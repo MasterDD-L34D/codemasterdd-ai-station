@@ -31,7 +31,7 @@ Target: piattaforma AI sovereign con zero subscription fisse post-maggio 2026.
 ## Capacità AI locali (Lenovo da solo)
 - Modelli fino a **7-8B** a piena quality (Qwen 2.5 Coder, Qwen 3 8B, DeepSeek 7B)
 - Modelli fino a **14B** con quantizzazione Q4 aggressiva (performance ridotta)
-- Velocità attesa Qwen 2.5 Coder 7B: ~40-55 tok/s (da validare con benchmark reale)
+- Velocità **misurata** Qwen 2.5 Coder 7B Q4_K_M: **93.51 tok/s sustained** (benchmark 669 token su RTX 5060, 2026-04-19) — ~2× sopra il target iniziale
 
 ## Ecosistema device
 - **CodeMasterDD** (Lenovo LOQ Tower 17IAX10): workstation primaria AI agentic
@@ -47,13 +47,15 @@ Target: piattaforma AI sovereign con zero subscription fisse post-maggio 2026.
 - Git 2.53.0.windows.3
 - Claude Code 2.1.114 (OAuth Claude Max, Opus 4.7)
 - NVIDIA Driver 595.79 + CUDA 13.2
+- GitHub CLI 2.90.0 (installato 2026-04-19, auth MasterDD-L34D)
+- Node.js 24.15.0 LTS + npm 11.12.1 (installato 2026-04-19, Active LTS fino aprile 2029)
+- Python 3.12.10 (installato 2026-04-19)
+- VS Code 1.116.0 x64 (installato 2026-04-19, commit `560a9dba96f961efea7b1612916f89e5d5d4d679`)
+- Ollama 0.21.0 (installato 2026-04-19, servizio Windows auto-start)
+- Modello locale: `qwen2.5-coder:7b` (Q4_K_M, 4.7 GB, digest `dae161e27b0e`, installato 2026-04-19)
 
 ## Stack da installare questa settimana
-- Node.js 22 LTS
-- Python 3.10+
-- VS Code
-- Ollama 0.21+ + Qwen 2.5 Coder 7B
-- GitHub CLI (gh)
+_(completato il 2026-04-19 — vedi "Stack installato")_
 
 ## Stack da installare settimana prossima (quando migriamo progetti)
 - Dipendenze specifiche progetti (da Evo-Tactics e Synesthesia)
@@ -64,6 +66,7 @@ Target: piattaforma AI sovereign con zero subscription fisse post-maggio 2026.
   - GitHub: `github.com/MasterDD-L34D/Game`
   - Path Lenovo: `C:\dev\Game`
   - Stack: Node 22 + Python 3.10, xstate@5, inkjs, Vue3 bundle
+  - Compat runtime: useremo Node 24 a livello di sistema; installeremo nvm-windows solo se emergono incompatibilità
   - 710+ test
 
 - **Synesthesia**: web app esame UniUPO
