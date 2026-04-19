@@ -1,6 +1,6 @@
-# Lenovo LOQ Tower 17IAX10 AI Workstation
+# CodeMasterDD AI Workstation
 
-**Infrastructure-as-code** del desktop Lenovo LOQ Tower 17IAX10 dedicato allo sviluppo AI agentic.
+**Infrastructure-as-code** del desktop CodeMasterDD (Lenovo LOQ Tower 17IAX10) dedicato allo sviluppo AI agentic.
 
 Questa è la workstation **primaria e autosufficiente** di Eduardo Scarpelli: tutti i workflow di sviluppo e i modelli AI locali girano qui, senza dipendenze da altri device.
 

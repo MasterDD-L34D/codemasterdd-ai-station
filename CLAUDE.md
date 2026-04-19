@@ -1,4 +1,4 @@
-# CLAUDE.md — Lenovo AI Station
+# CLAUDE.md — CodeMasterDD AI Station
 
 ## Ruolo workstation
 Dev workstation AI agentic **PRINCIPALE** per Eduardo Scarpelli.
@@ -21,7 +21,7 @@ Target: piattaforma AI sovereign con zero subscription fisse post-maggio 2026.
   - **NON è dependency** del piano: Lenovo funziona pienamente da solo
 
 ## Hardware (definitivo)
-- **Lenovo LOQ Tower 17IAX10** (desktop)
+- **CodeMasterDD** (Lenovo LOQ Tower 17IAX10, desktop)
   - Intel Core Ultra 7 255HX (24 core Arrow Lake HX, 2.40 GHz base)
   - NVIDIA RTX 5060 8GB VRAM (Blackwell sm_120, CUDA 13.2)
   - 16GB DDR5
@@ -34,8 +34,8 @@ Target: piattaforma AI sovereign con zero subscription fisse post-maggio 2026.
 - Velocità attesa Qwen 2.5 Coder 7B: ~40-55 tok/s (da validare con benchmark reale)
 
 ## Ecosistema device
-- **Lenovo LOQ Tower 17IAX10**: workstation primaria AI agentic
-- **Ryzen 9600X desktop**: PC appoggio corrente, dismissione graduale quando Lenovo ha tutto
+- **CodeMasterDD** (Lenovo LOQ Tower 17IAX10): workstation primaria AI agentic
+- **Ryzen 9600X desktop**: PC appoggio corrente, dismissione graduale quando CodeMasterDD ha tutto
 
 ## Configurazione sicurezza applicata (19/04/2026)
 - BitLocker: triplo layer disabilitato

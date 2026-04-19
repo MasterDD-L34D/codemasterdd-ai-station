@@ -1,4 +1,4 @@
-# Journal — Lenovo AI Station
+# Journal — CodeMasterDD AI Station
 
 Diario operativo della workstation. Una entry per sessione di lavoro significativa.
 
