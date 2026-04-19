@@ -31,7 +31,11 @@ Target: piattaforma AI sovereign con zero subscription fisse post-maggio 2026.
 ## Capacità AI locali (Lenovo da solo)
 - Modelli fino a **7-8B** a piena quality (Qwen 2.5 Coder, Qwen 3 8B, DeepSeek 7B)
 - Modelli fino a **14B** con quantizzazione Q4 aggressiva (performance ridotta)
-- Velocità **misurata** Qwen 2.5 Coder 7B Q4_K_M: **93.51 tok/s sustained** (benchmark 669 token su RTX 5060, 2026-04-19) — ~2× sopra il target iniziale
+- Velocità **misurata** Qwen 2.5 Coder 7B Q4_K_M sustained:
+  - 93.51 tok/s vanilla Ollama defaults (benchmark 2026-04-19)
+  - **114.20 tok/s Blackwell-optimized** (env vars applicate 2026-04-20, +22%)
+- Env vars Ollama applicate (User scope, persistenti) — config rationale: `docs/adr/0004-ollama-rtx5060-config.md`
+  - `OLLAMA_FLASH_ATTENTION=1`, `OLLAMA_KV_CACHE_TYPE=q8_0`, `OLLAMA_MAX_LOADED_MODELS=1`, `OLLAMA_KEEP_ALIVE=30m`, `OLLAMA_CONTEXT_LENGTH=16384`
 
 ## Ecosistema device
 - **CodeMasterDD** (Lenovo LOQ Tower 17IAX10): workstation primaria AI agentic
