@@ -183,3 +183,39 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 - **Root cause rivisto**: varianza output format di Qwen 14B Q2, non budget context. Il filename prefix è inconsistente run-to-run.
 - **Meta-finding importante**: anche lo stack consigliato (Aider+14B Q2 @ ctx 8192) ha **fail rate non-zero su format compliance**. In produzione aspettarsi ~10-20% edit respinti che richiedono retry manuale.
 - Implicazione sovereign roadmap: il "full sovereign" ottimistico va valutato con fail rate realistico (non 0%). Budget scenario ibrido ($300-420/anno con Claude Pro fallback) probabilmente più realistico del full-sovereign ($60-180).
+
+---
+
+## 2026-04-21
+
+### Completato
+- **Memoria persistente popolata** (`~/.claude/projects/.../memory/`): 6 file (user profile, feedback decision style, feedback communication style, project sovereign evaluation, project migrations pending, reference strategic docs) + `MEMORY.md` index. Evitate duplicazioni con CLAUDE.md; focus su pattern di collaborazione e stato decisionale in sospeso.
+- **Validation Aider in cmd.exe (JOURNAL 20/04 "Da fare")**: ✅ Aider interactive parte pulito in cmd.exe (no `prompt_toolkit` xterm-256color error come in bash). Banner corretto, prompt `>` responsive, Y/N prompts funzionanti.
+- **`OLLAMA_API_BASE` persistito** (User scope, `setx`) a `http://localhost:11434` per silenziare warning Aider.
+- **Scoperta grave: silent corruption Aider whole + 14B Q2** — non era su "Da fare", emerso durante validation cmd.exe:
+  - Test 1 (9 righe, interactive): file → `demo.js` (1 insertion, 9 deletions); commit message misleading (`docs: add JSDoc...`)
+  - Test 2 (9 righe, retry interactive): identico, **deterministico**
+  - Test 3 (9 righe, `--message`): identico → **NON interactive-specific**
+  - Test 4 (46 righe, `--message`): identico con `// demo.js` → **NON size-dependent**
+  - Test 5 (46 righe, `--edit-format diff`): **safe failure**, no edit, file intatto → `diff` mitigation valida
+  - Test 6 (46 righe, Qwen **7B**, whole): ✅ **success**, 47 JSDoc applicati, logic preserved → 7B output format compatibile
+- **Root cause cristallizzato**: Qwen 14B Q2 emette filename *dentro* un code block (pattern "due block": filename-only-block + content-block). Aider `whole` parser prende il primo block come contenuto file → overwrite distruttivo. Qwen 7B emette filename fuori dal block (formato Aider-nativo) → parser OK.
+- **ADR-0008 creato** (`docs/adr/0008-aider-whole-format-silent-corruption.md`): documentazione completa, matrice test, root cause, dual-stack task-routing come mitigation.
+- **ADR-0007 annotato** con forward reference (header "Partially Superseded"). La raccomandazione single-stack è deprecata; restano validi benchmark, env vars, paradox quantization Q2>Q3.
+- **CLAUDE.md aggiornato**: priority table ora con task-routing (cosmetic → 7B+whole, behavior-critical → 14B Q2+diff) + safety protocol Aider (diff check post-edit, no `--yes-always` su repo sporco).
+
+### Da fare
+- [ ] `udiff` edit format test (potrebbe risolvere sia silent-corruption sia no-edit di diff)
+- [ ] Reproducibility 7B success su ≥3 run (n=1 attuale)
+- [ ] Prompt-engineering "emit filename on its own line" per Qwen 14B Q2 (recupero marginale whole format)
+- [ ] File-watcher/hook che rifiuta commit con file = solo filename (guard rail automatico)
+- [ ] Wrapper script `aider-cosmetic` / `aider-refactor` per ridurre cognitive load dual-stack
+- [ ] Migrazione progetti reali (Evo-Tactics, Synesthesia) — settimana prossima (da 27/04)
+
+### Note
+- **Meta-lezione "safe failure mode è asserzione, non proprietà"**: ADR-0007 aveva *inferito* safe-failure di Aider dall'architettura robust-first. Test empirici mostrano che parser può accettare input malformato e scrivere garbage in silenzio. Safety claims richiedono evidenza empirica su failure mode specifico, non inferenza.
+- **Meta-lezione "display ≠ on-disk state"**: Aider mostra in output quello che il parser *credeva* di applicare (secondo block con JSDoc completo), non quello che scrive sul disco (primo block con filename). Verification obbligatoria via `git diff HEAD~1` dopo auto-commit.
+- **Meta-lezione "test in condizioni triviali"**: ADR-0007 ha testato su controller reale (~180 righe) con context ricco — condizioni dove il format quirk di Qwen 14B Q2 non si manifesta. Il bug emerge con file dummy piccolo. Lezione generalizzabile: test "troppo semplici per fallire" catturano bug che complessità nasconde.
+- **Pattern collaborazione confermato**: sessione open-ended con autonomia delegata dopo validation iniziale ("procedi finché non hai qualcosa di davvero importante da chiedermi") → batch di 3 test + scrittura ADR + update docs senza interruzioni non necessarie. Modello ha stoppato autonomamente quando decisione strategica richiedeva input utente (scelta tra 3 opzioni direction per ADR update).
+- **Budget impact**: nessuna revisione numerica immediata (ibrido $300-420/anno resta baseline). Dual-stack aggiunge cognitive overhead — se in uso reale risulta frizione alta, spinge verso Claude Pro fallback più spesso.
+- **Test artifacts**: `C:\dev\aider-tty-test\` preservato (directory throwaway ma git history contiene commit malformati `ebc2513`, `7d529c4`, `0aa511e`, `e58ecaf` — utili per ispezione futura del pattern corruption).

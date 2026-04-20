@@ -142,12 +142,19 @@ lenovo-ai-station/
 
 ## Priorità modelli AI
 - **Durante Claude Max (fino 19/05/2026)**: Opus 4.7 per tutto
-- **Post Max** (tipologia task → stack):
+- **Post Max** — task-routing (vedi ADR-0008 per rationale completo):
   - Query one-shot → `ollama run qwen2.5-coder:7b` (114 tok/s)
-  - Read/explain + CREATE single file → Aider + Qwen 7B
-  - **Edit agentic (JSDoc, refactor minimale, docstrings)** → **Aider + Qwen 14B Q2_K** (18.7 tok/s, faithful)
+  - Read/explain + CREATE single file → Aider + Qwen 7B + `whole`
+  - **Cosmetic edit** (JSDoc, docstrings, rename, lint-fix) → **Aider + Qwen 7B + `whole`** (format compatibile, faithfulness non critica)
+  - **Behavior-critical edit** (refactor, bug fix, logic change) → **Aider + Qwen 14B Q2_K + `--edit-format diff`** (safe failure; ~20-40% retry manuale ma zero silent-corruption)
   - Multi-file refactor / debug strategico → OpenRouter pay-per-use (Sonnet/Opus) o Claude Pro come backbone
-  - Riferimento decisionale completo: `docs/adr/0007-aider-qwen-quantization-findings.md`
+  - **⚠️ DEPRECATO**: Aider + 14B Q2 + `whole` — silent-corruption deterministico su task "edit single file" semplici, vedi ADR-0008
+  - Riferimenti decisionali: `docs/adr/0007-aider-qwen-quantization-findings.md` + `docs/adr/0008-aider-whole-format-silent-corruption.md`
+
+- **Safety protocol per Aider** (valido sempre):
+  - `git diff HEAD~1` post-edit prima di pushare: commit message generati dall'LLM riflettono l'intent, non necessariamente il diff reale
+  - Evitare `--yes-always` in repo con working tree sporco
+  - Per task behavior-critical considerare `--no-auto-commits`
 
 ## Aggiornamento JOURNAL
 A fine sessione significativa, aggiungere entry in JOURNAL.md:

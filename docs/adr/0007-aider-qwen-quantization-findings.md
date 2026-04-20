@@ -1,9 +1,21 @@
 # ADR 0007 — Aider + Qwen quantization findings su RTX 5060 8GB
 
-**Status**: Accepted
+**Status**: Partially Superseded by ADR-0008 (2026-04-21)
 **Data**: 2026-04-20 (sessione pomeridiana)
 **Decisore**: Eduardo Scarpelli
 **Tipo decisione**: tecnica, strategica (revisione Fase 2 ADR-0001, follow-up ADR-0006)
+
+> ⚠️ **Revisione critica — vedi ADR-0008**
+>
+> La raccomandazione principale di questo ADR ("Aider + Qwen 14B Q2_K + `whole` edit format come stack sovereign per edit agentic") è **deprecata** a seguito di test successivi che hanno rivelato un **silent-corruption mode** deterministico con quella configurazione su task "edit single file" semplici (es. JSDoc su file <50 righe).
+>
+> La "safe failure mode" Aider qui asserita vale solo con `--edit-format diff`, NON con `whole`.
+>
+> Task-routing sostitutivo in ADR-0008:
+> - **Cosmetic edit** (JSDoc, docstrings, rename) → Aider + **Qwen 7B** + `whole`
+> - **Behavior-critical edit** → Aider + Qwen 14B Q2 + **`diff`** (safe fail, retry manuale)
+>
+> Restano validi: benchmark throughput, env vars Ollama, paradox quantization (Q2 > Q3 faithfulness su context ricco), scartare Q3 e Cline.
 
 ## Contesto
 
