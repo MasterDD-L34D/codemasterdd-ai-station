@@ -177,3 +177,9 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 - **Aider + speed mode (ctx 4096 + num_gpu=-1) su Task 3 CREATE**: ❌ FAIL edit format. Qwen genera codice valido ma senza prefisso filename → Aider respinge → 3 reflection retry → stop. **ctx 4096 troppo stretto per Aider**: repo-map default 4k occupa intero budget, no room per prompt/response.
 - **Trade-off finale config**: gold standard (36.6 tok/s) **non combina con Aider** (edit format broken). Speed mode usabile solo per `ollama run` CLI o API dirette. Per Aider: ctx 8192 default rimane config produttiva.
 - **Issue operativo (ricorrente)**: CUDA pinned memory leak dopo kill. Soluzione permanente: usare tray app (`ollama app.exe`) per restart puliti invece di bash kill + background serve. Tray app gestisce CUDA state meglio.
+
+### Estensione 4 (map-tokens + varianza format)
+- **Aider + `--map-tokens 2048` + speed mode** su Task 3 CREATE: ❌ stesso fallimento format. Tokens sent dimezzati (5.6k vs 11k) ma Qwen omette filename prefix → Aider respinge.
+- **Root cause rivisto**: varianza output format di Qwen 14B Q2, non budget context. Il filename prefix è inconsistente run-to-run.
+- **Meta-finding importante**: anche lo stack consigliato (Aider+14B Q2 @ ctx 8192) ha **fail rate non-zero su format compliance**. In produzione aspettarsi ~10-20% edit respinti che richiedono retry manuale.
+- Implicazione sovereign roadmap: il "full sovereign" ottimistico va valutato con fail rate realistico (non 0%). Budget scenario ibrido ($300-420/anno con Claude Pro fallback) probabilmente più realistico del full-sovereign ($60-180).

@@ -310,11 +310,26 @@ Tentativo di applicare il gold standard config (36.6 tok/s) ad Aider tramite `.a
 
 **Decisione**: gold standard config **non combina con Aider**. Speed mode utilizzabile solo per `ollama run` o chiamate API dirette. Per Aider: rimanere su ctx 8192 default.
 
+#### Test 5: Aider `--map-tokens 2048` + speed mode
+
+Tentativo di riscattare speed mode con Aider dimezzando repo-map (4k→2k), ipotizzando che il problema di Test 4 fosse context budget.
+
+**Risultato**: ❌ **stesso failure mode**. Tokens sent dimezzati (5.6k vs 11k precedente) ma Qwen ancora produce code block **senza filename prefix** → Aider respinge.
+
+**Root cause rivisto**: il problema NON è context budget, è **varianza output format di Qwen 14B Q2**. Il filename prefix è prodotto inconsistentemente:
+- Task 3 @ ctx 8192 (Test originale, successo): Qwen incluse filename → edit applicato
+- Task 3 @ ctx 4096, map 4k (Test 4, fail): Qwen omise filename → respinto
+- Task 3 @ ctx 4096, map 2k (Test 5, fail): Qwen omise filename → respinto
+
+Qwen 14B Q2 ha **varianza anche sul format compliance** (più lieve di Q3 ma presente). Solo il precedente "success" era fortunato; ripetendo più volte, una parte fallirà per mancato filename.
+
+**Meta-finding**: lo stack Aider+Qwen 14B Q2 al ctx 8192 ha capability ma **anche un failure rate non-zero sulla correttezza format**. In uso reale prolungato, aspettarsi che ~10-20% edit siano respinti da Aider e richiedano retry manuale.
+
 ### Test ancora da fare (bassa priorità)
 
 - [ ] Test Aider in cmd.exe interattivo (Task 2 + follow-up "riprova perché hai cambiato redirect"): verifica se Qwen sa auto-correggere quando notificato di un errore
-- [ ] Test ridurre `--map-tokens 2048` per vedere se ctx 4096 diventa usabile con Aider (repo-map dimezzato libera budget)
 - [ ] Re-test Q3 con temperature=0 per isolare varianza stocastica vs capability intrinseca
+- [ ] Benchmark fail rate quantitativo su n=10 task per stimare percentuale retry reali in produzione
 
 ### Test più lunghi (quando time permette)
 
