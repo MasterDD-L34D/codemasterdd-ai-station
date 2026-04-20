@@ -57,6 +57,7 @@ Target: piattaforma AI sovereign con zero subscription fisse post-maggio 2026.
 - VS Code 1.116.0 x64 (installato 2026-04-19, commit `560a9dba96f961efea7b1612916f89e5d5d4d679`)
 - Ollama 0.21.0 (installato 2026-04-19, servizio Windows auto-start)
 - Modello locale: `qwen2.5-coder:7b` (Q4_K_M, 4.7 GB, digest `dae161e27b0e`, installato 2026-04-19)
+- VSCode Cline extension `saoudrizwan.claude-dev` v3.79.0 (installata 2026-04-20) — **NOT viable come agentic con Qwen 7B**, vedi `docs/adr/0006-cline-qwen-viability.md`
 
 ## Stack da installare questa settimana
 _(completato il 2026-04-19 — vedi "Stack installato")_
