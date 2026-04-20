@@ -203,6 +203,9 @@ Leggermente aumentata. Un RTX 5060 Ti 16GB permetterebbe 14B Q2 full-GPU + event
 - [x] ADR-0007 annotato con forward reference
 - [x] CLAUDE.md priority table aggiornata (cosmetic → 7B, behavior-critical → 14B Q2 diff)
 - [x] JOURNAL 2026-04-21 entry
+- [x] Wrapper script `aider-cosmetic` + `aider-refactor` in `C:\Users\edusc\.local\bin\` (zero-friction invocation)
+- [x] Guard rail pre-commit hook installato globale via `git config --global core.hooksPath` — testato 3 scenari (pattern pulito, pattern commentato, edit legittimo)
+- [x] Delegation protocol documentato in `docs/patterns/delegation-to-aider.md`
 
 ### Test ulteriori (bassa priorità)
 - [ ] `udiff` edit format: se anche diff migliora, potrebbe bypassare i due issue (silent corruption + filename header)

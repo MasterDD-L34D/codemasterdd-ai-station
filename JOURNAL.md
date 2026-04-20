@@ -219,3 +219,30 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 - **Pattern collaborazione confermato**: sessione open-ended con autonomia delegata dopo validation iniziale ("procedi finché non hai qualcosa di davvero importante da chiedermi") → batch di 3 test + scrittura ADR + update docs senza interruzioni non necessarie. Modello ha stoppato autonomamente quando decisione strategica richiedeva input utente (scelta tra 3 opzioni direction per ADR update).
 - **Budget impact**: nessuna revisione numerica immediata (ibrido $300-420/anno resta baseline). Dual-stack aggiunge cognitive overhead — se in uso reale risulta frizione alta, spinge verso Claude Pro fallback più spesso.
 - **Test artifacts**: `C:\dev\aider-tty-test\` preservato (directory throwaway ma git history contiene commit malformati `ebc2513`, `7d529c4`, `0aa511e`, `e58ecaf` — utili per ispezione futura del pattern corruption).
+
+### Estensione 1 (delegation infrastructure, post-ADR-0008)
+- **Motivazione**: ridurre consumo token Claude Max delegando task appropriati a stack locale, senza aspettare la migrazione progetti. Unlock token savings da subito (~4 settimane prima di 19/05).
+- **Wrapper CLI installati** in `C:\Users\edusc\.local\bin\` (già in User PATH):
+  - `aider-cosmetic.cmd` → `aider --model ollama/qwen2.5-coder:7b --edit-format whole %*`
+  - `aider-refactor.cmd` → `aider --model ollama/qwen2.5-coder:14b-instruct-q2_K --edit-format diff --no-auto-commits %*`
+  - Entrambi testati: `aider-cosmetic --version` e `aider-refactor --version` → `aider 0.86.2`
+- **Guard rail pre-commit hook** installato globale:
+  - Script bash in `C:\Users\edusc\.local\share\git-hooks\pre-commit` (msys-safe, niente regex alternation)
+  - Activated via `git config --global core.hooksPath "C:/Users/edusc/.local/share/git-hooks"` (prima config globale hooks — no override di precedenti)
+  - Detection: file ≤200 byte il cui contenuto (post-strip whitespace + comment prefix `//`, `#`, `;`, `--`) corrisponde a filename/basename → exit 1, ADR-0008 referenziato nel messaggio
+  - Validato 3 scenari: `demo.js` pure filename → block, `// demo.js` commento → block, 47-line real edit → pass. Integration test `git commit` con corruption → blocked con exit 1
+  - Bypass: `git commit --no-verify` (non raccomandato). Uninstall: `git config --global --unset core.hooksPath`
+- **Delegation protocol documentato** in `docs/patterns/delegation-to-aider.md`:
+  - Decision tree classification (cosmetic / behavior-critical / strategic)
+  - Formato handoff ready-to-paste (cmd.exe + prompt target)
+  - Review loop: cosa controllo quando torna output (success / safe fail / hook-blocked / silent corruption sospetta)
+  - Tabella tracking per log `logs/aider-delegation-YYYY-MM.md` (gitignored) → foundation per Fase 6 evaluation post-19/05
+  - Scenari operativi (cosmetic semplice, refactor minimale, query strategica, borderline)
+  - Limitazioni note (cognitive overhead, wrapper cmd.exe-only, fail rate 14B Q2 diff ~20-40%)
+- **CLAUDE.md aggiornato** con:
+  - Reference al safety protocol hook (comando attivazione + uninstall)
+  - Lista wrapper CLI installati
+  - Link al delegation protocol
+
+### Progress tracker
+- Barra progetto: **50% → 60%** (fase 4.5 "delegation infrastructure" chiusa). Restano: migrazione progetti (15%), 3-mesi uso reale (15%), decisione budget finale (10%).

@@ -155,6 +155,13 @@ lenovo-ai-station/
   - `git diff HEAD~1` post-edit prima di pushare: commit message generati dall'LLM riflettono l'intent, non necessariamente il diff reale
   - Evitare `--yes-always` in repo con working tree sporco
   - Per task behavior-critical considerare `--no-auto-commits`
+  - Guard rail pre-commit globale attivo (`git config --global core.hooksPath C:/Users/edusc/.local/share/git-hooks`) che blocca commit con silent corruption pattern — bypass con `git commit --no-verify`, non raccomandato
+
+- **Wrapper CLI per delegazione** (in PATH Windows, eseguibili da cmd.exe):
+  - `aider-cosmetic <file>` → 7B + whole (JSDoc, docstrings, rename, lint-fix)
+  - `aider-refactor <file>` → 14B Q2 + diff + no-auto-commits (refactor, bug fix, logic change)
+
+- **Delegation protocol Claude Code → Aider**: vedi `docs/patterns/delegation-to-aider.md` — decision tree classification, formato handoff, review loop, tracking fail rate per Fase 6
 
 ## Aggiornamento JOURNAL
 A fine sessione significativa, aggiungere entry in JOURNAL.md:
