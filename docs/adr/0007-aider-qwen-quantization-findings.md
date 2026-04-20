@@ -224,19 +224,46 @@ Con 8 GB VRAM ogni 14B spilla a CPU. Upgrade diventa **utile ma non critico**:
 
 ### Completato (stessa sessione, 2026-04-20 pomeriggio tardo)
 
-**Test `OLLAMA_CONTEXT_LENGTH` tuning su 14B Q2_K**:
+#### Test 1: `OLLAMA_CONTEXT_LENGTH` tuning su 14B Q2_K
 
-| ctx | Speed (tok/s) | GPU offload | KV cache spill | Verdict |
-|-----|---------------|-------------|----------------|---------|
-| 16384 | 18.72 | 73.0% | 2.4 GB | Baseline (env vars originali ADR-0004) |
-| **8192** | **25.54** | **86.3%** | **1.0 GB** | **+36% speed, context adeguato per single-file edit. Default nuovo.** |
-| 4096 | 35.23 | 90.7% | 0.6 GB | +88% vs baseline ma context troppo stretto per edit medi |
+| num_ctx | num_gpu | Speed (tok/s) | GPU offload | Layers GPU | Verdict |
+|---------|---------|---------------|-------------|------------|---------|
+| 16384 | auto | 18.72 | 73.0% | 44/49 | Baseline (env vars originali ADR-0004) |
+| **8192** | **auto** | **25.54** | **86.3%** | 44/49 | **+36% speed, default operativo nuovo** |
+| 4096 | auto | 35.23 | 90.7% | 44/49 | Context stretto per edit medi |
+| **4096** | **-1** | **36.61** | **~98%** | **48/49** | **Gold standard full-GPU**, solo output projection su CPU |
+| 8192 | -1 | CRASH | — | — | VRAM insufficiente, llama runner terminated |
 
-Nessuna config raggiunge full-GPU su 8 GB VRAM (weights 6.9 GB + OS 1 GB + runtime overhead non permette). Per full-GPU serve hardware upgrade (RTX 5060 Ti 16GB o 5070 12GB).
+**Decisione operativa**:
+- `OLLAMA_CONTEXT_LENGTH=8192` persistito come default (User scope, `setx`) — sweet spot per Aider con repo-map tipico (~4k token) + single file (~2-3k) + prompt.
+- Override per-request `num_ctx: 16384` per task multi-file complessi.
+- Override per-request `num_ctx: 4096, num_gpu: -1` per query veloci single-shot dove latency conta più di context (gold standard 36.6 tok/s).
+- Gold standard full-GPU **solo a ctx 4096**, non estendibile a ctx 8192 senza hardware upgrade.
 
-**Decisione**: `OLLAMA_CONTEXT_LENGTH=8192` persistito (User scope, `setx`). Override per-request `num_ctx: 16384` per task multi-file complessi (Aider con repo-map grande, contesto cross-file).
+**Validation post-ctx-change**: Aider+14B Q2 Task 2 (JSDoc su controller) ripetuto con ctx 8192 server default — ✅ successo, 38 JSDoc aggiunti, behavior preservato byte-per-byte (submitOnboarding identico a HEAD).
 
-**Implicazione per Aider**: Aider default repo-map = 4096 token + single file content (~2-3k) + prompt (~500). Tipico <8k token. Se overflow, ridurre `--map-tokens 2048`.
+#### Test 2: `OLLAMA_KV_CACHE_TYPE=q4_0` — NON viable su Blackwell
+
+Tentativo di dimezzare KV cache (da q8_0) per liberare VRAM. Risultato: **CUDA error su RTX 5060 sm_120**:
+
+```
+ggml_cuda_host_malloc: failed to allocate 26.01 MiB of pinned memory: resource already mapped
+CUDA error: shared object initialization failed
+  current device: 0, in function launch_mul_mat_q at mmq.cuh:3724
+  cudaFuncSetAttribute((mul_mat_q<type, mmq_x, false>), cudaFuncAttributeMaxDynamicSharedMemorySize, nbytes_shared)
+```
+
+Stesso errore sia con q4_0 sia con q8_0 dopo il primo fallimento (pinned memory leak permane finché Ollama non resetta cleanly). Restart completo + wait risolve.
+
+**Diagnosi**: il kernel `mul_mat_q` con quantizzazione q4_0 richiede shared memory allocation non supportata su Blackwell sm_120. Constraint architetturale nota (simile a NVFP4 MoE / MXFP4 issues documentate in `docs/research/rtx5060-ollama-benchmarks.md`).
+
+**Decisione**: **`OLLAMA_KV_CACHE_TYPE=q8_0` mantenuto**. q4_0 potrebbe diventare viable con:
+- Driver NVIDIA newer (595.79 attuale; versioni 600+ potrebbero portare fix)
+- Ollama update (0.21.0 attuale; upstream llama.cpp potrebbe aggiungere q4_0 kernel Blackwell-compatible)
+
+Re-test quando driver/Ollama aggiornati.
+
+**Implicazione per Aider**: Aider default repo-map = 4096 token + single file content (~2-3k) + prompt (~500). Tipico <8k token, fit in ctx 8192. Se overflow, ridurre `--map-tokens 2048`.
 
 ### Test rapidi ancora da fare
 
