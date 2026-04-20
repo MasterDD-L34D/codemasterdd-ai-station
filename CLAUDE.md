@@ -29,11 +29,17 @@ Target: piattaforma AI sovereign con zero subscription fisse post-maggio 2026.
 - OS: Windows 11 Home 25H2 (build 26200, no KB5083769)
 
 ## Capacità AI locali (Lenovo da solo)
-- Modelli fino a **7-8B** a piena quality (Qwen 2.5 Coder, Qwen 3 8B, DeepSeek 7B)
-- Modelli fino a **14B** con quantizzazione Q4 aggressiva (performance ridotta)
-- Velocità **misurata** Qwen 2.5 Coder 7B Q4_K_M sustained:
-  - 93.51 tok/s vanilla Ollama defaults (benchmark 2026-04-19)
-  - **114.20 tok/s Blackwell-optimized** (env vars applicate 2026-04-20, +22%)
+- Modelli **full-GPU** su 8 GB VRAM: fino a 7-8B a quality piena (Qwen 2.5 Coder 7B, Qwen 3 8B, DeepSeek 7B)
+- Modelli **14B**: entrano parzialmente (60-75% GPU + CPU spill 25-40%) — usabili ma throughput ridotto
+- Velocità **misurate** (sustained eval, prompt DoublyLinkedList Python):
+
+| Modello | Tok/s | GPU offload | Uso consigliato |
+|---------|-------|-------------|-----------------|
+| Qwen 2.5 Coder 7B Q4_K_M | **114** | 100% | query one-shot, create, read/explain |
+| Qwen 2.5 Coder 14B Q3_K_M | 10.8 | 62% | sconsigliato (hallucination su constraint) |
+| Qwen 2.5 Coder 14B **Q2_K** | **18.7** | 73% | **agentic edit (sweet spot + faithful)** |
+
+- Stack agentic sovereign consigliato: **Aider + Qwen 14B Q2_K** — vedi `docs/adr/0007-aider-qwen-quantization-findings.md`
 - Env vars Ollama applicate (User scope, persistenti) — config rationale: `docs/adr/0004-ollama-rtx5060-config.md`
   - `OLLAMA_FLASH_ATTENTION=1`, `OLLAMA_KV_CACHE_TYPE=q8_0`, `OLLAMA_MAX_LOADED_MODELS=1`, `OLLAMA_KEEP_ALIVE=30m`, `OLLAMA_CONTEXT_LENGTH=16384`
 
@@ -56,7 +62,11 @@ Target: piattaforma AI sovereign con zero subscription fisse post-maggio 2026.
 - Python 3.12.10 (installato 2026-04-19)
 - VS Code 1.116.0 x64 (installato 2026-04-19, commit `560a9dba96f961efea7b1612916f89e5d5d4d679`)
 - Ollama 0.21.0 (installato 2026-04-19, servizio Windows auto-start)
-- Modello locale: `qwen2.5-coder:7b` (Q4_K_M, 4.7 GB, digest `dae161e27b0e`, installato 2026-04-19)
+- Modelli locali:
+  - `qwen2.5-coder:7b` (Q4_K_M, 4.7 GB, digest `dae161e27b0e`, installato 2026-04-19) — **query one-shot, create single file, read/explain**
+  - `qwen2.5-coder:14b-instruct-q3_K_M` (7.3 GB, digest `e00d09afd55a`, installato 2026-04-20) — capace ma rischio hallucination su constraint; 10.8 tok/s (CPU spill 38%)
+  - `qwen2.5-coder:14b-instruct-q2_K` (5.8 GB, digest `dfeff73b234d`, installato 2026-04-20) — **sweet-spot agentic: 18.7 tok/s, faithful constraint-respect**, vedi `docs/adr/0007-aider-qwen-quantization-findings.md`
+- Aider 0.86.2 (installato 2026-04-20 via `python -m pip install aider-install && aider-install`, binary `C:\Users\edusc\.local\bin\aider.exe`) — **client agentic consigliato per workflow sovereign**
 - VSCode Cline extension `saoudrizwan.claude-dev` v3.79.0 (installata 2026-04-20) — **NOT viable come agentic con Qwen 7B**, vedi `docs/adr/0006-cline-qwen-viability.md`
 
 ## Stack da installare questa settimana
@@ -131,10 +141,12 @@ lenovo-ai-station/
 
 ## Priorità modelli AI
 - **Durante Claude Max (fino 19/05/2026)**: Opus 4.7 per tutto
-- **Post Max**:
-  - Task routine → Ollama Qwen 2.5 Coder 7B
-  - Task complessi → OpenRouter pay-per-use (Claude Sonnet, GPT)
-  - Task veloci → Ollama Qwen 3 8B
+- **Post Max** (tipologia task → stack):
+  - Query one-shot → `ollama run qwen2.5-coder:7b` (114 tok/s)
+  - Read/explain + CREATE single file → Aider + Qwen 7B
+  - **Edit agentic (JSDoc, refactor minimale, docstrings)** → **Aider + Qwen 14B Q2_K** (18.7 tok/s, faithful)
+  - Multi-file refactor / debug strategico → OpenRouter pay-per-use (Sonnet/Opus) o Claude Pro come backbone
+  - Riferimento decisionale completo: `docs/adr/0007-aider-qwen-quantization-findings.md`
 
 ## Aggiornamento JOURNAL
 A fine sessione significativa, aggiungere entry in JOURNAL.md:
