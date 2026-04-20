@@ -222,11 +222,27 @@ Con 8 GB VRAM ogni 14B spilla a CPU. Upgrade diventa **utile ma non critico**:
 
 ## Follow-up
 
-### Test rapidi da fare (1-2 ore totali)
+### Completato (stessa sessione, 2026-04-20 pomeriggio tardo)
 
-- [ ] Test con `OLLAMA_CONTEXT_LENGTH=8192`: verificare se 14B Q2 entra full-GPU e guadagno tok/s
+**Test `OLLAMA_CONTEXT_LENGTH` tuning su 14B Q2_K**:
+
+| ctx | Speed (tok/s) | GPU offload | KV cache spill | Verdict |
+|-----|---------------|-------------|----------------|---------|
+| 16384 | 18.72 | 73.0% | 2.4 GB | Baseline (env vars originali ADR-0004) |
+| **8192** | **25.54** | **86.3%** | **1.0 GB** | **+36% speed, context adeguato per single-file edit. Default nuovo.** |
+| 4096 | 35.23 | 90.7% | 0.6 GB | +88% vs baseline ma context troppo stretto per edit medi |
+
+Nessuna config raggiunge full-GPU su 8 GB VRAM (weights 6.9 GB + OS 1 GB + runtime overhead non permette). Per full-GPU serve hardware upgrade (RTX 5060 Ti 16GB o 5070 12GB).
+
+**Decisione**: `OLLAMA_CONTEXT_LENGTH=8192` persistito (User scope, `setx`). Override per-request `num_ctx: 16384` per task multi-file complessi (Aider con repo-map grande, contesto cross-file).
+
+**Implicazione per Aider**: Aider default repo-map = 4096 token + single file content (~2-3k) + prompt (~500). Tipico <8k token. Se overflow, ridurre `--map-tokens 2048`.
+
+### Test rapidi ancora da fare
+
 - [ ] Test 14B Q3 con prompt constraint-amplified: "NON cambiare logica, SOLO aggiungere JSDoc. Verifica byte-per-byte". Q3 hallucination riproducibile o fluke?
 - [ ] Test Aider in cmd.exe interattivo (Task 2 + follow-up "riprova perché hai cambiato redirect"): verifica che Qwen sa **auto-correggere** quando notificato
+- [ ] Rerun Aider+14B Q2 Task 2 con ctx 8192 persistente (verifica che edit funziona ancora dopo restart Ollama)
 
 ### Test più lunghi (quando time permette)
 

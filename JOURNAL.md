@@ -152,3 +152,12 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 - **Safe failure mode Aider**: ogni fail lascia working tree pulito. Zero danno collaterale vs Cline Task 4 catastrofe (280 npm pkg parassite).
 - **Meta-lezione quantization**: testare anche quant aggressive (Q2) su task specifici. La perdita di generative capacity può essere feature (faithfulness) non bug.
 - **Sessione produttiva ~2h**: install Aider + 2 pull 14B + 3 benchmark + 3 test Aider task + documentazione ADR-0007 + aggiornamento CLAUDE/JOURNAL.
+
+### Estensione (tardo pomeriggio): ctx tuning
+- **Test `OLLAMA_CONTEXT_LENGTH` su 14B Q2_K**:
+  - ctx 16384 (baseline): 18.72 tok/s, 73% GPU
+  - **ctx 8192: 25.54 tok/s, 86.3% GPU** → +36% speed, nuovo default
+  - ctx 4096: 35.23 tok/s, 90.7% GPU → +88% vs baseline ma context troppo stretto
+- Nessuna config raggiunge full-GPU su 8 GB (weights Q2 6.9 GB + OS 1 GB troppo stretti). Upgrade hardware (RTX 5060 Ti 16GB) vantaggioso ma non essenziale.
+- **`OLLAMA_CONTEXT_LENGTH=8192` persistito** (setx User scope). Override per-request `num_ctx: 16384` per task multi-file (Aider con repo-map grande).
+- ADR-0007 e CLAUDE.md aggiornati con matrice benchmark + rationale.

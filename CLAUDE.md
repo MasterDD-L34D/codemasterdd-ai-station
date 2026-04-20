@@ -40,8 +40,9 @@ Target: piattaforma AI sovereign con zero subscription fisse post-maggio 2026.
 | Qwen 2.5 Coder 14B **Q2_K** | **18.7** | 73% | **agentic edit (sweet spot + faithful)** |
 
 - Stack agentic sovereign consigliato: **Aider + Qwen 14B Q2_K** — vedi `docs/adr/0007-aider-qwen-quantization-findings.md`
-- Env vars Ollama applicate (User scope, persistenti) — config rationale: `docs/adr/0004-ollama-rtx5060-config.md`
-  - `OLLAMA_FLASH_ATTENTION=1`, `OLLAMA_KV_CACHE_TYPE=q8_0`, `OLLAMA_MAX_LOADED_MODELS=1`, `OLLAMA_KEEP_ALIVE=30m`, `OLLAMA_CONTEXT_LENGTH=16384`
+- Env vars Ollama applicate (User scope, persistenti) — config rationale: `docs/adr/0004-ollama-rtx5060-config.md` + `docs/adr/0007-aider-qwen-quantization-findings.md`
+  - `OLLAMA_FLASH_ATTENTION=1`, `OLLAMA_KV_CACHE_TYPE=q8_0`, `OLLAMA_MAX_LOADED_MODELS=1`, `OLLAMA_KEEP_ALIVE=30m`
+  - `OLLAMA_CONTEXT_LENGTH=8192` (ridotto da 16384 il 2026-04-20: +36% speed su 14B Q2 liberando KV cache da CPU spill. Override per-request `num_ctx: 16384` per task multi-file.)
 
 ## Ecosistema device
 - **CodeMasterDD** (Lenovo LOQ Tower 17IAX10): workstation primaria AI agentic
