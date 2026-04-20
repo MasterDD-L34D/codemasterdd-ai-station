@@ -265,11 +265,56 @@ Re-test quando driver/Ollama aggiornati.
 
 **Implicazione per Aider**: Aider default repo-map = 4096 token + single file content (~2-3k) + prompt (~500). Tipico <8k token, fit in ctx 8192. Se overflow, ridurre `--map-tokens 2048`.
 
-### Test rapidi ancora da fare
+### Completato (rigor checks successivi)
 
-- [ ] Test 14B Q3 con prompt constraint-amplified: "NON cambiare logica, SOLO aggiungere JSDoc. Verifica byte-per-byte". Q3 hallucination riproducibile o fluke?
-- [ ] Test Aider in cmd.exe interattivo (Task 2 + follow-up "riprova perché hai cambiato redirect"): verifica che Qwen sa **auto-correggere** quando notificato
-- [ ] Rerun Aider+14B Q2 Task 2 con ctx 8192 persistente (verifica che edit funziona ancora dopo restart Ollama)
+#### Test 3: Q3 re-test Task 2 (reproducibility hallucination)
+
+Re-run Aider+Q3 Task 2 (ctx 8192 default nuovo). Risultato: **NON ha hallucinato, ma neanche prodotto output utile**:
+- Prima risposta Qwen: discussione conversazionale ("Ho aggiunto JSDoc..."), no whole-file output
+- Seconda turn: solo "Ok." (2 token)
+- **Zero edit applicati** (vs prima volta: edit applicato con hallucination)
+
+**Finding**: Q3 non solo rischia hallucination ma ha **alta varianza di output** — stesso prompt produce comportamenti diversi:
+- Run 1: whole-file corretto con hallucination su submitOnboarding
+- Run 2: nessun whole-file output, solo "Ok."
+
+**Decisione**: Q3 è **doppiamente inaffidabile** (capability intermittente + hallucination rischio). Scartato definitivamente per agentic editing. Mantenuto come comparison baseline, non per uso produttivo.
+
+Caveat metodologico: n=2 non statisticamente conclusivo, ma la presenza di 2 failure mode diverse su 2 run è sufficiente per trattare Q3 come non-production-ready.
+
+#### Test 4: Aider "speed mode" (ctx 4096 + num_gpu=-1) su Task 3 CREATE
+
+Tentativo di applicare il gold standard config (36.6 tok/s) ad Aider tramite `.aider.model.settings.yml`:
+
+```yaml
+- name: ollama_chat/qwen2.5-coder:14b-instruct-q2_K
+  extra_params:
+    num_ctx: 4096
+    num_gpu: -1
+```
+
+**Risultato**: ❌ **Fallimento edit format**
+- Qwen genera codice JavaScript corretto (JSDoc + regex + ES module export)
+- Ma senza prefisso `utils/validate-email.js` richiesto da Aider whole-file format
+- Aider respinge con "No filename provided before \`\`\`" → 3 reflection retry → stop
+- File NON creato
+
+**Root cause**: ctx 4096 troppo stretto per Aider workflow. Il repo-map default (4096 token) occupa già l'intero context budget. Senza room per prompt istruzioni + response, Qwen produce output malformato.
+
+**Trade-off finalizzato**:
+| Scenario | Config consigliato | Speed | Usabilità |
+|----------|---------------------|-------|-----------|
+| Aider agentic editing | ctx 8192, auto offload | 25.5 tok/s | ✅ Full |
+| Query one-shot via `ollama run` | ctx 4096, num_gpu=-1 | 36.6 tok/s | ✅ Solo CLI |
+| Aider + speed mode | ctx 4096, num_gpu=-1 | N/A | ❌ Edit format broken |
+
+**Decisione**: gold standard config **non combina con Aider**. Speed mode utilizzabile solo per `ollama run` o chiamate API dirette. Per Aider: rimanere su ctx 8192 default.
+
+### Test ancora da fare (bassa priorità)
+
+- [ ] Test Aider in cmd.exe interattivo (Task 2 + follow-up "riprova perché hai cambiato redirect"): verifica se Qwen sa auto-correggere quando notificato di un errore
+- [ ] Test ridurre `--map-tokens 2048` per vedere se ctx 4096 diventa usabile con Aider (repo-map dimezzato libera budget)
+- [ ] Re-test Q3 con temperature=0 per isolare varianza stocastica vs capability intrinseca
 
 ### Test più lunghi (quando time permette)
 

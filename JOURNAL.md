@@ -171,3 +171,9 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
   - Full-GPU su 8 GB RTX 5060 raggiungibile **solo a ctx 4096**. Non scalabile a ctx 8192 senza hardware upgrade.
 - **Decisione config finale**: default `ctx 8192 + auto offload` (25.5 tok/s, equilibrio speed/context). Override API `num_ctx: 4096, num_gpu: -1` per query veloci single-shot.
 - **Issue operativo emerso**: dopo kill aggressivo Ollama, CUDA pinned memory non rilasciata immediatamente → restart Ollama deve aspettare ~5s. Documentare per operations.
+
+### Estensione 3 (rigor + edge case): Q3 reproducibility + Aider speed mode
+- **Q3 re-test Task 2**: Q3 ha **varianza output alta** — run 1 hallucinated, run 2 nessun edit (solo "Ok." 2 token). Q3 **doppiamente inaffidabile** (capability intermittente + hallucination). Scartato definitivamente per agentic.
+- **Aider + speed mode (ctx 4096 + num_gpu=-1) su Task 3 CREATE**: ❌ FAIL edit format. Qwen genera codice valido ma senza prefisso filename → Aider respinge → 3 reflection retry → stop. **ctx 4096 troppo stretto per Aider**: repo-map default 4k occupa intero budget, no room per prompt/response.
+- **Trade-off finale config**: gold standard (36.6 tok/s) **non combina con Aider** (edit format broken). Speed mode usabile solo per `ollama run` CLI o API dirette. Per Aider: ctx 8192 default rimane config produttiva.
+- **Issue operativo (ricorrente)**: CUDA pinned memory leak dopo kill. Soluzione permanente: usare tray app (`ollama app.exe`) per restart puliti invece di bash kill + background serve. Tray app gestisce CUDA state meglio.
