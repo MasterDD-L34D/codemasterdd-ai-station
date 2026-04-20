@@ -246,3 +246,20 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ### Progress tracker
 - Barra progetto: **50% → 60%** (fase 4.5 "delegation infrastructure" chiusa). Restano: migrazione progetti (15%), 3-mesi uso reale (15%), decisione budget finale (10%).
+
+### Estensione 2 (hub model + dogfood + tracking foundation)
+- **Motivazione**: feedback utente "non puoi fare tutto senza che io passo dal cmd a questo serve un hub" → architettura aggiornata: Claude Code orchestrator, user stays in chat, bash/PowerShell invoca Aider non-interattivo.
+- **Dogfood 1 — cosmetic 7B+whole**: JSDoc su demo.js (46 righe) via hub. Aider invocato da bash `--message` `--no-pretty --no-stream --no-show-release-notes`. Success: commit `9280e1b`, 47 insertions, no corruption. Reproducibility 7B+whole → n=2.
+- **Dogfood 2 — behavior-critical 14B Q2+diff+no-auto-commits**: refactor `divide()` da throw a return null. **Finding inatteso**: Aider diff format ha **reflection retry resilience**. Prima risposta Qwen senza filename → Aider respinto → Aider ha ri-chiesto → Qwen self-corrected con filename esplicito al 2° tentativo → edit applicato precisamente. Commit manuale `fffcbda` (workflow `--no-auto-commits` rispettato). 1 insertion, 1 deletion, preciso.
+- **Finding nuovo vs ADR-0008**: la classificazione "14B Q2 + diff = safe-fail only" era pessimistica. Con reflection enabled (default 3 retry), diff format recupera da format errors comuni. Non cambia la decision (diff resta strettamente migliore di whole per safety), ma aumenta viability reale.
+- **delegation-to-aider.md riscritto** con hub-first model:
+  - Architettura diagram (User → Claude Code → bash → Aider → Qwen)
+  - Invocation pattern canonico con flag rationale (yes-always, no-pretty, no-stream, no-show-release-notes)
+  - Review loop automatico (exit code, corruption check, commit hash, diff sanity, hook output)
+  - Fallback wrappers cmd.exe mantenuti come secondary
+  - Sezione "Ottimizzazioni token" onesta: hub vince su file grandi/task complessi, break-even su task trivial piccoli
+  - Limitazioni note (CRLF warnings, auto-translate commit, llama runner termination, reflection retry)
+- **aider-delegation-log-template.md creato**: schema tabella colonne (data, task, classe, stack, esito, retry, tokens, durata, note). Esempi compilati. Aggregati mensili + trigger decisioni per Fase 6. Path template `docs/patterns/`, istanze mensili `logs/aider-delegation-YYYY-MM.md` (gitignored).
+
+### Progress tracker
+- Barra progetto: **60% → 70%** (fase 4.6 "hub completion + dogfood" chiusa). Restano: migrazione progetti (10%), 3-mesi uso reale (15%), decisione budget finale (5%).

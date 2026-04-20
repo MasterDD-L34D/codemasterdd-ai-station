@@ -206,6 +206,15 @@ Leggermente aumentata. Un RTX 5060 Ti 16GB permetterebbe 14B Q2 full-GPU + event
 - [x] Wrapper script `aider-cosmetic` + `aider-refactor` in `C:\Users\edusc\.local\bin\` (zero-friction invocation)
 - [x] Guard rail pre-commit hook installato globale via `git config --global core.hooksPath` — testato 3 scenari (pattern pulito, pattern commentato, edit legittimo)
 - [x] Delegation protocol documentato in `docs/patterns/delegation-to-aider.md`
+- [x] Hub model consolidato: Claude Code orchestra via bash `--message`, user stays in chat. Delegation doc riscritto hub-first.
+- [x] Dogfood completo: 7B cosmetic (commit `9280e1b`) + 14B Q2 refactor (commit `fffcbda`) entrambi success via hub.
+- [x] Tracking log template `docs/patterns/aider-delegation-log-template.md` per Fase 6 evaluation.
+
+### Addendum 2026-04-21: reflection retry resilience (diff format)
+
+Durante il dogfood behavior-critical è emerso un comportamento non catturato dai test originali di questo ADR: **Aider diff format + Qwen 14B Q2 ha reflection retry resilience**. Quando Qwen emette SEARCH/REPLACE senza filename header (il failure mode del Test 5 di questo ADR), Aider chiede correzione → Qwen self-corregge al 2° tentativo → edit applicato pulito.
+
+Questo non cambia la decisione ADR-0008 (diff resta strettamente migliore di whole per safety), ma **alza la viability reale della route behavior-critical**. Fail rate stimato ~20-40% era basato su `--yes-always` + nessuna reflection; con reflection default (3 retry), una parte delle "safe-fail" si converte in "delayed success". Dati puliti attesi dal tracking log post-19/05.
 
 ### Test ulteriori (bassa priorità)
 - [ ] `udiff` edit format: se anche diff migliora, potrebbe bypassare i due issue (silent corruption + filename header)
