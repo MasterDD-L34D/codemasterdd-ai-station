@@ -181,14 +181,20 @@ Test empirici su RTX 5060 8GB + 16GB DDR5:
 
 ### Quality validation (dogfood diretto vs 14B Q2)
 
-Test R3 (extract method) e R1 (value-change 1-line) su `aider-tty-test/demo.js` con `aider --model ollama/qwen3-coder:30b --edit-format diff`:
+Test R1, R2, R3 su `aider-tty-test/demo.js` con `aider --model ollama/qwen3-coder:30b --edit-format diff` + R-cosmetic con `--edit-format whole`:
 
-| Test | 14B Q2 (ref ADR-0008) | **qwen3:30b** | Delta |
-|------|-----------------------|----------------|-------|
-| R3 extract method | ✅ success clean (37s, 3.1k/331) | ✅ success clean **byte-identical** (70s, 3.0k/310) | speed 14B Q2 wins 2× |
-| R1 value-change 1-line | ❌ **safe-fail 3 retry** (anti-pattern documentato) | ✅ **success first-pass** (41s, 3.0k/84) | **capability jump reale** |
+| Test | Edit fmt | 14B Q2 (ref ADR-0008) | **qwen3:30b** | Delta |
+|------|----------|-----------------------|----------------|-------|
+| R3 extract method | diff | ✅ success clean (37s, 3.1k/331) | ✅ byte-identical (70s, 3.0k/310) | speed 14B Q2 wins 2× |
+| R1 value-change 1-line | diff | ❌ **safe-fail 3 retry** (anti-pattern) | ✅ **success first-pass** (41s, 3.0k/84) | **capability jump reale** |
+| R2 rename method | diff | ✅ success + drift (25s, 3.0k/150) | ✅ byte-identical + **same drift** (89s, 3.0k/115) | parity, speed 14B Q2 wins 3.5× |
+| JSDoc cosmetic (stress whole) | whole | ❌ **silent corruption** (ADR-0008) | ✅ **clean success** (210s, 1.2k/720) | **architectural safety** |
 
-**Finding chiave**: Qwen3:30b **sa scopare SEARCH block al minimo necessario**. Su R1 ha emesso SEARCH con solo la function target, zero preamble — dove 14B Q2 includeva context preamble che poi non byte-matchava. Resolve l'anti-pattern documentato.
+**Finding chiave diff format**: Qwen3:30b **sa scopare SEARCH block al minimo necessario**. Su R1 ha emesso SEARCH con solo la function target, zero preamble — dove 14B Q2 includeva context preamble che poi non byte-matchava. Resolve l'anti-pattern documentato.
+
+**Finding chiave whole format (n=4 test)**: Qwen3:30b **NON ha il silent-corruption bug** che affligge 14B Q2 con whole format (ADR-0008 root cause: double code-block output). Qwen3 emette formato Aider-nativo corretto (filename on own line + single code block) — stessa famiglia architetturale di 7B. Aggiunge un'opzione di fallback safe per task che richiedessero whole format (non primario: speed 8× più lenta di 7B).
+
+**Finding drift (R2)**: il "drift" semantico su rename (rinominare string literal coerente col method name) appare anche con Qwen3 — è comportamento LLM generale, non modello-specifico. Scope constraint "only X" va rafforzato nel prompt se la strict interpretation è critica.
 
 ### Decisione empirica rivista
 

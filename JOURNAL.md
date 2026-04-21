@@ -375,3 +375,21 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ### Progress tracker
 - Barra progetto: **75%** stabile (validation work, no phase shift). Qwen3-30b entra come tier 2 escalation validato empiricamente; non rimpiazza stack attuale. Prossimo step: Fase 5 migrazione (10% → 85%) o test ulteriori su Qwen3 quality spectrum.
+
+### Estensione 9 (qwen3-coder quality spectrum extension)
+- **R2 rename** (14B Q2 aveva success+drift su string literal): qwen3:30b **byte-identical + same drift**. Tokens 3.0k/115, 89s. Parity con 14B Q2. Il drift è comportamento LLM generale, non modello-specifico.
+- **R-cosmetic JSDoc whole format** (14B Q2 = silent corruption; 7B = clean success): qwen3:30b **clean success**, 46→93 righe, +47 insertions 0 deletions. Tokens 1.2k/720, 210s. Commit `2b1680f` in aider-tty-test.
+- **Finding strutturale**: qwen3:30b NON ha il silent-corruption bug di 14B Q2 su whole. Emette formato Aider-nativo corretto (filename on own line + single code block). Stessa famiglia architetturale di 7B su questo aspetto.
+- **n=4 cumulative qwen3:30b** con Aider dogfood: tutti success (R1, R2, R3, R-cosmetic), 0 safe-fail, 0 corruption. Parity capability con 14B Q2 su task "normali" (R2, R3), capability jump su R1 anti-pattern.
+- **Speed penalty consolidata**:
+  - Cosmetic JSDoc: 8× slower che 7B (210s vs 25s) — qwen3 NOT viable replacement per 7B
+  - Behavior diff: 2-3.5× slower che 14B Q2 (70-89s vs 25-37s) — qwen3 come escalation ok
+- **Decisione stack confermata** (nessuna revisione ADR-0009):
+  - Cosmetic default 7B + whole (speed imbattibile)
+  - Behavior default 14B Q2 + diff (speed + margine RAM)
+  - Behavior escalation qwen3:30b + diff (capability R1-type) — tier 2 validato
+  - Bonus: qwen3:30b + whole disponibile come safe fallback (no corruption risk)
+- **Qwen3 value proposition chiarita**: non game-changer speed ma **architectural safety upgrade** — eliminates silent-corruption risk che afflige 14B Q2 su whole format. Resolve R1-type anti-pattern. Stack sovereign diventa più robusto con qwen3 come tier 2 invece che Claude Pro direct fallback.
+
+### Progress tracker
+- Barra progetto: **75%** stabile (Qwen3 quality spectrum mappato, n=4 validation). Prossimo shift: Fase 5 migrazione.
