@@ -67,6 +67,7 @@ Target: piattaforma AI sovereign con zero subscription fisse post-maggio 2026.
   - `qwen2.5-coder:7b` (Q4_K_M, 4.7 GB, digest `dae161e27b0e`, installato 2026-04-19) — **query one-shot, create single file, read/explain**
   - `qwen2.5-coder:14b-instruct-q3_K_M` (7.3 GB, digest `e00d09afd55a`, installato 2026-04-20) — capace ma rischio hallucination su constraint; 10.8 tok/s (CPU spill 38%)
   - `qwen2.5-coder:14b-instruct-q2_K` (5.8 GB, digest `dfeff73b234d`, installato 2026-04-20) — **sweet-spot agentic: 18.7 tok/s, faithful constraint-respect**, vedi `docs/adr/0007-aider-qwen-quantization-findings.md`
+  - `qwen3-coder:30b` (Q4_K_M, 18 GB, digest `06c1097efce0`, MoE 30.5B/3B-active, 256K ctx, installato 2026-04-21) — **tier 2 escalation behavior-critical**: 23.3 tok/s @ ctx 8192 ma RAM tight (1.3 GB free). Resolve anti-pattern R1 dove 14B Q2 safe-fails. Vedi `docs/adr/0009-upgrade-strategy.md` addendum 2026-04-21
 - Aider 0.86.2 (installato 2026-04-20 via `python -m pip install aider-install && aider-install`, binary `C:\Users\edusc\.local\bin\aider.exe`) — **client agentic consigliato per workflow sovereign**
 - VSCode Cline extension `saoudrizwan.claude-dev` v3.79.0 (installata 2026-04-20) — **NOT viable come agentic con Qwen 7B**, vedi `docs/adr/0006-cline-qwen-viability.md`
 
@@ -147,6 +148,7 @@ lenovo-ai-station/
   - Read/explain + CREATE single file → Aider + Qwen 7B + `whole`
   - **Cosmetic edit** (JSDoc, docstrings, rename, lint-fix) → **Aider + Qwen 7B + `whole`** (format compatibile, faithfulness non critica)
   - **Behavior-critical edit** (refactor, bug fix, logic change) → **Aider + Qwen 14B Q2_K + `--edit-format diff`** (safe failure; ~20-40% retry manuale ma zero silent-corruption)
+  - **Behavior-critical escalation** (quando 14B Q2 safe-fails, es. task R1-type 1-line value change) → **Aider + qwen3-coder:30b + diff** (MoE 30B-A3B, tier 2 fallback prima di Claude Pro; speed 2× slower + RAM tight ma risolve anti-pattern — vedi ADR-0009 addendum)
   - Multi-file refactor / debug strategico → OpenRouter pay-per-use (Sonnet/Opus) o Claude Pro come backbone
   - **⚠️ DEPRECATO**: Aider + 14B Q2 + `whole` — silent-corruption deterministico su task "edit single file" semplici, vedi ADR-0008
   - Riferimenti decisionali: `docs/adr/0007-aider-qwen-quantization-findings.md` + `docs/adr/0008-aider-whole-format-silent-corruption.md`

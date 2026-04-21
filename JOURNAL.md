@@ -352,3 +352,26 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ### Progress tracker
 - Barra progetto: **75%** stabile (wrap-up items, no phase shift). Tutta la fase 4.7+4.8 "operational hardening & meta hygiene" chiusa. Prossimo step naturale: Fase 5 migrazione (10% → 85%).
+
+### Estensione 8 (audit + qwen3-coder:30b discovery + validation)
+- **Audit repo** (PowerShell script utente) eseguito 2026-04-21 02:55. Repo clean, origin allineato, 20 commit recenti coerenti. Anomalie: (1) CLAUDE.md versione Claude Code 2.1.114 vs actual 2.1.116, (2) scripts/ vuota. Fix immediati: version bump + copia `aider-log` in `scripts/aider-log.sh` come source-of-truth repo (commit `813dedf`).
+- **Discovery critico**: `qwen3-coder:30b` (18 GB, MoE 30.5B/3B-active, Q4_K_M, 256K ctx) **già installato** ~4h prima. ADR-0009 T1 trigger Condition 1 (Ollama support) **empiricalmente già MET**.
+- **Benchmark suite qwen3-coder:30b** via ollama API diretta:
+  - ctx default (256K) → ❌ OOM `12.2 GiB required, 10.0 GiB available`
+  - ctx 2048 → ✅ 23.8 tok/s (1543 tokens in 64.9s)
+  - ctx 4096 → ✅ 24.0 tok/s (1601 tokens in 66.6s, 9.4s cold reload)
+  - ctx 8192 → ✅ 23.3 tok/s (1826 tokens in 78.4s) — **RAM 14.1/15.4 GB used, 1.3 GB free, CPU/GPU 66/34, VRAM 91%**
+- **Finding bottleneck revisionato**: RAM (non VRAM) è il limiting factor. MoE richiede tutti i weights loadable anche se 3B attivi. Implicazione ADR-0009 T2: upgrade 32 GB DDR5 (~€80) sblocca qwen3 margine confortevole, **cheap path** vs RTX 5060 Ti 16GB (€500).
+- **Quality validation dogfood** (Aider + qwen3-coder:30b + diff su `aider-tty-test`):
+  - **R3 extract method**: ✅ success first-pass, diff **byte-identical** a 14B Q2 R3 reference (ADR-0008). Tokens 3.0k/310, 70s (vs 14B Q2 37s → speed 2× slower prompt-eval overhead MoE)
+  - **R1 value-change 1-line** (anti-pattern documentato in delegation-to-aider.md — 14B Q2 safe-fail 3 retry exhausted): ✅ **success first-pass** 🎯. Qwen3 ha emesso SEARCH block minimale (solo function target, zero preamble) → byte-exact match. Tokens 3.0k/84, 41s. **Capability jump reale confermato**.
+- **Decisione operativa** (non switch totale, promozione tier escalation):
+  - 14B Q2 rimane default behavior-critical (speed 2× + RAM margine 3.7× più largo)
+  - qwen3:30b diventa **tier 2 escalation** quando 14B Q2 safe-fails (R1-type o anti-pattern simili)
+  - Claude Pro/OpenRouter tier 3 solo se anche qwen3 fallisce
+  - T2 hardware ridefinito: RAM upgrade 32GB come priorità, non GPU
+- **Doc aggiornati**: ADR-0009 addendum completo con matrice benchmark + quality validation + decisione rivista + routing aggiornato tier 1/2/3 per task class; delegation-to-aider.md anti-pattern R1 extension con workaround Qwen3; CLAUDE.md modelli locali + priority routing con tier escalation; JOURNAL estensione 8.
+- **Meta-finding**: Qwen3-Coder-30B-A3B MoE risolve empiricamente un anti-pattern che avevamo classificato "non-delegable sotto certa classe" con 14B Q2. Upgrade senza hardware change (per uso occasionale tier 2) è immediatamente possibile. Il full-daily use richiederebbe 32GB RAM.
+
+### Progress tracker
+- Barra progetto: **75%** stabile (validation work, no phase shift). Qwen3-30b entra come tier 2 escalation validato empiricamente; non rimpiazza stack attuale. Prossimo step: Fase 5 migrazione (10% → 85%) o test ulteriori su Qwen3 quality spectrum.

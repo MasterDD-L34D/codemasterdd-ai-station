@@ -54,13 +54,16 @@ Decision tree applicato dall'orchestratore (me) prima di ogni task codegen:
 - Task con più di 3 file → strategico, eseguo direttamente
 - Task con constraint "do not change logic" esplicito → resta cosmetic se tocca solo nomi/commenti
 
-### Anti-pattern: value-change singola riga su diff format
-Finding 2026-04-21 R1 (n=4 behavior-critical): task "cambia default param X da A a B" (singola riga) ha fail rate più alto di refactor strutturali (extract method, rename). Qwen 14B Q2 include troppo context preamble nel SEARCH block → exact-match fallisce → 3 reflection retry exhausted → safe fail.
+### Anti-pattern: value-change singola riga su diff format (con workaround Qwen3)
+Finding 2026-04-21 R1 (n=4 behavior-critical): task "cambia default param X da A a B" (singola riga) ha fail rate più alto di refactor strutturali (extract method, rename). **Qwen 14B Q2** include troppo context preamble nel SEARCH block → exact-match fallisce → 3 reflection retry exhausted → safe fail.
 
-**Contromisura**: per value-change singola riga preferire:
-- **Aider 7B + whole** se il cambio è localizzato e il resto del file non va modificato (Qwen riproduce l'intero file con 1 diff) — rischio drift minimo su cambio semplice
-- **Edit diretto da Claude Code** (mio Edit tool) per minimizzare chiamate LLM su task trivial
-- Aider 14B Q2 + diff solo su modifiche multiline o strutturali
+**Finding 2026-04-21 extended (ADR-0009 addendum)**: **Qwen3-Coder-30B-A3B** (MoE) **resolve il problema**. Stesso task R1, qwen3:30b produce SEARCH block minimale (solo la function target, zero preamble) → exact-match success first-pass. Capability jump reale su questa classe di task.
+
+**Contromisure (ordinate per preferenza)**:
+- **Tier 1**: `aider-cosmetic` con 7B + whole se il cambio è localizzato (whole riscrive il file, zero SEARCH-match issue)
+- **Tier 2 (NEW)**: `aider-refactor-xl` con **qwen3-coder:30b + diff** — fallback quando 14B Q2 safe-fail; speed 2× slower e RAM tight ma risolve anti-pattern
+- **Edit diretto Claude Code**: per task trivial, minimizza chiamate LLM
+- Aider 14B Q2 + diff: default behavior-critical (se task non R1-type)
 
 ## Task strategic (non-delegabili) — protocol
 
