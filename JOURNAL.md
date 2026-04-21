@@ -306,3 +306,40 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ### Progress tracker
 - Barra progetto: **70% → 75%** (fase 4.7 "operational hardening" chiusa). Restano: migrazione progetti (10% → 85%), 3-mesi uso reale (10% → 95%), decisione budget finale (5% → 100%).
+
+### Estensione 6 (test hub su strategic content + ADR-0009)
+- **Obiettivo**: testare il hub su task "strategic content" (ADR con research online) che per ADR-0008 è esplicitamente classificato **non-delegable**. Verificare empiricamente se la regola regge.
+- **Research phase (me)**: 2 WebSearch su "Qwen 3 Coder 2026" e "Aider 2026 roadmap". Findings raccolti in `docs/research/ai-stack-evolution-2026.md`:
+  - Qwen3-Coder-Next rilasciato Feb 2026: MoE 80B/3B-active, 256K ctx, performance ~Claude Sonnet 4 agentic
+  - Aider 2026: ancora attivo (39K stars, 4.1M installs), support Gemini 2.5 + OpenAI o-series
+- **Delega phase (Aider 7B + whole, hub bash)**: invocato con `--read` research file + `--message` structured prompt per CREATE `docs/adr/0009-upgrade-strategy.md`. Aider ha creato + committato auto in 2 commit consecutivi (`b231500` prep + `ea08e86` content). Tokens Aider: **2.7k sent / 710 received**, 25s.
+- **Review phase (me)**: Aider draft quality **D+**. Issues critici:
+  - Data sbagliata (`2023-04-21` invece di `2026-04-21`, Qwen hallucination)
+  - Content shallow: bullet-point riassunto del research, non analisi/sintesi
+  - Trigger criteria non concreti ("se il benchmark verificato lo consente" — vago)
+  - Opzioni non sono opzioni ma restatement del prompt
+  - No cross-references ad ADR 0001/0007/0008
+  - No risk analysis, no budget impact scenari, no timeline
+  - Path separator backslash vs convention forward-slash
+  - Style inconsistente (no tabelle comparative come altri ADR)
+- **Azione (opzione B scelta)**: draft Aider tenuto in git history + rewrite completo via mio Write tool. Dai 2 commit Aider → 3° commit con refactor completo. Git history mostra before/after per documentazione empirica.
+- **Token accounting finale**:
+
+| Fase | Tokens miei stimati | Note |
+|------|---------------------|------|
+| WebSearch ×2 | ~3400 (input) | costo fisso, identico in entrambi i path |
+| Write research file | ~2500 (output) | necessario in entrambi i path |
+| Invoke Aider + read output | ~700 | solo hub path |
+| Review Aider output | ~600 (output) | solo hub path |
+| Rewrite ADR completo | ~4500 (output) | hub path: rewrite ~70%; direct path: full write |
+| JOURNAL entry + commit | ~1000 (output) | uguale entrambi |
+| **Total hub path** | **~12700** | — |
+| **Total direct path (stimato)** | **~9000-10000** | senza Aider delega |
+
+- **Verdict empirico**: hub ~25-40% **più costoso** del direct su strategic content. **Conferma ADR-0008 rule** "strategic non-delegable" basata su empiria, non solo teoria.
+- **Finding interessante**: Qwen 7B ha **hallucinato la data** (2023 vs 2026) — segnale che il modello non ha contesto temporale affidabile senza training cutoff recente. Rilevante per T1 trigger ADR-0009: se usiamo Qwen3-Coder-Next in futuro, verificare temporal grounding prima di task che richiedono date accurate.
+- **ADR-0009 prodotto** (versione rewrite): framework trigger-based per upgrade modello/hardware/client 2026-2027. Definisce T1 (modello → Qwen3-Coder-Next con 4 condizioni) + T2 (hardware con trade-off RTX 5060 Ti €500 vs Mac mini €2500) + T3 (Aider switch, no trigger attivo). Integra findings research (MoE efficiency, Aider longevity) con reliability matrix di ADR-0008.
+- **Meta-lezione**: il TEST STESSO ha generato value misto: (a) draft scartato lato contenuto, ma (b) conferma empirica della regola ADR-0008 + (c) dato pricing preciso su "cost strategic delega". Il test NON è fallito anche se la delega è stata scarsa — abbiamo imparato con dati.
+
+### Progress tracker
+- Barra progetto: **75%** stabile (test di validation empirica, no phase shift). ADR-0009 deliverable aggiuntivo oltre scopo originale fase 4.7.
