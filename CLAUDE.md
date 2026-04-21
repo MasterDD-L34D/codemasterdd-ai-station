@@ -56,7 +56,7 @@ Target: piattaforma AI sovereign con zero subscription fisse post-maggio 2026.
 
 ## Stack installato
 - Git 2.53.0.windows.3
-- Claude Code 2.1.114 (OAuth Claude Max, Opus 4.7)
+- Claude Code 2.1.116 (OAuth Claude Max, Opus 4.7)
 - NVIDIA Driver 595.79 + CUDA 13.2
 - GitHub CLI 2.90.0 (installato 2026-04-19, auth MasterDD-L34D)
 - Node.js 24.15.0 LTS + npm 11.12.1 (installato 2026-04-19, Active LTS fino aprile 2029)

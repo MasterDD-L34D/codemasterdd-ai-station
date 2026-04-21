@@ -143,7 +143,7 @@ Template log in `docs/patterns/aider-delegation-log-template.md`, istanze mensil
 
 ### Helper `aider-log` (auto-compilazione entry)
 
-Script bash in `C:\Users\edusc\.local\bin\aider-log` (PATH, chmod +x) che parsa output Aider e appende riga auto:
+Script bash — **canonical source in repo**: `scripts/aider-log.sh`. Install deploy: `cp scripts/aider-log.sh ~/.local/bin/aider-log && chmod +x ~/.local/bin/aider-log`. Parsa output Aider e appende riga auto:
 
 ```bash
 # pattern canonico: pipe Aider output a aider-log con metadata
