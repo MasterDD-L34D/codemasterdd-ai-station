@@ -540,3 +540,47 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 **Obiettivo file sorgente raggiunto al 100%**: tutte le proposte integrate o scartate consapevolmente. `final-research-and-snippets-2026-04-21-v3.md` candidato a cancellazione quando l'utente autorizzerà.
 
 **Stato repo fine Parte 3**: 14 file changes (10 modificati + 4 nuovi) pronti per commit unico bundle.
+
+### Parte 4 — Steelman review onesto degli scarti + ammissioni bias
+
+**Motivazione**: user ha chiesto esplicitamente re-evaluation obiettiva di tutto ciò scartato/parziale, senza difesa delle decisioni precedenti ("se porta vantaggi dobbiamo riconsiderarlo").
+
+**Metodo**: spawn 6 subagent paralleli in **modalità steelman esplicita** (fai il caso più forte PRO l'adozione di ciascun item, poi verdict onesto).
+
+**2 bias mio scoperti e ammessi**:
+
+1. **Agno Pattern 2 (memory)** — scarto "richiede Postgres" era **falso**. `SqliteDb(db_file=...)` è drop-in nativo Agno, zero infrastructure. Il mio ragionamento era pigro (non ho cercato alternativa). Corretto in `docs/reference/agno-ollama-snippets.md`.
+2. **VoltAgent subagent** — scarto "non Aider-compatible" era **category error**. Claude Code È il primary orchestrator documentato nel hub pattern. Subagent Claude Code sono first-class nel tuo stack. Aider è il tier delegato, non il controller. Corretto in nuovo `docs/reference/subagents-skills-candidates.md`.
+
+**6 scarti riconsiderati con valore emerso**:
+- VoltAgent: 4 subagent utili (code-reviewer, test-automator, dependency-manager, debugger)
+- alirezarezvani/claude-skills: `skill-security-auditor` operazionalizza ADR-0010; `monorepo-navigator` match Evo-Tactics
+- affaan-m oltre AgentShield: `instincts` (formalizza ADR empirici) + `memory hooks` (automatizza JOURNAL)
+- rohitg00 oltre companion apps: `commit-guard.js` complementare al guard rail
+- hesreallyhim: 3 external tool concreti (TDD Guard, recall, claudia-statusline) — non bookmark-only
+- Rubber duck meta-pattern: valore documentale per future sessioni Claude (non "pratica ovvia")
+
+**5 scarti confermati con rationale stress-tested**:
+- MADR retrofit 9 ADR esistenti (ROI marginale, TL;DR retroattivo già copre 80%)
+- RotationPool Python custom (anti-pattern, `openrouter-free` PyPI copre casi free-tier multipli)
+- Y-Statement formale (sostituito da 1-liner italics)
+- OpenCode configs (stack non usa OpenCode)
+- GateGuard pip install (aspetta replica indipendente claim quality +2.25)
+
+**Correzione verdetto preview alirezarezvani/claude-skills**:
+Tentato `gh skill preview alirezarezvani/claude-skills engineering/skill-security-auditor` → **FAIL**: "no skills found. This repository may be a curated list rather than a skills publisher". Repo ha struttura custom non `gh skill`-compatibile standard. Adozione richiede manual clone + run `./scripts/install.sh --tool claude-code`. Finding aggiornato in `docs/reference/subagents-skills-candidates.md` con caveat.
+
+**Integrazione concreta**:
+- Clone read-only di `rohitg00/awesome-claude-code-toolkit` in `C:\dev\scratch\` per inspezione
+- `commit-guard.js` (41 righe JS zero-dep) copiato localmente in `scripts/hooks/commit-guard.js` come asset. **Non attivato** come hook — documentato il pattern per activation on-demand
+- Template `monorepo.md` ispezionato ma non salvato (Evo-Tactics ha già CLAUDE.md 35KB dedicato, ROI nullo)
+
+**4 azioni nuove implementate**:
+1. `docs/reference/agno-ollama-snippets.md` Pattern 2 corretto con SqliteDb drop-in
+2. `docs/reference/subagents-skills-candidates.md` (nuovo) — catalogo curato 5+ subagent + 5 skill + 3 external tool + 1 hook preview-worthy
+3. `docs/lessons-learned/ai-as-thinking-partner.md` (nuovo) — rubber duck meta-pattern per future sessioni Claude
+4. `docs/research/ai-stack-evolution-2026.md` estesa con 3 external tool (TDD Guard, recall, claudia-statusline)
+
+**Memory aggiornata**: `feedback_external_material_triage.md` ora include lesson #10 (steelman review scopre bias primo round) + lesson #11 (verificare empiricamente compatibility dichiarata).
+
+**Stato repo fine Parte 4**: 2 modificati (agno-snippets, ai-stack-evolution) + 3 nuovi (subagents-skills-candidates, ai-as-thinking-partner, scripts/hooks/commit-guard.js) + memory local.

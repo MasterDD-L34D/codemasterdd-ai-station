@@ -112,6 +112,18 @@ Dal repo [`rohitg00/awesome-claude-code-toolkit`](https://github.com/rohitg00/aw
 
 **Trigger adozione**: post-Max (da 20/05/2026). `ccusage` è candidato zero-cost per tracking token/sessioni senza dipendenza Anthropic dashboard. Valutare in Fase 6.
 
+### Tool esterni curati (da hesreallyhim/awesome-claude-code, 40k⭐)
+
+Progetti production-ready linkati da curator list, rilevanti per i pain point di questo stack:
+
+| Tool | Repo | Quando attivare |
+|------|------|-----------------|
+| **TDD Guard** | [nizos/tdd-guard](https://github.com/nizos/tdd-guard) | Post-migrazione Evo-Tactics. Hook blocca file-ops che violano TDD → estende guard rail con layer "behavior-critical edit senza test modificato = block" |
+| **recall** | [zippoxer/recall](https://github.com/zippoxer/recall) | Qualunque momento. Full-text search + resume sessioni Claude Code → context recovery post-restart/OOM |
+| **claudia-statusline** | [hagan/claudia-statusline](https://github.com/hagan/claudia-statusline) | **Post-19/05/2026**. Rust + SQLite stats + context progress bar → monitorare consumo Claude Pro quando pricing diventa variable |
+
+Questi non sono bookmark-only — sono tool concreti che risolvono gap operativi già identificati in MEMORY (session resumption, statusline, estensione guard rail).
+
 ## Ollama / llama.cpp ecosystem
 
 - Ollama continua supporto multi-model

@@ -30,13 +30,41 @@ agent.print_response("Whats happening in France?", stream=True)
 - Custom tool: `@tool` decorator su funzione Python qualsiasi, poi `tools=[my_tool]`
 - Modello: `id="qwen3-coder:30b"` per task più complessi (tier 2 escalation)
 
-## Pattern 2 — Agent con memoria persistente (skip-per-ora)
+## Pattern 2 — Agent con memoria persistente (SqliteDb drop-in)
 
-Fonte: [cookbook/90_models/ollama/chat/memory.py](https://github.com/agno-agi/agno/blob/main/cookbook/90_models/ollama/chat/memory.py)
+Fonte: [cookbook/90_models/ollama/chat/memory.py](https://github.com/agno-agi/agno/blob/main/cookbook/90_models/ollama/chat/memory.py) — swap `PostgresDb` → `SqliteDb` per zero infrastructure. **Nessun Postgres, nessun container.**
 
-Richiede **Postgres + pgvector via container**. Overkill per use case single-user locale.
+```python
+from agno.agent import Agent
+from agno.db.sqlite import SqliteDb
+from agno.models.ollama.chat import Ollama
 
-**Alternativa pragmatica se serve memoria**: sostituire `PostgresDb` → `SqliteDb` (Agno supporta nativo). Oppure scrivere 30 righe con `sqlite3` stdlib senza Agno — decidere caso per caso.
+db = SqliteDb(db_file="tmp/memory.db")
+
+agent = Agent(
+    model=Ollama(id="qwen2.5-coder:7b"),
+    db=db,
+    update_memory_on_run=True,       # user memories auto-estratte semanticamente
+    enable_session_summaries=True,   # summary rolling per sessione
+    add_history_to_context=True,
+)
+agent.print_response("Mi chiamo Eduardo, lavoro su Evo-Tactics", user_id="edu")
+agent.print_response("Su cosa stavo lavorando?", user_id="edu")  # recall cross-run
+```
+
+**Quando vale Agno invece di `sqlite3` stdlib**:
+- Memory extraction semantica: estrarre fatti strutturati ("preferisce italiano", "usa qwen 14B Q2") da conversazione libera richiede prompt engineering + deduplica + update logic che Agno fa nativamente
+- Multi-agent shared memory: briefing AI + Evo-Tactics assistant + Synesthesia tutor con stesso `user_id` su stesso SqliteDb → design pattern già risolto (`03_agents_share_memory.py`)
+- Multi-user/multi-session: `user_id` + `session_id` nativi
+
+**Quando NO (stdlib vince)**:
+- Log sessioni flat <50 righe
+- Single-turn task senza memoria → Pattern 1 basta
+- Zero-dep constraint (Agno pull ~80 MB: pydantic v2 + sqlalchemy)
+
+**Break-even**: Agno vince quando emergono 2+ delle condizioni "quando vale". Lock-in basso: `tmp/memory.db` è SQLite standard, queryabile da CLI anche se molli Agno.
+
+**Telemetry default-on**: disabilitare con `export AGNO_TELEMETRY=false` prima di import (allineato sovereign).
 
 ## Quando NON usare Agno
 
