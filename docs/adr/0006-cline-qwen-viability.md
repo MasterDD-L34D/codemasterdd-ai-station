@@ -1,5 +1,7 @@
 # ADR 0006 — Cline + Qwen 7B viability per workflow agentic locale
 
+> *TL;DR: Cline + Qwen 7B NON viable come sostituto Claude Code: SEARCH/REPLACE fallisce su modelli <30B, parsing-error rate inaccettabile. Scarto Cline, priorità shift ad Aider (diff format tollerante). Trade-off: 1 workflow-test bruciato, learning acquisito per ADR-0007.*
+
 **Status**: Accepted
 **Data**: 2026-04-20
 **Decisore**: Eduardo Scarpelli

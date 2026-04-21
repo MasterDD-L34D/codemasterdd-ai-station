@@ -1,5 +1,7 @@
 # ADR 0008 — Silent corruption Aider whole format + Qwen 14B Q2, task-routing come mitigation
 
+> *TL;DR: scoperto silent-corruption deterministico con Aider + 14B Q2 + `whole` format (file ridotto a filename, commit message misleading). Mitigation: task-routing cosmetic→7B+whole / behavior→14B Q2+diff + guard rail pre-commit globale. Trade-off: ~20-40% retry manuale su diff, zero silent-corruption.*
+
 **Status**: Accepted
 **Data**: 2026-04-21
 **Decisore**: Eduardo Scarpelli

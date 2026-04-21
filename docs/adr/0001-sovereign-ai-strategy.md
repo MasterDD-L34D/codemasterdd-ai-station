@@ -1,5 +1,7 @@
 # ADR 0001 — Sovereign AI Strategy
 
+> *TL;DR: post Claude Max (scadenza 19/05/2026), transizione a stack sovereign Ollama+Claude Code senza OAuth con fallback OpenRouter pay-per-use, target €60-180/anno invece di €2400. Trade-off: minor capability frontier, validazione empirica richiesta in Fase 6.*
+
 **Status**: Accepted
 **Data**: 2026-04-20
 **Decisore**: Eduardo Scarpelli

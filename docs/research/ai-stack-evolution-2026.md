@@ -82,6 +82,36 @@ Caveat operativi:
 
 Sources: https://openrouter.ai/docs/api/reference/limits, https://openrouter.ai/collections/free-models
 
+### Pattern rotation/fallback (aggiornato 2026-04-22)
+
+Pattern raccomandato 2026 è **OpenRouter native `models: [...]` array** (failover server-side nel body della request). Rotation custom Python (es. `RotationPool`) è **anti-pattern dal 2024** perché re-implementa logica già built-in. LiteLLM `Router` overkill per single-provider (serve solo se orchestri ≥2 provider con policy diverse).
+
+Esempio minimo (<10 righe):
+```python
+import requests
+r = requests.post("https://openrouter.ai/api/v1/chat/completions",
+    headers={"Authorization": f"Bearer {KEY}"},
+    json={"models": ["qwen/qwen3-coder:free", "deepseek/deepseek-chat:free", "openrouter/free"],
+          "messages": [{"role": "user", "content": prompt}]})
+# billing/usage = modello effettivamente usato (campo `model` in response)
+```
+
+Per rotazione multi-API-key (moltiplicare quota free), esiste `openrouter-free` su PyPI — non scrivere custom.
+
+Sources: https://openrouter.ai/docs/guides/routing/model-fallbacks, https://docs.litellm.ai/docs/routing
+
+## Claude Code companion apps — tracking post-Max (2026-04-22)
+
+Dal repo [`rohitg00/awesome-claude-code-toolkit`](https://github.com/rohitg00/awesome-claude-code-toolkit) (1.4k⭐) emergono 3 tool **offline / zero API** per analytics e safety, rilevanti post-Claude Max:
+
+| Tool | Repo | Valore |
+|------|------|--------|
+| **ccusage** | [ryoppippi/ccusage](https://github.com/ryoppippi/ccusage) (11.5k⭐) | CLI analizza `~/.claude/projects/*.jsonl` per token usage. Report daily/monthly/session/billing-window. **Offline, zero API call** → sostituisce dashboard Anthropic post-Max |
+| **getburnd** | [garvitsurana271/burnd](https://github.com/garvitsurana271/burnd) | Cost-control locale. Identifica 8 leak patterns (verbose context, tool loops, large file re-reads). Savings estimates. MIT, zero telemetry |
+| **cc-safe-setup** | [yurukusa/cc-safe-setup](https://github.com/yurukusa/cc-safe-setup) | `npx cc-safe-setup` installa 6 hook di safety in 10 secondi. Complementare al guard rail globale già attivo |
+
+**Trigger adozione**: post-Max (da 20/05/2026). `ccusage` è candidato zero-cost per tracking token/sessioni senza dipendenza Anthropic dashboard. Valutare in Fase 6.
+
 ## Ollama / llama.cpp ecosystem
 
 - Ollama continua supporto multi-model

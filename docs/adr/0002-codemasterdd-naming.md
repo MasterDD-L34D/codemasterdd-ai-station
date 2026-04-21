@@ -1,5 +1,7 @@
 # ADR 0002 — Naming: CodeMasterDD invece di Lenovo
 
+> *TL;DR: rename repo da `lenovo-ai-station` a `codemasterdd-ai-station` per disaccoppiare naming da brand hardware, allineandolo al nome PC Windows già scelto. Trade-off: nessuno — decisione pre-push, zero migration cost.*
+
 **Status**: Accepted
 **Data**: 2026-04-20
 **Decisore**: Eduardo Scarpelli

@@ -1,5 +1,7 @@
 # ADR 0005 — YAGNI e approccio minimalista
 
+> *TL;DR: formalizzo YAGNI come principio trasversale del progetto: no tool/struttura/complessità finché non serve un problema reale. Trade-off: rischio mancata preparazione per future needs, mitigato dalla natura reversibile della maggior parte dei tool dev.*
+
 **Status**: Accepted (as ongoing principle)
 **Data**: 2026-04-20 (formalizzato)
 **Decisore**: Eduardo Scarpelli

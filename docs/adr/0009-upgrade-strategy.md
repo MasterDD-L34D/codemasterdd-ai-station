@@ -1,5 +1,7 @@
 # ADR 0009 — Strategia evoluzione stack AI locale 2026-2027: trigger upgrade modello, hardware, client
 
+> *TL;DR: upgrade stack AI locale guidato da trigger espliciti/misurabili (T1 modello Qwen3-Coder-Next, T2 hardware RAM/VRAM/Mac mini, T3 switch client Aider→alternativa), non da hype release o calendar. Baseline: dati Fase 6 empirici 3 mesi post-Claude Max. Trade-off: ritardo adoption SOTA per affidabilità decisionale.*
+
 **Status**: Proposed
 **Data**: 2026-04-21
 **Decisore**: Eduardo Scarpelli

@@ -501,3 +501,42 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 - Prossimo shift naturale: Fase 6 (tracking log 3 mesi, maggio→agosto) — NON comprimibile
 
 **Stato repo fine sessione**: working tree codemasterdd-ai-station clean, 1 commit pushato (`f164f90`). Repo `Game` clonato e operativo ma non modificato upstream (solo skip-worktree lato client).
+
+### Parte 3 — Security scan + rivalutazione approfondita materiale esterno (serale)
+
+**AgentShield one-shot baseline**:
+- `npx ecc-agentshield scan` su codex → Grade B (80/100), 11 findings
+- Hardening applicato:
+  - ACL CLAUDE.md ristretto via `icacls` (Authenticated Users rimossi)
+  - Rimosso wildcard `Bash(python -c ' *)` da `.claude/settings.local.json` allow
+  - Aggiunta `deny` list esplicita 9 pattern (git push --force, rm -rf /, sudo, --no-verify, chmod 777, ssh, > /dev/)
+- Report salvato `docs/reference/agentshield-scan-2026-04-22.md` (commit `be315c9`)
+- Verdetto tool: pattern-matcher ingenuo (false positive su deny rule itself, Unix-centric su Windows). One-shot accettabile, no CI integration.
+
+**Rivalutazione approfondita materiale esterno** (spawn 6 subagent research paralleli):
+- **A1 Repo list**: verificato metadata 8 repo tramite `gh`. Top finding: `affaan-m/everything-claude-code` 162k⭐ + `rohitg00/awesome-claude-code-toolkit` ha killer companion apps (ccusage 11.5k⭐ offline token tracking, getburnd cost-control)
+- **A2 OpenRouter rotation**: pattern standard 2026 = **`models: [...]` array native** in request body. RotationPool custom = anti-pattern deprecato. LiteLLM overkill per single-provider
+- **A3 Agno cookbook Ollama**: cartella dedicata Ollama nel cookbook, pattern tool use 15 righe copiabile as-is. Bookmark snippets, no framework adoption
+- **A4 MADR**: 129 repo GitHub vs 723 Nygard. v4.0.0 corrente (09/2024). Tool ecosystem (adr-kit, VSCode extension). Adottare da ADR-0010+, NO retrofit
+- **A5 Y-Statement**: marginale 2024-2026, Zimmermann stesso deprecato in MADR. Uso 1-liner TL;DR informale in italics invece
+- **A6 gh skill testing/python**: 2 skill LambdaTest (pytest-skill, mocha-skill) thin templates, autore enterprise, MIT. Preview eseguito, no install senza use case
+
+**Azioni implementate (post-rivalutazione)**:
+- Creato ADR-0010 in formato MADR bare-minimal (adozione MADR da 0010+ + skill policy `gh skill preview`-before-install)
+- Aggiunto TL;DR 1-liner retroattivo su tutti i 9 ADR esistenti (add-only, zero logic change)
+- Salvati 2 script PowerShell in `scripts/` (disconnect-onedrive.ps1, bitlocker-hard-disable.ps1) per future setup machines
+- Creato `docs/reference/agno-ollama-snippets.md` (1 pattern tool-use 15 righe + link cookbook)
+- Estesa sezione OpenRouter in `ai-stack-evolution-2026.md` con pattern rotation corretto (`models: []` native)
+- Aggiunta sezione "Claude Code companion apps" in `ai-stack-evolution-2026.md` con ccusage/getburnd/cc-safe-setup come candidati post-Max tracking
+
+**Scartato consapevolmente (rivalutazione conferma)**:
+- Y-Statement formale → sostituito da 1-liner informale
+- VoltAgent subagent → primary concept Claude Code, non Aider-compatible
+- joelhooks/opencode-config → opencode-specific + stale (gennaio 2026)
+- Rubber duck meta-filosofia → pattern già nei fatti
+- RotationPool custom → anti-pattern 2024+
+- Migrazione retroattiva 9 ADR a MADR → sunk-cost, no ROI
+
+**Obiettivo file sorgente raggiunto al 100%**: tutte le proposte integrate o scartate consapevolmente. `final-research-and-snippets-2026-04-21-v3.md` candidato a cancellazione quando l'utente autorizzerà.
+
+**Stato repo fine Parte 3**: 14 file changes (10 modificati + 4 nuovi) pronti per commit unico bundle.

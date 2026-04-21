@@ -1,5 +1,7 @@
 # ADR 0007 — Aider + Qwen quantization findings su RTX 5060 8GB
 
+> *TL;DR: Aider 0.86.2 + Qwen 14B Q2_K adottato come stack sovereign agentic (Q2 batte Q3 su faithfulness context-ricco — "paradox quantization"). **Partially superseded da ADR-0008**: raccomandazione `whole` format revocata per silent-corruption; task-routing aggiornato in ADR-0008.*
+
 **Status**: Partially Superseded by ADR-0008 (2026-04-21)
 **Data**: 2026-04-20 (sessione pomeridiana)
 **Decisore**: Eduardo Scarpelli

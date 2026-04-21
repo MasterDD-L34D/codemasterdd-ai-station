@@ -1,5 +1,7 @@
 # ADR 0004 — Ollama config per RTX 5060 Blackwell
 
+> *TL;DR: Ollama configurato con `OLLAMA_FLASH_ATTENTION=1`, `OLLAMA_KV_CACHE_TYPE=q8_0`, `KEEP_ALIVE=30m` per massimizzare throughput su RTX 5060 8GB evitando MoE (NVFP4 rotto su Blackwell sm_120). Trade-off: vincolo modelli ≤14B dense, no vision, no MXFP4 per ora.*
+
 **Status**: Accepted
 **Data**: 2026-04-20
 **Decisore**: Eduardo Scarpelli
