@@ -608,3 +608,44 @@ Tentato `gh skill preview alirezarezvani/claude-skills engineering/skill-securit
 **Lezione**: hub pattern funziona solo se accompagnato da trigger loop esplicito. La regola è più importante del tool.
 
 **Stato finale sessione 2026-04-22**: 6 commit totali (commit sesto in Parte 5), barra 85% → ~87%, Fase 6 formalmente inaugurata, codex autoconscio dei propri bias metodologici (Parte 4) + istituzionalmente vincolato a delegare quando appropriato (Parte 5).
+
+### Parte 6 — Activation commit-guard hook + ccusage install (A1+A2 azioni residue)
+
+**Azione 1 — commit-guard.js hook attivato**:
+- Adattato script da formato `process.argv[2]` (Claude Code legacy) a **stdin JSON** (Claude Code 2.1+ standard)
+- Test manuale PASS: messaggio malformato (`"bad message without colon"`) → exit 2 + stderr; messaggio valido (`"feat: add new feature"`) → exit 0
+- Hook config aggiunto in `.claude/settings.local.json` (gitignored):
+  ```json
+  "hooks": {
+    "PreToolUse": [
+      { "matcher": "Bash", "hooks": [
+        { "type": "command", "command": "node scripts/hooks/commit-guard.js" }
+      ]}
+    ]
+  }
+  ```
+- Complementare al guard rail globale git: ora PRIMA del git commit, Claude intercetta messaggio malformato
+
+**Azione 2 — ccusage installato + baseline findings**:
+- `npm install -g ccusage` → 368ms, 0 deps, MIT, `ryoppippi/ccusage@18.0.11`
+- Report daily dei 3 giorni precedenti via analisi `~/.claude/projects/*.jsonl` (offline, zero API):
+
+| Data | Tokens totali | Cost equivalente |
+|------|---------------|------------------|
+| 2026-04-19 | 8.1M | $8.16 |
+| 2026-04-20 | 58.3M | $41.09 |
+| 2026-04-21 | 93.1M | $69.51 |
+| **Totale 3 giorni** | **159.5M** | **$118.76** |
+
+**Finding economicamente rilevante**: ~$40/giorno medio. Se post-19/05 pagassi Opus 4.7 pay-per-use senza Max, sarebbe ~$1200/mese = **6× il costo Claude Max attuale** (€200 ≈ $215). **Conferma empirica necessità delegation Aider + Ollama per sostenibilità economica post-Max**.
+
+Cost observation: cache read (155M su 159M totali, 97%) indica prompt caching Anthropic sta funzionando bene — il cost sarebbe 3-4× superiore senza cache. Adopter di Claude Code 2.1+ beneficia automaticamente.
+
+**Dataset Fase 6 arricchito**: ora ho baseline spending + tracking passivo automatizzato per i prossimi 3 mesi. Quando Fase 6 chiude ad agosto, confronto pre/post delega Aider sarà misurabile in $.
+
+**Stato finale sessione 2026-04-22**: **7 commit totali** (commit settimo in Parte 6), barra ~87% → ~88%, stack operativamente completo con:
+- Hub pattern ADR-0008 operationalized (trigger delega in CLAUDE.md)
+- Fase 6 tracking attivo su 2 dimensioni (aider-delegation-log manuale + ccusage token automatico)
+- commit-guard PreToolUse hook attivo (defense-in-depth commit message quality)
+- AgentShield baseline hardening + skill-policy preview-before-install (ADR-0010)
+- Reliability validation tools pronti (TDD Guard, recall documentati come candidati futuri)

@@ -1,41 +1,56 @@
-const { execFileSync } = require("child_process");
+#!/usr/bin/env node
+// PreToolUse hook: valida Conventional Commits per git commit -m "..."
+// Adapted for Claude Code 2.1+ stdin JSON format.
+// Original source: rohitg00/awesome-claude-code-toolkit/hooks/scripts/commit-guard.js
 
-const input = JSON.parse(process.argv[2] || "{}");
-const command = input.command || input.input || "";
+let input = '';
+process.stdin.on('data', chunk => input += chunk);
+process.stdin.on('end', () => {
+  let data;
+  try {
+    data = JSON.parse(input || '{}');
+  } catch {
+    process.exit(0); // invalid input, don't block
+  }
 
-if (!command.includes("git commit")) process.exit(0);
+  const toolName = data.tool_name || '';
+  const command = data.tool_input?.command || '';
 
-const msgMatch = command.match(/-m\s+["']([^"']+)["']/);
-if (!msgMatch) process.exit(0);
+  if (toolName !== 'Bash') process.exit(0);
+  if (!command.includes('git commit')) process.exit(0);
 
-const msg = msgMatch[1];
-const errors = [];
+  // Match -m "msg" or -m 'msg' only. HEREDOC multi-line skipped (controlled case).
+  const msgMatch = command.match(/-m\s+["']([^"']+)["']/);
+  if (!msgMatch) process.exit(0);
 
-const conventionalPattern = /^(feat|fix|docs|style|refactor|perf|test|chore|ci|build|revert)(\(.+\))?!?:\s.+/;
-if (!conventionalPattern.test(msg)) {
-  errors.push("Message does not follow conventional commit format: type(scope): description");
-}
+  const msg = msgMatch[1];
+  const errors = [];
 
-if (msg.length > 72) {
-  errors.push(`Subject line is ${msg.length} chars (max 72)`);
-}
+  const conventionalPattern = /^(feat|fix|docs|style|refactor|perf|test|chore|ci|build|revert)(\(.+\))?!?:\s.+/;
+  if (!conventionalPattern.test(msg)) {
+    errors.push('Message does not follow conventional commit format: type(scope): description');
+  }
 
-if (msg.endsWith(".")) {
-  errors.push("Subject line should not end with a period");
-}
+  if (msg.length > 72) {
+    errors.push(`Subject line is ${msg.length} chars (max 72)`);
+  }
 
-const firstChar = msg.replace(/^(feat|fix|docs|style|refactor|perf|test|chore|ci|build|revert)(\(.+\))?!?:\s/, "")[0];
-if (firstChar && firstChar === firstChar.toUpperCase()) {
-  errors.push("Description should start with lowercase letter");
-}
+  if (msg.endsWith('.')) {
+    errors.push('Subject line should not end with a period');
+  }
 
-if (errors.length > 0) {
-  console.log(
-    JSON.stringify({
-      decision: "block",
-      reason: "Commit message issues:\n" + errors.map((e) => "  - " + e).join("\n"),
-    })
-  );
-} else {
-  console.log(JSON.stringify({ decision: "allow", message: "Commit message looks good" }));
-}
+  const firstChar = msg.replace(/^(feat|fix|docs|style|refactor|perf|test|chore|ci|build|revert)(\(.+\))?!?:\s/, '')[0];
+  if (firstChar && firstChar === firstChar.toUpperCase()) {
+    errors.push('Description should start with lowercase letter');
+  }
+
+  if (errors.length > 0) {
+    process.stderr.write(
+      'commit-guard.js block — commit message issues:\n' +
+      errors.map(e => '  - ' + e).join('\n') + '\n'
+    );
+    process.exit(2);
+  }
+
+  process.exit(0);
+});
