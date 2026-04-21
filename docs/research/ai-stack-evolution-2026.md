@@ -39,6 +39,49 @@ Hardware upgrade options (da valutare se Qwen3 MoE non fit):
 - **Market position vs competitor 2026**: ancora top-tier per workflow CLI agentic, ma emergono alternative (OpenCode, Continue.dev, Roo Code)
 - **Source**: https://github.com/Aider-AI/aider/releases
 
+## OpenCode — alternativa client valutata 2026-04-21
+
+OpenCode (117k GitHub stars) valutato come alternativa ad Aider. Decisione: **mantenere Aider**. Tre motivi:
+
+1. **Windows-nativo**: Aider gira nativo, OpenCode raccomanda WSL → overhead setup non giustificato
+2. **Diff-first review loop** allineato al workflow sovereign consolidato (ADR-0008)
+3. **Claude Code-compatibilità di OpenCode**: legge nativamente `CLAUDE.md`, `.claude/skills/*`, con fallback `AGENTS.md` → `CLAUDE.md`. Portabilità del codex a costo zero se un giorno serve switchare
+
+Implicazione sovereign: il codex `CLAUDE.md` + `.claude/` è client-portabile by design.
+
+Trigger re-valutazione = ADR-0009 T3 (Aider >6 mesi senza commit upstream, o breakthrough concorrente senza migration cost).
+
+Sources: https://opencode.ai/docs/rules/, https://opencode.ai/docs/skills/
+
+## OpenRouter — rate limits e pool fallback (2026-04-21)
+
+Rate limits reali (fonte https://openrouter.ai/docs/api/reference/limits):
+
+- **No crediti acquistati**: 50 richieste/giorno **totali** (aggregato su tutti i modelli `:free`, non per-modello), 20 req/min
+- **Con ≥$10 crediti one-time**: 1000 richieste/giorno totali, 20 req/min. Soglia $10 è permanente — la quota alta resta anche se balance scende sotto
+
+Caveat operativi:
+- **Failed requests count verso quota**: 429, provider throttling upstream, timeout Cloudflare — tutti consumano quota. Retry storm esaurisce quota rapidamente
+- **Provider throttling upstream**: singoli modelli possono throttle in peak hours indipendentemente da quota personale
+- **Volatilità free tier**: modelli `:free` possono uscire dal tier senza preavviso → pool fallback esteso richiesto
+
+### Scenari budget aggiornati
+
+| Scenario | Costo | Viable per |
+|----------|-------|------------|
+| Solo Ollama locale (stack attuale) | €0/mese | Cosmetic + refactor + escalation tier 2 (validato Fase 4) |
+| Ollama + OpenRouter free no-credit | €0 + 50 req/day | Troppo stretto per uso agentico serio |
+| Ollama + OpenRouter con $10 one-time | **$10 + €0-5/mese** | Tier 2 reale come fallback opportunistico |
+| Ollama + OpenRouter paid saltuari | €5-20/mese | Task frontier non gestibili localmente |
+
+### Trigger condizionali riattivazione (non raccomandazione attiva)
+
+1. Fase 6 rivela fail rate Aider+Ollama >30% non risolvibile con reflection retry o switch modello locale → bridge OpenRouter finché T2 hardware non attiva
+2. Trigger T1 ADR-0009 fallisce (MoE non fit, performance insufficiente) + T2 non giustificabile → gap-filler temporaneo
+3. Scenario offline-impossibile singolo: task frontier raro, no voglia di Claude Pro fisso
+
+Sources: https://openrouter.ai/docs/api/reference/limits, https://openrouter.ai/collections/free-models
+
 ## Ollama / llama.cpp ecosystem
 
 - Ollama continua supporto multi-model
@@ -62,6 +105,14 @@ Trigger candidates per upgrade modello:
 1. Ollama official support Qwen3-Coder-Next con benchmark verificato
 2. ADR-0008 fail rate dati Fase 6 > 30% → stack insufficiente, upgrade necessario
 3. Emergenza task blocker non gestibile da 14B Q2 (es. multi-file refactor complesso)
+
+## Framework "5 Levels of Agentic Software" (Agno, marzo 2026)
+
+Modello mentale progressivo per roadmap agent: **L1** stateless+tool → **L2** session+knowledge → **L3** self-learning (agentic memory) → **L4** multi-agent teams → **L5** production runtime. Regola d'oro: ogni livello aggiunge complessità pagabile solo quando il precedente è al suo limite (allineato ADR-0005 YAGNI).
+
+Posizionamento attuale CodeMasterDD: **L2 sofisticato con routing deterministico custom** (hub Claude Code → dual-stack Aider + tier 2 qwen3:30b). Non giustificato salto a L3/L4 con evidenza empirica n=5+ di ADR-0008. Framework utile come linguaggio comune in futuri ADR di roadmap.
+
+Source: https://www.agno.com/blog/the-5-levels-of-agentic-software-a-progressive-framework-for-building-reliable-ai-agents
 
 ## Sources citate
 
