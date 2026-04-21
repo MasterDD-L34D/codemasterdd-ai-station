@@ -428,3 +428,76 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 - Memoria primaria da leggere al restart: `project_session_resumption.md` per snapshot completo
 
 **Stato repo fine giornata**: working tree clean, origin/main allineato, 0 commit locali non pushati. Tutti i 13 commit della sessione sono su `github.com/MasterDD-L34D/codemasterdd-ai-station`.
+
+---
+
+## 2026-04-22
+
+### Completato
+
+**Parte 1 — Integrazione materiale esterno (sessione claude.ai web 2026-04-21)**
+
+- Triage selettivo `final-research-and-snippets-2026-04-21-v3.md` (42KB, 5 sezioni + 4 snippet + 3 idee ADR)
+- Curation ratio: 3/12 blocchi integrati (~25%), zero bulk-dump
+- Commit `f164f90`: +51 righe `docs/research/ai-stack-evolution-2026.md` (74→125 righe)
+  - Sezione OpenCode come alternativa client valutata (Claude Code-compatibilità + portabilità codex by-design)
+  - Sezione OpenRouter rate limits reali (50/day no-credit vs 1000/day con $10 one-time) + scenari budget + trigger riattivazione
+  - Sezione framework "5 Levels of Agentic Software" (Agno) come bookmark concettuale (posizionamento attuale: L2 sofisticato con routing custom)
+- `gh skill` CLI esplorato (rilasciato 16/04/2026, gh 2.90.0 compatibile): 3 skill bookmarked senza install (`openrouter-aider-orchestration`, `aider expert`, `migrate-to-claude`)
+- Scartato: lista repo GitHub (reference-only), snippet script one-time OneDrive/BitLocker (già eseguiti), RotationPool Python (non applicabile Ollama puro), meta-lezione filosofica rubber duck, idee ADR format (marginali ADR-0010+)
+- Materiale sorgente retained local-only via `.git/info/exclude` (pattern `final-research-and-snippets-*.md`)
+- Memory entry creata: `feedback_external_material_triage.md` documenta pattern triage (25% ratio, test "già nel codex?", adattamento tono, retain-no-cancel)
+
+**Parte 2 — Fase 5 migrazione Evo-Tactics completata**
+
+- Pre-prep Synesthesia: scoperto **già migrato** (sync perfetto con origin/main dal 20/04, node_modules OK, working tree clean)
+- Migrazione Evo-Tactics (`github.com/MasterDD-L34D/Game` → `C:\dev\Game`): clone + full validation in ~50 min
+- **Step-by-step**:
+  1. Clone 75 MB, ultimo commit `d319404e` (M11 Phase B→TKT-05)
+  2. Engines inspect: no `engines` in root, solo `tools/memory-plugin` richiede `node>=18` → Node 24 compatibile
+  3. `HUSKY=0 npm install`: 402 packages in 53s, HUSKY=0 rispettato (`.husky/_/` NON creato, hooksPath resta globale)
+  4. Guard rail dual-layer: modificato `.husky/pre-commit` con wrapper che chiama `~/.local/share/git-hooks/pre-commit` alla fine. Marcato `skip-worktree` (invisibile a git status, zero upstream contamination)
+  5. `npm run prepare`: husky attivato, `core.hooksPath=.husky/_`
+  6. **Test empirico wrapper**: branch throwaway + file `test-dummy.txt` con contenuto `test-dummy.txt` → commit blocked da silent-corruption check (ADR-0008) → **catena wrapper validata end-to-end**
+  7. Python deps: `pip install -r requirements-dev.txt` (30 packages totali inclusi transitive), `evo_schema_lint.py --help` gira clean
+  8. `npm run lint:stack`: exit 0
+  9. **`npm run test:api`: tutti gli stage della catena `&&` PASSANO su Node 24** (~20 min). Include api/*.test.js, tsx orchestrator tests, serviceActor, tutorialSpeciesExistence, speciesIndex 37 test, damage_curves 10 test, ecc. — stima 710+ test totali cumulativi
+- **D2=c confermato empiricamente**: zero nvm-windows fallback necessario
+
+### Da fare
+
+- Fase 6: 3-mesi uso reale + tracking log compilation (maggio→agosto 2026, non comprimibile)
+- Fase 7: budget decision ADR finale post-Fase 6 (~30 min)
+- Opzionale parallelo: upgrade RAM 32GB DDR5 (~€80) per sbloccare qwen3:30b default + ctx 16384
+
+### Note
+
+**Finding Step 8 — shell incompatibility (non Node)**:
+- Primo tentativo `npm run test:api` fallito con `"ORCHESTRATOR_AUTOCLOSE_MS" non è riconosciuto` (Windows cmd.exe default non comprende sintassi Unix env-inline)
+- Root cause: monorepo Game scritto con pattern Unix `VAR=val command`, senza cross-env
+- **Fix user-level**: `npm config set script-shell "C:\Program Files\Git\bin\bash.exe" --location=user` → impatta TUTTI i progetti npm Windows futuri
+- Alternative considerate e scartate: install cross-env (invasivo upstream), `.npmrc` locale (duplica tra repo), wrap bash -c (fragile)
+- Rischio side-effect globale: basso (progetti npm moderni usano cross-env o equivalenti; se un progetto ha script Windows-specific si rompe, reversibile con `npm config delete script-shell --location=user`)
+
+**Finding Step 9 — security upstream**:
+- `.env` NON in `.gitignore` del repo Game (best-practice gap upstream, NON introdotto da noi)
+- `apps/trait-editor/.env.local` tracked MA contiene solo config Vite pubblica (no secret)
+- 22 npm vulnerabilities da `npm install` (1 critical, 12 high, 8 moderate, 1 low) — upstream, da triagiare in Fase 6 o PR upstream separato
+- 0 secret hardcoded trovati (2 match pattern-based = false positive su base64 embed PNG e video)
+
+**Decisioni architetturali**:
+- **D1=a** (husky wrapper preserva entrambi i guard rail): validato empiricamente, pattern riusabile per futuri repo con husky propri
+- **D2=c** (Node 24 first, zero fallback): YAGNI vincente, CLAUDE.md policy onorata
+- Skill `security-review` non adatta a fresh clone (opera su pending changes) → custom grep + npm audit più efficaci
+
+**Pattern emersi utili**:
+- `git update-index --skip-worktree` per modifiche locali a file tracked che non devono finire upstream (es. guard rail wrapper)
+- Test empirico hook con file che triggera check specifico = validazione catena wrapper infinitamente più affidabile di "trust the wiring"
+- Expected-value tempo decisionale: (c) YAGNI preferibile se P(success) > 25% — regola generale per decisioni setup-preventive
+
+### Progress tracker
+
+- Barra progetto: **75% → 85%** (Fase 5 migrazione completata in 1 sessione grazie a pre-prep Synesthesia already-done + Evo-Tactics clean D2=c)
+- Prossimo shift naturale: Fase 6 (tracking log 3 mesi, maggio→agosto) — NON comprimibile
+
+**Stato repo fine sessione**: working tree codemasterdd-ai-station clean, 1 commit pushato (`f164f90`). Repo `Game` clonato e operativo ma non modificato upstream (solo skip-worktree lato client).
