@@ -2,7 +2,16 @@
 
 **Stato**: attivo dal 2026-04-21 (follow-up ADR-0008, revisione hub-first)
 **Obiettivo**: ridurre consumo token Claude Code delegando codegen a Qwen locale, **mantenendo l'utente in una singola interfaccia (Claude Code)**
-**Prerequisiti**: Aider 0.86.2 installato, `OLLAMA_API_BASE=http://localhost:11434` persistito, guard rail hook pre-commit globale attivo (ADR-0008 safety protocol)
+**Prerequisiti**:
+- Aider 0.86.2 installato
+- Guard rail hook pre-commit globale attivo (ADR-0008 safety protocol)
+- `OLLAMA_API_BASE` disponibile nel processo aider. Due setup paralleli richiesti:
+  - **User PATH Windows** (per cmd.exe/PowerShell): `setx OLLAMA_API_BASE "http://127.0.0.1:11434"` — attivo per nuovi processi shell
+  - **`~/.env`** (per bash Claude Code / Git Bash): aider auto-legge `.env` in home + cwd + git root. Contenuto minimo:
+    ```
+    OLLAMA_API_BASE=http://127.0.0.1:11434
+    ```
+  - Rationale dual-setup: `setx` non propaga a shell già attive (bash in Claude Code è spawned all'avvio sessione, non rilegge PATH dopo `setx`). `.env` bypass: aider lo legge ad ogni invocazione
 
 ## Architettura hub
 

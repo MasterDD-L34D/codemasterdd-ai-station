@@ -272,3 +272,18 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ### Progress tracker
 - Barra progetto: **70%** (iterativo: hub hardening + cross-language coverage, nessuno shift di fase). Prossimo shift: migrazione progetti (10% → 80%).
+
+### Estensione 4 (behavior-critical reliability matrix + env fix)
+- **Dogfood behavior-critical 14B Q2 + diff** 3 test varianti complessità su demo.js:
+  - R1 (trivialissimo, `round()` default 3): ⚠️ **safe fail** 3 reflection exhausted, SEARCH block context mismatch byte-exact. Tokens ~1.2k/40.
+  - R2 (medium, rename `Calc.mul`→`multiply`): ✅ success con drift. Qwen ha esteso rename alla string literal `op: "mul"`→`"multiply"` in history push (fuori scope esplicito ma coerente). 0 retry, 3.0k/150 tokens, 25s.
+  - R3 (high strutturale, extract `_record` private method): ✅ success first-pass clean. 2 SEARCH/REPLACE block corretti, behavior preserved, pattern "extract method" riconosciuto. 0 retry, 3.1k/331 tokens, 37s.
+- **Aggregato n=4 cumulativi** (con dogfood #2 `fffcbda`): 75% success (di cui 25% via reflection), 25% safe fail, **0% corruption**.
+- **Meta-finding controintuitivo**: task 1-riga trivialissimo (R1) fail dove task strutturale complesso (R3) success. Ipotesi: Qwen struggle più su SEARCH exact-match su singola riga (include troppo context preamble) che su pattern strutturali canonici (extract method = training-data-friendly). Implicazione: per cambi `value → new_value` singoli preferire whole (7B) o edit manuale.
+- **Fix env `OLLAMA_API_BASE` warning**: il `setx` di stamattina non ha preso effetto sulla mia bash Claude Code (spawned prima, non rilegge env). Aider docs confermano: dual-setup necessario. Creato `~/.env` con `OLLAMA_API_BASE=http://127.0.0.1:11434` (aider auto-legge in home + cwd + git root). Warning sparito, tutti i prossimi invocation puliti.
+- **Aider docs fetch** da https://aider.chat/docs/llms/ollama.html: raccomandato `127.0.0.1` (non `localhost`, funzionalmente equivalente ma doc-compliant).
+- **ADR-0008 aggiornato** con addendum "behavior-critical reliability matrix (n=4)".
+- **delegation-to-aider.md aggiornato** sezione Prerequisiti: dual-setup (setx Windows PATH + `~/.env` bash) documentato con rationale.
+
+### Progress tracker
+- Barra progetto: **70%** (stabile: validation più robusta, noise ridotto, reliability matrix documentata).

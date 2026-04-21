@@ -216,6 +216,34 @@ Durante il dogfood behavior-critical è emerso un comportamento non catturato da
 
 Questo non cambia la decisione ADR-0008 (diff resta strettamente migliore di whole per safety), ma **alza la viability reale della route behavior-critical**. Fail rate stimato ~20-40% era basato su `--yes-always` + nessuna reflection; con reflection default (3 retry), una parte delle "safe-fail" si converte in "delayed success". Dati puliti attesi dal tracking log post-19/05.
 
+### Addendum 2026-04-21: behavior-critical reliability matrix (n=4)
+
+Quattro dogfood cumulativi su Aider + Qwen 14B Q2 + `--edit-format diff --no-auto-commits`:
+
+| # | Task | Complessità | Retry | Esito | Tokens s/r | Tempo |
+|---|------|-------------|-------|-------|-----------|-------|
+| 1 | `divide()` throw → return null | 1 riga | 1 reflection | ✅ success | 3.2k/111 | ~60s |
+| 2 (R1) | `round()` default precision → 3 | 1 riga param | 3 exhausted | ⚠️ safe fail | ~1.2k/~40 | 110s |
+| 3 (R2) | Rename `Calculator.mul` → `multiply` | medium | 0 | ✅ success + drift | 3.0k/150 | 25s |
+| 4 (R3) | Extract `_record(op, a, b, result)` method | high strutturale | 0 | ✅ success clean | 3.1k/331 | 37s |
+
+**Aggregato**: 3/4 success (75%), 1/4 safe fail (25%), **0/4 corruption**.
+
+**Meta-finding controintuitivo**: R1 (task trivialissimo 1 riga) è fallito mentre R3 (extract method, più complesso strutturalmente) è success first-pass. Ipotesi: Qwen ha più difficoltà su SEARCH exact-match su singola riga che su pattern strutturali riconoscibili (extract method è un refactor canonico ben rappresentato nel training data). Su R1 ha incluso troppo context preamble che non faceva match byte-exact.
+
+**Implicazione operativa**:
+- Per cambi 1-line su valori/default, prompt più esplicito richiesto, o preferire whole format (se 7B viable) o edit manuale
+- Refactor strutturali (rename, extract, inline) → 14B Q2 diff riesce first-pass
+- R2 "success + drift": aspettarsi che Qwen estenda coherentemente cambi semantici (es. string literal associato al nome del metodo). Scope strict "only X" non sempre rispettato
+
+**Stima fail rate aggiornata**:
+- Originale ADR-0008: "20-40% safe fail"
+- Misurato (n=4): 25% safe fail, 0% corruption, 50% first-pass success, 25% success via reflection
+- Reflection retry alza effective success rate da 50% a 75%
+- Coerente con ADR-0008 baseline, dato empirico iniziale
+
+n=4 ancora basso per conclusioni statistiche, ma pattern consistent. Continuare tracking in `logs/aider-delegation-YYYY-MM.md` (Fase 6).
+
 ### Addendum 2026-04-21: hook coverage extended + cross-language validation
 
 **Battery 9 edge case** testati contro il guard rail pre-commit hook:
