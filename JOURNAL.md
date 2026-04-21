@@ -393,3 +393,38 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ### Progress tracker
 - Barra progetto: **75%** stabile (Qwen3 quality spectrum mappato, n=4 validation). Prossimo shift: Fase 5 migrazione.
+
+### Chiusura sessione 2026-04-21
+
+**Sessione densa**: 13 commit, 50% → 75% (+25 punti). Tutta la fase operativa hub/safety/escalation + validazione Qwen3 chiusa.
+
+**Commit timeline della giornata**:
+1. `0cc905a` — ADR-0008 silent-corruption finding + dual-stack decision
+2. `5a35cb7` — delegation infrastructure v1 (wrappers + hook + protocol)
+3. `0f9b37d` — hub-first rewrite + tracking template
+4. `95b1b90` — hook 9/9 coverage + cross-language validation
+5. `b3b6e10` — reliability matrix n=4 + OLLAMA_API_BASE env fix
+6. `abd7b38` — fase 4.7 operational hardening (multi-file + cross-lang + ops docs)
+7. `b231500` + `ea08e86` — Aider auto-commits ADR-0009 draft (D+ quality)
+8. `4c1e0e0` — ADR-0009 upgrade strategy rewrite + hub strategic-content test findings
+9. `60fd17c` — aider-log helper + memory hygiene
+10. `813dedf` — audit anomaly fixes (Claude Code 2.1.114→2.1.116, aider-log in scripts/)
+11. `4cda62d` — qwen3-coder:30b validato tier 2 escalation
+12. `80b8825` — qwen3-coder:30b n=4 validation + architectural safety finding
+
+**Finale highlights**:
+- Hub Claude Code → Aider → Qwen locale: pattern operativo validato
+- 3-tier task routing: 7B cosmetic / 14B Q2 behavior / qwen3:30b escalation / Claude strategic
+- Guard rail hook silent-corruption: 9/9 coverage, global activation
+- Qwen3-Coder-30B-A3B (MoE): installato + validato (R1/R2/R3/R-cosmetic all success, resolve anti-pattern R1 dove 14B Q2 fallisce)
+- ADR-0007/0008/0009 coerenti con empiria n=4+5+3 test
+- Tracking infrastructure: `aider-log` helper + `logs/aider-delegation-YYYY-MM.md` schema
+- Memory files aggiornati per ripartenza domani: nuovo `project_session_resumption.md` snapshot + MEMORY.md index esteso
+
+**Ripartenza domani — punto operativo**:
+- Barra 75% → next 85% è Fase 5 migrazione
+- 3 opzioni discusse (A full / B solo Synesthesia / C pre-prep only): decisione differita
+- Open topic parallelo: RAM upgrade 32GB DDR5 (~€80) sblocca qwen3 default + ctx 16384
+- Memoria primaria da leggere al restart: `project_session_resumption.md` per snapshot completo
+
+**Stato repo fine giornata**: working tree clean, origin/main allineato, 0 commit locali non pushati. Tutti i 13 commit della sessione sono su `github.com/MasterDD-L34D/codemasterdd-ai-station`.
