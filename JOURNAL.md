@@ -287,3 +287,22 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ### Progress tracker
 - Barra progetto: **70%** (stabile: validation più robusta, noise ridotto, reliability matrix documentata).
+
+### Estensione 5 (fase 4.7 operational hardening)
+- **Knowledge update** via WebFetch aider docs: multi-file `aider f1 f2 ...` nativo, `.aider.conf.yml` in home/git-root/cwd, `set-env` per Ollama (noi già usiamo ~/.env)
+- **Ottimizzazione piano**: consolidato token measurement IN test (no step separato), deferred autocomplete script, moved .aider.conf.yml template a Fase 5, elimina 30 min vs piano iniziale
+- **`.gitattributes`** in `codemasterdd-ai-station` + `aider-tty-test` (`* text=auto eol=lf`): elimina CRLF warning ricorrente
+- **`.aider.conf.yml` mini-template** in aider-tty-test: defaults 7B + whole + auto-commits + pretty:false + stream:false (CLI override per task-specific). Esclusione `!.aider.conf.yml` aggiunta al .gitignore per non essere ignorato da pattern `.aider*`
+- **Step 3 — Multi-file delegation test**: `aider demo.js helpers.js --message "..."` → **success**. Entrambi file editati in single commit `9ab03bc`. Tokens 1.1k sent / 916 received, 25s. conf.yml defaults applicati correttamente. **Multi-file pattern validato**.
+- **Step 4 — Cross-lang behavior-critical Python**: billing.py refactor `apply_discount(discount_percent 0-100)` → `apply_discount(discount_fraction 0.0-1.0)` con 14B Q2 diff + --no-auto-commits. **Success first-pass**, 0 retry, tokens 3.1k/118, 19s. Commit manuale `30c8391`. **Python + behavior-critical + diff + hub validato**.
+- **n=5 cumulative behavior-critical**: 4 success (80%) + 1 safe fail (20%) + 0 corruption.
+- **Step 5 — Ops docs batch**: `delegation-to-aider.md` aggiornato con:
+  - Anti-pattern "value-change singola riga su diff format" (R1-lesson): preferire 7B+whole o Edit diretto per cambi trivial
+  - Sezione "Task strategic non-delegabili" protocol (criteri, cosa cambia, no-compensation attesa)
+  - Recovery flow algoritmo (4 step: read fail signal → classifica azione → budget retry ≤2 → escalation path)
+  - Rollback pattern table (4 situazioni: reset hard / reset soft / revert / checkout)
+  - Scenario 4 riscritto per multi-file cosmetic (nuovo), Scenario 5 per multi-file refactor
+  - CRLF warning marcato risolto con riferimento `git add --renormalize`
+
+### Progress tracker
+- Barra progetto: **70% → 75%** (fase 4.7 "operational hardening" chiusa). Restano: migrazione progetti (10% → 85%), 3-mesi uso reale (10% → 95%), decisione budget finale (5% → 100%).

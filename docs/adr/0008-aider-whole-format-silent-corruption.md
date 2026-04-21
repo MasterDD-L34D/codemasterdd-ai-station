@@ -244,6 +244,18 @@ Quattro dogfood cumulativi su Aider + Qwen 14B Q2 + `--edit-format diff --no-aut
 
 n=4 ancora basso per conclusioni statistiche, ma pattern consistent. Continuare tracking in `logs/aider-delegation-YYYY-MM.md` (Fase 6).
 
+### Update n=5 (2026-04-21 fase 4.7): cross-lang Python behavior-critical
+
+Quinto test dogfood su Python file (`billing.py`): refactor `apply_discount` da percent (0-100) a decimal fraction (0.0-1.0) via 14B Q2 + diff + --no-auto-commits + hub.
+
+**Esito**: ✅ success first-pass (0 reflection retry), 3.1k sent / 118 received, 19s. Qwen ha aggiornato parameter name + validation bounds + error message + calcolo, tutti coerenti. Commit manuale `30c8391`.
+
+**n=5 aggregato**: 80% success, 20% safe fail, 0% corruption. Cross-language confermato: Qwen 14B Q2 + diff funziona su Python come JavaScript, nessuna regressione.
+
+### Update fase 4.7: multi-file delegation validata
+
+Test separato: `aider demo.js helpers.js --message "..."` con 7B + whole. Success: entrambi file editati in single commit (`9ab03bc`), 1.1k/916 tokens, 25s. Multi-file pattern supportato nativo da Aider, funziona out-of-the-box con hub bash invocation. Scoperta operativa: `.aider.conf.yml` per-repo semplifica CLI invocation (meno flag ripetuti).
+
 ### Addendum 2026-04-21: hook coverage extended + cross-language validation
 
 **Battery 9 edge case** testati contro il guard rail pre-commit hook:

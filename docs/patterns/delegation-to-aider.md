@@ -54,6 +54,33 @@ Decision tree applicato dall'orchestratore (me) prima di ogni task codegen:
 - Task con più di 3 file → strategico, eseguo direttamente
 - Task con constraint "do not change logic" esplicito → resta cosmetic se tocca solo nomi/commenti
 
+### Anti-pattern: value-change singola riga su diff format
+Finding 2026-04-21 R1 (n=4 behavior-critical): task "cambia default param X da A a B" (singola riga) ha fail rate più alto di refactor strutturali (extract method, rename). Qwen 14B Q2 include troppo context preamble nel SEARCH block → exact-match fallisce → 3 reflection retry exhausted → safe fail.
+
+**Contromisura**: per value-change singola riga preferire:
+- **Aider 7B + whole** se il cambio è localizzato e il resto del file non va modificato (Qwen riproduce l'intero file con 1 diff) — rischio drift minimo su cambio semplice
+- **Edit diretto da Claude Code** (mio Edit tool) per minimizzare chiamate LLM su task trivial
+- Aider 14B Q2 + diff solo su modifiche multiline o strutturali
+
+## Task strategic (non-delegabili) — protocol
+
+Task che classifico "strategic" NON vanno ad Aider. Io (Claude Code) eseguo direttamente via Edit/Write/Read/Grep + mio ragionamento.
+
+**Criteri strategic**:
+- Multi-file (>3 file) con dipendenze incrociate
+- Debug architetturale (root cause investigation)
+- Design decisions (quale pattern usare, quale architettura)
+- Refactor che richiede comprensione di business logic emergente
+- Qualsiasi task dove l'utente ha chiesto esplicitamente "ragiona con me"
+
+**Cosa cambia vs delegazione**:
+- Token consumption: identico a pre-hub (io scrivo il codice)
+- No `aider` invocation
+- No tracking log (è il mio baseline di uso)
+- Review: utente vede il diff nel Claude Code diff UI / Bash tool
+
+**Non compensation attesa**: i task strategic restano "expensive" per design. Il hub riduce token solo sui delegabili; il mix totale dipende dal rapporto cosmetic+refactor vs strategic nel workflow reale.
+
 ## Invocation pattern canonico (hub, bash da Claude Code)
 
 ### Cosmetic
@@ -148,9 +175,51 @@ User: "cambia `divide()` per ritornare null invece di throw su b=0"
 User: "come organizzo i middleware Express in questa app?"
 → Eseguo io, nessuna delega.
 
-### Scenario 4 — Multi-file refactor
-User: "rinomina `usr` in `user` in tutti i 4 file del modulo"
-→ Classifico: strategico per scope (4 file), eseguo io con Edit+Grep
+### Scenario 4 — Multi-file cosmetic (2-3 file)
+User: "aggiungi JSDoc a tutte le funzioni in `demo.js` e `helpers.js`"
+→ Classifico: cosmetic multi-file, pattern supportato
+→ Invoco `aider --message "..." demo.js helpers.js` (lista file come args)
+→ Aider edita entrambi in una singola session + 1 commit unificato
+→ Verifico `git show HEAD --stat`: più file in single commit
+→ Finding 2026-04-21: testato 2 file JS+JS e JS+Python, 1.1k/916 tokens totali, 25s
+
+### Scenario 5 — Multi-file refactor cross-dipendenze (4+ file)
+User: "rinomina `usr` in `user` in tutti i file che lo usano"
+→ Classifico: strategico per scope + dipendenze cross-file, eseguo io con Grep + Edit
+
+## Recovery flow — quando Aider fallisce
+
+Quando Aider respinge l'edit o produce output non utile, seguo questo algoritmo:
+
+1. **Read the fail signal**:
+   - Safe-fail: "Only 3 reflections allowed, stopping" → Qwen non riesce a produrre format corretto
+   - Llama runner terminated: Ollama crash, retry automatico; se >3 volte, restart Ollama
+   - Hook blocked: silent corruption intercettata, working tree pulito
+
+2. **Classificazione azione**:
+   - **Safe-fail primo tentativo** → re-prompt con istruzioni più esplicite (es. "the SEARCH block must contain ONLY the function body of X, not surrounding code")
+   - **Safe-fail secondo tentativo** → escalation: switch a whole format (7B) se il task lo permette, altrimenti eseguo io
+   - **Hook blocked** → Qwen output malformato: re-prompt con constraint filename formatting, o escalation
+   - **Llama crash ricorrente** → restart Ollama tray (`ollama app.exe`) prima di retry; se persiste, verificare VRAM pressure
+
+3. **Budget retry**: max 2 re-prompt prima di escalare. Non ostinarsi su un task che Qwen non gestisce.
+
+4. **Escalation path**:
+   - Prima: io via Edit/Write (token cost higher ma capability garantita)
+   - Poi: Claude Pro/OpenRouter (solo per task critici, dopo due fail locali)
+
+## Rollback pattern
+
+Se un edit va male post-commit (auto-commit o manuale) e voglio annullarlo:
+
+| Situazione | Comando | Quando usare |
+|-----------|---------|--------------|
+| Ultimo commit, non pushato, in locale | `git reset --hard HEAD~1` | Working tree pulito, drop totale |
+| Ultimo commit, non pushato, voglio tenere modifiche come uncommitted | `git reset HEAD~1` | Per review manuale prima di re-committare |
+| Commit già pushato | `git revert HEAD` | Crea nuovo commit che annulla (safe per main) |
+| Working tree uncommitted (--no-auto-commits mode) | `git checkout -- <file>` | Annulla modifiche Aider non ancora staged |
+
+**Pre-operazione distruttiva**: sempre `git status` + `git log --oneline -3` per confermare su quale commit si sta operando.
 
 ## Ottimizzazioni token (findings 2026-04-21)
 
@@ -168,7 +237,7 @@ User: "rinomina `usr` in `user` in tutti i 4 file del modulo"
 ## Limitazioni note
 
 - **Reflection retry**: Aider diff format ha self-correction su format errors — 14B Q2 può recuperare al 2° tentativo (finding 2026-04-21 dogfood: refactor fffcbda recuperato). Non garantito sempre, ma pattern frequente.
-- **CRLF warning**: Git Windows mostra warning "CRLF will be replaced by LF" su file editati da Aider (Aider scrive LF). Cosmetic, non impatto funzionale. Eventualmente `.gitattributes` per normalizzare.
+- **CRLF warning** (risolto): `.gitattributes` con `* text=auto eol=lf` in ogni repo elimina il warning. Applicato a `aider-tty-test` e `codemasterdd-ai-station` il 2026-04-21. Per file pre-esistenti un tempo `git add --renormalize .` una volta normalizza tutto lo storico.
 - **Auto-translate commit message**: Qwen a volte auto-traduce il commit message in italiano anche con prompt inglese. Cosmetic issue, lascio.
 - **Llama runner termination**: ricorrente durante fase commit-message generation di Aider (auto-commit). Aider retry esponenziale recupera di solito in 1-3 secondi.
 - **Guard rail hook** protegge il 99% casi ma non garantisce zero danno. `git diff HEAD~1` post-commit sempre consigliato come seconda linea di difesa.
