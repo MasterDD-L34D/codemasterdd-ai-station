@@ -165,6 +165,16 @@ lenovo-ai-station/
 
 - **Delegation protocol Claude Code → Aider**: vedi `docs/patterns/delegation-to-aider.md` — decision tree classification, formato handoff, review loop, tracking fail rate per Fase 6
 
+- **Trigger delega in-session** (SEMPRE attivo, non solo post-Max — aggiunto 2026-04-22):
+  - Prima di Edit/Write su file esistente, **classificare il task** e proporre delega se appropriato:
+    - **cosmetic** (JSDoc, docstring, rename, lint-fix, typo, 1-liner batch) + working tree clean → proponi `aider-cosmetic <file>` con task short-description, attendi OK utente
+    - **behavior-critical** (refactor singolo file, bug fix, logic change) → proponi `aider-refactor <file>`, attendi OK
+    - **strategic** (multi-file, synthesis da conversazione, design, debug architetturale, ADR writing) → esegui direttamente senza proposta delega
+  - **Task <1 riga meccanica**: skip proposta (overhead > savings)
+  - **Batch operazioni simili ≥5**: proponi delega anche se singolarmente sub-threshold — trigger principale per savings
+  - **Tracking**: ogni delega effettuata → entry in `logs/aider-delegation-YYYY-MM.md`. Task strategici eseguiti direttamente → tracciati solo se rilevanti per ratio statistica
+  - **Anti-pattern**: default inerziale "faccio io direct" senza classification è un miss; ogni Edit/Write senza step di classification contraddice hub pattern ADR-0008
+
 ## Aggiornamento JOURNAL
 A fine sessione significativa, aggiungere entry in JOURNAL.md:
 - Data YYYY-MM-DD

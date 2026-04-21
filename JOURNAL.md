@@ -584,3 +584,27 @@ Tentato `gh skill preview alirezarezvani/claude-skills engineering/skill-securit
 **Memory aggiornata**: `feedback_external_material_triage.md` ora include lesson #10 (steelman review scopre bias primo round) + lesson #11 (verificare empiricamente compatibility dichiarata).
 
 **Stato repo fine Parte 4**: 2 modificati (agno-snippets, ai-stack-evolution) + 3 nuovi (subagents-skills-candidates, ai-as-thinking-partner, scripts/hooks/commit-guard.js) + memory local.
+
+### Parte 5 — Inaugurazione Fase 6 + trigger delega in-session (A+D)
+
+**Motivazione**: user ha fatto audit della sessione — 5 commit, zero deleghe ad Aider nonostante hub pattern esistesse. "Perché uso ancora solo token Claude Code?"
+
+**Root cause**: hub pattern ADR-0008 esiste ma **manca feedback loop** in-session che ricordi di classificare+delegare prima di default Claude-direct.
+
+**Azione A — Inaugurazione Fase 6**:
+- Creato `logs/aider-delegation-2026-04.md` (local-only, gitignored) dal template esistente
+- Entry baseline + **audit retroattivo** sessione 2026-04-22: delega mancata significativa solo sui 9 TL;DR retroattivi ADR (savings stimato ~2000-3000 token Claude, ~$0.03-0.05). Tutto il resto classificato strategic (non-delegabile) o break-even. Stima ~70% strategic / 30% mechanical
+- Periodo utile raccolta dati: 2026-04-23 → 2026-04-30 (8 giorni residui aprile)
+
+**Azione D — Regola trigger delega in-session in CLAUDE.md**:
+- Nuovo bullet sotto "Priorità modelli AI" → "Trigger delega in-session (SEMPRE attivo, non solo post-Max)"
+- Policy: prima di ogni Edit/Write file esistente, classificare cosmetic/behavior/strategic e proporre delega se cosmetic o behavior-critical
+- **Soglia trigger principale**: batch operazioni simili ≥5 (es. 9 TL;DR retroattivi)
+- Task <1 riga meccanica skip (overhead > savings)
+- Anti-pattern esplicitamente vietato: "default inerziale 'faccio io direct' senza classification"
+
+**Impatto architetturale**: questa regola cambia TUTTE le future sessioni — prima di Edit/Write esistente, classification step obbligatorio. Contribuisce a Fase 6 empirical tracking.
+
+**Lezione**: hub pattern funziona solo se accompagnato da trigger loop esplicito. La regola è più importante del tool.
+
+**Stato finale sessione 2026-04-22**: 6 commit totali (commit sesto in Parte 5), barra 85% → ~87%, Fase 6 formalmente inaugurata, codex autoconscio dei propri bias metodologici (Parte 4) + istituzionalmente vincolato a delegare quando appropriato (Parte 5).
