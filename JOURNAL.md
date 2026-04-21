@@ -263,3 +263,12 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ### Progress tracker
 - Barra progetto: **60% → 70%** (fase 4.6 "hub completion + dogfood" chiusa). Restano: migrazione progetti (10%), 3-mesi uso reale (15%), decisione budget finale (5%).
+
+### Estensione 3 (stress test + hook hardening)
+- **Test B — stress hub su Python**: file `inventory.py` 86 righe (3 functions, 2 classes, 8 methods, no docstrings). Delegato cosmetic "Add PEP 257 docstrings" a 7B+whole via hub (bash `--message`). Success pulito: +74 insertions, -1 deletion, commit `26ee1a5` nel repo `aider-tty-test`. Tokens Aider: 1.6k sent / 1.0k received. Nessuna modifica config tra JS e Python. **Reproducibility 7B+whole: n=3 cumulativa** (JSDoc JS commit `9280e1b`, refactor JS `fffcbda` su 14B Q2, docstrings Python `26ee1a5`).
+- **Test C — battery 9 edge case guard rail hook**: corruption pattern vs pass pattern. Detection 6/9 iniziale (C1 `#` prefix, C2 subdir basename, C3 subdir full path, C6 trailing whitespace, C7 empty-file-skip corretto, C5 no false positive). Gap identificati: C4 HTML `<!-- -->`, C9 C-block `/* */`.
+- **Hook extended**: aggiunti 8 needle pattern in `C:\Users\edusc\.local\share\git-hooks\pre-commit` (varianti `<!-- $file -->` con/senza spazi + `/* $file */` con/senza spazi). Post-patch: **9/9 scenari coperti**, regression tests C1+C5 pass.
+- **Documentazione**: ADR-0008 aggiornato con addendum "hook coverage extended + cross-language validation" — tabella scenari, matrice pre/post patch, note su coverage residua.
+
+### Progress tracker
+- Barra progetto: **70%** (iterativo: hub hardening + cross-language coverage, nessuno shift di fase). Prossimo shift: migrazione progetti (10% → 80%).

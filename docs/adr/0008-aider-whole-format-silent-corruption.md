@@ -216,6 +216,26 @@ Durante il dogfood behavior-critical è emerso un comportamento non catturato da
 
 Questo non cambia la decisione ADR-0008 (diff resta strettamente migliore di whole per safety), ma **alza la viability reale della route behavior-critical**. Fail rate stimato ~20-40% era basato su `--yes-always` + nessuna reflection; con reflection default (3 retry), una parte delle "safe-fail" si converte in "delayed success". Dati puliti attesi dal tracking log post-19/05.
 
+### Addendum 2026-04-21: hook coverage extended + cross-language validation
+
+**Battery 9 edge case** testati contro il guard rail pre-commit hook:
+
+| Scenario | Esito iniziale | Post-patch hook |
+|----------|----------------|-----------------|
+| Filename plain (`demo.js`) | block ✅ | block ✅ |
+| Linea-commento (`// file`, `# file`, `; file`, `-- file`) | block ✅ | block ✅ |
+| Subdir basename (`src/x/y.js` con content `y.js`) | block ✅ | block ✅ |
+| Subdir full path (`src/x/y.js` con content `src/x/y.js`) | block ✅ | block ✅ |
+| HTML/XML comment (`<!-- file -->`) | miss ❌ | **block ✅** |
+| C-block comment (`/* file */`) | miss ❌ | **block ✅** |
+| Trailing whitespace (`file   `) | block ✅ | block ✅ |
+| Empty file | pass ✅ | pass ✅ (skip corretto) |
+| Legit short content (~40 bytes valido) | pass ✅ | pass ✅ (no false positive) |
+
+Hook esteso con 8 needle addizionali (`<!-- $file -->`, `/* $file */` e loro varianti). **Coverage attuale: 9/9 scenari testati**, rimangono gap teorici solo su pattern non realistici (file >200 bytes con filename ripetuto, documenti completamente a-strutturali).
+
+**Cross-language validation**: hub testato anche su Python (inventory.py 86→159 righe con PEP 257 docstrings, commit `26ee1a5` nel repo `aider-tty-test`). **Reproducibility 7B+whole**: n=3 success cumulativi (JSDoc JS ×2 + docstrings Python ×1). Nessuna modifica config necessaria tra linguaggi.
+
 ### Test ulteriori (bassa priorità)
 - [ ] `udiff` edit format: se anche diff migliora, potrebbe bypassare i due issue (silent corruption + filename header)
 - [ ] Prompt-engineering esplicito per Qwen 14B Q2 "emit filename on its own line before the code block" — verificare se fa cambiare pattern output sufficientemente da recuperare whole format (bassa fiducia, comunque da documentare)
