@@ -343,3 +343,12 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ### Progress tracker
 - Barra progetto: **75%** stabile (test di validation empirica, no phase shift). ADR-0009 deliverable aggiuntivo oltre scopo originale fase 4.7.
+
+### Estensione 7 (memory hygiene + aider-log helper)
+- **Memory hygiene**: tutte le memorie file-based aggiornate per riflettere stato post-fase 4.7 + ADR-0009. Nuovo `feedback_hub_delegation_pattern.md` documenta hub-first pattern + regola strategic non-delegable empiricamente confermata. `project_sovereign_evaluation.md` aggiornato con reliability matrix n=5 + trigger decisionali ADR-0009. `reference_strategic_docs.md` esteso con ADR-0009, research file, delegation doc, infrastruttura out-of-repo.
+- **Script `aider-log`** (`C:\Users\edusc\.local\bin\aider-log`, bash + chmod +x): helper auto-compilazione tracking log. Input: output Aider via stdin + flag metadata. Parsing auto di tokens (1.1k/916), commit hash, outcome (heuristic: hook-block > safe-fail > success > error), retry count (awk). Crea `logs/aider-delegation-YYYY-MM.md` con header al primo uso del mese, poi appende righe tabellari.
+- **Validato 3 scenari** sintetici: success pulito, behavior con 2 retry, hook-block. Tutti parsed correttamente. Bug iniziale (retry count duplicato da `grep -c || echo`) fixato con `awk`-counter.
+- **Doc aggiornati**: `delegation-to-aider.md` sezione Tracking + `aider-delegation-log-template.md` istruzioni "Come usare" → pipe Aider output a `aider-log` con metadata. Fallback manuale mantenuto per scenari non-pipe-friendly.
+
+### Progress tracker
+- Barra progetto: **75%** stabile (wrap-up items, no phase shift). Tutta la fase 4.7+4.8 "operational hardening & meta hygiene" chiusa. Prossimo step naturale: Fase 5 migrazione (10% → 85%).

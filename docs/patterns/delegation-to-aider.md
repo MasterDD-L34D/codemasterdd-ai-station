@@ -141,15 +141,23 @@ Dopo ogni invocazione Aider, check automatici nell'ordine:
 
 Template log in `docs/patterns/aider-delegation-log-template.md`, istanze mensili in `logs/aider-delegation-YYYY-MM.md` (gitignored).
 
-Compilare **ad ogni delegazione** (righa per task):
-- Data/ora
-- Classificazione (cosmetic / behavior-critical / strategic)
-- Stack usato
-- Esito (success / safe fail / corruption / hook-blocked)
-- Retry count (Aider reflection)
-- Tokens sent/received (Aider riporta in output)
-- Durata wall-clock
-- Note
+### Helper `aider-log` (auto-compilazione entry)
+
+Script bash in `C:\Users\edusc\.local\bin\aider-log` (PATH, chmod +x) che parsa output Aider e appende riga auto:
+
+```bash
+# pattern canonico: pipe Aider output a aider-log con metadata
+aider --model <M> --edit-format <F> --yes-always --message "..." <files> 2>&1 | tee /tmp/aider-last.log
+aider-log --task "JSDoc on helpers.js" --class cosmetic --stack 7B-whole < /tmp/aider-last.log
+```
+
+Parsing automatico:
+- Tokens sent/received da "Tokens: X sent, Y received"
+- Commit hash da "Commit HASH" (l'ultimo)
+- Outcome heuristic: `hook-block` > `safe-fail` > `success` > `error` > `unknown`
+- Retry count: occorrenze "Retrying in"
+
+Compilare manualmente solo: `--task`, `--class`, `--stack`. Durata lasciata vuota (può essere aggiunta editando il file post-hoc se serve).
 
 Dati aggregati mensilmente → decisione budget post-19/08.
 

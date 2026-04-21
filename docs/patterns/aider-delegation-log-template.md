@@ -3,8 +3,13 @@
 **Scopo**: tracciare ogni delegazione Claude Code → Aider locale per costruire il dataset decisionale Fase 6 (post-19/05 evaluation, ADR-0008 follow-up).
 
 **Come usare**:
-1. Copiare questo file in `logs/aider-delegation-YYYY-MM.md` a inizio mese (il path `logs/` è gitignored tranne `.gitkeep`, quindi il file istanza resta locale).
-2. Compilare una riga per ogni delegazione durante la sessione (anche fallite o interrotte).
+1. **Automatico** (raccomandato): usare lo script helper `aider-log` (in `C:\Users\edusc\.local\bin\`):
+   ```bash
+   aider --model <M> --edit-format <F> --yes-always --message "..." <files> 2>&1 | tee /tmp/aider-last.log
+   aider-log --task "short desc" --class cosmetic --stack 7B-whole < /tmp/aider-last.log
+   ```
+   Crea automaticamente `logs/aider-delegation-YYYY-MM.md` al primo uso del mese. Parsa tokens/commit/outcome/retry dall'output Aider.
+2. **Manuale**: copiare questo file in `logs/aider-delegation-YYYY-MM.md` a inizio mese e compilare righe a mano (più lento ma serve se non hai pipe disponibile o vuoi annotazioni libere).
 3. A fine mese fare aggregati: fail rate per classe task, top failure modes, token savings stimati.
 4. ADR-0008 follow-up prevede review mensile durante il periodo 2026-05-20 → 2026-08-20.
 
