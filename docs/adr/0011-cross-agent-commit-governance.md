@@ -142,8 +142,34 @@ Aggiunto `--git-commit-verify` (forma positive, disabilita `--no-verify`) a entr
 
 Ora Aider rispetta i git hooks → `commit-msg` globale applicato come da design opzione 1A.
 
-### Validazione pendente
-Questo Addendum è basato su **source code analysis** + **empirical observation Gap 3 manifestation** (dogfood #2). **Re-test empirico post-fix pendente**: prossimo dogfood deve mostrare `commit-msg hook block` quando Qwen genera subject non-conforme, con Aider retry automatico interno.
+### Validazione empirica (2026-04-22 19:30, dogfood #3)
+
+Eseguito dogfood post-fix per validare Gap 3 resolution empiricamente. Task: documentare exit codes in `scripts/aider-log.sh` (4 righe additive, cosmetic).
+
+**Risultati**:
+| Dimensione | Esito | Dettaglio |
+|------------|-------|-----------|
+| Edit applicato al file | ✅ | Diff clean additive, zero behavior change, encoding OK |
+| Hook gate invocato | ✅ | `commit-msg` hook chiamato → bloccato 6 tentativi consecutivi |
+| Aider retry cycle | ✅ | 6× `Retrying in`, reflection meccanismo attivo come da design |
+| Convergenza commit-prompt | ❌ | Qwen 7B **non ha mai seguito `--commit-prompt`**: 6/6 subject code-chunk (0% compliance) |
+| Aider safe-fail clean | ❌ | **Crash UnicodeEncodeError** su `→` (Rich+cp1252 Windows bug) prima di raggiungere reflection limit |
+| Commit sul repo | ❌ | Mai eseguito; rescue via Claude Code manual commit (`c672e1a`) |
+
+**Gap 3 fix: VALIDATO** nella parte gate-enforcement. Il commit-msg hook è ora effettivamente applicato a Aider commit.
+
+**Nuovo bug upstream scoperto**: Aider+Rich su Windows legacy console (cp1252) crash con `UnicodeEncodeError: '→'` durante retry loop. Impedisce safe-fail controllato. Non è un bug di ADR-0011 — è upstream — ma cambia il workflow operativo richiesto.
+
+### Nuovo workflow operativo (post-validation)
+Per ogni delega Aider cosmetic (7B-whole):
+1. Eseguire wrapper (`aider-cosmetic <file>`)
+2. **Verificare `git status` a fine esecuzione**:
+   - Se commit presente conforme → all good
+   - Se working tree ha `M  <file>` staged ma no commit → Claude Code esegue manual commit con messaggio conforme
+3. Tracciare retry count e compliance come metrica Fase 6 (se >50% retry: valutare prompt refinement o model alternative)
+
+### Lesson scientifica
+Ciò che avevo inferito da source analysis (`--git-commit-verify` abilita hook rispect) è **confermato empiricamente**. Ciò che avevo inferito come inferenza (`Aider retry gestisce la non-convergenza Qwen e safe-fail dopo N reflections`) è **parzialmente confuto**: i retry avvengono ma il safe-fail è interrotto da un crash upstream. La **gestione Safe-fail su Windows richiede workaround env** (`PYTHONIOENCODING=utf-8` o simili) non ancora testato.
 
 ### Lesson architetturale
 La "guard rail chain" deve essere **enforced by default**, non configurabile via flag agent-specifici. Aider è un design case notevole: il default `--no-verify` è documentato come feature (evitare conflitti pre-commit formatters noisy) ma confligge con il design hub-and-spoke di questa workstation dove i hook globali sono **fonte di verità** (vedi ADR-0008 silent-corruption enforcement).
@@ -173,10 +199,11 @@ Dopo fix 2C il wrapper Aider produce commit message conformi in inglese; 1A bloc
 - [x] Smoke test 3 scenari PASS
 - [x] Aggiornare CLAUDE.md sezione guard rail chain
 - [x] Gap 3 scoperto + fix `--git-commit-verify` applicato ai wrapper (addendum 2026-04-22 17:04)
-- [ ] Re-test dogfood post-Gap 3 fix: verificare che `commit-msg` hook ora blocca commit Qwen non-conformi
-- [ ] Se Qwen ignora `--commit-prompt` ripetutamente (>30% retry): aumentare specificità prompt o valutare model switch
+- [x] Re-test dogfood post-Gap 3 fix (2026-04-22 19:30 dogfood #3): gate VALIDATO + convergenza commit-prompt FALLITA + crash Windows cp1252 scoperto
+- [ ] Testare `PYTHONIOENCODING=utf-8` nei wrapper `.cmd` per risolvere crash Windows console
+- [ ] Se Qwen ignora `--commit-prompt` ripetutamente (>30% retry): aumentare specificità prompt con esempi negativi ("NEVER include code blocks or diffs") o valutare model alternative (14B Q2 diff)
 - [ ] Se emerge drift regex (divergenza commit-guard.js vs commit-msg): refactor con shared JSON source
-- [ ] Considerare upgrade commit-prompt con esempi negativi ("NEVER include code blocks or diffs in commit message")
+- [ ] Decidere se mantenere wrapper corrente (gate + manual commit fallback) o investire in soluzione convergence-automatic
 
 ## Riferimenti
 
