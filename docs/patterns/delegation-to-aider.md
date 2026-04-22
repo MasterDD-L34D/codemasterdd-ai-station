@@ -288,16 +288,23 @@ Prima di classificare cosmetic/behavior/strategic (decision tree originale sopra
    - **Multimodal** (screenshot, vision) → `aider-gemini` OR Gemma 4 locale
    - **Capability-max** (bug oscuro, refactor architetturale) → `aider-openai` (gpt-4o) pay-per-use — ultimo resort
 
-### Privacy guard rail per repo
+### Privacy guard rail per repo (validato 2026-04-23)
 
-Classificazione repo attuali (da aggiornare se emergono):
+Classificazione empirica post-scan (sostituisce speculazioni precedenti):
 
-| Repo | Classe | Cloud OK? |
-|------|--------|-----------|
-| `codemasterdd-ai-station` | Infrastructure-as-code personale | ✅ Sì |
-| `Game` (Evo-Tactics) | Gioco personale, game logic | ✅ Sì probabile (no segreti) |
-| `synesthesia` | Web app esame UniUPO | ⚠️ Verificare se contiene dati studenti o segreti exam |
-| (futuro) cliente | Codice proprietario cliente | ❌ NO, sovereign-first |
+| Repo | Classe | Cloud OK? | Dettagli scan |
+|------|--------|-----------|---------------|
+| `codemasterdd-ai-station` | Infrastructure-as-code personale | ✅ **Sì** | API keys tier 3 fuori repo (`~/.config/api-keys/`). Backup gitignored. Nessun segreto nel codebase. |
+| `Game` (Evo-Tactics) | Gioco tactical d20, monorepo Node+Python | ✅ **Sì** | `.env.local` trovato in `apps/trait-editor/` ma solo 2 righe, zero pattern `KEY/SECRET/TOKEN/PASSWORD` (config dev). `.gitignore` protegge logs QA/visual + `data/*.db`. Game logic, nessun credenziale cliente. |
+| `synesthesia` | Web app esame UniUPO (Passport auth + SQLite) | ⚠️ **MIXED** | Sovereign-first per: `controllers/` (auth logic), `routes/` (auth routes), `middlewares/` (session). Cloud OK per: `views/*.ejs`, `public/css/`, codice non-auth. `.gitignore` protegge `.env` + `*.sqlite` + uploads user-content (audio/avatars/images) — non pushati ma **evitare cloud anche su file locali che includono info utenti**. |
+| (futuro) cliente | Codice proprietario cliente | ❌ NO, sovereign-first | Policy default: qualsiasi repo cliente = tier 1-2 locale always |
+
+### Regole operative emergenti da scan
+
+1. **Sempre `.gitignore` check**: prima di delegare cloud su repo sconosciuto, verificare che `.env`/`credentials`/`*.sqlite` siano protetti. Se non lo sono e ci sono keys reali, prima sistemare `.gitignore`.
+2. **Synesthesia regola fine-grain**: il repo è mixed. Per task su `controllers/`/`routes/`/`middlewares/` → `aider-refactor` (locale 14B Q2) o `aider-cosmetic` (locale 7B). Per view/static → cloud accettabile.
+3. **Evo-Tactics check periodico**: se in futuro vengono integrate API esterne (game services, leaderboard, analytics reali) con credenziali → rivalutare classificazione.
+4. **Segnale di allarme**: se uno scan rapido (`find . -name ".env*" -o -name "*.key"`) restituisce risultati non-template → pause + verify prima di delegare cloud.
 
 ### Caveat operativi tier 3
 

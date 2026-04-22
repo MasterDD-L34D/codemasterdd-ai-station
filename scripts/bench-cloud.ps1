@@ -22,6 +22,9 @@
 .EXAMPLE
   .\bench-cloud.ps1 -Provider cerebras -Model llama3.1-8b
 
+.EXAMPLE
+  .\bench-cloud.ps1 -Provider openai -Model gpt-4o-mini
+
 .NOTES
   Prompt identico a bench-ollama.ps1 (Python DoublyLinkedList hardcoded, temperature 0).
   Richiede env var <PROVIDER_UPPER>_API_KEY o param -ApiKey esplicito.
