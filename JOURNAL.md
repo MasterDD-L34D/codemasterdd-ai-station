@@ -649,3 +649,67 @@ Cost observation: cache read (155M su 159M totali, 97%) indica prompt caching An
 - commit-guard PreToolUse hook attivo (defense-in-depth commit message quality)
 - AgentShield baseline hardening + skill-policy preview-before-install (ADR-0010)
 - Reliability validation tools pronti (TDD Guard, recall documentati come candidati futuri)
+
+---
+
+## 2026-04-22 (addendum — hardware RAM upgrade)
+
+### Completato
+- **Upgrade RAM fisico**: 16 GB DDR5 → **64 GB DDR5-5600** (2×32 GB Micron CT32G56C46S5.C16D, dual channel ChannelA-DIMM1 + ChannelB-DIMM1). Misura post-upgrade: 63.37 GB totali, 54.38 GB liberi idle.
+- Verifica empirica via `Get-CimInstance Win32_PhysicalMemory` — 2 moduli identici, velocità configurata 5600 MT/s.
+- **CLAUDE.md aggiornato**: hardware section + nota modelli AI post-upgrade + `OLLAMA_CONTEXT_LENGTH=8192` marcato come "razionale decaduto, rivalidazione richiesta" + `qwen3-coder:30b` promosso da tier 2 borderline a tier 2 stabile (rimossa nota "RAM tight 1.3 GB free").
+- **ADR-0012 scritto** (MADR format): `docs/adr/0012-ram-upgrade-64gb-impact.md` — documenta cosa cambia subito (decisioni a rischio zero) e cosa è deferred a bench empirico (14B Q2 @ ctx 16384, qwen3:30b rebench, candidati 30B+ dense come Qwen 2.5 Coder 32B Q4).
+- Memory `project_sovereign_evaluation.md` aggiornata: blocker RAM tight rimosso dal ragionamento tier 2.
+
+### Da fare (task deferred, sessione separata)
+- **Bench empirico** con prompt standard ADR-0007 (DoublyLinkedList Python) + condizioni controllate:
+  - 14B Q2 @ ctx 8192 vs 16384 vs 32768 → se ctx 16384 ≥90% speed di 8192, promuovere env var default. Se regressione >10%, il collo è VRAM/KV compute non RAM.
+  - qwen3-coder:30b @ ctx 8192 ripetuto (sanity check post-upgrade) + @ ctx 16384/32768.
+  - (Opzionale) Pull Qwen 2.5 Coder 32B Q4_K_M (~19-20 GB) come candidato tier 2 dense.
+
+### Note
+- Upgrade **opportunistic**, NON triggerato formalmente da ADR-0009 T2. Documentato retroattivamente come materializzazione parziale del trigger senza attraversare decision framework (ADR-0012 nota esplicita).
+- **Numeri tok/s pre-upgrade restano validi**: misurati empiricamente, non RAM-bound alla sorgente. L'upgrade apre finestra rebench, non la forza — evita di inquinare Fase 6 mid-stream.
+- **Impatto Fase 6**: dogfood cosmetic 7B-whole già raccolti (n=3) intatti. Dogfood futuri behavior-critical (14B Q2) continuano con ctx 8192 default finché non esiste bench.
+- **Impatto Fase 7 budget decision**: scenario sovereign rafforzato qualitativamente (tier 2 locale più solido → meno escalation pay-per-use). Non quantificabile ora, dipende da fail rate empirico Fase 6.
+- Barra progetto invariata **88%**: l'upgrade non avanza Fase 6 (serve tempo) né Fase 7 (serve dato).
+
+---
+
+## 2026-04-22 (sera tardi — bench empirico eseguito)
+
+### Completato
+- **Bench 8 run totali** con prompt standard ADR-0007 (Python DoublyLinkedList, `temperature=0`, `num_predict=300`), metriche via API `/api/generate` parse JSON:
+  - 14B Q2 @ ctx 8192/16384/32768 → 25.39 / 17.28 / 11.62 tok/s
+  - qwen3:30b @ ctx 8192/16384/32768 → 30.67 / 30.65 / 29.78 tok/s
+  - qwen2.5-coder:32b dense @ ctx 8192/16384 → 3.65 / 3.52 tok/s (Run 7 + 7b bonus)
+- **Pull Qwen 2.5 Coder 32B Q4_K_M** (19 GB @ 9.3 MB/s, ~35 min download background)
+- **Script bench creato** `scripts/bench-ollama.ps1` (warm-up + misura + parse JSON, ctx override runtime via API)
+- **Log completo** `docs/research/bench-post-ram-upgrade-2026-04-22.md` (metodologia + risultati + findings + decisioni)
+- **Addendum ADR-0012** con sintesi findings + decisioni finalizzate
+
+### Findings chiave
+1. **RAM extra NON aiuta 14B Q2** (25.39 tok/s @ ctx 8192 vs baseline 25.54 = noise). Collo è VRAM+compute.
+2. **RAM extra aiuta MASSICCIAMENTE qwen3:30b**: +31.6% @ ctx 8192 (30.67 vs 23.3 baseline "RAM tight"). Beneficio correlato a % CPU spill.
+3. **qwen3:30b MoE ctx-insensitive**: da ctx 8192 a 32768 solo -3% (rumore). Ctx doppio gratis per multi-file.
+4. **32B dense scartato**: 3.65 tok/s, 8.4× più lento di qwen3:30b MoE a size pari. CPU-bound (73% CPU, 32B attivi full-weight).
+5. **Regressione -7.7% su 14B Q2 @ ctx 16384** (17.28 vs 18.72 baseline ADR-0007) — tracking: Ollama drift o rumore, non blocker perché default resta ctx 8192.
+
+### Decisioni prese
+- `OLLAMA_CONTEXT_LENGTH=8192` **RESTA default globale** (tier 1 14B Q2 coerence)
+- qwen3:30b tier 2 **promosso a ctx 16384 default** via override per-request (zero penalty, raddoppia effective ctx)
+- qwen2.5-coder:32b dense **scartato** come candidato tier routing (reference only)
+- Hub pattern ADR-0008 **invariato e rafforzato**
+- Scenario sovereign Fase 7 rafforzato qualitativamente
+
+### Da fare (deferred)
+- **Task #13**: valutare deepseek-r1 + gpt-oss:120b pullati parallelamente (2026-04-22) — non prioritario
+- **Task #14**: indagare file API keys su Desktop — cautela, chiedere utente prima di leggere
+- Integrare override `num_ctx=16384` in `aider-refactor.cmd` per task multi-file (o wrapper dedicato)
+- Monitorare regressione 14B Q2 ctx 16384 in uso reale
+
+### Note
+- Bench durato ~2h totali (inclusi 35 min pull 32B in background)
+- Monitor Claude Code nativo usato per attendere pull (pattern riproducibile per long-running background task)
+- Modelli aggiuntivi scaricati dall'utente in parallelo (deepseek-r1:8b, gpt-oss:120b) non benchati in questa sessione — task #13 dedicato
+- Barra progetto invariata **88%** (bench è dato empirico non avanzamento fase)
