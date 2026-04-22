@@ -200,7 +200,8 @@ Dopo fix 2C il wrapper Aider produce commit message conformi in inglese; 1A bloc
 - [x] Aggiornare CLAUDE.md sezione guard rail chain
 - [x] Gap 3 scoperto + fix `--git-commit-verify` applicato ai wrapper (addendum 2026-04-22 17:04)
 - [x] Re-test dogfood post-Gap 3 fix (2026-04-22 19:30 dogfood #3): gate VALIDATO + convergenza commit-prompt FALLITA + crash Windows cp1252 scoperto
-- [ ] Testare `PYTHONIOENCODING=utf-8` nei wrapper `.cmd` per risolvere crash Windows console
+- [x] **Applicare `PYTHONIOENCODING=utf-8` + `chcp 65001` ai wrapper `.cmd`** (deployed 2026-04-23 01:20 preventivo su tutti 6 wrapper aider-*.cmd). **Validation empirica pending** prossima occorrenza del bug cp1252 (bug intermittente, trigger quando Rich log usa char non-ASCII durante retry loop).
+- [ ] Se il fix non risolve: investigare alternative (wrapper PowerShell con `[Console]::OutputEncoding = [Text.UTF8Encoding]::new()` oppure stdin redirect forzato)
 - [ ] Se Qwen ignora `--commit-prompt` ripetutamente (>30% retry): aumentare specificità prompt con esempi negativi ("NEVER include code blocks or diffs") o valutare model alternative (14B Q2 diff)
 - [ ] Se emerge drift regex (divergenza commit-guard.js vs commit-msg): refactor con shared JSON source
 - [ ] Decidere se mantenere wrapper corrente (gate + manual commit fallback) o investire in soluzione convergence-automatic
