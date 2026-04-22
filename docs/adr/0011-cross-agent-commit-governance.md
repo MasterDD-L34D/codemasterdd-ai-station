@@ -1,10 +1,10 @@
 # ADR-0011 — Cross-agent commit message governance
 
-> *TL;DR: il primo dogfood Aider (2026-04-23) ha scoperto che `commit-guard.js` PreToolUse protegge solo commit fatti via Claude Code; Aider (e qualsiasi agent esterno) bypassa il gate. Inoltre i wrapper `aider-*.cmd` non impongono lingua/format del commit message. Questo ADR documenta i 2 gap e presenta opzioni; decision **deferred** in attesa di valutazione Eduardo.*
+> *TL;DR: il primo dogfood Aider (2026-04-23) ha scoperto che `commit-guard.js` PreToolUse protegge solo commit fatti via Claude Code; Aider (e qualsiasi agent esterno) bypassa il gate. Inoltre i wrapper `aider-*.cmd` non impongono lingua/format del commit message. Scelto **1A + 2C**: aggiunto `commit-msg` git hook globale (defense-in-depth con PreToolUse esistente) + `--commit-prompt` nei wrapper. Smoke test PASS.*
 
-- **Status**: Proposed
+- **Status**: Accepted
 - **Data**: 2026-04-23
-- **Decisore**: Eduardo Scarpelli (pending)
+- **Decisore**: Eduardo Scarpelli
 - **Deciders**: solo-dev (single-user workstation)
 
 ## Context and Problem Statement
@@ -83,31 +83,62 @@ Commit-prompt **guida** la generazione + gate **enforce** a valle. Prompt riduce
 
 ## Decision Outcome
 
-**Deferred**. Raccomandazione per valutazione futura:
+**Scelto 1A + 2C** (2026-04-23, stessa sessione del discovery).
 
-- **Gap 1**: tendere verso **Opzione 1A** (duplicate). Ragione principale: il feedback veloce di PreToolUse resta prezioso in sessione Claude Code; aggiungere `commit-msg` git hook copre il resto senza rimuovere valore esistente. Il drift risk è mitigabile con shared source (es. estrarre regex in file JSON condiviso sourced da entrambi hook).
-- **Gap 2**: tendere verso **Opzione 2C** (combined). Il costo di 1 flag `--commit-prompt` nei wrapper è trascurabile; pair con gate è robusto.
+### Gap 1 — Opzione 1A (duplicate)
+Creato `~/.local/share/git-hooks/commit-msg` (bash, 1668 bytes) con stessa logica di `scripts/hooks/commit-guard.js`:
+- Conventional Commits regex: `^(feat|fix|docs|style|refactor|perf|test|chore|ci|build|revert)(\(.+\))?!?:\s.+`
+- Subject <=72 chars
+- No trailing period
+- Lowercase description first char
 
-Decision non presa oggi perché:
-1. È un problema emerso durante dogfood, non era pianificato
-2. La sessione 2026-04-23 è focalizzata su raccolta dati empirici Fase 6, non refactoring guard-rail
-3. L'utente potrebbe preferire scelte diverse (es. 1B puro se valuta il drift risk maggiore del feedback-loss)
+Skip automatico per commit auto-generati (`Merge*`, `Revert*`, `fixup!*`, `squash!*`, commenti `#*`).
+
+Il PreToolUse `scripts/hooks/commit-guard.js` **resta attivo** come fail-fast gate in sessione Claude Code. Il nuovo `commit-msg` copre Aider, manual git, script, futuri agent.
+
+**Drift risk mitigation**: per ora regex duplicata testualmente in 2 file. Se il drift diventa problema concreto, refactor futuro estraendo in file JSON condiviso (non YAGNI oggi).
+
+### Gap 2 — Opzione 2C (combined)
+Aggiunto `--commit-prompt` a `C:\Users\edusc\.local\bin\aider-cosmetic.cmd` e `aider-refactor.cmd`:
+> `"Commit message MUST be in English, Conventional Commits format (type: short description), subject line <=72 chars total, lowercase description, no trailing period. Example: 'docs: add JSDoc to hook validation blocks'."`
+
+Esempio diverso per cosmetic vs refactor (seed corretto per il tipo di task).
+
+### Smoke test gate (2026-04-23 12:10)
+3 scenari testati in repo /tmp/hook-smoketest isolato:
+| Scenario | Message | Expected | Exit |
+|----------|---------|----------|------|
+| Non-conforme | "Aggiungo cose al file che fanno delle cose molto molto belle." | block 3 errors | 1 ✅ |
+| Conforme | "feat: add f.txt smoke test" | pass | 0 ✅ |
+| Merge | "Merge branch 'foo' into main" | skip | 0 ✅ |
+
+Errori rilevati TEST 1: regex non-match + trailing period + Description uppercase. **Length check non triggerato** (62<=72), corretto.
 
 ## Consequences
 
-Fino a risoluzione:
-- **Commit via Aider continuano a bypassare commit-guard**: richiede review manuale subject + amend post-commit se non conforme
-- **Pattern operativo temporaneo**: dopo ogni delega Aider, `git log -1 --format="%s"` + eventuale `git commit --amend -m "..."` prima di push
+### Guard rail chain aggiornata
+```
+1. Claude Code PreToolUse  commit-guard.js        (solo Claude Code Bash → fail-fast)
+2. git commit-msg globale  commit-msg              (tutti gli agent → cross-agent enforcement)  ← NEW
+3. git pre-commit globale  pre-commit              (silent-corruption ADR-0008)
+4. Husky repo-local        .husky/pre-commit       (solo Evo-Tactics, skip-worktree wrapper)
+```
 
-Benchmark cost di questa ADR-0011 stessa: `git log -1 --format="%s" | awk '{print length}'` come verifica veloce, oppure attivare il futuro `commit-msg` hook per enforcement uniforme.
+### Nessun amend manuale richiesto
+Dopo fix 2C il wrapper Aider produce commit message conformi in inglese; 1A blocca residui se prompt ignorato da Qwen. Pattern operativo temporaneo deprecato.
+
+### Token cost trascurabile
+`--commit-prompt` ~40 token aggiuntivi per invocazione Aider. Retry cycles evitati se Qwen segue il prompt = savings netto.
 
 ## Follow-up
 
-- [ ] User review ADR-0011, scelta opzioni
-- [ ] Se scelto 1A: creare `~/.local/share/git-hooks/commit-msg` con logica regex estratta da `scripts/hooks/commit-guard.js`
-- [ ] Se scelto 2C: update `aider-cosmetic.cmd` + `aider-refactor.cmd` con flag `--commit-prompt`
-- [ ] Aggiornare CLAUDE.md sezione "Guard rail chain" con nuovo layer git-level
-- [ ] Aggiornare `logs/aider-delegation-2026-04.md` quando findings risolti
+- [x] Creare `~/.local/share/git-hooks/commit-msg`
+- [x] Update wrapper `aider-cosmetic.cmd` + `aider-refactor.cmd`
+- [x] Smoke test 3 scenari PASS
+- [x] Aggiornare CLAUDE.md sezione guard rail chain
+- [ ] Prossimo dogfood Aider: verificare empiricamente che 2C guida Qwen in inglese (expected: zero amend)
+- [ ] Se Qwen ignora `--commit-prompt` ripetutamente (>30% retry): aumentare specificità prompt o valutare model switch
+- [ ] Se emerge drift regex (divergenza commit-guard.js vs commit-msg): refactor con shared JSON source
 
 ## Riferimenti
 

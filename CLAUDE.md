@@ -157,7 +157,12 @@ lenovo-ai-station/
   - `git diff HEAD~1` post-edit prima di pushare: commit message generati dall'LLM riflettono l'intent, non necessariamente il diff reale
   - Evitare `--yes-always` in repo con working tree sporco
   - Per task behavior-critical considerare `--no-auto-commits`
-  - Guard rail pre-commit globale attivo (`git config --global core.hooksPath C:/Users/edusc/.local/share/git-hooks`) che blocca commit con silent corruption pattern — bypass con `git commit --no-verify`, non raccomandato
+  - Guard rail chain (`git config --global core.hooksPath C:/Users/edusc/.local/share/git-hooks`):
+    1. `commit-msg` globale — valida Conventional Commits cross-agent (tutti gli agent inclusi Aider). ADR-0011.
+    2. `pre-commit` globale — blocca silent-corruption pattern (ADR-0008).
+    3. Husky repo-local (solo Evo-Tactics) — skip-worktree wrapper.
+    4. Claude Code PreToolUse `scripts/hooks/commit-guard.js` — fail-fast in sessione Claude Code (duplicato di 1 per feedback veloce).
+  - Bypass guard rail con `git commit --no-verify`, non raccomandato
 
 - **Wrapper CLI per delegazione** (in PATH Windows, eseguibili da cmd.exe):
   - `aider-cosmetic <file>` → 7B + whole (JSDoc, docstrings, rename, lint-fix)
