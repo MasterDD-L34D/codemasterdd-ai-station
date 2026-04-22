@@ -1,9 +1,9 @@
 # ADR-0011 — Cross-agent commit message governance
 
-> *TL;DR: il primo dogfood Aider (2026-04-23) ha scoperto che `commit-guard.js` PreToolUse protegge solo commit fatti via Claude Code; Aider (e qualsiasi agent esterno) bypassa il gate. Inoltre i wrapper `aider-*.cmd` non impongono lingua/format del commit message. Scelto **1A + 2C**: aggiunto `commit-msg` git hook globale (defense-in-depth con PreToolUse esistente) + `--commit-prompt` nei wrapper. Smoke test PASS.*
+> *TL;DR: il primo dogfood Aider (2026-04-22) ha scoperto che `commit-guard.js` PreToolUse protegge solo commit fatti via Claude Code; Aider (e qualsiasi agent esterno) bypassa il gate. Inoltre i wrapper `aider-*.cmd` non impongono lingua/format del commit message. Scelto **1A + 2C**: aggiunto `commit-msg` git hook globale (defense-in-depth con PreToolUse esistente) + `--commit-prompt` nei wrapper. Smoke test PASS.*
 
 - **Status**: Accepted
-- **Data**: 2026-04-23
+- **Data**: 2026-04-22
 - **Decisore**: Eduardo Scarpelli
 - **Deciders**: solo-dev (single-user workstation)
 
@@ -83,7 +83,7 @@ Commit-prompt **guida** la generazione + gate **enforce** a valle. Prompt riduce
 
 ## Decision Outcome
 
-**Scelto 1A + 2C** (2026-04-23, stessa sessione del discovery).
+**Scelto 1A + 2C** (2026-04-22, stessa sessione del discovery).
 
 ### Gap 1 — Opzione 1A (duplicate)
 Creato `~/.local/share/git-hooks/commit-msg` (bash, 1668 bytes) con stessa logica di `scripts/hooks/commit-guard.js`:
@@ -104,7 +104,7 @@ Aggiunto `--commit-prompt` a `C:\Users\edusc\.local\bin\aider-cosmetic.cmd` e `a
 
 Esempio diverso per cosmetic vs refactor (seed corretto per il tipo di task).
 
-### Smoke test gate (2026-04-23 12:10)
+### Smoke test gate (2026-04-22 12:10)
 3 scenari testati in repo /tmp/hook-smoketest isolato:
 | Scenario | Message | Expected | Exit |
 |----------|---------|----------|------|
@@ -113,6 +113,42 @@ Esempio diverso per cosmetic vs refactor (seed corretto per il tipo di task).
 | Merge | "Merge branch 'foo' into main" | skip | 0 ✅ |
 
 Errori rilevati TEST 1: regex non-match + trailing period + Description uppercase. **Length check non triggerato** (62<=72), corretto.
+
+## Addendum — Gap 3 scoperto post-implementation (2026-04-22 17:04)
+
+Il secondo dogfood Aider (batch PS1 comment-based help) ha esposto che l'implementation 1A+2C **non era sufficiente**:
+
+- Qwen 7B ha **ignorato** `--commit-prompt` generando come subject un chunk di codice PowerShell (~172 chars)
+- Il `commit-msg` git hook **non è stato chiamato**: commit 47c6403 passato con subject illeggibile
+
+### Root cause (Aider 0.86.2)
+Dal source `aider/repo.py:278`:
+```python
+if not self.git_commit_verify:
+    cmd.append("--no-verify")
+```
+E `aider/args.py:494`:
+```python
+"--git-commit-verify", action=argparse.BooleanOptionalAction, default=False,
+help="Enable/disable git pre-commit hooks with --no-verify (default: False)"
+```
+
+**Aider di default passa `--no-verify` a git commit → bypass TUTTI i git hooks** (commit-msg, pre-commit, post-commit). Non documentato esplicitamente nei wrapper.
+
+### Fix applicato same-session
+Aggiunto `--git-commit-verify` (forma positive, disabilita `--no-verify`) a entrambi i wrapper:
+- `C:\Users\edusc\.local\bin\aider-cosmetic.cmd`
+- `C:\Users\edusc\.local\bin\aider-refactor.cmd`
+
+Ora Aider rispetta i git hooks → `commit-msg` globale applicato come da design opzione 1A.
+
+### Validazione pendente
+Questo Addendum è basato su **source code analysis** + **empirical observation Gap 3 manifestation** (dogfood #2). **Re-test empirico post-fix pendente**: prossimo dogfood deve mostrare `commit-msg hook block` quando Qwen genera subject non-conforme, con Aider retry automatico interno.
+
+### Lesson architetturale
+La "guard rail chain" deve essere **enforced by default**, non configurabile via flag agent-specifici. Aider è un design case notevole: il default `--no-verify` è documentato come feature (evitare conflitti pre-commit formatters noisy) ma confligge con il design hub-and-spoke di questa workstation dove i hook globali sono **fonte di verità** (vedi ADR-0008 silent-corruption enforcement).
+
+**Estensione regola CLAUDE.md**: per qualsiasi futuro agent CLI integrato, verificare se applica `--no-verify` di default e correggere nel wrapper.
 
 ## Consequences
 
@@ -136,13 +172,15 @@ Dopo fix 2C il wrapper Aider produce commit message conformi in inglese; 1A bloc
 - [x] Update wrapper `aider-cosmetic.cmd` + `aider-refactor.cmd`
 - [x] Smoke test 3 scenari PASS
 - [x] Aggiornare CLAUDE.md sezione guard rail chain
-- [ ] Prossimo dogfood Aider: verificare empiricamente che 2C guida Qwen in inglese (expected: zero amend)
+- [x] Gap 3 scoperto + fix `--git-commit-verify` applicato ai wrapper (addendum 2026-04-22 17:04)
+- [ ] Re-test dogfood post-Gap 3 fix: verificare che `commit-msg` hook ora blocca commit Qwen non-conformi
 - [ ] Se Qwen ignora `--commit-prompt` ripetutamente (>30% retry): aumentare specificità prompt o valutare model switch
 - [ ] Se emerge drift regex (divergenza commit-guard.js vs commit-msg): refactor con shared JSON source
+- [ ] Considerare upgrade commit-prompt con esempi negativi ("NEVER include code blocks or diffs in commit message")
 
 ## Riferimenti
 
-- Log dogfood: `logs/aider-delegation-2026-04.md` entry 2026-04-23 11:58
+- Log dogfood: `logs/aider-delegation-2026-04.md` entry 2026-04-22 11:58
 - Hook attuale: `scripts/hooks/commit-guard.js` (PreToolUse Claude Code)
 - Git hook globale esistente: `~/.local/share/git-hooks/pre-commit` (silent-corruption)
 - Aider `--commit-prompt` docs: https://aider.chat/docs/config/options.html#--commit-prompt-prompt
