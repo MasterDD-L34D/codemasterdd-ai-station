@@ -169,3 +169,56 @@ qwen3:30b da ctx 8192 a ctx 32768 → -3% speed (rumore).
 - [ ] Bench qwen3:30b @ ctx 32768 con workload reale Aider (non solo prompt bench isolato) per confermare che il -3% resta costante.
 - [ ] Valutazione capability (non speed) di 32B dense su task behavior-critical: forse vale la pena come "slow but more capable" tier 3? Da decidere solo se Fase 6 rivela gap capability che 30B MoE non copre.
 - [ ] Task #13 (deepseek-r1 + gpt-oss:120b): valutazione rimandata, vedi task tracking.
+
+---
+
+## Bench cloud tier 3 2026-04-22 (serata tardi)
+
+Validazione empirica post ADR-0013. Stesso prompt DoublyLinkedList. Via `scripts/bench-cloud.ps1` (warm-up 30 tok + misura 300 tok, temperature 0).
+
+### Risultati cloud providers
+
+| Provider/Model | Eval tok/s | Completion tok | Prompt tok | Wall s | Note |
+|----------------|-----------:|---------------:|-----------:|-------:|------|
+| `groq/llama-3.3-70b-versatile` | **630.86** | 300 | 109 | 0.85 | usage.completion_time (nativo Groq) |
+| `cerebras/llama3.1-8b` | **733.5** | 300 | 109 | 0.41 | wall-clock approx (Cerebras no native metric) |
+
+### Confronto tier routing locale vs cloud
+
+| Tier | Model | Speed tok/s | Moltiplicatore vs locale | Capability nominal |
+|------|-------|------------:|-------------------------:|--------------------|
+| cosmetic locale | qwen2.5-coder:7b | 114 | 1× | 7B coder specialist |
+| behavior locale | qwen2.5-coder:14b Q2 | 25.39 | 1× | 14B coder specialist Q2 |
+| escalation locale | qwen3-coder:30b MoE | 30.67 | 1× | 30B/3B-active coder |
+| **cosmetic cloud** | cerebras/llama3.1-8b | **733.5** | **6.4×** vs 7B | 8B general |
+| **behavior/escalation cloud** | **groq/llama-3.3-70b** | **630.86** | **20.6×** vs qwen3:30b | 70B dense general |
+
+### Finding strategico — cloud ridefinisce il tier routing
+
+**Online mode** (internet up, free tier non exhausted):
+- Groq llama 70B > qwen3:30b su TUTTI i fronti: speed 20×, capability 70B > 30B MoE, cost $0 free
+- Cerebras 8B > qwen 7B su speed 6×, capability generale simile (8B general vs 7B coder-specialist — possibile tradeoff qualità coder)
+
+**Offline mode / quota exhausted**:
+- Locale Qwen tier resta valido (sovereign guaranteed)
+
+**Pattern proposto** (pending review utente + empirical Fase 6):
+- **Tier 1 cosmetic ONLINE**: `cerebras/llama3.1-8b` se quota disponibile → fallback `qwen2.5-coder:7b` locale
+- **Tier 2 behavior ONLINE**: `groq/llama-3.3-70b-versatile` se quota disponibile → fallback `qwen2.5-coder:14b-q2` locale
+- **Tier 3 escalation**: `groq/qwen-2.5-coder-32b` (se disponibile su Groq) o `qwen3-coder:30b` locale
+- **Tier 4 capability-max**: `openai/gpt-4o`, `gemini/2.5-pro` (pay-per-use o limited free)
+
+### Caveat da considerare
+
+1. **Privacy**: send source code to cloud = data retention per Groq/Cerebras ToS. Per codice proprietario/cliente → sovereign-first obbligatorio. Per repo personali → rischio basso, accettabile.
+2. **Quality coder**: bench tok/s dice nulla su quality code generato. Groq/Cerebras usano llama 3 general, non coder-specialist. Qwen 2.5 Coder è potenzialmente più preciso su task strettamente coding anche a parità di speed. Bench quality (es. HumanEval, pass@1) richiesto prima di declaration definitiva.
+3. **Rate limit**: Groq 6000 tok/min sostenuti → task iterativi molti (es. Aider 5+ round) potrebbero saturare. Cerebras quota non chiara su free tier.
+4. **Availability**: provider outage = workflow blocked. Locale = guarantee uptime.
+5. **Bench singolo**: n=1 speed test. Quality + reliability statistica richiedono Fase 6 dogfood reali.
+
+### Decisioni pre-ADR-0013 addendum
+
+1. **NON aggiornare tier routing CLAUDE.md ora** — serve dogfood Fase 6 per quality validation prima di shift paradigmatico cloud-first.
+2. **ADR-0013 status**: Proposed → **Validation-in-progress** (bench speed PASS, quality pending).
+3. **Nuovo pattern documentabile come esperimento**: usare cloud per N task nei prossimi giorni, registrare in log Fase 6 ciò che funziona e fallisce.
+4. **Privacy check**: attivare cloud solo su repo non-sensitive (lenovo-ai-station OK, eventuali repo cliente NO).

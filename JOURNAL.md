@@ -713,3 +713,44 @@ Cost observation: cache read (155M su 159M totali, 97%) indica prompt caching An
 - Monitor Claude Code nativo usato per attendere pull (pattern riproducibile per long-running background task)
 - Modelli aggiuntivi scaricati dall'utente in parallelo (deepseek-r1:8b, gpt-oss:120b) non benchati in questa sessione — task #13 dedicato
 - Barra progetto invariata **88%** (bench è dato empirico non avanzamento fase)
+
+---
+
+## 2026-04-22 (notte — combo F: cloud tier 3 validation)
+
+### Completato
+- **Step A — Validazione 4 provider cloud** via curl minimal:
+  - Groq `llama-3.3-70b-versatile` ✅
+  - OpenAI `gpt-4o-mini` ✅
+  - Gemini `gemini-2.5-flash` ✅ (richiede `thinkingBudget: 0`)
+  - Cerebras `llama3.1-8b` ✅ — ma `gpt-oss-120b`/`qwen-3-235b` nel catalog inaccessibili (paid tier)
+- **Step B — Primo dogfood reale Aider + Groq** (Fase 6 #4):
+  - Target: `scripts/bench-ollama.ps1`, task cosmetic additive (2 `.EXAMPLE` + `.NOTES`)
+  - Result: SUCCESS, 11 insertions, 1 retry format, **~10s wall**, $0.0033 cost ($0 free tier)
+  - Primo validation end-to-end del pattern `.aider.conf.yml` + `env-file` auto-load
+- **Step E — Bench speed cloud vs locale** stesso prompt DoublyLinkedList:
+  - **Groq llama-3.3-70b: 630.86 tok/s** (20.6× vs qwen3:30b locale)
+  - **Cerebras llama3.1-8b: 733.5 tok/s** (6.4× vs qwen 7B locale)
+- Script `scripts/bench-cloud.ps1` creato (riusabile per future bench)
+- ADR-0013 Addendum scritto: da **Proposed** a **Validation-in-progress**
+
+### Findings strategici
+- **Cloud ridefinisce tier routing online**: speed 6-20× vs locale, capability 70B > 30B MoE
+- **MA**: 3 caveat bloccanti prima di shift definitivo:
+  1. Privacy (source code to cloud = data retention)
+  2. Quality coder non validato (llama general vs qwen coder-specialist)
+  3. Bench singolo n=1 (variabilità + reliability statistica pending)
+- **Decisione**: tier routing CLAUDE.md NON aggiornato ancora; continuare Fase 6 dogfood reali per quality + reliability validation
+- Pattern proposto documentato in ADR-0013 Addendum per review + esperimento controllato
+
+### Da fare (deferred)
+- Quality bench (HumanEval-like) Qwen Coder vs Llama general
+- Dogfood Fase 6 behavior-critical cloud (attualmente solo cosmetic validato)
+- Eventuale wrapper `aider-cloud` con routing esplicito provider (opzione D menu, non attivata)
+- Task #13 deepseek-r1 + gpt-oss:120b locali (deferred, ortogonale a cloud)
+
+### Note
+- Utente ha concesso auto-pilot ("continua in automatico chiedimi conferma solo per cose veramente importanti") → sessione eseguita con minimi interrupt su decisioni strategiche
+- **Dogfood #4 è il primo task reale con cloud tier 3** — milestone Fase 6
+- Costo sessione combo F: $0.0033 Groq (dogfood) + $0 bench (usage non-chargeable per bench endpoint). Free tier ampiamente sufficiente
+- Privacy nota: repo `lenovo-ai-station` è infrastructure-as-code personale, nessun segreto. Cloud OK qui. Per repo cliente revisione caso-per-caso

@@ -155,3 +155,62 @@ Proposed 2026-04-22. Passerà a **Accepted** dopo review utente + primo dogfood 
 - **Aider LiteLLM providers**: https://docs.litellm.ai/docs/providers
 - **Groq API docs**: https://console.groq.com/docs
 - **Cerebras API docs**: https://inference-docs.cerebras.ai
+
+---
+
+## Addendum 2026-04-22 sera tardi — Validation combo F (A + B + E)
+
+Eseguite 3 operazioni stessa serata dell'ADR-0013 Proposed:
+
+### A — Validazione endpoint 4 provider
+- **Groq** llama-3.3-70b-versatile: ✅
+- **OpenAI** gpt-4o-mini: ✅
+- **Gemini** gemini-2.5-flash: ✅ (richiede `thinkingConfig.thinkingBudget=0` altrimenti thinking mode consuma budget output)
+- **Cerebras** llama3.1-8b: ✅ (ma `gpt-oss-120b` e `qwen-3-235b` nel catalog **NON accessibili free tier** — paid tier required)
+
+**Gemini 2.0-flash** = quota 0 effettiva (deprecato o limitato), usare **gemini-2.5-flash** come default.
+
+### B — Primo dogfood Aider + Groq (cosmetic task, file del repo)
+- Target: `scripts/bench-ollama.ps1` — 2 `.EXAMPLE` extra + `.NOTES` section
+- Config: `aider --model groq/llama-3.3-70b-versatile --edit-format diff --no-auto-commits`
+- Risultato: ✅ SUCCESS, 11 insertions additive, 1 retry format, **~10s wall clock**, **$0.0033 cost** (free tier: $0)
+- Glitch minore: "è un implementazione" (manca apostrofo elisione, lingua non core issue)
+- Log Fase 6: `logs/aider-delegation-2026-04.md` dogfood #4
+
+### E — Bench speed cloud vs locale (stesso prompt DoublyLinkedList)
+
+| Model | Speed tok/s | vs locale equivalente |
+|-------|------------:|----------------------|
+| `groq/llama-3.3-70b-versatile` | **630.86** | **20.6×** vs qwen3:30b (30.67) |
+| `cerebras/llama3.1-8b` | **733.5** | **6.4×** vs qwen2.5-coder:7b (114) |
+
+Script riusabile: `scripts/bench-cloud.ps1`.
+
+### Implicazioni per routing strategy
+
+**Online mode (internet up + free quota)**: cloud è **dominante su tutti i fronti** — speed 6-20× maggiore, capability 70B/8B ≥ equivalente locale, cost $0.
+
+**Pattern routing proposto** (pending Fase 6 quality validation):
+- Tier 1 cosmetic ONLINE: `cerebras/llama3.1-8b` → fallback `qwen2.5-coder:7b`
+- Tier 2 behavior ONLINE: `groq/llama-3.3-70b-versatile` → fallback `qwen2.5-coder:14b-q2`
+- Tier 3 escalation: `groq/qwen-2.5-coder-32b` se disponibile (da verificare) / `qwen3-coder:30b` locale
+- Tier 4 capability-max: `openai/gpt-4o` / `gemini-2.5-pro`
+
+### Caveat critici (bloccanti shift definitivo)
+
+1. **Privacy**: send source code → data retention per Groq/Cerebras ToS. **Sovereign-first obbligatorio** per codice cliente/proprietario. Cloud OK per repo personali (questo ADR OK).
+2. **Quality coder**: bench speed dice nulla su qualità output coder. Llama general vs Qwen Coder specialist → possibile gap quality. Richiede quality bench (HumanEval-like) prima di promote definitivo.
+3. **Cerebras paid models**: `gpt-oss-120b`, `qwen-3-235b` catalog ma free tier blocca. Paid tier costs da verificare prima di considerare.
+4. **Rate limit**: Groq 6k tok/min → task Aider iterative (multi-turn) possibile throttle.
+5. **n=1**: speed bench singolo. Variability non misurata.
+
+### Status updates
+
+- **ADR-0013**: da **Proposed** a **Validation-in-progress** (speed PASS, quality + reliability pending Fase 6).
+- **CLAUDE.md tier routing**: NON aggiornato in questa sessione. Aspetta dogfood Fase 6 prima di shift paradigmatico.
+- **Follow-up critico**: quality bench (HumanEval pass@1 o equivalente) su Qwen Coder 7B/14B vs Llama 3.1-8B / 3.3-70B, per decidere se i coder-specialist locali hanno edge qualitativo che compensa lo speed gap.
+
+### Privacy guard aggiunto
+
+Per questo repo (`lenovo-ai-station`) = **OK cloud** (infrastructure-as-code personale, niente segreti — le keys sono fuori repo via `.config/` + `backup/*` gitignored).
+Per `Evo-Tactics` e `Synesthesia`: revisione caso-per-caso. Se contengono logica proprietaria cliente o dati sensibili → sovereign-first.

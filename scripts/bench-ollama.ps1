@@ -14,6 +14,17 @@
 
 .EXAMPLE
   .\bench-ollama.ps1 -Model qwen2.5-coder:14b-instruct-q2_K -NumCtx 8192
+.EXAMPLE
+  .\bench-ollama.ps1 -Model qwen3-coder:30b -NumCtx 16384
+.EXAMPLE
+  .\bench-ollama.ps1 -Model qwen2.5-coder:7b -NumCtx 4096
+
+.NOTES
+  Il prompt utilizzato è un implementazione Python di una classe DoublyLinkedList (hardcoded).
+  La temperatura è impostata su 0.
+  Il warm-up utilizza 30 token.
+  La misura utilizza 300 token.
+  Richiede Ollama HTTP API su 127.0.0.1:11434.
 #>
 param(
   [Parameter(Mandatory=$true)][string]$Model,
