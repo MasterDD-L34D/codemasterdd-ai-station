@@ -55,6 +55,18 @@ Target: piattaforma AI sovereign con zero subscription fisse post-maggio 2026.
 - Bloatware rimosso (21 pacchetti)
 - Account: eduscarpelli@gmail.com (con Claude Max attivo)
 
+## API keys tier 3 cloud (aggiunto 2026-04-22)
+- **Storage primario**: `C:\Users\edusc\.config\api-keys\keys.env` (ACL: solo `CODEMASTERDD\edusc:(F)`, inheritance disabilitata)
+- **Backup locale**: `C:\dev\codemasterdd-ai-station\backup\api-keys-2026-04-22.env` (gitignored via `backup/*`, ACL identiche)
+- **Config Aider globale**: `C:\Users\edusc\.aider.conf.yml` contiene `env-file:` → auto-load in ogni sessione Aider (via LiteLLM)
+- **Provider attivi** (free-tier):
+  - **Groq** (`GROQ_API_KEY`) — LPU inference veloce, tier free 6000 tok/min, candidato tier 3 prioritario. Model examples: `groq/llama-3.3-70b-versatile`, `groq/qwen-2.5-coder-32b`
+  - **Cerebras** (`CEREBRAS_API_KEY`) — WSE inference massima velocità, tier free generoso. Model examples: `cerebras/llama3.3-70b`
+  - **Google Gemini** (`GEMINI_API_KEY`) — 60 req/min free. Model examples: `gemini/gemini-2.0-flash-exp`
+  - **OpenAI** (`OPENAI_API_KEY`) — pay-per-use (no free tier generoso). Model examples: `gpt-4o`, `gpt-4o-mini`
+- **Uso bash sessions**: `set -a; source ~/.config/api-keys/keys.env; set +a` (non auto-caricato da Claude Code bash)
+- **Policy**: keys MAI in repo, MAI in registry (no setx), MAI in commit. Revoca rapida: `Remove-Item keys.env`. Vedi `docs/adr/0013-tier3-cloud-free-providers.md` per decision rationale.
+
 ## Stack installato
 - Git 2.53.0.windows.3
 - Claude Code 2.1.116 (OAuth Claude Max, Opus 4.7)
