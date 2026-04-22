@@ -222,3 +222,52 @@ Validazione empirica post ADR-0013. Stesso prompt DoublyLinkedList. Via `scripts
 2. **ADR-0013 status**: Proposed → **Validation-in-progress** (bench speed PASS, quality pending).
 3. **Nuovo pattern documentabile come esperimento**: usare cloud per N task nei prossimi giorni, registrare in log Fase 6 ciò che funziona e fallisce.
 4. **Privacy check**: attivare cloud solo su repo non-sensitive (lenovo-ai-station OK, eventuali repo cliente NO).
+
+---
+
+## Bench Gemma 4 locale (aggiunto 2026-04-22 notte, dopo bench cloud)
+
+Nuovo modello locale installato dall'utente stessa serata: `gemma4:latest` (Google open weights).
+
+### Specs modello (da `ollama show`)
+- **Architecture**: gemma4
+- **Parameters**: 8.0B
+- **Quantization**: Q4_K_M
+- **Context length nativo**: **131072 (128K)**
+- **Capabilities**: completion + **vision + audio + tools + thinking** — **unico modello locale multimodal**
+- **License**: Apache 2.0
+- **Size disk**: 9.6 GB (adapter vision/audio aggiungono overhead vs 8B Q4 standard ~5 GB)
+
+### Risultati bench stesso prompt DoublyLinkedList
+
+| num_ctx | Eval tok/s | Prompt tok/s | GPU offload | Size loaded |
+|---------|-----------:|-------------:|------------:|------------:|
+| 8192 | **39.26** | 3678.88 | 32% | 10 GB |
+| 16384 | **39.16** | 4118.95 | 33% | 10 GB |
+
+### Osservazioni
+
+1. **Ctx-insensitive** nel range 8192-16384 (delta -0.25% = rumore). Stesso pattern di qwen3:30b MoE.
+2. **CPU spill pesante** (67-68% CPU): size loaded 10 GB > 8 GB VRAM → non full-GPU senza ridurre ctx drasticamente. L'overhead multimodal (vision + audio adapter) sposta il peso oltre VRAM limit.
+3. **Speed intermedia**: 39 tok/s sta tra qwen 7B (114 tok/s, 100% GPU) e qwen3:30b MoE (30.67 tok/s, 32% GPU). Non competitivo con coder-specialist locali su speed pure, ma:
+   - ~30% più veloce di qwen3:30b MoE
+   - Molto più lento del qwen 7B coder
+
+### Positioning nel tier routing
+
+Gemma 4 **NON entra nel tier coder routing** (qwen coder-specialist dominano per quality + speed specifica per coding). Si posiziona come:
+
+- **Tier multimodal dedicato**: unica opzione locale per task che coinvolgono immagini (screenshot code review, diagrammi architetturali, OCR), audio (dictation → code comments, voice queries), tools nativi.
+- **Tier thinking/reasoning alt**: alternativa a qwen3:30b MoE per task che beneficiano di thinking mode esplicito. Da validare empiricamente quale produce migliore chain-of-thought.
+
+### Decisioni
+
+1. **CLAUDE.md "Modelli locali"**: aggiungere riga per `gemma4:latest` con nota "tier multimodal dedicato, non coder".
+2. **Tier routing coder invariato**: per task coding continuiamo Qwen-specialist (7B/14B/30B MoE).
+3. **Dogfood multimodal deferred**: da provare quando emerge use case reale (es. screenshot bug report → Aider + Gemma 4 vision per diagnosi, oppure audio dictation → code comments).
+4. **Quality bench multimodal deferred**: nessun altro modello locale multimodal per baseline comparativo.
+
+### Non testato (parking)
+- Bench ctx 32768 stress → atteso flat come altri MoE/multimodal. Marginal value.
+- Bench quality output code (HumanEval o simile) vs Qwen Coder.
+- Bench vision capability (richiede setup immagine + prompt strutturato, non in scope bench tok/s).
