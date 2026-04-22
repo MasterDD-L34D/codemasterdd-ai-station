@@ -62,3 +62,6 @@ backup/*
 # === Claude Code ===
 .claude/
 .aider*
+
+# === Quality bench results (framework tracked, run outputs ignored) ===
+scripts/quality-bench/results/
