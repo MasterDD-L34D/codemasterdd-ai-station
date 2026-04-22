@@ -81,10 +81,39 @@ function Invoke-Bench($maxTokens) {
     temperature = 0
   } | ConvertTo-Json -Depth 5
 
-  $sw = [Diagnostics.Stopwatch]::StartNew()
-  $r = Invoke-RestMethod -Uri $url -Method Post -Headers $headers -Body $payload -TimeoutSec 300
-  $sw.Stop()
-  return @{ response = $r; wallMs = $sw.ElapsedMilliseconds }
+  $attempt = 0
+  $maxAttempts = 3
+  $backoffSeconds = @(1, 2)
+
+  while ($attempt -lt $maxAttempts) {
+    try {
+      $sw = [Diagnostics.Stopwatch]::StartNew()
+      $r = Invoke-RestMethod -Uri $url -Method Post -Headers $headers -Body $payload -TimeoutSec 300
+      $sw.Stop()
+      return @{ response = $r; wallMs = $sw.ElapsedMilliseconds }
+    } catch {
+      if ($_.Exception.GetType().Name -eq 'HttpWebResponseException' -and ($_.Exception.Response.StatusCode -eq 429 -or $_.Exception.Response.StatusCode -eq 500 -or $_.Exception.Response.StatusCode -eq 502 -or $_.Exception.Response.StatusCode -eq 503 -or $_.Exception.Response.StatusCode -eq 504)) {
+        # retry for HTTP status 429, 500, 502, 503, 504
+        $attempt++
+        if ($attempt -lt $maxAttempts) {
+          Start-Sleep -Seconds $backoffSeconds[$attempt - 1]
+        } else {
+          throw "Failed after $maxAttempts attempts for $Provider/$Model"
+        }
+      } elseif ($_.Exception.GetType().Name -eq 'WebException' -or $_.Exception.GetType().Name -eq 'HttpRequestException') {
+        # retry for System.Net.WebException or System.Net.Http.HttpRequestException
+        $attempt++
+        if ($attempt -lt $maxAttempts) {
+          Start-Sleep -Seconds $backoffSeconds[$attempt - 1]
+        } else {
+          throw "Failed after $maxAttempts attempts for $Provider/$Model"
+        }
+      } else {
+        # propagate other errors immediately
+        throw
+      }
+    }
+  }
 }
 
 Write-Host "[$(Get-Date -Format HH:mm:ss)] Warm-up $Provider/$Model ..."
