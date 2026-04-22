@@ -271,3 +271,74 @@ Gemma 4 **NON entra nel tier coder routing** (qwen coder-specialist dominano per
 - Bench ctx 32768 stress → atteso flat come altri MoE/multimodal. Marginal value.
 - Bench quality output code (HumanEval o simile) vs Qwen Coder.
 - Bench vision capability (richiede setup immagine + prompt strutturato, non in scope bench tok/s).
+
+---
+
+## Bench deepseek-r1:8b + gpt-oss:120b (Task #13, 2026-04-23 notte)
+
+Modelli pullati dall'utente 2026-04-22 in parallelo alla sessione principale, valutazione rimandata come Task #13.
+
+### deepseek-r1:8b
+
+**Specs** (da `ollama show`):
+- **Architecture**: qwen3 (fine-tune: DeepSeek R1 distillation su Qwen 3 8B base)
+- **Parameters**: 8.2B
+- **Quantization**: Q4_K_M (5.2 GB disk / 6.0 GB loaded)
+- **Context length nativo**: 131072 (128K)
+- **Capabilities**: completion + **thinking** (R1 reasoning mode)
+
+**Risultati bench stesso prompt DoublyLinkedList**:
+
+| num_ctx | Eval tok/s | Prompt tok/s | GPU offload | Size loaded |
+|---------|-----------:|-------------:|------------:|------------:|
+| 8192 | **74.57** | 5038.32 | **100% (full GPU)** | 6.0 GB |
+| 16384 | **47.46** | 3382.66 | 87% | 6.7 GB |
+
+**Osservazioni**:
+1. **Full-GPU @ ctx 8192**: prima tra i 8B locali a fittare completamente VRAM (qwen3:8b non benchato, gemma4 no per overhead multimodal).
+2. Raddoppio ctx → -36% speed (KV cache spill inizia a ctx 16384, simile pattern 14B Q2).
+3. Speed @ ctx 8192 (74.57 tok/s) è **~35% più lento di qwen 2.5 Coder 7B** (114 tok/s) — giusto tradeoff per thinking mode + 8B vs 7B.
+
+**Positioning nel tier routing**:
+- **Tier thinking/reasoning locale**: R1 distillation = chain-of-thought implicito per task che richiedono ragionamento esteso (debug logica complessa, architecture decisions, math-heavy code).
+- Alternative locale a qwen3:30b MoE per reasoning (qwen3 ha pure thinking ma diversa scala/performance).
+- **Non coder-specialist**: per coding puro continuare Qwen 2.5 Coder.
+
+### gpt-oss:120b — NON viable locale
+
+**Specs** (da `ollama show`):
+- **Architecture**: gptoss
+- **Parameters**: **116.8B** (!!)
+- **Quantization**: **MXFP4** (Microsoft mixed 4-bit float — quantization aggressive)
+- **Context length nativo**: 131072 (128K)
+- **Capabilities**: completion + tools + thinking
+- **License**: Apache 2.0
+- **Size disk**: 65 GB
+
+**RAM budget check**:
+- Runtime estimate: 116.8B × 0.5 byte/param (MXFP4) ≈ 58 GB weights + KV cache @ 128K + overhead ≈ **70+ GB RAM** minimo
+- Hardware attuale: **63.37 GB RAM totali, ~53 GB free idle**
+- **Verdetto**: NON caricabile localmente senza swap catastrofico o OOM crash
+
+**Bench NON eseguito** per safety (rischio freeze Windows). 
+
+### Opzioni gpt-oss:120b
+
+1. **Via cloud**: Cerebras catalog include `gpt-oss-120b` ma **free tier BLOCCA accesso** (verificato sessione precedente). Paid tier richiesto — costi non valutati.
+2. **Upgrade RAM a 96/128 GB**: fuori scope budget 2026-04.
+3. **Tenere su disco** per future upgrade: costa 65 GB disk (abbiamo ~820 GB free post-setup, impact basso).
+4. **Delete** per recuperare spazio: reversibile via re-pull (lento ma possibile).
+
+**Decisione**: mantenere su disco come reference, valutare decisione permanente in Fase 6/7 quando use case reale per modelli 100B+ emerge (o no).
+
+### Positioning finale modelli locali post-Task-#13
+
+| Tier | Model | Speed @ ctx 8192 | Purpose | VRAM fit |
+|------|-------|-----------------:|---------|----------|
+| cosmetic locale | qwen2.5-coder:7b | 114 tok/s | coder quick | 100% GPU |
+| behavior locale | qwen2.5-coder:14b-q2 | 25.39 tok/s | coder default | 85% GPU |
+| escalation locale | qwen3-coder:30b MoE | 30.67 tok/s | coder escalation | 32% GPU spill OK |
+| **reasoning locale** | **deepseek-r1:8b** | **74.57 tok/s** | thinking/chain-of-thought | **100% GPU** |
+| multimodal locale | gemma4:latest | 39.26 tok/s | vision/audio/thinking | 32% GPU spill |
+| ❌ NON viable locale | gpt-oss:120b | N/A | capability-max cloud-only | richiede 70+ GB RAM |
+| ❌ SCARTATO tier | qwen2.5-coder:32b dense | 3.65 tok/s | CPU-bound 73% | reference only (ADR-0012) |
