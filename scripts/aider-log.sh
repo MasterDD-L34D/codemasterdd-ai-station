@@ -5,6 +5,10 @@
 # Parses "Tokens:" line + "Commit HASH" + outcome heuristics from stdin,
 # appends row to current-month log file in current git repo root.
 
+# Exit codes:
+# 0 = success (entry logged)
+# 1 = error (missing required argument, not in a git repo, or invalid input)
+
 set -u
 
 TASK=""
