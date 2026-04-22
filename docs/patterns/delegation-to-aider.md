@@ -254,10 +254,73 @@ Se un edit va male post-commit (auto-commit o manuale) e voglio annullarlo:
 - **Guard rail hook** protegge il 99% casi ma non garantisce zero danno. `git diff HEAD~1` post-commit sempre consigliato come seconda linea di difesa.
 - **Output Aider verboso** su --message può costare più token in input a Claude Code che risparmiato in codegen, su task piccoli. Usare `tail`/`head` per estrarre solo info rilevanti.
 
+## Extension tier 3 cloud (aggiunto 2026-04-22 combo F + 2026-04-23 wrapper D)
+
+Post acquisizione 4 API keys cloud (ADR-0013) + bench empirico:
+
+### Wrapper disponibili (tutti in `C:\Users\edusc\.local\bin\`)
+
+| Wrapper | Tier | Model default | Speed empirica | Use case |
+|---------|------|---------------|---------------:|----------|
+| `aider-cosmetic` | 1 locale | `ollama/qwen2.5-coder:7b` | 114 tok/s | cosmetic (JSDoc, rename, docstring) |
+| `aider-refactor` | 2 locale | `ollama/qwen2.5-coder:14b-q2` | 25 tok/s | behavior-critical default |
+| `aider-groq` | 3 cloud | `groq/llama-3.3-70b-versatile` | **630 tok/s** | behavior-critical online preferred |
+| `aider-cerebras` | 3 cloud | `cerebras/llama3.1-8b` | **733 tok/s** | cosmetic online preferred (8B general) |
+| `aider-gemini` | 4 cloud | `gemini/gemini-2.5-flash` | n/a bench | multimodal/thinking (attenzione thinking budget) |
+| `aider-openai` | 4 cloud | `openai/gpt-4o-mini` | n/a bench | capability-max pay-per-use |
+
+### Decision tree esteso (post combo F)
+
+Prima di classificare cosmetic/behavior/strategic (decision tree originale sopra), considera **online/offline** e **privacy**:
+
+1. **Codice sensibile (cliente, proprietario, con segreti)?**
+   - Sì → **sovereign-first obbligatorio**: `aider-cosmetic` / `aider-refactor` locali. Stop, ignora cloud.
+   - No (repo personale, open-source, infra-as-code) → step 2
+
+2. **Internet disponibile E free tier quota non exhausted?**
+   - No → fallback locale (`aider-cosmetic` / `aider-refactor`)
+   - Sì → step 3
+
+3. **Classe task**:
+   - **Cosmetic small** (<50 righe, no logica) → `aider-cerebras` (733 tok/s free) OR `aider-cosmetic` locale se preferisci sovereign
+   - **Cosmetic/behavior standard** → `aider-groq` (630 tok/s, 70B capability, free tier)
+   - **Reasoning esteso / thinking mode** → `aider-gemini` (2.5 Flash con thinking) OR locale `deepseek-r1:8b` via ollama
+   - **Multimodal** (screenshot, vision) → `aider-gemini` OR Gemma 4 locale
+   - **Capability-max** (bug oscuro, refactor architetturale) → `aider-openai` (gpt-4o) pay-per-use — ultimo resort
+
+### Privacy guard rail per repo
+
+Classificazione repo attuali (da aggiornare se emergono):
+
+| Repo | Classe | Cloud OK? |
+|------|--------|-----------|
+| `codemasterdd-ai-station` | Infrastructure-as-code personale | ✅ Sì |
+| `Game` (Evo-Tactics) | Gioco personale, game logic | ✅ Sì probabile (no segreti) |
+| `synesthesia` | Web app esame UniUPO | ⚠️ Verificare se contiene dati studenti o segreti exam |
+| (futuro) cliente | Codice proprietario cliente | ❌ NO, sovereign-first |
+
+### Caveat operativi tier 3
+
+- **Groq rate limit**: 6000 tok/min free tier. Task iterativi multi-turn (Aider 5+ round) possono saturare. Se 429 → fallback automatico locale o retry con backoff.
+- **Cerebras free tier**: solo `llama3.1-8b` accessibile. Modelli grandi catalog (`gpt-oss-120b`, `qwen-3-235b`) richiedono paid tier.
+- **Gemini thinking budget**: default consuma token → potrebbe eccedere budget output su max_tokens bassi. Se output vuoto/truncated, disable thinking via LiteLLM `--extra-body` o alzare max_tokens.
+- **OpenAI cost tracking**: unica cloud a pagamento. Monitorare via `ccusage` o OpenAI dashboard — alert su $10/mese.
+- **Auto-commit DISABILITATO** su tutti i wrapper cloud (`--no-auto-commits`) per review Claude Code obbligatoria: cloud output quality non ancora validata in produzione, pattern safety.
+
+### Output atteso in log Fase 6
+
+Per ogni delega cloud aggiungere colonna extra:
+- `provider` (groq/cerebras/gemini/openai)
+- `quota_ok` (Y/N, solo se vedi 429/quota error)
+- `cost_usd` (da usage response, 0 se free tier)
+
 ## Riferimenti
 
 - ADR-0007 — benchmark e paradox quantization: `docs/adr/0007-aider-qwen-quantization-findings.md`
 - ADR-0008 — silent corruption + dual-stack decision: `docs/adr/0008-aider-whole-format-silent-corruption.md`
-- Wrapper fallback (cmd.exe): `C:\Users\edusc\.local\bin\aider-cosmetic.cmd`, `C:\Users\edusc\.local\bin\aider-refactor.cmd`
-- Hook guard rail: `C:\Users\edusc\.local\share\git-hooks\pre-commit` (attivato via `git config --global core.hooksPath`)
+- **ADR-0013 — tier 3 cloud free-tier providers**: `docs/adr/0013-tier3-cloud-free-providers.md` (Validation-in-progress)
+- **Bench empirico combo F**: `docs/research/bench-post-ram-upgrade-2026-04-22.md` section "Bench cloud tier 3"
+- Wrapper locali: `aider-cosmetic.cmd`, `aider-refactor.cmd`
+- **Wrapper cloud** (2026-04-23): `aider-groq.cmd`, `aider-cerebras.cmd`, `aider-gemini.cmd`, `aider-openai.cmd`
+- Hook guard rail: `C:\Users\edusc\.local\share\git-hooks\pre-commit` + `commit-msg` (ADR-0011) attivati via `git config --global core.hooksPath`
 - Log template: `docs/patterns/aider-delegation-log-template.md`

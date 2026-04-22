@@ -181,9 +181,16 @@ lenovo-ai-station/
     4. Claude Code PreToolUse `scripts/hooks/commit-guard.js` — fail-fast in sessione Claude Code (duplicato di 1 per feedback veloce).
   - Bypass guard rail con `git commit --no-verify`, non raccomandato
 
-- **Wrapper CLI per delegazione** (in PATH Windows, eseguibili da cmd.exe):
-  - `aider-cosmetic <file>` → 7B + whole (JSDoc, docstrings, rename, lint-fix)
-  - `aider-refactor <file>` → 14B Q2 + diff + no-auto-commits (refactor, bug fix, logic change)
+- **Wrapper CLI per delegazione** (in `C:\Users\edusc\.local\bin\`, eseguibili da cmd.exe):
+  - **Locali (tier 1-2 sovereign)**:
+    - `aider-cosmetic <file>` → 7B + whole (JSDoc, docstrings, rename, lint-fix) — 114 tok/s
+    - `aider-refactor <file>` → 14B Q2 + diff + no-auto-commits (refactor, bug fix, logic change) — 25 tok/s
+  - **Cloud (tier 3-4, aggiunti 2026-04-23 combo F+D, vedi ADR-0013)**:
+    - `aider-groq <file>` → groq/llama-3.3-70b-versatile + diff + no-auto-commits — 630 tok/s free tier
+    - `aider-cerebras <file>` → cerebras/llama3.1-8b + diff + no-auto-commits — 733 tok/s free tier
+    - `aider-gemini <file>` → gemini/gemini-2.5-flash + diff + no-auto-commits (attenzione thinking budget)
+    - `aider-openai <file>` → openai/gpt-4o-mini + diff + no-auto-commits — **paid, monitorare ccusage**
+  - **Privacy guard rail**: cloud OK solo su repo non-sensitive (`codemasterdd-ai-station` sì, Evo-Tactics/Synesthesia verificare caso-per-caso, repo cliente MAI). Vedi `docs/patterns/delegation-to-aider.md` Extension tier 3 cloud.
 
 - **Delegation protocol Claude Code → Aider**: vedi `docs/patterns/delegation-to-aider.md` — decision tree classification, formato handoff, review loop, tracking fail rate per Fase 6
 
