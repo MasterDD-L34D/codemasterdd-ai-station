@@ -11,6 +11,23 @@
 # Usage (PowerShell admin):
 #   .\scripts\bitlocker-hard-disable.ps1
 
+<#
+.SYNOPSIS
+Disabilita BitLocker in modo completo su un disco.
+
+.DESCRIPTION
+Questo script esegue una disabilitazione triplo di BitLocker per impedire l'auto-encryption su Windows 11. 
+Il processo include la decrittazione del disco, la modifica del registro per prevenire l'auto-encryption e la disabilitazione del servizio BDESVC.
+
+.NOTES
+Questo script è stato sviluppato per prevenire problemi di lock-out come quello riscontrato nel pattern Victus.
+Per ulteriori dettagli, vedere il JOURNAL 2026-04-19.
+
+.EXAMPLE
+.\scripts\bitlocker-hard-disable.ps1
+Esegui il processo di disabilitazione di BitLocker completo.
+#>
+
 # Livello 1 — Decrittazione disco
 manage-bde -off C:  # wait until "Fully Decrypted" in manage-bde -status
 

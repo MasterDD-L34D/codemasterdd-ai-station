@@ -10,6 +10,23 @@
 # Usage (PowerShell admin):
 #   .\scripts\disconnect-onedrive.ps1
 
+<#
+.SYNOPSIS
+Scollega OneDrive in modo pulito.
+
+.DESCRIPTION
+Questo script esegue un disconnessione pulita di OneDrive, rimuovendo l'account personale e aziendale, 
+disabilitando il servizio di avvio e la sincronizzazione. Il processo preserva le dipendenze Windows come BitLocker key sync.
+
+.NOTES
+Questo script è stato sviluppato per prevenire problemi di lock-out come quello riscontrato nel pattern Victus.
+Per ulteriori dettagli, vedere il JOURNAL 2026-04-19.
+
+.EXAMPLE
+.\scripts\disconnect-onedrive.ps1
+Esegui il processo di disconnessione pulita di OneDrive.
+#>
+
 # 1. Backup registry PRIMA di operazioni
 $backupDir = "C:\dev\backup-$(Get-Date -Format 'yyyyMMdd-HHmm')"
 New-Item -Path $backupDir -ItemType Directory -Force
