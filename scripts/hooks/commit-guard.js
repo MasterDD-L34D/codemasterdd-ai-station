@@ -1,7 +1,10 @@
 #!/usr/bin/env node
-// PreToolUse hook: valida Conventional Commits per git commit -m "..."
-// Adapted for Claude Code 2.1+ stdin JSON format.
-// Original source: rohitg00/awesome-claude-code-toolkit/hooks/scripts/commit-guard.js
+
+/**
+ * PreToolUse hook: valida Conventional Commits per git commit -m "..."
+ * Adapted for Claude Code 2.1+ stdin JSON format.
+ * Original source: rohitg00/awesome-claude-code-toolkit/hooks/scripts/commit-guard.js
+ */
 
 let input = '';
 process.stdin.on('data', chunk => input += chunk);
@@ -26,19 +29,31 @@ process.stdin.on('end', () => {
   const msg = msgMatch[1];
   const errors = [];
 
+  /**
+   * Regex per il pattern dei messaggi di commit Conventional Commits.
+   */
   const conventionalPattern = /^(feat|fix|docs|style|refactor|perf|test|chore|ci|build|revert)(\(.+\))?!?:\s.+/;
   if (!conventionalPattern.test(msg)) {
     errors.push('Message does not follow conventional commit format: type(scope): description');
   }
 
+  /**
+   * Verifica che la lunghezza del messaggio non superi i 72 caratteri.
+   */
   if (msg.length > 72) {
     errors.push(`Subject line is ${msg.length} chars (max 72)`);
   }
 
+  /**
+   * Verifica che il messaggio non termini con un punto.
+   */
   if (msg.endsWith('.')) {
     errors.push('Subject line should not end with a period');
   }
 
+  /**
+   * Verifica che la prima lettera del descrittore sia in minuscolo.
+   */
   const firstChar = msg.replace(/^(feat|fix|docs|style|refactor|perf|test|chore|ci|build|revert)(\(.+\))?!?:\s/, '')[0];
   if (firstChar && firstChar === firstChar.toUpperCase()) {
     errors.push('Description should start with lowercase letter');
