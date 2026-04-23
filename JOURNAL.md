@@ -791,3 +791,43 @@ Cost observation: cache read (155M su 159M totali, 97%) indica prompt caching An
 - **6 dogfood Fase 6 inaugurali** (3 locale + 2 cloud cosmetic + 1 cloud behavior-critical) — 100% success cumulative
 - **Quality bench framework** riusabile per future re-run mirati
 - Barra globale **88% → 88%** invariata (fasi-based, attende chiusura Fase 6), ma "robustezza dell'88%" cresciuta significativamente
+
+---
+
+## 2026-04-23 (sera — integrazione framework archivio + normalizzazione governance)
+
+### Completato
+- **Analisi strutturale "Principal Engineer + Systems Architect + Technical PM + Archivist"** dello stato reale del progetto, con produzione 9 sezioni (snapshot, reality map, core priorities, continuation strategy, phased roadmap, sprint plan, open decisions, backlog, next action)
+- **Primo round governance files**: scritti 7 file root-level (PROJECT_BRIEF, COMPACT_CONTEXT, DECISIONS_LOG, BACKLOG, OPEN_DECISIONS, ROADMAP, SPRINT_01) con schema custom basato sull'analisi del progetto reale
+- **Scoperta `Archivio_Libreria_Operativa_Progetti/`** (~130 file, importato 20:42 stesso giorno): framework operativo multi-progetto con bootstrap kit + 07_CLAUDE_CODE_OPERATING_PACKAGE + libreria prompt + workflow + template reali + reference OCR TikTok. Framework è **game-biased** per default (master orchestrator menziona "game repository", FIRST_PRINCIPLES_GAME_CHECKLIST, ecc.)
+- **Conflitto fonti riconciliato** (CLAUDE_OPERATING_RULES regola 1 "non scegliere in silenzio"):
+  - Schema template archivio ≠ schema custom dei miei 7 file
+  - 4 file del kit mancanti nella mia prima scrittura (MASTER_PROMPT, REFERENCE_INDEX, PROMPT_LIBRARY, MODEL_ROUTING)
+  - `FIRST_PRINCIPLES_GAME_CHECKLIST` N/A (non game repo)
+  - Meta-regole 07_OPERATING_PACKAGE da coabitare con CLAUDE.md progetto-specifico
+- **Proposta riconciliazione A+B+C+D+E presentata all'utente** con opzioni esplicite (rewrite totale / merge ibrido / solo missing files) + **OK utente "procedi"** ricevuto
+- **Secondo round governance files** (merge ibrido):
+  - 5 file riscritti seguendo schema bootstrap-kit mantenendo contenuto ricco (PROJECT_BRIEF 9 sezioni template, COMPACT_CONTEXT 9 sezioni template, DECISIONS_LOG ibrido ADR-index + "Decisioni NNN", OPEN_DECISIONS formato `[OD-NNN]`, BACKLOG con "Primo sprint consigliato" inline)
+  - 4 file creati nuovi compilati col contesto reale (MASTER_PROMPT portabile, REFERENCE_INDEX con 30+ asset catalogati per categoria GOV/ADR/PAT/RES/LES/REF/SES/LOG/ARC/X, PROMPT_LIBRARY con prompt universali + 7 progetto-specifici + scenari, MODEL_ROUTING con 10 modelli + 4 policy + evoluzione post-Fase-6)
+  - ROADMAP + SPRINT_01 retained come extension progetto-specifica (non nel kit standard ma high-value)
+- **3 Decisioni non-ADR registrate** in `DECISIONS_LOG.md`:
+  - Decisione 001 — Adozione schema framework archivio per governance files
+  - Decisione 002 — `FIRST_PRINCIPLES_GAME_CHECKLIST` N/A per questo repo
+  - Decisione 003 — Regole 07_OPERATING_PACKAGE restano nell'archivio, non duplicate al root
+- **Pointer propagati**: `CLAUDE.md` sezione "Governance meta-operativa" + ordine lettura nuove sessioni; `README.md` indice 11 file governance
+- **Commit `4f5227c`** (122 file, +7867 righe): envelope A basso rischio, zero codice toccato. Push `a23b533..4f5227c main -> main` ✅
+- **Memory refresh** `project_session_resumption.md` trasformata in lean pointer (HEAD aggiornato + nota integrazione + pointer a `COMPACT_CONTEXT.md` per snapshot completo). Evita duplicazione contenuto.
+
+### Da fare (post-sessione)
+- **SPRINT_01 T1** — Dogfood behavior-critical cloud #2 (retry logic su `scripts/quality-bench/run-bench.ps1` via `aider-groq`) per sbloccare P1 + validare fix cp1252
+- **SPRINT_01 T2** — Dogfood cosmetic batch JSDoc/help su script residui
+- **M3 condizionale** — Wrapper PowerShell alternative se fix cp1252 fallisce sotto retry reale
+- **M5** — Privacy validation sessione Synesthesia (criterio 3 ADR-0014)
+- **Review settimana 2** ~2026-05-07
+
+### Note
+- **Lezione meta-metodologica**: la mia prima analisi "Principal Engineer" è stata completa sul dominio-progetto ma **cieca al framework operativo importato la stessa mattina**. L'utente ha dovuto indicare esplicitamente "dovresti trovare tutto qui" → scoperta archivio → necessità di rifare. Insegnamento: aprire sessione con `ls` root + `ls` cartelle recenti quando lavoro su analisi strutturale, non assumere che il CLAUDE.md sia l'unica fonte di governance.
+- **CLAUDE_OPERATING_RULES regola 1** applicata correttamente nel secondo round: conflitto esplicitato + riconciliazione proposta + OK utente prima di procedere. Questo rituale ha prevenuto rewrite ciechi.
+- **File-first regola** (CLAUDE_OPERATING_RULES #4) rispettata: la sessione produce 11 file + 2 edit + 1 memory refresh + 1 commit, non long chat explanations.
+- **Change budget** envelope A (basso rischio): solo docs, zero codice, zero impatto stack AI operativo. Sessione ~1h ma output durevole (framework setup + navigable governance).
+- **Barra progetto invariata 88%**: governance normalization non è progresso fase, è **infrastructure quality**. L'ETA di chiusura Fase 6 non cambia, ma il progetto è ora **materialmente più operabile** da sessioni future (umane o agenti) grazie a schema prescrittivo consistente.
