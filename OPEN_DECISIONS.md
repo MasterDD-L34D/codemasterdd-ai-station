@@ -63,10 +63,10 @@
 
 ---
 
-### [OD-006] Routing threshold: constraint count per delegazione cloud vs locale vs manuale
+### [OD-006] ~~Routing threshold: constraint count per delegazione cloud vs locale vs manuale~~ **CLOSED 2026-04-24**
 
 - **Livello**: workflow / tooling
-- **Stato**: **formalizzata in ADR-0016 (Proposed 2026-04-24)** — pattern confermato da n=6 data points cross-tier + n=11 cumulative. Chiude questo OD.
+- **Stato**: **CLOSED** — formalizzata in ADR-0016 (Proposed 2026-04-24). Pattern confermato da n=6 data points cross-tier + n=11 cumulative. Follow-up raccolta n≥3 data points addizionali verso Accepted tracciato in BACKLOG H6 (chiuso anch'esso).
 - **Ambiguità**: Groq 70B cloud degrada significativamente su task behavior-critical con ≥5 constraint espliciti (dogfood #7: 20% compliance). Qwen 7B local degrada su task cosmetic con ≥2 constraint trasformativi (dogfood #8: 50% compliance). **Soglia routing quantitativa va formalizzata**?
 - **Perché conta**: routing attuale classifica per **natura task** (cosmetic/behavior/strategic). Il nuovo dato suggerisce **constraint-count** come seconda dimensione discriminante — potenziale revisione della decision matrix CLAUDE.md.
 - **Miglior default proposto**:
