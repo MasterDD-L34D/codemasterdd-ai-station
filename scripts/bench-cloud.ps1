@@ -81,37 +81,35 @@ function Invoke-Bench($maxTokens) {
     temperature = 0
   } | ConvertTo-Json -Depth 5
 
-  $attempt = 0
+  # Retry on transient: HTTP 429/5xx, WebException, HttpRequestException.
+  # PS 5.1 Invoke-RestMethod raises WebException with .Response.StatusCode (HttpStatusCode enum);
+  # PS 7+ raises HttpResponseException. Handle both.
+  $retryStatus = @(429, 500, 502, 503, 504)
   $maxAttempts = 3
   $backoffSeconds = @(1, 2)
 
-  while ($attempt -lt $maxAttempts) {
+  for ($attempt = 1; $attempt -le $maxAttempts; $attempt++) {
     try {
       $sw = [Diagnostics.Stopwatch]::StartNew()
       $r = Invoke-RestMethod -Uri $url -Method Post -Headers $headers -Body $payload -TimeoutSec 300
       $sw.Stop()
       return @{ response = $r; wallMs = $sw.ElapsedMilliseconds }
     } catch {
-      if ($_.Exception.GetType().Name -eq 'HttpWebResponseException' -and ($_.Exception.Response.StatusCode -eq 429 -or $_.Exception.Response.StatusCode -eq 500 -or $_.Exception.Response.StatusCode -eq 502 -or $_.Exception.Response.StatusCode -eq 503 -or $_.Exception.Response.StatusCode -eq 504)) {
-        # retry for HTTP status 429, 500, 502, 503, 504
-        $attempt++
-        if ($attempt -lt $maxAttempts) {
-          Start-Sleep -Seconds $backoffSeconds[$attempt - 1]
-        } else {
-          throw "Failed after $maxAttempts attempts for $Provider/$Model"
-        }
-      } elseif ($_.Exception.GetType().Name -eq 'WebException' -or $_.Exception.GetType().Name -eq 'HttpRequestException') {
-        # retry for System.Net.WebException or System.Net.Http.HttpRequestException
-        $attempt++
-        if ($attempt -lt $maxAttempts) {
-          Start-Sleep -Seconds $backoffSeconds[$attempt - 1]
-        } else {
-          throw "Failed after $maxAttempts attempts for $Provider/$Model"
-        }
-      } else {
-        # propagate other errors immediately
-        throw
+      $ex = $_.Exception
+      $typeName = $ex.GetType().Name
+      $statusCode = 0
+      if ($ex.Response -and $ex.Response.StatusCode) {
+        $statusCode = [int]$ex.Response.StatusCode
       }
+      $isTransient = ($statusCode -in $retryStatus) -or ($typeName -in @('WebException', 'HttpRequestException', 'HttpResponseException'))
+      if ($isTransient -and $attempt -lt $maxAttempts) {
+        Start-Sleep -Seconds $backoffSeconds[$attempt - 1]
+        continue
+      }
+      if ($isTransient) {
+        throw "Transient failure after $maxAttempts attempts for $Provider/$Model (last status=$statusCode, type=$typeName): $($ex.Message)"
+      }
+      throw
     }
   }
 }

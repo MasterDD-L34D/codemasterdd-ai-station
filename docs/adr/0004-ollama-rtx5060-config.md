@@ -2,10 +2,15 @@
 
 > *TL;DR: Ollama configurato con `OLLAMA_FLASH_ATTENTION=1`, `OLLAMA_KV_CACHE_TYPE=q8_0`, `KEEP_ALIVE=30m` per massimizzare throughput su RTX 5060 8GB evitando MoE (NVFP4 rotto su Blackwell sm_120). Trade-off: vincolo modelli ≤14B dense, no vision, no MXFP4 per ora.*
 
-**Status**: Accepted
+**Status**: Accepted (razionale `num_ctx=8192` e "MoE da evitare" parzialmente superati da ADR-0012 + ADR-0013; env vars restano invariate)
 **Data**: 2026-04-20
 **Decisore**: Eduardo Scarpelli
 **Tipo decisione**: tecnica (performance, LLM locali)
+
+> ⚠️ **Aggiornamenti post-2026-04-22**:
+> - `OLLAMA_CONTEXT_LENGTH=8192`: razionale "RAM tight su 16GB" decaduto post upgrade 64GB (ADR-0012), ma il default resta ottimale per tier 1 14B Q2 speed-wise. Vedi ADR-0012 Addendum.
+> - "Evitare MoE": contraddetto empiricamente da `qwen3-coder:30b` MoE (ADR-0009 addendum + ADR-0012 bench) — promosso tier 2 stabile. Blackwell issues erano su NVFP4 / MXFP4 specifici, MoE Q4_K_M gira OK.
+> - Env vars (`FLASH_ATTENTION=1`, `KV_CACHE_TYPE=q8_0`, `KEEP_ALIVE=30m`, `MAX_LOADED_MODELS=1`) **invariate** e validate in produzione.
 
 ## Contesto
 

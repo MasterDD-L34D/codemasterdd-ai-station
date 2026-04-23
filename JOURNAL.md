@@ -754,3 +754,40 @@ Cost observation: cache read (155M su 159M totali, 97%) indica prompt caching An
 - **Dogfood #4 è il primo task reale con cloud tier 3** — milestone Fase 6
 - Costo sessione combo F: $0.0033 Groq (dogfood) + $0 bench (usage non-chargeable per bench endpoint). Free tier ampiamente sufficiente
 - Privacy nota: repo `lenovo-ai-station` è infrastructure-as-code personale, nessun segreto. Cloud OK qui. Per repo cliente revisione caso-per-caso
+
+---
+
+## 2026-04-23 (notte — ADR ratification + fix sweep)
+
+### Completato
+- **ADR-0014 scritto + Accepted** stessa sessione: Fase 6 timeline compression da 3 mesi → ~4 settimane (rationale: ADR-0013 risolve Q1+Q2 infrastrutturalmente; Q3 quality validabile in settimane; Q4 reliability ottenibile con n≥20 in 4 settimane).
+- **Quality bench framework creato** (`scripts/quality-bench/`): 10 problemi easy + 5 hard Python, runner multi-provider, sandbox subprocess, parse resilience.
+- **2 iterazioni bench eseguite**: v1 easy 60 test, v2 hard 25 test. **Totale 75 test, 100% pass@1 universale su 5 modelli coder**. deepseek-r1 framework-limited su thinking mode (5/10 con num_predict=2000, non capability issue).
+- **Finding strategico**: problem set standard non discrimina modelli moderni coder-capable → quality parity locale/cloud **confermata** → shift cloud-first ha senso solo per speed, non capability.
+- **Dogfood #6** behavior-critical reale: retry logic su `scripts/bench-cloud.ps1` via wrapper `aider-groq`, 1st-try success, $0.0030 free tier. Primo behavior-critical cloud Fase 6.
+- **ADR-0013 → Accepted** (ratificato): speed + quality + privacy + wrapper + dogfood tutti PASS + OK utente.
+- **ADR-0014 → Accepted** (ratificato): rationale confermato dal bench 75 test + OK utente.
+- **Sweep check pre-close**: 4 fix applicati
+  1. Retry logic `bench-cloud.ps1` refactored (dead branch `HttpWebResponseException` inventato da dogfood #6 → rewrite pulito con `$statusCode` + transient detection robusta PS 5.1/7+)
+  2. README.md aggiornato (hardware 64GB, stack full, roadmap compressa)
+  3. ADR-0004 status con superseded notes (num_ctx 8192 + "evitare MoE" superati)
+  4. Questo JOURNAL entry
+
+### Findings strategici
+- **Timeline progetto compressa -3 mesi**: ETA barra 100% da ~fine agosto 2026 → ~**fine maggio 2026**
+- **Budget scenario target**: da ibrido Claude Pro $240-420/anno → **full-sovereign $0-50/anno** via free-tier cloud (Groq+Cerebras) + Ollama locale
+- **Zero subscription ricorrenti** realistica come default post 2026-05-19
+
+### Da fare (Fase 6 compressa, ~4 settimane)
+- Raccolta passive ≥14 dogfood aggiuntivi per n≥20 target
+- Cost tracking mensile <$20/mese check via ccusage
+- Privacy validation in sessioni reali (Synesthesia mixed particolare attenzione)
+- Review settimana 2 (~2026-05-07) + settimana 4 (~2026-05-20) per decisione chiusura Fase 6
+
+### Note
+- Sessione totale 22-23/04: **~8.5 ore, 14 commit** (da 2c37172 a commit finale fix sweep)
+- **3 ADR strategici ratificati** same-night: 0012 (RAM) + 0013 (cloud) + 0014 (compression)
+- **4 wrapper cloud + 2 wrapper locali** operativi con cp1252 fix preventivo
+- **6 dogfood Fase 6 inaugurali** (3 locale + 2 cloud cosmetic + 1 cloud behavior-critical) — 100% success cumulative
+- **Quality bench framework** riusabile per future re-run mirati
+- Barra globale **88% → 88%** invariata (fasi-based, attende chiusura Fase 6), ma "robustezza dell'88%" cresciuta significativamente
