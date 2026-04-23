@@ -831,3 +831,74 @@ Cost observation: cache read (155M su 159M totali, 97%) indica prompt caching An
 - **File-first regola** (CLAUDE_OPERATING_RULES #4) rispettata: la sessione produce 11 file + 2 edit + 1 memory refresh + 1 commit, non long chat explanations.
 - **Change budget** envelope A (basso rischio): solo docs, zero codice, zero impatto stack AI operativo. Sessione ~1h ma output durevole (framework setup + navigable governance).
 - **Barra progetto invariata 88%**: governance normalization non è progresso fase, è **infrastructure quality**. L'ETA di chiusura Fase 6 non cambia, ma il progetto è ora **materialmente più operabile** da sessioni future (umane o agenti) grazie a schema prescrittivo consistente.
+
+---
+
+## 2026-04-23 (sera tardi — SPRINT_01 T1+T2 execution)
+
+### Completato
+
+**T1 — Dogfood behavior-critical cloud #2 (REJECT)**
+- Target: refactor `Invoke-Model` in `scripts/quality-bench/run-bench.ps1` per retry logic con exponential backoff (5 constraint: signature preservation, return values per 2 branch divergenti, max 3 attempts, discriminator 429/5xx vs 4xx, informative exhaustion)
+- Delega: `aider-groq.cmd` con Groq llama-3.3-70b-versatile + diff + `--no-auto-commits`
+- Cost: $0.0059 (free tier $0)
+- **Outcome**: ❌ REJECT manual — **5 constraint violations di cui 1 BLOCKING**:
+  - 🔴 Bug #1 BLOCKING: `return $r.message.content` usato per entrambi branch, ma cloud richiede `$r.choices[0].message.content` → cloud branch **silent-fails return null**
+  - Bug #2: `$maxAttempts = 5` vs richiesto 3
+  - Bug #3: retry su QUALSIASI exception, zero discriminator 4xx
+  - Bug #4: `throw $_` senza attempt count informativo
+  - Bug #5: comment in italiano (convention violation)
+- Rescue: `git checkout` revert + Edit manuale Claude Code con helper `Invoke-ModelRequest` rispettando TUTTI 5 constraint. PowerShell parser validation PASS, 48 insertions / 2 deletions. Commit `f80ab3c`.
+
+**T2 — Dogfood cosmetic #8 (partial success)**
+- Target: fix apostrofo elisione `"un implementazione"` → `"un'implementazione"` + condensare NOTES in `scripts/bench-ollama.ps1` (bug introdotto da Groq in dogfood #4)
+- Delega: `aider-cosmetic.cmd` con Qwen 7B local + whole + `--git-commit-verify` + `--commit-prompt English`
+- Cost: $0 (locale)
+- **Outcome**: 🟡 partial — fix apostrofo ✅, condensazione NOTES ❌ (7B conservativo, skippa transformation)
+- Auto-commit retry observed: 1° msg `\`\`\`docs:...\`\`\`` → commit-msg hook BLOCK ✅ → Aider self-retry → 2° msg `fix: correct spelling error in script comment` → passed → commit `2dccec7`
+- Zero silent-corruption, 0 retry sull'edit
+
+**Documentazione findings**
+- `OPEN_DECISIONS.md` + OD-006 (routing threshold constraint-count)
+- `MODEL_ROUTING.md` + sezione "Finding empirico 2026-04-23 — constraint count come seconda dimensione routing"
+- `BACKLOG.md` + H6 (validare OD-006 con n≥3 dogfood aggiuntivi)
+- `logs/aider-delegation-2026-04.md` + entries dogfood #7 + #8 con breakdown per classe aggiornato
+
+### Findings strategici
+
+**Fase 6 dataset n=8 (end 2026-04-23 22:20)**:
+- Cosmetic: 5 full success + 1 partial (92% rate)
+- Behavior: 1 success + 1 REJECT (50% rate)
+- Silent-corruption working-tree: 0 ✅
+- Silent-semantic-corruption intercepted at review: 1 (#7 return-value divergence)
+- Cost cumulative: $0.0148 (~0.07% di $20/mese budget)
+
+**Pattern constraint-count routing** (OD-006):
+- 1 constraint semplice: qualsiasi tier ~100%
+- 2-3 constraint mix fix+transform: local 14B Q2 o cloud 70B ~80-85%
+- 5+ constraint strict semantic: cloud 70B **degrada a ~20%** — manual rewrite preferito
+- Ipotesi: capacity LLM ≤70B di preservare simultaneamente constraint = ~3, oltre "dimentica" i trasformativi
+
+**cp1252 monitoring H3**: ANCORA pending dopo 5 dogfood consecutivi (#4-#8) senza retry loop naturale. 4 success 1st-try + 1 auto-retry 2nd-try. Considerare test sintetico se nessun trigger entro n=12.
+
+**Criteri ADR-0014 closure update**:
+- Criterio 2 (reliability): 8/20 (40%), fail rate 12.5% (vs 30% threshold) ✅, zero corruption ✅
+- Criterio 3 (privacy): invariato 1/3
+- Criterio 4 (cost): 0.07% di soglia ✅
+- Trend on-track per closure ~2026-05-20
+
+### Da fare
+- **H1** — +3 behavior-critical per chiudere target n≥5 (attuale 2)
+- **H2** — +4 cosmetic per n≥10 (attuale 6)
+- **H3** — continuare monitoring cp1252 fino n=12 o test sintetico
+- **H6** — validare OD-006 con n≥3 dogfood di constraint-count variabile
+- **M5** — Synesthesia privacy session (criterio 3)
+- **Review settimana 2** ~2026-05-07
+
+### Note
+- **Primo REJECT cloud dopo 3 success**: dato rilevante per ridimensionare euforia ADR-0013. Cloud 70B NON è silver bullet — rafforza "Claude Code review manuale MANDATORY" come safety net non opzionale.
+- **Hook ADR-0011 validato empirically dogfood #8**: 1° message invalido bloccato, 2° message passato. Gate funziona come da design — Aider self-retry è compatibile con commit-msg policy.
+- **Lesson per SPRINT_01 T2**: non forzare batch ≥5 cosmetic se non ci sono candidates naturali. Singolo task opportunistico (apostrofo fix + potential condense) è comunque valid data point. Target numerici arbitrari vanno rivisitati se realtà non li supporta.
+- **File-first regola rispettata**: output sessione = 2 commit codice + 4 docs update + 1 log local entry. No long chat explanations.
+- **Sessione durata**: ~1h (T1 delega + rescue + commit + T2 delega + auto-commit + 4 docs update). Bilancio positivo: 2 dogfood + 2 commit pushati + strategic findings consolidated.
+- Barra progetto **invariata 88%**: Fase 6 ora 40% (8/20) vs precedente 30% (6/20). Progress Fase 6 non muove barra fasi-based ma conta per chiusura.

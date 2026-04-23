@@ -63,6 +63,22 @@
 
 ---
 
+### [OD-006] Routing threshold: constraint count per delegazione cloud vs locale vs manuale
+
+- **Livello**: workflow / tooling
+- **Stato**: proposta (emersa da dogfood #7)
+- **Ambiguità**: Groq 70B cloud degrada significativamente su task behavior-critical con ≥5 constraint espliciti (dogfood #7: 20% compliance). Qwen 7B local degrada su task cosmetic con ≥2 constraint trasformativi (dogfood #8: 50% compliance). **Soglia routing quantitativa va formalizzata**?
+- **Perché conta**: routing attuale classifica per **natura task** (cosmetic/behavior/strategic). Il nuovo dato suggerisce **constraint-count** come seconda dimensione discriminante — potenziale revisione della decision matrix CLAUDE.md.
+- **Miglior default proposto**:
+  - **Task con 1 constraint semplice** (add-only, fix puntuale): 7B local OK
+  - **Task con 2-3 constraint fix+transform**: 14B Q2 local o 70B cloud (entrambi ~85% attuali)
+  - **Task con ≥5 constraint strict**: **rewrite manuale Claude Code** — delegare è anti-pattern empiricamente
+- **Rischio se ignorata**: delegazioni falliscono silently, user deve fare rescue retroattivo — già successo dogfood #7 con return-value divergence blocking bug.
+- **File o moduli coinvolti**: `CLAUDE.md` sezione "Priorità modelli AI" + `docs/patterns/delegation-to-aider.md` + `MODEL_ROUTING.md`.
+- **Prossima azione consigliata**: raccogliere altri n≥3 dogfood con constraint-count variabile per confermare pattern. Se confermato → ADR dedicato (0016?) formalizza second-dimension routing.
+
+---
+
 ### [OD-005] `FIRST_PRINCIPLES_GAME_CHECKLIST` sostituito da cosa?
 
 - **Livello**: workflow / documentation

@@ -6,11 +6,12 @@
 
 ## Priorità alta
 
-- [ ] **H1** — Dogfood behavior-critical n+5 (target ≥5, attuale 1). Source: ADR-0014 criterio 2. Stack preferito: Groq 70B via `aider-groq`; locale 14B Q2 ≥1 per mix.
-- [ ] **H2** — Dogfood cosmetic fino n≥10 cumulativo (attuale 5). Mix local/cloud. Opportunistic batch JSDoc/help sections.
-- [ ] **H3** — Monitoring empirico fix cp1252 durante retry loop naturale. Decisione "tiene" / "fallisce → M3".
-- [ ] **H4** — Cost tracking cumulativo mensile `ccusage` + cloud logs. Snapshot mid-sprint + fine mese.
+- [ ] **H1** — Dogfood behavior-critical n+4 (target ≥5, attuale 2: #6 success + #7 REJECT). Source: ADR-0014 criterio 2. Stack: alternare Groq 70B e locale 14B Q2 per bilanciare stack.
+- [ ] **H2** — Dogfood cosmetic fino n≥10 cumulativo (attuale 6 dopo #8 partial). Mix local/cloud. Opportunistic batch JSDoc/help sections.
+- [ ] **H3** — Monitoring empirico fix cp1252 durante retry loop naturale. **ANCORA PENDING**: 5 dogfood consecutivi (#4-#8) sono stati 1st-try o 2nd-try auto senza retry loop naturale. Soglia pazienza: se nessun trigger entro n=12, considerare test sintetico controllato.
+- [ ] **H4** — Cost tracking cumulativo mensile `ccusage` + cloud logs. Snapshot mid-sprint + fine mese. Cumulative Fase 6 cost: $0.0148 (~0.07% di budget mensile $20).
 - [ ] **H5** — Review settimana 2 formale (~2026-05-07): count dogfood, fail rate, ETA chiusura. Decisione on-track / extension.
+- [ ] **H6** — Validare empiricamente OD-006 (routing threshold constraint-count). Raccogliere n≥3 dogfood con constraint-count variabile (1, 3, 5+) per confermare pattern "manual Claude Code preferito per ≥5 constraints". Se confermato → ADR-0016 seconda dimensione routing.
 
 ## Priorità media
 

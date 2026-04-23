@@ -223,6 +223,28 @@ Applicata in concreto:
 
 ---
 
+## Finding empirico 2026-04-23 — Constraint count come seconda dimensione routing
+
+Dogfood Fase 6 n=8 rivela **pattern nuovo non previsto nella matrice originale**: la success-rate delega degrada con il numero di constraint espliciti, indipendentemente dalla classe (cosmetic/behavior).
+
+| Constraint count | Qwen 7B local whole | Qwen 14B Q2 local diff | Groq 70B cloud diff | Nota |
+|:----------------:|:-------------------:|:----------------------:|:-------------------:|------|
+| 1 (add-only / fix puntuale) | 100% (n=3) | n/a | 100% (n=2) | Safe delega, qualsiasi tier |
+| 2-3 (fix + transform / logic change) | 50% (n=1) | ~80% (ADR-0007) | ~85% (n=1 small smell) | Preferire diff + review manual |
+| 5+ (multi-constraint strict + branch-semantic) | n/a | n/a | **20% (n=1 REJECT)** | **Rewrite manuale Claude Code** raccomandato |
+
+**Implicazione routing aggiornata** (OD-006 proposta):
+- La matrice `CLAUDE.md "Priorità modelli AI"` si basa su CLASSE task. Questo finding aggiunge **constraint-count** come seconda dimensione. Non sostituisce, integra.
+- Proposta operativa: **quando classifico task pre-delega, conta anche constraint espliciti nel prompt**. Se ≥5 → skip delega, rewrite direct.
+- Status: OD-006 per validation con altri n≥3 dogfood di constraint-count variabile. Se confermato → ADR-0016.
+
+**Esempi dogfood reference**:
+- #6 (3 constraint: signature + return + resilience) → Groq 70B success con small smell
+- #7 (5 constraint: signature + return-branch-divergent + max=3 + discriminator + informative) → Groq 70B **REJECT** con blocking bug
+- #8 (2 constraint: fix + condense) → Qwen 7B applicato solo fix (1/2 compliance)
+
+**Cause ipotetica**: LLM ≤70B hanno capacity per preservare ~2-3 constraint simultaneamente. Oltre, iniziano a "dimenticare" i meno prominenti nel prompt — tipicamente quelli trasformativi (vs fix puntuali più concreti).
+
 ## Evoluzione attesa post Fase 6 (ADR-0015)
 
 Scenario **A full-sovereign** (preferito):
