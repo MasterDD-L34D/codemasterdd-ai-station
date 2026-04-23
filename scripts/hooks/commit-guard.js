@@ -24,7 +24,7 @@ process.stdin.on('end', () => {
 
   // Check for HEREDOC opener
   if (command.includes('<<')) {
-    console.log('HEREDOC detected, skipping validation');
+    console.error('HEREDOC detected, skipping validation');
     process.exit(0);
   }
 
