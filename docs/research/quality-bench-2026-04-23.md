@@ -120,3 +120,96 @@ Per task Python toy livello "CS 101-201", **Qwen 7B locale è sufficient**. Il g
 ## Tempo sessione: ~40 minuti framework + 10 minuti bench + 5 minuti doc = 55 min totali
 
 Contraddistinto da 3 bug PowerShell risolti in live debug. Framework ora stabile e riusabile per future re-run.
+
+---
+
+## Iterazione 2 — Hard problems + deepseek-r1 re-bench (2026-04-23 02:00)
+
+### deepseek-r1 re-bench con num_predict 500 → 2000
+
+**Risultato**: da 2/10 a **5/10 pass@1** (+30%).
+
+Progresso ma ancora 5/10 `infer_error`: thinking output eccede anche 2000 tokens su alcuni problemi. Patterns:
+- PASS: is_palindrome (68s!), merge_sorted, is_prime, flatten, word_count
+- ERROR: fibonacci, count_vowels, gcd, reverse_words, is_anagram
+
+Tempi PASS vanno 5s → 68s: thinking mode è MOLTO verbose. num_predict=5000 potrebbe recuperare qualche altro, ma a diminishing returns.
+
+**Conclusione deepseek-r1**: **reasoning-mode specializzato, non coder-optimized**. Skip dal bench standard. Mantenuto come tier reasoning dedicato (non coder). Se emerge task che beneficia di chain-of-thought esplicito → dogfood dedicato.
+
+### Hard problems (5 Leetcode medium, 5 modelli coder)
+
+Dataset: `problems-hard.json` — LIS, edit distance, coin change, longest palindromic substring, decode ways.
+
+| Model | Pass | Rate | Avg ms |
+|-------|-----:|-----:|-------:|
+| `qwen2.5-coder:7b` | 5/5 | 100% | ~2.7s |
+| `qwen2.5-coder:14b-q2` | 5/5 | 100% | ~69s (outlier: coin_change 314s) |
+| `qwen3-coder:30b` MoE | 5/5 | 100% | ~6.2s |
+| `groq/llama-3.3-70b` | 5/5 | 100% | ~0.5s |
+| `cerebras/llama3.1-8b` | 5/5 | 100% | ~0.4s |
+
+**Tutti 100% anche su HARD**.
+
+### Finding strategico — Bench "standard" NON discrimina
+
+Dataset totale v1+v2: 15 problemi Python (10 easy + 5 hard Leetcode medium) × 5 modelli coder = **75 test** → **100% pass@1 universale**.
+
+Spiegazione: tutti questi problemi sono **classici Leetcode / algoritmi CS standard** → ampiamente presenti nei training set di qualsiasi modello code-capable moderno. Il test misura memorizzazione + pattern match, NON capability reale.
+
+**Implicazioni per discriminant power**:
+
+Per separare i modelli servirebbero problemi:
+- **Non-standard**: inventati, non presenti in Leetcode/codeforces/HackerRank (training set contamination inevitabile)
+- **Contextual**: dipendenti da dominio-specifico (es. parsing file log aziendale custom, legacy API wrappers)
+- **Creative synthesis**: richiedono combinazione tecniche non-ovvia
+- **Code review/debug**: trovare bug sottili in code esistente (non synthesis nuovo)
+- **Long-context**: task richiedenti >8k token per formulazione completa
+
+Nessuno di questi è scriptable in bench notturno con risorse standard.
+
+### Implicazioni per tier routing (ratificate)
+
+Con parity confermata su task standard:
+
+1. **Daily coding task (solvable pattern-match)**: **usa modello più veloce disponibile**
+   - Offline: Qwen 7B locale (114 tok/s, 100% pass@1 sia easy che hard)
+   - Online: Cerebras 8B cloud (733 tok/s, 100% sia easy che hard)
+
+2. **Behavior/refactor standard**: Qwen 14B Q2 locale o Groq 70B cloud — entrambi 100%
+
+3. **Escalation reale serve capability distinta**: task **non classici**, debugging, synthesis. Qui cloud 70B probabilmente ha edge (training più ampio), ma non dimostrabile con bench standard.
+
+4. **deepseek-r1:8b**: dedicated tier reasoning. Non usare per coding standard (inefficient). Usare quando task richiede chain-of-thought esplicito.
+
+### Implicazioni per ADR-0013 status
+
+**PRONTO per Accepted**:
+- Speed PASS ✅ (bench 2026-04-22)
+- Quality parity PASS ✅ (bench 2026-04-23 v1+v2, n=75, 100%)
+- Privacy policy documented ✅
+- Wrapper operativi ✅
+
+**Caveat pending** (non bloccante per Accepted):
+- Discriminant power reale non misurato (fuori scope)
+- n<30 dogfood reali (emergerà via Fase 6 uso normale)
+
+Proposta: passare ADR-0013 a **Accepted** next session + formalizzare decision matrix speed-first online.
+
+### Implicazioni per ADR-0014 (Fase 6 compression)
+
+**Ulteriore rafforzamento**: i dati indicano che raccogliere **n alto di task toy/standard** non avanza la decisione. Il tempo in Fase 6 va investito in:
+- Dogfood task **reali** di uso quotidiano (non bench artificiali)
+- Task **varietà** (non ripetizioni stesso pattern)
+- **Debug/synthesis** quando capitano naturalmente
+
+4 settimane a questo ritmo = sufficiente. 3 mesi non aggiungono value.
+
+### Follow-up rivisti
+
+- [ ] **ADR-0013 → Accepted**: pronto con la validazione quality (richiede OK utente)
+- [ ] **ADR-0014 → Accepted**: pronto (richiede OK utente)
+- [x] Re-bench hard problems eseguito (questo log)
+- [x] deepseek-r1 re-bench eseguito (50%, framework limit accepted)
+- [ ] Discriminant bench: **fuori scope per questa infrastruttura**. Soluzioni alternative: (a) tracking empirico via dogfood Fase 6, (b) bench custom con problemi interni real-world dal repo
+- [ ] Aggiornare CLAUDE.md tier routing con nuove evidenze quality parity

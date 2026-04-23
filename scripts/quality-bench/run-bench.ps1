@@ -78,9 +78,9 @@ function Invoke-Model {
         @{ role = 'user'; content = $userPrompt }
       )
       stream = $false
-      options = @{ num_ctx = 8192; num_predict = 500; temperature = 0 }
+      options = @{ num_ctx = 8192; num_predict = 2000; temperature = 0 }
     } | ConvertTo-Json -Depth 6
-    $r = Invoke-RestMethod -Uri 'http://127.0.0.1:11434/api/chat' -Method Post -Body $payload -ContentType 'application/json' -TimeoutSec 180
+    $r = Invoke-RestMethod -Uri 'http://127.0.0.1:11434/api/chat' -Method Post -Body $payload -ContentType 'application/json' -TimeoutSec 300
     return $r.message.content
   } elseif ($endpoints.ContainsKey($Provider)) {
     $keyVar = "${Provider}_API_KEY".ToUpper()
@@ -92,7 +92,7 @@ function Invoke-Model {
         @{ role = 'system'; content = $systemPrompt }
         @{ role = 'user'; content = $userPrompt }
       )
-      max_tokens = 500
+      max_tokens = 2000
       temperature = 0
     } | ConvertTo-Json -Depth 5
     $headers = @{ 'Authorization' = "Bearer $apiKey"; 'Content-Type' = 'application/json' }
