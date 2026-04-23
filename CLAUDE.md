@@ -5,15 +5,18 @@ Dev workstation AI agentic **PRINCIPALE** per Eduardo Scarpelli.
 Questa macchina è autosufficiente per tutti i workflow dev e AI locali.
 Target: piattaforma AI sovereign con zero subscription fisse post-maggio 2026.
 
-## Roadmap strategica (realistica)
-- **Oggi (19/04/2026)**: setup Lenovo completato, infrastructure ready
-- **Settimana corrente**: Ollama + primo modello locale (Qwen 2.5 Coder 7B)
-- **Settimana prossima**: migrazione progetti da Ryzen (Evo-Tactics + Synesthesia)
-- **Fino al 19/05**: uso intensivo Claude Max (Opus 4.7) + benchmark parallelo Ollama
-- **Post Claude Max (da 20/05)**:
-  - Primary: Ollama locale + Claude Code (senza OAuth Max)
-  - Fallback: OpenRouter pay-per-use per task critici
-  - Zero subscription ricorrenti
+## Roadmap strategica (realistica — aggiornata 2026-04-23 post ADR-0013+0014)
+- **19/04/2026**: ✅ setup Lenovo completato, infrastructure ready
+- **20-21/04**: ✅ Ollama + Qwen 7B/14B, ADR-0004/0007/0008 findings
+- **22/04**: ✅ migrazione Evo-Tactics + Synesthesia, RAM upgrade 64GB (ADR-0012), API keys cloud (ADR-0013 Accepted)
+- **22-23/04 notte**: ✅ quality bench + 4 wrapper cloud + 6 dogfood Fase 6 inaugurati
+- **Fino al 19/05**: Claude Max attivo, Fase 6 tracking compresso (ADR-0014 Accepted) — target n≥20 dogfood + privacy validation + cost tracking <$20/mese
+- **20/05/2026 (approx, allineato Claude Max expiration)**: Fase 6 closure → **ADR-0015 budget decision finale**
+- **Post 20/05**: operatività target **full-sovereign $0-50/anno** via:
+  - Tier 1-2 locale: Qwen Coder 7B/14B/30B MoE (Ollama, RTX 5060)
+  - Tier 3 cloud free: Groq llama-70B + Cerebras llama-8B
+  - Tier 4 cloud paid (emergency only): OpenAI gpt-4o-mini
+  - **Zero subscription ricorrenti** (abbandono Claude Max + no Claude Pro richiesto)
 
 ## Estensioni future (opzionali, non pianificate)
 - Mac mini M4 Pro 48GB come **upgrade AI inference** se/quando budget permette

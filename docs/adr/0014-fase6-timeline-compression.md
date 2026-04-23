@@ -2,8 +2,8 @@
 
 > *TL;DR: ADR-0001 definiva Fase 6 tracking come "3 mesi di uso reale post-Claude Max" per rispondere a 2 domande chiave: (Q1) locale è capace?, (Q2) Claude Pro $240/anno giustificato?. Entrambe risolte infrastrutturalmente dall'ADR-0013 (cloud free tier 630-733 tok/s, $0/anno viable). Rimangono Q3 quality + Q4 reliability, time-bound settimane non mesi. Proposta: comprimere Fase 6 a 3-4 settimane (→ fine maggio 2026, coincide con expiration Claude Max 2026-05-19). Progetto 100% barra atteso fine maggio invece di fine agosto. -3 mesi guadagnati.*
 
-- **Status**: Proposed
-- **Data**: 2026-04-23
+- **Status**: **Accepted** (2026-04-23 02:05 — rationale confermato da quality bench 75 test + approvazione utente)
+- **Data**: 2026-04-23 (Proposed + Accepted same day)
 - **Decisore**: Eduardo Scarpelli
 - **Deciders**: solo-dev (single-user workstation)
 
@@ -156,13 +156,13 @@ Barra **valore** invariato (88% ora → 100% fine). Barra **tempo** compressa 4�
 
 ## Follow-up
 
-- [ ] Ottenere OK utente su ADR-0014 → passa a Accepted
+- [x] Ottenere OK utente su ADR-0014 → passa a Accepted (2026-04-23 02:05)
+- [x] **Quality bench immediato eseguito same-day** (docs/research/quality-bench-2026-04-23.md, 75 test 100% pass@1)
 - [ ] Aggiornare memory `project_session_resumption.md` con nuova ETA barra 100%
 - [ ] Aggiornare CLAUDE.md roadmap section
 - [ ] Aggiornare `project_sovereign_evaluation.md` memory con nuova chiusura Fase 6
-- [ ] **Quality bench immediato** (questo ADR presuppone che il bench venga eseguito come primo step Fase 6 compresso)
-- [ ] Review a settimana 2 (2026-05-07): se 10+ dogfood e quality bench done → 50% Fase 6. Se no → investigate.
-- [ ] Review a settimana 4 (2026-05-20): valutare chiusura vs estensione mirata.
+- [ ] Review a settimana 2 (2026-05-07): se 10+ dogfood → 50% Fase 6. Se no → investigate.
+- [ ] Review a settimana 4 (2026-05-20): valutare chiusura vs estensione mirata con ADR-0014 Addendum.
 
 ## Riferimenti
 
