@@ -64,6 +64,52 @@ $endpoints = @{
   cerebras = 'https://api.cerebras.ai/v1/chat/completions'
 }
 
+function Invoke-ModelRequest {
+  param(
+    [string]$Uri,
+    [hashtable]$Headers,
+    [string]$Body,
+    [string]$ContentType,
+    [int]$TimeoutSec,
+    [int]$MaxAttempts = 3
+  )
+  # Retry on transient errors only: 429 (rate limit), 5xx (server), WebException/timeout.
+  # Do NOT retry 4xx client errors (except 429) — those indicate caller bugs.
+  $lastErr = $null
+  for ($attempt = 1; $attempt -le $MaxAttempts; $attempt++) {
+    try {
+      if ($Headers) {
+        return Invoke-RestMethod -Uri $Uri -Method Post -Headers $Headers -Body $Body -TimeoutSec $TimeoutSec
+      } else {
+        return Invoke-RestMethod -Uri $Uri -Method Post -Body $Body -ContentType $ContentType -TimeoutSec $TimeoutSec
+      }
+    } catch {
+      $lastErr = $_
+      $statusCode = $null
+      if ($_.Exception.Response -and $_.Exception.Response.StatusCode) {
+        # PS 5.1: StatusCode is HttpStatusCode enum; Value__ is the int
+        $statusCode = [int]$_.Exception.Response.StatusCode.Value__
+      }
+      $isTransient = $false
+      if ($statusCode) {
+        if ($statusCode -eq 429 -or ($statusCode -ge 500 -and $statusCode -lt 600)) {
+          $isTransient = $true
+        }
+      } elseif ($_.Exception -is [System.Net.WebException] -or $_.Exception.Message -match 'timed out|timeout|connection') {
+        $isTransient = $true
+      }
+      if (-not $isTransient -or $attempt -eq $MaxAttempts) {
+        break
+      }
+      # Exponential backoff: 1s, 2s
+      $backoffSec = [math]::Pow(2, $attempt - 1)
+      Start-Sleep -Seconds $backoffSec
+    }
+  }
+  $statusInfo = if ($lastErr.Exception.Response) { " (HTTP $([int]$lastErr.Exception.Response.StatusCode.Value__))" } else { '' }
+  throw "Invoke-ModelRequest failed after $MaxAttempts attempt(s)$($statusInfo): $($lastErr.Exception.Message)"
+}
+
 function Invoke-Model {
   param([string]$Provider, [string]$Model, [string]$Prompt)
 
@@ -80,7 +126,7 @@ function Invoke-Model {
       stream = $false
       options = @{ num_ctx = 8192; num_predict = 2000; temperature = 0 }
     } | ConvertTo-Json -Depth 6
-    $r = Invoke-RestMethod -Uri 'http://127.0.0.1:11434/api/chat' -Method Post -Body $payload -ContentType 'application/json' -TimeoutSec 300
+    $r = Invoke-ModelRequest -Uri 'http://127.0.0.1:11434/api/chat' -Body $payload -ContentType 'application/json' -TimeoutSec 300
     return $r.message.content
   } elseif ($endpoints.ContainsKey($Provider)) {
     $keyVar = "${Provider}_API_KEY".ToUpper()
@@ -96,7 +142,7 @@ function Invoke-Model {
       temperature = 0
     } | ConvertTo-Json -Depth 5
     $headers = @{ 'Authorization' = "Bearer $apiKey"; 'Content-Type' = 'application/json' }
-    $r = Invoke-RestMethod -Uri $endpoints[$Provider] -Method Post -Headers $headers -Body $payload -TimeoutSec 120
+    $r = Invoke-ModelRequest -Uri $endpoints[$Provider] -Headers $headers -Body $payload -TimeoutSec 120
     return $r.choices[0].message.content
   } else {
     throw "Unknown provider: $Provider"
