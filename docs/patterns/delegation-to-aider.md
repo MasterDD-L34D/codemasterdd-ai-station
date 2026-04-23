@@ -325,7 +325,8 @@ Per ogni delega cloud aggiungere colonna extra:
 
 - ADR-0007 — benchmark e paradox quantization: `docs/adr/0007-aider-qwen-quantization-findings.md`
 - ADR-0008 — silent corruption + dual-stack decision: `docs/adr/0008-aider-whole-format-silent-corruption.md`
-- **ADR-0013 — tier 3 cloud free-tier providers**: `docs/adr/0013-tier3-cloud-free-providers.md` (Validation-in-progress)
+- **ADR-0013 — tier 3 cloud free-tier providers**: `docs/adr/0013-tier3-cloud-free-providers.md` (**Accepted** 2026-04-23)
+- **ADR-0014 — Fase 6 timeline compression**: `docs/adr/0014-fase6-timeline-compression.md` (**Accepted** 2026-04-23, target closure ~2026-05-20)
 - **Bench empirico combo F**: `docs/research/bench-post-ram-upgrade-2026-04-22.md` section "Bench cloud tier 3"
 - Wrapper locali: `aider-cosmetic.cmd`, `aider-refactor.cmd`
 - **Wrapper cloud** (2026-04-23): `aider-groq.cmd`, `aider-cerebras.cmd`, `aider-gemini.cmd`, `aider-openai.cmd`

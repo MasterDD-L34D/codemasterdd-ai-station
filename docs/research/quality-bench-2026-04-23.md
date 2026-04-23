@@ -79,10 +79,12 @@ Per task Python toy livello "CS 101-201", **Qwen 7B locale è sufficient**. Il g
 3. deepseek-r1 skewed dal framework bug (non decidibile)
 4. Quality ≠ reliability — questo test misura quality peak, non consistency over time
 
-**Decisione**: mantenere ADR-0013 **Validation-in-progress**. Serve:
+**Decisione (al momento prima iterazione)**: mantenere ADR-0013 **Validation-in-progress**. Serve:
 - Ripetere bench con problem set hard (HumanEval subset `HumanEval/20`-`HumanEval/60` range)
 - n≥30 task via dogfood reali Fase 6
 - deepseek-r1 re-bench con num_predict fixato
+
+**UPDATE 2026-04-23 02:05 (stessa sessione)**: post iterazione 2 (hard bench 5/5 modelli 100%) + review utente, **ADR-0013 passato a Accepted**. I 3 punti sopra sono deferred come follow-up non bloccanti (discriminant power richiede problemi non-standard fuori scope bench notturno, n≥20 raccolto via Fase 6 compressa). Vedi "Iterazione 2" sotto.
 
 ## Implicazioni per ADR-0014 Fase 6 compression
 

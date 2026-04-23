@@ -25,7 +25,7 @@ Il tempo 3 mesi fu scelto per:
 - **Hardware**: RAM 16→64 GB. qwen3:30b MoE +32% speed post-upgrade (23.3→30.67 tok/s), stabilizzato tier 2 escalation.
 - **Acquisizione 4 API keys cloud free-tier** (Groq/Cerebras/Gemini/OpenAI): mai previste in roadmap originale.
 - **Bench empirico cloud**: Groq llama-3.3-70b-versatile 630.86 tok/s (**20× vs qwen3:30b locale**), Cerebras llama3.1-8b 733.5 tok/s (**6× vs qwen 7B**).
-- **ADR-0013 Validation-in-progress**: scenario "full-sovereign sub-$60/anno" diventa realistic default invece di upper-bound ottimistico.
+- **ADR-0013 Validation-in-progress** (Accepted same session 2026-04-23 02:05 post quality bench): scenario "full-sovereign sub-$60/anno" diventa realistic default invece di upper-bound ottimistico.
 
 ### Impact sulle domande originali Fase 6
 
