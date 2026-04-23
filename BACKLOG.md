@@ -6,21 +6,21 @@
 
 ## Priorità alta
 
-- [ ] **H1** — Dogfood behavior-critical n+4 (target ≥5, attuale 2: #6 success + #7 REJECT). Source: ADR-0014 criterio 2. Stack: alternare Groq 70B e locale 14B Q2 per bilanciare stack.
-- [ ] **H2** — Dogfood cosmetic fino n≥10 cumulativo (attuale 6 dopo #8 partial). Mix local/cloud. Opportunistic batch JSDoc/help sections.
-- [ ] **H3** — Monitoring empirico fix cp1252 durante retry loop naturale. **ANCORA PENDING**: 5 dogfood consecutivi (#4-#8) sono stati 1st-try o 2nd-try auto senza retry loop naturale. Soglia pazienza: se nessun trigger entro n=12, considerare test sintetico controllato.
-- [ ] **H4** — Cost tracking cumulativo mensile `ccusage` + cloud logs. Snapshot mid-sprint + fine mese. Cumulative Fase 6 cost: $0.0148 (~0.07% di budget mensile $20).
-- [ ] **H5** — Review settimana 2 formale (~2026-05-07): count dogfood, fail rate, ETA chiusura. Decisione on-track / extension.
+- [ ] **H1** — Dogfood behavior-critical n+1 (target ≥5, attuale 4: #6 + #9 + #10 success, #7 REJECT). Gap 1. Source: ADR-0014 criterio 2.
+- [ ] **H2** — Dogfood cosmetic fino n≥10 cumulativo (attuale 7 dopo #11). Gap 3. Mix local/cloud. Opportunistic batch.
+- [ ] **H3** — Monitoring empirico fix cp1252 durante retry loop naturale. **ANCORA PENDING**: 8 dogfood consecutivi (#4-#11) sono stati 1st-try o 2nd-try auto senza retry loop naturale. Soglia pazienza: se nessun trigger entro n=15, considerare test sintetico controllato.
+- [ ] **H4** — Cost tracking cumulativo mensile `ccusage` + cloud logs. Snapshot mid-sprint (~2026-04-30) + fine mese. Cumulative Fase 6 cost: $0.0148 (0.07% di budget $20/mese).
+- [ ] **H5** — Review settimana 2 formale (~2026-05-07): count dogfood, fail rate, ETA chiusura. Decisione on-track / extension. **Pre-review evidence**: Fase 6 55%, fail rate 9.1%, tutti 4 criteri on-track.
 - [x] ~~**H6** — Validare empiricamente OD-006 (routing threshold constraint-count).~~ **DONE 2026-04-24**: n=6 data points cross-tier raccolti (dogfood #6/#7/#8/#9/#10/#11). OD-006 **chiuso via ADR-0016** (Proposed 2026-04-24). Follow-up: raccogliere n≥3 data points addizionali per gap (constraint=4, 2-transform LOCAL, 5-strict LOCAL) verso ADR-0016 Accepted.
 
 ## Priorità media
 
-- [ ] **M1** — JOURNAL entry 2026-04-23 documentando integrazione framework archivio + 11 file governance + rationale.
-- [ ] **M2** — Memory refresh `project_session_resumption.md`: aggiornare HEAD + pointer a `COMPACT_CONTEXT.md` (evita duplicazione).
-- [ ] **M3** — Wrapper PowerShell alternative (`aider-groq.ps1` etc.) **se H3 fallisce**. Condizionale.
+- [x] ~~**M1** — JOURNAL entry 2026-04-23 documentando integrazione framework archivio + 11 file governance + rationale.~~ **DONE**: entry in JOURNAL `2026-04-23 (sera — integrazione framework archivio)` + follow-up `2026-04-24 notte` aggiunta.
+- [x] ~~**M2** — Memory refresh `project_session_resumption.md`.~~ **DONE 2026-04-24**: HEAD 9bcc2a4, tabella 11 dogfood, ADR-0016 reference, Sprint 01 early hit.
+- [ ] **M3** — Wrapper PowerShell alternative (`aider-groq.ps1` etc.) **se H3 fallisce**. Condizionale. Trigger: 1° crash cp1252 post-deploy fix. Finora nessun crash osservato (8 dogfood consecutivi clean).
 - [ ] **M4** — Integrate bench framework ↔ dogfood tracking: colonna "quality pass" nel log.
-- [ ] **M5** — Synesthesia privacy first-violation test: ≥1 sessione che tocchi `views/` (cloud OK) + `controllers/` (sovereign-only). Criterio 3 ADR-0014.
-- [ ] **M6** — Commit delle 11 modifiche governance + entry JOURNAL.
+- [ ] **M5** — Synesthesia privacy first-violation test: ≥1 sessione che tocchi `views/` (cloud OK) + `controllers/` (sovereign-only). Criterio 3 ADR-0014. **Priorità residua principale Sprint 01** (1/3 ancora).
+- [x] ~~**M6** — Commit delle 11 modifiche governance + entry JOURNAL.~~ **DONE 2026-04-23/24**: 11 commit sessione cumulative (sera + notte).
 
 ## Priorità bassa
 
