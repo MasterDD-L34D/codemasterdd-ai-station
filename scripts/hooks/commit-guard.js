@@ -22,6 +22,12 @@ process.stdin.on('end', () => {
   if (toolName !== 'Bash') process.exit(0);
   if (!command.includes('git commit')) process.exit(0);
 
+  // Check for HEREDOC opener
+  if (command.includes('<<')) {
+    console.log('HEREDOC detected, skipping validation');
+    process.exit(0);
+  }
+
   // Match -m "msg" or -m 'msg' only. HEREDOC multi-line skipped (controlled case).
   const msgMatch = command.match(/-m\s+["']([^"']+)["']/);
   if (!msgMatch) process.exit(0);
