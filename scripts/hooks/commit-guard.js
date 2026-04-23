@@ -20,7 +20,7 @@ process.stdin.on('end', () => {
   const command = data.tool_input?.command || '';
 
   if (toolName !== 'Bash') process.exit(0);
-  if (!command.includes('git commit')) process.exit(0);
+  if (!/(^|[;&|]\s*)git\s+commit/.test(command)) process.exit(0);
 
   // Check for HEREDOC opener
   if (command.includes('<<')) {
