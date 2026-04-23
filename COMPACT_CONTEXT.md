@@ -6,14 +6,15 @@
 
 ## Progetto
 - **Nome**: CodeMasterDD AI Station
-- **Versione del compact**: v3 (post-sprint01 T1+T2 execution)
-- **Data ultimo aggiornamento**: 2026-04-23 22:30
+- **Versione del compact**: v4 (post dogfood #9 behavior-critical local)
+- **Data ultimo aggiornamento**: 2026-04-24 01:50
 
 ## Stato attuale
-- Barra globale **88%** invariata. Fase 6 al **40%** (8/20 dogfood + quality bench v1+v2 done).
-- HEAD `e687b42`, origin/main aligned, working tree clean.
-- **Commit sessione 2026-04-23 sera**: `4f5227c` (governance framework) → `e7a4ed0` (JOURNAL framework) → `f80ab3c` (retry logic quality-bench rescue) → `2dccec7` (apostrofo fix Aider auto) → `e687b42` (findings consolidation). **5 commit**, pushed.
-- Fase 6 dataset attuale: 5 cosmetic full + 1 cosmetic partial + 1 behavior success + 1 behavior **REJECT**. Fail rate 12.5% (vs 30% threshold ADR-0014). Zero silent-corruption working-tree cumulative.
+- Barra globale **88%** invariata. Fase 6 al **45%** (9/20 dogfood + quality bench v1+v2 done).
+- HEAD `0fa0016`, origin/main aligned, working tree clean.
+- **Commit sessione 2026-04-24 notte**: `9ab01e9` (governance drift alignment post-sera) → `0fa0016` (fix HEREDOC false-positive in commit-guard hook, dogfood #9). **2 commit**, pushed.
+- **Commit sessione 2026-04-23 sera**: `4f5227c` (governance framework) → `e7a4ed0` (JOURNAL framework) → `f80ab3c` (retry logic quality-bench rescue) → `2dccec7` (apostrofo fix Aider auto) → `e687b42` (findings consolidation) → `5ef8e9c` (compact refresh). **6 commit**, pushed.
+- Fase 6 dataset attuale: 5 cosmetic full + 1 cosmetic partial + 2 behavior success + 1 behavior **REJECT**. Fail rate 11.1% (vs 30% threshold ADR-0014). Zero silent-corruption working-tree cumulative.
 - Framework operativo `Archivio_Libreria_Operativa_Progetti/` integrato come governance layer.
 
 ## Obiettivo di questa fase
@@ -21,6 +22,12 @@
 - **Sprint 01 target**: dataset 8 → ≥12 dogfood (di cui ≥3 behavior-critical) + validare cp1252 + review settimana 2.
 
 ## Cosa è già stato fatto
+
+### Sessione 2026-04-24 notte (governance drift + dogfood #9)
+- **Audit governance drift post-sera**: 4 file allineati (PROJECT_BRIEF, ROADMAP, MODEL_ROUTING, MASTER_PROMPT) con HEAD, Fase 6 stats, cost cumulative, P1/P6 aggiornati, +P7 cloud degradation. Commit `9ab01e9`.
+- **Dogfood #9 behavior-critical LOCAL**: fix HEREDOC false-positive in `scripts/hooks/commit-guard.js` via `aider-refactor` (Qwen 14B Q2 diff). 1st-try, 0 retry, 7k/282 tok, 100% compliance (con small smell console.log acceptable). Constraint-count=2 (fix+preserve). **Primo behavior-critical local della Fase 6**. Commit `0fa0016`.
+- **OD-006 update**: pattern constraint-count routing allineato top-range predizione. 14B Q2 diff su 2-constraint fix+preserve confermato empirically.
+- **Memory M2 refresh**: `project_session_resumption.md` aggiornato (HEAD, tabella 9 dogfood, stats breakdown, ADR-0014 Accepted status corretto).
 
 ### Pre-sessione corrente
 - Hardware setup + hardening + migrazione progetti (Fase 1-5 closed).
@@ -60,11 +67,11 @@
 
 ## Problemi aperti
 
-- **P1** Dogfood behavior-critical n=2 (1 success + 1 REJECT). Target ≥5.
-- **P2** Fix cp1252 validation empirica ancora pending (5 dogfood senza trigger retry loop).
+- **P1** Dogfood behavior-critical n=3 (2 success + 1 REJECT). Target ≥5 — gap ridotto.
+- **P2** Fix cp1252 validation empirica ancora pending (6 dogfood senza trigger retry loop, #9 pure 1st-try).
 - **P3** Privacy validation reale 1/3.
 - **P6** Qwen 7B commit-prompt 0% compliance (ma auto-retry post-hook-block **funziona** empirically — nuovo dato positivo dogfood #8).
-- **P7 (nuovo)** — Cloud 70B degrada a 20% compliance su behavior-critical con ≥5 strict semantic constraint (dogfood #7). Implicazione: ridimensionamento shift cloud-first di ADR-0013.
+- **P7** Cloud 70B degrada a 20% compliance su behavior-critical con ≥5 strict semantic constraint (dogfood #7). Implicazione: ridimensionamento shift cloud-first di ADR-0013.
 
 Dettaglio e next actions in `BACKLOG.md` (H1-H6) + `OPEN_DECISIONS.md` (OD-001 to OD-006).
 
@@ -77,8 +84,8 @@ Dettaglio e next actions in `BACKLOG.md` (H1-H6) + `OPEN_DECISIONS.md` (OD-001 t
 - Framework archivio: `Archivio_Libreria_Operativa_Progetti/` (130 file multi-progetto)
 
 ## Prossimi 3 passi
-1. **H1** — Aggiungere ≥3 dogfood behavior-critical aggiuntivi (attuale n=2). Preferito mix Groq 70B + locale 14B Q2 per bilanciare dataset. Candidati reali emergenti dal lavoro quotidiano (NON bench artificiali).
-2. **H6** — Validare empiricamente OD-006 con n≥3 dogfood di constraint-count variabile (1, 3, 5+). Se pattern confermato → ADR-0016 seconda dimensione routing.
+1. **H1** — Aggiungere ≥2 dogfood behavior-critical aggiuntivi (attuale n=3). Continuare mix Groq 70B + locale 14B Q2. Candidati reali emergenti dal lavoro quotidiano (NON bench artificiali).
+2. **H6** — Validare OD-006 con altri n≥2 dogfood di constraint-count variabile (attuale n=5 data points: 3× constraint=1, 1× constraint=2 local, 1× constraint=2 cloud, 1× constraint=3 cloud, 1× constraint=5 cloud REJECT). Pattern ancora coerente post-#9. Se confermato con altri 2 → ADR-0016 seconda dimensione routing.
 3. **Review settimana 2** (~2026-05-07) — sessione ~30min: count dataset + fail rate + cost proiezione + ETA chiusura Fase 6. Decisione on-track / mid-course / extension early-warning.
 
 ## Next session restart: cosa leggere per ripartire
