@@ -6,63 +6,89 @@
 
 ## Progetto
 - **Nome**: CodeMasterDD AI Station
-- **Versione del compact**: v2 (post-integrazione Archivio framework)
-- **Data ultimo aggiornamento**: 2026-04-23
+- **Versione del compact**: v3 (post-sprint01 T1+T2 execution)
+- **Data ultimo aggiornamento**: 2026-04-23 22:30
 
 ## Stato attuale
-- Barra globale **88%** (fasi-based). Fase 6 al 30% (6/20 dogfood + quality bench v1+v2 done).
-- HEAD `a23b533`, origin/main aligned, working tree clean.
-- 3 ADR strategici ratificati 2026-04-23: **0012** (RAM 64GB) + **0013** (cloud tier 3) + **0014** (Fase 6 compression).
-- 6 wrapper Aider operativi + 4 API keys cloud (Groq/Cerebras/Gemini/OpenAI) + 5 modelli Ollama attivi.
-- Framework operativo `Archivio_Libreria_Operativa_Progetti/` integrato come governance layer (2026-04-23 sera).
+- Barra globale **88%** invariata. Fase 6 al **40%** (8/20 dogfood + quality bench v1+v2 done).
+- HEAD `e687b42`, origin/main aligned, working tree clean.
+- **Commit sessione 2026-04-23 sera**: `4f5227c` (governance framework) → `e7a4ed0` (JOURNAL framework) → `f80ab3c` (retry logic quality-bench rescue) → `2dccec7` (apostrofo fix Aider auto) → `e687b42` (findings consolidation). **5 commit**, pushed.
+- Fase 6 dataset attuale: 5 cosmetic full + 1 cosmetic partial + 1 behavior success + 1 behavior **REJECT**. Fail rate 12.5% (vs 30% threshold ADR-0014). Zero silent-corruption working-tree cumulative.
+- Framework operativo `Archivio_Libreria_Operativa_Progetti/` integrato come governance layer.
 
 ## Obiettivo di questa fase
-- **Fase 6 (compressa, ~4 settimane)**: chiudere i 4 criteri ADR-0014 entro **~2026-05-20** per ratificare ADR-0015 Budget decision.
-- **Target sprint corrente**: portare dataset dogfood da 6 → ≥12 (di cui ≥3 behavior-critical) + validare empiricamente fix cp1252 + cost snapshot mid-sprint.
+- **Fase 6 (compressa, ~4 settimane)**: chiudere 4 criteri ADR-0014 entro **~2026-05-20**.
+- **Sprint 01 target**: dataset 8 → ≥12 dogfood (di cui ≥3 behavior-critical) + validare cp1252 + review settimana 2.
 
 ## Cosa è già stato fatto
+
+### Pre-sessione corrente
 - Hardware setup + hardening + migrazione progetti (Fase 1-5 closed).
-- Stack AI tier-routing 4 tier (cosmetic/behavior/escalation/reasoning) + privacy policy per-repo.
-- 14 ADR in `docs/adr/`, 4 guard rail commit cross-agent, tracking `ccusage` + dogfood log.
-- Quality bench framework riusabile (`scripts/quality-bench/`) + 75 test eseguiti.
-- 6 dogfood registrati (5 cosmetic + 1 behavior), 100% success, 0 silent-corruption.
-- Normalizzazione project files: 7 file governance root-level + 4 aggiuntivi (MASTER_PROMPT, REFERENCE_INDEX, PROMPT_LIBRARY, MODEL_ROUTING) compilati 2026-04-23.
+- Stack AI tier-routing 4 tier + privacy policy per-repo.
+- 14 ADR, 4 guard rail commit cross-agent, tracking `ccusage` + dogfood log.
+- Quality bench framework (75 test, 100% pass@1 discriminant-limited).
+- 11 file governance root-level + 4 aggiuntivi compilati seguendo schema archivio.
+- Framework `Archivio_Libreria_Operativa_Progetti/` importato e integrato.
+
+### Sessione 2026-04-23 sera (governance + sprint01 T1/T2)
+- **Normalizzazione governance**: 11 file schema archivio, 3 Decisioni non-ADR registrate (001/002/003).
+- **T1 behavior-critical cloud REJECT**: Groq 70B ha prodotto 5 constraint violations su retry logic `Invoke-Model`, inclusa 1 BLOCKING (return-value divergence tra branch). **Rescue manuale** Claude Code con helper `Invoke-ModelRequest` — commit `f80ab3c`, syntax validated.
+- **T2 cosmetic local partial**: Qwen 7B ha fixato apostrofo elisione in `bench-ollama.ps1` (✅) ma skippato condensazione NOTES (❌). Auto-commit retry ADR-0011 validato (hook block → Aider self-retry → pass 2nd-try) — commit `2dccec7`.
+- **OD-006 proposta**: constraint-count come seconda dimensione routing (≥5 constraint strict → manual Claude Code preferito).
+- **Consolidamento findings** in `JOURNAL`, `OPEN_DECISIONS`, `MODEL_ROUTING`, `BACKLOG` — commit `e687b42`.
 
 ## Decisioni prese
-- **ADR-0001** Sovereign strategy + target budget $0-50/anno (revisionato da $60-240 via 0013).
-- **ADR-0008** Hub pattern tier routing: cosmetic 7B whole, behavior 14B Q2 diff no-auto-commits, escalation 30B MoE.
-- **ADR-0011** Commit governance cross-agent: `commit-msg` globale + `--git-commit-verify` + `--commit-prompt English` nei wrapper.
-- **ADR-0012** RAM 64GB upgrade, qwen3:30b promosso tier 2 stabile, 32B dense scartato.
-- **ADR-0013** 4 API keys cloud free/paid, storage `~/.config/api-keys/keys.env` ACL-hardened, routing Groq/Cerebras primario.
-- **ADR-0014** Fase 6 timeline compressa 3 mesi → ~4 settimane, chiusura target ~20/05.
-- **Adozione framework archivio** (2026-04-23 sera): schema bootstrap-kit + regole 07_OPERATING_PACKAGE come meta-governance non-distruttiva (CLAUDE.md resta autoritativo progetto-specifico).
+
+### ADR strategici (14, indice in DECISIONS_LOG)
+- **ADR-0008** Hub pattern tier routing (cosmetic/behavior/escalation)
+- **ADR-0011** Commit governance cross-agent
+- **ADR-0012** RAM 64GB upgrade, qwen3:30b tier 2 stabile
+- **ADR-0013** Tier 3 cloud free providers — Groq/Cerebras primary
+- **ADR-0014** Fase 6 compressa a ~4 settimane
+
+### Decisioni non-ADR (operative minori, in DECISIONS_LOG)
+- **001** Adozione schema framework archivio per governance files
+- **002** `FIRST_PRINCIPLES_GAME_CHECKLIST` N/A per questo repo (non game)
+- **003** Regole 07_OPERATING_PACKAGE non clonate al root (pointer + adozione)
 
 ## Vincoli hard
-- RTX 5060 8 GB VRAM → tuning ctx obbligatorio modelli >7B.
-- Windows cp1252 console bug Aider → fix `chcp 65001 + PYTHONIOENCODING=utf-8` nei wrapper (validazione empirica pending).
+- RTX 5060 8 GB VRAM → ctx tuning obbligato modelli >7B.
+- Windows cp1252 bug Aider → fix deployato ma **validazione empirica pending** (5 dogfood consecutivi senza retry loop naturale).
 - **Deadline fissa 2026-05-19** (Claude Max expiration). Target Fase 6 closure 2026-05-20.
-- Privacy per-repo rigorosa (Synesthesia mixed, repo cliente sovereign-only).
-- No `--force` su main, no `--no-verify`, Conventional Commits enforced cross-agent.
+- Privacy per-repo rigorosa (Synesthesia mixed, cliente sovereign-only).
+- No `--force` su main, no `--no-verify`, Conventional Commits enforced.
 
 ## Problemi aperti
-- **P1** Dogfood behavior-critical n=1 (target ≥5).
-- **P2** Fix cp1252 validation empirica pending.
-- **P3** Privacy validation reale 1/3.
-- **P4** Memory drift HEAD.
-- **P5** Aggregati mensili log da popolare.
-- **P6** Qwen 7B commit-prompt 0% compliance.
 
-Dettaglio e next actions in `BACKLOG.md` + `OPEN_DECISIONS.md`.
+- **P1** Dogfood behavior-critical n=2 (1 success + 1 REJECT). Target ≥5.
+- **P2** Fix cp1252 validation empirica ancora pending (5 dogfood senza trigger retry loop).
+- **P3** Privacy validation reale 1/3.
+- **P6** Qwen 7B commit-prompt 0% compliance (ma auto-retry post-hook-block **funziona** empirically — nuovo dato positivo dogfood #8).
+- **P7 (nuovo)** — Cloud 70B degrada a 20% compliance su behavior-critical con ≥5 strict semantic constraint (dogfood #7). Implicazione: ridimensionamento shift cloud-first di ADR-0013.
+
+Dettaglio e next actions in `BACKLOG.md` (H1-H6) + `OPEN_DECISIONS.md` (OD-001 to OD-006).
 
 ## File / output importanti
-- Governance root-level: `PROJECT_BRIEF.md`, `COMPACT_CONTEXT.md`, `DECISIONS_LOG.md`, `BACKLOG.md`, `OPEN_DECISIONS.md`, `ROADMAP.md`, `SPRINT_01.md`, `MASTER_PROMPT.md`, `REFERENCE_INDEX.md`, `PROMPT_LIBRARY.md`, `MODEL_ROUTING.md`
-- Convenzioni Claude Code: `CLAUDE.md` (progetto) + `Archivio_Libreria_Operativa_Progetti/07_CLAUDE_CODE_OPERATING_PACKAGE/*` (meta-rules adottate)
-- Diario cronologico: `JOURNAL.md`
+- Governance root-level (11): `PROJECT_BRIEF`, `COMPACT_CONTEXT` (questo), `DECISIONS_LOG`, `BACKLOG`, `OPEN_DECISIONS`, `ROADMAP`, `SPRINT_01`, `MASTER_PROMPT`, `REFERENCE_INDEX`, `PROMPT_LIBRARY`, `MODEL_ROUTING`
+- Convenzioni Claude Code: `CLAUDE.md` (progetto) + `Archivio_.../07_CLAUDE_CODE_OPERATING_PACKAGE/*` (meta-rules adottate)
+- Diario cronologico: `JOURNAL.md` (3 nuovi entries sessione 2026-04-23)
 - Decision history: `docs/adr/` (14 file)
-- Operational log: `logs/aider-delegation-2026-04.md`
-- Framework archivio: `Archivio_Libreria_Operativa_Progetti/` (reference multi-progetto)
+- Operational log: `logs/aider-delegation-2026-04.md` (8 dogfood entries + breakdown per classe)
+- Framework archivio: `Archivio_Libreria_Operativa_Progetti/` (130 file multi-progetto)
 
 ## Prossimi 3 passi
-1. **Commit** 11 file governance nuovi/aggiornati + entry JOURNAL 2026-04-23 con rationale integrazione framework archivio.
-2. **Dogfood behavior-critical cloud #2** (T1 SPRINT_01): `aider-groq scripts/quality-bench/run-bench.ps1` per retry logic 429/5xx. Validazione simultanea fix cp1252 se emerge retry.
-3. **Refresh memory** `project_session_resumption.md` con HEAD attuale + pointer a `COMPACT_CONTEXT.md` (evita duplicazione contenuti).
+1. **H1** — Aggiungere ≥3 dogfood behavior-critical aggiuntivi (attuale n=2). Preferito mix Groq 70B + locale 14B Q2 per bilanciare dataset. Candidati reali emergenti dal lavoro quotidiano (NON bench artificiali).
+2. **H6** — Validare empiricamente OD-006 con n≥3 dogfood di constraint-count variabile (1, 3, 5+). Se pattern confermato → ADR-0016 seconda dimensione routing.
+3. **Review settimana 2** (~2026-05-07) — sessione ~30min: count dataset + fail rate + cost proiezione + ETA chiusura Fase 6. Decisione on-track / mid-course / extension early-warning.
+
+## Next session restart: cosa leggere per ripartire
+
+Ordine raccomandato:
+1. `CLAUDE.md` — convenzioni progetto
+2. Questo file (`COMPACT_CONTEXT.md`) — snapshot stato corrente
+3. `Archivio_.../07_CLAUDE_CODE_OPERATING_PACKAGE/CLAUDE_OPERATING_RULES.md` — regole meta-operative
+4. `BACKLOG.md` + `OPEN_DECISIONS.md` — cosa è aperto
+5. `SPRINT_01.md` — sprint attivo + task candidates
+6. ADR rilevanti solo se task tocca topic noto
+
+Memory auto-caricata via `~/.claude/projects/.../memory/MEMORY.md`.
