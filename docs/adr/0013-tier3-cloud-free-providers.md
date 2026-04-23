@@ -132,12 +132,12 @@ Caveat: **da validare in Fase 6**. I free tier hanno rate limit, quality non mis
 
 ## Follow-up
 
-- [ ] Validare endpoint Cerebras (curl test simile a Groq, 1 req trivial)
-- [ ] Validare endpoint Gemini (formato API diverso, usa Google AI SDK)
-- [ ] Validare endpoint OpenAI (sk-proj key format nuovo, verificare compatibilità LiteLLM)
-- [ ] **Fase 6 dogfood** tier 3: primo task safe-fail locale → routing Groq, misurare quality + speed vs locale
-- [ ] Se emerge pattern ricorrente (es. "Groq per refactor, Cerebras per multi-file"), creare wrapper dedicati
-- [ ] Fase 7 (~2026-08-20): rivalutare budget scenario con dati Fase 6. Se free-tier basta → full-sovereign definitivo. Se no → Claude Pro residuale.
+- [x] Validare endpoint Cerebras (combo F 2026-04-22: llama3.1-8b PASS; gpt-oss-120b e qwen-3-235b free tier BLOCKED, paid-only)
+- [x] Validare endpoint Gemini (combo F 2026-04-22: gemini-2.5-flash PASS con `thinkingConfig.thinkingBudget=0`; gemini-2.0-flash quota 0 effective deprecated)
+- [x] Validare endpoint OpenAI (combo F 2026-04-22: gpt-4o-mini PASS)
+- [x] **Fase 6 dogfood** tier 3 (n=3 cumulative 2026-04-22/23): dogfood #4 Groq direct cosmetic + #5 Groq wrapper cosmetic + #6 Groq wrapper **behavior-critical**. 100% success, $0.0089 total cost free tier.
+- [x] Wrapper dedicati creati (opzione D 2026-04-23): `aider-groq.cmd`, `aider-cerebras.cmd`, `aider-gemini.cmd`, `aider-openai.cmd` in `~/.local/bin/`
+- [ ] Fase 7 (~**2026-05-20** post ADR-0014 compression): rivalutare budget scenario con dati Fase 6. Se free-tier basta → full-sovereign definitivo. Se no → Claude Pro residuale.
 - [ ] Se una delle keys viene esposta (git history leak, scraper, etc.): revoca immediata via provider UI + rotation + update `keys.env`.
 
 ## Status changes
