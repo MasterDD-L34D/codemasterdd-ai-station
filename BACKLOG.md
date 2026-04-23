@@ -11,7 +11,7 @@
 - [ ] **H3** — Monitoring empirico fix cp1252 durante retry loop naturale. **ANCORA PENDING**: 5 dogfood consecutivi (#4-#8) sono stati 1st-try o 2nd-try auto senza retry loop naturale. Soglia pazienza: se nessun trigger entro n=12, considerare test sintetico controllato.
 - [ ] **H4** — Cost tracking cumulativo mensile `ccusage` + cloud logs. Snapshot mid-sprint + fine mese. Cumulative Fase 6 cost: $0.0148 (~0.07% di budget mensile $20).
 - [ ] **H5** — Review settimana 2 formale (~2026-05-07): count dogfood, fail rate, ETA chiusura. Decisione on-track / extension.
-- [ ] **H6** — Validare empiricamente OD-006 (routing threshold constraint-count). Raccogliere n≥3 dogfood con constraint-count variabile (1, 3, 5+) per confermare pattern "manual Claude Code preferito per ≥5 constraints". Se confermato → ADR-0016 seconda dimensione routing.
+- [x] ~~**H6** — Validare empiricamente OD-006 (routing threshold constraint-count).~~ **DONE 2026-04-24**: n=6 data points cross-tier raccolti (dogfood #6/#7/#8/#9/#10/#11). OD-006 **chiuso via ADR-0016** (Proposed 2026-04-24). Follow-up: raccogliere n≥3 data points addizionali per gap (constraint=4, 2-transform LOCAL, 5-strict LOCAL) verso ADR-0016 Accepted.
 
 ## Priorità media
 

@@ -233,10 +233,11 @@ Dogfood Fase 6 n=8 rivela **pattern nuovo non previsto nella matrice originale**
 | 2-3 (fix + transform / logic change) | 50% (n=1) | ~80% (ADR-0007) | ~85% (n=1 small smell) | Preferire diff + review manual |
 | 5+ (multi-constraint strict + branch-semantic) | n/a | n/a | **20% (n=1 REJECT)** | **Rewrite manuale Claude Code** raccomandato |
 
-**Implicazione routing aggiornata** (OD-006 proposta):
-- La matrice `CLAUDE.md "Priorità modelli AI"` si basa su CLASSE task. Questo finding aggiunge **constraint-count** come seconda dimensione. Non sostituisce, integra.
-- Proposta operativa: **quando classifico task pre-delega, conta anche constraint espliciti nel prompt**. Se ≥5 → skip delega, rewrite direct.
-- Status: OD-006 per validation con altri n≥3 dogfood di constraint-count variabile. Se confermato → ADR-0016.
+**Implicazione routing formalizzata** (OD-006 → ADR-0016 Proposed 2026-04-24):
+- La matrice `CLAUDE.md "Priorità modelli AI"` si basa su CLASSE task. **ADR-0016** aggiunge **constraint-count** come seconda dimensione. Non sostituisce, estende.
+- Regola operativa: **quando classifico task pre-delega, conta anche constraint espliciti nel prompt**. Se ≥5 → skip delega, rewrite direct.
+- **Nuova distinzione qualitativa**: transform vs preserve constraint (7B skippa transform; 14B Q2 safe su preserve).
+- Vedi `docs/adr/0016-constraint-count-routing-dimension.md` per matrice 2D completa + rationale empirico (n=11 cumulative, n=6 cross-tier).
 
 **Esempi dogfood reference**:
 - #6 (3 constraint: signature + return + resilience) → Groq 70B success con small smell
