@@ -30,7 +30,7 @@
 
 ---
 
-## Fase 6 — Empirical tracking compressa (22/04 → ~20/05/2026) 🟡 IN PROGRESS (30%)
+## Fase 6 — Empirical tracking compressa (22/04 → ~20/05/2026) 🟡 IN PROGRESS (40%)
 
 **Obiettivo**: raccogliere dati empirici sufficienti per ratificare ADR-0015 Budget decision post-Claude Max.
 

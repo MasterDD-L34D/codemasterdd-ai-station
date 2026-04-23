@@ -5,7 +5,7 @@
 ## Identità del progetto
 - **Nome progetto**: CodeMasterDD AI Station (repo: `codemasterdd-ai-station`)
 - **Tipo di progetto**: infrastructure-as-code personale + registry decisionale di transizione strategica AI (NON un prodotto, NON una libreria, NON codice di progetti reali — quelli vivono in `Evo-Tactics` e `Synesthesia` separati)
-- **Stato attuale**: barra globale 88%, Fase 6 (empirical tracking compressa) al 30%, HEAD `a23b533` working tree clean
+- **Stato attuale**: barra globale 88%, Fase 6 (empirical tracking compressa) al 40% (8/20 dogfood), HEAD `5ef8e9c` working tree clean
 - **Owner / team**: solo-dev — Eduardo Scarpelli (`eduscarpelli@gmail.com`), GitHub `@MasterDD-L34D`
 
 ## Scopo
@@ -40,7 +40,7 @@
 - **Team**: 1 persona (single-dev, zero delega umana)
 - **Tempo**: hard deadline **2026-05-19** (Claude Max expiration). Fase 6 closure target 2026-05-20.
 - **Budget target post-Max**: $0-50/anno (free tier Groq+Cerebras + eventuali OpenAI overflow <$20/mese)
-- **Budget attuale**: Claude Max €200 già pagato mese corrente; $0.0089 cumulativo dogfood cloud finora
+- **Budget attuale**: Claude Max €200 già pagato mese corrente; $0.0148 cumulativo dogfood cloud finora (0.07% di budget $20/mese)
 
 ### Vincoli di scope
 - NO codice progetti reali in questo repo (scope-creep vietato)
@@ -59,20 +59,20 @@
 - **Conversazioni importanti**: sessione maratona 2026-04-22/23 (14 commit, 3 ADR strategici ratificati) documentata in JOURNAL + memory `project_session_resumption.md`
 
 ## Problemi attuali
-- **P1** — Dogfood behavior-critical n=1 → statisticamente non significativo per chiusura Fase 6 (target ≥5)
-- **P2** — Fix cp1252 deployato ma non validato empiricamente su retry loop reale
+- **P1** — Dogfood behavior-critical n=2 (1 success + 1 REJECT) → ancora lontano target ≥5
+- **P2** — Fix cp1252 deployato ma non validato empiricamente su retry loop reale (5 dogfood consecutivi senza trigger)
 - **P3** — Privacy validation reale = 1 sessione su target ≥3 (criterio 3 ADR-0014)
-- **P4** — Memoria `project_session_resumption.md` cita HEAD `24d3965` vs reale `a23b533` (drift)
 - **P5** — Aggregati mensili `logs/aider-delegation-2026-04.md` da popolare fine mese
-- **P6** — Qwen 7B commit-prompt non-compliance (0/6 dogfood), workaround manual-fallback attivo ma non a regime
+- **P6** — Qwen 7B commit-prompt 0% compliance (7 dogfood), ma auto-retry post-hook-block validato empirically dogfood #8
+- **P7** — Cloud 70B degrada a ~20% compliance su behavior-critical con ≥5 strict constraint (dogfood #7 REJECT). Driver OD-006.
 
 ## Metriche di successo
 
 ### Criteri chiusura Fase 6 (tutti-4 AND, da ADR-0014)
 1. **Quality bench** ≥10 problemi × ≥5 modelli → ✅ **fatto** (75 test, 100% pass@1, discriminant-limited ma sufficiente per parity)
-2. **Reliability dogfood**: n≥20, fail rate <30%, **zero silent-corruption** (attuale: 6/20, 100% success, 0 corruption)
+2. **Reliability dogfood**: n≥20, fail rate <30%, **zero silent-corruption** (attuale: 8/20, fail rate 12.5% <30% ✅, 0 silent-corruption working-tree ✅)
 3. **Privacy validation**: ≥3 sessioni reali classificazione repo enforced senza violation (attuale: 1)
-4. **Cost tracking**: <$20/mese extrapolato (attuale: ~$0.01 cloud + Max pre-paid)
+4. **Cost tracking**: <$20/mese extrapolato (attuale: $0.0148 cloud = 0.07% budget ✅, Max pre-paid)
 
 ### Metriche di sostenibilità Fase 8 (post ADR-0015)
 - Spesa cumulativa 30 giorni post-Max < $4/mese
@@ -80,4 +80,4 @@
 - ≥1 revisione qualitativa senza gap materiali a 30 giorni
 
 ## Prossimo passo singolo più utile
-Eseguire **dogfood behavior-critical cloud #2** (T1 di `SPRINT_01.md`): refactor retry logic su `scripts/quality-bench/run-bench.ps1` via `aider-groq`. Leverage alto perché (a) sblocca P1, (b) valida indirettamente fix cp1252 P2 se entra in retry, (c) produce 1/5 del criterio 2 ADR-0014. Esecuzione <1h.
+Eseguire **dogfood behavior-critical #3** (T1 SPRINT_01 residuo, dopo REJECT #7 e rescue manuale): identificare task reale emergente (refactor, bug fix, error handling) → classificare constraint-count → delegare al tier corretto (Groq 70B se ≤3 constraint, manual Claude Code se ≥5). Ogni dogfood avanza P1 + alimenta OD-006 validation (H6).

@@ -19,7 +19,7 @@ Contesto progetto:
 - Tipo: infrastructure-as-code personale + registry decisionale transizione AI sovereign
 - Natura: NON prodotto, NON libreria, NON codice di progetti reali (quelli in Evo-Tactics + Synesthesia separati)
 - Owner: Eduardo Scarpelli, solo-dev
-- Stato: barra 88%, Fase 6 (empirical tracking compressa) al 30%, HEAD a23b533 clean
+- Stato: barra 88%, Fase 6 (empirical tracking compressa) al 40% (8/20 dogfood), HEAD 5ef8e9c clean
 - Deadline hard: 2026-05-19 (Claude Max expiration). Fase 6 closure target 2026-05-20.
 - Hardware: Lenovo LOQ Tower, Intel Core Ultra 7 255HX + RTX 5060 8GB VRAM + 64GB DDR5-5600
 - Stack attivo: Claude Code 2.1 Opus 4.7 + Aider 0.86 + 6 wrapper + 5 Ollama models + 4 cloud keys (Groq/Cerebras/Gemini/OpenAI)

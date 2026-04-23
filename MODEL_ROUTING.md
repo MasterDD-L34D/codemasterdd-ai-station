@@ -219,7 +219,7 @@ Applicata in concreto:
 - **Strumento principale di comprensione**: Claude Code nativo (Glob/Grep/Read)
 - **Strumento principale di esecuzione**: Aider con wrapper tier-appropriate (classificazione CLAUDE.md)
 - **Strumento principale di archivio / orchestrazione**: Claude Code scrive docs/, logs/, memory; ADR come decision persistence
-- **Prossimo test da fare sul routing**: dogfood behavior-critical cloud #2 (T1 SPRINT_01) per confermare routing `aider-groq` robusto; empirical fix cp1252 validation
+- **Prossimo test da fare sul routing**: dogfood behavior-critical #3+ per bilanciare dataset cloud (1 success + 1 REJECT al 23/04 sera) + validare OD-006 constraint-count routing con n≥3 task di constraint-count variabile
 
 ---
 
