@@ -6,15 +6,15 @@
 
 ## Progetto
 - **Nome**: CodeMasterDD AI Station
-- **Versione del compact**: v4 (post dogfood #9 behavior-critical local)
-- **Data ultimo aggiornamento**: 2026-04-24 01:50
+- **Versione del compact**: v5 (post dogfood #9/#10/#11 hardening commit-guard)
+- **Data ultimo aggiornamento**: 2026-04-24 02:35
 
 ## Stato attuale
-- Barra globale **88%** invariata. Fase 6 al **45%** (9/20 dogfood + quality bench v1+v2 done).
-- HEAD `0fa0016`, origin/main aligned, working tree clean.
-- **Commit sessione 2026-04-24 notte**: `9ab01e9` (governance drift alignment post-sera) → `0fa0016` (fix HEREDOC false-positive in commit-guard hook, dogfood #9). **2 commit**, pushed.
+- Barra globale **88%** invariata. Fase 6 al **55%** (11/20 dogfood + quality bench v1+v2 done).
+- HEAD `3231e2e`, origin/main aligned, working tree clean.
+- **Commit sessione 2026-04-24 notte**: `9ab01e9` (governance drift) → `0fa0016` (fix #9 HEREDOC commit-guard) → `2254706` (compact v4) → `3156edf` (fix #10 command.includes false-positive) → `3231e2e` (polish #11 stderr). **5 commit**, pushed.
 - **Commit sessione 2026-04-23 sera**: `4f5227c` (governance framework) → `e7a4ed0` (JOURNAL framework) → `f80ab3c` (retry logic quality-bench rescue) → `2dccec7` (apostrofo fix Aider auto) → `e687b42` (findings consolidation) → `5ef8e9c` (compact refresh). **6 commit**, pushed.
-- Fase 6 dataset attuale: 5 cosmetic full + 1 cosmetic partial + 2 behavior success + 1 behavior **REJECT**. Fail rate 11.1% (vs 30% threshold ADR-0014). Zero silent-corruption working-tree cumulative.
+- Fase 6 dataset attuale: 6 cosmetic full + 1 cosmetic partial + 3 behavior success + 1 behavior **REJECT**. Fail rate 9.1% (vs 30% threshold ADR-0014). Zero silent-corruption working-tree cumulative.
 - Framework operativo `Archivio_Libreria_Operativa_Progetti/` integrato come governance layer.
 
 ## Obiettivo di questa fase
@@ -23,11 +23,14 @@
 
 ## Cosa è già stato fatto
 
-### Sessione 2026-04-24 notte (governance drift + dogfood #9)
+### Sessione 2026-04-24 notte (governance drift + 3 dogfood commit-guard hardening)
 - **Audit governance drift post-sera**: 4 file allineati (PROJECT_BRIEF, ROADMAP, MODEL_ROUTING, MASTER_PROMPT) con HEAD, Fase 6 stats, cost cumulative, P1/P6 aggiornati, +P7 cloud degradation. Commit `9ab01e9`.
-- **Dogfood #9 behavior-critical LOCAL**: fix HEREDOC false-positive in `scripts/hooks/commit-guard.js` via `aider-refactor` (Qwen 14B Q2 diff). 1st-try, 0 retry, 7k/282 tok, 100% compliance (con small smell console.log acceptable). Constraint-count=2 (fix+preserve). **Primo behavior-critical local della Fase 6**. Commit `0fa0016`.
-- **OD-006 update**: pattern constraint-count routing allineato top-range predizione. 14B Q2 diff su 2-constraint fix+preserve confermato empirically.
-- **Memory M2 refresh**: `project_session_resumption.md` aggiornato (HEAD, tabella 9 dogfood, stats breakdown, ADR-0014 Accepted status corretto).
+- **Dogfood #9 behavior-critical LOCAL**: fix HEREDOC false-positive in `scripts/hooks/commit-guard.js` via `aider-refactor` (Qwen 14B Q2 diff). 1st-try, 0 retry, 7k/282 tok, 100% compliance con small smell console.log. Constraint-count=2 (fix+preserve). **Primo behavior-critical local Fase 6**. Commit `0fa0016`.
+- **Dogfood #10 behavior-critical LOCAL**: fix `command.includes('git commit')` false-positive (hit live quando prompt text conteneva la frase) → regex start/separator. Qwen 14B Q2 diff, 1st-try, 0 retry, 7k/169 tok, 100% compliance clean. Constraint-count=3 (fix+preserve HEREDOC+preserve validation). Commit `3156edf`.
+- **Dogfood #11 cosmetic LOCAL polish**: console.log → console.error per #9 smell. Qwen 7B whole, 1st-try edit, 1 auto-commit retry (Qwen 7B subject=path → hook block → Aider retry → valid). 5.3k/656 tok. Commit `3231e2e`. **2° validazione pattern auto-commit retry** post-#8.
+- **OD-006 data points**: 6 data point cross-tier (constraint 1, 2 local local/cloud, 3 local/cloud, 5+ cloud REJECT). **ADR-0016 draft-ready**.
+- **Sprint 01 obiettivo superato**: 11/12 dogfood quasi target + **4/3 behavior-critical già superato**.
+- **Memory M2 refresh**: `project_session_resumption.md` aggiornato (HEAD, tabella dogfood, ADR-0014 Accepted status).
 
 ### Pre-sessione corrente
 - Hardware setup + hardening + migrazione progetti (Fase 1-5 closed).
@@ -67,8 +70,8 @@
 
 ## Problemi aperti
 
-- **P1** Dogfood behavior-critical n=3 (2 success + 1 REJECT). Target ≥5 — gap ridotto.
-- **P2** Fix cp1252 validation empirica ancora pending (6 dogfood senza trigger retry loop, #9 pure 1st-try).
+- **P1** Dogfood behavior-critical n=4 (3 success + 1 REJECT). Target ≥5 — gap 1.
+- **P2** Fix cp1252 validation empirica ancora pending (8 dogfood senza trigger retry loop, #9/#10/#11 1st-try).
 - **P3** Privacy validation reale 1/3.
 - **P6** Qwen 7B commit-prompt 0% compliance (ma auto-retry post-hook-block **funziona** empirically — nuovo dato positivo dogfood #8).
 - **P7** Cloud 70B degrada a 20% compliance su behavior-critical con ≥5 strict semantic constraint (dogfood #7). Implicazione: ridimensionamento shift cloud-first di ADR-0013.
@@ -84,9 +87,9 @@ Dettaglio e next actions in `BACKLOG.md` (H1-H6) + `OPEN_DECISIONS.md` (OD-001 t
 - Framework archivio: `Archivio_Libreria_Operativa_Progetti/` (130 file multi-progetto)
 
 ## Prossimi 3 passi
-1. **H1** — Aggiungere ≥2 dogfood behavior-critical aggiuntivi (attuale n=3). Continuare mix Groq 70B + locale 14B Q2. Candidati reali emergenti dal lavoro quotidiano (NON bench artificiali).
-2. **H6** — Validare OD-006 con altri n≥2 dogfood di constraint-count variabile (attuale n=5 data points: 3× constraint=1, 1× constraint=2 local, 1× constraint=2 cloud, 1× constraint=3 cloud, 1× constraint=5 cloud REJECT). Pattern ancora coerente post-#9. Se confermato con altri 2 → ADR-0016 seconda dimensione routing.
-3. **Review settimana 2** (~2026-05-07) — sessione ~30min: count dataset + fail rate + cost proiezione + ETA chiusura Fase 6. Decisione on-track / mid-course / extension early-warning.
+1. **ADR-0016 draft** — OD-006 ha massa critica (n=6 data points cross-tier, n=11 cumulative). Formalizzare constraint-count come seconda dimensione routing. Integrare in CLAUDE.md + MODEL_ROUTING + delegation-to-aider pattern.
+2. **H1 residuo** — +1 behavior-critical per chiudere target ≥5 (attuale 4). Candidato real emergente.
+3. **Review settimana 2** (~2026-05-07) — count + fail rate + cost + ETA. On-track already evidente con 55% e 9.1% fail rate, ma formalizzare.
 
 ## Next session restart: cosa leggere per ripartire
 
