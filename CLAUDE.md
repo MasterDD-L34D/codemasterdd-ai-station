@@ -172,6 +172,7 @@ lenovo-ai-station/
   - Multi-file refactor / debug strategico → OpenRouter pay-per-use (Sonnet/Opus) o Claude Pro come backbone
   - **⚠️ DEPRECATO**: Aider + 14B Q2 + `whole` — silent-corruption deterministico su task "edit single file" semplici, vedi ADR-0008
   - Riferimenti decisionali: `docs/adr/0007-aider-qwen-quantization-findings.md` + `docs/adr/0008-aider-whole-format-silent-corruption.md`
+  - **Seconda dimensione routing (in review)**: `docs/adr/0016-constraint-count-routing-dimension.md` (Proposed 2026-04-24). Estende matrice classe-based con **constraint-count**: 1 qualsiasi tier / 2-3 additive+preserve → 14B Q2 local o 70B cloud / 2 fix+transform → downgrade 14B Q2 (7B skippa transform) / **5+ strict → manual Claude Code**. Consultare per task con ≥3 constraint espliciti nel prompt. Status Accepted trigger: n≥3 data points addizionali.
 
 - **Safety protocol per Aider** (valido sempre):
   - `git diff HEAD~1` post-edit prima di pushare: commit message generati dall'LLM riflettono l'intent, non necessariamente il diff reale
