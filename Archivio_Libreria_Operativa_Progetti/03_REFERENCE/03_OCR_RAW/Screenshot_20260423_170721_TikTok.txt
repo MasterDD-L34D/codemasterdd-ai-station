@@ -1,0 +1,12 @@
+17:07 oM¢ can 40)
+
+Hack #6
+« Long chats eat tokens exponentially.
+* But switching chats = losing context.
+"Create this skill: When I say 'COMPACT', summarize
+our entire conversation into 5-7 key bullet points
+with all critical context, decisions, & code
+snippets. Format for easy copy-paste into new chat"
+« This creates a Compact Conversation Skill.
+
+@ @okaashish

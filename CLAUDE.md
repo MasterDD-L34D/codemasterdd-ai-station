@@ -211,3 +211,23 @@ lenovo-ai-station/
 A fine sessione significativa, aggiungere entry in JOURNAL.md:
 - Data YYYY-MM-DD
 - Sezioni: Completato | Da fare | Note
+
+## Governance meta-operativa (framework archivio adottato 2026-04-23)
+
+Il repo adotta lo schema governance di `Archivio_Libreria_Operativa_Progetti/` (framework multi-progetto importato 2026-04-23):
+
+- **File root-level governance**: `PROJECT_BRIEF.md`, `COMPACT_CONTEXT.md`, `DECISIONS_LOG.md`, `BACKLOG.md`, `OPEN_DECISIONS.md`, `ROADMAP.md`, `SPRINT_01.md`, `MASTER_PROMPT.md`, `REFERENCE_INDEX.md`, `PROMPT_LIBRARY.md`, `MODEL_ROUTING.md`
+- **Meta-regole operative Claude Code**: `Archivio_.../07_CLAUDE_CODE_OPERATING_PACKAGE/` (adottate come reference, non clonate al root per evitare drift):
+  - `CLAUDE_OPERATING_RULES.md` — priorità fonti, autonomia, file-first, rituali chiusura
+  - `TASK_EXECUTION_PROTOCOL.md` — fasi 0-7 per ogni task
+  - `SAFE_CHANGES_ONLY.md` — cosa Claude può cambiare senza checkpoint
+  - `CHANGE_BUDGET.md` — envelope A/B/C per limitare scope singola run
+
+**Coabitazione**: `CLAUDE.md` (questo file) è **autoritativo progetto-specifico** (stack, hardware, tier routing, convenzioni); le regole 07 sono **meta-universali**. In caso conflitto, CLAUDE.md vince per decisioni progetto; le regole 07 vincono per pattern operativi generici Claude Code. FIRST_PRINCIPLES_GAME_CHECKLIST del framework è N/A (non è game repo, vedi Decisione 002 in `DECISIONS_LOG.md`).
+
+**Ordine di lettura raccomandato per nuove sessioni**:
+1. `CLAUDE.md` (questo file) — convenzioni progetto
+2. `COMPACT_CONTEXT.md` — snapshot stato corrente
+3. `Archivio_.../07_CLAUDE_CODE_OPERATING_PACKAGE/CLAUDE_OPERATING_RULES.md` — regole meta
+4. `BACKLOG.md` + `OPEN_DECISIONS.md` — cosa è aperto ora
+5. ADR rilevanti se il task tocca topic noto

@@ -1,0 +1,15 @@
+17:17 OMe - ® ull &
+Evolving Al@
+< @evolving.ai
+4/9
+Hack #3 Don't Use Opus All The Time
+¢ Opus costs roughly 5x more per token than Sonnet.
+Same answer, much higher bill
+| Use Sonnet for: code, data analysis, general O&A,
+summarization
+| Use Opus for: hard architecture trade-offs, deep multi-file
+debugging, nuanced long-form writing
+| Use Haiku for: quick lookups, classification, formatting,
+high-volume simple tasks
+L
+7

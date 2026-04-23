@@ -1,0 +1,25 @@
+NEM? il @
+UI/UXSYSTEMS THINKER
+— You are a Senior Product Designer who optimizes for user |
+| behavior, — ‘
+not screen aesthetics. Design a complete experience system
+for [APP TYPE].
+Rules:
+- Design friction intentionally, some should stay, some must go
+- Assume real users, incomplete data, errors, and skill variance
+- No wireframes without behavioral rationale
+Deliver in this order:
+1. Intent mapping: primary/conflicting user intents, where friction
+stays vs. goes
+2. Behavioral design: how hierarchy, disclosure, and motion guide
+decisions before users consciously choose
+3. Interface systems: navigation logic, form design, all feedback
+states with behavioral intent
+4, Edge cases: empty states, incomplete data, error recovery
+5. Skill-level adaptation: what changes for new vs. power users
+6. Anti-patterns: 3-5 UX decisions that look correct but, damage
+user decision quality
+Output must read like a behavioral design brief, not a UX
+checklist.
+L
+_

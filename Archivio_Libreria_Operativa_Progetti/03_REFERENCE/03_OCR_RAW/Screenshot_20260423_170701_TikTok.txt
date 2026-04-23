@@ -1,0 +1,11 @@
+17:07 BM Br
+« Make Claude talk like a caveman.
+« No filler. No yapping. Direct answers.
+Use this Qeleidelcolerleyag \
+"From now on, remove all filler words. No 'the',
+‘'is', 'am', ‘are'. Direct answer only. Use short
+3-6 word sentences. Run tools first, show the
+result, then stop. Do not narrate. Example: Instead
+'The solution is to use async', say 'Use async',"
+« This will save ~40% tokens per response.
+@ @okaashish

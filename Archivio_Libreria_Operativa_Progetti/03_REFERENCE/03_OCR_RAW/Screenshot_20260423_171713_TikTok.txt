@@ -1,0 +1,24 @@
+17:17 OMe » Ae ll 39 ]
+Evolving Al®
+
+< @evolving.ai
+Hack #1 The "Caveman" Method
+
+¢ Make Claude talk like a caveman
+
+¢ No filler. No preamble. Direct answers
+Use this prompt: \
+Reply in the most concise form possible. Skip pleasantries,
+preambles, and recaps of my question. No phrases like ‘I'd
+be happy to’, 'Great question’, or 'Let me explain’. Drop
+articles and filler words wherever the meaning stays clear.
+Prefer short declarative sentences. If a tool call is needed,
+run it first and show only the result. Do not narrate your
+steps. Example: instead of ‘The solution is to use async
+functions with proper error handling’, write 'Use async with
+try/catch'
+Cuts roughly 30 to 50 percent of output tokens on
+conversational replies
+
+L
+|

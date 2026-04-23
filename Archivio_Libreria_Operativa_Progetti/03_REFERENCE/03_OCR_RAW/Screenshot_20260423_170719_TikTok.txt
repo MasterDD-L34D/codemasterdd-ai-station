@@ -1,0 +1,13 @@
+17:07 OM ¢ > @u ED
+Hack #5
+Your 5-hour window starts with your FIRST
+message. So follow this trick: >\
+// Send a basic message 2-3 hours before
+you actually need Claude. For example:
+|
+>" 6:00 AM - Send something like “hey”
+"| 9:00 AM - Start the real work
+| 11:00 AM - Your window resets mid workflow
+CH
+« Fresh allocation when you need it the most.
+@ @okaashish

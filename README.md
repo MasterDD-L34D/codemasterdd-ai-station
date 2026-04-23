@@ -40,6 +40,24 @@ Questa è la workstation **primaria e autosufficiente** di Eduardo Scarpelli: tu
 
 Per i dettagli operativi e le convenzioni di lavoro con Claude Code, vedi [CLAUDE.md](./CLAUDE.md). Per storia decisionale completa, `docs/adr/` (14 ADR).
 
+## Governance & navigazione
+
+File governance root-level (schema framework archivio adottato 2026-04-23):
+
+- [PROJECT_BRIEF.md](./PROJECT_BRIEF.md) — scopo, obiettivo di successo, vincoli
+- [COMPACT_CONTEXT.md](./COMPACT_CONTEXT.md) — snapshot stato corrente (aggiornato fine sessione)
+- [DECISIONS_LOG.md](./DECISIONS_LOG.md) — indice ADR strategici + decisioni operative
+- [BACKLOG.md](./BACKLOG.md) — backlog prioritizzato + primo sprint consigliato
+- [OPEN_DECISIONS.md](./OPEN_DECISIONS.md) — decisioni aperte non bloccanti
+- [ROADMAP.md](./ROADMAP.md) — piano per fasi (1-8)
+- [SPRINT_01.md](./SPRINT_01.md) — sprint attivo 2026-04-23 → 2026-05-06
+- [MASTER_PROMPT.md](./MASTER_PROMPT.md) — prompt apertura portabile
+- [REFERENCE_INDEX.md](./REFERENCE_INDEX.md) — indice navigabile docs/patterns/research
+- [PROMPT_LIBRARY.md](./PROMPT_LIBRARY.md) — prompt riutilizzabili progetto-specifici
+- [MODEL_ROUTING.md](./MODEL_ROUTING.md) — routing strategico strumenti/modelli
+
+Framework universale multi-progetto: `Archivio_Libreria_Operativa_Progetti/` (libreria, template, workflow, regole meta Claude Code).
+
 ## Autore
 Eduardo Scarpelli · `eduscarpelli@gmail.com` · GitHub: [@MasterDD-L34D](https://github.com/MasterDD-L34D)
 

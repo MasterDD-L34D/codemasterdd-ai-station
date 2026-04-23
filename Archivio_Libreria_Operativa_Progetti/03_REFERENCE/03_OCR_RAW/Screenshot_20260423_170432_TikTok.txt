@@ -1,0 +1,18 @@
+17:04 2 Md - ull D
+Blue Viper
+(8) @blueviper.ai 4/1
+Bad data structures ruin good apps.
+Prompt:
+"Act as a Database Administrator. | am building [App
+Feature]. Design the optimal relational schema for this.
+Include tables, foreign keys, and the exact SQL commands
+to create them.’
+Do not let your app get hacked on day one.
+Prompt:
+"Review this code snippet for security vulnerabilities.
+Check for SQL injection, XSS, and authentication flaws.
+Provide the patched code and explain the exact exploit
+you prevented: [Paste Code]"
+SWIPE FOR MORE
+L
+|

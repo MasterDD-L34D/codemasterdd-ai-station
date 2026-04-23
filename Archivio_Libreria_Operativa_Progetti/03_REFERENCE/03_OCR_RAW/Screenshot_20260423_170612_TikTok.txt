@@ -1,0 +1,22 @@
+17:06 B Md - & ul @D
+€
+mane @ 3 16
+9. /AUDIENCE adapts the response to a
+chosen audience.
+10. /TONE changes the tone (formal, witty,
+empathetic, etc.).
+11. /DEV MODE simulates a raw, technical
+developer style.
+12. /PM MODE gives a project-management
+perspective.
+13. /SWOT produces a
+strengths/weaknesses/opportunities/threat
+s analysis.
+14. /FORMAT AS enforces a specific format
+(table, XML, JSON, etc.).
+15. /COMPARE puts two or more things side
+by side.
+16. /MULTI-PERSPECTIVE shows several
+points of view.
+L
+4

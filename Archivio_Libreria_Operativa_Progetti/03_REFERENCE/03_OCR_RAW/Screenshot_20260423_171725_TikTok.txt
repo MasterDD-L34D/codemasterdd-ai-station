@@ -1,0 +1,22 @@
+17:17 OMe - Ae will 39 ]
+Evolving Al®
+< @evolving.ai
+5/9
+Hack #4 Don't Upload PDFs Directly To Claude
+Image-heavy or scanned PDFs can eat a huge chunk of your
+context window. So do this instead:
+« Run the PDF through a cheaper model first (Haiku,
+GPT-40 mini, or any local tool)
+« Use the prompt below to compress it
+¢ Paste the condensed text into your main Claude session
+Use this Prompt:
+Read this document end to end. Output a condensed plain-
+text version that preserves: (1) all factual claims, numbers,
+dates, and names; (2) every actionable instruction or
+recommendation; (3) the document's structure as short
+headings. Drop filler phrases, repeated context, marketing
+language, formatting artifacts, and page headers and
+footers. Target 20 to 30 percent of the original length. Return
+only the condensed text, no commentary.
+L
+7

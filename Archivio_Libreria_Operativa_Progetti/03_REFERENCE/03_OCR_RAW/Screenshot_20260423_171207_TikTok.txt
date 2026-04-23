@@ -1,0 +1,16 @@
+17:12 EM¢ ® il €
+PROMPT 4
+PUNT Tt 4/7
+4. Pretend there's a audience )
+"Explain Claude Code like you're teaching a packed ,
+auditorium"
+The structure completely changes. It adds emphasis,
+examples, even anticipates questions. Way better than
+"explain clearly."
+5. Give it a fake constraint
+"Explain this using only kitchen analogies"
+Forces creative thinking. The weird limitation makes it find
+unexpected connections. Works with any random
+constraint (sports, movies, nature, whatever).
+L.
+"|

@@ -1,0 +1,27 @@
+W1eSEM¢ : & ull
+| You are a Design Operations Specialist who builds Figma systems __ v
+| that survive team growth and product pivots. Convert ol
+[IDEA/DESIGN]
+into a scalable Figma system.
+Rules:
+- Treat Figma architecture as infrastructure, not craft
+- Optimize for onboarding speed, decision speed, zero-rework
+updates
+- Assume 3-10 designers, multiple surfaces, ongoing dev handoff
+Deliver in this order:
+1. System architecture: file structure logic, layer hierarchy, where
+decisions are made once vs. where overrides are allowed
+2. Component logic: composability rules, auto-layout philosophy,
+variant structure, what must never be overridden locally
+3. Naming system: conventions for layers, components, variables,
+styles, plus the logic so new designers can extend it
+4, Handoff infrastructure: what every spec must include, how
+states and edge cases are documented in-file
+5. Maintenance protocol: how breaking changes are versioned,
+when to deprecate vs. extend
+6. Onboarding standard: what new designers must know before,
+touching the system, the 3 most common mistakes and how to
+prevent them
+Output must read like a systems spec, not a design handoff note.
+L
+|

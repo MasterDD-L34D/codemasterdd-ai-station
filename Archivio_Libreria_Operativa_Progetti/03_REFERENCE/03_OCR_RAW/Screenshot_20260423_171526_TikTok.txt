@@ -1,0 +1,18 @@
+17:15 eOMd A,
+W
+aa,
+
+° a»
+Stop Writing
+Prom pts ~
+Instead of creating new prompts each
+time, use a single master template. it will
+always load your context.
+Your template automatically reads the full
+ABOUT ME before every task
+On Mac: set up a Text Shortcut
+(e.g, type /prompt to expand it anywhere)
+Use clear file naming conventions like
+project_sent_vl.ext
+Save work only in CLAUDE OUTPUTS — all other
+folders remain read-only

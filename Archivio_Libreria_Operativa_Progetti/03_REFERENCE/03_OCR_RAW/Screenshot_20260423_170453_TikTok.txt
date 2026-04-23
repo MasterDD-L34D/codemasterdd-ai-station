@@ -1,0 +1,19 @@
+17:04 2 Md &.il@
+(8) Blue Viper
+@blueviper.ai 10 / 1
+I]. The Technical Interviewer
+Practice makes perfect.
+Prompt:
+Ask me one LeetCode medium question. Do not give me
+the answer. Give me hints only if | ask, and evaluate my
+final solution."
+18. The Career Strategist
+Your skills mean nothing if you cannot sell them.
+Prompt:
+‘Act as a Tech Recruiter. Review my current tech stack:
+[List Skills]. Tell me the top 3 nigh paying remote roles |
+should target, and rewrite my professional summary to
+bypass ATS filters."
+SWIPE FOR MORE
+L
+.

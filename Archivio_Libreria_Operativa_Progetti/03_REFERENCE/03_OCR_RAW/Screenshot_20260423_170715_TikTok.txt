@@ -1,0 +1,13 @@
+. ra ~ aan
+Hack #4
+Directly To Claude
+PDFs can consume 80% of your session.
+So do this instead: \
+©) Upload the PDF to ChatGPT first
+—) Use this prompt:
+“Read this document thoroughly. Remove all filler words,
+extra text, & formatting. Extract the core info. Return as
+condensed platn text with key points.”
+KE} Copy the output given by ChatGPT
+t) Paste into Claude
+@ ovis
