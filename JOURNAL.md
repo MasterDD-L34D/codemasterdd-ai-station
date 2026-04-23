@@ -987,3 +987,29 @@ Sessione auto-mode con trust esplicito utente ("fai tutto da solo"). Obiettivi e
 - **Sessione durata**: ~2h auto-mode. Bilancio ottimo: +3 dogfood + 1 ADR draft + drift audit + governance v5. Tutto pushato.
 - Barra **invariata 88%**: Fase 6 ora 55% (11/20) vs precedente 40% (8/20). Velocità progress notevole.
 - **Rispettato anti-pattern "non forzare"**: i 3 dogfood (#9/#10/#11) sono emersi da bug reali discovery in-session, non artificiali. #11 polish di smell reale #9. Nessun make-work.
+
+---
+
+## 2026-04-24 (review settimana 2 anticipata)
+
+### Completato
+- **Review settimana 2 anticipata** (scheduled ~2026-05-07, anticipata per sprint 01 early-hit). Trigger: 11/12 dogfood + 4/3 behavior-critical raggiunti al 3° giorno dalla sprint start.
+- **Valutazione 4 criteri ADR-0014**:
+  1. Quality bench ≥10×≥5 → ✅ **PASS** (75 test già completati pre-Fase 6)
+  2. Reliability n≥20, fail <30%, zero silent-corruption → 🟡 **on-track** (n=11/20 al 55%, fail rate 9.1%, zero corruption cumulative)
+  3. Privacy ≥3 sessioni enforced senza violation → 🟡 **on-track** (1/3, gap richiede task reale Synesthesia)
+  4. Cost <$20/mese → ✅ **PASS** ($0.0148 cumulative, 0.07% del budget)
+- **Decisione**: **on-track, no mid-course correction**. Gap residui (volume dogfood + privacy validation) richiedono solo tempo/uso naturale, non cambi stack o routing.
+- **ETA chiusura Fase 6**: 2026-05-20 confermato plausibile. Deadline hard 2026-05-19 (Claude Max) rispettata.
+- **Next checkpoint**: settimana 4 (~2026-05-17) per pre-closure check + preparazione ADR-0015 draft.
+
+### Da fare
+- M5 Synesthesia privacy validation: attendere task reale emergente (≥2 sessioni con classificazione enforced).
+- H1 residuo: +1 behavior-critical per target ≥5 (opportunistico, non forzare).
+- H2: +3 cosmetic cumulative (opportunistico).
+
+### Note
+- Review anticipata libera slot mentale e chiude H5 in BACKLOG (marked done con nota "anticipata").
+- Trend on-track già evidente senza attendere 2 settimane canoniche. Risk principale resta pace dogfood (n=9 gap + ≥2 sessioni Synesthesia) se uso naturale rallenta — mitigabile solo con opportunity reali, coerente con anti-pattern "non forzare".
+- **ADR-0015 preview**: con 2/4 criteri PASS e 2/4 on-track, scenario A full-sovereign resta confermato come ipotesi di lavoro. Nessuna anticipazione decision: deliberato waiting closure formale.
+- Sessione chiusa con 3 file modificati (JOURNAL, BACKLOG, COMPACT_CONTEXT v7 if updated) + 1 commit conforme.

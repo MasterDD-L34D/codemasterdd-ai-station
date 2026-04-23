@@ -6,8 +6,8 @@
 
 ## Progetto
 - **Nome**: CodeMasterDD AI Station
-- **Versione del compact**: v6 (post ADR-0016 draft + governance consolidation)
-- **Data ultimo aggiornamento**: 2026-04-24 03:00
+- **Versione del compact**: v7 (post review settimana 2 anticipata)
+- **Data ultimo aggiornamento**: 2026-04-24 (review anticipata)
 
 ## Stato attuale
 - Barra globale **88%** invariata. Fase 6 al **55%** (11/20 dogfood + quality bench v1+v2 done).
@@ -32,6 +32,7 @@
 - **Governance consolidation final sweep**: JOURNAL entry (`4e67a21`), CLAUDE.md pointer ADR-0016 (`8de3263`), H6 closed + routing refs updated (`b31ff86`), BACKLOG refresh close M1/M2/M6 (`9af4b72`).
 - **Sprint 01 obiettivi superati early** (3° giorno su 14): 11/12 dogfood + **4/3 behavior-critical ✅ superato**.
 - **Memory M2 refresh**: `project_session_resumption.md` aggiornato (HEAD, tabella 11 dogfood, Sprint 01 early hit, ADR-0014 status).
+- **Review settimana 2 anticipata** (H5 closed): on-track confermato. 2/4 criteri ADR-0014 PASS (quality 75 test, cost $0.0148 / 0.07% budget), 2/4 on-track (reliability 11/20 @ 9.1% fail, privacy 1/3). Nessun mid-course correction. Next checkpoint settimana 4 (~2026-05-17). JOURNAL entry `2026-04-24 (review settimana 2 anticipata)`.
 
 ### Pre-sessione corrente
 - Hardware setup + hardening + migrazione progetti (Fase 1-5 closed).
@@ -89,9 +90,9 @@ Dettaglio e next actions in `BACKLOG.md` (H1-H6) + `OPEN_DECISIONS.md` (OD-001 t
 - Framework archivio: `Archivio_Libreria_Operativa_Progetti/` (130 file multi-progetto)
 
 ## Prossimi 3 passi
-1. **M5 Synesthesia privacy validation** — criterio 3 ADR-0014 ancora 1/3. **Priorità residua principale sprint 01**: ≥2 sessioni reali Synesthesia con classificazione enforced (views/ cloud OK, controllers/ sovereign). Richiede task reale emergente dal lavoro web app.
+1. **M5 Synesthesia privacy validation** — criterio 3 ADR-0014 ancora 1/3. **Priorità residua principale**: ≥2 sessioni reali Synesthesia con classificazione enforced (views/ cloud OK, controllers/ sovereign). Richiede task reale emergente dal lavoro web app.
 2. **H1 residuo** — +1 behavior-critical per chiudere target ≥5 (attuale 4). Candidato real emergente.
-3. **Review settimana 2** (~2026-05-07) — count + fail rate + cost + ETA. On-track evidente (55% Fase 6 + 9.1% fail rate), formalizzare in JOURNAL entry dedicata + decisione on-track / mid-course.
+3. **Pre-closure check settimana 4** (~2026-05-17) — count finale + preparazione ADR-0015 draft. Review settimana 2 già fatta anticipata 2026-04-24 (on-track).
 
 ## Next session restart: cosa leggere per ripartire
 
