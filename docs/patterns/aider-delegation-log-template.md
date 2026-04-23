@@ -79,6 +79,30 @@
 - Se cosmetic success > 90% e behavior safe-fail < 25%: scenario full-sovereign viable, skip Claude Pro
 - Se mix complessivo con success < 50%: stack sovereign non maturo, Claude Pro mandatory
 
+### Quality bench ↔ reliability correlation (M4)
+
+Il quality-bench misura **capability su toy problems** (pass@1 deterministic). Il dogfood log misura **reliability su task reali** (constraint-compliance multi-shot). I due dataset sono ortogonali e **devono essere letti insieme** fine-mese per diagnosticare fail modes.
+
+**Reference table** (da aggiornare a ogni nuovo bench run): mappare ciascuno stack a `pass@1_rate` + `bench_source` per context. Formato consigliato:
+
+```markdown
+| Stack | pass@1 (quality bench) | Source | Reliability rate (dogfood) |
+|-------|------------------------|--------|----------------------------|
+| 7B-whole | 100% | quality-bench-2026-04-23.md | (compilato fine mese) |
+| 14B-diff | 100% | quality-bench-2026-04-23.md | (compilato fine mese) |
+| qwen3-30b-diff | 100% | quality-bench-2026-04-23.md | (compilato fine mese) |
+| groq-70b | 100% | quality-bench-2026-04-23.md | (compilato fine mese) |
+| cerebras-8b | 100% | quality-bench-2026-04-23.md | (compilato fine mese) |
+```
+
+**Diagnostic patterns**:
+- `pass@1 = 100% AND reliability < 80%` → fail mode è **constraint-specific**, non capability-gap. Driver per routing matrix adjustment (es. ADR-0016 constraint-count).
+- `pass@1 < 50% AND reliability < 50%` → capability-gap reale, considerare upgrade modello (ADR-0009 T1 trigger).
+- `pass@1 = 100% AND reliability = 100%` → stack robusto per la classe task osservata; mantenere.
+- `pass@1 variance alta across benches` → discriminant power insufficiente, serve hard problem set (L1 backlog).
+
+**Quando aggiornare la reference table**: a ogni nuovo bench eseguito (run-bench.ps1) o quando un nuovo stack è aggiunto al routing (nuovo wrapper).
+
 ## Pattern da tenere d'occhio
 
 - **Auto-translate commit** (Qwen ↔ italiano): cosmetic, ma se diventa consistent potrebbe indicare contamination di chat history
