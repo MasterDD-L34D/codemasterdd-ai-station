@@ -1013,3 +1013,47 @@ Sessione auto-mode con trust esplicito utente ("fai tutto da solo"). Obiettivi e
 - Trend on-track già evidente senza attendere 2 settimane canoniche. Risk principale resta pace dogfood (n=9 gap + ≥2 sessioni Synesthesia) se uso naturale rallenta — mitigabile solo con opportunity reali, coerente con anti-pattern "non forzare".
 - **ADR-0015 preview**: con 2/4 criteri PASS e 2/4 on-track, scenario A full-sovereign resta confermato come ipotesi di lavoro. Nessuna anticipazione decision: deliberato waiting closure formale.
 - Sessione chiusa con 3 file modificati (JOURNAL, BACKLOG, COMPACT_CONTEXT v7 if updated) + 1 commit conforme.
+
+---
+
+## 2026-04-24 (notte tarda — sessione Dafne swarm massiva, ~5h cumulative)
+
+### Completato
+
+**Contesto**: sessione estesa sul repo Dafne swarm (`C:\Users\edusc\Dafne\workspace\swarm`, remote `github.com/MasterDD-L34D/evo-swarm`) dopo chiusura review settimana 2. 19 commit swarm pushati, 1 branch Game repo pushato, 2 file memory nuovi + 2 aggiornati.
+
+**Macro-milestones**:
+- **Security fix**: rimozione GROQ_API_KEY hardcoded da `start-dafne.cmd` + fix `START-SWARM.ps1` per caricare `~/.config/api-keys/keys.env` centrale (policy CodeMasterDD)
+- **Framework archivio selective adoption**: 5 file governance creati (PROJECT_BRIEF, DECISIONS_LOG, BACKLOG, OPEN_DECISIONS, MODEL_ROUTING) + mapping in INDEX. Zero duplicazioni.
+- **Drift resolution opzione C**: MANIFEST two-tier coesistenti (Livello 1 famiglia 4 MBTI + Livello 2 specialisti operativi Evo-Tactics). DECISIONS_LOG 11 decisioni storicizzate.
+- **SWARM-CONTROLS v1.0** con CO-01/02/04/06 compilati (CO-03/05/07 dichiarati pending empirical data).
+- **Agent registration live**: gameplay-prototyper + combat-engineer registrati runtime via POST (BOM fix risolse 500 silenzioso).
+- **Dashboard UI restyle** (selective sentiero A): 6 sfrondature + loop pattern detection client-side + framework mapping.
+- **Validation run completo**: 6 cicli swarm, 100% success rate, +19 artifact. Continuità cross-session validata (trait `magnetic_rift_resonance` cross-session).
+- **H5/H7/H8 closed con live validation**:
+  - H5 gate embedding via Ollama `nomic-embed-text` (274MB installato) → blocked `play-loop-validator` (5ª variante loop pattern) con similarity 0.868
+  - H7 handoff guidance dinamico in `run_agent()` → constrain next_action a agent reali
+  - H8 CO-02 wrapping server-side in `run_agent()` → artifact arricchiti con schema fields
+- **MEMORY-SHARED swarm**: 6 lezioni empirical L-E1..L-E6 (primo batch reale). Pilastro 2 🔴 0% → 🟡 ~5%.
+- **6 proposte Dafne rejected** (pattern "bridge design-dev validator" 5 varianti + morph-budget duplicate). Eduardo esce dal loop triage.
+
+**Insight meta**: sessione ha dimostrato il pattern "selective adoption + onestà riflessiva" del framework archivio. Ogni volta che riproducevo anti-pattern criticato (chip non cliccabili, hardcoded TODO, stat boxes always-0), Eduardo rilevava, io correggevo. Risultato: UI e governance **onesti**, non perfetti.
+
+### Da fare (tracked, not urgent)
+
+- **OD-003 Groq key**: check console per nuova key post-rotate (403 persistent)
+- **OD-004 dashboard feature usage**: 1 settimana observation post-day-5
+- **OD-005 NEW (apro ora)**: Tavily API key per Dafne web search degraded
+- **BACKLOG L7 CAMEL integration**: deferred a Atto 2 (H5/H7/H8 core problem risolto senza CAMEL)
+- **Day-5 26/04**: primo task famiglia Solver/Scout/Builder via DAY-5-BRIEF.md
+- **Pre-closure check sett.4 (~2026-05-17)**: pre-closure Fase 6
+
+### Note
+
+- **Server Dafne swarm lasciato UP idle** su `localhost:5000` a fine sessione (2026-04-24 02:15 notte). RAM/CPU consumption minimale in stato idle. Per stop: `taskkill //PID <id> //F` o chiudi finestra PowerShell minimized.
+- **Pattern "Dafne propone 'bridge/validator'" è strutturale**: 5 varianti in ~100 min (mechanic-integrator, mechanic-validator, simulator-validator, play-loop-validator + 1 precedente). H5 gate ora autoblocca, Eduardo esce dal loop.
+- **Embedding Ollama** >> **Jaccard stdlib** per semantic similarity: `play-loop-validator` vs `simulator-validator` Jaccard ~0.13 (borderline) vs embedding 0.868 (clear catch). Justification per `nomic-embed-text` 274MB installato.
+- **Continuità cross-session confermata**: `magnetic_rift_resonance` creato via test manuale ciclo 0 è stato ripreso automaticamente dal trait-curator al ciclo 4 del loop successivo senza handoff esplicito. Filesystem artifact funziona come memoria funzionale del collettivo.
+- **DAY-5-BRIEF resta valido strutturalmente** ma il focus_directive Dafne intervention #3 ("spostare da documentazione a prototipazione verticale") anticipa il tema naturale day-5. Eduardo può override o confermare.
+- **Nessun impatto sul repo codemasterdd-ai-station**: il lavoro Dafne è in repo separato `evo-swarm`. Questo JOURNAL entry è per tracking meta (session resumption future).
+- **Commit codemasterdd repo**: nessun cambio ai file (fase 6 dogfood), solo questa entry JOURNAL finale + aggiornamento memory.
