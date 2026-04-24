@@ -46,7 +46,37 @@
 ### Decisioni pendenti
 - ADR-0015 (Proposed) ratification
 - ADR-0016 (Proposed) awaiting n≥3 data points addizionali
-- ADR-0017 (Proposed) UI + observability stack — rollout phased Sprint 02 → ratification ~2026-05-17
+- ADR-0017 (Proposed) UI + observability stack — **scaffolding completato 2026-04-24 auto-mode**, test live pending (U0-U4-test), ratification ~2026-05-17
+
+### Stack ADR-0017 — status scaffolding
+
+| Componente | Path | Status code | Status runtime |
+|------------|------|:-----------:|:--------------:|
+| LiteLLM Proxy config | `infra/litellm/config.yaml` | ✅ validated | ⏸️ not started |
+| Langfuse docker setup | `infra/docker-compose.yml` | ✅ validated | ⏸️ not started |
+| Postgres init | `infra/postgres/init-multiple-dbs.sh` | ✅ ready | ⏸️ not started |
+| promptfoo config | `scripts/quality-bench/promptfoo.config.yaml` | ✅ validated | ⏸️ not installed (npm) |
+| dogfood-ui Flask | `apps/dogfood-ui/` | ✅ Python AST OK | ⏸️ not installed (pip) |
+| Sub-agents | `.claude/agents/*.md` | ✅ 5 agent registered | ✅ invocabili via Agent tool |
+
+Comando avvio stack completo (quando Eduardo pronto):
+
+```bash
+# 1. Setup secrets
+cd infra && cp .env.example .env
+# (genera NEXTAUTH_SECRET + SALT con openssl rand -base64 32)
+
+# 2. Start docker stack
+docker compose up -d
+
+# 3. Start dogfood-ui Python
+cd ../apps/dogfood-ui
+pip install -r requirements.txt
+python app.py
+
+# 4. Install promptfoo globale
+npm i -g promptfoo
+```
 
 ---
 

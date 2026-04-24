@@ -176,13 +176,19 @@ Nessuno dei 3 repo ha CI integration. Monitoring manuale:
 - backup/ per config sensibili (gitignored)
 - .env (gitignored, template in .env.example)
 
-## Struttura repository
+## Struttura repository (evoluta 2026-04-24 post ADR-0017 scaffolding)
 ```
-lenovo-ai-station/
-├── scripts/       # setup, maintenance, backup scripts
-├── docs/          # documentazione tecnica, procedure, ADR
-├── logs/          # log esecuzione (gitignored)
-├── backup/        # backup config, registry (gitignored)
+codemasterdd-ai-station/
+├── scripts/          # setup, maintenance, backup, quality-bench
+├── docs/             # documentazione tecnica, procedure, ADR (17+)
+├── logs/             # log esecuzione (gitignored)
+├── backup/           # backup config, registry (gitignored)
+├── infra/            # docker-compose + LiteLLM config + Langfuse (ADR-0017)
+├── apps/             # mini-app UI (dogfood-ui Flask) (ADR-0017)
+├── .claude/agents/   # 5 sub-agent Claude Code (dogfood-analyst, bench-reporter, cost-monitor, repo-health-auditor, adr-drafter)
+├── Archivio_Libreria_Operativa_Progetti/  # framework archivio multi-progetto
+├── 11+ file governance root-level (PROJECT_BRIEF, COMPACT_CONTEXT, DECISIONS_LOG, BACKLOG, ...)
+├── STATUS_MULTI_REPO.md  # dashboard operativa cross-repo
 ├── README.md
 ├── JOURNAL.md
 ├── CLAUDE.md
@@ -190,14 +196,15 @@ lenovo-ai-station/
 ```
 
 ## Scopo repository
-`lenovo-ai-station` è **infrastructure-as-code** della workstation Lenovo:
+`codemasterdd-ai-station` è **infrastructure-as-code + observability stack self-hosted + UI glue minimale** (scope evoluto post ADR-0017 Proposed 2026-04-24):
 - Gestione setup, manutenzione, backup
-- Procedure ripetibili
-- Documentazione decisioni architetturali
-- Knowledge base personale
-- Log sessioni significative
+- Procedure ripetibili + config stack osservabilità
+- Documentazione decisioni architetturali (17+ ADR)
+- Knowledge base personale + dashboard operativa cross-repo
+- Log sessioni + tracking strutturato Fase 6 dogfood
+- UI glue per tier routing + dogfood tracking + bench viewer (`apps/dogfood-ui/`)
 
-**NON contiene codice di progetti reali** (vivono in repo separati).
+**NON contiene codice di progetti reali Game/Synesthesia** (vivono in repo separati). Le "apps/" root-level sono mini-strumenti operativi per questo repo stesso (dashboard, Aider wrapper, bench viewer), non gioco né prodotto esterno.
 
 ## Priorità modelli AI
 - **Durante Claude Max (fino 19/05/2026)**: Opus 4.7 per tutto

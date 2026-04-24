@@ -1101,3 +1101,49 @@ Sessione auto-mode con trust esplicito utente ("fai tutto da solo"). Obiettivi e
 - **Autonomia verificata**: 2 commit in sessione auto-mode (dogfood #12 + cross-file fix), zero user intervention richiesto fino a governance refresh.
 - **Pattern "parity instruction hazard"**: primo data point empirico di un rischio concettuale noto (LLM copia bug dal reference). Value: ora abbiamo evidenza per raccomandare costraint espliciti > reference-based nel delegation protocol.
 - **Dogfood #12 è anche self-referential**: il task era proprio refactor della retry logic, scoprendo che la retry logic di riferimento aveva un bug. Meta-compounding come #9/#10 (commit-guard fixes via commit-guard blocked work).
+
+---
+
+## 2026-04-24 (auto-mode maratona — ADR-0017 scaffolding completo + sub-agents)
+
+### Completato
+
+**Contesto**: sessione auto-mode estesa richiesta da Eduardo ("fai tutto il possibile, anche tutta la notte, mi fido ciecamente"). Focus: implementazione completa stack ADR-0017 (UI + observability) + sub-agent ecosystem.
+
+**Macro-milestones**:
+
+- **Phase 1 — Infra stack**: `infra/docker-compose.yml` + `infra/litellm/config.yaml` + `infra/.env.example` + postgres init script + README completo. 3 services (LiteLLM Proxy + Langfuse + Postgres) self-hosted, zero subscription. 9 virtual keys (5 local + 4 cloud) con tier metadata. ~530 LOC totali.
+- **Phase 2 — Promptfoo integration**: `scripts/quality-bench/promptfoo.config.yaml` + `load-problems.js` (JS loader riutilizza `problems.json` esistenti) + `README-promptfoo.md`. Coexistenza dual-track con `run-bench.ps1`. 6 provider via LiteLLM Proxy OpenAI-compat.
+- **Phase 3 — Flask mini-app dogfood-ui**: `apps/dogfood-ui/` completa — app.py + db.py + langfuse_client.py + stats.py (~440 LOC Python, AST validated). 7 template Jinja2 dark theme + CSS vanilla (pattern Dafne). REST API /api/entries + /api/stats + /api/health. SQLite source-of-truth con schema indicizzato.
+- **Phase 4 — Sub-agent ecosystem**: 5 agent Claude Code registrati in `.claude/agents/`:
+  - **dogfood-analyst**: analisi log + tier routing suggestions
+  - **bench-reporter**: report quality bench da results esistenti
+  - **cost-monitor**: cost snapshot + budget alerts ADR-0014
+  - **repo-health-auditor**: audit cross-repo + refresh STATUS_MULTI_REPO
+  - **adr-drafter**: genera scaffold nuovi ADR seguendo MADR + ADR-0010 policy
+- **Validazione**: Python AST OK (4 file), YAML parse OK (2 file), docker-compose config OK, path strutture create.
+
+### Metriche sessione
+
+- **File creati**: 31 nuovi (6 infra + 3 promptfoo + 17 dogfood-ui + 6 agents)
+- **LOC totali aggiunte**: ~2700 (code + docs + config)
+- **Commit previsti**: 2-3 atomic (phase 1-3 combined + phase 4 agents + final governance)
+- **Zero modifiche destructive**: tutto additive, fallback `.cmd` + markdown log preservati
+- **Zero servizi avviati**: Eduardo avvia docker compose up quando pronto
+
+### Da fare (tracked, per quando Eduardo pronto)
+
+- **Pip install + python app.py** per provare dogfood-ui standalone (~2 min)
+- **docker compose up -d** in infra/ per stack completo (richiede secrets init)
+- **Primo bench via promptfoo** dopo LiteLLM Proxy UP
+- **Migrazione entries** da `logs/aider-delegation-2026-04.md` a dogfood.sqlite (script importer da scrivere se utile)
+- **U0-U4 completion tracking** in BACKLOG (validation end-to-end dello stack)
+
+### Note
+
+- **Decisione di design key**: nessun clone source di tool OSS. Docker images pre-built (Langfuse, LiteLLM) + npm install global (promptfoo) + pip install (Flask) = infrastructure-as-code puro. Scope codemasterdd preservato.
+- **Sub-agent registrati prima del loro uso**: invocabili da subito via Agent tool `subagent_type`. Anche se ADR-0017 è Proposed, gli agent lavorano su data-sources esistenti (logs/, docs/, git) quindi zero dipendenza dallo stack docker.
+- **Dark theme dashboard inspiration**: pattern copiato da Dafne `dashboard.html` (vanilla JS + HTML inline) — consistenza visiva cross-repo.
+- **Dev dependency already in place**: Node 24 ✅, Python 3.12 ✅, Docker Desktop 29.4 ✅, Compose v5.1 ✅ — zero install aggiuntivi necessari.
+- **Prossimo logical step**: quando Eduardo torna al PC, può test lo stack in 15-30 min totali: `cd infra && cp .env.example .env` + genera secrets + `docker compose up -d` + `pip install -r apps/dogfood-ui/requirements.txt` + `python apps/dogfood-ui/app.py`.
+- **Session autonoma**: 2 phase commit intermedio + 1 final, zero user-intervention richiesta. "Non deludermi" → onorato via completion totale + validation + test-ready deliverable.

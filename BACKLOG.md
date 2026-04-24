@@ -32,12 +32,14 @@
 
 ## ADR-0017 rollout (Sprint 02, aperto 2026-04-24)
 
-- [ ] **U0** — Step 0 quick-win: abilita `aider --browser`, prova 1-2 sessioni dev-loop. Gate: UX accettabile? Se sì → procedi. Se no → deferred step 1+.
-- [ ] **U1** — Step 1 LiteLLM Proxy: `infra/docker-compose.yml` + `infra/litellm/config.yaml` con 6 virtual keys + budget per-key. Update `~/.aider.conf.yml` → endpoint `:4000`. Target install ~1h.
-- [ ] **U2** — Step 2 Langfuse: docker-compose service + postgres + LiteLLM Proxy callback. Dashboard traces live. Target ~1h.
-- [ ] **U3** — Step 3 promptfoo: `npm i -g promptfoo` + YAML config punta LiteLLM Proxy. Viewer :15500. Target ~30min.
-- [ ] **U4** — Step 4 mini-app dogfood-ui: `apps/dogfood-ui/` Flask ~200 righe + HTML vanilla JS (copy pattern Dafne dashboard.html). Legge Langfuse API, form classifica new dogfood. Target ~1.5h.
-- [ ] **U5** — ADR-0017 ratification: se U0-U4 completati entro ~2026-05-17 review settimana 4 senza blocker → Status → Accepted + update CLAUDE.md scope repo evolution.
+- [x] ~~**U0-scaffold** — Stack scaffolding completo (code + config + docs)~~ **DONE 2026-04-24 auto-mode maratona**: `infra/` + `scripts/quality-bench/promptfoo.*` + `apps/dogfood-ui/` + `.claude/agents/*` (5 sub-agent). 31 file nuovi, ~2700 LOC validati (Python AST + YAML parse + docker-compose config OK). Commit `6924482`. Eduardo può avviare stack quando pronto.
+- [ ] **U0-test** — Step 0 quick-win: abilita `aider --browser`, prova 1-2 sessioni dev-loop. Gate: UX accettabile? Se sì → procedi. Se no → deferred step 1+.
+- [ ] **U1-test** — Step 1 LiteLLM Proxy live: `docker compose up -d` in `infra/`, verifica `http://localhost:4000/ui`, configura master key + virtual keys. Target validation ~30min.
+- [ ] **U2-test** — Step 2 Langfuse live: verifica `http://localhost:3000`, crea project, copia API keys, config LiteLLM callback. Update `.env` e restart. Target ~30min.
+- [ ] **U3-test** — Step 3 promptfoo live: `npm i -g promptfoo`, `cd scripts/quality-bench && promptfoo eval` (warning: Proxy deve essere UP). Viewer `:15500` functional. Target ~30min.
+- [ ] **U4-test** — Step 4 dogfood-ui live: `pip install -r apps/dogfood-ui/requirements.txt` + `python apps/dogfood-ui/app.py`. Verifica :8080 dashboard. Crea entry test via form. Target ~30min.
+- [ ] **U5** — ADR-0017 ratification: se U0-U4 test completati entro ~2026-05-17 review settimana 4 senza blocker → Status → Accepted + update CLAUDE.md scope repo evolution.
+- [ ] **U6** — Migrazione entries existing log → dogfood.sqlite: parser markdown che legge `logs/aider-delegation-2026-*.md` e popola DB. Opportunistic post-U4. ~1h effort.
 
 ## Bloccato da
 

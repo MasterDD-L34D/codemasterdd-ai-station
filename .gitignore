@@ -61,6 +61,8 @@ backup/*
 
 # === Claude Code ===
 .claude/
+!.claude/agents/
+!.claude/agents/**
 .aider*
 
 # === Quality bench results (framework tracked, run outputs ignored) ===
