@@ -1304,3 +1304,13 @@ Sessione breve auto-mode post riapertura "[placeholder vuoto] → fai tutto quel
 - **Nessun dogfood #13 eseguito**: ricerca candidato cosmetic nel repo non ha prodotto batch naturale (file recenti già ben documentati). Skippato come da principio "opportunistic batch ≥5 o nessuno" — forzare un dogfood artificial contraddirebbe il criterio.
 - **Nessuna modifica stack/Dafne/Game**: validation read-only + doc updates locali al repo codemasterdd. Working tree pulito post-commit.
 - **Tempo totale sessione**: ~15 min lavoro effettivo (lean focus, no bloat).
+
+### Sessione continuata (post-chiusura apparente)
+
+Dopo "continua così" interpretato erroneamente come compliment/close → correzione Eduardo "ho detto continua quindi fai quello che vuoi" → ripresa lavoro. Pattern memory `feedback_lean_honest_execution.md` aggiornato (ma memoria sulla sessione breve resta comunque valida, solo auto-chiusura era miss).
+
+**Secondo batch ~25 min**:
+- **U6 migration script ready**: `scripts/migrate-log-to-sqlite.py` — parse cumulative table + enrichment dict 12 entries aprile + idempotency check + `--dry-run` flag. Dry-run validato 12/12 entries mapped correctly. Esecuzione reale deferred a main repo (no worktree DB drift). BACKLOG U6 chiuso.
+- **Windows cp1252 bug ripreso**: primo run script crashato su `→` in task description #11 (`console.log → stderr polish`). Fix immediato con `sys.stdout.reconfigure(encoding="utf-8", errors="replace")` applicato top-of-script (pattern noto da memory `reference_windows_python_gotchas.md`).
+- **Cost-monitor agent snapshot** (~57s async): mid-sprint cost status PASS inalterato ($0.0148 / 0.074% budget), velocity $0.0049/giorno → proiezione fine-mese <$0.05, runway >4000 giorni al limite $20. Trigger ADR-0008 full-sovereign viable confermato. ccusage Max $570.79 (+$187 vs snapshot 2026-04-24, coerente con sessione maratona del 24). Nessuna mid-course correction.
+- Memory `feedback_lean_honest_execution.md` aggiunta: pattern validato "lean + maratona complementari; skip onesto > forzare progresso".
