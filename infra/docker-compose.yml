@@ -50,7 +50,10 @@ services:
   # Tracing, evals, prompt management, cost dashboard
   # ============================================================
   langfuse-web:
-    image: langfuse/langfuse:latest
+    # Pin v2: v3+ richiede ClickHouse + Redis + MinIO (breaking change).
+    # Per sovereign solo-dev, v2 è sufficiente (Postgres-only, feature subset OK
+    # per dogfood Fase 6). Rivalutare v3 se serve funzionalità specifica v3-only.
+    image: langfuse/langfuse:2
     container_name: codemasterdd-langfuse-web
     restart: unless-stopped
     ports:

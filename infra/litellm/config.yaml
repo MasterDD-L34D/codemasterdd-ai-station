@@ -140,10 +140,11 @@ general_settings:
   master_key: "os.environ/LITELLM_MASTER_KEY"
   database_url: "os.environ/DATABASE_URL"
   disable_spend_logs: false
-  # Enforce budget per virtual key
-  enforced_params: []
   # Admin UI enabled
   ui_access_mode: "admin_only"
+  # NOTE: `enforced_params` è LiteLLM Enterprise-only — non compatibile con OSS.
+  # Budget enforcement funziona comunque via virtual keys (max_budget per key
+  # impostato in Admin UI dopo setup).
 
 # Environment variables mapping (caricate via .env)
 environment_variables:
