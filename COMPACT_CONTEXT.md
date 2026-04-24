@@ -66,6 +66,7 @@
 - **ADR-0014** Fase 6 compressa a ~4 settimane
 - **ADR-0015** Fase 7 budget full-sovereign + deroga #3 Synesthesia dormant — **Proposed 2026-04-24**
 - **ADR-0016** Constraint-count seconda dimensione routing — **Proposed 2026-04-24**
+- **ADR-0017** UI + observability stack (LiteLLM Proxy + Langfuse + promptfoo + Flask mini-app) — **Proposed 2026-04-24**
 
 ### Decisioni non-ADR (operative minori, in DECISIONS_LOG)
 - **001** Adozione schema framework archivio per governance files

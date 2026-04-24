@@ -32,6 +32,7 @@
   - Opportunistic dogfood verso n=20 (attuale 12). Non hard-target.
   - H2 cosmetic gap 3 (opportunistic batch)
   - H3 cp1252 monitoring fino n=15 trigger
+  - **ADR-0017 rollout phased U0-U4** (UI + observability stack): Aider browser → LiteLLM Proxy → Langfuse → promptfoo → dogfood-ui Flask mini-app. Target ~4h cumulative.
 
 - **2026-05-17** checkpoint:
   - Verifica criterio #2 reliability + #4 cost
@@ -45,6 +46,7 @@
 ### Decisioni pendenti
 - ADR-0015 (Proposed) ratification
 - ADR-0016 (Proposed) awaiting n≥3 data points addizionali
+- ADR-0017 (Proposed) UI + observability stack — rollout phased Sprint 02 → ratification ~2026-05-17
 
 ---
 

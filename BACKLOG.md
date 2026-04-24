@@ -30,6 +30,15 @@
 - [ ] **L4** — Gemma 4 multimodal dogfood reale. Opportunistic.
 - [ ] **L5** — Skill install policy audit periodico (cadence 3 mesi).
 
+## ADR-0017 rollout (Sprint 02, aperto 2026-04-24)
+
+- [ ] **U0** — Step 0 quick-win: abilita `aider --browser`, prova 1-2 sessioni dev-loop. Gate: UX accettabile? Se sì → procedi. Se no → deferred step 1+.
+- [ ] **U1** — Step 1 LiteLLM Proxy: `infra/docker-compose.yml` + `infra/litellm/config.yaml` con 6 virtual keys + budget per-key. Update `~/.aider.conf.yml` → endpoint `:4000`. Target install ~1h.
+- [ ] **U2** — Step 2 Langfuse: docker-compose service + postgres + LiteLLM Proxy callback. Dashboard traces live. Target ~1h.
+- [ ] **U3** — Step 3 promptfoo: `npm i -g promptfoo` + YAML config punta LiteLLM Proxy. Viewer :15500. Target ~30min.
+- [ ] **U4** — Step 4 mini-app dogfood-ui: `apps/dogfood-ui/` Flask ~200 righe + HTML vanilla JS (copy pattern Dafne dashboard.html). Legge Langfuse API, form classifica new dogfood. Target ~1.5h.
+- [ ] **U5** — ADR-0017 ratification: se U0-U4 completati entro ~2026-05-17 review settimana 4 senza blocker → Status → Accepted + update CLAUDE.md scope repo evolution.
+
 ## Bloccato da
 
 - **B1** — ADR-0015 Budget decision: richiede chiusura Fase 6 (tutti 4 criteri ADR-0014). ETA sblocco ~2026-05-20.
