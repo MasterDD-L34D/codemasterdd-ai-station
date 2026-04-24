@@ -183,6 +183,7 @@ Da triageare nel BACKLOG del repo Game quando Eduardo fa sessione lì. Non gesti
 - **Monitoring integrato**: `apps/dogfood-ui` ha panel `/dafne` che proxy verso `:5000` + endpoint `/api/dafne/snapshot` JSON aggregato. Avvia con `python apps/dogfood-ui/app.py`, apri `http://localhost:8080/dafne`.
 - **⚠️ Process persistence issue** (tracked 2026-04-24): Dafne server muore dopo ~10-30min senza causa evidente quando launched via `Start-Process -Minimized`. Workaround: usa `START-SWARM-PERSISTENT.ps1` (auto-restart + log rotation, vedi `docs/reference/dafne-persistence.md`). Per always-on, Task Scheduler opzione 2.
 - **Prossimo milestone**: **DAY-5 2026-04-26** — primo task famiglia coordinatori (Solver/Scout/Builder) + Dafne orchestra. Brief già scritto in `DAY-5-BRIEF.md`. Durata stimata 2h. **Pre-flight checklist**: [docs/reference/dafne-persistence.md#day-5-pre-flight-checklist-2026-04-26](docs/reference/dafne-persistence.md#day-5-pre-flight-checklist-2026-04-26).
+- **Chat personale Dafne (nuova, 2026-04-25)**: endpoint `http://localhost:5000/dafne` nella swarm dashboard. Separata dalla modalità intervention-swarm. Fallback chain qwen3:8b local → groq 70B → cerebras 8B → gemini flash. System prompt auto-caricato da SOUL/IDENTITY/diary. Persistence in `workspace/memory/dialoghi/YYYY-MM-DD.md`. Swarm commit `4706d88`.
 - **Scope DAY-5**:
   - Consolidare decisione "drift manifest vs reality" da opzione C provvisoria a canonica
   - Test pattern handoff CO-01 (SWARM-CONTROLS v1.0)

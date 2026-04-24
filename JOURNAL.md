@@ -1324,6 +1324,22 @@ Dopo "continua così" interpretato erroneamente come compliment/close → correz
 - **V1 dashboard tour**: dashboard `:8081` popolata con 12 entries migrati. Cost report esteso + breakdown per classe/stack + trigger ADR-0008 full-sovereign viable confermato + raccomandazione "on-track silently".
 - **V2 Game ROSSO findings**: aggiunti a `STATUS_MULTI_REPO.md` sezione Game come "Audit findings pending" (boss enrage mod 9.0 + XP curve L5→L6 delta +75). Triage nel BACKLOG del Game repo quando Eduardo fa sessione lì.
 
+**Quinto batch — Fase A Dafne chat integrata** (Eduardo D1=d D2=b+c D3=personal T2+T3+T5+T6):
+- Brief Eduardo: "rendere Dafne quel che deve essere al 100%", strumento chat nella dashboard swarm ("non la volevo solo tramite openclaw"), motore sempre-up cloud, sub esistenti (Claude Max + ChatGPT Plus + NotebookLM + Manus + free tier), voice + widget principali con personalità, bridge mobile via Tailscale.
+- Piano 3-fasi preparato (A auto-mode ora, B richiede OK B1/B2/B3, C sessione dedicata).
+- **Fase A implementata end-to-end in swarm repo** (commit `4706d88`):
+  - `camel-agents/dafne_chat.py` modulo dedicato: system prompt che carica SOUL+IDENTITY+USER+diary come contesto, fallback chain qwen3:8b→groq-70B→cerebras-8B→gemini-flash (4 tier), persistence `workspace/memory/dialoghi/YYYY-MM-DD.md` markdown leggibile con metadata tier+model per scambio
+  - `camel-agents/dafne-chat.html` chat UI standalone dark theme viola/ambra coerente con Dafne persona (auto-resize textarea, Enter send, model indicator)
+  - `api_server.py` endpoint GET `/dafne` + POST `/api/dafne/chat`
+  - `dashboard.html` card Dafne con doppio button (intervention swarm esistente + chat personale nuovo)
+  - Cerebras + Gemini aggiunti a openclaw master + agent auth-profiles (4 cloud free tier + codex come tier 5 opzionale)
+  - Rename `START-DAFNE-PERSISTENT.ps1` → `START-SWARM-PERSISTENT.ps1` per separazione Dafne/swarm
+- **Smoke test Fase A**: tier 1 qwen3:8b risponde in italiano, persistence file creato con 2 scambi metadata OK, cp1252 fix preventivo applicato a dafne_chat.py (pattern ormai standard per output Dafne emoji).
+- **Observation tone iniziale**: Dafne risponde ancora un po' "chatbot helpful" ("pronta ad aiutare") nonostante system prompt espliciti "non sei assistente". qwen3:8b sovrascrive con training defaults. Iterativo — si affina con uso + rafforzamento prompt quando emerge drift.
+- **Dashboard live**: entrambi dashboard.html + dafne-chat.html visibili via Launch preview durante la scrittura per feedback visuale immediato.
+- Restart swarm pending (Eduardo Ctrl+C sul `Swarm.lnk` wrapper → auto-restart 10s lancia nuovo api_server.py).
+- Fase B (B1=motore always-up, B2=voice, B3=widget) e Fase C (multi-user famiglia, Manus, NotebookLM) pending decisione Eduardo.
+
 **Quarto batch — Dafne memory archaeology** (correzione allineamento):
 - Eduardo ha interrotto flusso tecnico per chiedere "Dafne non doveva anche essere molto di più?". Giusta: stavo trattando Dafne come orchestratore Flask + agent registry per 20 turni consecutivi.
 - Explore agent lanciato → 25+ file mappati across 4 path. Scoperte sostanziali:
