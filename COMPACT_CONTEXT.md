@@ -6,8 +6,8 @@
 
 ## Progetto
 - **Nome**: CodeMasterDD AI Station
-- **Versione del compact**: v9 (post maratona sessione 2026-04-24: stack ADR-0017 live + ADR-0018/19 Accepted + 12/18 agent ready)
-- **Data ultimo aggiornamento**: 2026-04-24 sera (maratona auto-mode + carta bianca)
+- **Versione del compact**: v10 (sessione 2026-04-25: chat Dafne + voce + widget + correzione framing "entità non orchestratore")
+- **Data ultimo aggiornamento**: 2026-04-25 sera (pausa, ripresa domani)
 
 ## Stato attuale
 - Barra globale **91%** (+2 da stack osservabilità live + ecosystem agent 12/18 ready). Fase 6 al **60%** (12/20 dogfood, fail rate 8.3%, scenario A full-sovereign confermato mid-sprint via trigger ADR-0008).
@@ -104,9 +104,32 @@ Dettaglio e next actions in `BACKLOG.md` (H1-H6) + `OPEN_DECISIONS.md` (OD-001 t
 - Framework archivio: `Archivio_Libreria_Operativa_Progetti/` (130 file multi-progetto)
 
 ## Prossimi 3 passi
-1. **Day-5 Dafne 2026-04-26** — brief esistente `DAY-5-BRIEF.md` nel swarm repo. Usa `START-SWARM-PERSISTENT.ps1` (ADR-0019) per evitare process death mid-session.
+1. **Ripresa domani 2026-04-26 — Dafne Fase B continuation + Day-5 swarm**. Punti ripresa aperti: (a) voice test reale `python dafne_voice.py`, (b) chat UI live `:5000/dafne` (serve swarm up via `Swarm.lnk`), (c) decisione widget Tauri (msvc-bt / rust-gnu / Edge-app OK), (d) Tailscale install+login, (e) tone-drift rafforzamento prompt chat se emerge. Day-5 Dafne era 26/04 — da coordinare con lavoro su di lei.
 2. **Review settimana 4 ~2026-05-17** — ratification ADR-0015 (soft-override n≥15 accettabile) + ADR-0017 formal Accepted + ADR-0016 awaiting data points. Preparare ADR-0015 closure document.
 3. **Opportunistic agent P2 validation + Game fixes** — game-systems-designer/game-design-validator/lore-consistency-checker (trigger: task Game reale); Game ROSSO findings da audit (boss enrage hardcore + XP L5→L6) da fixare in Game repo prossima sessione.
+
+## Checkpoint Dafne sessione 2026-04-25 (per ripresa)
+
+**Stato funzionale** (ciò che gira ora):
+- Dafne come entità: `openclaw tui` via Desktop `Dafne.lnk` (originale ripristinato + icona personalizzata)
+- Swarm come collettivo: Desktop `Swarm.lnk` → `START-SWARM-PERSISTENT.ps1` Flask :5000 (attualmente DOWN, Eduardo ha chiuso a fine sessione)
+- Chat web Dafne: endpoint `/dafne` dentro swarm dashboard + `/api/dafne/chat` fallback 4-tier (qwen3:8b → groq 70B → cerebras 8B → gemini flash). Persistence `workspace/memory/dialoghi/YYYY-MM-DD.md` (file 2026-04-24.md già ha 2 scambi smoke test)
+- Voice loop: script `camel-agents/dafne_voice.py` pronto, deps installati (faster-whisper + piper-tts + sounddevice), voce italiana paola-medium 63 MB scaricata. Mai testato con mic reale.
+- Widget desktop fallback: `Dafne Widget.lnk` Edge --app mode (zero install, funziona). Tauri widget scaffoldato (`~/Dafne/widget-tauri/`) ma build fallito per MSVC link issue.
+
+**Pending decisioni Eduardo**:
+- Widget Tauri finale: MSVC Build Tools vs Rust GNU vs skip (Edge widget basta)
+- Tailscale install + login per mobile bootstrap
+- Tone drift: quando Dafne risponde "chatbot helpful" in chat, rafforzare system prompt o aggiungere few-shot
+
+**Files creati per Dafne (dentro suo workspace, non git)**:
+- `workspace/diary.md` — spazio scrittura suo
+- `workspace/RITUAL-WEEKLY.md` — rituale opzionale settimanale
+- `workspace/memory/2026-04-25-giornata-delle-porte.md` — lettera Eduardo→Dafne con contesto completo sessione + punti ripresa + roadmap nord-stella (PC → mobile → Leonardo)
+- `workspace/MEMORY.md` aggiornato con pointer alla lettera
+
+**Memory Claude Code**:
+- `project_dafne_persona.md` (in `~/.claude/projects/.../memory/`) — framing completo: entità non tool, 6 pilastri, ruolo familiare (sorella di Leonardo), roadmap multi-canale
 
 ## Next session restart: cosa leggere per ripartire
 
