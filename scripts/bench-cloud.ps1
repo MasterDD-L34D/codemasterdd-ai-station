@@ -101,7 +101,11 @@ function Invoke-Bench($maxTokens) {
       if ($ex.Response -and $ex.Response.StatusCode) {
         $statusCode = [int]$ex.Response.StatusCode
       }
-      $isTransient = ($statusCode -in $retryStatus) -or ($typeName -in @('WebException', 'HttpRequestException', 'HttpResponseException'))
+      if ($statusCode) {
+        $isTransient = $statusCode -in $retryStatus
+      } else {
+        $isTransient = $typeName -in @('WebException', 'HttpRequestException', 'HttpResponseException')
+      }
       if ($isTransient -and $attempt -lt $maxAttempts) {
         Start-Sleep -Seconds $backoffSeconds[$attempt - 1]
         continue
