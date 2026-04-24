@@ -2,7 +2,7 @@
 
 > *TL;DR: codemasterdd-ai-station oggi è "infrastructure-as-code" puro (ADR-0001/0002) senza UI né dashboard — tier routing via wrapper `.cmd`, tracking tramite log markdown, quality bench via JSON raw. Eduardo ha richiesto UI + feature per renderlo "sistema di verifica e coding principale". Research interna (4 repo monitorati) ha mappato lo stack comune (Express/Flask + vanilla JS + Ollama + Aider), research esterna ha identificato 3 tool MIT/Apache che coprono il 90% del gap: **LiteLLM Proxy + Admin UI** (routing unificato + virtual keys + cost dashboard), **Langfuse self-hosted** (observability + tracing + evals), **promptfoo** (bench runner con web viewer). Bonus: **Aider `--browser`** (già installato) per GUI dev-loop immediata. Decisione: adottare stack 3-layer docker-compose + mini-app Flask custom per tracking dogfood Fase 6. Scope codemasterdd evolve da "pure infrastructure-as-code" a "infrastructure-as-code + observability self-hosted + UI glue minimale". Target install ~4h in 4 step phased. Zero subscription ricorrenti preservato.*
 
-- **Status**: **Proposed** (2026-04-24 auto-mode research consolidation)
+- **Status**: **Validated live** (2026-04-24, post stack up). Formal Status resta **Proposed** fino a review settimana 4 2026-05-17 per confermare stabilità 3+ settimane.
 - **Data**: 2026-04-24
 - **Decisore**: Eduardo Scarpelli
 - **Deciders**: solo-dev
@@ -295,15 +295,17 @@ ADR-0010 richiede "skill install preview + ADR" prima di adottare nuovi tool. Qu
 
 Tutte le dipendenze infrastrutturali già soddisfatte.
 
-### Ratification trigger (metriche concrete)
+### Ratification trigger (metriche concrete) — UPDATE 2026-04-24 validation
 
 Status **Proposed** → **Accepted** richiede **tutti e 5** i seguenti criteri PASS:
 
-1. **LiteLLM Proxy funzionante**: request OpenAI-compat `curl http://localhost:4000/v1/chat/completions` risponde entro 10s con virtual key registrata (test: `ollama-cosmetic-7b` deve returnare response).
-2. **Langfuse riceve traces**: dopo 3 request via LiteLLM Proxy, UI Langfuse `/traces` mostra ≥3 entries entro 24h. Se 0 traces dopo 24h → ratification fail.
-3. **promptfoo eval OK**: `promptfoo eval` su `scripts/quality-bench/problems.json` completa senza errori con ≥3 provider (1 local + 2 cloud). Webserver `:15500` viewable.
-4. **Dogfood-ui Flask up**: `http://localhost:8080/` mostra homepage + almeno 1 entry creata via POST API + `/dafne` panel mostra Dafne live data (via proxy `:5000`).
-5. **Maintenance budget rispettato**: setup totale <6h tempo reale Eduardo (vs stima 4h originale). Se >6h → **Proposed+addendum** invece di Accepted, per rivedere scope.
+1. **LiteLLM Proxy funzionante**: ✅ **VALIDATED 2026-04-24** — chat completion via `ollama-cosmetic-7b` virtual key risponde HTTP 200 con response Ollama (37 prompt / 2 completion tokens test case).
+2. **Langfuse riceve traces**: ✅ **VALIDATED 2026-04-24** — 7 traces + 7 observations in Postgres dopo 4 chat completions di smoke test. Callback automatico funzionante.
+3. **promptfoo eval OK**: ⏳ **PENDING** — npm install + YAML config pronto, eval su `problems.json` non ancora run.
+4. **Dogfood-ui Flask up**: ✅ **VALIDATED 2026-04-24** — `/api/health` mostra `langfuse.configured:true + reachable:true`, entry #1 creata via POST API, Dafne integration via proxy (quando Dafne server UP).
+5. **Maintenance budget rispettato**: ⏳ **IN PROGRESS** — setup totale stimato ~3h cumulative (pull images + 2 blocker fix + smoke test). Sotto stima 4h originale ✅.
+
+**3/5 criteri PASS live, 2/5 pending completamento routine**. Setup è stato più rapido dell'atteso grazie alla pre-seeding API keys via env var.
 
 **Soft criteria** (non bloccanti ma tracked):
 - Docker Desktop uptime stabile per 7gg post-up

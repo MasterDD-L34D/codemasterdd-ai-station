@@ -20,9 +20,9 @@ services:
       LITELLM_MASTER_KEY: ${LITELLM_MASTER_KEY:-sk-local-masterkey-change-me}
       # Database per virtual keys + budget persistence (usa postgres shared)
       DATABASE_URL: postgresql://litellm:${LITELLM_DB_PASSWORD:-litellm-local}@postgres:5432/litellm
-      # Langfuse callbacks
-      LANGFUSE_PUBLIC_KEY: ${LANGFUSE_PUBLIC_KEY:-}
-      LANGFUSE_SECRET_KEY: ${LANGFUSE_SECRET_KEY:-}
+      # Langfuse callbacks (matching LANGFUSE_INIT_PROJECT_*_KEY sopra)
+      LANGFUSE_PUBLIC_KEY: ${LANGFUSE_INIT_PUBLIC_KEY:-pk-lf-codemasterdd-local}
+      LANGFUSE_SECRET_KEY: ${LANGFUSE_INIT_SECRET_KEY:-sk-lf-codemasterdd-local-change-me}
       LANGFUSE_HOST: http://langfuse-web:3000
       # Provider API keys (caricate da .env file)
       GROQ_API_KEY: ${GROQ_API_KEY:-}
@@ -65,10 +65,16 @@ services:
       SALT: ${SALT:-changeme-32char-salt-use-openssl-rand}
       TELEMETRY_ENABLED: "false"
       LANGFUSE_ENABLE_EXPERIMENTAL_FEATURES: "false"
-      # Primo-avvio: auto-init org + project
+      # Primo-avvio: auto-init org + project + API keys pre-seed
+      # Le keys iniziali evitano step manuale UI (create key via Settings)
+      LANGFUSE_INIT_ORG_ID: "codemasterdd"
       LANGFUSE_INIT_ORG_NAME: "CodeMasterDD"
+      LANGFUSE_INIT_PROJECT_ID: "fase6-dogfood"
       LANGFUSE_INIT_PROJECT_NAME: "fase6-dogfood"
+      LANGFUSE_INIT_PROJECT_PUBLIC_KEY: "${LANGFUSE_INIT_PUBLIC_KEY:-pk-lf-codemasterdd-local}"
+      LANGFUSE_INIT_PROJECT_SECRET_KEY: "${LANGFUSE_INIT_SECRET_KEY:-sk-lf-codemasterdd-local-change-me}"
       LANGFUSE_INIT_USER_EMAIL: "${LANGFUSE_ADMIN_EMAIL:-admin@codemasterdd.local}"
+      LANGFUSE_INIT_USER_NAME: "Eduardo Admin"
       LANGFUSE_INIT_USER_PASSWORD: "${LANGFUSE_ADMIN_PASSWORD:-changeme-8char-min}"
     depends_on:
       postgres:

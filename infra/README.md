@@ -33,28 +33,37 @@ docker compose up -d
 docker compose logs -f langfuse
 ```
 
-### 3. Prima configurazione Langfuse (browser)
+### 3. Prima configurazione Langfuse (automatica, zero browser)
 
-1. Apri `http://localhost:3000`
-2. Registra account admin (local, no email verification)
-3. Crea project "codemasterdd-fase6"
-4. Vai in Settings → API Keys → crea nuovo key pair
-5. Copia `LANGFUSE_PUBLIC_KEY` + `LANGFUSE_SECRET_KEY` → incolla in `../litellm/.env`
+Al primo avvio, `LANGFUSE_INIT_*` env variables **auto-seedano**:
+- Organizzazione "CodeMasterDD"
+- Progetto "fase6-dogfood"
+- User admin (`admin@codemasterdd.local` / `changeme-8char-min`)
+- API key pair (`pk-lf-codemasterdd-local` / `sk-lf-codemasterdd-local-change-me`)
 
-### 4. Configura LiteLLM Proxy
+Le stesse keys sono passate automaticamente a LiteLLM callback via env expansion nel docker-compose.
 
+**Verifica funzioni**:
 ```bash
-cd ../litellm
-cp .env.example .env
-# Edit .env: incolla Langfuse keys + carica API keys cloud da ~/.config/api-keys/keys.env
+# Chat completion via LiteLLM → trace automatica in Langfuse
+curl -X POST http://localhost:4000/v1/chat/completions \
+  -H "Authorization: Bearer sk-local-masterkey-change-me" \
+  -H "Content-Type: application/json" \
+  -d '{"model":"ollama-cosmetic-7b","messages":[{"role":"user","content":"Test"}]}'
+
+# Check DB trace count (dovrebbe incrementare)
+docker exec codemasterdd-postgres psql -U langfuse -d langfuse -c "SELECT COUNT(*) FROM traces;"
+
+# Browse UI (login con credenziali sopra)
+# http://localhost:3000
 ```
 
-Riavvia LiteLLM per caricare env aggiornate:
+### 4. Opzionale: rotate secrets per deployment multi-user
 
-```bash
-cd ..
-docker compose restart litellm
-```
+Se devi cambiare le keys di default (es. condividi macchina):
+1. Edit `.env` con nuovi valori per `LANGFUSE_INIT_PUBLIC_KEY` + `LANGFUSE_INIT_SECRET_KEY`
+2. **ATTENZIONE**: per re-seeding, serve reset DB: `docker compose down -v && docker compose up -d`
+3. Altrimenti le keys vecchie restano in DB (seed avviene solo primo up)
 
 ### 5. Verifica end-to-end
 
