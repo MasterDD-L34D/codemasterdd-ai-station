@@ -33,6 +33,34 @@ param(
 
 $ErrorActionPreference = 'Stop'
 
+function Invoke-OllamaRequest($uri, $body) {
+  $retryStatus = @(500, 502, 503, 504)
+  $maxAttempts = 3
+  $backoffSeconds = @(1, 2)
+
+  for ($attempt = 1; $attempt -le $maxAttempts; $attempt++) {
+    try {
+      return Invoke-RestMethod -Uri $uri -Method Post -Body $body -ContentType 'application/json' -TimeoutSec 600
+    } catch {
+      $ex = $_.Exception
+      $typeName = $ex.GetType().Name
+      $statusCode = 0
+      if ($ex.Response -and $ex.Response.StatusCode) {
+        $statusCode = [int]$ex.Response.StatusCode
+      }
+      $isTransient = ($statusCode -in $retryStatus) -or ($typeName -in @('WebException', 'HttpRequestException', 'HttpResponseException'))
+      if ($isTransient -and $attempt -lt $maxAttempts) {
+        Start-Sleep -Seconds $backoffSeconds[$attempt - 1]
+        continue
+      }
+      if ($isTransient) {
+        throw "Transient failure after $maxAttempts attempts (last status=$statusCode, type=$typeName): $($ex.Message)"
+      }
+      throw
+    }
+  }
+}
+
 $prompt = @'
 Write a Python implementation of a doubly-linked list class named DoublyLinkedList.
 Include these methods: insert_head(value), insert_tail(value), delete_by_value(value),
@@ -56,10 +84,10 @@ $measurePayload = @{
 } | ConvertTo-Json -Depth 5
 
 Write-Host "[$(Get-Date -Format HH:mm:ss)] Warm-up $Model @ ctx=$NumCtx ..."
-$null = Invoke-RestMethod -Uri 'http://127.0.0.1:11434/api/generate' -Method Post -Body $warmupPayload -ContentType 'application/json' -TimeoutSec 600
+$null = Invoke-OllamaRequest -Uri 'http://127.0.0.1:11434/api/generate' -Body $warmupPayload
 
 Write-Host "[$(Get-Date -Format HH:mm:ss)] Measure $Model @ ctx=$NumCtx ..."
-$r = Invoke-RestMethod -Uri 'http://127.0.0.1:11434/api/generate' -Method Post -Body $measurePayload -ContentType 'application/json' -TimeoutSec 600
+$r = Invoke-OllamaRequest -Uri 'http://127.0.0.1:11434/api/generate' -Body $measurePayload
 
 $evalTps = [math]::Round(($r.eval_count / ($r.eval_duration / 1e9)), 2)
 $promptTps = if ($r.prompt_eval_duration -gt 0) { [math]::Round(($r.prompt_eval_count / ($r.prompt_eval_duration / 1e9)), 2) } else { 0 }
