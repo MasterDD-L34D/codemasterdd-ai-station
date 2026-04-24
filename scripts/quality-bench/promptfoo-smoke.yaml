@@ -8,7 +8,7 @@ providers:
     label: "Qwen 7B (local)"
     config:
       apiBaseUrl: http://localhost:4000/v1
-      apiKey: sk-local-masterkey-change-me
+      # apiKey: via OPENAI_API_KEY env var (LiteLLM virtual key)
       temperature: 0
       max_tokens: 800
 
@@ -16,7 +16,7 @@ providers:
     label: "Groq 70B (cloud)"
     config:
       apiBaseUrl: http://localhost:4000/v1
-      apiKey: sk-local-masterkey-change-me
+      # apiKey: via OPENAI_API_KEY env var (LiteLLM virtual key)
       temperature: 0
       max_tokens: 800
 

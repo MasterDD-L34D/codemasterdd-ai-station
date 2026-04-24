@@ -4,11 +4,15 @@
 # Uso:
 #   npm i -g promptfoo
 #   cd scripts/quality-bench
+#   export OPENAI_API_KEY=sk-<your-litellm-virtual-key>   # bash/WSL
+#   # set OPENAI_API_KEY=sk-<key>                         # cmd.exe
+#   # $env:OPENAI_API_KEY = "sk-<key>"                    # PowerShell
 #   promptfoo eval
 #   promptfoo view    # apre viewer locale :15500
 #
 # Endpoint: tutti i provider vanno via LiteLLM Proxy unificato (:4000).
 # Richiede docker-compose stack UP in infra/ con virtual keys configurate.
+# Virtual key creata via http://localhost:4000/ui/ → Virtual Keys → Create.
 
 description: CodeMasterDD quality bench multi-model via LiteLLM Proxy
 
@@ -22,7 +26,8 @@ providers:
     label: "Qwen 7B (local cosmetic)"
     config:
       apiBaseUrl: http://localhost:4000/v1
-      apiKey: sk-local-testkey
+      # apiKey: read from OPENAI_API_KEY env var (LiteLLM virtual key).
+      # Create via http://localhost:4000/ui/ Virtual Keys → export OPENAI_API_KEY=sk-...
       temperature: 0
       max_tokens: 2000
 
@@ -31,7 +36,8 @@ providers:
     label: "Qwen 14B Q2 (local behavior)"
     config:
       apiBaseUrl: http://localhost:4000/v1
-      apiKey: sk-local-testkey
+      # apiKey: read from OPENAI_API_KEY env var (LiteLLM virtual key).
+      # Create via http://localhost:4000/ui/ Virtual Keys → export OPENAI_API_KEY=sk-...
       temperature: 0
       max_tokens: 2000
 
@@ -39,7 +45,8 @@ providers:
     label: "Qwen3 30B MoE (local escalation)"
     config:
       apiBaseUrl: http://localhost:4000/v1
-      apiKey: sk-local-testkey
+      # apiKey: read from OPENAI_API_KEY env var (LiteLLM virtual key).
+      # Create via http://localhost:4000/ui/ Virtual Keys → export OPENAI_API_KEY=sk-...
       temperature: 0
       max_tokens: 2000
 
@@ -48,7 +55,7 @@ providers:
     label: "DeepSeek-R1 8B (local reasoning)"
     config:
       apiBaseUrl: http://localhost:4000/v1
-      apiKey: sk-local-testkey
+      # apiKey: read from OPENAI_API_KEY env var (LiteLLM virtual key).
       temperature: 0
       max_tokens: 4000    # R1 emette thinking → extra budget
 
@@ -57,7 +64,8 @@ providers:
     label: "Groq Llama 3.3 70B (cloud free)"
     config:
       apiBaseUrl: http://localhost:4000/v1
-      apiKey: sk-local-testkey
+      # apiKey: read from OPENAI_API_KEY env var (LiteLLM virtual key).
+      # Create via http://localhost:4000/ui/ Virtual Keys → export OPENAI_API_KEY=sk-...
       temperature: 0
       max_tokens: 2000
 
@@ -65,7 +73,8 @@ providers:
     label: "Cerebras Llama 3.1 8B (cloud free fast)"
     config:
       apiBaseUrl: http://localhost:4000/v1
-      apiKey: sk-local-testkey
+      # apiKey: read from OPENAI_API_KEY env var (LiteLLM virtual key).
+      # Create via http://localhost:4000/ui/ Virtual Keys → export OPENAI_API_KEY=sk-...
       temperature: 0
       max_tokens: 2000
 
