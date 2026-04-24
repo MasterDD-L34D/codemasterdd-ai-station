@@ -6,12 +6,15 @@
 
 ## Progetto
 - **Nome**: CodeMasterDD AI Station
-- **Versione del compact**: v8 (post dogfood #12 auto-mode + H4 cost snapshot)
-- **Data ultimo aggiornamento**: 2026-04-24 (auto-mode session)
+- **Versione del compact**: v9 (post maratona sessione 2026-04-24: stack ADR-0017 live + ADR-0018/19 Accepted + 12/18 agent ready)
+- **Data ultimo aggiornamento**: 2026-04-24 sera (maratona auto-mode + carta bianca)
 
 ## Stato attuale
-- Barra globale **89%** (+1 dopo dogfood #12 e H4 chiuso). Fase 6 al **60%** (12/20 dogfood + quality bench v1+v2 done + H4 snapshot mid-sprint compilato).
-- HEAD `410db7f` (worktree branch), working tree clean. Pending push/merge to main.
+- Barra globale **91%** (+2 da stack osservabilità live + ecosystem agent 12/18 ready). Fase 6 al **60%** (12/20 dogfood, fail rate 8.3%, scenario A full-sovereign confermato mid-sprint via trigger ADR-0008).
+- HEAD `8446869` (origin/main aligned, pushed). Working tree clean.
+- **Stack ADR-0017 live UP**: postgres + langfuse v2 (`:3000`) + litellm (`:4000`) + dogfood-ui Flask (`:8080`) + promptfoo v0.121.7 installed. 7+ Langfuse traces persisted via LiteLLM callback automatico.
+- **Agent ecosystem (ADR-0018)**: 12/18 ready (67%), 6/18 draft trigger-gated. Smoke test log in `docs/agent-smoke-tests/` × 12 file.
+- **Commit sessione 2026-04-24 maratona (16+ totali, 8 nel worktree branch)**: `53c2e20` (harsh review fixes) → `f95e004` (stack validation blockers) → `b43881e` (ADR-0017 end-to-end validated) → `75d4eae` (promptfoo + Dafne wrapper) → `46ece8b` (ADR-0018 Accepted) → `3b26173` (batch P0 ready) → `f10becd` (batch P1 ready + ADR-0019 draft) → `8446869` (game-balance ready + ADR-0019 Accepted). Cross-repo: Dafne `c638098`, Game branch `swarm/register-biome-gameplay-integrator-2026-04-24` pushed.
 - **Commit sessione 2026-04-24 notte (11 totali)**: `9ab01e9` (governance drift) → `0fa0016` (fix #9 HEREDOC commit-guard) → `2254706` (compact v4) → `3156edf` (fix #10 command.includes false-positive) → `3231e2e` (polish #11 stderr) → `5539881` (compact v5) → `9bcc2a4` (**ADR-0016 draft** OD-006 formalized) → `4e67a21` (journal entry) → `8de3263` (CLAUDE.md pointer ADR-0016) → `b31ff86` (close H6 + routing refs) → `9af4b72` (backlog refresh). Tutti pushed.
 - **Commit sessione 2026-04-23 sera**: `4f5227c` (governance framework) → `e7a4ed0` (JOURNAL framework) → `f80ab3c` (retry logic quality-bench rescue) → `2dccec7` (apostrofo fix Aider auto) → `e687b42` (findings consolidation) → `5ef8e9c` (compact refresh). **6 commit**, pushed.
 - Fase 6 dataset attuale: 6 cosmetic full + 1 cosmetic partial + 3 behavior full + 1 behavior partial (#12 inherited bug) + 1 behavior **REJECT**. Fail rate strict 8.3% (vs 30% threshold ADR-0014). Zero silent-corruption working-tree cumulative.
@@ -58,7 +61,7 @@
 
 ## Decisioni prese
 
-### ADR strategici (16, indice in DECISIONS_LOG)
+### ADR strategici (19, indice in DECISIONS_LOG)
 - **ADR-0008** Hub pattern tier routing (cosmetic/behavior/escalation)
 - **ADR-0011** Commit governance cross-agent
 - **ADR-0012** RAM 64GB upgrade, qwen3:30b tier 2 stabile
@@ -66,7 +69,9 @@
 - **ADR-0014** Fase 6 compressa a ~4 settimane
 - **ADR-0015** Fase 7 budget full-sovereign + deroga #3 Synesthesia dormant — **Proposed 2026-04-24**
 - **ADR-0016** Constraint-count seconda dimensione routing — **Proposed 2026-04-24**
-- **ADR-0017** UI + observability stack (LiteLLM Proxy + Langfuse + promptfoo + Flask mini-app) — **Proposed 2026-04-24**
+- **ADR-0017** UI + observability stack — **Validated live** 2026-04-24, pending formal Accepted a review sett.4
+- **ADR-0018** Agent readiness protocol 3-gate — **Accepted 2026-04-24**
+- **ADR-0019** Dafne process persistence (Opzione A wrapper) — **Accepted 2026-04-24**
 
 ### Decisioni non-ADR (operative minori, in DECISIONS_LOG)
 - **001** Adozione schema framework archivio per governance files
@@ -99,9 +104,9 @@ Dettaglio e next actions in `BACKLOG.md` (H1-H6) + `OPEN_DECISIONS.md` (OD-001 t
 - Framework archivio: `Archivio_Libreria_Operativa_Progetti/` (130 file multi-progetto)
 
 ## Prossimi 3 passi
-1. **M5 Synesthesia privacy validation** — criterio 3 ADR-0014 ancora 1/3. **Blocker residuo principale**: ≥2 sessioni reali Synesthesia con classificazione enforced. Non autonomously forceable.
-2. **Pre-closure check settimana 4** (~2026-05-17) — count finale + draft ADR-0015. Gap: 8 dogfood residui verso criterio 2 target n=20.
-3. **Opportunistic H2 cosmetic / H3 cp1252 monitoring** — dataset gap +3 cosmetic + trigger cp1252 ancora non attivato. Opportunistic-only.
+1. **Day-5 Dafne 2026-04-26** — brief esistente `DAY-5-BRIEF.md` nel swarm repo. Usa `START-DAFNE-PERSISTENT.ps1` (ADR-0019) per evitare process death mid-session.
+2. **Review settimana 4 ~2026-05-17** — ratification ADR-0015 (soft-override n≥15 accettabile) + ADR-0017 formal Accepted + ADR-0016 awaiting data points. Preparare ADR-0015 closure document.
+3. **Opportunistic agent P2 validation + Game fixes** — game-systems-designer/game-design-validator/lore-consistency-checker (trigger: task Game reale); Game ROSSO findings da audit (boss enrage hardcore + XP L5→L6) da fixare in Game repo prossima sessione.
 
 ## Next session restart: cosa leggere per ripartire
 

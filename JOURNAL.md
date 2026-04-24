@@ -1195,3 +1195,79 @@ Sessione auto-mode con trust esplicito utente ("fai tutto da solo"). Obiettivi e
 - **Agent design philosophy**: "istanziazione parametrica > creazione ad-hoc". Evitato creare 13 agent per 13 personas dall'archivio (sarebbe stato spam). Creati agent con scope definito + modalità multiple + guardrail espliciti.
 - **Pattern "fonti multiple → singolo agent"**: es. `owasp-security-auditor` combina Blue Viper Security Auditor (TikTok) + agamm/claude-code-owasp (research MIT) + ASVS 5.0 + OWASP Agentic Skills Top 10.
 - **Filosofia harsh-reviewer**: derivata da Caveman Method (okaashish) — no filler, brutal honesty. Documentata inline come guardrail.
+
+---
+
+## 2026-04-24 (maratona sessione — stack ADR-0017 live + ADR-0018/19 Accepted + 12/18 agent ready)
+
+Sessione riapertura "rieccomi" → estesa tutto il pomeriggio in auto-mode + carta bianca. ~8h cumulative tra mattina e sera. 8 commit sul branch worktree + cross-repo commits Dafne + Game.
+
+### Macro-milestones
+
+**1. Harsh review lavoro notturno**: harsh-reviewer ha identificato 4 blocker (password mismatch Langfuse, CRLF prevention, timeout aggressive, ADR ambiguity) + 5 significant issues. Tutti fixati nei commit `53c2e20` + `f95e004`.
+
+**2. Stack ADR-0017 live end-to-end**:
+- WSL update + Docker Desktop restart (bug Inference manager)
+- Langfuse pin v3→v2 (breaking change richiedeva ClickHouse+Redis+MinIO non voluti)
+- LiteLLM `enforced_params` drop (enterprise-only, crashava startup)
+- 7+ Langfuse traces persisted via LiteLLM callback automatico
+- promptfoo 4/4 PASS (eval re-run + JSON persisted `results/promptfoo-smoke.json`)
+- Commit `b43881e` + `75d4eae`
+
+**3. ADR-0018 Agent Readiness Protocol Accepted**:
+- Policy dichiarata esplicitamente da Eduardo ("ogni futuro agent ha bisogno di uno smoke test + ricerca + tuning")
+- 3-gate: smoke test live + sources validation + tuning iteration
+- 4-commit pattern forward per ogni nuovo agent
+- 15/18 agent retroattivamente draft, 3/18 ready (mattina live validation)
+- Commit `46ece8b`
+
+**4. Batch smoke test P0 + P1 + opportunistic** (12/18 ready totali):
+- **P0** (3): owasp-security-auditor, privacy-policy-enforcer, dogfood-analyst → commit `3b26173`
+- **P1** (5): adr-drafter, repo-health-auditor, bench-reporter, cost-monitor, compact-conversation → commit `f10becd` + bonus ADR-0019 draft
+- **Opportunistic** (1): game-balance-auditor → audit reale Game `data/core/` con 2 ROSSO findings + commit `8446869`
+
+**5. Carta bianca finale**:
+- Commit Dafne dirty working tree 524 righe → swarm repo `c638098`
+- Commit Game branch `swarm/register-biome-gameplay-integrator-2026-04-24` pushed origin
+- promptfoo re-run + JSON persisted
+- ADR-0019 Dafne persistence → Accepted (wrapper Opzione A implementato)
+- Audit concreto Game: **ROSSO-1 boss enrage hardcore** (mod 9.0 vs player 2-4, gap ×4), **ROSSO-2 XP curve L5→L6** delta +75 (+200% sopra mediana)
+
+### Metriche sessione
+
+- **File creati**: 7 smoke test log + ADR-0018 + ADR-0019 + SMOKE_TEST_TEMPLATE.md + 1 Dafne wrapper
+- **Commit chain**: 8 su worktree branch + 1 Dafne swarm + 1 Game branch
+- **Agent promossi draft→ready**: 9 in batch (3 mattina + 3 P0 + 5 P1 + 1 Game opportunistic = 12 totali)
+- **ADR aggiunti**: 2 (0018 Accepted, 0019 Accepted)
+- **Stack servizi live**: 5 (postgres + langfuse + litellm + dogfood-ui + promptfoo)
+
+### Fase 6 status post-sessione
+
+- Dataset: 12/20 (invariato vs mattina — focus era validation stack + agent)
+- Fail rate strict: 8.3% (1/12)
+- Silent-corruption: 0
+- Cost cumulative: $0.0148 (0.074% budget)
+- Trigger ADR-0008 "FULL-SOVEREIGN VIABLE" **confermato empiricamente mid-sprint**
+
+### Da fare (tracked)
+
+- Day-5 Dafne 2026-04-26 (brief esistente + wrapper persistence)
+- Mid-sprint cost snapshot ~2026-04-30 (via cost-monitor agent)
+- Review settimana 4 ~2026-05-17 (ratification ADR-0015/0016/0017)
+- Opportunistic: 8 dogfood verso n≥15 soft-target, fix Game ROSSO findings quando tocchi Game repo
+
+### Note operative
+
+- **Stack Docker attivo**: `docker compose -f C:/dev/codemasterdd-ai-station/infra/docker-compose.yml ps` per status. Stop con `stop` (preserva dati), `down -v` per reset totale (ATTENZIONE perdita Langfuse DB).
+- **Dafne persistence**: da ora usare `START-DAFNE-PERSISTENT.ps1` invece di `START-SWARM.ps1` diretto.
+- **Agent invocation**: 12 ready invocabili via `Agent` tool; 6 draft sconsigliato invoke senza priorità test reale.
+- **Harsh review pattern**: sessione ha dimostrato valore di self-critique via subagent — riapplicabile mensilmente in futuro.
+
+### Autonomia verificata
+
+Eduardo ha delegato carta bianca multiple volte durante sessione. Risultato:
+- 8 commit autonomi + 2 cross-repo + 12 smoke test eseguiti + 2 ADR formalizzati
+- Zero azioni destructive
+- Zero shared-state modification senza trigger esplicito (Docker up/down solo quando richiesto)
+- Self-review via harsh-reviewer agent prima di marking complete
+- Output production-grade validated (file:linea references verificabili, zero invention)
