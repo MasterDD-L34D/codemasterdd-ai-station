@@ -1057,3 +1057,11 @@ Sessione auto-mode con trust esplicito utente ("fai tutto da solo"). Obiettivi e
 - **DAY-5-BRIEF resta valido strutturalmente** ma il focus_directive Dafne intervention #3 ("spostare da documentazione a prototipazione verticale") anticipa il tema naturale day-5. Eduardo può override o confermare.
 - **Nessun impatto sul repo codemasterdd-ai-station**: il lavoro Dafne è in repo separato `evo-swarm`. Questo JOURNAL entry è per tracking meta (session resumption future).
 - **Commit codemasterdd repo**: nessun cambio ai file (fase 6 dogfood), solo questa entry JOURNAL finale + aggiornamento memory.
+
+### Addendum 2026-04-24 notte (03:30) — pipeline swarm → Game chiusa
+
+- **PR #1718 mergiato** su main Game repo (`509e4747`): gameplay-prototyper + combat-engineer registered runtime + 2 profile files + agents_index stats cumulative.
+- **PR #1720 mergiato** su main Game repo (`aa82d67f`): **primo artifact staging** `incoming/swarm-candidates/traits/magnetic_rift_resonance.yaml` con provenance completa. Pipeline swarm → Game end-to-end validata (lore-designer → trait-curator → staging YAML → PR → CI → merge).
+- **H5 gate validated live 3 volte** su proposte reali Dafne: play-loop-validator (0.868), combat-metrics-analyst (0.832), gameplay-analytics-specialist (0.879 cascading). Gate autonomous.
+- **Swarm loop final validation run** 03:22-03:29: 3 cicli 100% OK (lore-designer, species-curator, balancer).
+- **Eduardo esce dal triage loop Dafne**: gate embedding auto-gestisce pattern riformulati, integration pipeline definita + applicata con successo.
