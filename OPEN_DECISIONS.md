@@ -6,19 +6,14 @@
 
 ---
 
-### [OD-001] Scenario Budget Fase 7 (ADR-0015)
+### [OD-001] ~~Scenario Budget Fase 7 (ADR-0015)~~ **CLOSED 2026-04-24**
 
 - **Livello**: system / workflow / budget
-- **Stato**: in attesa di dati (chiusura Fase 6)
-- **Ambiguità**: quale scenario adottare post-Claude Max (2026-05-19)?
-  - **A**: full-sovereign free-tier + locale, $0-50/anno
-  - **B**: ibrido Claude Pro $20/mese + Ollama + cloud free, ~$240/anno
-  - **C**: extension Fase 6 mirata, decisione rimandata 2-4 settimane
-- **Perché conta**: definisce spesa annua + confidence operativa post-Max. Anchor dello scenario sovereign ADR-0001.
-- **Miglior default proposto**: **A** (full-sovereign). Rationale: ADR-0013 ha spostato il baseline da ibrido a sovereign realistic; Claude Pro diventa spesa ingiustificata se free-tier + locale coprono ≥95% workflow.
-- **Rischio se ignorata**: gap di transizione post-19/05 senza scenario definito → stress operativo + decisione reattiva.
-- **File o moduli coinvolti**: ADR-0015 (da scrivere), `CLAUDE.md` sezione "Priorità modelli AI", `MODEL_ROUTING.md`.
-- **Prossima azione consigliata**: completare Fase 6 criteri (dogfood ≥20, privacy n≥3, cost <$20/mese) → raccogliere dataset → ratificare A in ADR-0015.
+- **Stato**: **CLOSED** — formalizzato in **ADR-0015 Proposed 2026-04-24**. Opzione A (full-sovereign $0-50/anno) selezionata come default, con **deroga esplicita criterio #3 privacy** (Synesthesia dormant fino esame UniUPO agosto 2026). Ratification a review settimana 4 (~2026-05-17).
+- **Ambiguità originale**: quale scenario adottare post-Claude Max (2026-05-19)? (A full-sovereign / B ibrido Pro / C extension)
+- **Decisione finale**: A — full-sovereign. B declassato (quality parity 5/5 stack + 70B cloud parity vs 14B Q2 local empirically confermata). C scartato (costo bridge 3 mesi ingiustificato senza lavoro reale su Synesthesia).
+- **File coinvolti (output)**: `docs/adr/0015-fase7-budget-decision-full-sovereign.md` (Proposed), `DECISIONS_LOG.md` aggiornato.
+- **Trigger Accepted**: review settimana 4 con criteri #2 reliability + #4 cost confermati + nessuna regressione fail rate o silent-corruption.
 
 ---
 

@@ -2,7 +2,11 @@
 
 > Sprint 1 della Fase 6 compressa. Finestra: **2026-04-23 → 2026-05-06** (2 settimane, fino alla review settimana 2 ADR-0014).
 >
+> **Status 2026-04-24**: **CLOSED early-hit** (3° giorno su 14). Tutti gli obiettivi hard raggiunti o superati.
+>
 > **Sprint objective**: portare dataset Fase 6 da 6 → ≥12 dogfood (di cui ≥3 behavior-critical) + validare empiricamente il fix cp1252 + mantenere cost tracking attivo. Zero silent-corruption deve rimanere invariato.
+>
+> **Esito finale**: **12/12 dogfood ✅**, **5/3 behavior-critical ✅** oltrepassato, **0 silent-corruption ✅** mantenuto, **H4 cost snapshot anticipato ✅**, **H5 review settimana 2 anticipata ✅** (on-track). Soft-goal cp1252 fix: 9 dogfood consecutivi senza retry loop naturale → validation **inconclusive** (trigger mai attivato), soglia pazienza n=15. **ADR-0015 Proposed 2026-04-24** (deroga criterio #3 privacy per Synesthesia dormant fino agosto).
 
 ---
 
@@ -105,5 +109,21 @@
 - Deepseek-r1 framework fix [L2]
 - Cerebras paid evaluation [L3]
 - Gemma 4 multimodal use case [L4]
-- ADR-0015 draft (richiede closure Fase 6)
+- ~~ADR-0015 draft (richiede closure Fase 6)~~ **Spostato in scope 2026-04-24 Proposed** post input Synesthesia dormant: draft preparatorio pre-closure, ratification a review sett.4 (~2026-05-17).
 - Migrazione Evo-Tactics sovereign workflow (post-Max)
+
+---
+
+## Closure log
+
+**2026-04-24 auto-mode session** — Sprint 01 chiuso early-hit:
+- T1 (H1 behavior-critical cloud #2-3): ✅ superato con #6 success + #9/#10/#12 local + #7 reject. Dataset behavior 5, target ≥3.
+- T2 (H2 cosmetic mix): 🟡 partial 7/10 (#3 via 7B local + #4/#5 via Groq + #8 partial + #11 polish). Gap 3 opportunistic, non-blocking.
+- T3 (H3 cp1252 monitoring): 🟡 inconclusive — 9 dogfood consecutivi clean, trigger mai attivato. Soglia pazienza n=15.
+- T4 (H4 cost snapshot): ✅ anticipato 2026-04-24 vs target 2026-04-30. $0.0148 cumulative / 0.074% budget.
+- T5 (H5 review settimana 2): ✅ anticipata 2026-04-24. Esito on-track, no mid-course correction.
+- T6 (M1 JOURNAL entry normalizzazione): ✅ entry + 2 addendum 2026-04-24 sessioni.
+- T7 (M2 memory refresh): ✅ `project_session_resumption.md` + nuovo `project_synesthesia_dormant.md` 2026-04-24.
+- Bonus: ADR-0016 Proposed (constraint-count) + ADR-0015 Proposed (closure path).
+
+**Sprint obiettivi hard**: 4/4 ✅. **Soft**: cp1252 inconclusive (tracked), altri done. **Next sprint (SPRINT_02)**: focus reliability n=20 + pre-closure check settimana 4 + ADR-0015 ratification.

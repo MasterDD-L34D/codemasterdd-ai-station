@@ -22,13 +22,12 @@
 | 0012 | RAM 64GB upgrade impact | Accepted + Validated | 2026-04-22 | qwen3:30b +31% speed tier 2 stabile |
 | 0013 | Tier 3 cloud free providers | Accepted (75 test + OK user) | 2026-04-23 | Groq/Cerebras tier 3 primary; OpenAI/Gemini capability-max |
 | 0014 | Fase 6 timeline compression | Accepted (OK user) | 2026-04-23 | 3 mesi → ~4 settimane; chiusura ~20/05 |
+| 0015 | Fase 7 budget decision full-sovereign | **Proposed** | 2026-04-24 | Opzione A $0-50/anno + deroga criterio #3 (Synesthesia dormant fino agosto) |
 | 0016 | Constraint-count routing dimension | **Proposed** | 2026-04-24 | 2D matrix classe + constraint-count; 5+ strict → manual Claude Code |
 
-### Pending (non-Proposed)
-- **ADR-0015** placeholder — Budget decision Fase 7 post-Claude Max. Trigger: chiusura Fase 6 (4 criteri ADR-0014). Output: A full-sovereign / B ibrido Pro / C extension.
-
 ### In review (Proposed, awaiting Accepted trigger)
-- **ADR-0016** — Constraint-count routing dimension. Trigger Accepted: n≥3 data points addizionali (constraint=4 gap, transform tier 14B Q2, constraint=5 LOCAL). ETA review: Sprint 01 settimana 2.
+- **ADR-0015** — Fase 7 budget decision full-sovereign. Trigger Accepted: review settimana 4 (~2026-05-17) con verifica criteri #2 reliability + #4 cost confermati + no fail rate regression. Input 2026-04-24: Synesthesia dormant fino agosto 2026 → criterio #3 derogato.
+- **ADR-0016** — Constraint-count routing dimension. Trigger Accepted: n≥3 data points addizionali (constraint=4 explicit LOCAL, 2-transform LOCAL, 5-strict LOCAL). Update 2026-04-24: +1 data point (#12 constraint=4 parity-based, partial) → constraint specificity identificata come sub-dimensione.
 
 ### Note coerenza
 - **0007 vs 0008**: 0008 depreca whole solo per behavior-critical; cosmetic+whole resta valido (faithfulness non critica).

@@ -58,12 +58,13 @@
 
 ## Decisioni prese
 
-### ADR strategici (15, indice in DECISIONS_LOG)
+### ADR strategici (16, indice in DECISIONS_LOG)
 - **ADR-0008** Hub pattern tier routing (cosmetic/behavior/escalation)
 - **ADR-0011** Commit governance cross-agent
 - **ADR-0012** RAM 64GB upgrade, qwen3:30b tier 2 stabile
 - **ADR-0013** Tier 3 cloud free providers — Groq/Cerebras primary
 - **ADR-0014** Fase 6 compressa a ~4 settimane
+- **ADR-0015** Fase 7 budget full-sovereign + deroga #3 Synesthesia dormant — **Proposed 2026-04-24**
 - **ADR-0016** Constraint-count seconda dimensione routing — **Proposed 2026-04-24**
 
 ### Decisioni non-ADR (operative minori, in DECISIONS_LOG)
