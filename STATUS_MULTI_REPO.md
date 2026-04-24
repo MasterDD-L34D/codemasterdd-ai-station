@@ -154,6 +154,13 @@ Governance del Game vive **nel Game repo stesso** (`docs/governance/`). codemast
 - **Supportare**: pipeline swarm → Game se emergono issue integration
 - **Non gestire direttamente**: Q-001 decisions, feat/ branches
 
+### Audit findings pending (dal game-balance-auditor 2026-04-24, marked ROSSO)
+
+1. **Boss enrage mod 9.0** (vs player mod 2-4) — gap 4× sopra range giocatore, combat hardcoded impossibile. File target: `C:/dev/Game/data/core/bosses.yaml` (verifica path)
+2. **XP curve delta L5→L6: +75** — +200% sopra mediana della progressione. File target: `C:/dev/Game/data/core/xp-curve.yaml` (verifica path)
+
+Da triageare nel BACKLOG del repo Game quando Eduardo fa sessione lì. Non gestire da codemasterdd (rispetto ownership).
+
 ### Cross-repo handoff points
 - Swarm produce → Game integra: workflow già validato end-to-end (2026-04-24)
 - codemasterdd policy → Game adotta: hook commit-msg globale applicato, Conventional Commits enforced, Aider wrapper fruibili anche qui
