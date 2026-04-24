@@ -12,7 +12,13 @@ Ogni agent ha status visibile in tabelle sotto:
 
 Riferimento completo: [ADR-0018 agent readiness protocol](../../docs/adr/0018-agent-readiness-protocol.md) + [SMOKE_TEST_TEMPLATE.md](SMOKE_TEST_TEMPLATE.md).
 
-Stato retroattivo 2026-04-24: 3/18 ✅ ready (smoke test live confermato), 15/18 🟡 draft (system prompt scritto ma non test-validato end-to-end). Priorità validation documentata in ADR-0018.
+Stato retroattivo 2026-04-24 (post sessione smoke test batch P0): **6/18 ✅ ready** (smoke test live confermato), **12/18 🟡 draft** (system prompt scritto ma non ancora test-validato end-to-end). Priorità validation documentata in ADR-0018.
+
+- **Gate 1 PASS + Gate 2 validated + Gate 3 documented** (6 agent):
+  - `harsh-reviewer`, `delegation-classifier`, `swarm-cycle-analyzer` (validated 2026-04-24 mattina)
+  - `owasp-security-auditor`, `privacy-policy-enforcer`, `dogfood-analyst` (validated 2026-04-24 pomeriggio, batch P0)
+
+Log smoke test: [docs/agent-smoke-tests/](../../docs/agent-smoke-tests/)
 
 ## Agent registrati (18 totali)
 
@@ -20,7 +26,7 @@ Stato retroattivo 2026-04-24: 3/18 ✅ ready (smoke test live confermato), 15/18
 
 | Agent | Status | Model | Scope | When to invoke |
 |-------|:------:|-------|-------|----------------|
-| [dogfood-analyst](dogfood-analyst.md) | 🟡 draft | sonnet | Analizza log dogfood + tier routing suggestions | "analizza dogfood", "come va Fase 6" |
+| [dogfood-analyst](dogfood-analyst.md) | ✅ ready | sonnet | Analizza log dogfood + tier routing suggestions | "analizza dogfood", "come va Fase 6" |
 | [bench-reporter](bench-reporter.md) | 🟡 draft | sonnet | Report quality bench da results esistenti | "report bench", "qual è il migliore per X" |
 | [cost-monitor](cost-monitor.md) | 🟡 draft | sonnet | Cost snapshot + budget alerts | "quanto spendo", "cost snapshot" |
 | [repo-health-auditor](repo-health-auditor.md) | 🟡 draft | sonnet | Audit cross-repo superficie + STATUS_MULTI_REPO refresh | "audit cross-repo", "stato tutti repo" |
@@ -46,7 +52,7 @@ Stato retroattivo 2026-04-24: 3/18 ✅ ready (smoke test live confermato), 15/18
 
 | Agent | Status | Model | Scope | When to invoke |
 |-------|:------:|-------|-------|----------------|
-| [owasp-security-auditor](owasp-security-auditor.md) | 🟡 draft | opus | OWASP Top 10 2025 + Agentic Skills Top 10 su endpoint/secrets | "security audit", "OWASP review" |
+| [owasp-security-auditor](owasp-security-auditor.md) | ✅ ready | opus | OWASP Top 10 2025 + Agentic Skills Top 10 su endpoint/secrets | "security audit", "OWASP review" |
 | [a11y-wcag-reviewer](a11y-wcag-reviewer.md) | 🟡 draft | sonnet | WCAG 2.2 AA scan su template HTML/EJS/Jinja2 | "check a11y", "WCAG review" |
 | [harsh-reviewer](harsh-reviewer.md) | ✅ ready | opus | Quality gate generico multi-aspect (code, ADR, plan) | "harsh review", "che problemi vedi" |
 
@@ -55,7 +61,7 @@ Stato retroattivo 2026-04-24: 3/18 ✅ ready (smoke test live confermato), 15/18
 | Agent | Status | Model | Scope | When to invoke |
 |-------|:------:|-------|-------|----------------|
 | [database-schema-designer](database-schema-designer.md) | 🟡 draft | sonnet | Schema design + index + migration strategy cross-repo | "design schema DB", "review Prisma" |
-| [privacy-policy-enforcer](privacy-policy-enforcer.md) | 🟡 draft | haiku | Classifica file path per cloud-OK vs sovereign-only | "è cloud OK?", "classifica privacy" |
+| [privacy-policy-enforcer](privacy-policy-enforcer.md) | ✅ ready | haiku | Classifica file path per cloud-OK vs sovereign-only | "è cloud OK?", "classifica privacy" |
 
 ### 🧭 Meta / workflow (2)
 
