@@ -295,13 +295,27 @@ ADR-0010 richiede "skill install preview + ADR" prima di adottare nuovi tool. Qu
 
 Tutte le dipendenze infrastrutturali già soddisfatte.
 
-### Ratification trigger
+### Ratification trigger (metriche concrete)
 
-Status **Proposed** → **Accepted** dopo:
+Status **Proposed** → **Accepted** richiede **tutti e 5** i seguenti criteri PASS:
 
-1. Eduardo conferma architettura o chiede aggiustamenti (revisioni su opzione A, es. skip promptfoo se overlap con Langfuse evals)
-2. Step 0 quick-win completato (`aider --browser`) e positivo — decisione se proseguire con step 1+
-3. Se tutti i 4 step completati entro Sprint 02 (2026-05-06 → ~2026-05-17) senza issue critici → Accepted
-4. Se emergono blocker (Docker Desktop instabile, tool licenza cambiata, performance degrade >20%) → revisione con addendum
+1. **LiteLLM Proxy funzionante**: request OpenAI-compat `curl http://localhost:4000/v1/chat/completions` risponde entro 10s con virtual key registrata (test: `ollama-cosmetic-7b` deve returnare response).
+2. **Langfuse riceve traces**: dopo 3 request via LiteLLM Proxy, UI Langfuse `/traces` mostra ≥3 entries entro 24h. Se 0 traces dopo 24h → ratification fail.
+3. **promptfoo eval OK**: `promptfoo eval` su `scripts/quality-bench/problems.json` completa senza errori con ≥3 provider (1 local + 2 cloud). Webserver `:15500` viewable.
+4. **Dogfood-ui Flask up**: `http://localhost:8080/` mostra homepage + almeno 1 entry creata via POST API + `/dafne` panel mostra Dafne live data (via proxy `:5000`).
+5. **Maintenance budget rispettato**: setup totale <6h tempo reale Eduardo (vs stima 4h originale). Se >6h → **Proposed+addendum** invece di Accepted, per rivedere scope.
+
+**Soft criteria** (non bloccanti ma tracked):
+- Docker Desktop uptime stabile per 7gg post-up
+- Zero data loss Langfuse DB
+- Nessuna licenza tool cambiata a breaking terms
+
+**Hard blocker** (se qualsiasi emerge, ratification fail + revisione):
+- Password mismatch / init script failure (come identificato in harsh review 2026-04-24)
+- Langfuse self-host instabile (crash >1/gg)
+- LiteLLM config drift tra versioni (breaking change non documentato)
+- Performance degrade >20% su Aider workflow (wrapper attuale vs nuovo via proxy)
+
+**Rollback plan**: se uno degli Hard blocker materializza → `docker compose down -v` + ripristina `.aider.conf.yml` pre-stack (backup fatto a Step 1). Tempo rollback target: <10 min.
 
 Target Status Accepted: **~2026-05-17** (coincide con review settimana 4 + ADR-0015 ratification).

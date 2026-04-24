@@ -17,9 +17,19 @@ class DafneClient:
       GET /api/dafne/proposals        — proposals pending/approved/rejected
     """
 
-    def __init__(self, host: str = "http://localhost:5000", timeout: float = 2.0) -> None:
+    def __init__(
+        self,
+        host: str = "http://localhost:5000",
+        timeout: float = 5.0,
+        ping_timeout: float = 2.0,
+    ) -> None:
+        """
+        timeout: per operazioni full-snapshot (swarm può essere mid-cycle con LLM busy → alza a 5s)
+        ping_timeout: per liveness check rapido (aggressive OK perché /api/status è O(1))
+        """
         self.host = host.rstrip("/")
         self.timeout = timeout
+        self.ping_timeout = ping_timeout
 
     # -----------------------------------------------------------------------
     # Core fetchers (return None on failure = server down / endpoint 404)
@@ -27,7 +37,7 @@ class DafneClient:
 
     def ping(self) -> bool:
         try:
-            r = requests.get(f"{self.host}/api/status", timeout=self.timeout)
+            r = requests.get(f"{self.host}/api/status", timeout=self.ping_timeout)
             return r.status_code == 200
         except (requests.ConnectionError, requests.Timeout):
             return False

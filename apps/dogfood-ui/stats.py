@@ -83,8 +83,10 @@ def aggregate_stats(entries: list[sqlite3.Row]) -> dict[str, Any]:
             "target_n": target_n,
             "progress_pct": round((total / target_n) * 100, 1),
             "fail_rate_limit": target_fail_rate_max,
+            # ADR-0014 criterio 2: "fail rate <30%" → threshold strict (30% esatto = FAIL)
             "fail_rate_status": "PASS" if fail_rate_strict < target_fail_rate_max else "FAIL",
             "cost_budget_monthly": cost_budget_monthly,
+            # Budget $20/mo è hard cap (esatto 20 = FAIL)
             "cost_status": "PASS" if total_cost < cost_budget_monthly else "FAIL",
         },
     }

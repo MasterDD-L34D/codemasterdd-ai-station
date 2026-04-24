@@ -97,11 +97,15 @@ Prolunga Fase 6 di 3 mesi (2026-05-20 → ~2026-08-31) per completare criterio #
 
 ### Closure protocol Fase 6 (da applicare ~2026-05-20 @ review settimana 4)
 
-1. Verifica criterio #2 (reliability ≥20) raggiunto. Se 12→20 non completato entro 2026-05-17 per mancanza task reali → accettabile chiusura a n attuale con fail rate <30% (trend già <10%).
-2. Verifica criterio #4 costo mensile (target <$20 ampiamente rispettato).
+1. **Verifica criterio #2 reliability — minimo accettabile n≥15 (soft-override esplicito del target originale n≥20)**:
+   - Target originale ADR-0014: n≥20 con fail rate <30%.
+   - **Soft-override documentato qui**: se n reale a 2026-05-17 è tra 15-19 con fail rate <15% (storicamente ≈9-10%), accettabile closure. Rationale: ogni dogfood opportunistic, non forzabile senza inventare task; trend statistico già robusto.
+   - Se n<15 a 2026-05-17 → **hard blocker**, extension 1 settimana con target explicit "push a ≥15".
+   - Se fail rate drift oltre 15% → **hard blocker**, revisione scenario A (possibile switch a B ibrido).
+2. Verifica criterio #4 costo mensile (target <$20 ampiamente rispettato — cumulative attuale $0.0148).
 3. Quality criterio #1 già PASS 2026-04-23.
 4. Criterio #3 **derogato** con rationale documentato in questo ADR: dataset acquisibile solo post-agosto, privacy policy per-repo formalizzata e documented (CLAUDE.md), deroga time-boxed a riattivazione Synesthesia.
-5. ADR-0015 Status → Accepted.
+5. ADR-0015 Status → Accepted se criteri #1/#4 PASS + #2 n≥15 + #3 derogato.
 6. Claude Max disattivato 2026-05-19. Transizione a wrapper tier 3-4 cloud + locale.
 
 ### Post-agosto protocol
