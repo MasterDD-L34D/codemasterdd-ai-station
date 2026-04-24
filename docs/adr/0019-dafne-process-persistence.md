@@ -2,7 +2,7 @@
 
 > *TL;DR: Il server Dafne (`START-SWARM.ps1`) muore 2× in sessione auto-mode 2026-04-24 dopo ~10-30min quando lanciato da PowerShell con `Start-Process -WindowStyle Minimized`. Tre opzioni valutate: wrapper auto-restart PowerShell (leggero, richiede shell aperta), Windows Task Scheduler (always-on, modifica di sistema), Docker container (consistente con infra ADR-0017, complessità alta). Decisione: **Opzione A (wrapper)** per sviluppo attivo corrente, con Opzione B (Task Scheduler) come upgrade non-bloccante post-Fase 6. Opzione C deferred a post-transizione sovereign.*
 
-- **Status**: **Proposed** (2026-04-24 — drafted da adr-drafter agent Gate 1 smoke test)
+- **Status**: **Accepted** (2026-04-24 — wrapper Opzione A già implementato e committato in swarm repo `c638098`. Nessun trade-off controverso, zero friction adoption, Eduardo ha delegato carta bianca durante sessione live.)
 - **Data**: 2026-04-24
 - **Decisore**: Eduardo Scarpelli
 - **Deciders**: solo-dev (single-user workstation)

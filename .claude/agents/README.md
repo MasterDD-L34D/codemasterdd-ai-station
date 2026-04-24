@@ -12,13 +12,14 @@ Ogni agent ha status visibile in tabelle sotto:
 
 Riferimento completo: [ADR-0018 agent readiness protocol](../../docs/adr/0018-agent-readiness-protocol.md) + [SMOKE_TEST_TEMPLATE.md](SMOKE_TEST_TEMPLATE.md).
 
-Stato 2026-04-24 (post batch P0 + P1): **11/18 ✅ ready** (smoke test live confermato), **7/18 🟡 draft**. Priorità validation documentata in ADR-0018.
+Stato 2026-04-24 (post batch P0 + P1 + P2-partial): **12/18 ✅ ready** (smoke test live confermato), **6/18 🟡 draft**. Priorità validation documentata in ADR-0018.
 
-- **Gate 1 PASS + Gate 2 validated + Gate 3 documented** (11 agent):
+- **Gate 1 PASS + Gate 2 validated + Gate 3 documented** (12 agent):
   - Mattina: `harsh-reviewer`, `delegation-classifier`, `swarm-cycle-analyzer`
   - Batch P0: `owasp-security-auditor`, `privacy-policy-enforcer`, `dogfood-analyst`
   - Batch P1: `adr-drafter`, `repo-health-auditor`, `bench-reporter`, `cost-monitor`, `compact-conversation`
-- **Restano draft** (7 agent): game-* (4), dafne-proposal-triager, database-schema-designer, lore-consistency-checker, a11y-wcag-reviewer
+  - Opportunistic (Game data disponibile): `game-balance-auditor` — audit reale con 2 ROSSO findings concreti
+- **Restano draft** (6 agent): game-systems-designer, game-design-validator, lore-consistency-checker, dafne-proposal-triager, database-schema-designer, a11y-wcag-reviewer
 
 Log smoke test completi: [docs/agent-smoke-tests/](../../docs/agent-smoke-tests/)
 
@@ -38,7 +39,7 @@ Log smoke test completi: [docs/agent-smoke-tests/](../../docs/agent-smoke-tests/
 
 | Agent | Status | Model | Scope | When to invoke |
 |-------|:------:|-------|-------|----------------|
-| [game-balance-auditor](game-balance-auditor.md) | 🟡 draft | sonnet | d20 combat balance, stat outlier, Numbers Policy | "check balance", "rivedi stats" |
+| [game-balance-auditor](game-balance-auditor.md) | ✅ ready | sonnet | d20 combat balance, stat outlier, Numbers Policy | "check balance", "rivedi stats" |
 | [game-systems-designer](game-systems-designer.md) | 🟡 draft | sonnet | Design core loop + sub-loop + experience arc | "design core loop", "progetta sistema X" |
 | [game-design-validator](game-design-validator.md) | 🟡 draft | opus | First principles + Rule of Threes + elimination test | "valida design", "first principles game" |
 | [lore-consistency-checker](lore-consistency-checker.md) | 🟡 draft | sonnet | Coerenza narrativa cross-artifact lore | "check lore", "coerenza narrativa" |
