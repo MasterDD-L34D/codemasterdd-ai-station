@@ -267,6 +267,7 @@ Il repo adotta lo schema governance di `Archivio_Libreria_Operativa_Progetti/` (
 **Ordine di lettura raccomandato per nuove sessioni**:
 1. `CLAUDE.md` (questo file) — convenzioni progetto
 2. `COMPACT_CONTEXT.md` — snapshot stato corrente
-3. `Archivio_.../07_CLAUDE_CODE_OPERATING_PACKAGE/CLAUDE_OPERATING_RULES.md` — regole meta
-4. `BACKLOG.md` + `OPEN_DECISIONS.md` — cosa è aperto ora
-5. ADR rilevanti se il task tocca topic noto
+3. `STATUS_MULTI_REPO.md` — dashboard operativa cross-repo (se task coinvolge progetti monitorati)
+4. `Archivio_.../07_CLAUDE_CODE_OPERATING_PACKAGE/CLAUDE_OPERATING_RULES.md` — regole meta
+5. `BACKLOG.md` + `OPEN_DECISIONS.md` — cosa è aperto ora
+6. ADR rilevanti se il task tocca topic noto
