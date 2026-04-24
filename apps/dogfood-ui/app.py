@@ -21,6 +21,7 @@ from flask import Flask, render_template, request, redirect, url_for, jsonify, f
 
 from db import Database
 from langfuse_client import LangfuseClient
+from dafne_client import DafneClient
 from stats import aggregate_stats, parse_promptfoo_results
 
 # ---------------------------------------------------------------------------
@@ -36,6 +37,7 @@ LITELLM_ENDPOINT = os.environ.get("LITELLM_ENDPOINT", "http://localhost:4000")
 LANGFUSE_HOST = os.environ.get("LANGFUSE_HOST", "http://localhost:3000")
 LANGFUSE_PUBLIC_KEY = os.environ.get("LANGFUSE_PUBLIC_KEY", "")
 LANGFUSE_SECRET_KEY = os.environ.get("LANGFUSE_SECRET_KEY", "")
+DAFNE_HOST = os.environ.get("DAFNE_HOST", "http://localhost:5000")
 
 # ---------------------------------------------------------------------------
 # App factory
@@ -52,6 +54,7 @@ def create_app() -> Flask:
         public_key=LANGFUSE_PUBLIC_KEY,
         secret_key=LANGFUSE_SECRET_KEY,
     )
+    dafne = DafneClient(host=DAFNE_HOST)
 
     # -----------------------------------------------------------------------
     # Routes
@@ -120,6 +123,11 @@ def create_app() -> Flask:
                 flash(f"Promptfoo results malformed: {exc}", "error")
         return render_template("bench.html", bench=bench, path=str(PROMPTFOO_LATEST))
 
+    @app.route("/dafne")
+    def dafne_view():
+        snapshot = dafne.full_snapshot()
+        return render_template("dafne.html", snapshot=snapshot, host=DAFNE_HOST)
+
     # -----------------------------------------------------------------------
     # JSON API (for external tools / scripts / future CLI integration)
     # -----------------------------------------------------------------------
@@ -145,15 +153,24 @@ def create_app() -> Flask:
         return jsonify({
             "status": "ok",
             "app": "dogfood-ui",
-            "version": "0.1.0",
+            "version": "0.2.0",
             "db": db.health(),
             "langfuse": {
                 "configured": bool(LANGFUSE_PUBLIC_KEY),
                 "reachable": lf.ping() if LANGFUSE_PUBLIC_KEY else None,
             },
             "litellm_endpoint": LITELLM_ENDPOINT,
+            "dafne": {
+                "host": DAFNE_HOST,
+                "reachable": dafne.ping(),
+            },
             "promptfoo_results_available": PROMPTFOO_LATEST.exists(),
         })
+
+    @app.route("/api/dafne/snapshot")
+    def api_dafne_snapshot():
+        """Proxy snapshot aggregato da Dafne :5000."""
+        return jsonify(dafne.full_snapshot())
 
     return app
 

@@ -144,6 +144,13 @@ Governance del Game vive **nel Game repo stesso** (`docs/governance/`). codemast
 
 ### Piano operativo (Atto 1 day-3/10 in corso)
 
+- **Live status 2026-04-24** (via dogfood-ui proxy + Dafne `/api/status`):
+  - Server :5000 UP, HTTP 200, Ollama `qwen3:8b` online, Game repo accessible
+  - **52 cicli totali, 0 reject**, 463 artifacts generati
+  - **Agent performance**: 3 Specialisti (balancer, lore-designer, species-curator) + 5 Esperti (archivist, asset-prep, biome-ecosystem-curator, dev-tooling, trait-curator) + 3 Apprendisti (biome-gameplay-integrator, combat-engineer, gameplay-prototyper)
+  - **Dafne intervention #6**: active, Flint drift detected (gameplay ratio 10% < 20% threshold), last directive: prioritizzare 2 meccaniche giocabili testabili
+  - HEAD Dafne: `fb6f5c4` (fix no-cache headers dashboard)
+- **Monitoring integrato**: `apps/dogfood-ui` ha panel `/dafne` che proxy verso `:5000` + endpoint `/api/dafne/snapshot` JSON aggregato. Avvia con `python apps/dogfood-ui/app.py`, apri `http://localhost:8080/dafne`.
 - **Prossimo milestone**: **DAY-5 2026-04-26** — primo task famiglia coordinatori (Solver/Scout/Builder) + Dafne orchestra. Brief già scritto in `DAY-5-BRIEF.md`. Durata stimata 2h.
 - **Scope DAY-5**:
   - Consolidare decisione "drift manifest vs reality" da opzione C provvisoria a canonica

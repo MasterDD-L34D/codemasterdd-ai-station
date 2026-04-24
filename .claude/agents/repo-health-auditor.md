@@ -33,11 +33,13 @@ Passi:
    - `git log --oneline -5` (recent commits)
    - `git branch --show-current` (branch corrente)
 2. Check processi in ambiente:
-   - Ollama daemon UP? (check `ollama ps` se possibile)
-   - Dafne Flask server :5000 UP? (`curl -s -o /dev/null -w "%{http_code}" http://localhost:5000`)
-   - LiteLLM Proxy :4000 UP? (`curl -s -o /dev/null -w "%{http_code}" http://localhost:4000`)
-   - Langfuse :3000 UP?
-   - Dogfood-UI :8080 UP?
+   - Ollama daemon UP? `curl -s http://localhost:11434/api/tags | jq '.models | length'`
+   - Dafne Flask server :5000 UP? `curl -s http://localhost:5000/api/status | jq .ollama_online` → `true` se tutto ok
+     - Deep check Dafne: `curl -s http://localhost:5000/api/swarm/status` → cycle count + current agent + error state
+     - Aggregato: se dogfood-ui UP, `curl -s http://localhost:8080/api/dafne/snapshot` offre rollup completo
+   - LiteLLM Proxy :4000 UP? `curl -s -o /dev/null -w "%{http_code}" http://localhost:4000/health`
+   - Langfuse :3000 UP? `curl -s -o /dev/null -w "%{http_code}" http://localhost:3000`
+   - Dogfood-UI :8080 UP? `curl -s http://localhost:8080/api/health | jq .`
 3. Compara contro `STATUS_MULTI_REPO.md` attuale: identifica drift (HEAD cambiato, nuovi branch, blocker nuovi)
 
 ## Output report

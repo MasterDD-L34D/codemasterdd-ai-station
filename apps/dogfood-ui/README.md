@@ -60,9 +60,11 @@ Default porta: 8080. Cambia con `PORT=9090 python app.py`.
 | `/entries/<id>/delete` | POST | Rimuovi entry |
 | `/stats` | GET | Stats raw JSON (debug) |
 | `/bench` | GET | Promptfoo latest bench results |
+| `/dafne` | GET | Dafne swarm live status (proxy :5000, agents + cycles + intervention + drift) |
 | `/api/entries` | GET/POST | REST — list/create entries |
 | `/api/stats` | GET | REST — stats aggregate |
-| `/api/health` | GET | Health check (DB + Langfuse + LiteLLM) |
+| `/api/health` | GET | Health check (DB + Langfuse + LiteLLM + Dafne) |
+| `/api/dafne/snapshot` | GET | JSON aggregato Dafne (status + swarm + stats + dafne status + proposals) |
 
 ## Env vars
 
@@ -75,6 +77,7 @@ Default porta: 8080. Cambia con `PORT=9090 python app.py`.
 | `LANGFUSE_HOST` | http://localhost:3000 | Langfuse URL |
 | `LANGFUSE_PUBLIC_KEY` | — | Per ping + trace lookup (opzionale) |
 | `LANGFUSE_SECRET_KEY` | — | Per ping + trace lookup (opzionale) |
+| `DAFNE_HOST` | http://localhost:5000 | Dafne swarm API URL (per panel `/dafne`) |
 
 Windows PowerShell (pre-carica da ~/.config/api-keys/keys.env):
 

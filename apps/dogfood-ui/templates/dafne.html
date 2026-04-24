@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+{% block title %}Dafne swarm{% endblock %}
+{% block content %}
+
+<h1>Dafne swarm · live status</h1>
+
+{% if not snapshot.reachable %}
+<section class="warning">
+    <strong>Dafne server non raggiungibile</strong> su <code>{{ host }}</code>.<br>
+    Per avviare: <code>cd C:\Users\edusc\Dafne\workspace\swarm && .\START-SWARM.ps1</code>
+</section>
+{% else %}
+
+<p class="muted">
+    Host: <code>{{ host }}</code> · Ollama
+    {% if snapshot.kpi and snapshot.kpi.ollama_online %}<span class="ok">online</span>{% else %}<span class="ko">offline</span>{% endif %}
+    · Artifacts totali: <strong>{{ snapshot.kpi.artifacts_count if snapshot.kpi else '—' }}</strong>
+</p>
+
+{% if snapshot.kpi %}
+<section class="kpi-row">
+    <div class="kpi">
+        <div class="kpi-label">Cycles</div>
+        <div class="kpi-value">{{ snapshot.kpi.cycles_total }}</div>
+        <div class="kpi-sub">{{ snapshot.kpi.cycles_ok }} ok · {{ snapshot.kpi.cycles_rejected }} reject</div>
+    </div>
+    <div class="kpi">
+        <div class="kpi-label">Current agent</div>
+        <div class="kpi-value" style="font-size:18px">{{ snapshot.kpi.current_agent or '—' }}</div>
+        <div class="kpi-sub">next: {{ snapshot.kpi.next_specialist or '—' }}</div>
+    </div>
+    <div class="kpi kpi-{{ 'pass' if snapshot.kpi.swarm_status == 'running' else 'fail' }}">
+        <div class="kpi-label">Swarm status</div>
+        <div class="kpi-value" style="font-size:18px">{{ snapshot.kpi.swarm_status or '—' }}</div>
+        <div class="kpi-sub">{{ snapshot.kpi.agents_count }} agents available</div>
+    </div>
+    {% if snapshot.kpi.last_error %}
+    <div class="kpi kpi-fail">
+        <div class="kpi-label">Last error</div>
+        <div class="kpi-value" style="font-size:14px">{{ snapshot.kpi.last_error }}</div>
+    </div>
+    {% endif %}
+</section>
+{% endif %}
+
+{% if snapshot.intervention %}
+<section class="panel">
+    <h2>Dafne intervention</h2>
+    <p>
+        Total interventions: <strong>{{ snapshot.intervention.count }}</strong>
+        · Status:
+        {% if snapshot.intervention.active %}<span class="ko">ACTIVE</span>{% else %}<span class="muted">idle</span>{% endif %}
+        · Last at: <code>{{ snapshot.intervention.last_at or '—' }}</code>
+    </p>
+    {% if snapshot.intervention.drifting %}
+    <div class="warning">
+        <strong>Flint drift detected</strong> · gameplay ratio <code>{{ '{:.1%}'.format(snapshot.intervention.gameplay_ratio or 0) }}</code> (target ≥20%)
+    </div>
+    {% endif %}
+    {% if snapshot.intervention.last_focus %}
+    <h3 style="font-size:13px; color:var(--text-muted); margin-top:12px;">Last focus directive</h3>
+    <p class="json-block">{{ snapshot.intervention.last_focus }}</p>
+    {% endif %}
+    {% if snapshot.intervention.last_assessment %}
+    <h3 style="font-size:13px; color:var(--text-muted); margin-top:8px;">Last assessment</h3>
+    <p class="json-block">{{ snapshot.intervention.last_assessment }}</p>
+    {% endif %}
+</section>
+{% endif %}
+
+{% if snapshot.levels %}
+<section class="panel">
+    <h2>Agents by level</h2>
+    <table class="data-table">
+        <thead>
+            <tr><th>Level</th><th>Agents</th></tr>
+        </thead>
+        <tbody>
+            {% for lvl, agents in snapshot.levels.items() %}
+                {% if agents %}
+                <tr>
+                    <td><span class="tag tag-{{ 'success' if lvl == 'Specialista' else ('cosmetic' if lvl == 'Esperto' else 'behavior') }}">{{ lvl }}</span></td>
+                    <td>{% for a in agents %}<code>{{ a }}</code>{% if not loop.last %} · {% endif %}{% endfor %}</td>
+                </tr>
+                {% endif %}
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+{% endif %}
+
+{% if snapshot.agents_detail %}
+<section class="panel">
+    <h2>Agents performance (sorted by cycles)</h2>
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Agent</th>
+                <th>Level</th>
+                <th>Cycles</th>
+                <th>Accept rate</th>
+                <th>Avg score</th>
+                <th>Rejected</th>
+                <th>Security</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for a in snapshot.agents_detail %}
+            <tr>
+                <td><code>{{ a.name }}</code></td>
+                <td><span class="tag tag-stack">{{ a.level }}</span></td>
+                <td>{{ a.cycles }}</td>
+                <td>{{ '{:.0%}'.format(a.accept_rate) if a.accept_rate is not none else '—' }}</td>
+                <td>{{ '{:.2f}'.format(a.avg_score) if a.avg_score is not none else '—' }}</td>
+                <td>{% if a.rejected %}<span class="ko">{{ a.rejected }}</span>{% else %}—{% endif %}</td>
+                <td>{% if a.security_alerts %}<span class="ko">{{ a.security_alerts }}</span>{% else %}—{% endif %}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+{% endif %}
+
+{% if snapshot.proposals_summary %}
+<section class="panel">
+    <h2>Proposals (dafne → Eduardo)</h2>
+    <table class="data-table">
+        <thead>
+            <tr><th>Total</th><th>Pending</th><th>Approved</th><th>Rejected</th></tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{ snapshot.proposals_summary.total }}</td>
+                <td>{{ snapshot.proposals_summary.pending }}</td>
+                <td>{{ snapshot.proposals_summary.approved }}</td>
+                <td>{{ snapshot.proposals_summary.rejected }}</td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+{% endif %}
+
+<p class="muted" style="margin-top: 24px;">
+    <a href="{{ host }}" target="_blank">Dashboard Dafne nativa</a> ·
+    <a href="{{ url_for('api_dafne_snapshot') }}" target="_blank">JSON snapshot raw</a>
+</p>
+
+{% endif %}
+
+{% endblock %}
