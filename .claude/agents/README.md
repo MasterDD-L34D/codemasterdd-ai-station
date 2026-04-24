@@ -2,55 +2,67 @@
 
 Agent definition files per Claude Code. Invocati tramite `Agent` tool con `subagent_type: <name>`.
 
+## ⚠️ Readiness protocol (ADR-0018)
+
+Ogni agent ha status visibile in tabelle sotto:
+
+- ✅ **ready**: passato 3 gate (smoke test + ricerca validated + tuning iteration)
+- 🟡 **draft**: creato ma non completamente validato — usabile ma con cautela
+- 🔴 **blocked**: validation failed, require rework
+
+Riferimento completo: [ADR-0018 agent readiness protocol](../../docs/adr/0018-agent-readiness-protocol.md) + [SMOKE_TEST_TEMPLATE.md](SMOKE_TEST_TEMPLATE.md).
+
+Stato retroattivo 2026-04-24: 3/18 ✅ ready (smoke test live confermato), 15/18 🟡 draft (system prompt scritto ma non test-validato end-to-end). Priorità validation documentata in ADR-0018.
+
 ## Agent registrati (18 totali)
 
 ### 🎯 Operational — codemasterdd core (5)
 
-| Agent | Model | Scope | When to invoke |
-|-------|-------|-------|----------------|
-| [dogfood-analyst](dogfood-analyst.md) | sonnet | Analizza log dogfood + tier routing suggestions | "analizza dogfood", "come va Fase 6" |
-| [bench-reporter](bench-reporter.md) | sonnet | Report quality bench da results esistenti | "report bench", "qual è il migliore per X" |
-| [cost-monitor](cost-monitor.md) | sonnet | Cost snapshot + budget alerts | "quanto spendo", "cost snapshot" |
-| [repo-health-auditor](repo-health-auditor.md) | sonnet | Audit cross-repo superficie + STATUS_MULTI_REPO refresh | "audit cross-repo", "stato tutti repo" |
-| [adr-drafter](adr-drafter.md) | sonnet | Scaffold nuovi ADR seguendo MADR | "scrivi ADR per X" |
+| Agent | Status | Model | Scope | When to invoke |
+|-------|:------:|-------|-------|----------------|
+| [dogfood-analyst](dogfood-analyst.md) | 🟡 draft | sonnet | Analizza log dogfood + tier routing suggestions | "analizza dogfood", "come va Fase 6" |
+| [bench-reporter](bench-reporter.md) | 🟡 draft | sonnet | Report quality bench da results esistenti | "report bench", "qual è il migliore per X" |
+| [cost-monitor](cost-monitor.md) | 🟡 draft | sonnet | Cost snapshot + budget alerts | "quanto spendo", "cost snapshot" |
+| [repo-health-auditor](repo-health-auditor.md) | 🟡 draft | sonnet | Audit cross-repo superficie + STATUS_MULTI_REPO refresh | "audit cross-repo", "stato tutti repo" |
+| [adr-drafter](adr-drafter.md) | 🟡 draft | sonnet | Scaffold nuovi ADR seguendo MADR | "scrivi ADR per X" |
 
 ### 🎮 Game (Evo-Tactics) — 4
 
-| Agent | Model | Scope | When to invoke |
-|-------|-------|-------|----------------|
-| [game-balance-auditor](game-balance-auditor.md) | sonnet | d20 combat balance, stat outlier, Numbers Policy | "check balance", "rivedi stats" |
-| [game-systems-designer](game-systems-designer.md) | sonnet | Design core loop + sub-loop + experience arc | "design core loop", "progetta sistema X" |
-| [game-design-validator](game-design-validator.md) | opus | First principles + Rule of Threes + elimination test | "valida design", "first principles game" |
-| [lore-consistency-checker](lore-consistency-checker.md) | sonnet | Coerenza narrativa cross-artifact lore | "check lore", "coerenza narrativa" |
+| Agent | Status | Model | Scope | When to invoke |
+|-------|:------:|-------|-------|----------------|
+| [game-balance-auditor](game-balance-auditor.md) | 🟡 draft | sonnet | d20 combat balance, stat outlier, Numbers Policy | "check balance", "rivedi stats" |
+| [game-systems-designer](game-systems-designer.md) | 🟡 draft | sonnet | Design core loop + sub-loop + experience arc | "design core loop", "progetta sistema X" |
+| [game-design-validator](game-design-validator.md) | 🟡 draft | opus | First principles + Rule of Threes + elimination test | "valida design", "first principles game" |
+| [lore-consistency-checker](lore-consistency-checker.md) | 🟡 draft | sonnet | Coerenza narrativa cross-artifact lore | "check lore", "coerenza narrativa" |
 
 ### 🐝 Dafne swarm — 2 (oltre a repo-health-auditor per quick check)
 
-| Agent | Model | Scope | When to invoke |
-|-------|-------|-------|----------------|
-| [swarm-cycle-analyzer](swarm-cycle-analyzer.md) | sonnet | Deep pattern analysis cicli swarm + intervention effectiveness | "analisi cicli swarm", "pattern fail Dafne" |
-| [dafne-proposal-triager](dafne-proposal-triager.md) | sonnet | Pre-filter proposals Dafne prima approvazione Eduardo | "triage dafne proposals", "review pending" |
+| Agent | Status | Model | Scope | When to invoke |
+|-------|:------:|-------|-------|----------------|
+| [swarm-cycle-analyzer](swarm-cycle-analyzer.md) | ✅ ready | sonnet | Deep pattern analysis cicli swarm + intervention effectiveness | "analisi cicli swarm", "pattern fail Dafne" |
+| [dafne-proposal-triager](dafne-proposal-triager.md) | 🟡 draft | sonnet | Pre-filter proposals Dafne prima approvazione Eduardo | "triage dafne proposals", "review pending" |
 
 ### 🔒 Cross-cutting quality/security (3)
 
-| Agent | Model | Scope | When to invoke |
-|-------|-------|-------|----------------|
-| [owasp-security-auditor](owasp-security-auditor.md) | opus | OWASP Top 10 2025 + Agentic Skills Top 10 su endpoint/secrets | "security audit", "OWASP review" |
-| [a11y-wcag-reviewer](a11y-wcag-reviewer.md) | sonnet | WCAG 2.2 AA scan su template HTML/EJS/Jinja2 | "check a11y", "WCAG review" |
-| [harsh-reviewer](harsh-reviewer.md) | opus | Quality gate generico multi-aspect (code, ADR, plan) | "harsh review", "che problemi vedi" |
+| Agent | Status | Model | Scope | When to invoke |
+|-------|:------:|-------|-------|----------------|
+| [owasp-security-auditor](owasp-security-auditor.md) | 🟡 draft | opus | OWASP Top 10 2025 + Agentic Skills Top 10 su endpoint/secrets | "security audit", "OWASP review" |
+| [a11y-wcag-reviewer](a11y-wcag-reviewer.md) | 🟡 draft | sonnet | WCAG 2.2 AA scan su template HTML/EJS/Jinja2 | "check a11y", "WCAG review" |
+| [harsh-reviewer](harsh-reviewer.md) | ✅ ready | opus | Quality gate generico multi-aspect (code, ADR, plan) | "harsh review", "che problemi vedi" |
 
 ### 🗄️ Database + privacy (2)
 
-| Agent | Model | Scope | When to invoke |
-|-------|-------|-------|----------------|
-| [database-schema-designer](database-schema-designer.md) | sonnet | Schema design + index + migration strategy cross-repo | "design schema DB", "review Prisma" |
-| [privacy-policy-enforcer](privacy-policy-enforcer.md) | haiku | Classifica file path per cloud-OK vs sovereign-only | "è cloud OK?", "classifica privacy" |
+| Agent | Status | Model | Scope | When to invoke |
+|-------|:------:|-------|-------|----------------|
+| [database-schema-designer](database-schema-designer.md) | 🟡 draft | sonnet | Schema design + index + migration strategy cross-repo | "design schema DB", "review Prisma" |
+| [privacy-policy-enforcer](privacy-policy-enforcer.md) | 🟡 draft | haiku | Classifica file path per cloud-OK vs sovereign-only | "è cloud OK?", "classifica privacy" |
 
 ### 🧭 Meta / workflow (2)
 
-| Agent | Model | Scope | When to invoke |
-|-------|-------|-------|----------------|
-| [delegation-classifier](delegation-classifier.md) | haiku | Classifica task + suggest tier routing (ADR-0016 formalizzato) | "classifica task", "che tier uso" |
-| [compact-conversation](compact-conversation.md) | sonnet | Produce compact markdown paste-ready per nuova sessione | "compact", "prepara handoff" |
+| Agent | Status | Model | Scope | When to invoke |
+|-------|:------:|-------|-------|----------------|
+| [delegation-classifier](delegation-classifier.md) | ✅ ready | haiku | Classifica task + suggest tier routing (ADR-0016 formalizzato) | "classifica task", "che tier uso" |
+| [compact-conversation](compact-conversation.md) | 🟡 draft | sonnet | Produce compact markdown paste-ready per nuova sessione | "compact", "prepara handoff" |
 
 ## Model tier rationale
 
@@ -110,12 +122,29 @@ Agent({
 | Dafne swarm | swarm-cycle-analyzer, repo-health-auditor | owasp, harsh |
 | Synesthesia (dormant) | — | a11y, database, privacy, owasp, harsh (quando riattiva) |
 
-## Aggiungere nuovo agent
+## Aggiungere nuovo agent (workflow ADR-0018)
 
-1. Crea file `<name>.md` con frontmatter YAML (`name`, `description`, opzionale `model`)
-2. Body system prompt + task-specific instructions
-3. Update questo README (sezione + coverage matrix se applicabile)
-4. Commit + push
+1. **Commit 1 `feat(agents): add <name> draft`**:
+   - Crea file `<name>.md` con frontmatter YAML (`name`, `description`, opzionale `model`)
+   - Body system prompt + task-specific instructions
+   - Update README — status **🟡 draft**
+   - Update SOURCES.md con attribuzione fonti (licenze da verificare in Gate 2)
+
+2. **Commit 2 `test(agents): smoke test <name> gate 1`**:
+   - Invoca agent via `Agent` tool con prompt rappresentativo del scope
+   - Segui checklist [SMOKE_TEST_TEMPLATE.md](SMOKE_TEST_TEMPLATE.md)
+   - Log risultato in commit message o `docs/agent-smoke-tests/<name>.md`
+
+3. **Commit 3 `chore(agents): validate sources <name> gate 2`**:
+   - Verifica licenze fonti (MIT/Apache/BSD preferite, flag AGPL/NC)
+   - Confirm pattern/framework citati sono validati (non invented)
+   - Aggiorna SOURCES.md se trovi issue
+
+4. **Commit 4 `tune(agents): refine <name> gate 3 → ready`**:
+   - Applica refinement basato sui findings smoke test
+   - README status **🟡 draft** → **✅ ready**
+
+**Anti-pattern**: 1 commit con 5+ nuovi agent senza gate. Se urgente (emergency response agent), usa tag `draft-emergency` con rationale esplicito.
 
 ## Evoluzione / TODO
 
