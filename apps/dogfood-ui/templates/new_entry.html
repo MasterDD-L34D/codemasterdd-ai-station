@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+{% block title %}Nuova entry{% endblock %}
+{% block content %}
+
+<h1>Nuova entry dogfood</h1>
+
+<form method="post" class="entry-form">
+    <label>
+        Task description (1 riga)
+        <input type="text" name="task_description" value="{{ form.task_description or '' }}" required maxlength="200">
+    </label>
+
+    <div class="row">
+        <label>
+            Classe
+            <select name="classe" required>
+                <option value="">—</option>
+                <option value="cosmetic"   {% if form.classe == 'cosmetic'   %}selected{% endif %}>cosmetic</option>
+                <option value="behavior"   {% if form.classe == 'behavior'   %}selected{% endif %}>behavior</option>
+                <option value="strategic"  {% if form.classe == 'strategic'  %}selected{% endif %}>strategic</option>
+            </select>
+        </label>
+
+        <label>
+            Stack
+            <select name="stack" required>
+                <option value="">—</option>
+                <optgroup label="Local">
+                    <option value="7B-local-whole">7B local (whole)</option>
+                    <option value="14B-Q2-local-diff">14B Q2 local (diff)</option>
+                    <option value="30B-MoE-local-diff">30B MoE local (diff)</option>
+                    <option value="R1-8B-local">R1 8B local (reasoning)</option>
+                    <option value="gemma4-multimodal-local">Gemma4 multimodal</option>
+                </optgroup>
+                <optgroup label="Cloud">
+                    <option value="groq-70b-cloud">Groq 70B</option>
+                    <option value="cerebras-8b-cloud">Cerebras 8B</option>
+                    <option value="gemini-flash-cloud">Gemini Flash</option>
+                    <option value="openai-4o-mini-cloud">OpenAI 4o-mini</option>
+                </optgroup>
+                <optgroup label="Altro">
+                    <option value="claude-code-direct">Claude Code (direct/strategic)</option>
+                    <option value="other">Other</option>
+                </optgroup>
+            </select>
+        </label>
+
+        <label>
+            Constraint count
+            <input type="number" name="constraint_count" min="0" max="20" value="{{ form.constraint_count or 0 }}">
+        </label>
+    </div>
+
+    <div class="row">
+        <label>
+            Outcome
+            <select name="outcome" required>
+                <option value="">—</option>
+                <option value="success">success</option>
+                <option value="partial">partial</option>
+                <option value="reject">reject</option>
+                <option value="safe-fail">safe-fail</option>
+                <option value="hook-block">hook-block</option>
+                <option value="error">error</option>
+            </select>
+        </label>
+
+        <label>
+            Retry count
+            <input type="number" name="retry_count" min="0" max="20" value="{{ form.retry_count or 0 }}">
+        </label>
+    </div>
+
+    <div class="row">
+        <label>
+            Tokens sent
+            <input type="number" name="tokens_sent" min="0" value="{{ form.tokens_sent or 0 }}">
+        </label>
+
+        <label>
+            Tokens received
+            <input type="number" name="tokens_received" min="0" value="{{ form.tokens_received or 0 }}">
+        </label>
+
+        <label>
+            Cost USD
+            <input type="number" name="cost_usd" step="0.0001" min="0" value="{{ form.cost_usd or 0 }}">
+        </label>
+    </div>
+
+    <label>
+        Commit hash (short)
+        <input type="text" name="commit_hash" pattern="[0-9a-f]{0,40}" maxlength="40" value="{{ form.commit_hash or '' }}">
+    </label>
+
+    <label>
+        Note
+        <textarea name="note" rows="3" maxlength="1000">{{ form.note or '' }}</textarea>
+    </label>
+
+    <div class="form-actions">
+        <button type="submit" class="btn btn-primary">Save</button>
+        <a href="{{ url_for('list_entries') }}" class="btn btn-ghost">Cancel</a>
+    </div>
+</form>
+
+{% endblock %}

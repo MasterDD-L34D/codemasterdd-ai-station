@@ -1,0 +1,105 @@
+# promptfoo config — CodeMasterDD quality bench via LiteLLM Proxy (ADR-0017)
+# Docs: https://www.promptfoo.dev/docs/configuration/guide
+#
+# Uso:
+#   npm i -g promptfoo
+#   cd scripts/quality-bench
+#   promptfoo eval
+#   promptfoo view    # apre viewer locale :15500
+#
+# Endpoint: tutti i provider vanno via LiteLLM Proxy unificato (:4000).
+# Richiede docker-compose stack UP in infra/ con virtual keys configurate.
+
+description: CodeMasterDD quality bench multi-model via LiteLLM Proxy
+
+# ====================================================================
+# Providers — tutti puntano al LiteLLM Proxy locale
+# Virtual keys vengono risolte proxy-side a modelli reali
+# ====================================================================
+providers:
+  # TIER 1 local cosmetic
+  - id: openai:ollama-cosmetic-7b
+    label: "Qwen 7B (local cosmetic)"
+    config:
+      apiBaseUrl: http://localhost:4000/v1
+      apiKey: sk-local-testkey
+      temperature: 0
+      max_tokens: 2000
+
+  # TIER 2 local behavior
+  - id: openai:ollama-refactor-14b-q2
+    label: "Qwen 14B Q2 (local behavior)"
+    config:
+      apiBaseUrl: http://localhost:4000/v1
+      apiKey: sk-local-testkey
+      temperature: 0
+      max_tokens: 2000
+
+  - id: openai:ollama-refactor-30b-moe
+    label: "Qwen3 30B MoE (local escalation)"
+    config:
+      apiBaseUrl: http://localhost:4000/v1
+      apiKey: sk-local-testkey
+      temperature: 0
+      max_tokens: 2000
+
+  # TIER reasoning local
+  - id: openai:ollama-reasoning-r1-8b
+    label: "DeepSeek-R1 8B (local reasoning)"
+    config:
+      apiBaseUrl: http://localhost:4000/v1
+      apiKey: sk-local-testkey
+      temperature: 0
+      max_tokens: 4000    # R1 emette thinking → extra budget
+
+  # TIER 3 cloud free
+  - id: openai:groq-70b
+    label: "Groq Llama 3.3 70B (cloud free)"
+    config:
+      apiBaseUrl: http://localhost:4000/v1
+      apiKey: sk-local-testkey
+      temperature: 0
+      max_tokens: 2000
+
+  - id: openai:cerebras-8b
+    label: "Cerebras Llama 3.1 8B (cloud free fast)"
+    config:
+      apiBaseUrl: http://localhost:4000/v1
+      apiKey: sk-local-testkey
+      temperature: 0
+      max_tokens: 2000
+
+# ====================================================================
+# Default prompt — instructs Python code-only output
+# ====================================================================
+prompts:
+  - |
+    You are a Python coder. Complete the function below.
+    Return ONLY the function definition (including the signature line), no explanation,
+    no example usage, no surrounding markdown fences.
+
+    {{problem}}
+
+# ====================================================================
+# Tests — loaded dinamicamente da problems.json via JS loader
+# ====================================================================
+tests: file://load-problems.js
+
+# ====================================================================
+# Outputs
+# ====================================================================
+outputPath: ./results/promptfoo-latest.json
+
+# ====================================================================
+# Eval settings
+# ====================================================================
+evaluateOptions:
+  maxConcurrency: 2         # non saturare Ollama GPU (1 modello caricato alla volta)
+  repeat: 1                 # single-shot per problem (pass@1 stile HumanEval)
+  delay: 500                # 500ms tra requests per rispettare rate limits
+
+# ====================================================================
+# Sharing / telemetry
+# ====================================================================
+sharing: false              # Never share privately
+telemetry: false            # Disable Promptfoo telemetry

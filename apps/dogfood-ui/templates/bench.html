@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Bench{% endblock %}
+{% block content %}
+
+<h1>Promptfoo bench — latest results</h1>
+
+{% if bench %}
+<p class="muted">Timestamp: <code>{{ bench.timestamp }}</code> · {{ bench.num_tests }} problemi</p>
+
+<table class="data-table">
+    <thead>
+        <tr><th>Provider</th><th>Pass</th><th>Fail</th><th>Total</th><th>Pass rate</th></tr>
+    </thead>
+    <tbody>
+        {% for p in bench.providers %}
+        <tr>
+            <td><code>{{ p.provider }}</code></td>
+            <td class="ok">{{ p.pass }}</td>
+            <td class="ko">{{ p.fail }}</td>
+            <td>{{ p.total }}</td>
+            <td><strong>{{ '{:.1%}'.format(p.pass_rate) }}</strong></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<p class="muted">
+    Raw file: <code>{{ path }}</code><br>
+    Esegui nuovo bench: <code>cd scripts/quality-bench && promptfoo eval</code>
+</p>
+
+{% else %}
+<p class="empty">
+    Nessun bench recente. Esegui:
+    <code>cd scripts/quality-bench && promptfoo eval</code>
+    <br>Poi refresha questa pagina.
+</p>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,156 @@
+# LiteLLM Proxy config — CodeMasterDD AI Station (ADR-0017)
+# Docs: https://docs.litellm.ai/docs/proxy/configs
+#
+# Tier routing policy:
+# - Tier 1 (cosmetic):  7B local, whole format, 114 tok/s
+# - Tier 2 (behavior):  14B Q2 local (diff, 25 tok/s) or 30B MoE escalation
+# - Tier 3 (cloud free): Groq 70B / Cerebras 8B / Gemini Flash
+# - Tier 4 (cloud paid): OpenAI gpt-4o-mini (emergency)
+# - Tier multimodal: Gemma4 (local, vision + audio + tools)
+# - Tier reasoning: DeepSeek-R1 8B (local, thinking mode)
+
+model_list:
+  # ===== TIER 1: cosmetic (local) =====
+  - model_name: ollama-cosmetic-7b
+    litellm_params:
+      model: ollama/qwen2.5-coder:7b
+      api_base: http://host.docker.internal:11434
+      num_ctx: 8192
+      temperature: 0.0
+    model_info:
+      metadata:
+        tier: "1-cosmetic"
+        task_types: "jsdoc,docstring,rename,lint-fix,1-line-batch"
+        speed_tok_s: 114
+        context_default: 8192
+
+  # ===== TIER 2: behavior-critical (local) =====
+  - model_name: ollama-refactor-14b-q2
+    litellm_params:
+      model: ollama/qwen2.5-coder:14b-instruct-q2_K
+      api_base: http://host.docker.internal:11434
+      num_ctx: 8192
+      temperature: 0.0
+    model_info:
+      metadata:
+        tier: "2-behavior"
+        task_types: "refactor,bug-fix,logic-change"
+        speed_tok_s: 18.7
+        context_default: 8192
+        edit_format: "diff"
+
+  - model_name: ollama-refactor-30b-moe
+    litellm_params:
+      model: ollama/qwen3-coder:30b
+      api_base: http://host.docker.internal:11434
+      num_ctx: 16384
+      temperature: 0.0
+    model_info:
+      metadata:
+        tier: "2-escalation"
+        task_types: "refactor-escalation-tier1-safefails,R1-type-edits"
+        speed_tok_s: 30.67
+        context_default: 16384
+        ram_gb: 18
+
+  # ===== TIER reasoning (local) =====
+  - model_name: ollama-reasoning-r1-8b
+    litellm_params:
+      model: ollama/deepseek-r1:8b
+      api_base: http://host.docker.internal:11434
+      num_ctx: 8192
+      temperature: 0.0
+    model_info:
+      metadata:
+        tier: "reasoning-local"
+        task_types: "debug-logic,chain-of-thought"
+        speed_tok_s: 74.57
+        full_gpu_vram: true
+
+  # ===== TIER multimodal (local) =====
+  - model_name: ollama-multimodal
+    litellm_params:
+      model: ollama/gemma4:latest
+      api_base: http://host.docker.internal:11434
+      num_ctx: 8192
+      temperature: 0.0
+    model_info:
+      metadata:
+        tier: "multimodal-local"
+        task_types: "vision,audio,tools,thinking"
+        speed_tok_s: 39.26
+
+  # ===== TIER 3: cloud free =====
+  - model_name: groq-70b
+    litellm_params:
+      model: groq/llama-3.3-70b-versatile
+      api_key: "os.environ/GROQ_API_KEY"
+      temperature: 0.0
+    model_info:
+      metadata:
+        tier: "3-cloud-free"
+        task_types: "refactor-cloud,behavior-capable"
+        speed_tok_s: 630
+
+  - model_name: cerebras-8b
+    litellm_params:
+      model: cerebras/llama3.1-8b
+      api_key: "os.environ/CEREBRAS_API_KEY"
+      temperature: 0.0
+    model_info:
+      metadata:
+        tier: "3-cloud-free-fast"
+        task_types: "cosmetic-fast,1st-pass"
+        speed_tok_s: 733
+
+  - model_name: gemini-flash
+    litellm_params:
+      model: gemini/gemini-2.5-flash
+      api_key: "os.environ/GEMINI_API_KEY"
+      temperature: 0.0
+    model_info:
+      metadata:
+        tier: "3-cloud-free-alt"
+        task_types: "long-context,attention-thinking-budget"
+
+  # ===== TIER 4: cloud paid (emergency-only) =====
+  - model_name: openai-4o-mini
+    litellm_params:
+      model: openai/gpt-4o-mini
+      api_key: "os.environ/OPENAI_API_KEY"
+      temperature: 0.0
+    model_info:
+      metadata:
+        tier: "4-cloud-paid"
+        task_types: "emergency-fallback-only"
+        cost_warning: "monitor ccusage, pay-per-use"
+
+litellm_settings:
+  # Osservabilità — shippa traces a Langfuse
+  success_callback: ["langfuse"]
+  failure_callback: ["langfuse"]
+  cache: false
+  drop_params: true
+  set_verbose: false
+  # Budget globale di safety (hard cap)
+  max_budget: 50.0
+  budget_duration: 30d
+
+general_settings:
+  master_key: "os.environ/LITELLM_MASTER_KEY"
+  database_url: "os.environ/DATABASE_URL"
+  disable_spend_logs: false
+  # Enforce budget per virtual key
+  enforced_params: []
+  # Admin UI enabled
+  ui_access_mode: "admin_only"
+
+# Environment variables mapping (caricate via .env)
+environment_variables:
+  GROQ_API_KEY: "os.environ/GROQ_API_KEY"
+  CEREBRAS_API_KEY: "os.environ/CEREBRAS_API_KEY"
+  GEMINI_API_KEY: "os.environ/GEMINI_API_KEY"
+  OPENAI_API_KEY: "os.environ/OPENAI_API_KEY"
+  LANGFUSE_PUBLIC_KEY: "os.environ/LANGFUSE_PUBLIC_KEY"
+  LANGFUSE_SECRET_KEY: "os.environ/LANGFUSE_SECRET_KEY"
+  LANGFUSE_HOST: "os.environ/LANGFUSE_HOST"

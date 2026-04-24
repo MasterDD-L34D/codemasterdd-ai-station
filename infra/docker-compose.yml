@@ -1,0 +1,107 @@
+version: "3.9"
+
+# CodeMasterDD AI Station — observability stack (ADR-0017)
+# Start:  docker compose up -d
+# Stop:   docker compose down
+# Logs:   docker compose logs -f <service>
+
+services:
+  # ============================================================
+  # LiteLLM Proxy + Admin UI
+  # Routing gateway OpenAI-compat per tier 1-4
+  # Virtual keys + budget enforcement + spend dashboard
+  # ============================================================
+  litellm:
+    image: ghcr.io/berriai/litellm:main-latest
+    container_name: codemasterdd-litellm
+    restart: unless-stopped
+    ports:
+      - "4000:4000"
+    environment:
+      # Master key per admin UI (cambia in produzione)
+      LITELLM_MASTER_KEY: ${LITELLM_MASTER_KEY:-sk-local-masterkey-change-me}
+      # Database per virtual keys + budget persistence (usa postgres shared)
+      DATABASE_URL: postgresql://litellm:${POSTGRES_PASSWORD:-litellm-local}@postgres:5432/litellm
+      # Langfuse callbacks
+      LANGFUSE_PUBLIC_KEY: ${LANGFUSE_PUBLIC_KEY:-}
+      LANGFUSE_SECRET_KEY: ${LANGFUSE_SECRET_KEY:-}
+      LANGFUSE_HOST: http://langfuse-web:3000
+      # Provider API keys (caricate da .env file)
+      GROQ_API_KEY: ${GROQ_API_KEY:-}
+      CEREBRAS_API_KEY: ${CEREBRAS_API_KEY:-}
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+    volumes:
+      - ./litellm/config.yaml:/app/config.yaml:ro
+    command:
+      - "--config=/app/config.yaml"
+      - "--port=4000"
+      - "--num_workers=1"
+      - "--telemetry=False"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    extra_hosts:
+      # Permette a LiteLLM di raggiungere Ollama su host Windows
+      - "host.docker.internal:host-gateway"
+    networks:
+      - observability
+
+  # ============================================================
+  # Langfuse web (UI + API)
+  # Tracing, evals, prompt management, cost dashboard
+  # ============================================================
+  langfuse-web:
+    image: langfuse/langfuse:latest
+    container_name: codemasterdd-langfuse-web
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: postgresql://langfuse:${POSTGRES_PASSWORD:-langfuse-local}@postgres:5432/langfuse
+      NEXTAUTH_URL: http://localhost:3000
+      NEXTAUTH_SECRET: ${NEXTAUTH_SECRET:-changeme-32char-secret-use-openssl-rand}
+      SALT: ${SALT:-changeme-32char-salt-use-openssl-rand}
+      TELEMETRY_ENABLED: "false"
+      LANGFUSE_ENABLE_EXPERIMENTAL_FEATURES: "false"
+      # Primo-avvio: auto-init org + project
+      LANGFUSE_INIT_ORG_NAME: "CodeMasterDD"
+      LANGFUSE_INIT_PROJECT_NAME: "fase6-dogfood"
+      LANGFUSE_INIT_USER_EMAIL: "${LANGFUSE_ADMIN_EMAIL:-admin@codemasterdd.local}"
+      LANGFUSE_INIT_USER_PASSWORD: "${LANGFUSE_ADMIN_PASSWORD:-changeme-8char-min}"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - observability
+
+  # ============================================================
+  # Postgres (condiviso LiteLLM + Langfuse)
+  # Init script crea 2 database + 2 utenti separati
+  # ============================================================
+  postgres:
+    image: postgres:15-alpine
+    container_name: codemasterdd-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_ROOT_PASSWORD:-postgres-local-change-me}
+      POSTGRES_MULTIPLE_DATABASES: litellm:litellm-local,langfuse:langfuse-local
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./postgres/init-multiple-dbs.sh:/docker-entrypoint-initdb.d/init-multiple-dbs.sh:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - observability
+
+networks:
+  observability:
+    driver: bridge
+
+volumes:
+  postgres-data:
+    name: codemasterdd-postgres-data
