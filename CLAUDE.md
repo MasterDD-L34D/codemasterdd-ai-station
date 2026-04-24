@@ -275,6 +275,7 @@ Il repo adotta lo schema governance di `Archivio_Libreria_Operativa_Progetti/` (
 1. `CLAUDE.md` (questo file) — convenzioni progetto
 2. `COMPACT_CONTEXT.md` — snapshot stato corrente
 3. `STATUS_MULTI_REPO.md` — dashboard operativa cross-repo (se task coinvolge progetti monitorati)
-4. `Archivio_.../07_CLAUDE_CODE_OPERATING_PACKAGE/CLAUDE_OPERATING_RULES.md` — regole meta
-5. `BACKLOG.md` + `OPEN_DECISIONS.md` — cosa è aperto ora
-6. ADR rilevanti se il task tocca topic noto
+4. `.claude/agents/README.md` — 18 sub-agent disponibili (game/dafne/quality/security/db/meta) + invocation pattern
+5. `Archivio_.../07_CLAUDE_CODE_OPERATING_PACKAGE/CLAUDE_OPERATING_RULES.md` — regole meta
+6. `BACKLOG.md` + `OPEN_DECISIONS.md` — cosa è aperto ora
+7. ADR rilevanti se il task tocca topic noto

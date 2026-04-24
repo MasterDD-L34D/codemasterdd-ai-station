@@ -48,6 +48,18 @@
 - ADR-0016 (Proposed) awaiting n≥3 data points addizionali
 - ADR-0017 (Proposed) UI + observability stack — **scaffolding completato 2026-04-24 auto-mode**, test live pending (U0-U4-test), ratification ~2026-05-17
 
+### Sub-agent ecosystem (`.claude/agents/`)
+
+**18 agent registrati** coprono 4 repo + cross-cutting. Fonti tracciate in `SOURCES.md`:
+- 5 core codemasterdd (dogfood/bench/cost/repo-health/adr)
+- 4 Game/Evo-Tactics (balance/systems-design/validator/lore)
+- 2 Dafne swarm (cycle-analyzer/proposal-triager)
+- 3 quality (owasp-security/a11y-wcag/harsh-reviewer)
+- 2 DB+privacy (schema-designer/policy-enforcer)
+- 2 meta (delegation-classifier/compact-conversation)
+
+Invocabili via Agent tool con `subagent_type: <name>`. Dettaglio: [.claude/agents/README.md](.claude/agents/README.md).
+
 ### Stack ADR-0017 — status scaffolding
 
 | Componente | Path | Status code | Status runtime |

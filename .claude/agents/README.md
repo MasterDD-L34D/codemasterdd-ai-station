@@ -2,52 +2,137 @@
 
 Agent definition files per Claude Code. Invocati tramite `Agent` tool con `subagent_type: <name>`.
 
-## Agent registrati
+## Agent registrati (18 totali)
 
-| Agent | Scope | When to invoke |
-|-------|-------|----------------|
-| [dogfood-analyst](dogfood-analyst.md) | Analizza log dogfood + tier routing suggestions | "analizza dogfood", "come va Fase 6", "che tier per questo task" |
-| [bench-reporter](bench-reporter.md) | Report quality bench da results esistenti | "report bench", "qual è il migliore per X", "confronta A vs B" |
-| [cost-monitor](cost-monitor.md) | Cost snapshot + budget alerts | "quanto spendo", "cost snapshot", "siamo sotto budget" |
-| [repo-health-auditor](repo-health-auditor.md) | Audit cross-repo + refresh STATUS_MULTI_REPO | "audit cross-repo", "stato tutti i repo", "sync status" |
-| [adr-drafter](adr-drafter.md) | Draft nuovi ADR seguendo MADR + policy | "scrivi ADR per X", "draft ADR", "formalizza decisione" |
+### 🎯 Operational — codemasterdd core (5)
+
+| Agent | Model | Scope | When to invoke |
+|-------|-------|-------|----------------|
+| [dogfood-analyst](dogfood-analyst.md) | sonnet | Analizza log dogfood + tier routing suggestions | "analizza dogfood", "come va Fase 6" |
+| [bench-reporter](bench-reporter.md) | sonnet | Report quality bench da results esistenti | "report bench", "qual è il migliore per X" |
+| [cost-monitor](cost-monitor.md) | sonnet | Cost snapshot + budget alerts | "quanto spendo", "cost snapshot" |
+| [repo-health-auditor](repo-health-auditor.md) | sonnet | Audit cross-repo superficie + STATUS_MULTI_REPO refresh | "audit cross-repo", "stato tutti repo" |
+| [adr-drafter](adr-drafter.md) | sonnet | Scaffold nuovi ADR seguendo MADR | "scrivi ADR per X" |
+
+### 🎮 Game (Evo-Tactics) — 4
+
+| Agent | Model | Scope | When to invoke |
+|-------|-------|-------|----------------|
+| [game-balance-auditor](game-balance-auditor.md) | sonnet | d20 combat balance, stat outlier, Numbers Policy | "check balance", "rivedi stats" |
+| [game-systems-designer](game-systems-designer.md) | sonnet | Design core loop + sub-loop + experience arc | "design core loop", "progetta sistema X" |
+| [game-design-validator](game-design-validator.md) | opus | First principles + Rule of Threes + elimination test | "valida design", "first principles game" |
+| [lore-consistency-checker](lore-consistency-checker.md) | sonnet | Coerenza narrativa cross-artifact lore | "check lore", "coerenza narrativa" |
+
+### 🐝 Dafne swarm — 2 (oltre a repo-health-auditor per quick check)
+
+| Agent | Model | Scope | When to invoke |
+|-------|-------|-------|----------------|
+| [swarm-cycle-analyzer](swarm-cycle-analyzer.md) | sonnet | Deep pattern analysis cicli swarm + intervention effectiveness | "analisi cicli swarm", "pattern fail Dafne" |
+| [dafne-proposal-triager](dafne-proposal-triager.md) | sonnet | Pre-filter proposals Dafne prima approvazione Eduardo | "triage dafne proposals", "review pending" |
+
+### 🔒 Cross-cutting quality/security (3)
+
+| Agent | Model | Scope | When to invoke |
+|-------|-------|-------|----------------|
+| [owasp-security-auditor](owasp-security-auditor.md) | opus | OWASP Top 10 2025 + Agentic Skills Top 10 su endpoint/secrets | "security audit", "OWASP review" |
+| [a11y-wcag-reviewer](a11y-wcag-reviewer.md) | sonnet | WCAG 2.2 AA scan su template HTML/EJS/Jinja2 | "check a11y", "WCAG review" |
+| [harsh-reviewer](harsh-reviewer.md) | opus | Quality gate generico multi-aspect (code, ADR, plan) | "harsh review", "che problemi vedi" |
+
+### 🗄️ Database + privacy (2)
+
+| Agent | Model | Scope | When to invoke |
+|-------|-------|-------|----------------|
+| [database-schema-designer](database-schema-designer.md) | sonnet | Schema design + index + migration strategy cross-repo | "design schema DB", "review Prisma" |
+| [privacy-policy-enforcer](privacy-policy-enforcer.md) | haiku | Classifica file path per cloud-OK vs sovereign-only | "è cloud OK?", "classifica privacy" |
+
+### 🧭 Meta / workflow (2)
+
+| Agent | Model | Scope | When to invoke |
+|-------|-------|-------|----------------|
+| [delegation-classifier](delegation-classifier.md) | haiku | Classifica task + suggest tier routing (ADR-0016 formalizzato) | "classifica task", "che tier uso" |
+| [compact-conversation](compact-conversation.md) | sonnet | Produce compact markdown paste-ready per nuova sessione | "compact", "prepara handoff" |
+
+## Model tier rationale
+
+- **haiku** (fast, cheap): classifier / gate senza deep reasoning (delegation-classifier, privacy-policy-enforcer)
+- **sonnet** (default): review + analisi + report (la maggior parte)
+- **opus** (deep reasoning): first principles + harsh critique + OWASP (game-design-validator, harsh-reviewer, owasp-security-auditor)
 
 ## Invocazione pattern
 
 ```
 Agent({
-  subagent_type: "dogfood-analyst",
-  description: "Review Fase 6 metrics",
-  prompt: "Analizza il log dogfood del mese corrente e dimmi se siamo on-track verso i criteri ADR-0014. Report <300 parole."
+  subagent_type: "game-balance-auditor",
+  description: "Evo-Tactics balance audit",
+  prompt: "Audit balance su C:/dev/Game/data/core/species/*.yaml. Focus: outlier stat base. Report <500 parole."
 })
 ```
 
 ## Policy governance
 
-- Ogni agent ha **scope read-only di default** — se deve scrivere, specificato esplicitamente nella description
-- **Nessun agent avvia servizi docker/processi long-running** — quello è responsabilità Eduardo + hub Claude Code
-- **Nessun agent modifica logs/ dogfood direttamente** — quello è scrittura hub dopo ogni dogfood reale
-- **ADR-drafter è l'unico autorizzato a creare file in `docs/adr/`** senza pre-approvazione Eduardo (ma produce sempre Proposed, mai Accepted)
+- **Read-only di default** — se deve scrivere, specificato esplicitamente nella description
+- **No avvio servizi** (docker, processi) — responsabilità hub Claude Code
+- **No modifica logs/ dogfood direttamente** — responsabilità hub
+- **adr-drafter è l'unico autorizzato** a creare file in `docs/adr/` (sempre Proposed)
+- **privacy-policy-enforcer è upstream gate** per tutti i delegation cloud
+
+## Fonti / attribuzione
+
+### Pattern dall'Archivio_Libreria_Operativa_Progetti
+- `adr-drafter` ← Tech Lead + PM Tecnico + ADR-0010 MADR
+- `harsh-reviewer` ← "Revisore severo ma utile" (02_LIBRARY/02_Modules:355)
+- `game-design-validator` ← First Principles Repo Game (02_LIBRARY/03 + template 06)
+- `database-schema-designer` ← Software Architect Repo Mapper (02_LIBRARY/02_Modules:141)
+
+### Pattern da research esterna (MIT/Apache)
+- `game-balance-auditor` ← Donchitos/Claude-Code-Game-Studios `balance-check` + Game Design Framework skill
+- `a11y-wcag-reviewer` ← Community-Access/accessibility-agents (WCAG 2.2 AA)
+- `owasp-security-auditor` ← agamm/claude-code-owasp + TarkinLarson/asvs-auditor
+- `swarm-cycle-analyzer` ← jayminwest/overstory tiered watchdog pattern
+
+### Tecniche da TikTok sources
+- `compact-conversation` ← Evolving AI Hack #6 + okaashish Hack #6 (Compact Skill)
+- `harsh-reviewer` philosophy ← okaashish Caveman Method (no filler, direct)
+- `delegation-classifier` formalizza Opus/Sonnet/Haiku routing (Evolving AI Hack #3)
+
+### Custom codemasterdd
+- `dogfood-analyst`, `bench-reporter`, `cost-monitor`, `repo-health-auditor` (Fase 6 operations)
+- `privacy-policy-enforcer` (ADR-0013 policy enforcement)
+- `delegation-classifier` (ADR-0016 formalizzazione)
+- `swarm-cycle-analyzer`, `lore-consistency-checker` (integration Game+Dafne ecosystem)
+
+## Coverage matrix per repo
+
+| Repo | Primary agent(s) | Cross-cutting agents |
+|------|------------------|----------------------|
+| codemasterdd | dogfood-analyst, bench-reporter, cost-monitor, repo-health-auditor, adr-drafter, delegation-classifier, compact-conversation | owasp, database, privacy, harsh |
+| Game (Evo-Tactics) | game-balance-auditor, game-design-validator, lore-consistency-checker | owasp, a11y, harsh |
+| Dafne swarm | swarm-cycle-analyzer, repo-health-auditor | owasp, harsh |
+| Synesthesia (dormant) | — | a11y, database, privacy, owasp, harsh (quando riattiva) |
 
 ## Aggiungere nuovo agent
 
-1. Crea file `<name>.md` in `.claude/agents/`
-2. Frontmatter YAML con `name`, `description` (usato per auto-matching), opzionale `model: sonnet|opus|haiku`
-3. Body con system prompt + task specific instructions
-4. Update questo README con riga tabella + scope
-5. Commit
+1. Crea file `<name>.md` con frontmatter YAML (`name`, `description`, opzionale `model`)
+2. Body system prompt + task-specific instructions
+3. Update questo README (sezione + coverage matrix se applicabile)
+4. Commit + push
 
-## Evoluzione
+## Evoluzione / TODO
 
-Agent candidates per future extensions (tracked in BACKLOG):
+Agent candidates tracked in BACKLOG, da considerare post ADR-0017 ratification:
 
-- **lang-checker**: verifica convenzioni Italian/English cross-repo
-- **privacy-auditor**: check privacy policy compliance su repo mixed (Synesthesia quando riattivata)
-- **release-notes-writer**: genera release notes da git log + ADR accettati
-- **memory-consolidator**: già coperto da skill `anthropic-skills:consolidate-memory`, wrapper possibile
+- **bench-post-upgrade-runner**: automatizza bench pattern (da research `bench-post-ram-upgrade-2026-04-22.md`)
+- **monorepo-boundary-guardian**: cross-language import check per Game (Node + Python)
+- **memory-consolidator-wrapper**: invoca skill `anthropic-skills:consolidate-memory` con policy codemasterdd
+- **release-notes-writer**: genera release notes da git log + ADR accepted
+- **schema-privacy-classifier**: estensione specifica per-commit di privacy-policy-enforcer
 
 ## Riferimenti
 
+- [ADR-0010 MADR format + skill policy](../../docs/adr/0010-madr-format-adoption-and-skill-policy.md)
+- [ADR-0013 Tier 3 cloud free providers](../../docs/adr/0013-tier3-cloud-free-providers.md)
+- [ADR-0016 Constraint-count routing dimension](../../docs/adr/0016-constraint-count-routing-dimension.md)
 - [ADR-0017 UI + observability stack](../../docs/adr/0017-ui-observability-stack.md)
 - [CLAUDE.md](../../CLAUDE.md) — convenzioni progetto
-- Claude Code agents docs: https://docs.claude.com/en/docs/claude-code
+- [docs/patterns/delegation-to-aider.md](../../docs/patterns/delegation-to-aider.md)
+- Claude Code agents docs: https://code.claude.com/docs/en/agent-teams

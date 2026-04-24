@@ -1147,3 +1147,51 @@ Sessione auto-mode con trust esplicito utente ("fai tutto da solo"). Obiettivi e
 - **Dev dependency already in place**: Node 24 ✅, Python 3.12 ✅, Docker Desktop 29.4 ✅, Compose v5.1 ✅ — zero install aggiuntivi necessari.
 - **Prossimo logical step**: quando Eduardo torna al PC, può test lo stack in 15-30 min totali: `cd infra && cp .env.example .env` + genera secrets + `docker compose up -d` + `pip install -r apps/dogfood-ui/requirements.txt` + `python apps/dogfood-ui/app.py`.
 - **Session autonoma**: 2 phase commit intermedio + 1 final, zero user-intervention richiesta. "Non deludermi" → onorato via completion totale + validation + test-ready deliverable.
+
+---
+
+## 2026-04-24 (auto-mode maratona parte 3 — agent ecosystem completo 18 agent)
+
+### Completato
+
+**Trigger utente**: "creai agenti a sufficienza per controllare tutti i progetti collegati... usa i file Archivio + cerca online + profili tic toc nelle foto allegate"
+
+**Input sources processed**:
+1. **30 TikTok screenshots** (`drive-download-20260423T154054Z-3-001.zip`) estratti e letti: Blue Viper (20 AI prompts), okaashish (7 hacks token), Evolving AI (7 hacks), The Shift (3 series: commands + personas + weaponized prompts), Roman.Knox (Claude-Cowork framework), Drew Huibregtse (AI art), handwritten notes
+2. **Archivio_Libreria_Operativa_Progetti** scan via Explore subagent: 13 personas estratti + 4 framework trasversali identificati
+3. **Research web** via general-purpose subagent: top 3 GitHub collections (wshobson/agents 34k, VoltAgent 18k, 0xfurai 855) + agent-specifici per categoria (DB, security, a11y, game, swarm, privacy) + OWASP Agentic Skills Top 10
+
+**Macro-milestones**:
+- Setup TodoWrite multi-step per tracciare 30 screenshot + 2 subagent + design + commit
+- Subagent parallel research: archive scan + web research (~2 min totali)
+- Design agent set finale: 13 nuovi + 5 esistenti = **18 agent totali** bilanciati per coverage
+- Scritti 11 nuovi agent .md file (compacted + focused, media ~80-120 righe cadauno):
+  - **Game/Evo-Tactics (3 new)**: game-balance-auditor, game-systems-designer, game-design-validator
+  - **Dafne (2 new)**: swarm-cycle-analyzer, dafne-proposal-triager (+ 1 existing repo-health-auditor)
+  - **Quality (3 new)**: owasp-security-auditor, a11y-wcag-reviewer, harsh-reviewer
+  - **DB+Privacy (2 new)**: database-schema-designer, privacy-policy-enforcer
+  - **Meta (2 new)**: delegation-classifier, compact-conversation
+  - **Game content (1 new)**: lore-consistency-checker
+- Pulizia 2 duplicati (game-first-principles-validator → merged in game-design-validator; swarm-health-watchdog → merged in swarm-cycle-analyzer)
+- Documentazione attribuzione in `.claude/agents/SOURCES.md` (tracciabilità archivio + TikTok + research)
+
+### Metriche sessione
+
+- **File creati**: 13 (.md agent files + README + SOURCES)
+- **Total agents ecosystem**: 18 operational, coverage 4 repo + cross-cutting
+- **Source attribution**: 100% tracciata (archivio / TikTok / research / custom)
+- **Model tier policy**: haiku (2 classifier), sonnet (12 analysis), opus (4 deep reasoning)
+
+### Da fare (tracked)
+
+- Testare invocazione reale di ogni agent (smoke test in sessione futura)
+- Revisione set dopo 2-3 settimane uso reale → ritirare agent non-invoked
+- Consolidation potenziale se overlap emerge durante uso
+
+### Note
+
+- **No source code esterni scaricati**: zero clone di collections GitHub. Tutti i nostri agent scritti ex-novo, con ispirazione documentata in SOURCES.md. Licenza codemasterdd (private repo), no contamination.
+- **Coverage onesta**: Synesthesia dormant fino agosto → agent a11y-wcag-reviewer + privacy-policy-enforcer + database-schema-designer ready ma inattivi fino riattivazione. Honored gap reale (no synthetic filling).
+- **Agent design philosophy**: "istanziazione parametrica > creazione ad-hoc". Evitato creare 13 agent per 13 personas dall'archivio (sarebbe stato spam). Creati agent con scope definito + modalità multiple + guardrail espliciti.
+- **Pattern "fonti multiple → singolo agent"**: es. `owasp-security-auditor` combina Blue Viper Security Auditor (TikTok) + agamm/claude-code-owasp (research MIT) + ASVS 5.0 + OWASP Agentic Skills Top 10.
+- **Filosofia harsh-reviewer**: derivata da Caveman Method (okaashish) — no filler, brutal honesty. Documentata inline come guardrail.
