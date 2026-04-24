@@ -163,6 +163,7 @@ Governance del Game vive **nel Game repo stesso** (`docs/governance/`). codemast
   - **Dafne intervention #6**: active, Flint drift detected (gameplay ratio 10% < 20% threshold), last directive: prioritizzare 2 meccaniche giocabili testabili
   - HEAD Dafne: `fb6f5c4` (fix no-cache headers dashboard)
 - **Monitoring integrato**: `apps/dogfood-ui` ha panel `/dafne` che proxy verso `:5000` + endpoint `/api/dafne/snapshot` JSON aggregato. Avvia con `python apps/dogfood-ui/app.py`, apri `http://localhost:8080/dafne`.
+- **⚠️ Process persistence issue** (tracked 2026-04-24): Dafne server muore dopo ~10-30min senza causa evidente quando launched via `Start-Process -Minimized`. Workaround: usa `START-DAFNE-PERSISTENT.ps1` (auto-restart + log rotation, vedi `docs/reference/dafne-persistence.md`). Per always-on, Task Scheduler opzione 2.
 - **Prossimo milestone**: **DAY-5 2026-04-26** — primo task famiglia coordinatori (Solver/Scout/Builder) + Dafne orchestra. Brief già scritto in `DAY-5-BRIEF.md`. Durata stimata 2h.
 - **Scope DAY-5**:
   - Consolidare decisione "drift manifest vs reality" da opzione C provvisoria a canonica

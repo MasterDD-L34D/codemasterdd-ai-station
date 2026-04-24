@@ -1,0 +1,57 @@
+# Smoke test config — 2 provider + 2 problems only (quick validation)
+# Usage: cd scripts/quality-bench && promptfoo eval -c promptfoo-smoke.yaml
+
+description: CodeMasterDD smoke test (ADR-0017 validation)
+
+providers:
+  - id: openai:ollama-cosmetic-7b
+    label: "Qwen 7B (local)"
+    config:
+      apiBaseUrl: http://localhost:4000/v1
+      apiKey: sk-local-masterkey-change-me
+      temperature: 0
+      max_tokens: 800
+
+  - id: openai:groq-70b
+    label: "Groq 70B (cloud)"
+    config:
+      apiBaseUrl: http://localhost:4000/v1
+      apiKey: sk-local-masterkey-change-me
+      temperature: 0
+      max_tokens: 800
+
+prompts:
+  - |
+    Complete the function. Return ONLY the function definition, no explanation, no markdown fences.
+
+    {{problem}}
+
+tests:
+  - vars:
+      problem: |
+        def is_palindrome(s: str) -> bool:
+            """Return True if s is a palindrome (ignore case + spaces)."""
+    assert:
+      - type: contains
+        value: "def is_palindrome"
+      - type: contains
+        value: "return"
+
+  - vars:
+      problem: |
+        def count_vowels(s: str) -> int:
+            """Count vowels (aeiou) in s, case-insensitive."""
+    assert:
+      - type: contains
+        value: "def count_vowels"
+      - type: contains
+        value: "return"
+
+outputPath: ./results/promptfoo-smoke.json
+
+evaluateOptions:
+  maxConcurrency: 1
+  delay: 500
+
+sharing: false
+telemetry: false
