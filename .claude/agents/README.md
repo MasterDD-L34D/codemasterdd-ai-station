@@ -12,13 +12,15 @@ Ogni agent ha status visibile in tabelle sotto:
 
 Riferimento completo: [ADR-0018 agent readiness protocol](../../docs/adr/0018-agent-readiness-protocol.md) + [SMOKE_TEST_TEMPLATE.md](SMOKE_TEST_TEMPLATE.md).
 
-Stato retroattivo 2026-04-24 (post sessione smoke test batch P0): **6/18 ✅ ready** (smoke test live confermato), **12/18 🟡 draft** (system prompt scritto ma non ancora test-validato end-to-end). Priorità validation documentata in ADR-0018.
+Stato 2026-04-24 (post batch P0 + P1): **11/18 ✅ ready** (smoke test live confermato), **7/18 🟡 draft**. Priorità validation documentata in ADR-0018.
 
-- **Gate 1 PASS + Gate 2 validated + Gate 3 documented** (6 agent):
-  - `harsh-reviewer`, `delegation-classifier`, `swarm-cycle-analyzer` (validated 2026-04-24 mattina)
-  - `owasp-security-auditor`, `privacy-policy-enforcer`, `dogfood-analyst` (validated 2026-04-24 pomeriggio, batch P0)
+- **Gate 1 PASS + Gate 2 validated + Gate 3 documented** (11 agent):
+  - Mattina: `harsh-reviewer`, `delegation-classifier`, `swarm-cycle-analyzer`
+  - Batch P0: `owasp-security-auditor`, `privacy-policy-enforcer`, `dogfood-analyst`
+  - Batch P1: `adr-drafter`, `repo-health-auditor`, `bench-reporter`, `cost-monitor`, `compact-conversation`
+- **Restano draft** (7 agent): game-* (4), dafne-proposal-triager, database-schema-designer, lore-consistency-checker, a11y-wcag-reviewer
 
-Log smoke test: [docs/agent-smoke-tests/](../../docs/agent-smoke-tests/)
+Log smoke test completi: [docs/agent-smoke-tests/](../../docs/agent-smoke-tests/)
 
 ## Agent registrati (18 totali)
 
@@ -27,10 +29,10 @@ Log smoke test: [docs/agent-smoke-tests/](../../docs/agent-smoke-tests/)
 | Agent | Status | Model | Scope | When to invoke |
 |-------|:------:|-------|-------|----------------|
 | [dogfood-analyst](dogfood-analyst.md) | ✅ ready | sonnet | Analizza log dogfood + tier routing suggestions | "analizza dogfood", "come va Fase 6" |
-| [bench-reporter](bench-reporter.md) | 🟡 draft | sonnet | Report quality bench da results esistenti | "report bench", "qual è il migliore per X" |
-| [cost-monitor](cost-monitor.md) | 🟡 draft | sonnet | Cost snapshot + budget alerts | "quanto spendo", "cost snapshot" |
-| [repo-health-auditor](repo-health-auditor.md) | 🟡 draft | sonnet | Audit cross-repo superficie + STATUS_MULTI_REPO refresh | "audit cross-repo", "stato tutti repo" |
-| [adr-drafter](adr-drafter.md) | 🟡 draft | sonnet | Scaffold nuovi ADR seguendo MADR | "scrivi ADR per X" |
+| [bench-reporter](bench-reporter.md) | ✅ ready | sonnet | Report quality bench da results esistenti | "report bench", "qual è il migliore per X" |
+| [cost-monitor](cost-monitor.md) | ✅ ready | sonnet | Cost snapshot + budget alerts | "quanto spendo", "cost snapshot" |
+| [repo-health-auditor](repo-health-auditor.md) | ✅ ready | sonnet | Audit cross-repo superficie + STATUS_MULTI_REPO refresh | "audit cross-repo", "stato tutti repo" |
+| [adr-drafter](adr-drafter.md) | ✅ ready | sonnet | Scaffold nuovi ADR seguendo MADR | "scrivi ADR per X" |
 
 ### 🎮 Game (Evo-Tactics) — 4
 
@@ -68,7 +70,7 @@ Log smoke test: [docs/agent-smoke-tests/](../../docs/agent-smoke-tests/)
 | Agent | Status | Model | Scope | When to invoke |
 |-------|:------:|-------|-------|----------------|
 | [delegation-classifier](delegation-classifier.md) | ✅ ready | haiku | Classifica task + suggest tier routing (ADR-0016 formalizzato) | "classifica task", "che tier uso" |
-| [compact-conversation](compact-conversation.md) | 🟡 draft | sonnet | Produce compact markdown paste-ready per nuova sessione | "compact", "prepara handoff" |
+| [compact-conversation](compact-conversation.md) | ✅ ready | sonnet | Produce compact markdown paste-ready per nuova sessione | "compact", "prepara handoff" |
 
 ## Model tier rationale
 

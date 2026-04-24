@@ -14,10 +14,21 @@
 
 | Repo | Status | Next action | Deadline/trigger | Blocker |
 |------|--------|-------------|------------------|---------|
-| **codemasterdd-ai-station** | Fase 6 60%, on-track | Review sett.4 + ADR-0015 ratification | ~2026-05-17 | Nessuno bloccante |
-| **Synesthesia** | Dormant | Riattiva pre-esame UniUPO | ~agosto 2026 | Nessuno (dormant intenzionale) |
-| **Game (Evo-Tactics)** | Q-001 review active + swarm staging `aa82d67f` | Continuazione Q-001 follow-up branch plan | No fixed | Pending PR branch `swarm/register-agents-2026-04-24` |
-| **Dafne swarm (evo-swarm)** | Atto 1 day-3/10, server Flask UP idle :5000 | DAY-5 Scout/Solver/Builder family task | 2026-04-26 | Nessuno |
+| **codemasterdd-ai-station** | Fase 6 60%, HEAD `3b26173`, ADR-0017 stack live UP, 11/18 agent ✅ ready (ADR-0018) | Review sett.4 + ADR-0015 ratification | ~2026-05-17 | Nessuno bloccante |
+| **Synesthesia** | Dormant, HEAD `05f8a92` | Riattiva pre-esame UniUPO | ~agosto 2026 | Nessuno (dormant intenzionale) |
+| **Game (Evo-Tactics)** | Q-001 review active, HEAD `aa82d67f`, working tree DIRTY (biome-gameplay-integrator untracked + agents_index modified) | Commit swarm day-3 artifacts + Q-001 follow-up | No fixed | Pending commit working tree |
+| **Dafne swarm (evo-swarm)** | Atto 1 day-3/10, server Flask :5000 **DOWN** (persistence issue, ADR-0019 Proposed), HEAD `fb6f5c4` + dirty (456 righe non committate) | Avvia via `START-DAFNE-PERSISTENT.ps1` prima day-5 + commit cycle-log | **2026-04-26** | Persistence issue tracked in ADR-0019 |
+
+### Stack ADR-0017 runtime (aggiornato 2026-04-24, scoperta da repo-health-auditor)
+
+| Componente | Port | Status runtime | Note |
+|------------|-----:|:--------------:|------|
+| LiteLLM Proxy | 4000 | ✅ UP | Container `codemasterdd-litellm` 27+min uptime |
+| Langfuse | 3000 | ✅ UP | 7 trace + 7 observations in Postgres |
+| Postgres | 5432 | ✅ healthy | Container `codemasterdd-postgres` |
+| dogfood-ui Flask | 8080 | ✅ UP | v0.2.0, Dafne unreachable visible nell'UI |
+| promptfoo CLI | — | ✅ installed v0.121.7 | Eval smoke test 4/4 PASS |
+| Dafne swarm | 5000 | 🔴 DOWN | Process persistence issue — workaround wrapper disponibile |
 
 ---
 

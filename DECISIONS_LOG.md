@@ -25,7 +25,8 @@
 | 0015 | Fase 7 budget decision full-sovereign | **Proposed** | 2026-04-24 | Opzione A $0-50/anno + deroga criterio #3 (Synesthesia dormant fino agosto) |
 | 0016 | Constraint-count routing dimension | **Proposed** | 2026-04-24 | 2D matrix classe + constraint-count; 5+ strict → manual Claude Code |
 | 0017 | UI + observability stack | **Proposed** (4/5 criteri live validated 2026-04-24) | 2026-04-24 | LiteLLM Proxy + Langfuse + promptfoo + Aider browser + Flask mini-app custom |
-| 0018 | Agent readiness protocol (3-gate smoke+research+tuning) | **Accepted** | 2026-04-24 | Ogni agent `draft` fino passaggio gate. 3/18 ready, 15/18 draft retroactive |
+| 0018 | Agent readiness protocol (3-gate smoke+research+tuning) | **Accepted** | 2026-04-24 | Ogni agent `draft` fino passaggio gate. 11/18 ready dopo batch P0+P1, 7/18 draft |
+| 0019 | Dafne process persistence (3 opzioni A/B/C) | **Proposed** | 2026-04-24 | Opzione A wrapper PS auto-restart per Fase 6, B Task Scheduler post-Fase 6, C Docker deferred |
 
 ### In review (Proposed, awaiting Accepted trigger)
 - **ADR-0015** — Fase 7 budget decision full-sovereign. Trigger Accepted: review settimana 4 (~2026-05-17) con verifica criteri #2 reliability + #4 cost confermati + no fail rate regression. Input 2026-04-24: Synesthesia dormant fino agosto 2026 → criterio #3 derogato.
