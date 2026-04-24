@@ -14,12 +14,12 @@ e senza restart. L'integration dogfood-ui `/dafne` panel mostra `reachable: fals
 
 ## Opzione 1 — Wrapper auto-restart (consigliata per use saltuario)
 
-File: `C:/Users/edusc/Dafne/workspace/swarm/START-DAFNE-PERSISTENT.ps1`
+File: `C:/Users/edusc/Dafne/workspace/swarm/START-SWARM-PERSISTENT.ps1`
 
 Usage:
 ```powershell
 cd C:\Users\edusc\Dafne\workspace\swarm
-.\START-DAFNE-PERSISTENT.ps1
+.\START-SWARM-PERSISTENT.ps1
 # Lascia la finestra aperta (o minimized). Ctrl+C per stop.
 ```
 
@@ -40,7 +40,7 @@ Richiede PowerShell admin.
 # Esegui come Administrator
 $action = New-ScheduledTaskAction `
     -Execute "powershell.exe" `
-    -Argument "-ExecutionPolicy Bypass -WindowStyle Hidden -File C:\Users\edusc\Dafne\workspace\swarm\START-DAFNE-PERSISTENT.ps1"
+    -Argument "-ExecutionPolicy Bypass -WindowStyle Hidden -File C:\Users\edusc\Dafne\workspace\swarm\START-SWARM-PERSISTENT.ps1"
 
 $trigger = New-ScheduledTaskTrigger -AtLogOn -User "$env:USERNAME"
 
@@ -109,7 +109,7 @@ Se dogfood-ui up, panel `/dafne` mostra live data anche post-system-idle.
 
 ## Riferimenti
 
-- `START-DAFNE-PERSISTENT.ps1` — wrapper custom (Opzione 1)
+- `START-SWARM-PERSISTENT.ps1` — wrapper custom (Opzione 1)
 - `STATUS_MULTI_REPO.md` — tracking operativo Dafne state
 - `apps/dogfood-ui/dafne_client.py` — client con ping_timeout=2s, timeout=5s
 - Microsoft docs: [Register-ScheduledTask](https://learn.microsoft.com/en-us/powershell/module/scheduledtasks/register-scheduledtask)
@@ -123,7 +123,7 @@ Se dogfood-ui up, panel `/dafne` mostra live data anche post-system-idle.
 1. **Avvia Dafne persistente** in una PowerShell dedicata (lasciare aperta 2h):
    ```powershell
    cd C:\Users\edusc\Dafne\workspace\swarm
-   .\START-DAFNE-PERSISTENT.ps1
+   .\START-SWARM-PERSISTENT.ps1
    ```
    Attendere il banner `Dafne Persistent Wrapper` + log "Avvio Dafne (attempt #1)".
 

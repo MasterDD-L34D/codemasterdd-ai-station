@@ -7,6 +7,8 @@
 - **Decisore**: Eduardo Scarpelli
 - **Deciders**: solo-dev (single-user workstation)
 
+> **Addendum 2026-04-25**: wrapper rinominato da `START-DAFNE-PERSISTENT.ps1` → `START-SWARM-PERSISTENT.ps1` per separazione concettuale: Dafne è **entità** (persona, con strumento proprio `openclaw tui`), la swarm è **collettivo di agenti** (server Flask :5000 che Dafne coordina). Il wrapper riguarda la swarm, non Dafne come individua. Rename propagato in tutti i doc operativi; ADR preserva nome vecchio solo in citation storica di questo addendum.
+
 ## Context and Problem Statement
 
 Dafne swarm (`C:\Users\edusc\Dafne\workspace\swarm`) è un server Python/Flask avviato tramite `START-SWARM.ps1`. Il dogfood-ui (ADR-0017, panel `/dafne`) lo consuma via HTTP su `:5000` con `ping_timeout=2s`.
@@ -19,11 +21,11 @@ Dafne swarm (`C:\Users\edusc\Dafne\workspace\swarm`) è un server Python/Flask a
 
 Sessione auto-mode 2026-04-24: Dafne è stato rilanciato 2× in ~30 minuti (via `Start-Process -WindowStyle Minimized`). Entrambe le volte il processo è morto senza traceback visibile. Il panel `/dafne` del dogfood-ui mostrava `reachable: false`, causando loss of visibility su Dafne Atto 1 day-3.
 
-Workaround immediato creato: `START-DAFNE-PERSISTENT.ps1` con loop auto-restart + circuit breaker (max 20 restart/ora). Documento operativo in `docs/reference/dafne-persistence.md` con 3 opzioni.
+Workaround immediato creato: `START-SWARM-PERSISTENT.ps1` con loop auto-restart + circuit breaker (max 20 restart/ora). Documento operativo in `docs/reference/dafne-persistence.md` con 3 opzioni.
 
 ## Options
 
-### Opzione A — Wrapper PowerShell auto-restart `START-DAFNE-PERSISTENT.ps1` ✅ RACCOMANDATA
+### Opzione A — Wrapper PowerShell auto-restart `START-SWARM-PERSISTENT.ps1` ✅ RACCOMANDATA
 
 Uno script PS che wrappa `python app.py` in un `while ($true)` loop. Se il processo esce per qualsiasi ragione, ripartisce dopo 10 secondi. Circuit breaker conta i restart nell'ultima ora: se supera 20, si ferma e logga un warning (evita bootloop).
 
@@ -87,7 +89,7 @@ Spostare `evo-swarm` in un container con `restart: unless-stopped`. Integrerebbe
 
 ## Decision
 
-**Opzione A — wrapper `START-DAFNE-PERSISTENT.ps1`** per il periodo Fase 6 (fino a ~2026-05-20).
+**Opzione A — wrapper `START-SWARM-PERSISTENT.ps1`** per il periodo Fase 6 (fino a ~2026-05-20).
 
 **Rationale**: il problema è QoL, non blocco critico. Opzione A risolve il 90% del problema (crash recovery, log capture) con zero modifica di sistema. Dafne è Atto 1 day-3/10 — processo in rapid iteration — containerizzarlo (C) o task scheduler (B) prima che si stabilizzi aggiungerebbe overhead governance sproporzionato. Il wrapper è già scritto e testato.
 
@@ -98,9 +100,9 @@ Principi rispettati:
 
 ### Implementation plan
 
-- Step 1 — Verificare commit `START-DAFNE-PERSISTENT.ps1` in `evo-swarm` repo. Effort: 5 min.
+- Step 1 — Verificare commit `START-SWARM-PERSISTENT.ps1` in `evo-swarm` repo. Effort: 5 min.
 - Step 2 — Aggiornare `docs/reference/dafne-persistence.md` sezione "Decisione ADR-0019". Effort: 2 min.
-- Step 3 — Aggiornare `STATUS_MULTI_REPO.md` sezione Dafne con "avvio: `START-DAFNE-PERSISTENT.ps1`". Effort: 2 min.
+- Step 3 — Aggiornare `STATUS_MULTI_REPO.md` sezione Dafne con "avvio: `START-SWARM-PERSISTENT.ps1`". Effort: 2 min.
 - Step 4 (deferred, post-Fase 6) — Rivalutare Opzione B se Dafne stabilità operativa confermata.
 
 ## Consequences

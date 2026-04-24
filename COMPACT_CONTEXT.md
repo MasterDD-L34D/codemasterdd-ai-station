@@ -104,7 +104,7 @@ Dettaglio e next actions in `BACKLOG.md` (H1-H6) + `OPEN_DECISIONS.md` (OD-001 t
 - Framework archivio: `Archivio_Libreria_Operativa_Progetti/` (130 file multi-progetto)
 
 ## Prossimi 3 passi
-1. **Day-5 Dafne 2026-04-26** — brief esistente `DAY-5-BRIEF.md` nel swarm repo. Usa `START-DAFNE-PERSISTENT.ps1` (ADR-0019) per evitare process death mid-session.
+1. **Day-5 Dafne 2026-04-26** — brief esistente `DAY-5-BRIEF.md` nel swarm repo. Usa `START-SWARM-PERSISTENT.ps1` (ADR-0019) per evitare process death mid-session.
 2. **Review settimana 4 ~2026-05-17** — ratification ADR-0015 (soft-override n≥15 accettabile) + ADR-0017 formal Accepted + ADR-0016 awaiting data points. Preparare ADR-0015 closure document.
 3. **Opportunistic agent P2 validation + Game fixes** — game-systems-designer/game-design-validator/lore-consistency-checker (trigger: task Game reale); Game ROSSO findings da audit (boss enrage hardcore + XP L5→L6) da fixare in Game repo prossima sessione.
 
