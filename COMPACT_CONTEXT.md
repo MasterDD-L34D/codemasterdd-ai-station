@@ -6,15 +6,15 @@
 
 ## Progetto
 - **Nome**: CodeMasterDD AI Station
-- **Versione del compact**: v7 (post review settimana 2 anticipata)
-- **Data ultimo aggiornamento**: 2026-04-24 (review anticipata)
+- **Versione del compact**: v8 (post dogfood #12 auto-mode + H4 cost snapshot)
+- **Data ultimo aggiornamento**: 2026-04-24 (auto-mode session)
 
 ## Stato attuale
-- Barra globale **88%** invariata. Fase 6 al **55%** (11/20 dogfood + quality bench v1+v2 done).
-- HEAD `9af4b72`, origin/main aligned, working tree clean.
+- Barra globale **89%** (+1 dopo dogfood #12 e H4 chiuso). Fase 6 al **60%** (12/20 dogfood + quality bench v1+v2 done + H4 snapshot mid-sprint compilato).
+- HEAD `410db7f` (worktree branch), working tree clean. Pending push/merge to main.
 - **Commit sessione 2026-04-24 notte (11 totali)**: `9ab01e9` (governance drift) → `0fa0016` (fix #9 HEREDOC commit-guard) → `2254706` (compact v4) → `3156edf` (fix #10 command.includes false-positive) → `3231e2e` (polish #11 stderr) → `5539881` (compact v5) → `9bcc2a4` (**ADR-0016 draft** OD-006 formalized) → `4e67a21` (journal entry) → `8de3263` (CLAUDE.md pointer ADR-0016) → `b31ff86` (close H6 + routing refs) → `9af4b72` (backlog refresh). Tutti pushed.
 - **Commit sessione 2026-04-23 sera**: `4f5227c` (governance framework) → `e7a4ed0` (JOURNAL framework) → `f80ab3c` (retry logic quality-bench rescue) → `2dccec7` (apostrofo fix Aider auto) → `e687b42` (findings consolidation) → `5ef8e9c` (compact refresh). **6 commit**, pushed.
-- Fase 6 dataset attuale: 6 cosmetic full + 1 cosmetic partial + 3 behavior success + 1 behavior **REJECT**. Fail rate 9.1% (vs 30% threshold ADR-0014). Zero silent-corruption working-tree cumulative.
+- Fase 6 dataset attuale: 6 cosmetic full + 1 cosmetic partial + 3 behavior full + 1 behavior partial (#12 inherited bug) + 1 behavior **REJECT**. Fail rate strict 8.3% (vs 30% threshold ADR-0014). Zero silent-corruption working-tree cumulative.
 - Framework operativo `Archivio_Libreria_Operativa_Progetti/` integrato come governance layer.
 
 ## Obiettivo di questa fase
@@ -22,6 +22,13 @@
 - **Sprint 01 target**: dataset 8 → ≥12 dogfood (di cui ≥3 behavior-critical) + validare cp1252 + review settimana 2.
 
 ## Cosa è già stato fatto
+
+### Sessione 2026-04-24 auto-mode (dogfood #12 + H4 snapshot + cross-file fix)
+- **Dogfood #12 behavior-critical LOCAL**: retry logic parity su `scripts/bench-ollama.ps1` via `aider-refactor` (Qwen 14B Q2 diff). 9.0k/854 tok, $0 locale, 1st-try edit, PS parser PASS. Commit `dce8ee4`. **Partial success**: constraint letter-compliant 100%, semantic 75% (inherited bug da parity target bench-cloud.ps1).
+- **Finding meta ADR-0016**: "parity with X" instruction propaga bug latenti di X. Nuovo sub-pattern: **constraint specificity** (explicit > by-reference).
+- **Cross-file strategic rescue manual**: fix status-code-first pattern a `bench-cloud.ps1` + `bench-ollama.ps1` (aligned to `run-bench.ps1`). Test 404 → immediate fail confermato. Commit `410db7f`.
+- **H4 cost snapshot mid-sprint** (anticipato vs target fine-mese): sezione "Aggregati aprile 2026" compilata in `logs/aider-delegation-2026-04.md`. $0.0148 cloud (0.074% budget) / $0 locale / ccusage Claude Max $383.36 (usage-equivalent).
+- **Trigger ADR-0008 FULL-SOVEREIGN VIABLE confermato empirically mid-sprint**: scenario A (full-sovereign) default per ADR-0015.
 
 ### Sessione 2026-04-24 notte (governance drift + 3 dogfood + ADR-0016 + final consolidation)
 - **Audit governance drift post-sera**: 4 file allineati (PROJECT_BRIEF, ROADMAP, MODEL_ROUTING, MASTER_PROMPT). Commit `9ab01e9`.
@@ -73,9 +80,9 @@
 
 ## Problemi aperti
 
-- **P1** Dogfood behavior-critical n=4 (3 success + 1 REJECT). Target ≥5 — gap 1.
-- **P2** Fix cp1252 validation empirica ancora pending (8 dogfood senza trigger retry loop, #9/#10/#11 1st-try).
-- **P3** Privacy validation reale 1/3.
+- **P1** ~~Dogfood behavior-critical n=4. Target ≥5 — gap 1.~~ **CLOSED**: n=5 (3 full + 1 partial + 1 reject) post-#12, target ≥5 raggiunto.
+- **P2** Fix cp1252 validation empirica ancora pending (9 dogfood senza trigger retry loop, #9/#10/#11/#12 1st-try). Soglia pazienza n=15.
+- **P3** Privacy validation reale 1/3. **Blocker residuo principale** — richiede task reale Synesthesia.
 - **P6** Qwen 7B commit-prompt 0% compliance (ma auto-retry post-hook-block **funziona** empirically — nuovo dato positivo dogfood #8).
 - **P7** Cloud 70B degrada a 20% compliance su behavior-critical con ≥5 strict semantic constraint (dogfood #7). Implicazione: ridimensionamento shift cloud-first di ADR-0013.
 
@@ -90,9 +97,9 @@ Dettaglio e next actions in `BACKLOG.md` (H1-H6) + `OPEN_DECISIONS.md` (OD-001 t
 - Framework archivio: `Archivio_Libreria_Operativa_Progetti/` (130 file multi-progetto)
 
 ## Prossimi 3 passi
-1. **M5 Synesthesia privacy validation** — criterio 3 ADR-0014 ancora 1/3. **Priorità residua principale**: ≥2 sessioni reali Synesthesia con classificazione enforced (views/ cloud OK, controllers/ sovereign). Richiede task reale emergente dal lavoro web app.
-2. **H1 residuo** — +1 behavior-critical per chiudere target ≥5 (attuale 4). Candidato real emergente.
-3. **Pre-closure check settimana 4** (~2026-05-17) — count finale + preparazione ADR-0015 draft. Review settimana 2 già fatta anticipata 2026-04-24 (on-track).
+1. **M5 Synesthesia privacy validation** — criterio 3 ADR-0014 ancora 1/3. **Blocker residuo principale**: ≥2 sessioni reali Synesthesia con classificazione enforced. Non autonomously forceable.
+2. **Pre-closure check settimana 4** (~2026-05-17) — count finale + draft ADR-0015. Gap: 8 dogfood residui verso criterio 2 target n=20.
+3. **Opportunistic H2 cosmetic / H3 cp1252 monitoring** — dataset gap +3 cosmetic + trigger cp1252 ancora non attivato. Opportunistic-only.
 
 ## Next session restart: cosa leggere per ripartire
 

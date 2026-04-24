@@ -1065,3 +1065,39 @@ Sessione auto-mode con trust esplicito utente ("fai tutto da solo"). Obiettivi e
 - **H5 gate validated live 3 volte** su proposte reali Dafne: play-loop-validator (0.868), combat-metrics-analyst (0.832), gameplay-analytics-specialist (0.879 cascading). Gate autonomous.
 - **Swarm loop final validation run** 03:22-03:29: 3 cicli 100% OK (lore-designer, species-curator, balancer).
 - **Eduardo esce dal triage loop Dafne**: gate embedding auto-gestisce pattern riformulati, integration pipeline definita + applicata con successo.
+
+---
+
+## 2026-04-24 (auto-mode — dogfood #12 + H4 cost snapshot + retry-logic cross-file fix)
+
+### Completato
+
+**Contesto**: sessione auto-mode richiesta da Eduardo ("procedi con tutto quello che va fatto in autonomia finché non ti serve il mio intervento"). Focus: chiusura gap MUST residui Fase 6 (H1 behavior-critical +1 + H4 cost snapshot).
+
+**Macro-milestones**:
+- **Dogfood #12 LOCAL behavior-critical** (aider-refactor + Qwen 14B Q2 diff): retry logic parity su `scripts/bench-ollama.ps1`. Tokens 9.0k/854, $0 locale, 1st-try edit, PS parser PASS. Commit `dce8ee4`.
+- **Finding meta ADR-0016**: il 14B Q2 ha replicato fedelmente il discriminator `$isTransient = (...) -or ($typeName -in ...)` di `bench-cloud.ps1` → bug latente inherited (retry su 4xx). Classification: partial success letter-compliant / semantic-violation. Nuovo sub-pattern: **constraint specificity** (explicit > by-reference) come seconda dimensione sottesa a ADR-0016.
+- **Cross-file strategic rescue** (manual Claude Code): fix pattern status-code-first a entrambi `bench-cloud.ps1` + `bench-ollama.ps1`, aligned to `run-bench.ps1` correct implementation. Test empirico: 404 → immediate fail (no retry). Commit `410db7f`.
+- **H4 cost snapshot mid-sprint anticipato** (vs target fine-mese): sezione "Aggregati aprile 2026" popolata in `logs/aider-delegation-2026-04.md`. Cumulative cloud cost $0.0148 (0.074% di budget $20/mese). ccusage Claude Code $383.36 (Max subscription, non out-of-pocket). Savings stimati ~$1-2 in 3 giorni.
+- **Trigger ADR-0008 status indicato FULL-SOVEREIGN VIABLE** empiricamente: cosmetic 93% + behavior 70-80%, corruption 0, mix success 83%. Scenario A (full-sovereign) si conferma come default ADR-0015.
+
+### Metriche aggiornate
+
+- **Dataset Fase 6**: **12/20 dogfood** (60% progress, criterio 2 ADR-0014)
+- **Fail rate strict**: 8.3% (1/12 reject). Fail rate broad (partial+reject): 25%. Entrambi sotto 30% threshold ADR-0014 ✅
+- **Silent-corruption working-tree**: **0** (invariato) ✅
+- **Sprint 01**: **12/12 dogfood ✅ target raggiunto**, **5/3 behavior ✅ oltrepassato**
+- **Privacy validation Synesthesia**: invariato 1/3 (richiede task reale emergente — non autonomamente forzabile)
+
+### Da fare (tracked, not urgent)
+
+- **M5 Synesthesia privacy gap 2/3**: blocker residuo principale per chiusura ADR-0014 criterio 3. Richiede task reale su `C:\dev\synesthesia` toccando views/ o controllers/. Non autonomously forceable.
+- **Pre-closure check settimana 4 (~2026-05-17)**: count finale + draft ADR-0015.
+- **H3 cp1252 monitoring**: 9 dogfood consecutivi senza retry loop naturale (trigger non ancora attivato). Soglia n=15.
+- **ADR-0016 Accepted trigger**: gap residui constraint=4 explicit LOCAL + constraint=5 LOCAL (ancora solo cloud). Data points addizionali opportunistic.
+
+### Note
+
+- **Autonomia verificata**: 2 commit in sessione auto-mode (dogfood #12 + cross-file fix), zero user intervention richiesto fino a governance refresh.
+- **Pattern "parity instruction hazard"**: primo data point empirico di un rischio concettuale noto (LLM copia bug dal reference). Value: ora abbiamo evidenza per raccomandare costraint espliciti > reference-based nel delegation protocol.
+- **Dogfood #12 è anche self-referential**: il task era proprio refactor della retry logic, scoprendo che la retry logic di riferimento aveva un bug. Meta-compounding come #9/#10 (commit-guard fixes via commit-guard blocked work).
