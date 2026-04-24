@@ -98,19 +98,57 @@ _(completato il 2026-04-19 — vedi "Stack installato")_
 - Dipendenze specifiche progetti (da Evo-Tactics e Synesthesia)
 - Eventuali MCP server (filesystem, github) se emergono bisogni reali
 
-## Progetti target (migrazione settimana prossima)
-- **Evo-Tactics**: co-op tactical game d20, monorepo Node+Python
+## Progetti monitorati (status 2026-04-24)
+
+- **Evo-Tactics** — co-op tactical game d20, monorepo Node+Python
   - GitHub: `github.com/MasterDD-L34D/Game`
   - Path Lenovo: `C:\dev\Game`
   - Stack: Node 22 + Python 3.10, xstate@5, inkjs, Vue3 bundle
-  - Compat runtime: useremo Node 24 a livello di sistema; installeremo nvm-windows solo se emergono incompatibilità
-  - 710+ test
+  - Compat runtime: Node 24 system-level (validato n=710+ test)
+  - **Integration 2026-04-24**: repo target dello swarm Dafne (vedi sotto). Branch `swarm/register-agents-2026-04-24` contiene 2 agent registrati (gameplay-prototyper, combat-engineer) + runtime state sync. PR pending su GitHub UI.
+  - **File chiave toccati da swarm**: `agents/agents_index.json` (registry 11 agent), `agents/*.md` + `.ai/*/PROFILE.md` (definizioni), `docs/flint-status.json` (monitor telemetria), `data/flow-shell/atlas-snapshot.json`
 
-- **Synesthesia**: web app esame UniUPO
+- **Synesthesia** — web app esame UniUPO
   - GitHub: `github.com/MasterDD-L34D/synesthesia`
   - Path Lenovo: `C:\dev\synesthesia`
   - Stack: Node 20 ESM, Express, EJS, SQLite, Passport
   - Status: MVP funzionante
+  - Privacy policy per-repo: `controllers/`/`routes/`/`middlewares/` sovereign-only; `views/`/`public/` cloud OK
+
+- **Dafne swarm (evo-swarm)** — orchestratore AI agentic per Evo-Tactics, multi-agent sistema custom
+  - GitHub: `github.com/MasterDD-L34D/evo-swarm`
+  - Path Lenovo: `C:\Users\edusc\Dafne\workspace\swarm` (repo git separato, NOT in `C:\dev\`)
+  - Home Dafne: `C:\Users\edusc\Dafne\` (start-dafne.cmd + agent/ config + desktop shortcut)
+  - Stack: Python 3.12 + Flask + Ollama (qwen3:8b governance + nomic-embed-text per H5 gate)
+  - Status 2026-04-24 notte: Atto 1 day-3/10. Server Flask UP idle su `:5000` per day-5 (26/04). 20 commit pushati. 11 agent runtime. Pilastro 2 evoluzione 🔴→🟡 (6 lezioni empirical).
+  - **Scopo**: coordinatrice + memory keeper che governa specialist (lore-designer, trait-curator, balancer, ecc.) per produrre content integrabile in repo `Game`.
+  - **Integration col Game repo**: scrive su `C:\dev\Game\agents/` quando Eduardo approva nuovi agent via `POST /api/dafne/approve-agent`. H5 gate autonomous blocca pattern loop.
+  - **Governance framework-archivio adottato**: 5 file root-level (PROJECT_BRIEF, DECISIONS_LOG, BACKLOG, OPEN_DECISIONS, MODEL_ROUTING) + mapping selettivo. Decisione 006 in DECISIONS_LOG swarm.
+  - **Open items**: OD-003 Groq key 403, OD-004 dashboard usage, OD-005 Tavily (tutti non bloccanti). BACKLOG L7 CAMEL integration deferred a Atto 2.
+  - **Avvio**: `cd C:\Users\edusc\Dafne\workspace\swarm && .\START-SWARM.ps1` → dashboard `http://localhost:5000`
+  - **Dettaglio completo**: memoria `reference_dafne_swarm.md` + `CAMEL-INTEGRATION.md` nel repo swarm
+
+### Relazioni inter-repo
+
+```
+codemasterdd-ai-station (policy + infrastruttura)
+       │
+       ├─── Evo-Tactics (C:\dev\Game)
+       │         ↑
+       │         │ swarm produce → integra manualmente
+       │         │
+       └─── Dafne swarm (C:\Users\edusc\Dafne\workspace\swarm)
+                 ↑
+                 │ governance + pilastri + metriche empirical
+```
+
+### Monitoring cross-repo (sessione 2026-04-24)
+
+Nessuno dei 3 repo ha CI integration. Monitoring manuale:
+- Review settimana 2 Fase 6 (codemasterdd): fatto 2026-04-24 anticipata, on-track
+- Validation run swarm (6 cicli): 100% success rate, pattern Dafne gated
+- Game repo: branch swarm/register-agents-2026-04-24 pending PR
+- Evo-Tactics status own: `d319404e` M11 Phase B→TKT-05 close (pre-swarm integration)
 
 ## Lingua
 - Comunicazione con utente: italiano
