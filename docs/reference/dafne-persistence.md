@@ -113,3 +113,55 @@ Se dogfood-ui up, panel `/dafne` mostra live data anche post-system-idle.
 - `STATUS_MULTI_REPO.md` — tracking operativo Dafne state
 - `apps/dogfood-ui/dafne_client.py` — client con ping_timeout=2s, timeout=5s
 - Microsoft docs: [Register-ScheduledTask](https://learn.microsoft.com/en-us/powershell/module/scheduledtasks/register-scheduledtask)
+
+---
+
+## Day-5 pre-flight checklist (2026-04-26)
+
+> Da eseguire 10-15 min prima di avviare la sessione day-5 famiglia Solver/Scout/Builder + Dafne orchestration.
+
+1. **Avvia Dafne persistente** in una PowerShell dedicata (lasciare aperta 2h):
+   ```powershell
+   cd C:\Users\edusc\Dafne\workspace\swarm
+   .\START-DAFNE-PERSISTENT.ps1
+   ```
+   Attendere il banner `Dafne Persistent Wrapper` + log "Avvio Dafne (attempt #1)".
+
+2. **Verifica health** in un'altra shell:
+   ```bash
+   curl -s -o /dev/null -w "HTTP %{http_code}\n" http://localhost:5000/api/status
+   # Atteso: HTTP 200
+   curl -s http://localhost:5000/api/status | python -c "import sys, json; d=json.load(sys.stdin); print('ollama:', d.get('ollama',{}).get('status','?'), '| game:', d.get('game_repo',{}).get('accessible','?'))"
+   # Atteso: ollama: online | game: True
+   ```
+
+3. **Apri dashboard** (opzionale, utile per synthesis):
+   ```bash
+   # dogfood-ui deve essere UP (porta 8080)
+   start http://localhost:8080/dafne
+   ```
+
+4. **Review brief + artifacts** prima di iniziare:
+   - `C:/Users/edusc/Dafne/workspace/swarm/DAY-5-BRIEF.md` (brief)
+   - `camel-agents/dafne-proposals.json` (proposte da triageare)
+   - `camel-agents/artifacts/cycle-log.md` (~417 righe, input per Solver)
+
+5. **Pre-session snapshot** (opzionale ma utile per review post-session):
+   ```powershell
+   cd C:\Users\edusc\Dafne\workspace\swarm
+   git log -1 --format="%h %s"   # HEAD attuale
+   git status --short             # working tree diff
+   ```
+
+### Criteri go/no-go
+
+- ✅ `HTTP 200` su `:5000/api/status` + `ollama: online` + `game: True` → **go**
+- ⚠️ `:5000` down ma wrapper running → attendi 20s, ricontrolla; se persiste, `Ctrl+C` + restart wrapper
+- 🔴 `ollama: offline` → verifica `Get-Service ollama` o `ollama list`; non iniziare day-5 fino risoluzione
+
+### Fallback se Dafne non tiene 2h continue
+
+Se durante la sessione il wrapper restart rate > 3 in 30min:
+- salva output corrente agenti manualmente (copy-paste da cycle-log.md)
+- considera Opzione 2 (Task Scheduler) per next session
+- documenta pattern fail in `STATUS_MULTI_REPO.md` → sezione Dafne open items

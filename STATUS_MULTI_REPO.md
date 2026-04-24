@@ -6,7 +6,7 @@
 >
 > Riferimenti deep: CLAUDE.md sezione "Progetti monitorati" (descrittivo), memory `project_multi_repo_overview.md` (architetturale), questo file (operativo).
 
-**Ultimo refresh**: 2026-04-24 auto-mode post-ADR-0015
+**Ultimo refresh**: 2026-04-25 auto-mode (post stack live validation U1/U2/U4 + Day-5 prep)
 
 ---
 
@@ -19,16 +19,16 @@
 | **Game (Evo-Tactics)** | Q-001 review active, HEAD `aa82d67f`, working tree DIRTY (biome-gameplay-integrator untracked + agents_index modified) | Commit swarm day-3 artifacts + Q-001 follow-up | No fixed | Pending commit working tree |
 | **Dafne swarm (evo-swarm)** | Atto 1 day-3/10, server Flask :5000 **DOWN** (persistence issue, ADR-0019 Proposed), HEAD `fb6f5c4` + dirty (456 righe non committate) | Avvia via `START-DAFNE-PERSISTENT.ps1` prima day-5 + commit cycle-log | **2026-04-26** | Persistence issue tracked in ADR-0019 |
 
-### Stack ADR-0017 runtime (aggiornato 2026-04-24, scoperta da repo-health-auditor)
+### Stack ADR-0017 runtime (aggiornato 2026-04-25, validation endpoint-level)
 
 | Componente | Port | Status runtime | Note |
 |------------|-----:|:--------------:|------|
-| LiteLLM Proxy | 4000 | ✅ UP | Container `codemasterdd-litellm` 27+min uptime |
-| Langfuse | 3000 | ✅ UP | 7 trace + 7 observations in Postgres |
+| LiteLLM Proxy | 4000 | ✅ UP | Container `codemasterdd-litellm` 6h+ uptime, `/health/readiness` 200, DB connected, success_callback `langfuse` attivo + 8 hook, v1.82.6 |
+| Langfuse | 3000 | ✅ UP | Container `codemasterdd-langfuse-web`, `/api/public/health` 200, v2.95.11, 7 trace + 7 observations persistiti Postgres |
 | Postgres | 5432 | ✅ healthy | Container `codemasterdd-postgres` |
-| dogfood-ui Flask | 8080 | ✅ UP | v0.2.0, Dafne unreachable visible nell'UI |
-| promptfoo CLI | — | ✅ installed v0.121.7 | Eval smoke test 4/4 PASS |
-| Dafne swarm | 5000 | 🔴 DOWN | Process persistence issue — workaround wrapper disponibile |
+| dogfood-ui Flask | 8080 | ✅ UP | v0.2.0, `/api/health` ok, 11 route (UI + API + Dafne proxy). ⚠️ Launched da worktree `mystifying-keller-84cb03` — DB path hardcoded a quel worktree (side-effect noto, U6 orientato main) |
+| promptfoo CLI | — | ✅ installed v0.121.7 | Eval run pending virtual key setup via LiteLLM admin UI (~15min manual) |
+| Dafne swarm | 5000 | 🔴 DOWN | Process persistence issue — avviare via `START-DAFNE-PERSISTENT.ps1` prima Day-5 (2026-04-26) |
 
 ---
 
@@ -175,7 +175,7 @@ Governance del Game vive **nel Game repo stesso** (`docs/governance/`). codemast
   - HEAD Dafne: `fb6f5c4` (fix no-cache headers dashboard)
 - **Monitoring integrato**: `apps/dogfood-ui` ha panel `/dafne` che proxy verso `:5000` + endpoint `/api/dafne/snapshot` JSON aggregato. Avvia con `python apps/dogfood-ui/app.py`, apri `http://localhost:8080/dafne`.
 - **⚠️ Process persistence issue** (tracked 2026-04-24): Dafne server muore dopo ~10-30min senza causa evidente quando launched via `Start-Process -Minimized`. Workaround: usa `START-DAFNE-PERSISTENT.ps1` (auto-restart + log rotation, vedi `docs/reference/dafne-persistence.md`). Per always-on, Task Scheduler opzione 2.
-- **Prossimo milestone**: **DAY-5 2026-04-26** — primo task famiglia coordinatori (Solver/Scout/Builder) + Dafne orchestra. Brief già scritto in `DAY-5-BRIEF.md`. Durata stimata 2h.
+- **Prossimo milestone**: **DAY-5 2026-04-26** — primo task famiglia coordinatori (Solver/Scout/Builder) + Dafne orchestra. Brief già scritto in `DAY-5-BRIEF.md`. Durata stimata 2h. **Pre-flight checklist**: [docs/reference/dafne-persistence.md#day-5-pre-flight-checklist-2026-04-26](docs/reference/dafne-persistence.md#day-5-pre-flight-checklist-2026-04-26).
 - **Scope DAY-5**:
   - Consolidare decisione "drift manifest vs reality" da opzione C provvisoria a canonica
   - Test pattern handoff CO-01 (SWARM-CONTROLS v1.0)

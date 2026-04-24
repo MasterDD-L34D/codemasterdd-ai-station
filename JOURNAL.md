@@ -1271,3 +1271,36 @@ Eduardo ha delegato carta bianca multiple volte durante sessione. Risultato:
 - Zero shared-state modification senza trigger esplicito (Docker up/down solo quando richiesto)
 - Self-review via harsh-reviewer agent prima di marking complete
 - Output production-grade validated (file:linea references verificabili, zero invention)
+
+---
+
+## 2026-04-25 (auto-mode short — U1/U2/U4 validation formale + Day-5 pre-flight checklist)
+
+Sessione breve auto-mode post riapertura "[placeholder vuoto] → fai tutto quello che vuoi". Focus: chiudere gap validation stack ADR-0017 + preparare Day-5 Dafne (dopodomani).
+
+### Completato
+
+- **Stack health verify end-to-end** (docker + host endpoints):
+  - `docker compose ps`: 3/3 container UP da 6h+ (postgres healthy, langfuse-web, litellm)
+  - LiteLLM `/health/readiness` 200 → DB connected, `success_callback: ["langfuse", ...]` 9 hook attivi, v1.82.6
+  - Langfuse `/api/public/health` 200, v2.95.11, 7 trace + 7 observations persistiti
+  - dogfood-ui `:8080/api/health` 200, v0.2.0, 11 route registered, litellm+langfuse reachable
+  - Dafne `:5000` DOWN atteso (tracked OD + ADR-0019 wrapper pronto)
+- **U1/U2/U4 test → DONE** in `BACKLOG.md` con dettaglio endpoint + gap residui (virtual key admin UI + project Langfuse UI sono gesti manuali ~15min ciascuno, non bloccanti)
+- **U3 test → gate documentato**: promptfoo v0.121.7 installed + config valid, eval run richiede virtual key LiteLLM (da admin UI). Pending manual.
+- **Finding side-effect DB per-worktree**: dogfood-ui Flask host process lanciato da worktree `mystifying-keller-84cb03` → DB path hardcoded a quello. Documentato in BACKLOG U4-test + U6 caveat.
+- **Day-5 Dafne pre-flight checklist**: aggiunta sezione dedicata a [docs/reference/dafne-persistence.md:117-159](docs/reference/dafne-persistence.md) con 5-step preflight (avvio wrapper, health check, dashboard opzionale, review brief/artifacts, pre-session snapshot) + criteri go/no-go + fallback se wrapper non tiene 2h.
+- **STATUS_MULTI_REPO refresh**: runtime table stack aggiornata con details health endpoint + version container + finding worktree-DB-path. Pointer pre-flight checklist aggiunto riga Dafne.
+
+### Da fare (pointers invariati da sessione precedente)
+
+- Eduardo → avvia Dafne via wrapper prima Day-5 2026-04-26 (checklist pronta)
+- Eduardo → crea virtual key LiteLLM admin UI + project Langfuse per chiudere U3/U5
+- Mid-sprint cost snapshot ~2026-04-30 (cost-monitor agent)
+- Review settimana 4 ~2026-05-17 (ADR-0015/0016/0017 ratification)
+
+### Note operative
+
+- **Nessun dogfood #13 eseguito**: ricerca candidato cosmetic nel repo non ha prodotto batch naturale (file recenti già ben documentati). Skippato come da principio "opportunistic batch ≥5 o nessuno" — forzare un dogfood artificial contraddirebbe il criterio.
+- **Nessuna modifica stack/Dafne/Game**: validation read-only + doc updates locali al repo codemasterdd. Working tree pulito post-commit.
+- **Tempo totale sessione**: ~15 min lavoro effettivo (lean focus, no bloat).
