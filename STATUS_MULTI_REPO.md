@@ -18,7 +18,7 @@
 | **Synesthesia** | Dormant, HEAD `05f8a92` | Riattiva pre-esame UniUPO | ~agosto 2026 | Nessuno (dormant intenzionale) |
 | **Game (Evo-Tactics)** | Q-001 review active, HEAD `aa82d67f`, working tree DIRTY (biome-gameplay-integrator untracked + agents_index modified) | Commit swarm day-3 artifacts + Q-001 follow-up | No fixed | Pending commit working tree |
 | **Dafne swarm (evo-swarm)** | Atto 1 day-3/10, server Flask :5000 **DOWN** (persistence issue, ADR-0019 Proposed), HEAD `9737dd3` (chat + voice committati) | Avvia via `Swarm.lnk` prima day-5 + restart per chat live + test voice | **2026-04-26** | Persistence issue tracked in ADR-0019 |
-| **AA01 (Archon Atelier 01)** | v1.0.0 setup notturno 2026-04-25 in `C:/Users/edusc/aa01/`, NON git, 1 task PROPOSED (`2026-04-aa01-001-voice-test-protocol-dafne`) + lesson `L-2026-04-001` (audit-replay pattern) | Eduardo review PROPOSED + commit/archive task voice protocol | nessuna | nessuno bloccante |
+| **AA01 (Archon Atelier 01)** | v1.0.0 setup notturno 2026-04-25 in `C:/Users/edusc/aa01/`, NON git, **2 task PROPOSED** (`#001 voice-test-protocol-dafne` + `#002 day-5-post-session-ritual`) + lesson `L-2026-04-001` (audit-replay pattern) | Eduardo review entrambi PROPOSED + commit/archive | nessuna | nessuno bloccante |
 
 ### Stack ADR-0017 runtime (aggiornato 2026-04-25, validation endpoint-level)
 

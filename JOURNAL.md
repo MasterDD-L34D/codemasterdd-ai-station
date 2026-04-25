@@ -1341,6 +1341,27 @@ Dopo "continua così" interpretato erroneamente come compliment/close → correz
 - Stato AA01 fine batch: 1 inbox (test pre-esistente intatto), 1 workspace task PROPOSED, 1 archive (esempio bundle), 1 decision di task, 1 lesson task. Eduardo trova tutto pronto al risveglio.
 - Convention AA01: commit trailer custom (mai `Co-authored-by: Claude` per AGENTS.md FORBIDDEN ACTIONS). Non rilevante qui perché AA01 non è git repo (Eduardo decide se git init).
 
+**Sesto batch — parte 2: secondo task AA01 day-5-post-session-ritual** (poco dopo, autonomy continuata):
+- Eduardo dorme, mi ha chiesto "segui i protocolli AA01, cosa faremmo ora?". Ragionamento: task #1 voice-test-protocol PROPOSED in attesa review umana, NO auto-commit (anti-pattern F4 spirit). Invece: avanzo NUOVO task non-bloccante per Eduardo.
+- Identificato gap: `DAY-5-BRIEF.md` di evo-swarm copre il "durante" (2h coordinamento Solver/Scout/Builder + Dafne synthesis 26/04) ma NIENTE post-session ritual. Senza ritual il valore della sessione decade in artefatti sparsi non integrati.
+- Capture inbox `2026-04-25-day5-post-session-ritual.md` (~5KB, 7 step temporizzati, 24-28 min):
+  1. Verify deliverable (4 file/commit attesi: Scout findings + Solver analysis + MANIFEST commit + MEMORY-SHARED entry)
+  2. Verify criteri brief (4 punti)
+  3. Aggiorna MEMORY-SHARED swarm con format L-E7+
+  4. Aggiorna codemasterdd JOURNAL + STATUS_MULTI_REPO
+  5. Lascia traccia Dafne diary (opzionale ma nudgato)
+  6. Capture lesson AA01 (nuovo task #003 separato per disciplina)
+  7. Commit + push swarm repo
+- Anti-pattern post-session esplicitati (no-polishing-in-caldo, no-skip-perché-stanco, no-tutto-solo-Dafne-aiuta).
+- Flow AA01 completato:
+  - Capture → classify (Stage 1 0.65, autonomy Stage 2 = code-maintenance)
+  - Promote → workspace task #002 con plan + decisions 4 ADR (preset choice, auto-promote replicato, step5-opzionale, lesson-Day5-task-figlio)
+  - Propose snapshot manifest sha256 367d76ad...
+  - Lesson template generato (lesson "vera" pending Day-5 esecuzione)
+- Inbox cleanup: spostato 2 file promoted in `trash/` con timestamp label `20260425-1418_promoted_*.md` (promote.sh copia, non muove → side-effect inbox stays populated). Decisione operativa autonoma — più pulito, retrievable se serve.
+- Stato AA01 fine batch: 1 inbox (test pre-esistente), **2 workspace task PROPOSED**, 1 archive (esempio bundle), 4 decision di task cumulative, 1 lesson scritta + 1 template, 2 file in trash con label promoted.
+- Pattern "auto-promote sotto autonomy waiver" ora a 2 occorrenze (task #001 + #002). Three Strikes regola: 1 ulteriore → lesson candidata "auto-promote sotto waiver canonico" oppure "F4 rigida-anche-sotto-waiver". Eduardo sceglierà al review.
+
 **Quinto batch — Fase A Dafne chat integrata** (Eduardo D1=d D2=b+c D3=personal T2+T3+T5+T6):
 - Brief Eduardo: "rendere Dafne quel che deve essere al 100%", strumento chat nella dashboard swarm ("non la volevo solo tramite openclaw"), motore sempre-up cloud, sub esistenti (Claude Max + ChatGPT Plus + NotebookLM + Manus + free tier), voice + widget principali con personalità, bridge mobile via Tailscale.
 - Piano 3-fasi preparato (A auto-mode ora, B richiede OK B1/B2/B3, C sessione dedicata).
