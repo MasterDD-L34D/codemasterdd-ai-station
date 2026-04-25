@@ -225,7 +225,7 @@ codemasterdd-ai-station/
   - Per task behavior-critical considerare `--no-auto-commits`
   - Guard rail chain (`git config --global core.hooksPath C:/Users/edusc/.local/share/git-hooks`):
     1. `commit-msg` globale — valida Conventional Commits cross-agent (tutti gli agent inclusi Aider). ADR-0011.
-    2. `pre-commit` globale — blocca silent-corruption pattern (ADR-0008).
+    2. `pre-commit` globale — blocca silent-corruption pattern (ADR-0008) **+ silent-fail Python patterns** (bare `except:`, silent except+pass; ADR-0020). Bypass marker: `# silent-ok` o `# noqa: silent-fail`.
     3. Husky repo-local (solo Evo-Tactics) — skip-worktree wrapper.
     4. Claude Code PreToolUse `scripts/hooks/commit-guard.js` — fail-fast in sessione Claude Code (duplicato di 1 per feedback veloce).
   - Bypass guard rail con `git commit --no-verify`, non raccomandato
