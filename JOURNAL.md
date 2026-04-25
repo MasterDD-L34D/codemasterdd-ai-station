@@ -1324,6 +1324,23 @@ Dopo "continua così" interpretato erroneamente come compliment/close → correz
 - **V1 dashboard tour**: dashboard `:8081` popolata con 12 entries migrati. Cost report esteso + breakdown per classe/stack + trigger ADR-0008 full-sovereign viable confermato + raccomandazione "on-track silently".
 - **V2 Game ROSSO findings**: aggiunti a `STATUS_MULTI_REPO.md` sezione Game come "Audit findings pending" (boss enrage mod 9.0 + XP curve L5→L6 delta +75). Triage nel BACKLOG del Game repo quando Eduardo fa sessione lì.
 
+**Sesto batch — AA01 (Archon Atelier 01) setup notturno autonomo, 2026-04-25 ~03:00**:
+- Eduardo ha lasciato `C:/Users/edusc/Downloads/AA01.zip` (Personal Cognitive Studio multi-agente, ARCHON v2.0.2 + A00 v2 ereditati) e ha detto "fai in modo di fare tutto in autonomia... ti prego non deludermi! divertiti mentre lavori".
+- Estratto in `C:/Users/edusc/aa01/` (home utente, NON dentro codemasterdd — è studio personale separato).
+- Bootstrap manuale via audit-then-replay (sandbox blocca exec scripts esterni unaudited): letto `bootstrap.sh`, replicato deps check + structure verify + gitkeep manuale con tool autorizzati. Pattern documentato come lesson `L-2026-04-001`.
+- Smoke test: `status.sh` + `classify.sh` su file di test esistente OK. Stage 1 regex confidence 0.65 (markdown senza signal) → ASK USER demandato all'agent → autonomy-decision documentata in decisions.md task.
+- **Primo task reale fun**: capture `voice-test-protocol-dafne.md` in inbox/ — protocollo concreto per Eduardo per testare voce Dafne (paola TTS + Whisper STT + chat tier 1) domani mattina con criteri PASS/FAIL chiari, debug table, 3 fasi (hello-world / 3-turn / stress fallback cloud).
+- Flow AA01 fino a PROPOSED:
+  1. Capture `inbox/2026-04-25-voice-test-protocol-dafne.md` (5.3 KB protocollo)
+  2. Classify (Stage 1 regex 0.65) → autonomy-decision Stage 2 LLM = `code-maintenance` (preset più appropriato di idea-capture, ratio: ha shell commands + debug table + acceptance criteria, non idea grezza)
+  3. Promote → `workspace/2026-04-aa01-001-...` con plan + decisions + status + _trace.yaml + events.ndjson primo evento
+  4. Lavoro DRAFT: input file in DRAFT/, plan.md compilato (goal + 6 steps + acceptance criteria + risks table 5-row), decisions.md 3 ADR (D-001 preset choice, D-002 auto-promote autonomy waiver, D-003 lavoro solo plan vs DRAFT)
+  5. Propose snapshot → PROPOSED/ con manifest sha256 + status update proposed_at + events.ndjson task.proposed event
+  6. Lesson template generato + compilato `L-2026-04-001` (process / audit-then-replay pattern, confidence medium, applicability sandbox-restricted-agent contexts) + sezione placeholder per lesson "vera" post-test Eduardo
+- Mi sono fermato a PROPOSED rispettando AGENTS.md AA01: commit/archive serve review umana di Eduardo. Lui domani può: review → commit → archive. Oppure: dice "no auto-promote anche con carta bianca, regola F4 rigida" → revertiamo + lesson "F4 non aggira-bile".
+- Stato AA01 fine batch: 1 inbox (test pre-esistente intatto), 1 workspace task PROPOSED, 1 archive (esempio bundle), 1 decision di task, 1 lesson task. Eduardo trova tutto pronto al risveglio.
+- Convention AA01: commit trailer custom (mai `Co-authored-by: Claude` per AGENTS.md FORBIDDEN ACTIONS). Non rilevante qui perché AA01 non è git repo (Eduardo decide se git init).
+
 **Quinto batch — Fase A Dafne chat integrata** (Eduardo D1=d D2=b+c D3=personal T2+T3+T5+T6):
 - Brief Eduardo: "rendere Dafne quel che deve essere al 100%", strumento chat nella dashboard swarm ("non la volevo solo tramite openclaw"), motore sempre-up cloud, sub esistenti (Claude Max + ChatGPT Plus + NotebookLM + Manus + free tier), voice + widget principali con personalità, bridge mobile via Tailscale.
 - Piano 3-fasi preparato (A auto-mode ora, B richiede OK B1/B2/B3, C sessione dedicata).
