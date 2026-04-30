@@ -106,6 +106,23 @@ Status: done in this branch (`docs/recovery/encoding-policy.md`).
 Status: done in this branch (`docs/recovery/original-system-intent.md` and
 `docs/recovery/reconnect-from-main.md`).
 
+### S2-09 - Instruction surface cleanup
+
+- Create clean tracked `AGENTS.md` for Codex.
+- Add instruction-file policy for `AGENTS.md`, `CLAUDE.md`, and
+  `MASTER_PROMPT.md`.
+- Rebuild `MODEL_ROUTING.md` as recovery-safe routing policy.
+
+Status: done in this branch.
+
+### S2-10 - Merge readiness package
+
+- Add pre-merge checklist.
+- Add PR description draft.
+- Make the branch easier to review from the correct PC.
+
+Status: done in this branch.
+
 ## Out of scope
 
 - Fixing or triaging Game.

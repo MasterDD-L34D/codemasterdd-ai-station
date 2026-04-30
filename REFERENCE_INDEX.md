@@ -13,6 +13,9 @@ Current reference index after structural recovery started.
 | REC-05 | `COMPACT_CONTEXT.md` | Short current snapshot. |
 | REC-06 | `docs/recovery/original-system-intent.md` | Reconstruction of original OpenCode/Ollama/Aider/system intent. |
 | REC-07 | `docs/recovery/reconnect-from-main.md` | How to review and reconnect this branch from the correct PC. |
+| REC-08 | `docs/recovery/instruction-files-policy.md` | Contract for AGENTS/CLAUDE/MASTER_PROMPT roles. |
+| REC-09 | `docs/recovery/pre-merge-checklist.md` | Checklist before merging the recovery branch. |
+| REC-10 | `docs/recovery/pr-description-structural-reset.md` | Draft PR description for GitHub review. |
 
 ## Active governance references
 
@@ -24,6 +27,9 @@ Current reference index after structural recovery started.
 | GOV-04 | `OPEN_DECISIONS.md` | Decisions still open during recovery. |
 | GOV-05 | `ROADMAP.md` | Recovery roadmap. |
 | GOV-06 | `MASTER_PROMPT.md` | Portable prompt with current recovery context. |
+| GOV-07 | `AGENTS.md` | Codex entry point. |
+| GOV-08 | `CLAUDE.md` | Claude/OpenCode-compatible entry point. |
+| GOV-09 | `MODEL_ROUTING.md` | Recovery-safe routing policy. |
 
 ## Historical but retained
 

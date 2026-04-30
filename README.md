@@ -13,6 +13,8 @@ Fonte di recupero corrente:
 - `docs/recovery/2026-04-30-transplant-audit.md`
 - `docs/recovery/original-system-intent.md`
 - `docs/recovery/reconnect-from-main.md`
+- `docs/recovery/pre-merge-checklist.md`
+- `docs/recovery/pr-description-structural-reset.md`
 - `SPRINT_02.md`
 - `EXTERNAL_REPOS.md`
 
@@ -53,6 +55,12 @@ Leggere in questo ordine:
 5. `SPRINT_02.md`
 6. `DECISIONS_LOG.md`
 7. `EXTERNAL_REPOS.md`
+
+Agent/client entry points:
+
+- `AGENTS.md` for Codex.
+- `CLAUDE.md` for Claude/OpenCode-compatible clients.
+- `MASTER_PROMPT.md` for browser or non-repo contexts.
 
 `JOURNAL.md` e `docs/sessions/` sono storia. Utili per audit, non per decidere
 lo stato operativo corrente senza verifica.

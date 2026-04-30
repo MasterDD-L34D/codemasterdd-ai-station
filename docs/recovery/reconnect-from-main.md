@@ -37,6 +37,12 @@ git diff main..origin/codex/structural-reset -- DECISIONS_LOG.md OPEN_DECISIONS.
 git diff main..origin/codex/structural-reset -- docs/recovery EXTERNAL_REPOS.md SPRINT_02.md
 ```
 
+Also read:
+
+- `docs/recovery/pre-merge-checklist.md`
+- `docs/recovery/pr-description-structural-reset.md`
+- `docs/recovery/instruction-files-policy.md`
+
 ## Before merging
 
 Verify local reality on the correct PC:
