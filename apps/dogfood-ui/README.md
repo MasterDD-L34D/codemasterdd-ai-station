@@ -1,203 +1,45 @@
-# dogfood-ui — Flask mini-app per tracking Fase 6 (ADR-0017)
+# dogfood-ui
 
-Dashboard web per classificare dogfood delegations, visualizzare stats aggregate, correlare con promptfoo bench.
+Recovery status: scaffold/dormant.
 
-## Architettura
+The source code is present, but runtime state is absent in this transplanted
+checkout.
 
-```
-apps/dogfood-ui/
-├── app.py                  # Flask main (~180 LOC, routes + API)
-├── db.py                   # SQLite schema + CRUD (~80 LOC)
-├── langfuse_client.py      # Langfuse REST API client (~50 LOC)
-├── stats.py                # Aggregation helpers + promptfoo parser (~130 LOC)
-├── requirements.txt
-├── templates/
-│   ├── base.html           # Layout + nav + flashes
-│   ├── index.html          # Dashboard (KPI + breakdown)
-│   ├── _entries_table.html # Partial shared
-│   ├── entries.html        # List completa
-│   ├── new_entry.html      # Form
-│   ├── stats.html          # Raw stats JSON
-│   └── bench.html          # Promptfoo viewer light
-├── static/
-│   ├── style.css           # Dark theme minimal
-│   └── app.js              # Fetch helpers
-├── data/                   # SQLite + runtime state (gitignored)
-└── README.md
-```
+Missing current runtime evidence:
 
-**No framework frontend**: Jinja2 server-side + vanilla JS (pattern copiato da Dafne `dashboard.html`). Zero React/Vue obbligatori.
+- `apps/dogfood-ui/data/dogfood.sqlite`
+- old migrated dogfood entries
+- verified LiteLLM endpoint
+- verified Langfuse endpoint
+- verified Dafne endpoint
 
-## Setup
+## Current rule
 
-```bash
-cd apps/dogfood-ui
-python -m venv .venv
-.venv\Scripts\activate   # Windows
-# OR: source .venv/bin/activate  # Unix
-pip install -r requirements.txt
-```
+Treat this app as code scaffold until local runtime evidence is restored.
 
-## Avvio
+The Dafne panel depends on `http://localhost:5000`, which is not available
+unless the external Dafne workspace is reactivated through `../../EXTERNAL_REPOS.md`.
 
-```bash
-# Dev mode (auto-reload + debug)
-FLASK_DEBUG=1 python app.py
+## What remains useful
 
-# Production mode (no reload)
-python app.py
-```
+- Flask app structure.
+- SQLite schema code in `db.py`.
+- Stats helpers in `stats.py`.
+- Templates and static assets as UI reference.
 
-Default porta: 8080. Cambia con `PORT=9090 python app.py`.
+## What is not currently guaranteed
 
-## Routes
+- Any old dogfood count.
+- Any old cost aggregate.
+- Any old promptfoo correlation.
+- Any old Langfuse trace.
+- Any old Dafne live status.
 
-| Path | Method | Descrizione |
-|------|--------|-------------|
-| `/` | GET | Dashboard (KPI + breakdown + ultime 50 entries) |
-| `/entries` | GET | Lista completa entries |
-| `/entries/new` | GET/POST | Form nuova entry |
-| `/entries/<id>/delete` | POST | Rimuovi entry |
-| `/stats` | GET | Stats raw JSON (debug) |
-| `/bench` | GET | Promptfoo latest bench results |
-| `/dafne` | GET | Dafne swarm live status (proxy :5000, agents + cycles + intervention + drift) |
-| `/api/entries` | GET/POST | REST — list/create entries |
-| `/api/stats` | GET | REST — stats aggregate |
-| `/api/health` | GET | Health check (DB + Langfuse + LiteLLM + Dafne) |
-| `/api/dafne/snapshot` | GET | JSON aggregato Dafne (status + swarm + stats + dafne status + proposals) |
+## Reactivation checklist
 
-## Env vars
-
-| Var | Default | Scopo |
-|-----|---------|-------|
-| `PORT` | 8080 | Porta HTTP |
-| `FLASK_DEBUG` | (unset) | Mode debug + auto-reload |
-| `FLASK_SECRET` | dev-only | Session secret (cambia in produzione) |
-| `LITELLM_ENDPOINT` | http://localhost:4000 | LiteLLM Proxy URL |
-| `LANGFUSE_HOST` | http://localhost:3000 | Langfuse URL |
-| `LANGFUSE_PUBLIC_KEY` | — | Per ping + trace lookup (opzionale) |
-| `LANGFUSE_SECRET_KEY` | — | Per ping + trace lookup (opzionale) |
-| `DAFNE_HOST` | http://localhost:5000 | Dafne swarm API URL (per panel `/dafne`) |
-
-Windows PowerShell (pre-carica da ~/.config/api-keys/keys.env):
-
-```powershell
-Get-Content ~/.config/api-keys/keys.env | ForEach-Object {
-    if ($_ -match '^([A-Z_]+)=(.+)$') {
-        [Environment]::SetEnvironmentVariable($matches[1], $matches[2], 'Process')
-    }
-}
-python app.py
-```
-
-## Schema DB
-
-Tabella singola `entries`:
-
-| Colonna | Tipo | Note |
-|---------|------|------|
-| id | INTEGER PRIMARY KEY | Autoinc |
-| created_at | TEXT | ISO UTC timestamp |
-| task_description | TEXT | 1 riga |
-| classe | TEXT | cosmetic / behavior / strategic |
-| stack | TEXT | Vedi `VALID_STACKS` in `app.py` |
-| constraint_count | INTEGER | Per ADR-0016 correlation |
-| outcome | TEXT | success / partial / reject / safe-fail / hook-block / error |
-| retry_count | INTEGER | |
-| tokens_sent / tokens_received | INTEGER | |
-| cost_usd | REAL | Costi cloud paid |
-| commit_hash | TEXT | Short hash collegato |
-| note | TEXT | Free-form |
-| langfuse_trace_id | TEXT | Linking a Langfuse trace (opzionale) |
-
-Indici su `created_at`, `classe`, `stack`, `outcome`.
-
-Path DB: `apps/dogfood-ui/data/dogfood.sqlite` (gitignored).
-
-## API JSON
-
-### Create entry
-
-```bash
-curl -X POST http://localhost:8080/api/entries \
-  -H "Content-Type: application/json" \
-  -d '{
-    "task_description": "JSDoc on commit-guard.js",
-    "classe": "cosmetic",
-    "stack": "7B-local-whole",
-    "constraint_count": 1,
-    "outcome": "success",
-    "retry_count": 0,
-    "tokens_sent": 1800,
-    "tokens_received": 632,
-    "cost_usd": 0,
-    "commit_hash": "f087e52",
-    "note": "dogfood #1"
-  }'
-```
-
-### Get stats
-
-```bash
-curl http://localhost:8080/api/stats | jq .phase6
-```
-
-### Health check
-
-```bash
-curl http://localhost:8080/api/health | jq .
-```
-
-## Backup DB
-
-```bash
-# Windows
-copy apps\dogfood-ui\data\dogfood.sqlite backup\dogfood-$(date +%Y%m%d).sqlite
-
-# Unix
-cp apps/dogfood-ui/data/dogfood.sqlite backup/dogfood-$(date +%Y%m%d).sqlite
-```
-
-## Integrazione con Langfuse (opzionale)
-
-Una volta configurate `LANGFUSE_PUBLIC_KEY` + `LANGFUSE_SECRET_KEY`:
-
-- Dashboard mostra "Langfuse: reachable" in health
-- Se fornisci `langfuse_trace_id` in POST /api/entries → link cliccabile verso Langfuse UI (non ancora implementato)
-- TODO futuro: auto-pull trace metadata (tokens, cost, latency) da Langfuse quando trace_id fornito
-
-## Test
-
-Smoke test manuale:
-
-```bash
-# 1. Start app
-python app.py &
-
-# 2. Health check
-curl http://localhost:8080/api/health | jq .
-
-# 3. Create test entry
-curl -X POST http://localhost:8080/api/entries -H "Content-Type: application/json" -d '{
-  "task_description":"smoke test","classe":"cosmetic","stack":"other",
-  "outcome":"success"
-}'
-
-# 4. Verify
-curl http://localhost:8080/api/stats | jq .total
-
-# 5. Check UI
-# → http://localhost:8080
-```
-
-Test formale pytest da aggiungere in `tests/` in sprint futuri.
-
-## Future extensions
-
-- Auto-import entries da `logs/aider-delegation-YYYY-MM.md` (parser markdown → SQLite)
-- CSV/Excel export
-- Charts (Chart.js o plotly) per trend temporali
-- Filtro + search nella lista entries
-- Trigger Aider direttamente dall'UI (POST form → subprocess `aider-refactor`)
-- Pull trace metadata da Langfuse quando `langfuse_trace_id` specificato
-- Light/dark theme toggle
+1. Decide whether `dogfood-ui` is still needed.
+2. Restore or recreate `apps/dogfood-ui/data/dogfood.sqlite`.
+3. Restore runtime logs or accept a fresh empty database.
+4. Start the Flask app from this checkout.
+5. Verify `/api/health`.
+6. Keep Dafne integration disabled or explicitly reactivate Dafne first.

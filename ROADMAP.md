@@ -1,117 +1,96 @@
-# ROADMAP — CodeMasterDD AI Station
+# ROADMAP
 
-> Rinormalizzata post ADR-0013/0014 (2026-04-23). Numerazione fasi conservata dall'ADR-0001 originale (1-3 = setup/transizione/steady state) + evoluzione operativa 4-7 introdotta in Fase di tracking.
->
-> **Scelta strategica**: **Consolidare il non-core e continuare in-place con struttura più stretta**. Motivo: lo stack è già materializzato e funzionante (88% barra), 3 ADR ratificati nelle ultime 48h. Non serve estrarre un core né ricostruire. Serve **raccogliere evidenza empirica in finestra compressa** per ratificare ADR-0015 e chiudere.
+## Principio
 
----
+La roadmap corrente non e' piu la roadmap della macchina originale. E' la
+roadmap della copia trapiantata.
 
-## Fase 1 — Setup intensivo (aprile 2026) ✅ COMPLETED
+Obiettivo: rendere il repo portabile, coerente e utilizzabile senza dipendere da
+repo fantasma o runtime non presenti.
 
-**Obiettivo**: build infrastructure + learning con Claude Max attivo.
+## Fase R0 - Audit transplant
 
-**Stato**: chiusa 2026-04-20 circa. Hardware hardened, dev stack installato, Ollama + Qwen 7B operativo, repo GitHub live, CLAUDE.md + ADR base.
+Status: done.
 
-**Deliverable chiusi**: Lenovo setup + 3 ADR base + 1 modello Ollama + bench 114 tok/s.
+Output:
 
----
+- `docs/recovery/2026-04-30-transplant-audit.md`
+- verifica path esterni mancanti
+- verifica runtime artifacts mancanti
+- conteggio aree repo
+- identificazione source-of-truth drift
 
-## Fase 2-5 — Discovery & materialization (20/04 → 22/04) ✅ COMPLETED
+## Fase R1 - Scope reset
 
-**Obiettivo**: scoprire limiti stack agentic, iterare quantization/tools, migrare progetti reali, stabilizzare guard rail.
+Status: in progress.
 
-**Milestone**: 
-- Cline ✕ Qwen 7B → NOT viable (ADR-0006).
-- Aider + 14B Q2 + diff → sweet spot behavior (ADR-0007/0008).
-- Migrazione Evo-Tactics + Synesthesia completata.
-- AgentShield baseline + commit-guard PreToolUse + MADR format.
+Decisione:
 
-**Stato**: chiusa 2026-04-22.
+- il repo governa solo se stesso;
+- i repo esterni sono dormienti;
+- `EXTERNAL_REPOS.md` e' il registro unico per eventuale reactivation;
+- vecchi piani cross-repo restano storici.
 
----
+## Fase R2 - Governance refresh
 
-## Fase 6 — Empirical tracking compressa (22/04 → ~20/05/2026) 🟡 IN PROGRESS (40%)
+Status: in progress.
 
-**Obiettivo**: raccogliere dati empirici sufficienti per ratificare ADR-0015 Budget decision post-Claude Max.
+File da allineare:
 
-**Perché in questa posizione**: lo stack è completo tecnicamente; manca solo evidenza di sostenibilità operativa. 4 settimane sono il tempo proporzionato alle domande rimanenti (Q3 quality + Q4 reliability, entrambe time-bound settimane non mesi — Q1/Q2 risolte infrastrutturalmente da ADR-0013).
+- `README.md`
+- `PROJECT_BRIEF.md`
+- `COMPACT_CONTEXT.md`
+- `BACKLOG.md`
+- `DECISIONS_LOG.md`
+- `OPEN_DECISIONS.md`
+- `REFERENCE_INDEX.md`
+- `MASTER_PROMPT.md`
+- `STATUS_MULTI_REPO.md`
 
-**Dipendenze**: nessuna esterna. Richiede solo uso naturale della workstation con trigger delega attivi.
+Definition of done:
 
-**Rischi**:
-- n<20 se pace dogfood rallenta. Mitigazione: H1/H2 backlog priority high.
-- Bug cp1252 ricorrente → blocca ciclo retry → workaround manual. Mitigazione: H3 monitoring.
-- Emergere gap quality cloud non catturato da toy bench. Mitigazione: dogfood real-world + privacy discriminator + option C (extension mirata).
+- nessun file root dichiara live un path assente;
+- tutti gli ADR esistenti sono indicizzati;
+- `SPRINT_02.md` e' il piano attivo.
 
-**Deliverable attesi**:
-- `logs/aider-delegation-2026-04.md` + successivi mensili con n≥20 task
-- `ccusage` aggregato + cloud costs documentati in JOURNAL
-- 1+ sessione Synesthesia per privacy validation
-- Memoria/COMPACT_CONTEXT refresh a settimana 2 e 4
+## Fase R3 - Surface reduction
 
-**Definition of done** (criteri ADR-0014):
-1. Quality bench ≥10 problemi × ≥5 modelli ✅ già fatto (75 test)
-2. Reliability: n≥20 dogfood, fail rate <30%, zero silent-corruption
-3. Privacy: ≥3 sessioni reali classificazione repo enforced senza violation
-4. Cost: <$20/mese (ccusage + cloud) extrapolato
+Status: planned.
 
-Se tutti PASS → Fase 7. Se 1+ non regge → Fase 6b Addendum mirato (non blank check 3 mesi).
+Azioni:
 
----
+- marcare agent cross-repo come dormant/requires-reactivation;
+- chiarire che `apps/dogfood-ui` e `infra/` sono scaffold, non servizi live;
+- lasciare `Archivio_Libreria_Operativa_Progetti/` come library frozen;
+- creare policy per runtime artifacts gitignored.
 
-## Fase 7 — Budget decision (~20/05/2026) 🔴 BLOCKED
+## Fase R4 - Encoding and portability
 
-**Obiettivo**: ratificare scenario operativo post-Claude Max via ADR-0015.
+Status: planned.
 
-**Perché in questa posizione**: decisione informata richiede output Fase 6; non anticipabile.
+Azioni:
 
-**Dipendenze**: chiusura Fase 6 + disponibilità decisore (half-day).
+- normalizzare solo file attivi;
+- evitare rewrite globale cieco;
+- aggiungere regola UTF-8 per nuovi documenti;
+- tenere i log storici mojibake come materiale frozen finche non serve leggerli.
 
-**Rischi**: overcorrection (decidere prima che i dati bastino) vs underproof (estendere Fase 6 senza criteri chiari). Mitigazione: 4 criteri closure già formalizzati ADR-0014.
+## Fase R5 - Optional reactivation
 
-**Deliverable attesi**:
-- `docs/adr/0015-budget-decision-post-claude-max.md` (MADR format)
-- Scenario scelto (A full-sovereign / B ibrido Pro / C extension) con rationale data-driven
-- Aggiornamento CLAUDE.md roadmap + COMPACT_CONTEXT
+Status: future.
 
-**Definition of done**: ADR-0015 Accepted + CLAUDE.md + memoria allineati.
+Un repo esterno puo tornare attivo solo passando il gate in `EXTERNAL_REPOS.md`.
 
----
+Possibili reactivation:
 
-## Fase 8 — Sovereign steady state (da 20/05/2026) ⚪ PLANNED
+- Game, se viene clonato localmente e richiesto da Eduardo.
+- Synesthesia, quando torna lavoro reale pre-esame.
+- Dafne, solo sulla macchina dove esiste il workspace.
+- AA01, solo se presente e se Eduardo vuole includerlo.
 
-**Obiettivo**: operatività autonoma low-cost, stack sovereign come default.
+## Calendario
 
-**Perché in questa posizione**: è lo stato target finale di ADR-0001; rappresenta il successo del progetto.
-
-**Dipendenze**: ADR-0015 Accepted con scenario A o B. Non attiva con C (extension rimanda).
-
-**Rischi**: drift silenzioso (stack che degrada senza che me ne accorga). Mitigazione: quarterly review + tracking continuativo `logs/aider-delegation-YYYY-MM.md`.
-
-**Deliverable attesi**:
-- Workflow dev quotidiano ≥1 settimana senza Claude Max (validation)
-- Logs mensili continuativi
-- Eventuale ADR reattivo se emergono regressioni
-
-**Definition of done**: 30 giorni operatività post-Max + ≥1 revisione qualitativa senza gap materiali.
-
----
-
-## Estensioni future (non pianificate, opzionali)
-
-- **Mac mini M4 Pro 48GB**: se emergono task 30B+ dense critici (OR, budget scherzoso). NOT dependency.
-- **ADR retrofit MADR completo**: skippato per ROI basso (ADR-0010). Re-consider se doc consumer esterni (team futuro).
-- **Skill ecosystem expansion**: quando uso naturale richiede > 5 skill installate (audit ADR-0010).
-
----
-
-## Calendario sintetico
-
-```
-2026-04-23  ←  Oggi: Fase 6 in corso, ADR 0012/0013/0014 ratificati
-2026-04-30  ←  Review settimanale interna (opportunistica)
-2026-05-07  ←  Review settimana 2 Fase 6 (ADR-0014 follow-up)
-2026-05-19  ←  Claude Max expiration (hard date)
-2026-05-20  ←  Target chiusura Fase 6 + ADR-0015 decision
-2026-06-01+ ←  Fase 8 sovereign steady state (se scenario A/B)
-```
+- 2026-04-30: structural recovery start.
+- Next: completare Sprint 02.
+- After Sprint 02: decidere se il repo resta solo governance archive o se
+  riattivare moduli infra/app uno per volta.

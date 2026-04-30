@@ -1,5 +1,15 @@
 # MODEL_ROUTING
 
+> Recovery status 2026-04-30: dormant strategic reference.
+>
+> This file was written for the original workstation context. It remains useful
+> as model-routing history, but it is not an active routing contract in this
+> transplanted checkout until local models, wrappers, API keys, logs, and privacy
+> boundaries are re-verified.
+>
+> Active recovery routing is simple: use the current agent for structural docs,
+> avoid cross-repo work, and do not assume Aider/cloud wrappers exist locally.
+
 > Compilato dal template `Archivio_Libreria_Operativa_Progetti/04_BOOTSTRAP_KIT/MODEL_ROUTING.md` con stack reale codemasterdd-ai-station.
 >
 > Source-of-truth per routing strategico. Per istruzioni operative in-session vedi `CLAUDE.md` "Priorità modelli AI". Questo file è il **perché** strategico, CLAUDE.md è il **come** operativo.

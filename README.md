@@ -1,65 +1,92 @@
-# CodeMasterDD AI Workstation
+# CodeMasterDD AI Station
 
-**Infrastructure-as-code** del desktop CodeMasterDD (Lenovo LOQ Tower 17IAX10) dedicato allo sviluppo AI agentic.
+Repository di governance, documentazione e scaffold infrastrutturale per una
+workstation AI locale.
 
-Questa è la workstation **primaria e autosufficiente** di Eduardo Scarpelli: tutti i workflow di sviluppo e i modelli AI locali girano qui, senza dipendenze da altri device.
+## Stato corrente
 
-## Scopo del repository
-- Setup e configurazione ripetibile della workstation
-- Procedure di manutenzione e backup
-- Documentazione decisioni architetturali (ADR)
-- Knowledge base personale e log sessioni significative
+Questa copia e' in fase di **structural recovery** dopo un trasporto su una
+macchina diversa da quella originale.
 
-> **Nota**: questo repo non contiene codice di progetti reali. Quelli vivono in repository separati (Evo-Tactics, Synesthesia, ecc.).
+Fonte di recupero corrente:
 
-## Hardware
-- **Modello**: Lenovo LOQ Tower 17IAX10 (desktop)
-- **CPU**: Intel Core Ultra 7 255HX (24 core Arrow Lake HX, 2.40 GHz base)
-- **GPU**: NVIDIA RTX 5060 8GB VRAM (Blackwell sm_120, CUDA 13.2)
-- **RAM**: **64GB DDR5-5600** dual channel (2×32GB Micron CT32G56C46S5.C16D, upgrade 2026-04-22, vedi ADR-0012)
-- **Storage**: SSD 1TB Micron NVMe
-- **OS**: Windows 11 Home 25H2 (build 26200)
+- `docs/recovery/2026-04-30-transplant-audit.md`
+- `docs/recovery/original-system-intent.md`
+- `docs/recovery/reconnect-from-main.md`
+- `SPRINT_02.md`
+- `EXTERNAL_REPOS.md`
 
-## Stack attivo (aggiornato 2026-04-23)
-- **Claude Code 2.1.116** — agente CLI di sviluppo (OAuth Claude Max fino 2026-05-19)
-- **Git 2.53.0.windows.3** + **GitHub CLI 2.90.0**
-- **NVIDIA Driver 595.79 + CUDA 13.2**
-- **Node.js 24.15.0 LTS** + npm 11.12.1
-- **Python 3.12.10**
-- **VS Code 1.116.0**
-- **Ollama 0.21.0** con modelli locali tier-based (cosmetic 7B / behavior 14B Q2 / escalation qwen3:30b MoE / reasoning deepseek-r1 / multimodal gemma4)
-- **Aider 0.86.2** con wrapper CLI (`aider-cosmetic`, `aider-refactor`, `aider-groq`, `aider-cerebras`, `aider-gemini`, `aider-openai`)
-- **Cloud tier 3** (free tier): Groq llama-3.3-70b (630 tok/s) + Cerebras llama-3.1-8b (733 tok/s) + Gemini 2.5 Flash + OpenAI gpt-4o-mini
+## Regola madre
 
-## Roadmap sintetica (aggiornata post ADR-0014)
-- **19/04**: ✅ setup base completato
-- **20-22/04**: ✅ Ollama + Qwen stack + migrazione progetti + bench + RAM upgrade
-- **22-23/04**: ✅ tier 3 cloud stack + quality bench + Fase 6 inaugurata
-- **Fino 19/05 (Claude Max expiration)**: Fase 6 tracking compresso — target n≥20 dogfood + quality bench continuation
-- **~20/05/2026**: ADR-0015 budget decision finale → target **full-sovereign $0-50/anno** (Ollama locale + cloud free-tier, **zero subscription ricorrenti**)
+Questo repo governa solo se stesso.
 
-Per i dettagli operativi e le convenzioni di lavoro con Claude Code, vedi [CLAUDE.md](./CLAUDE.md). Per storia decisionale completa, `docs/adr/` (14 ADR).
+I repo esterni citati nello storico restano dormienti finche non vengono
+riattivati con verifica esplicita. Vedi `EXTERNAL_REPOS.md`.
 
-## Governance & navigazione
+## Scope attivo
 
-File governance root-level (schema framework archivio adottato 2026-04-23):
+Attivo in questa copia:
 
-- [PROJECT_BRIEF.md](./PROJECT_BRIEF.md) — scopo, obiettivo di successo, vincoli
-- [COMPACT_CONTEXT.md](./COMPACT_CONTEXT.md) — snapshot stato corrente (aggiornato fine sessione)
-- [DECISIONS_LOG.md](./DECISIONS_LOG.md) — indice ADR strategici + decisioni operative
-- [BACKLOG.md](./BACKLOG.md) — backlog prioritizzato + primo sprint consigliato
-- [OPEN_DECISIONS.md](./OPEN_DECISIONS.md) — decisioni aperte non bloccanti
-- [ROADMAP.md](./ROADMAP.md) — piano per fasi (1-8)
-- [SPRINT_01.md](./SPRINT_01.md) — sprint attivo 2026-04-23 → 2026-05-06
-- [MASTER_PROMPT.md](./MASTER_PROMPT.md) — prompt apertura portabile
-- [REFERENCE_INDEX.md](./REFERENCE_INDEX.md) — indice navigabile docs/patterns/research
-- [PROMPT_LIBRARY.md](./PROMPT_LIBRARY.md) — prompt riutilizzabili progetto-specifici
-- [MODEL_ROUTING.md](./MODEL_ROUTING.md) — routing strategico strumenti/modelli
+- struttura del repo
+- ADR e indice decisionale
+- documentazione di setup e recovery
+- script presenti nel repo
+- scaffold `infra/` e `apps/dogfood-ui/`, solo come codice locale verificabile
+- archivio storico, come riferimento
 
-Framework universale multi-progetto: `Archivio_Libreria_Operativa_Progetti/` (libreria, template, workflow, regole meta Claude Code).
+Dormiente in questa copia:
 
-## Autore
-Eduardo Scarpelli · `eduscarpelli@gmail.com` · GitHub: [@MasterDD-L34D](https://github.com/MasterDD-L34D)
+- Evo-Tactics / Game
+- Synesthesia
+- Dafne swarm / evo-swarm
+- AA01
+- runtime logs, DB SQLite, promptfoo outputs e backup non presenti
 
-## Data creazione
-19 aprile 2026
+## Fonti principali
+
+Leggere in questo ordine:
+
+1. `docs/recovery/2026-04-30-transplant-audit.md`
+2. `PROJECT_BRIEF.md`
+3. `COMPACT_CONTEXT.md`
+4. `BACKLOG.md`
+5. `SPRINT_02.md`
+6. `DECISIONS_LOG.md`
+7. `EXTERNAL_REPOS.md`
+
+`JOURNAL.md` e `docs/sessions/` sono storia. Utili per audit, non per decidere
+lo stato operativo corrente senza verifica.
+
+## ADR
+
+Il repo contiene 20 ADR in `docs/adr/`.
+
+Le decisioni piu importanti per la recovery sono:
+
+- ADR-0001: strategia AI sovereign
+- ADR-0008: Aider whole format silent-corruption
+- ADR-0011: commit governance cross-agent
+- ADR-0014: timeline Fase 6 compressa
+- ADR-0015: budget decision full-sovereign, ancora Proposed
+- ADR-0016: constraint-count routing, ancora Proposed
+- ADR-0017: UI + observability stack, validated-live storico ma non verificato qui
+- ADR-0018: agent readiness protocol
+- ADR-0019: Dafne process persistence, storico/dormiente qui
+- ADR-0020: silent-fail Python guardrail
+
+## Runtime evidence
+
+Questa copia non contiene alcuni artefatti runtime citati nello storico:
+
+- `logs/aider-delegation-2026-04.md`
+- `apps/dogfood-ui/data/dogfood.sqlite`
+- `results/promptfoo-smoke.json`
+- backup sensibili
+
+Questi file sono ignorati o non presenti. Non usarli come fonte di verita fino a
+quando non vengono ripristinati o rigenerati localmente.
+
+## Convenzione
+
+Documentazione progetto in italiano.
+Codice, identifier e commit message in inglese.
