@@ -12,12 +12,13 @@ that old local paths, runtime services, logs, API keys, or external repos exist.
 ## Read first
 
 1. `docs/recovery/2026-04-30-transplant-audit.md`
-2. `PROJECT_BRIEF.md`
-3. `COMPACT_CONTEXT.md`
-4. `SPRINT_02.md`
-5. `BACKLOG.md`
-6. `EXTERNAL_REPOS.md`
-7. `DECISIONS_LOG.md`
+2. `PROJECT_STATE.yaml`
+3. `PROJECT_BRIEF.md`
+4. `COMPACT_CONTEXT.md`
+5. `SPRINT_02.md`
+6. `BACKLOG.md`
+7. `EXTERNAL_REPOS.md`
+8. `DECISIONS_LOG.md`
 
 ## Core rule
 
@@ -83,6 +84,7 @@ all three.
 Before finalizing recovery work:
 
 - run `git diff --check`;
+- run `.\scripts\check-recovery-consistency.ps1`;
 - inspect `git status --short --branch`;
 - ensure root docs do not present missing external repos as live;
 - keep runtime artifacts gitignored unless a redacted policy says otherwise.

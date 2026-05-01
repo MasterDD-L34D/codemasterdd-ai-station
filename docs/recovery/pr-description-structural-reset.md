@@ -12,6 +12,7 @@ from presenting themselves as live work.
 
 - Added recovery audit documenting missing paths, missing runtime evidence, and
   source-of-truth drift.
+- Added `PROJECT_STATE.yaml` as a minimal machine-readable recovery state.
 - Added `EXTERNAL_REPOS.md` with a reactivation gate.
 - Added `SPRINT_02.md` focused on structural recovery.
 - Rewrote root governance files to describe the current repo state.
@@ -21,6 +22,8 @@ from presenting themselves as live work.
 - Rebuilt `MODEL_ROUTING.md` as a recovery-safe routing policy.
 - Added policies for instruction files, runtime artifacts, encoding, pre-merge
   checks, and reconnecting from the correct PC.
+- Added `scripts/check-recovery-consistency.ps1` to catch stale active-state
+  regressions.
 - Preserved OpenCode as an architectural/portability option instead of treating
   it as an active dependency.
 
@@ -58,6 +61,7 @@ Recommended path:
 ## Validation
 
 - `git diff --check` passed during branch work.
+- `scripts/check-recovery-consistency.ps1` passed during branch work.
 - Main was not modified from the transplanted checkout.
 - Recovery branch was pushed as `origin/codex/structural-reset`.
 

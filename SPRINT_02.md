@@ -123,6 +123,15 @@ Status: done in this branch.
 
 Status: done in this branch.
 
+### S2-11 - Minimal state and anti-regression check
+
+- Add `PROJECT_STATE.yaml`.
+- Add active vs historical boundary.
+- Add recovery consistency script.
+- Wire the script into README/agent guidance.
+
+Status: done in this branch.
+
 ## Out of scope
 
 - Fixing or triaging Game.

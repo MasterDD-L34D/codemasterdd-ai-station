@@ -1,0 +1,61 @@
+schema_version: 1
+updated: "2026-05-01"
+mode: structural_recovery
+branch: codex/structural-reset
+
+main_policy:
+  modify_main_from_transplant: false
+  recovery_branch_is_review_package: true
+  intended_review_location: correct_original_pc
+
+active_scope:
+  governs:
+    - codemasterdd-ai-station
+  does_not_govern:
+    - Evo-Tactics / Game
+    - Synesthesia
+    - Dafne swarm / evo-swarm
+    - AA01
+
+external_repos:
+  status: dormant
+  registry: EXTERNAL_REPOS.md
+  reactivation_required: true
+  reactivation_mode: one_at_a_time
+
+runtime_evidence:
+  status: missing_in_transplanted_checkout
+  policy: docs/recovery/runtime-artifacts-policy.md
+  absent_or_unverified:
+    - logs/aider-delegation-2026-04.md
+    - apps/dogfood-ui/data/dogfood.sqlite
+    - promptfoo result outputs
+    - original API key files
+    - Aider wrapper binaries
+
+instruction_surface:
+  codex: AGENTS.md
+  claude_or_opencode: CLAUDE.md
+  portable_prompt: MASTER_PROMPT.md
+  policy: docs/recovery/instruction-files-policy.md
+
+active_sprint:
+  file: SPRINT_02.md
+  name: Structural recovery
+
+recovery_docs:
+  audit: docs/recovery/2026-04-30-transplant-audit.md
+  original_intent: docs/recovery/original-system-intent.md
+  reconnect: docs/recovery/reconnect-from-main.md
+  pre_merge: docs/recovery/pre-merge-checklist.md
+  pr_description: docs/recovery/pr-description-structural-reset.md
+  boundary: docs/recovery/active-vs-historical-boundary.md
+
+automation:
+  recovery_consistency_check: scripts/check-recovery-consistency.ps1
+
+status_summary:
+  design_direction: keep_core_small_reactivate_satellites_explicitly
+  opencode_role: portability_bridge_not_active_dependency
+  aider_role: historical_primary_client_verify_on_correct_pc
+  dogfood_ui_role: scaffold_dormant_until_runtime_restored

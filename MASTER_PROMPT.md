@@ -17,12 +17,13 @@ Core rule:
 
 Read first:
 1. docs/recovery/2026-04-30-transplant-audit.md
-2. PROJECT_BRIEF.md
-3. COMPACT_CONTEXT.md
-4. SPRINT_02.md
-5. BACKLOG.md
-6. DECISIONS_LOG.md
-7. EXTERNAL_REPOS.md
+2. PROJECT_STATE.yaml
+3. PROJECT_BRIEF.md
+4. COMPACT_CONTEXT.md
+5. SPRINT_02.md
+6. BACKLOG.md
+7. DECISIONS_LOG.md
+8. EXTERNAL_REPOS.md
 
 Known transplant facts:
 - Historical docs mention original paths such as C:\dev\Game and

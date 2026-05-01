@@ -45,6 +45,7 @@ Get-Item apps\dogfood-ui\data\dogfood.sqlite
 
 Check:
 
+- `PROJECT_STATE.yaml`
 - `AGENTS.md`
 - `CLAUDE.md`
 - `MASTER_PROMPT.md`
@@ -84,6 +85,7 @@ For each repo:
 ## 7. Post-merge checks
 
 ```powershell
+.\scripts\check-recovery-consistency.ps1
 git diff --check
 git status --short --branch
 ```

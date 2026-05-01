@@ -16,6 +16,9 @@ Current reference index after structural recovery started.
 | REC-08 | `docs/recovery/instruction-files-policy.md` | Contract for AGENTS/CLAUDE/MASTER_PROMPT roles. |
 | REC-09 | `docs/recovery/pre-merge-checklist.md` | Checklist before merging the recovery branch. |
 | REC-10 | `docs/recovery/pr-description-structural-reset.md` | Draft PR description for GitHub review. |
+| REC-11 | `PROJECT_STATE.yaml` | Minimal machine-readable current state. |
+| REC-12 | `docs/recovery/active-vs-historical-boundary.md` | Boundary between active, scaffold, historical, and dormant areas. |
+| REC-13 | `scripts/check-recovery-consistency.ps1` | Guardrail against stale active-state regression. |
 
 ## Active governance references
 
@@ -30,6 +33,7 @@ Current reference index after structural recovery started.
 | GOV-07 | `AGENTS.md` | Codex entry point. |
 | GOV-08 | `CLAUDE.md` | Claude/OpenCode-compatible entry point. |
 | GOV-09 | `MODEL_ROUTING.md` | Recovery-safe routing policy. |
+| GOV-10 | `PROJECT_STATE.yaml` | Minimal recovery state for humans and agents. |
 
 ## Historical but retained
 
@@ -60,5 +64,5 @@ The following are not active references unless present in the current checkout:
 
 ## Deprecated references
 
-Old statements that say SPRINT_01 is active, 14 ADR exist, or cross-repo
+Old statements that say SPRINT_01 is active, old ADR counts exist, or cross-repo
 services are live should be treated as stale unless updated during Sprint 02.

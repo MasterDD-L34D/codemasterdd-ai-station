@@ -10,9 +10,11 @@ macchina diversa da quella originale.
 
 Fonte di recupero corrente:
 
+- `PROJECT_STATE.yaml`
 - `docs/recovery/2026-04-30-transplant-audit.md`
 - `docs/recovery/original-system-intent.md`
 - `docs/recovery/reconnect-from-main.md`
+- `docs/recovery/active-vs-historical-boundary.md`
 - `docs/recovery/pre-merge-checklist.md`
 - `docs/recovery/pr-description-structural-reset.md`
 - `SPRINT_02.md`
@@ -49,12 +51,13 @@ Dormiente in questa copia:
 Leggere in questo ordine:
 
 1. `docs/recovery/2026-04-30-transplant-audit.md`
-2. `PROJECT_BRIEF.md`
-3. `COMPACT_CONTEXT.md`
-4. `BACKLOG.md`
-5. `SPRINT_02.md`
-6. `DECISIONS_LOG.md`
-7. `EXTERNAL_REPOS.md`
+2. `PROJECT_STATE.yaml`
+3. `PROJECT_BRIEF.md`
+4. `COMPACT_CONTEXT.md`
+5. `BACKLOG.md`
+6. `SPRINT_02.md`
+7. `DECISIONS_LOG.md`
+8. `EXTERNAL_REPOS.md`
 
 Agent/client entry points:
 
@@ -98,3 +101,12 @@ quando non vengono ripristinati o rigenerati localmente.
 
 Documentazione progetto in italiano.
 Codice, identifier e commit message in inglese.
+
+## Recovery check
+
+Run before committing recovery changes:
+
+```powershell
+.\scripts\check-recovery-consistency.ps1
+git diff --check
+```
