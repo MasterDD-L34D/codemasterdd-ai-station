@@ -51,9 +51,11 @@ Open decisions for the structural recovery.
 ## OD-R5 - Mojibake cleanup
 
 - Level: documentation / portability.
-- Status: open.
+- Status: partly resolved.
 - Context: many historical files show mojibake.
 - Default: do not do a global rewrite. Fix active root docs first, then decide
   whether historical logs need cleanup.
 - Current policy: `docs/recovery/encoding-policy.md`.
+- Resolution: `PROMPT_LIBRARY.md` was rewritten as a recovery-safe ASCII prompt
+  catalogue. Historical files remain frozen unless edited for another reason.
 - Next action: clean only active files when they are edited for another reason.

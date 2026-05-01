@@ -25,6 +25,8 @@ Current reference index after structural recovery started.
 | REC-17 | `scripts/recovery-status.ps1` | Local diagnostic snapshot for tools, paths, and runtime evidence. |
 | REC-18 | `scripts/check-all.ps1` | Consolidated recovery validation script. |
 | REC-19 | `docs/recovery/plan-inventory-2026-05-01.md` | Inventory of old and current plans, completed work, omissions, and dormant items. |
+| REC-20 | `docs/recovery/frozen-files-index.md` | Index of historical/frozen areas and mixed areas. |
+| REC-21 | `docs/recovery/final-review-package.md` | Final handoff package for correct-PC review and merge decision. |
 
 ## Active governance references
 
@@ -42,6 +44,7 @@ Current reference index after structural recovery started.
 | GOV-10 | `PROJECT_STATE.yaml` | Minimal recovery state for humans and agents. |
 | GOV-11 | `config/system-map.yaml` | Current module status map. |
 | GOV-12 | `apps/dogfood-ui/templates/recovery.html` | Recovery dashboard view for the local UI scaffold. |
+| GOV-13 | `PROMPT_LIBRARY.md` | Recovery-safe prompt catalogue. |
 
 ## Historical but retained
 

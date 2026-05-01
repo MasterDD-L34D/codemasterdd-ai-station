@@ -1,236 +1,259 @@
 # PROMPT_LIBRARY
 
-> Compilato dal template `Archivio_Libreria_Operativa_Progetti/04_BOOTSTRAP_KIT/PROMPT_LIBRARY.md`.
->
-> Prompt riutilizzabili specifici di questo progetto. Per prompt universali (`/INTAKE`, `/STRUCTURE`, etc.) vedi `Archivio_.../02_LIBRARY/05_Prompt_Library_and_Reference_System.md`.
+Recovery status: active as a prompt catalogue, not as runtime evidence.
 
-## Sezione 1 — Prompt universali (copiati dal framework)
+This file was originally compiled from
+`Archivio_Libreria_Operativa_Progetti/04_BOOTSTRAP_KIT/PROMPT_LIBRARY.md`.
+After the transplant, prompts that depend on missing logs, external repos,
+or live services are marked as dormant/conditional.
+
+## Current Rule
+
+Use these prompts only after checking the active boundary:
+
+1. Is the target inside this repo?
+2. Does the required runtime evidence exist here?
+3. Is the target external repo reactivated in `EXTERNAL_REPOS.md`?
+4. Is the model/client/tool actually available on this machine?
+
+If any answer is no, treat the prompt as historical or planning-only.
+
+## Universal Prompts
 
 ### /INTAKE
+
 ```text
 Raccogli le informazioni minime mancanti e restituisci un brief pulito.
+Evidenzia subito cosa e' verificato, cosa e' assunto, e cosa richiede path o
+runtime non presenti.
 ```
 
 ### /STRUCTURE
+
 ```text
 Trasforma il materiale in struttura, sezioni, cartelle e documenti base.
+Se trovi riferimenti a repo esterni, separali in: active, historical, dormant,
+requires reactivation.
 ```
 
 ### /PLAN
+
 ```text
-Crea un piano operativo con ordine, dipendenze e priorità.
+Crea un piano operativo con ordine, dipendenze e priorita.
+Non includere task che richiedono path esterni mancanti; spostali in una sezione
+"reactivation candidates".
 ```
 
 ### /BUILD
+
 ```text
-Produci il deliverable richiesto nella forma più utile.
+Produci il deliverable richiesto nella forma piu utile.
+Prima di modificare file, conferma che il deliverable appartenga allo scope
+attivo del repo corrente.
 ```
 
 ### /REVIEW
+
 ```text
-Rivedi il materiale per chiarezza, coerenza e qualità.
+Rivedi il materiale per chiarezza, coerenza, qualita e drift rispetto a
+PROJECT_STATE.yaml e docs/recovery/active-vs-historical-boundary.md.
 ```
 
 ### /AUDIT
+
 ```text
-Cerca problemi, omissioni, incoerenze, rischi, edge case.
+Cerca problemi, omissioni, incoerenze, rischi, edge case e vecchi piani
+presentati come live senza evidenza locale.
 ```
 
 ### /COMPACT
+
 ```text
-Comprimi la sessione in un riassunto operativo trasportabile. Aggiorna COMPACT_CONTEXT.md.
+Comprimi la sessione in un riassunto operativo trasportabile.
+Aggiorna solo fonti attive se la sessione ha cambiato stato reale.
 ```
 
 ### /HANDOFF
+
 ```text
-Chiudi la sessione con handoff pulito: aggiorna COMPACT_CONTEXT + BACKLOG + JOURNAL entry + memory refresh. Produci "Prossimo passo singolo più utile" esplicito.
+Chiudi la sessione con handoff pulito:
+- stato branch;
+- file modificati;
+- check eseguiti;
+- cosa e' attivo;
+- cosa resta dormant;
+- prossimo passo singolo sul PC corretto.
 ```
 
----
+## Project-Specific Prompts
 
-## Sezione 2 — Prompt specifici progetto
+### /RECOVERY-CHECK
 
-### /DOGFOOD-LOG
-Prompt per aggiungere entry conforme al log dogfood Aider (schema `docs/patterns/aider-delegation-log-template.md`).
+Status: active.
 
 ```text
-Aggiungi entry in logs/aider-delegation-2026-04.md per la delegazione Aider appena eseguita.
+Verifica lo stato recovery del repo.
 
-Raccogli da contesto sessione:
-- Data/ora (ISO 8601)
-- Task 1-riga descrittivo
-- Classe: cosmetic | behavior | strategic
-- Stack: modello + edit-format + flag rilevanti (es. "7B-whole", "Groq 70B via wrapper", "14B Q2 + diff + no-auto-commits")
-- Esito: success | success-amended | safe-fail | gate-blocked | corruption | error
-- Retry count (integer)
-- Tokens s/r (sent/received, k per migliaia)
-- Durata wall-clock
-- Commit/note: hash commit + eventuali findings rilevanti
+Leggi:
+- PROJECT_STATE.yaml
+- config/system-map.yaml
+- docs/recovery/plan-inventory-2026-05-01.md
+- docs/recovery/final-review-package.md
+- BACKLOG.md
 
-Formato: riga tabella Markdown | col1 | col2 | ... |
+Poi rispondi con:
+1. cosa e' done;
+2. cosa e' ancora aperto qui;
+3. cosa richiede il PC corretto;
+4. cosa non va riattivato.
+```
 
-Se un campo non è derivabile, scrivi "-" (non inventare). Segnala valori dubbi.
+### /PLAN-INVENTORY
 
-Al termine: conta entries cumulative e stampa breakdown per classe (cosmetic / behavior / strategic).
+Status: active.
+
+```text
+Rileggi tutti i piani nel repo e classificali:
+- active;
+- done;
+- partly done;
+- dormant;
+- historical;
+- unverifiable here.
+
+Non usare il JOURNAL come stato live senza confronto con PROJECT_STATE.yaml.
 ```
 
 ### /ADR-NEW
-Prompt per inizializzare nuovo ADR MADR (da ADR-0010 format in poi).
+
+Status: active for repo-level decisions.
 
 ```text
-Crea nuovo ADR in docs/adr/NNNN-topic-kebab.md (sostituisci NNNN con prossimo numero disponibile).
+Crea nuovo ADR in docs/adr/NNNN-topic-kebab.md.
 
-Struttura MADR obbligatoria:
-- TL;DR (1 paragrafo italics, sintesi decisione + outcome atteso)
-- Status: Proposed (default iniziale)
-- Data: YYYY-MM-DD
-- Decisore: Eduardo Scarpelli
-- Deciders: solo-dev
-
-Sezioni:
-1. Context and Problem Statement
-2. Decision Drivers (bullet)
-3. Considered Options (A, B, C, D minimo — "chosen" marcato)
-4. Decision Outcome (scelta + rationale)
-5. Consequences (Positive / Negative / Neutral)
-6. Follow-up (checkbox actionable)
-7. Riferimenti (link ad ADR correlati + research + patterns)
+Struttura:
+- TL;DR
+- Status: Proposed
+- Date: YYYY-MM-DD
+- Deciders
+- Context and Problem Statement
+- Decision Drivers
+- Considered Options
+- Decision Outcome
+- Consequences
+- Follow-up
+- References
 
 Vincoli:
-- Italiano (tranne codice/identifier)
-- No speculazione: ogni claim o ha data empirico o ha rationale strutturale esplicito
-- Marca incertezza con "pending validation" / "assumed" esplicito
-- Collega ad ADR esistenti quando topic si tocca
+- italiano per documentazione;
+- codice e identifier in inglese;
+- marca "pending validation" quando manca evidenza;
+- collega ADR correlati.
+```
 
-Dopo Proposed → pass a Accepted solo dopo approvazione esplicita utente + eventuale validation empirica richiesta in Follow-up.
+### /REVIEW-ADR
+
+Status: active, but evidence-gated.
+
+```text
+Review ADR [NUMBER] per eventuale passaggio a Accepted.
+
+Check:
+1. i follow-up sono davvero verificati?
+2. esistono log, bench o test locali?
+3. ci sono conflitti con ADR successivi?
+4. la decisione richiede il PC corretto?
+
+Se manca evidenza, non promuovere. Scrivi i gap.
 ```
 
 ### /DELEGATE-CLASSIFY
-Prompt per classificare task prima di Edit/Write (policy CLAUDE.md "Trigger delega in-session").
+
+Status: dormant in this checkout unless Aider wrappers and models are verified.
 
 ```text
-Task proposto: [DESCRIZIONE BREVE]
-File target: [PATH]
+Classifica il task:
+- cosmetic;
+- behavior-critical;
+- strategic.
 
-Classifica il task secondo docs/patterns/delegation-to-aider.md:
+Prima di proporre Aider o wrapper locali/cloud, verifica che:
+- wrapper esista;
+- modello/API key esista;
+- target repo sia active;
+- privacy scope consenta cloud.
+```
 
-1. Cosmetic? (JSDoc, docstring, rename, lint-fix, typo, 1-liner)
-   → se sì E working tree clean → proponi `aider-cosmetic <file>` con task short-description, attendi OK
-2. Behavior-critical? (refactor singolo file, bug fix, logic change)
-   → proponi `aider-refactor <file>` (local) o `aider-groq <file>` (cloud online), attendi OK
-3. Strategic? (multi-file, synthesis da conversazione, design, debug architetturale, ADR writing)
-   → esegui direttamente, nessuna delega
+### /DOGFOOD-LOG
 
-Eccezioni:
-- Task <1 riga meccanica: skip proposta (overhead > savings)
-- Batch operazioni simili ≥5: proponi delega anche se singolarmente sub-threshold
+Status: dormant until `logs/aider-delegation-YYYY-MM.md` exists or is
+regenerated.
 
-Output:
-- Classe: cosmetic / behavior / strategic
-- Stack proposto: [wrapper]
-- Azione richiesta: proponi / esegui direct / batch
-
-Default inerziale "faccio io direct" senza classification è anti-pattern esplicito CLAUDE.md.
+```text
+Aggiungi entry al log dogfood solo se il log runtime esiste davvero in questa
+copia. Se manca, non ricostruire da memoria: crea al massimo un report
+redatto in docs/recovery/.
 ```
 
 ### /BENCH-PROMPT
-Prompt standard per bench speed modelli (usato in `scripts/bench-ollama.ps1` / `bench-cloud.ps1`).
+
+Status: scaffold/conditional.
 
 ```text
-Write a Python DoublyLinkedList class with insert_head, insert_tail, remove_head, remove_tail, find, and __repr__ methods.
+Write a Python DoublyLinkedList class with insert_head, insert_tail,
+remove_head, remove_tail, find, and __repr__ methods.
 
 Constraints:
 - Use type hints on all method signatures
-- Include docstrings (PEP 257) on class and each method
+- Include docstrings on class and each method
 - Edge cases: empty list, single element, duplicate values
 - Thread-safety NOT required
 
 Do not explain the code. Return only the class definition.
 ```
 
-### /REVIEW-ADR
-Prompt per review stato ADR prima di pass da Proposed → Accepted.
-
-```text
-Review ADR [NUMBER] docs/adr/NNNN-topic.md per pass a Accepted.
-
-Check:
-1. Tutti i Follow-up marked [x] come done SONO davvero done? (verifica file, hook, bench, test reali — non solo claim)
-2. Quality evidence sufficiente per claim? (es. se claim "quality parity", bench n≥10 disponibile?)
-3. Dipendenze con altri ADR: nessun conflict non risolto?
-4. Risk mitigation elencate hanno counter-misura applicata o documented-as-accepted?
-5. Revisione utente ricevuta? (se decisione strategica)
-
-Se tutti check PASS → scrivi commit "docs: promote ADR-NNNN to Accepted" + edit Status line + entry JOURNAL.
-Se 1+ check FAIL → lista gap in output, proponi remediation o extension Proposed.
-```
-
----
-
-## Sezione 3 — Prompt per scenari specifici
-
 ### /FASE6-CHECKPOINT
+
+Status: historical/dormant in this checkout.
+
 ```text
-Review stato Fase 6 rispetto criteri chiusura ADR-0014:
-
-1. Quality bench ≥10 × ≥5 modelli: done/pending?
-2. Reliability: n=? fail rate=? corruption=?
-3. Privacy: sessioni enforced n=?
-4. Cost: proiezione mensile $?
-
-Per ogni criterio:
-- PASS: ✅
-- PARTIAL: 🟡 + gap specifico + azione per chiudere
-- FAIL: 🔴 + deadline rischio + remediation proposta
-
-Output: tabella + verdetto (on-track / extension needed / ready to close).
+Review Fase 6 only if dogfood logs, cost evidence, and bench outputs are present.
+If evidence is missing, classify the checkpoint as unverifiable here and point
+to docs/recovery/runtime-artifacts-policy.md.
 ```
 
 ### /HARDWARE-CHANGE-IMPACT
+
+Status: correct-PC only.
+
 ```text
-Nuovo cambiamento hardware: [DESCRIZIONE].
-
-Rivaluta impact su:
-1. Modelli locali attuali (speed, RAM headroom, VRAM offload %)
-2. Decisione matrix task → stack (CLAUDE.md "Priorità modelli AI")
-3. ADR rilevanti (0004, 0007, 0008, 0012, 0013)
-4. Env vars Ollama persistenti
-5. Scenario budget (ADR-0001, 0013)
-
-Output:
-- Cosa cambia SUBITO (zero rischio)
-- Cosa DEFERRED a bench empirico
-- Se serve ADR nuovo → schematic draft
-- Memory refresh da fare
+Rivaluta un cambiamento hardware solo dopo verifica della macchina reale:
+- RAM;
+- GPU/driver;
+- Ollama;
+- modelli installati;
+- bench locale.
 ```
 
 ### /PRIVACY-CHECK
+
+Status: active principle, external execution dormant until repo reactivation.
+
 ```text
-Task proposto tocca repo/file: [PATH]
+Per ogni task:
+1. identifica repo e path;
+2. verifica se il repo e' active o dormant;
+3. classifica privacy scope;
+4. scegli local/cloud solo se le evidenze sono presenti.
 
-Check privacy routing (ADR-0013 + CLAUDE.md):
-- repo codemasterdd-ai-station: cloud OK
-- repo Game (Evo-Tactics): cloud OK
-- repo synesthesia:
-  - controllers/ / routes/ / middlewares/: sovereign-only
-  - views/ / public/: cloud OK
-- repo cliente: sovereign-only sempre
-
-Se cloud OK → procedi con wrapper cloud.
-Se sovereign-only → usa wrapper locale (aider-cosmetic / aider-refactor).
-Se mixed repo → verifica file-by-file.
-
-Se dubbio → abort e segnala.
+Se il repo e' dormant, fermati e chiedi reactivation.
 ```
 
----
+## Historical Framework Prompts
 
-## Sezione 4 — Prompt best-of (riferimenti framework)
+The broader prompt framework remains in:
 
-- Best-of mettere ordine → usa `/STRUCTURE` + Project Architect mode
-- Best-of da caos a piano → usa `/PLAN` + Systems Designer mode
-- Best-of audit spietato → usa `/AUDIT` + QA Auditor mode
-- Best-of decisione tra opzioni → usa `/ADR-NEW` + Project Architect mode
-- Best-of compact perfetto → usa `/COMPACT` + Archivist mode
+- `Archivio_Libreria_Operativa_Progetti/02_LIBRARY/05_Prompt_Library_and_Reference_System.md`
+- `Archivio_Libreria_Operativa_Progetti/04_BOOTSTRAP_KIT/PROMPT_LIBRARY.md`
 
-Dettaglio pattern universali: `Archivio_Libreria_Operativa_Progetti/02_LIBRARY/05_Prompt_Library_and_Reference_System.md`.
+Those files are reference material. They are not current operating state.

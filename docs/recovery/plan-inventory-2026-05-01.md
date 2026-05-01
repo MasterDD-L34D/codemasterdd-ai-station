@@ -247,16 +247,21 @@ Important omissions that are still worth remembering:
 
 1. Redacted runtime export format: policy exists, but no concrete manifest was
    generated because runtime files are absent here.
-2. Historical frozen-file index: still missing.
-3. Active mojibake cleanup: policy exists, full cleanup intentionally deferred.
-4. Prompt library review: not done.
-5. Final model routing reconstruction: not done; must happen on the correct PC.
-6. OpenCode decision: not done; requires install/config check on the correct PC.
-7. ADR-0015/0016/0017 ratification: not done; depends on restored evidence.
-8. Dogfood n>=20 / week-4 closure: not done here and no longer active without
+2. Full historical mojibake cleanup: intentionally deferred; active root docs
+   were cleaned, historical files remain frozen.
+3. Final model routing reconstruction: not done; must happen on the correct PC.
+4. OpenCode decision: not done; requires install/config check on the correct PC.
+5. ADR-0015/0016/0017 ratification: not done; depends on restored evidence.
+6. Dogfood n>=20 / week-4 closure: not done here and no longer active without
    logs/DB.
-9. External project work: not done here by design.
-10. Agent re-smoke-test in this checkout: not done.
+7. External project work: not done here by design.
+8. Agent re-smoke-test in this checkout: not done.
+
+Resolved after this inventory:
+
+- historical frozen-file index: `docs/recovery/frozen-files-index.md`;
+- prompt library review: `PROMPT_LIBRARY.md`;
+- final handoff package: `docs/recovery/final-review-package.md`.
 
 ## What should be checked on the correct PC
 

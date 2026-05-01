@@ -6,6 +6,10 @@ Post-transplant routing policy.
 
 Recovery mode.
 
+Review note 2026-05-01: this file has intentionally not been rebuilt into a
+performance matrix. The final routing matrix must be reconstructed on the
+correct PC after verifying Ollama, Aider wrappers, API keys, and runtime logs.
+
 The old routing matrix depended on original-machine facts: installed Ollama
 models, Aider wrappers, API keys, dogfood logs, and runtime services. Those are
 not verified in this checkout.

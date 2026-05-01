@@ -18,6 +18,9 @@ Fonte di recupero corrente:
 - `docs/recovery/pre-merge-checklist.md`
 - `docs/recovery/pr-description-structural-reset.md`
 - `docs/recovery/client-runtime-matrix.md`
+- `docs/recovery/plan-inventory-2026-05-01.md`
+- `docs/recovery/frozen-files-index.md`
+- `docs/recovery/final-review-package.md`
 - `SPRINT_02.md`
 - `EXTERNAL_REPOS.md`
 - `config/system-map.yaml`
@@ -85,6 +88,8 @@ lo stato operativo corrente senza verifica.
 - `apps/dogfood-ui/` include una pagina `/recovery` per vedere lo stato
   strutturale dal browser. Il pannello Dafne resta disabilitato finche non si
   imposta esplicitamente `DAFNE_ENABLED=1`.
+- `docs/recovery/final-review-package.md` e' il punto di chiusura per decidere
+  cosa fare sul PC corretto.
 
 ## ADR
 

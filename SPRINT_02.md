@@ -159,6 +159,15 @@ Status: done in this branch.
 
 Status: done in this branch.
 
+### S2-15 - Final archive and review package
+
+- Add frozen-files index.
+- Rewrite `PROMPT_LIBRARY.md` as recovery-safe prompt catalogue.
+- Add final review package for the correct PC.
+- Mark active-root mojibake cleanup complete.
+
+Status: done in this branch.
+
 ## Out of scope
 
 - Fixing or triaging Game.

@@ -106,6 +106,9 @@ Possibili reactivation:
 ## Calendario
 
 - 2026-04-30: structural recovery start.
-- Next: completare Sprint 02.
-- After Sprint 02: decidere se il repo resta solo governance archive o se
-  riattivare moduli infra/app uno per volta.
+- 2026-05-01: structural recovery package completed on
+  `codex/structural-reset`.
+- Next: review this branch from the correct PC using
+  `docs/recovery/final-review-package.md`.
+- After correct-PC review: decide hybrid merge, then reactivate modules one at a
+  time only if fresh local evidence exists.

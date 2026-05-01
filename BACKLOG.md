@@ -30,16 +30,16 @@ Diventa candidato di reactivation in `EXTERNAL_REPOS.md`.
 - [x] Aggiungere un piccolo `docs/recovery/encoding-policy.md`.
 - [x] Creare una mappa strutturale machine-readable del repo.
 - [x] Rendere Dafne opt-in nella dashboard locale.
-- [ ] Creare un indice dei file storici frozen.
+- [x] Creare un indice dei file storici frozen.
 
 ## Bassa priorita
 
-- [ ] Normalizzare mojibake nei file attivi dopo il reset di scope.
-- [ ] Rivedere `PROMPT_LIBRARY.md`.
-- [ ] Rivedere `MODEL_ROUTING.md` per un mondo post-transplant.
+- [x] Normalizzare mojibake nei file attivi dopo il reset di scope.
+- [x] Rivedere `PROMPT_LIBRARY.md`.
+- [x] Rivedere `MODEL_ROUTING.md` per un mondo post-transplant.
 - [ ] Decidere sul PC giusto se OpenCode resta solo ponte di portabilita o diventa client secondario reale.
 - [ ] Sul PC giusto, verificare se conviene full merge, cherry-pick o hybrid merge.
-- [ ] Valutare se integrare `scripts/check-recovery-consistency.ps1` in un hook o CI leggero.
+- [x] Valutare se integrare `scripts/check-recovery-consistency.ps1` in un hook o CI leggero.
 - [ ] Ridurre o archiviare `Archivio_Libreria_Operativa_Progetti/` se il repo deve diventare minimale.
 
 ## Dormant, non actionable in questa copia

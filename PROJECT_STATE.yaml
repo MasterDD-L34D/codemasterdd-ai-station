@@ -51,6 +51,9 @@ recovery_docs:
   pr_description: docs/recovery/pr-description-structural-reset.md
   boundary: docs/recovery/active-vs-historical-boundary.md
   client_runtime_matrix: docs/recovery/client-runtime-matrix.md
+  plan_inventory: docs/recovery/plan-inventory-2026-05-01.md
+  frozen_files_index: docs/recovery/frozen-files-index.md
+  final_review_package: docs/recovery/final-review-package.md
 
 config:
   system_map: config/system-map.yaml
@@ -74,3 +77,4 @@ status_summary:
   opencode_role: portability_bridge_not_active_dependency
   aider_role: historical_primary_client_verify_on_correct_pc
   dogfood_ui_role: scaffold_dormant_with_recovery_dashboard
+  next_meaningful_step: review_branch_on_correct_pc
