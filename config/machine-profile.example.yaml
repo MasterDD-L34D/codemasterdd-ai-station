@@ -1,0 +1,46 @@
+schema_version: 1
+profile_name: example
+
+machine:
+  role: unknown
+  notes:
+    - Copy this file to machine-profile.local.yaml and edit locally.
+    - Do not commit machine-profile.local.yaml.
+
+paths:
+  codemasterdd_repo: null
+  game_repo: null
+  synesthesia_repo: null
+  dafne_swarm_repo: null
+  aa01_workspace: null
+  aider_bin_dir: null
+  api_keys_env: null
+
+tools:
+  git: unknown
+  python: unknown
+  node: unknown
+  docker: unknown
+  ollama: unknown
+  aider: unknown
+  opencode: unknown
+  gh: unknown
+
+services:
+  dogfood_ui:
+    enabled: false
+    url: http://127.0.0.1:8080
+  litellm:
+    enabled: false
+    url: http://localhost:4000
+  langfuse:
+    enabled: false
+    url: http://localhost:3000
+  dafne:
+    enabled: false
+    url: http://localhost:5000
+
+policy:
+  external_repos_default: dormant
+  runtime_evidence_default: missing_until_verified
+  cloud_delegation_default: disabled_until_privacy_checked

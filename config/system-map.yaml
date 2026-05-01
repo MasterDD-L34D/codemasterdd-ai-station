@@ -1,0 +1,74 @@
+schema_version: 1
+updated: "2026-05-01"
+
+modules:
+  governance:
+    status: active
+    paths:
+      - README.md
+      - PROJECT_BRIEF.md
+      - COMPACT_CONTEXT.md
+      - ROADMAP.md
+      - BACKLOG.md
+      - DECISIONS_LOG.md
+      - OPEN_DECISIONS.md
+      - REFERENCE_INDEX.md
+      - PROJECT_STATE.yaml
+  recovery:
+    status: active
+    paths:
+      - docs/recovery/
+      - SPRINT_02.md
+      - EXTERNAL_REPOS.md
+  instruction_surface:
+    status: active
+    paths:
+      - AGENTS.md
+      - CLAUDE.md
+      - MASTER_PROMPT.md
+      - docs/recovery/instruction-files-policy.md
+  scripts:
+    status: active
+    paths:
+      - scripts/check-recovery-consistency.ps1
+      - scripts/recovery-status.ps1
+      - scripts/check-all.ps1
+  dogfood_ui:
+    status: scaffold_dormant
+    paths:
+      - apps/dogfood-ui/
+    notes:
+      - Runtime DB is gitignored and absent unless recreated.
+      - Dafne integration is disabled unless DAFNE_ENABLED=1.
+  infra:
+    status: scaffold_dormant
+    paths:
+      - infra/
+    notes:
+      - Config exists.
+      - Running services are not assumed.
+  agents:
+    status: mixed_active_dormant
+    paths:
+      - .claude/agents/
+    notes:
+      - Core repo agents may be useful.
+      - Cross-repo agents require reactivation.
+  archive_framework:
+    status: historical_reference
+    paths:
+      - Archivio_Libreria_Operativa_Progetti/
+  external_repos:
+    status: dormant
+    registry: EXTERNAL_REPOS.md
+
+runtime_evidence:
+  dogfood_log:
+    path: logs/aider-delegation-2026-04.md
+    status: missing_unless_restored
+  dogfood_db:
+    path: apps/dogfood-ui/data/dogfood.sqlite
+    status: missing_unless_restored
+  promptfoo_results:
+    path: scripts/quality-bench/results/
+    status: missing_unless_restored

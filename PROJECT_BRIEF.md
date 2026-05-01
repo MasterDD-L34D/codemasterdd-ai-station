@@ -44,6 +44,9 @@ non passa il gate in `EXTERNAL_REPOS.md`.
 - Backlog solo per task verificabili in questa copia.
 - Policy su artefatti runtime mancanti.
 - Separazione tra storia e piano.
+- Mappa strutturale machine-readable in `config/system-map.yaml`.
+- Diagnostica locale con `scripts/recovery-status.ps1` e `scripts/check-all.ps1`.
+- Dashboard `/recovery` nello scaffold `apps/dogfood-ui`.
 
 ## Fuori scope
 
@@ -62,9 +65,10 @@ La recovery e' riuscita quando:
 2. nessun file radice rimanda a repo fantasma come se fossero live;
 3. ADR e backlog sono coerenti con i file realmente presenti;
 4. i runtime artifacts assenti sono dichiarati assenti;
-5. il prossimo sprint e' `SPRINT_02.md`, non vecchi dogfood task.
+5. il prossimo sprint e' `SPRINT_02.md`, non vecchi dogfood task;
+6. Dafne e gli altri repo esterni sono opt-in, non dipendenze implicite.
 
 ## Prossimo passo
 
-Completare `SPRINT_02.md`: structural recovery, dashboard demotion, agent
-surface reduction, runtime evidence policy, e pass encoding mirato.
+Verificare e pubblicare il branch `codex/structural-reset`, poi ricollegarlo
+dal `main` del PC corretto seguendo `docs/recovery/pre-merge-checklist.md`.

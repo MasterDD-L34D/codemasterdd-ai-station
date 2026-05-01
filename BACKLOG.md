@@ -18,13 +18,18 @@ Diventa candidato di reactivation in `EXTERNAL_REPOS.md`.
 - [x] **S2-09 Instruction surface cleanup** - creato `AGENTS.md`, aggiunta policy instruction files, riscritto `MODEL_ROUTING.md`.
 - [x] **S2-10 Merge readiness package** - creati checklist pre-merge e PR description.
 - [x] **S2-11 Minimal state and anti-regression check** - creato `PROJECT_STATE.yaml`, boundary attivo/storico, e script `scripts/check-recovery-consistency.ps1`.
+- [x] **S2-12 System map and local machine profile** - aggiunti `config/system-map.yaml`, template profilo macchina e gitignore locale.
+- [x] **S2-13 Recovery diagnostics and app dashboard** - aggiunti `scripts/recovery-status.ps1`, `scripts/check-all.ps1`, route `/recovery`, e Dafne opt-in.
+- [x] **S2-14 Client/runtime matrix and ADR-0021** - aggiunti matrix runtime e ADR strutturale.
 
 ## Media priorita
 
 - [x] Aggiornare `apps/dogfood-ui/README.md` per separare dogfood core da panel Dafne.
-- [ ] Valutare se `infra/` resta active scaffold o viene marcato dormant.
-- [ ] Aggiungere un piccolo `docs/recovery/runtime-artifacts-policy.md`.
-- [ ] Aggiungere un piccolo `docs/recovery/encoding-policy.md`.
+- [x] Valutare se `infra/` resta active scaffold o viene marcato dormant.
+- [x] Aggiungere un piccolo `docs/recovery/runtime-artifacts-policy.md`.
+- [x] Aggiungere un piccolo `docs/recovery/encoding-policy.md`.
+- [x] Creare una mappa strutturale machine-readable del repo.
+- [x] Rendere Dafne opt-in nella dashboard locale.
 - [ ] Creare un indice dei file storici frozen.
 
 ## Bassa priorita

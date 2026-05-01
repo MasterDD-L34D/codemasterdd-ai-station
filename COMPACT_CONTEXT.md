@@ -2,9 +2,9 @@
 
 ## Snapshot corrente
 
-Data: 2026-04-30.
+Data: 2026-05-01.
 
-Stato: recovery strutturale in corso.
+Stato: recovery strutturale avanzata su branch `codex/structural-reset`.
 
 Questa copia del repo non e' la workstation originale documentata nello storico.
 I path esterni originali non esistono qui, quindi la governance cross-repo e'
@@ -26,14 +26,18 @@ Per questa fase leggere:
 3. `SPRINT_02.md`
 4. `BACKLOG.md`
 5. `DECISIONS_LOG.md`
+6. `config/system-map.yaml`
+7. `docs/recovery/client-runtime-matrix.md`
 
 ## Cosa e' attivo
 
 - Questo repo.
 - Root governance.
+- `PROJECT_STATE.yaml` e `config/system-map.yaml`.
 - ADR e documentazione.
-- Script presenti localmente.
+- Script di recovery presenti localmente, incluso `scripts/check-all.ps1`.
 - Scaffold `infra/` e `apps/dogfood-ui/`, solo come codice presente.
+- Dashboard `/recovery` dentro `apps/dogfood-ui`.
 
 ## Cosa e' dormiente
 
@@ -61,7 +65,8 @@ satelliti come dormienti.
 
 ## Prossimi passi
 
-- Chiudere refresh dei file root.
-- Demuovere `STATUS_MULTI_REPO.md` a storico.
-- Marcare agent cross-repo come dormant/requires-reactivation.
-- Definire export/import per runtime artifacts se serviranno in futuro.
+- Usare `scripts/check-all.ps1` come check pre-commit/pre-merge.
+- Sul PC corretto, compilare eventualmente `config/machine-profile.local.yaml`.
+- Riattivare repo esterni solo uno alla volta tramite `EXTERNAL_REPOS.md`.
+- Decidere dopo merge se mantenere `apps/dogfood-ui` come dashboard recovery o
+  ripristinare il dogfood runtime.

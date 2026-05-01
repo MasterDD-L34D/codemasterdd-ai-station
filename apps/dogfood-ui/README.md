@@ -17,8 +17,11 @@ Missing current runtime evidence:
 
 Treat this app as code scaffold until local runtime evidence is restored.
 
-The Dafne panel depends on `http://localhost:5000`, which is not available
-unless the external Dafne workspace is reactivated through `../../EXTERNAL_REPOS.md`.
+The Recovery page at `/recovery` is safe to use in this checkout because it
+only reports files and paths from the local repo.
+
+The Dafne panel is disabled by default. Set `DAFNE_ENABLED=1` only after the
+external Dafne workspace is reactivated through `../../EXTERNAL_REPOS.md`.
 
 ## What remains useful
 
@@ -26,6 +29,8 @@ unless the external Dafne workspace is reactivated through `../../EXTERNAL_REPOS
 - SQLite schema code in `db.py`.
 - Stats helpers in `stats.py`.
 - Templates and static assets as UI reference.
+- Recovery dashboard route `/recovery`.
+- Health API that reports Dafne as disabled unless explicitly enabled.
 
 ## What is not currently guaranteed
 
@@ -42,4 +47,6 @@ unless the external Dafne workspace is reactivated through `../../EXTERNAL_REPOS
 3. Restore runtime logs or accept a fresh empty database.
 4. Start the Flask app from this checkout.
 5. Verify `/api/health`.
-6. Keep Dafne integration disabled or explicitly reactivate Dafne first.
+6. Verify `/recovery`.
+7. Keep Dafne integration disabled or explicitly reactivate Dafne first with
+   `DAFNE_ENABLED=1`.

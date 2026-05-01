@@ -28,6 +28,9 @@ checkout because the live logs and runtime DB are absent.
 - `STATUS_MULTI_REPO.md` is historical or dormant, not a live dashboard.
 - Backlog contains only tasks verifiable in this checkout.
 - Missing runtime artifacts are documented instead of assumed.
+- System boundaries are machine-readable in `config/system-map.yaml`.
+- Recovery can be checked with one command: `.\scripts\check-all.ps1`.
+- Dogfood UI exposes recovery state without assuming Dafne is live.
 
 ## Tasks
 
@@ -129,6 +132,30 @@ Status: done in this branch.
 - Add active vs historical boundary.
 - Add recovery consistency script.
 - Wire the script into README/agent guidance.
+
+Status: done in this branch.
+
+### S2-12 - System map and local machine profile
+
+- Add `config/system-map.yaml`.
+- Add `config/machine-profile.example.yaml`.
+- Keep real local machine profile gitignored.
+
+Status: done in this branch.
+
+### S2-13 - Recovery diagnostics and app dashboard
+
+- Add `scripts/recovery-status.ps1`.
+- Add `scripts/check-all.ps1`.
+- Add `/recovery` to `apps/dogfood-ui`.
+- Make Dafne integration opt-in with `DAFNE_ENABLED=1`.
+
+Status: done in this branch.
+
+### S2-14 - Client/runtime matrix and ADR-0021
+
+- Add `docs/recovery/client-runtime-matrix.md`.
+- Add ADR-0021 for structural recovery and external repo quarantine.
 
 Status: done in this branch.
 

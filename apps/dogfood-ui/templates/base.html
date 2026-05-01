@@ -3,19 +3,20 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Dogfood UI{% endblock %} — CodeMasterDD</title>
+    <title>{% block title %}Dogfood UI{% endblock %} - CodeMasterDD</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
     <nav class="topbar">
         <div class="topbar-inner">
-            <a href="{{ url_for('index') }}" class="brand">CodeMasterDD · Dogfood UI</a>
+            <a href="{{ url_for('index') }}" class="brand">CodeMasterDD / Dogfood UI</a>
             <div class="nav-links">
                 <a href="{{ url_for('index') }}">Dashboard</a>
                 <a href="{{ url_for('list_entries') }}">Entries</a>
                 <a href="{{ url_for('new_entry') }}">+ New</a>
                 <a href="{{ url_for('stats_view') }}">Stats</a>
                 <a href="{{ url_for('bench_view') }}">Bench</a>
+                <a href="{{ url_for('recovery_view') }}">Recovery</a>
                 <a href="{{ url_for('dafne_view') }}">Dafne</a>
                 <a href="{{ url_for('api_health') }}" target="_blank">Health</a>
             </div>
@@ -38,7 +39,7 @@
 
     <footer>
         <p>
-            CodeMasterDD AI Station · ADR-0017 observability stack ·
+            CodeMasterDD AI Station / ADR-0017 observability stack /
             <a href="https://github.com/MasterDD-L34D/codemasterdd-ai-station" target="_blank">repo</a>
         </p>
     </footer>

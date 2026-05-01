@@ -17,8 +17,10 @@ Fonte di recupero corrente:
 - `docs/recovery/active-vs-historical-boundary.md`
 - `docs/recovery/pre-merge-checklist.md`
 - `docs/recovery/pr-description-structural-reset.md`
+- `docs/recovery/client-runtime-matrix.md`
 - `SPRINT_02.md`
 - `EXTERNAL_REPOS.md`
+- `config/system-map.yaml`
 
 ## Regola madre
 
@@ -32,6 +34,7 @@ riattivati con verifica esplicita. Vedi `EXTERNAL_REPOS.md`.
 Attivo in questa copia:
 
 - struttura del repo
+- mappa di sistema in `config/system-map.yaml`
 - ADR e indice decisionale
 - documentazione di setup e recovery
 - script presenti nel repo
@@ -68,9 +71,24 @@ Agent/client entry points:
 `JOURNAL.md` e `docs/sessions/` sono storia. Utili per audit, non per decidere
 lo stato operativo corrente senza verifica.
 
+## Config e diagnostica
+
+- `config/system-map.yaml` descrive quali moduli sono active, scaffold,
+  historical o dormant.
+- `config/machine-profile.example.yaml` e' il template per un profilo macchina
+  locale. Il profilo reale va creato come `config/machine-profile.local.yaml` e
+  resta gitignored.
+- `scripts/recovery-status.ps1` mostra branch, tool disponibili, path esterni e
+  runtime evidence presenti.
+- `scripts/check-all.ps1` esegue il check di recovery, sanity YAML, sintassi
+  Python e `git diff --check`.
+- `apps/dogfood-ui/` include una pagina `/recovery` per vedere lo stato
+  strutturale dal browser. Il pannello Dafne resta disabilitato finche non si
+  imposta esplicitamente `DAFNE_ENABLED=1`.
+
 ## ADR
 
-Il repo contiene 20 ADR in `docs/adr/`.
+Il repo contiene 21 ADR in `docs/adr/`.
 
 Le decisioni piu importanti per la recovery sono:
 
@@ -84,6 +102,7 @@ Le decisioni piu importanti per la recovery sono:
 - ADR-0018: agent readiness protocol
 - ADR-0019: Dafne process persistence, storico/dormiente qui
 - ADR-0020: silent-fail Python guardrail
+- ADR-0021: structural recovery and external repo quarantine
 
 ## Runtime evidence
 
@@ -108,5 +127,6 @@ Run before committing recovery changes:
 
 ```powershell
 .\scripts\check-recovery-consistency.ps1
+.\scripts\check-all.ps1
 git diff --check
 ```

@@ -37,6 +37,23 @@ Questo file e' l'indice operativo aggiornato per la recovery.
   verita se non esistono nella copia locale.
 - Rationale: diversi vecchi file root assumevano presenti dati non trasportati.
 
+### Decisione R-2026-05-01-004 - Structure over cross-repo orchestration
+
+- Data: 2026-05-01.
+- Status: active.
+- Decisione: prima di riattivare Game, Synesthesia, Dafne o AA01, il repo deve
+  avere una mappa di sistema, un profilo macchina locale, una dashboard recovery
+  e uno script unico di verifica.
+- Rationale: senza questi guardrail, i vecchi piani cross-repo tornano a
+  confondersi con lo stato reale del checkout.
+- Output:
+  - `config/system-map.yaml`
+  - `config/machine-profile.example.yaml`
+  - `docs/recovery/client-runtime-matrix.md`
+  - `scripts/recovery-status.ps1`
+  - `scripts/check-all.ps1`
+  - `apps/dogfood-ui/templates/recovery.html`
+
 ## ADR index
 
 | # | Topic | Status in file | Recovery interpretation |
@@ -61,6 +78,7 @@ Questo file e' l'indice operativo aggiornato per la recovery.
 | 0018 | Agent readiness protocol | Accepted | Active principle; many agents now require reactivation. |
 | 0019 | Dafne process persistence | Accepted | Historical/dormant here because Dafne path is missing. |
 | 0020 | Silent-fail Python guardrail | Accepted | Active safety principle, local hook presence unverified. |
+| 0021 | Structural recovery and external repo quarantine | Accepted | Active recovery architecture for this branch. |
 
 ## In review after recovery
 

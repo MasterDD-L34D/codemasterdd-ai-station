@@ -24,6 +24,11 @@ from presenting themselves as live work.
   checks, and reconnecting from the correct PC.
 - Added `scripts/check-recovery-consistency.ps1` to catch stale active-state
   regressions.
+- Added `config/system-map.yaml` and `config/machine-profile.example.yaml`.
+- Added `scripts/recovery-status.ps1` and `scripts/check-all.ps1`.
+- Added `docs/recovery/client-runtime-matrix.md` and ADR-0021.
+- Added a recovery dashboard route in `apps/dogfood-ui` and made Dafne opt-in
+  through `DAFNE_ENABLED=1`.
 - Preserved OpenCode as an architectural/portability option instead of treating
   it as an active dependency.
 
@@ -62,6 +67,7 @@ Recommended path:
 
 - `git diff --check` passed during branch work.
 - `scripts/check-recovery-consistency.ps1` passed during branch work.
+- `scripts/check-all.ps1` passed during branch work.
 - Main was not modified from the transplanted checkout.
 - Recovery branch was pushed as `origin/codex/structural-reset`.
 
@@ -69,6 +75,7 @@ Recommended path:
 
 - Decide whether OpenCode becomes a real secondary client on the correct PC.
 - Decide whether `apps/dogfood-ui` remains scaffold or gets runtime restored.
+- Decide whether to fill `config/machine-profile.local.yaml` on the correct PC.
 - Decide whether cross-repo agents should stay labelled dormant or be moved into
   a dormant folder.
 - Normalize mojibake only in active docs, not via blind global rewrite.

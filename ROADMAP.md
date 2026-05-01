@@ -22,7 +22,7 @@ Output:
 
 ## Fase R1 - Scope reset
 
-Status: in progress.
+Status: done.
 
 Decisione:
 
@@ -33,7 +33,7 @@ Decisione:
 
 ## Fase R2 - Governance refresh
 
-Status: in progress.
+Status: done.
 
 File da allineare:
 
@@ -55,7 +55,7 @@ Definition of done:
 
 ## Fase R3 - Surface reduction
 
-Status: planned.
+Status: done.
 
 Azioni:
 
@@ -66,7 +66,7 @@ Azioni:
 
 ## Fase R4 - Encoding and portability
 
-Status: planned.
+Status: partly done.
 
 Azioni:
 
@@ -74,6 +74,21 @@ Azioni:
 - evitare rewrite globale cieco;
 - aggiungere regola UTF-8 per nuovi documenti;
 - tenere i log storici mojibake come materiale frozen finche non serve leggerli.
+- mantenere `config/machine-profile.local.yaml` fuori da git.
+
+## Fase R4b - Self-diagnostic structure
+
+Status: done.
+
+Output:
+
+- `config/system-map.yaml`
+- `config/machine-profile.example.yaml`
+- `scripts/recovery-status.ps1`
+- `scripts/check-all.ps1`
+- `docs/recovery/client-runtime-matrix.md`
+- `/recovery` in `apps/dogfood-ui`
+- Dafne opt-in con `DAFNE_ENABLED=1`
 
 ## Fase R5 - Optional reactivation
 

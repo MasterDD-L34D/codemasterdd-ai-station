@@ -19,6 +19,11 @@ Current reference index after structural recovery started.
 | REC-11 | `PROJECT_STATE.yaml` | Minimal machine-readable current state. |
 | REC-12 | `docs/recovery/active-vs-historical-boundary.md` | Boundary between active, scaffold, historical, and dormant areas. |
 | REC-13 | `scripts/check-recovery-consistency.ps1` | Guardrail against stale active-state regression. |
+| REC-14 | `docs/recovery/client-runtime-matrix.md` | Client/runtime status after structural recovery. |
+| REC-15 | `config/system-map.yaml` | Machine-readable module boundary map. |
+| REC-16 | `config/machine-profile.example.yaml` | Local machine profile template; real profile stays gitignored. |
+| REC-17 | `scripts/recovery-status.ps1` | Local diagnostic snapshot for tools, paths, and runtime evidence. |
+| REC-18 | `scripts/check-all.ps1` | Consolidated recovery validation script. |
 
 ## Active governance references
 
@@ -34,6 +39,8 @@ Current reference index after structural recovery started.
 | GOV-08 | `CLAUDE.md` | Claude/OpenCode-compatible entry point. |
 | GOV-09 | `MODEL_ROUTING.md` | Recovery-safe routing policy. |
 | GOV-10 | `PROJECT_STATE.yaml` | Minimal recovery state for humans and agents. |
+| GOV-11 | `config/system-map.yaml` | Current module status map. |
+| GOV-12 | `apps/dogfood-ui/templates/recovery.html` | Recovery dashboard view for the local UI scaffold. |
 
 ## Historical but retained
 
@@ -50,7 +57,7 @@ Current reference index after structural recovery started.
 
 ADR directory: `docs/adr/`.
 
-There are 20 ADR files. See `DECISIONS_LOG.md` for the current index.
+There are 21 ADR files. See `DECISIONS_LOG.md` for the current index.
 
 ## Runtime evidence
 

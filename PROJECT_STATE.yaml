@@ -50,12 +50,27 @@ recovery_docs:
   pre_merge: docs/recovery/pre-merge-checklist.md
   pr_description: docs/recovery/pr-description-structural-reset.md
   boundary: docs/recovery/active-vs-historical-boundary.md
+  client_runtime_matrix: docs/recovery/client-runtime-matrix.md
+
+config:
+  system_map: config/system-map.yaml
+  machine_profile_template: config/machine-profile.example.yaml
+  machine_profile_local: config/machine-profile.local.yaml
+  local_profile_tracked: false
 
 automation:
   recovery_consistency_check: scripts/check-recovery-consistency.ps1
+  recovery_status: scripts/recovery-status.ps1
+  check_all: scripts/check-all.ps1
+
+dashboard:
+  dogfood_ui_status: scaffold_dormant
+  recovery_route: /recovery
+  dafne_default_enabled: false
+  dafne_enable_env: DAFNE_ENABLED=1
 
 status_summary:
   design_direction: keep_core_small_reactivate_satellites_explicitly
   opencode_role: portability_bridge_not_active_dependency
   aider_role: historical_primary_client_verify_on_correct_pc
-  dogfood_ui_role: scaffold_dormant_until_runtime_restored
+  dogfood_ui_role: scaffold_dormant_with_recovery_dashboard

@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% block title %}Recovery{% endblock %}
+{% block content %}
+
+<h1>Structural recovery</h1>
+
+<section class="kpi-row">
+    <div class="kpi kpi-pass">
+        <div class="kpi-label">Mode</div>
+        <div class="kpi-value" style="font-size:18px">{{ snapshot.mode }}</div>
+        <div class="kpi-sub">Repo governs itself</div>
+    </div>
+    <div class="kpi {{ 'kpi-pass' if snapshot.db.exists else 'kpi-fail' }}">
+        <div class="kpi-label">Dogfood DB</div>
+        <div class="kpi-value">{{ snapshot.db.count }}</div>
+        <div class="kpi-sub">{{ snapshot.db.path }}</div>
+    </div>
+    <div class="kpi {{ 'kpi-pass' if snapshot.dafne_enabled else 'kpi-fail' }}">
+        <div class="kpi-label">Dafne panel</div>
+        <div class="kpi-value" style="font-size:18px">{{ 'enabled' if snapshot.dafne_enabled else 'disabled' }}</div>
+        <div class="kpi-sub">External workspace required</div>
+    </div>
+</section>
+
+<section class="panel">
+    <h2>Recovery documents</h2>
+    <table class="data-table">
+        <thead><tr><th>Name</th><th>Status</th><th>Path</th></tr></thead>
+        <tbody>
+        {% for item in snapshot.docs %}
+            <tr>
+                <td>{{ item.name }}</td>
+                <td>{% if item.exists %}<span class="ok">present</span>{% else %}<span class="ko">missing</span>{% endif %}</td>
+                <td><code>{{ item.path }}</code></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</section>
+
+<section class="panel">
+    <h2>Runtime evidence</h2>
+    <table class="data-table">
+        <thead><tr><th>Name</th><th>Status</th><th>Path</th></tr></thead>
+        <tbody>
+        {% for item in snapshot.runtime %}
+            <tr>
+                <td>{{ item.name }}</td>
+                <td>{% if item.exists %}<span class="ok">present</span>{% else %}<span class="muted">absent</span>{% endif %}</td>
+                <td><code>{{ item.path }}</code></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</section>
+
+<section class="panel">
+    <h2>External repos</h2>
+    <table class="data-table">
+        <thead><tr><th>Name</th><th>Status</th><th>Expected path</th></tr></thead>
+        <tbody>
+        {% for item in snapshot.external %}
+            <tr>
+                <td>{{ item.name }}</td>
+                <td>{% if item.exists %}<span class="warning">found - verify before reactivation</span>{% else %}<span class="muted">dormant / missing</span>{% endif %}</td>
+                <td><code>{{ item.path }}</code></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</section>
+
+<section class="panel">
+    <h2>Next check</h2>
+    <p class="muted">
+        Run <code>.\scripts\check-all.ps1</code> from the repository root before
+        committing recovery changes.
+    </p>
+</section>
+
+{% endblock %}

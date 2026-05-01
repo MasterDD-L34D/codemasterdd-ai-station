@@ -1,5 +1,5 @@
 """
-CodeMasterDD AI Station — Dogfood UI (ADR-0017)
+CodeMasterDD AI Station - Dogfood UI (ADR-0017)
 
 Mini-app Flask per tracciare dogfood Fase 6 + correlazione con bench results.
 Legge/scrive da SQLite locale (source-of-truth) + optional sync con Langfuse.
@@ -31,13 +31,21 @@ from stats import aggregate_stats, parse_promptfoo_results
 APP_ROOT = Path(__file__).resolve().parent
 REPO_ROOT = APP_ROOT.parent.parent
 DB_PATH = APP_ROOT / "data" / "dogfood.sqlite"
-PROMPTFOO_LATEST = REPO_ROOT / "scripts" / "quality-bench" / "results" / "promptfoo-latest.json"
+PROMPTFOO_LATEST = (
+    REPO_ROOT / "scripts" / "quality-bench" / "results" / "promptfoo-latest.json"
+)
 
 LITELLM_ENDPOINT = os.environ.get("LITELLM_ENDPOINT", "http://localhost:4000")
 LANGFUSE_HOST = os.environ.get("LANGFUSE_HOST", "http://localhost:3000")
 LANGFUSE_PUBLIC_KEY = os.environ.get("LANGFUSE_PUBLIC_KEY", "")
 LANGFUSE_SECRET_KEY = os.environ.get("LANGFUSE_SECRET_KEY", "")
 DAFNE_HOST = os.environ.get("DAFNE_HOST", "http://localhost:5000")
+DAFNE_ENABLED = os.environ.get("DAFNE_ENABLED", "0").lower() in {
+    "1",
+    "true",
+    "yes",
+    "on",
+}
 
 # ---------------------------------------------------------------------------
 # App factory
@@ -54,7 +62,7 @@ def create_app() -> Flask:
         public_key=LANGFUSE_PUBLIC_KEY,
         secret_key=LANGFUSE_SECRET_KEY,
     )
-    dafne = DafneClient(host=DAFNE_HOST)
+    dafne = DafneClient(host=DAFNE_HOST) if DAFNE_ENABLED else None
 
     # -----------------------------------------------------------------------
     # Routes
@@ -123,10 +131,27 @@ def create_app() -> Flask:
                 flash(f"Promptfoo results malformed: {exc}", "error")
         return render_template("bench.html", bench=bench, path=str(PROMPTFOO_LATEST))
 
+    @app.route("/recovery")
+    def recovery_view():
+        snapshot = recovery_snapshot(db=db, dafne_enabled=DAFNE_ENABLED)
+        return render_template("recovery.html", snapshot=snapshot)
+
     @app.route("/dafne")
     def dafne_view():
+        if not DAFNE_ENABLED or dafne is None:
+            return render_template(
+                "dafne.html",
+                disabled=True,
+                snapshot={"reachable": False},
+                host=DAFNE_HOST,
+            )
         snapshot = dafne.full_snapshot()
-        return render_template("dafne.html", snapshot=snapshot, host=DAFNE_HOST)
+        return render_template(
+            "dafne.html",
+            disabled=False,
+            snapshot=snapshot,
+            host=DAFNE_HOST,
+        )
 
     # -----------------------------------------------------------------------
     # JSON API (for external tools / scripts / future CLI integration)
@@ -161,8 +186,9 @@ def create_app() -> Flask:
             },
             "litellm_endpoint": LITELLM_ENDPOINT,
             "dafne": {
+                "enabled": DAFNE_ENABLED,
                 "host": DAFNE_HOST,
-                "reachable": dafne.ping(),
+                "reachable": dafne.ping() if DAFNE_ENABLED and dafne is not None else None,
             },
             "promptfoo_results_available": PROMPTFOO_LATEST.exists(),
         })
@@ -170,6 +196,12 @@ def create_app() -> Flask:
     @app.route("/api/dafne/snapshot")
     def api_dafne_snapshot():
         """Proxy snapshot aggregato da Dafne :5000."""
+        if not DAFNE_ENABLED or dafne is None:
+            return jsonify({
+                "reachable": False,
+                "enabled": False,
+                "message": "Dafne integration disabled. Set DAFNE_ENABLED=1 to enable.",
+            })
         return jsonify(dafne.full_snapshot())
 
     return app
@@ -211,6 +243,52 @@ def validate_entry(payload: dict[str, Any]) -> list[str]:
 
 def entry_to_dict(row: sqlite3.Row) -> dict[str, Any]:
     return dict(row)
+
+
+def recovery_snapshot(db: Database, dafne_enabled: bool) -> dict[str, Any]:
+    """Return recovery status from files present in this checkout."""
+    docs = {
+        "PROJECT_STATE.yaml": REPO_ROOT / "PROJECT_STATE.yaml",
+        "EXTERNAL_REPOS.md": REPO_ROOT / "EXTERNAL_REPOS.md",
+        "SPRINT_02.md": REPO_ROOT / "SPRINT_02.md",
+        "transplant audit": (
+            REPO_ROOT / "docs" / "recovery" / "2026-04-30-transplant-audit.md"
+        ),
+        "active boundary": (
+            REPO_ROOT / "docs" / "recovery" / "active-vs-historical-boundary.md"
+        ),
+        "pre-merge checklist": REPO_ROOT / "docs" / "recovery" / "pre-merge-checklist.md",
+    }
+    runtime = {
+        "dogfood log": REPO_ROOT / "logs" / "aider-delegation-2026-04.md",
+        "dogfood sqlite": DB_PATH,
+        "promptfoo results": REPO_ROOT / "scripts" / "quality-bench" / "results",
+    }
+    external = {
+        "Game": Path("C:/dev/Game"),
+        "Synesthesia": Path("C:/dev/synesthesia"),
+        "Dafne swarm": Path("C:/Users/edusc/Dafne/workspace/swarm"),
+        "AA01": Path("C:/Users/edusc/aa01"),
+    }
+    db_health = db.health()
+    return {
+        "mode": "structural_recovery",
+        "repo_root": str(REPO_ROOT),
+        "docs": [
+            {"name": name, "exists": path.exists(), "path": str(path)}
+            for name, path in docs.items()
+        ],
+        "runtime": [
+            {"name": name, "exists": path.exists(), "path": str(path)}
+            for name, path in runtime.items()
+        ],
+        "external": [
+            {"name": name, "exists": path.exists(), "path": str(path)}
+            for name, path in external.items()
+        ],
+        "db": db_health,
+        "dafne_enabled": dafne_enabled,
+    }
 
 
 # ---------------------------------------------------------------------------

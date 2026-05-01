@@ -24,6 +24,12 @@ Test-Path C:\Users\edusc\.local\bin
 Test-Path C:\Users\edusc\.config\api-keys\keys.env
 ```
 
+Optionally create a local, untracked profile from:
+
+```powershell
+Copy-Item config\machine-profile.example.yaml config\machine-profile.local.yaml
+```
+
 ## 3. Verify runtime evidence
 
 ```powershell
@@ -86,6 +92,7 @@ For each repo:
 
 ```powershell
 .\scripts\check-recovery-consistency.ps1
+.\scripts\check-all.ps1
 git diff --check
 git status --short --branch
 ```

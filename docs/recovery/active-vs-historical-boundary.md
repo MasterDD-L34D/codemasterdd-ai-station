@@ -21,6 +21,8 @@ If another document disagrees during recovery, prefer this boundary plus
 | External registry | `EXTERNAL_REPOS.md` | Dormant repo list and reactivation gate. |
 | Decisions | `DECISIONS_LOG.md` | Current ADR index plus recovery decisions. |
 | Recovery docs | `docs/recovery/` | Active recovery evidence and policies. |
+| System map | `config/system-map.yaml` | Machine-readable active/scaffold/dormant boundary. |
+| Validation scripts | `scripts/check-all.ps1` | Consolidated recovery validation. |
 
 ## Active but scaffold-only
 
@@ -30,6 +32,7 @@ If another document disagrees during recovery, prefer this boundary plus
 | infra stack | `infra/` | Config exists; service state not assumed. |
 | scripts | `scripts/` | Source exists; machine effects must be verified. |
 | model routing | `MODEL_ROUTING.md` | Policy only; no model availability guarantee. |
+| machine profile | `config/machine-profile.local.yaml` | Local-only, gitignored, created only on the real machine. |
 
 ## Historical
 
