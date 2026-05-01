@@ -24,6 +24,7 @@ Current reference index after structural recovery started.
 | REC-16 | `config/machine-profile.example.yaml` | Local machine profile template; real profile stays gitignored. |
 | REC-17 | `scripts/recovery-status.ps1` | Local diagnostic snapshot for tools, paths, and runtime evidence. |
 | REC-18 | `scripts/check-all.ps1` | Consolidated recovery validation script. |
+| REC-19 | `docs/recovery/plan-inventory-2026-05-01.md` | Inventory of old and current plans, completed work, omissions, and dormant items. |
 
 ## Active governance references
 
