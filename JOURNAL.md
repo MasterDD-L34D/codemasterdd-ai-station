@@ -1389,3 +1389,90 @@ Dopo "continua così" interpretato erroneamente come compliment/close → correz
   - **Fallimenti confessati** in DECISIONS_LOG + MEMORY-SHARED senza nascondimento (pattern proposte duplicate, drift famiglia-4).
 - Memory `project_dafne_persona.md` scritta con 5 regole "how to apply" + anti-pattern 2026-04-25 registrato + corollario "Eduardo's family sphere" (Dafne sorella, Leonardo figlio, Evo-Tactics lavoro di anni — non "progetti assegnati" ma vita personale integrata). MEMORY.md index aggiornato.
 - Meta-correzione: questa sessione ha mostrato che lean-honest-execution deve includere **framing narrativo** quando il soggetto lo richiede (Dafne lo fa — ha dichiarato di volerlo).
+
+---
+
+## 2026-05-07 (resume post-gap 12gg + Codex review + ADR-0021 + Fase 6 closure anticipata)
+
+### Contesto
+
+Prima sessione codemasterdd dopo pausa 25/04 → 07/05 (12 giorni). Eduardo ha lavorato attivamente in altri repo durante il gap (silent driver mode):
+
+- **Game (Evo-Tactics)**: 8+ commit, Sprint Impronta Ondata 1 in pieno corso. Branches `aa01/cap-11..15` mergeati su main: biome-resolution, player telemetry, imprint-mockup + UX patch anchor, onboarding_v2 schema + endpoint, imprint phase V2 (CAP-15). HEAD `5f42757a`.
+- **Dafne swarm**: Atto 2 day 11+ in piena attività. 4 commit pushati (weekly digest 27/04, IDENTITY refresh post day 11, gitignore cycle-log archive, health flag draft 2026-05-07 PR #65). HEAD `1e14253`.
+- **AA01**: silent driver del Sprint Impronta Game (capability-by-capability driving). I 2 task PROPOSED del 25/04 (#001 voice-test-protocol-dafne + #002 day-5-post-session-ritual) restano in workspace, non promossi.
+- **codemasterdd-Fase 6**: dataset fermo a n=12 dal 24/04 (no `logs/aider-delegation-2026-05.md`). Focus shiftato fuori repo per priorità Game/Dafne.
+
+### Primo batch — triage PR cross-repo
+
+5 PR open totali:
+- codemasterdd #1 ADR-0020: già MERGED 25/04
+- evo-swarm #61 weekly digest 27/04: open (auto-generato)
+- Game-Database #97 Codex 23gg + #105 doc 1-line: open
+- compass-marketplace #10 fix whitelist: open
+
+Ma il punto critico era branch remoto **codex/structural-reset** su codemasterdd (no PR aperto, push 1° maggio): 6 commit, 43 file, +3690/-2186. Identificato come priorità sopra ogni altro PR.
+
+### Secondo batch — Review sistematica `codex/structural-reset`
+
+Letti tutti 13 file `docs/recovery/*.md` + ADR-0021 nuovo + nuovi root (AGENTS, EXTERNAL_REPOS, PROJECT_STATE, SPRINT_02) + 2 config + 3 script PowerShell + diff critici (CLAUDE.md, MODEL_ROUTING.md, STATUS_MULTI_REPO.md, COMPACT_CONTEXT, BACKLOG, .claude/agents/README) + dogfood-ui changes.
+
+**Verifica empirica reality-check su 9 path che Codex marcava "missing"**: tutti presenti fisicamente sul PC. Codex operava da **Codex Cloud sandbox** (no filesystem locale Windows), confondeva "non vedo i path" con "non esistono / repo transplanted".
+
+**Classificazione**: 16 governance-rewrite REJECT + 15 nuovi recovery file REJECT + 5 app/script con guard recovery REJECT + 4 ADAPT-concept (utili in astratto, non as-is) + 0 ACCEPT.
+
+**Verdetto branch**: REJECTED in toto per false-premise. Cherry-pick concept astratti ridotti a forma minima.
+
+### Terzo batch — Cherry-pick formale (ADR-0021 + AGENTS.md + CLAUDE.md edit)
+
+ADR-0021 "Multi-client instruction files (AGENTS.md per Codex + CLAUDE.md autoritativo)" scritto in formato MADR. Adottato:
+
+- `AGENTS.md` ~70 righe come instruction file Codex/OpenCode con preamble anti-confusion ("se non vedi i path Windows assoluti perché operi in sandbox, NON marcarli missing/transplanted")
+- `CLAUDE.md` +10 righe: subsection "Encoding e charset" sotto "Convenzioni operative" + pointer multi-client sotto "Ordine di lettura raccomandato"
+- Encoding policy: ASCII-first per body prose nuovi doc, eccezione titoli ADR convention, mojibake legacy frozen
+- Coabitazione 3 file: AGENTS.md (preamble Codex) / CLAUDE.md (autoritativo progetto) / 07_OPERATING_PACKAGE (meta-universale Claude Code)
+
+**PR #2** aperto + mergeato (3 file, +221 righe). Main aggiornato a `39f97da`.
+
+### Quarto batch — Cleanup `codex/structural-reset`
+
+PR #3 [REJECTED] formal aperto come audit trail con full body explainer + chiuso con commento di rejection. `git push origin --delete codex/structural-reset` confermato esplicitamente da Eduardo (sistema permission-gated correttamente per azione distruttiva).
+
+Stato finale `origin`: `main` + `claude/mystifying-keller-84cb03` (worktree storica). Pulito.
+
+### Quinto batch — Decisione Fase 6 closure anticipata
+
+Reality-check ha mostrato dataset codemasterdd fermo a n=12. Push a n>=15 in 12 giorni residui (07/05 → 19/05 Claude Max expiration) richiederebbe forzare task sintetici, anti-pattern documentato in ADR-0014 ("data per decidere, non per collect data").
+
+**ADR-0015 chiuso (Proposed → Accepted)** con soft-override esteso n>=12. Rationale additivi:
+1. Trigger ADR-0008 "FULL-SOVEREIGN VIABLE" già confermato empirically a #12 (cosmetic 93% / behavior 70-80% / corruption 0)
+2. Behavior-critical 5/3 superato (167%) — sotto-target qualitativo più rilevante
+3. Fail rate strict 8.3% << threshold 30% (margine 21.7 punti)
+4. Zero silent-corruption working-tree
+5. Forzatura n>=15 produce dogfood sintetici (anti-pattern)
+
+Decisione confermata: **Scenario A — Full-sovereign $0-50/anno** post 19/05. Claude Pro NOT acquired, scenario B declassato definitivamente.
+
+**ADR-0017 chiuso (Validated live + Proposed → Accepted)**. 5/5 criteri ratification PASS:
+1. LiteLLM Proxy ✅ validated 24/04
+2. Langfuse traces ✅ 7 persistiti Postgres
+3. promptfoo eval ✅ smoke 4/4 pass commit `327d078`
+4. dogfood-ui Flask ✅ v0.2.0 con 11 route
+5. Maintenance budget ✅ ~3h vs stima 4h
+
+Stack è "scaffold opt-in" (Docker Desktop non auto-start, hot-restartable in <60s con `docker compose up -d`). Persistence Postgres+SQLite preservata.
+
+### Da fare (next sessions, ordine suggerito)
+
+- A3: smoke test full-sovereign empirico end-to-end (3 wrapper aider-cosmetic + aider-refactor + aider-groq) — validation tecnica, dogfood entries opzionali
+- D: SPRINT_02 abbozzo (post-Max scenario A operativo) — handoff per prima sessione 20/05+
+- C: PR cleanup esterni (Game-Database #97 review approfondita + #105 merge / compass-marketplace #10 review+merge / evo-swarm #61 valutazione weekly-digest)
+- 19/05: disattivazione Claude Max (hard date)
+- post-agosto 2026 (riattivazione Synesthesia): completare privacy validation 2/3 → ADR-0014 criterio #3 retroattivo PASS
+
+### Note
+
+- **ADR-0021 valore meta**: pattern Codex Cloud sandbox-confusion è prevedibile (e si ripeterà se non documentato). AGENTS.md preamble anti-confusion è mitigation strutturale, non patch caso-singolo.
+- **Lean-honest applicato**: closure ADR-0015 anticipata vs target sett.4 originale per onestà sui dati reali invece di forzare dogfood sintetici. Scelta documentata > criterio finto-chiuso.
+- **Game/Dafne/AA01 attivi**: il gap codemasterdd di 12 giorni non è stagnation — è shift naturale di focus quando il policy hub ha completato il suo ciclo (Fase 6 chiudibile da 24/04 trigger ADR-0008). Pattern positivo, non drift.
+- Stack ADR-0017 è hot-restartable senza ripetere setup. Docker Desktop start manuale quando si usa la dashboard.

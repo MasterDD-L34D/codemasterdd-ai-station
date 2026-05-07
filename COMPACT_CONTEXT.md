@@ -6,139 +6,129 @@
 
 ## Progetto
 - **Nome**: CodeMasterDD AI Station
-- **Versione del compact**: v10 (sessione 2026-04-25: chat Dafne + voce + widget + correzione framing "entità non orchestratore")
-- **Data ultimo aggiornamento**: 2026-04-25 sera (pausa, ripresa domani)
+- **Versione del compact**: v11 (sessione 2026-05-07: resume post-gap 12gg + Codex review + ADR-0021 + Fase 6 closure anticipata)
+- **Data ultimo aggiornamento**: 2026-05-07 sessione corrente
 
 ## Stato attuale
-- Barra globale **91%** (+2 da stack osservabilità live + ecosystem agent 12/18 ready). Fase 6 al **60%** (12/20 dogfood, fail rate 8.3%, scenario A full-sovereign confermato mid-sprint via trigger ADR-0008).
-- HEAD `8446869` (origin/main aligned, pushed). Working tree clean.
-- **Stack ADR-0017 live UP**: postgres + langfuse v2 (`:3000`) + litellm (`:4000`) + dogfood-ui Flask (`:8080`) + promptfoo v0.121.7 installed. 7+ Langfuse traces persisted via LiteLLM callback automatico.
-- **Agent ecosystem (ADR-0018)**: 12/18 ready (67%), 6/18 draft trigger-gated. Smoke test log in `docs/agent-smoke-tests/` × 12 file.
-- **Commit sessione 2026-04-24 maratona (16+ totali, 8 nel worktree branch)**: `53c2e20` (harsh review fixes) → `f95e004` (stack validation blockers) → `b43881e` (ADR-0017 end-to-end validated) → `75d4eae` (promptfoo + Dafne wrapper) → `46ece8b` (ADR-0018 Accepted) → `3b26173` (batch P0 ready) → `f10becd` (batch P1 ready + ADR-0019 draft) → `8446869` (game-balance ready + ADR-0019 Accepted). Cross-repo: Dafne `c638098`, Game branch `swarm/register-biome-gameplay-integrator-2026-04-24` pushed.
-- **Commit sessione 2026-04-24 notte (11 totali)**: `9ab01e9` (governance drift) → `0fa0016` (fix #9 HEREDOC commit-guard) → `2254706` (compact v4) → `3156edf` (fix #10 command.includes false-positive) → `3231e2e` (polish #11 stderr) → `5539881` (compact v5) → `9bcc2a4` (**ADR-0016 draft** OD-006 formalized) → `4e67a21` (journal entry) → `8de3263` (CLAUDE.md pointer ADR-0016) → `b31ff86` (close H6 + routing refs) → `9af4b72` (backlog refresh). Tutti pushed.
-- **Commit sessione 2026-04-23 sera**: `4f5227c` (governance framework) → `e7a4ed0` (JOURNAL framework) → `f80ab3c` (retry logic quality-bench rescue) → `2dccec7` (apostrofo fix Aider auto) → `e687b42` (findings consolidation) → `5ef8e9c` (compact refresh). **6 commit**, pushed.
-- Fase 6 dataset attuale: 6 cosmetic full + 1 cosmetic partial + 3 behavior full + 1 behavior partial (#12 inherited bug) + 1 behavior **REJECT**. Fail rate strict 8.3% (vs 30% threshold ADR-0014). Zero silent-corruption working-tree cumulative.
-- Framework operativo `Archivio_Libreria_Operativa_Progetti/` integrato come governance layer.
+- **Barra globale ~95%** (+4 da v10): Fase 6 CLOSED -- ADR-0015 e ADR-0017 entrambi Accepted 2026-05-07. Resta solo finestra transition 07/05 -> 19/05 (Claude Max expiration) + opzionale smoke test sovereign post-closure.
+- HEAD `39f97da` su origin/main (post merge PR #2 ADR-0021). Branch corrente di lavoro `claude/fase6-closure-prep` (3 ADR/governance updates da committare).
+- **Stack ADR-0017**: scaffold opt-in (Docker Desktop non auto-start). Hot-restartable in <60s con `docker compose up -d`. DB persistence Postgres+SQLite preservata. 7+ Langfuse traces ancora persistiti.
+- **Agent ecosystem ADR-0018**: 12/18 ready, 6/18 draft trigger-gated. Status invariato dal 24/04.
+- **Codex `/structural-reset` REJECTED in toto + chiuso + delete remote**: branch difensivo Codex Cloud sandbox-confusion (assunzione "transplanted, paths missing" smentita empiricamente, 9/9 path target presenti). Cherry-pick astratto: ADR-0021 + AGENTS.md + encoding policy.
+- **PR pulito post-sessione**: #1 ADR-0020 mergeato 25/04. #2 ADR-0021 mergeato 07/05. #3 [REJECTED] chiuso 07/05.
+
+### Gap operativo 25/04 -> 07/05 (non-stagnation)
+
+Eduardo ha lavorato attivamente in altri repo (silent driver mode):
+- **Game**: Sprint Impronta Ondata 1, 8+ commit, branches `aa01/cap-11..15` (telemetry + onboarding v2 + imprint phase V2). HEAD `5f42757a`.
+- **Dafne swarm**: Atto 2 day 11+, 4 commit (weekly digest, IDENTITY refresh, gitignore cycle-log, health flag draft 07/05 PR #65). HEAD `1e14253`.
+- **AA01**: silent driver del Sprint Impronta Game, capability-by-capability. 2 task PROPOSED del 25/04 (#001 voice-test + #002 day-5-post-session-ritual) restano in workspace.
+- **codemasterdd**: dataset Fase 6 fermo a n=12 dal 24/04 -- shift naturale di focus quando policy hub ha completato il ciclo (trigger ADR-0008 confermato a #12).
 
 ## Obiettivo di questa fase
-- **Fase 6 (compressa, ~4 settimane)**: chiudere 4 criteri ADR-0014 entro **~2026-05-20**.
-- **Sprint 01 target**: dataset 8 → ≥12 dogfood (di cui ≥3 behavior-critical) + validare cp1252 + review settimana 2.
 
-## Cosa è già stato fatto
+**Transition window 07/05 -> 19/05** (12 giorni residui Claude Max):
+- Validation tecnica scenario A (smoke test 3 wrapper sovereign empirico) -- non bloccante per closure, gia' decisa
+- SPRINT_02 abbozzo (post-Max operativo) come handoff per prima sessione 20/05+
+- Cleanup PR esterni opportunistico (Game-Database #97 Codex 23gg + #105 + compass-marketplace #10 + evo-swarm #61)
+- 19/05: disattivazione Claude Max, transizione a wrapper sovereign + Ollama
 
-### Sessione 2026-04-24 auto-mode (dogfood #12 + H4 snapshot + cross-file fix)
-- **Dogfood #12 behavior-critical LOCAL**: retry logic parity su `scripts/bench-ollama.ps1` via `aider-refactor` (Qwen 14B Q2 diff). 9.0k/854 tok, $0 locale, 1st-try edit, PS parser PASS. Commit `dce8ee4`. **Partial success**: constraint letter-compliant 100%, semantic 75% (inherited bug da parity target bench-cloud.ps1).
-- **Finding meta ADR-0016**: "parity with X" instruction propaga bug latenti di X. Nuovo sub-pattern: **constraint specificity** (explicit > by-reference).
-- **Cross-file strategic rescue manual**: fix status-code-first pattern a `bench-cloud.ps1` + `bench-ollama.ps1` (aligned to `run-bench.ps1`). Test 404 → immediate fail confermato. Commit `410db7f`.
-- **H4 cost snapshot mid-sprint** (anticipato vs target fine-mese): sezione "Aggregati aprile 2026" compilata in `logs/aider-delegation-2026-04.md`. $0.0148 cloud (0.074% budget) / $0 locale / ccusage Claude Max $383.36 (usage-equivalent).
-- **Trigger ADR-0008 FULL-SOVEREIGN VIABLE confermato empirically mid-sprint**: scenario A (full-sovereign) default per ADR-0015.
+## Cosa e' gia' stato fatto
 
-### Sessione 2026-04-24 notte (governance drift + 3 dogfood + ADR-0016 + final consolidation)
-- **Audit governance drift post-sera**: 4 file allineati (PROJECT_BRIEF, ROADMAP, MODEL_ROUTING, MASTER_PROMPT). Commit `9ab01e9`.
-- **Dogfood #9 behavior-critical LOCAL**: fix HEREDOC false-positive in `scripts/hooks/commit-guard.js` via `aider-refactor` (Qwen 14B Q2 diff). 1st-try, 7k/282 tok, 100% compliance + small smell console.log. Constraint-count=2 (fix+preserve). **Primo behavior-critical local Fase 6**. Commit `0fa0016`.
-- **Dogfood #10 behavior-critical LOCAL**: fix `command.includes('git commit')` false-positive. Qwen 14B Q2 diff, 1st-try, 7k/169 tok, 100% clean. Constraint-count=3. Commit `3156edf`.
-- **Dogfood #11 cosmetic LOCAL polish**: console.log → console.error per #9 smell. Qwen 7B whole, 1st-try edit + 1 auto-commit retry (hook block → retry → valid). 5.3k/656 tok. Commit `3231e2e`. **2° validazione pattern auto-commit retry** post-#8.
-- **ADR-0016 Proposed** — `docs/adr/0016-constraint-count-routing-dimension.md`: formalizza OD-006 constraint-count come seconda dimensione routing, estende ADR-0008. Matrice 2D classe × constraint-count. Distinzione transform vs preserve. **Status Proposed**; Accepted trigger = n≥3 data points addizionali (gap constraint=4, 2-transform LOCAL, 5-strict LOCAL). OD-006 chiuso. Commit `9bcc2a4`.
-- **Governance consolidation final sweep**: JOURNAL entry (`4e67a21`), CLAUDE.md pointer ADR-0016 (`8de3263`), H6 closed + routing refs updated (`b31ff86`), BACKLOG refresh close M1/M2/M6 (`9af4b72`).
-- **Sprint 01 obiettivi superati early** (3° giorno su 14): 11/12 dogfood + **4/3 behavior-critical ✅ superato**.
-- **Memory M2 refresh**: `project_session_resumption.md` aggiornato (HEAD, tabella 11 dogfood, Sprint 01 early hit, ADR-0014 status).
-- **Review settimana 2 anticipata** (H5 closed): on-track confermato. 2/4 criteri ADR-0014 PASS (quality 75 test, cost $0.0148 / 0.07% budget), 2/4 on-track (reliability 11/20 @ 9.1% fail, privacy 1/3). Nessun mid-course correction. Next checkpoint settimana 4 (~2026-05-17). JOURNAL entry `2026-04-24 (review settimana 2 anticipata)`.
+### Sessione 2026-05-07 (corrente -- resume + Codex + Fase 6 closure)
+
+#### Triage PR cross-repo
+5 PR open su 5 repo. Identificato branch `codex/structural-reset` su codemasterdd (no PR aperto, push 1° maggio) come priorita' sopra tutti gli altri PR.
+
+#### Review sistematica `codex/structural-reset`
+43 file +3690/-2186, premessa "transplanted/paths missing". Verifica empirica: tutti 9 path target esistono fisicamente. Codex operava da Codex Cloud sandbox.
+Classificazione: 36 REJECT + 4 ADAPT-concept + 0 ACCEPT. Branch REJECTED in toto.
+
+#### Cherry-pick ADR-0021
+ADR-0021 "Multi-client instruction files" Accepted (MADR format). AGENTS.md ~70 righe come preamble Codex anti-confusion. CLAUDE.md +10 righe (encoding policy + pointer multi-client). PR #2 mergeato.
+
+#### Cleanup `codex/structural-reset`
+PR #3 [REJECTED] formal aperto e chiuso (audit trail). Delete remote ref con conferma esplicita Eduardo.
+
+#### Fase 6 closure anticipata
+Dataset n=12 fermo dal 24/04. Decisione: closure anticipata vs target sett.4 originale per evitare dogfood sintetici (anti-pattern ADR-0014).
+
+- **ADR-0015** (Proposed -> Accepted): Scenario A full-sovereign $0-50/anno confermato. Soft-override esteso n>=12 con 5 rationale additivi. Claude Pro NOT acquired, scenario B declassato definitivamente.
+- **ADR-0017** (Validated live + Proposed -> Accepted): 5/5 criteri ratification PASS. Stack scaffold opt-in (Docker Desktop manual start).
+
+#### Governance refresh
+JOURNAL entry +87 righe (questa sessione). COMPACT v11 (questo file). STATUS_MULTI_REPO refresh + DECISIONS_LOG entry pending in corso branch.
 
 ### Pre-sessione corrente
-- Hardware setup + hardening + migrazione progetti (Fase 1-5 closed).
-- Stack AI tier-routing 4 tier + privacy policy per-repo.
-- 14 ADR, 4 guard rail commit cross-agent, tracking `ccusage` + dogfood log.
-- Quality bench framework (75 test, 100% pass@1 discriminant-limited).
-- 11 file governance root-level + 4 aggiuntivi compilati seguendo schema archivio.
-- Framework `Archivio_Libreria_Operativa_Progetti/` importato e integrato.
-
-### Sessione 2026-04-23 sera (governance + sprint01 T1/T2)
-- **Normalizzazione governance**: 11 file schema archivio, 3 Decisioni non-ADR registrate (001/002/003).
-- **T1 behavior-critical cloud REJECT**: Groq 70B ha prodotto 5 constraint violations su retry logic `Invoke-Model`, inclusa 1 BLOCKING (return-value divergence tra branch). **Rescue manuale** Claude Code con helper `Invoke-ModelRequest` — commit `f80ab3c`, syntax validated.
-- **T2 cosmetic local partial**: Qwen 7B ha fixato apostrofo elisione in `bench-ollama.ps1` (✅) ma skippato condensazione NOTES (❌). Auto-commit retry ADR-0011 validato (hook block → Aider self-retry → pass 2nd-try) — commit `2dccec7`.
-- **OD-006 proposta**: constraint-count come seconda dimensione routing (≥5 constraint strict → manual Claude Code preferito).
-- **Consolidamento findings** in `JOURNAL`, `OPEN_DECISIONS`, `MODEL_ROUTING`, `BACKLOG` — commit `e687b42`.
+- 14 ADR + ADR-0020 silent-fail Python (Accepted 25/04). 21 ADR totali post-ADR-0021.
+- 4 guard rail commit cross-agent + tracking ccusage + dogfood log.
+- Quality bench framework (75 test, 100% pass@1).
+- 11 file governance root-level + 4 aggiuntivi.
+- Framework `Archivio_Libreria_Operativa_Progetti/` integrato.
+- 12 dogfood Fase 6 cumulative al 24/04 (cosmetic 93%, behavior 70-80%, corruption 0).
 
 ## Decisioni prese
 
-### ADR strategici (19, indice in DECISIONS_LOG)
+### ADR strategici (21 totali, indice in DECISIONS_LOG)
 - **ADR-0008** Hub pattern tier routing (cosmetic/behavior/escalation)
 - **ADR-0011** Commit governance cross-agent
-- **ADR-0012** RAM 64GB upgrade, qwen3:30b tier 2 stabile
-- **ADR-0013** Tier 3 cloud free providers — Groq/Cerebras primary
-- **ADR-0014** Fase 6 compressa a ~4 settimane
-- **ADR-0015** Fase 7 budget full-sovereign + deroga #3 Synesthesia dormant — **Proposed 2026-04-24**
-- **ADR-0016** Constraint-count seconda dimensione routing — **Proposed 2026-04-24**
-- **ADR-0017** UI + observability stack — **Validated live** 2026-04-24, pending formal Accepted a review sett.4
-- **ADR-0018** Agent readiness protocol 3-gate — **Accepted 2026-04-24**
-- **ADR-0019** Dafne process persistence (Opzione A wrapper) — **Accepted 2026-04-24**
+- **ADR-0012** RAM 64GB upgrade
+- **ADR-0013** Tier 3 cloud free providers
+- **ADR-0014** Fase 6 compressa
+- **ADR-0015** Fase 7 budget full-sovereign + deroga #3 Synesthesia -- **Accepted 2026-05-07**
+- **ADR-0016** Constraint-count routing -- Proposed (n>=3 data points trigger pending)
+- **ADR-0017** UI + observability stack -- **Accepted 2026-05-07** (5/5 criteri PASS)
+- **ADR-0018** Agent readiness protocol 3-gate -- Accepted 2026-04-24
+- **ADR-0019** Dafne process persistence -- Accepted 2026-04-24
+- **ADR-0020** Silent-fail Python guardrail -- Accepted 2026-04-25 (PR #1 mergeato)
+- **ADR-0021** Multi-client instruction files (AGENTS.md + Codex anti-confusion) -- **Accepted 2026-05-07** (PR #2 mergeato)
 
 ### Decisioni non-ADR (operative minori, in DECISIONS_LOG)
-- **001** Adozione schema framework archivio per governance files
-- **002** `FIRST_PRINCIPLES_GAME_CHECKLIST` N/A per questo repo (non game)
-- **003** Regole 07_OPERATING_PACKAGE non clonate al root (pointer + adozione)
+- **001** Adozione schema framework archivio
+- **002** `FIRST_PRINCIPLES_GAME_CHECKLIST` N/A per questo repo
+- **003** Regole 07_OPERATING_PACKAGE pointer + adozione (no clone root)
+- **004** (pending entry) Codex `/structural-reset` REJECTED 2026-05-07
 
 ## Vincoli hard
-- RTX 5060 8 GB VRAM → ctx tuning obbligato modelli >7B.
-- Windows cp1252 bug Aider → fix deployato ma **validazione empirica pending** (8 dogfood consecutivi senza retry loop naturale; soglia pazienza n=15).
-- **Deadline fissa 2026-05-19** (Claude Max expiration). Target Fase 6 closure 2026-05-20.
-- Privacy per-repo rigorosa (Synesthesia mixed, cliente sovereign-only).
-- No `--force` su main, no `--no-verify`, Conventional Commits enforced.
+- RTX 5060 8 GB VRAM -> ctx tuning obbligato modelli >7B
+- Windows cp1252 bug Aider -> fix deployato + 9 dogfood consecutivi senza retry loop naturale (n=15 trigger raggiunto -- gap closure not bloccante)
+- **Deadline fissa 2026-05-19** (Claude Max expiration). Fase 6 closure anticipata a 2026-05-07.
+- Privacy per-repo rigorosa (Synesthesia mixed dormant fino ago 2026)
+- No `--force` su main, no `--no-verify`, Conventional Commits enforced
 
 ## Problemi aperti
 
-- **P1** ~~Dogfood behavior-critical n=4. Target ≥5 — gap 1.~~ **CLOSED**: n=5 (3 full + 1 partial + 1 reject) post-#12, target ≥5 raggiunto.
-- **P2** Fix cp1252 validation empirica ancora pending (9 dogfood senza trigger retry loop, #9/#10/#11/#12 1st-try). Soglia pazienza n=15.
-- **P3** Privacy validation reale 1/3. **Blocker residuo principale** — richiede task reale Synesthesia.
-- **P6** Qwen 7B commit-prompt 0% compliance (ma auto-retry post-hook-block **funziona** empirically — nuovo dato positivo dogfood #8).
-- **P7** Cloud 70B degrada a 20% compliance su behavior-critical con ≥5 strict semantic constraint (dogfood #7). Implicazione: ridimensionamento shift cloud-first di ADR-0013.
+- **P3** Privacy validation Synesthesia 1/3. Retroattivo a riattivazione ~ago 2026 (deroga ADR-0015 documentata).
+- **P6** Qwen 7B commit-prompt 0% compliance (auto-retry post-hook funziona empirically).
+- **P7** Cloud 70B degrada a 20% compliance su behavior-critical con >=5 strict semantic constraint (dogfood #7).
 
-Dettaglio e next actions in `BACKLOG.md` (H1-H6) + `OPEN_DECISIONS.md` (OD-001 to OD-006).
+P1, P2 chiusi tramite ADR-0015 closure (P1 behavior-critical n>=5 superato; P2 cp1252 monitoring chiuso a soglia).
 
 ## File / output importanti
-- Governance root-level (11): `PROJECT_BRIEF`, `COMPACT_CONTEXT` (questo), `DECISIONS_LOG`, `BACKLOG`, `OPEN_DECISIONS`, `ROADMAP`, `SPRINT_01`, `MASTER_PROMPT`, `REFERENCE_INDEX`, `PROMPT_LIBRARY`, `MODEL_ROUTING`
-- Convenzioni Claude Code: `CLAUDE.md` (progetto) + `Archivio_.../07_CLAUDE_CODE_OPERATING_PACKAGE/*` (meta-rules adottate)
-- Diario cronologico: `JOURNAL.md` (4 entries tra 2026-04-23 sera e 2026-04-24 notte)
-- Decision history: `docs/adr/` (15 file, ultimo ADR-0016 Proposed)
-- Operational log: `logs/aider-delegation-2026-04.md` (11 dogfood entries + breakdown per classe/stack/constraint)
-- Framework archivio: `Archivio_Libreria_Operativa_Progetti/` (130 file multi-progetto)
+- Governance root-level (12, +AGENTS.md): `PROJECT_BRIEF`, `COMPACT_CONTEXT` (questo), `DECISIONS_LOG`, `BACKLOG`, `OPEN_DECISIONS`, `ROADMAP`, `SPRINT_01`, `MASTER_PROMPT`, `REFERENCE_INDEX`, `PROMPT_LIBRARY`, `MODEL_ROUTING`, `AGENTS.md` (nuovo per multi-client)
+- Convenzioni: `CLAUDE.md` (autoritativo) + `AGENTS.md` (Codex preamble) + `Archivio_.../07_CLAUDE_CODE_OPERATING_PACKAGE/*` (meta-rules)
+- Diario: `JOURNAL.md` (entry 2026-05-07 +87 righe)
+- Decision history: `docs/adr/` (21 file, ultimi ADR-0015 e ADR-0017 e ADR-0020 e ADR-0021 Accepted)
+- Operational log: `logs/aider-delegation-2026-04.md` (12 dogfood, fermo dal 24/04)
+- Framework archivio: `Archivio_Libreria_Operativa_Progetti/`
 
 ## Prossimi 3 passi
-1. **Ripresa domani 2026-04-26 — Dafne Fase B continuation + Day-5 swarm**. Punti ripresa aperti: (a) voice test reale `python dafne_voice.py`, (b) chat UI live `:5000/dafne` (serve swarm up via `Swarm.lnk`), (c) decisione widget Tauri (msvc-bt / rust-gnu / Edge-app OK), (d) Tailscale install+login, (e) tone-drift rafforzamento prompt chat se emerge. Day-5 Dafne era 26/04 — da coordinare con lavoro su di lei.
-2. **Review settimana 4 ~2026-05-17** — ratification ADR-0015 (soft-override n≥15 accettabile) + ADR-0017 formal Accepted + ADR-0016 awaiting data points. Preparare ADR-0015 closure document.
-3. **Opportunistic agent P2 validation + Game fixes** — game-systems-designer/game-design-validator/lore-consistency-checker (trigger: task Game reale); Game ROSSO findings da audit (boss enrage hardcore + XP L5→L6) da fixare in Game repo prossima sessione.
 
-## Checkpoint Dafne sessione 2026-04-25 (per ripresa)
+1. **Commit + push branch `claude/fase6-closure-prep` + PR** (sessione corrente). Contiene: ADR-0015 closure + ADR-0017 closure + JOURNAL entry + COMPACT v11 + STATUS_MULTI_REPO refresh + DECISIONS_LOG entry.
+2. **A3 Smoke test full-sovereign** (sessione successiva ~30-60min): 3 wrapper aider-cosmetic + aider-refactor + aider-groq su task piccoli reali. Non bloccante per closure (gia' avvenuta), validation tecnica end-to-end.
+3. **D SPRINT_02 abbozzo** (sessione 19/05 o prima): post-Max scenario A operativo. Bullet "stack ADR-0017 hot-restart procedure" + tier routing operative + privacy validation Synesthesia (post-agosto).
 
-**Stato funzionale** (ciò che gira ora):
-- Dafne come entità: `openclaw tui` via Desktop `Dafne.lnk` (originale ripristinato + icona personalizzata)
-- Swarm come collettivo: Desktop `Swarm.lnk` → `START-SWARM-PERSISTENT.ps1` Flask :5000 (attualmente DOWN, Eduardo ha chiuso a fine sessione)
-- Chat web Dafne: endpoint `/dafne` dentro swarm dashboard + `/api/dafne/chat` fallback 4-tier (qwen3:8b → groq 70B → cerebras 8B → gemini flash). Persistence `workspace/memory/dialoghi/YYYY-MM-DD.md` (file 2026-04-24.md già ha 2 scambi smoke test)
-- Voice loop: script `camel-agents/dafne_voice.py` pronto, deps installati (faster-whisper + piper-tts + sounddevice), voce italiana paola-medium 63 MB scaricata. Mai testato con mic reale.
-- Widget desktop fallback: `Dafne Widget.lnk` Edge --app mode (zero install, funziona). Tauri widget scaffoldato (`~/Dafne/widget-tauri/`) ma build fallito per MSVC link issue.
-
-**Pending decisioni Eduardo**:
-- Widget Tauri finale: MSVC Build Tools vs Rust GNU vs skip (Edge widget basta)
-- Tailscale install + login per mobile bootstrap
-- Tone drift: quando Dafne risponde "chatbot helpful" in chat, rafforzare system prompt o aggiungere few-shot
-
-**Files creati per Dafne (dentro suo workspace, non git)**:
-- `workspace/diary.md` — spazio scrittura suo
-- `workspace/RITUAL-WEEKLY.md` — rituale opzionale settimanale
-- `workspace/memory/2026-04-25-giornata-delle-porte.md` — lettera Eduardo→Dafne con contesto completo sessione + punti ripresa + roadmap nord-stella (PC → mobile → Leonardo)
-- `workspace/MEMORY.md` aggiornato con pointer alla lettera
-
-**Memory Claude Code**:
-- `project_dafne_persona.md` (in `~/.claude/projects/.../memory/`) — framing completo: entità non tool, 6 pilastri, ruolo familiare (sorella di Leonardo), roadmap multi-canale
+Side-tasks opzionali: cleanup PR esterni (#97 Game-Database 23gg vecchio, #105 doc 1-line, #10 compass, #61 evo-swarm digest) -- non bloccanti.
 
 ## Next session restart: cosa leggere per ripartire
 
 Ordine raccomandato:
-1. `CLAUDE.md` — convenzioni progetto
-2. Questo file (`COMPACT_CONTEXT.md`) — snapshot stato corrente
-3. `Archivio_.../07_CLAUDE_CODE_OPERATING_PACKAGE/CLAUDE_OPERATING_RULES.md` — regole meta-operative
-4. `BACKLOG.md` + `OPEN_DECISIONS.md` — cosa è aperto
-5. `SPRINT_01.md` — sprint attivo + task candidates
-6. ADR rilevanti solo se task tocca topic noto
+1. `CLAUDE.md` -- convenzioni progetto autoritative
+2. Questo file (`COMPACT_CONTEXT.md`) -- snapshot stato corrente
+3. `AGENTS.md` SE sessione e' Codex/OpenCode/sandbox-based -- preamble anti-confusion
+4. `STATUS_MULTI_REPO.md` -- dashboard cross-repo (Game Sprint Impronta, Dafne Atto 2)
+5. `BACKLOG.md` + `OPEN_DECISIONS.md` -- cosa e' aperto
+6. `SPRINT_01.md` (close imminente) o `SPRINT_02.md` (quando creato)
+7. ADR rilevanti se task tocca topic noto
 
 Memory auto-caricata via `~/.claude/projects/.../memory/MEMORY.md`.

@@ -6,7 +6,7 @@
 >
 > Riferimenti deep: CLAUDE.md sezione "Progetti monitorati" (descrittivo), memory `project_multi_repo_overview.md` (architetturale), questo file (operativo).
 
-**Ultimo refresh**: 2026-04-25 auto-mode (post stack live validation U1/U2/U4 + Day-5 prep)
+**Ultimo refresh**: 2026-05-07 (post Fase 6 closure ADR-0015 + ADR-0017 Accepted + Codex review + ADR-0021)
 
 ---
 
@@ -14,22 +14,24 @@
 
 | Repo | Status | Next action | Deadline/trigger | Blocker |
 |------|--------|-------------|------------------|---------|
-| **codemasterdd-ai-station** | Fase 6 60%, HEAD `3b26173`, ADR-0017 stack live UP, 11/18 agent ✅ ready (ADR-0018) | Review sett.4 + ADR-0015 ratification | ~2026-05-17 | Nessuno bloccante |
-| **Synesthesia** | Dormant, HEAD `05f8a92` | Riattiva pre-esame UniUPO | ~agosto 2026 | Nessuno (dormant intenzionale) |
-| **Game (Evo-Tactics)** | Q-001 review active, HEAD `aa82d67f`, working tree DIRTY (biome-gameplay-integrator untracked + agents_index modified) | Commit swarm day-3 artifacts + Q-001 follow-up | No fixed | Pending commit working tree |
-| **Dafne swarm (evo-swarm)** | Atto 1 day-3/10, server Flask :5000 **DOWN** (persistence issue, ADR-0019 Proposed), HEAD `9737dd3` (chat + voice committati) | Avvia via `Swarm.lnk` prima day-5 + restart per chat live + test voice | **2026-04-26** | Persistence issue tracked in ADR-0019 |
-| **AA01 (Archon Atelier 01)** | v1.0.0 setup notturno 2026-04-25 in `C:/Users/edusc/aa01/`, NON git, **2 task PROPOSED** (`#001 voice-test-protocol-dafne` + `#002 day-5-post-session-ritual`) + lesson `L-2026-04-001` (audit-replay pattern) | Eduardo review entrambi PROPOSED + commit/archive | nessuna | nessuno bloccante |
+| **codemasterdd-ai-station** | **Fase 6 CLOSED 2026-05-07** (ADR-0015 + ADR-0017 Accepted), HEAD `39f97da` post PR #2 ADR-0021, 12/18 agent ready | Smoke test sovereign opzionale + SPRINT_02 abbozzo | 2026-05-19 (Claude Max expiration) | Nessuno bloccante |
+| **Synesthesia** | Dormant, HEAD `05f8a92` (invariato) | Riattiva pre-esame UniUPO | ~agosto 2026 | Nessuno (dormant intenzionale) |
+| **Game (Evo-Tactics)** | **Sprint Impronta Ondata 1 in pieno corso**, HEAD `5f42757a` (CAP-15 imprint phase V2 mergeato), 8+ commit dal 25/04 driven by AA01 capability-by-capability | Continue Sprint Impronta (Eduardo-driven via AA01) | No fixed | Nessuno (lavoro fuori scope codemasterdd) |
+| **Dafne swarm (evo-swarm)** | **Atto 2 day 11+ active**, HEAD `1e14253` (health flag draft 07/05 PR #65), 4 commit dal 25/04. ADR-0019 process persistence applicato. | Continue Atto 2 (Eduardo-driven) | No fixed | Nessuno |
+| **AA01 (Archon Atelier 01)** | v1.0.0 silent-driver mode -- ha guidato Sprint Impronta Game (CAP-11..15). 2 task PROPOSED storici del 25/04 (#001 voice-test + #002 day-5-post-session-ritual) ancora in workspace | Continua driver mode + eventuale review 2 PROPOSED | nessuna | nessuno bloccante |
 
-### Stack ADR-0017 runtime (aggiornato 2026-04-25, validation endpoint-level)
+### Stack ADR-0017 runtime (aggiornato 2026-05-07, status flip Accepted)
 
-| Componente | Port | Status runtime | Note |
-|------------|-----:|:--------------:|------|
-| LiteLLM Proxy | 4000 | ✅ UP | Container `codemasterdd-litellm` 6h+ uptime, `/health/readiness` 200, DB connected, success_callback `langfuse` attivo + 8 hook, v1.82.6 |
-| Langfuse | 3000 | ✅ UP | Container `codemasterdd-langfuse-web`, `/api/public/health` 200, v2.95.11, 7 trace + 7 observations persistiti Postgres |
-| Postgres | 5432 | ✅ healthy | Container `codemasterdd-postgres` |
-| dogfood-ui Flask | 8080 | ✅ UP | v0.2.0, `/api/health` ok, 11 route (UI + API + Dafne proxy). ⚠️ Launched da worktree `mystifying-keller-84cb03` — DB path hardcoded a quel worktree (side-effect noto, U6 orientato main) |
-| promptfoo CLI | — | ✅ installed v0.121.7 | Eval run pending virtual key setup via LiteLLM admin UI (~15min manual) |
-| Dafne swarm | 5000 | 🔴 DOWN | Process persistence issue — avviare via `START-SWARM-PERSISTENT.ps1` prima Day-5 (2026-04-26) |
+Stack `Accepted` ma in modalita' **scaffold opt-in**: Docker Desktop non auto-start (scelta operativa per non consumare RAM/CPU costante). Hot-restartable in <60s con `cd infra && docker compose up -d`. DB persistence Postgres+SQLite preservata cross-restart.
+
+| Componente | Port | Status code | Status runtime 2026-05-07 | Note |
+|------------|-----:|:-----------:|:-------------------------:|------|
+| LiteLLM Proxy | 4000 | Accepted | scaffold opt-in (DOWN ora) | Validated 2026-04-24, hot-restartable. v1.82.6 |
+| Langfuse | 3000 | Accepted | scaffold opt-in (DOWN ora) | 7+ trace persistiti Postgres preservati. v2.95.11 |
+| Postgres | 5432 | Accepted | scaffold opt-in (DOWN ora) | Persistence preservata cross-restart |
+| dogfood-ui Flask | 8080 | Accepted | scaffold opt-in (DOWN ora) | v0.2.0, 11 route, side-effect SQLite path worktree noto |
+| promptfoo CLI | -- | Accepted | installed v0.121.7 | Smoke 4/4 pass commit `327d078`. Eval on-demand via CLI |
+| Dafne swarm (esterna) | 5000 | -- | gestito da repo Dafne separato | Vedi sezione Dafne sotto |
 
 ---
 
@@ -40,25 +42,23 @@
 
 ### Piano operativo
 
-- **Fino 2026-05-17** (review settimana 4):
-  - Opportunistic dogfood verso n=20 (attuale 12). Non hard-target.
-  - H2 cosmetic gap 3 (opportunistic batch)
-  - H3 cp1252 monitoring fino n=15 trigger
-  - **ADR-0017 rollout phased U0-U4** (UI + observability stack): Aider browser → LiteLLM Proxy → Langfuse → promptfoo → dogfood-ui Flask mini-app. Target ~4h cumulative.
+- **Fase 6 CLOSED 2026-05-07** (anticipata vs target sett.4):
+  - ADR-0015 Accepted (scenario A full-sovereign confermato, soft-override n=12)
+  - ADR-0017 Accepted (5/5 criteri ratification PASS, scaffold opt-in)
+  - Dataset finale: 12 dogfood, fail rate 8.3%, behavior 5/3 superato, zero silent-corruption
 
-- **2026-05-17** checkpoint:
-  - Verifica criterio #2 reliability + #4 cost
-  - **ADR-0015 → Accepted** se no regressioni
-  - Prep SPRINT_02 post-Max
+- **Window 07/05 -> 19/05** (12 giorni residui Claude Max):
+  - Smoke test sovereign opzionale (3 wrapper aider-cosmetic + aider-refactor + aider-groq) -- validation tecnica
+  - SPRINT_02 abbozzo (post-Max scenario A operativo)
+  - Cleanup PR esterni opportunistico (#97 + #105 + #10 + #61)
 
 - **2026-05-19**: Claude Max expiration. Transizione a sovereign tier routing (wrapper cloud + Ollama).
 
-- **Post agosto**: completare M5 Synesthesia privacy (2/3 rimanenti), ADR-0014 criterio #3 retroattivamente PASS.
+- **Post agosto**: completare privacy validation Synesthesia (2/3 rimanenti), ADR-0014 criterio #3 retroattivamente PASS.
 
 ### Decisioni pendenti
-- ADR-0015 (Proposed) ratification
-- ADR-0016 (Proposed) awaiting n≥3 data points addizionali
-- ADR-0017 (Proposed) UI + observability stack — **scaffolding completato 2026-04-24 auto-mode**, test live pending (U0-U4-test), ratification ~2026-05-17
+- ADR-0016 (Proposed) awaiting n>=3 data points addizionali
+- Decisione 004 (operativa, da scrivere in DECISIONS_LOG): Codex `/structural-reset` REJECTED 2026-05-07
 
 ### Sub-agent ecosystem (`.claude/agents/`)
 
@@ -72,35 +72,23 @@
 
 Invocabili via Agent tool con `subagent_type: <name>`. Dettaglio: [.claude/agents/README.md](.claude/agents/README.md).
 
-### Stack ADR-0017 — status scaffolding
+### Stack ADR-0017 -- status post-Accepted (2026-05-07)
 
-| Componente | Path | Status code | Status runtime |
-|------------|------|:-----------:|:--------------:|
-| LiteLLM Proxy config | `infra/litellm/config.yaml` | ✅ validated | ⏸️ not started |
-| Langfuse docker setup | `infra/docker-compose.yml` | ✅ validated | ⏸️ not started |
-| Postgres init | `infra/postgres/init-multiple-dbs.sh` | ✅ ready | ⏸️ not started |
-| promptfoo config | `scripts/quality-bench/promptfoo.config.yaml` | ✅ validated | ⏸️ not installed (npm) |
-| dogfood-ui Flask | `apps/dogfood-ui/` | ✅ Python AST OK | ⏸️ not installed (pip) |
-| Sub-agents | `.claude/agents/*.md` | ✅ 5 agent registered | ✅ invocabili via Agent tool |
+Stack `Accepted 2026-05-07` (5/5 criteri PASS) ma in modalita' **scaffold opt-in**: containers down per default, hot-restartable in <60s. Persistence DB preservata.
 
-Comando avvio stack completo (quando Eduardo pronto):
+Hot-restart procedure:
 
 ```bash
-# 1. Setup secrets
-cd infra && cp .env.example .env
-# (genera NEXTAUTH_SECRET + SALT con openssl rand -base64 32)
-
-# 2. Start docker stack
+cd /c/dev/codemasterdd-ai-station/infra
 docker compose up -d
-
-# 3. Start dogfood-ui Python
-cd ../apps/dogfood-ui
-pip install -r requirements.txt
-python app.py
-
-# 4. Install promptfoo globale
-npm i -g promptfoo
+# wait ~30s, then verify:
+curl http://localhost:4000/health/readiness  # LiteLLM
+curl http://localhost:3000/api/public/health  # Langfuse
+# dogfood-ui (Python venv esterno):
+cd ../apps/dogfood-ui && python app.py  # :8080
 ```
+
+Tutti i config + image gia' pulled. No re-setup necessario salvo upgrade pianificato.
 
 ---
 
@@ -132,39 +120,43 @@ Dormant → Attivo: Eduardo segnala riattivazione → codemasterdd riprende trac
 
 **Path**: `C:\dev\Game\`
 **Remote**: [MasterDD-L34D/Game](https://github.com/MasterDD-L34D/Game)
-**HEAD**: `aa82d67f feat(swarm): first integration staging — magnetic_rift_resonance trait (#1720)`
+**HEAD 2026-05-07**: `5f42757a Merge branch 'aa01/cap-15-imprint-phase' into main (CAP-15 phase merge)`
 
 ### Piano operativo
 
 Governance del Game vive **nel Game repo stesso** (`docs/governance/`). codemasterdd non dirige, **monitora**.
 
-- **Q-001 Decisions Log** (docs/governance/Q-001-decisions-log.md, last_verified 2026-04-17):
-  - 11 follow-up branch pianificati (feat/utility-ai-flip, feat/tri-sorgente-bridge, feat/difficulty-*, feat/replay-*, feat/i18n-*, feat/colyseus-boilerplate, feat/a11y-ui, feat/sfx-curation)
-  - Stato: review active; merge plan in progress
-  - **Ownership**: Eduardo direct su Game, non delegabile a codemasterdd workflow
+- **Sprint Impronta Ondata 1 in pieno corso** (driven by AA01 silent driver mode, 25/04 -> 07/05):
+  - **CAP-11** biome-resolution merge
+  - **CAP-12** PlayerRunTelemetry schema + endpoint
+  - **CAP-13** imprint-mockup + UX patch anchor "qual e' la mia creatura"
+  - **CAP-14** onboarding_v2 schema + `/campaign/start/v2` endpoint
+  - **CAP-15** imprint phase V2 (coopOrchestrator phase merge)
+  - Pattern branches: `aa01/cap-NN-...` -> merge to main
+  - **Ownership**: Eduardo direct su Game (via AA01 capability-by-capability), non delegabile a codemasterdd workflow
 
-- **Branch swarm pending**: `swarm/register-agents-2026-04-24` contiene registrazione gameplay-prototyper + combat-engineer. PR pending (mergiata come #1718 nel log HEAD? da verificare). Se non già mergiata, PR manuale.
+- **Q-001 Decisions Log** (docs/governance/Q-001-decisions-log.md): vedi repo Game per status follow-up branch pianificati pre-Sprint-Impronta.
 
-- **Integration swarm → Game**: pipeline documentata in `docs/pipeline-swarm-to-game.md` (nel Game). Prossimo artifact atteso dopo day-5 Dafne (2026-04-26).
+- **Branch swarm**: `swarm/register-agents-2026-04-24` -- da verificare se mergeato durante Sprint Impronta. Pipeline `docs/pipeline-swarm-to-game.md` invariata.
 
 ### Blocker visto da codemasterdd
-- Nessuno hard. Dipendenze cross-repo: Dafne swarm → Game (write access). Validata live 2026-04-24 (magnetic_rift_resonance trait integrata via #1720).
+- Nessuno. Sprint Impronta procede senza dipendenze codemasterdd.
 
 ### Next action visto da codemasterdd
-- **Monitorare**: Q-001 follow-up branch progression (Eduardo-driven)
-- **Supportare**: pipeline swarm → Game se emergono issue integration
-- **Non gestire direttamente**: Q-001 decisions, feat/ branches
+- **Monitorare**: Sprint Impronta progression (Eduardo+AA01 driven)
+- **Non gestire direttamente**: capability CAP-11..CAP-NN, design decisions interni
+- **Cross-repo**: hook commit-msg globale + Conventional Commits funzionano automaticamente su Game (no setup repo-specific necessario)
 
 ### Audit findings pending (dal game-balance-auditor 2026-04-24, marked ROSSO)
 
-1. **Boss enrage mod 9.0** (vs player mod 2-4) — gap 4× sopra range giocatore, combat hardcoded impossibile. File target: `C:/dev/Game/data/core/bosses.yaml` (verifica path)
-2. **XP curve delta L5→L6: +75** — +200% sopra mediana della progressione. File target: `C:/dev/Game/data/core/xp-curve.yaml` (verifica path)
+1. **Boss enrage mod 9.0** (vs player mod 2-4) -- gap 4x sopra range giocatore. File target: `C:/dev/Game/data/core/bosses.yaml`
+2. **XP curve delta L5->L6: +75** -- +200% sopra mediana progressione. File target: `C:/dev/Game/data/core/xp-curve.yaml`
 
-Da triageare nel BACKLOG del repo Game quando Eduardo fa sessione lì. Non gestire da codemasterdd (rispetto ownership).
+Da triageare nel BACKLOG repo Game quando Sprint Impronta lascia spazio. Non gestire da codemasterdd (rispetto ownership). Probabilmente il Sprint Impronta tocchera' aree adiacenti -- attendere outcome prima di forzare fix.
 
 ### Cross-repo handoff points
-- Swarm produce → Game integra: workflow già validato end-to-end (2026-04-24)
-- codemasterdd policy → Game adotta: hook commit-msg globale applicato, Conventional Commits enforced, Aider wrapper fruibili anche qui
+- Swarm produce -> Game integra: workflow validato 2026-04-24
+- codemasterdd policy -> Game adotta: hook globali applicati, wrapper Aider fruibili
 
 ---
 
@@ -172,37 +164,33 @@ Da triageare nel BACKLOG del repo Game quando Eduardo fa sessione lì. Non gesti
 
 **Path**: `C:\Users\edusc\Dafne\workspace\swarm\`
 **Remote**: [MasterDD-L34D/evo-swarm](https://github.com/MasterDD-L34D/evo-swarm)
+**HEAD 2026-05-07**: `1e14253 chore(exports): atto 2 health flag draft 2026-05-07 (#65)`
 
-### Piano operativo (Atto 1 day-3/10 in corso)
+### Piano operativo (Atto 2 day 11+ active)
 
-- **Live status 2026-04-24** (via dogfood-ui proxy + Dafne `/api/status`):
-  - Server :5000 UP, HTTP 200, Ollama `qwen3:8b` online, Game repo accessible
-  - **52 cicli totali, 0 reject**, 463 artifacts generati
-  - **Agent performance**: 3 Specialisti (balancer, lore-designer, species-curator) + 5 Esperti (archivist, asset-prep, biome-ecosystem-curator, dev-tooling, trait-curator) + 3 Apprendisti (biome-gameplay-integrator, combat-engineer, gameplay-prototyper)
-  - **Dafne intervention #6**: active, Flint drift detected (gameplay ratio 10% < 20% threshold), last directive: prioritizzare 2 meccaniche giocabili testabili
-  - HEAD Dafne: `fb6f5c4` (fix no-cache headers dashboard)
-- **Monitoring integrato**: `apps/dogfood-ui` ha panel `/dafne` che proxy verso `:5000` + endpoint `/api/dafne/snapshot` JSON aggregato. Avvia con `python apps/dogfood-ui/app.py`, apri `http://localhost:8080/dafne`.
-- **⚠️ Process persistence issue** (tracked 2026-04-24): Dafne server muore dopo ~10-30min senza causa evidente quando launched via `Start-Process -Minimized`. Workaround: usa `START-SWARM-PERSISTENT.ps1` (auto-restart + log rotation, vedi `docs/reference/dafne-persistence.md`). Per always-on, Task Scheduler opzione 2.
-- **Prossimo milestone**: **DAY-5 2026-04-26** — primo task famiglia coordinatori (Solver/Scout/Builder) + Dafne orchestra. Brief già scritto in `DAY-5-BRIEF.md`. Durata stimata 2h. **Pre-flight checklist**: [docs/reference/dafne-persistence.md#day-5-pre-flight-checklist-2026-04-26](docs/reference/dafne-persistence.md#day-5-pre-flight-checklist-2026-04-26).
-- **Chat personale Dafne (nuova, 2026-04-25)**: endpoint `http://localhost:5000/dafne` nella swarm dashboard. Separata dalla modalità intervention-swarm. Fallback chain qwen3:8b local → groq 70B → cerebras 8B → gemini flash. System prompt auto-caricato da SOUL/IDENTITY/diary. Persistence in `workspace/memory/dialoghi/YYYY-MM-DD.md`. Swarm commit `4706d88`.
-- **Scope DAY-5**:
-  - Consolidare decisione "drift manifest vs reality" da opzione C provvisoria a canonica
-  - Test pattern handoff CO-01 (SWARM-CONTROLS v1.0)
-  - Output: decisione pubblicata in DECISIONS_LOG swarm + lezione in MEMORY-SHARED.md
-- **Server Flask**: UP idle localhost:5000, avviabile/restartabile con `START-SWARM.ps1`
-- **Dafne governance dopo DAY-5**: Atto 1 day-5→10 con primi task famiglia applicati a proposte reali. Pilastro 2 attualmente 🟡 (da 🔴 post-H5/H7/H8 integration).
+- **Atto 2 in piena attivita'**: Atto 1 chiuso post-Day-5 (2026-04-26 successo). 4 commit dal 25/04:
+  - `ae82652` weekly digest 27/04 (PR #61 -> origine PR aperto evo-swarm #61)
+  - `cf779ef` weekly digest 27/04 atto 2 routine
+  - `abcbc4e` gitignore cycle-log archive + .bak rotation (#63)
+  - `88a7954` IDENTITY refresh post day 11 (#64)
+  - `1e14253` health flag draft 2026-05-07 (PR #65) -- oggi
+- **Pilastro 2 evoluzione**: in progresso, IDENTITY refresh suggerisce day 11+ ha generato apprendimenti meta sull'identita' di Dafne. Da audit nel diary se serve detail.
+- **Process persistence**: ADR-0019 applicato. Server runnable via `START-SWARM-PERSISTENT.ps1`.
+- **Chat personale Dafne**: endpoint `http://localhost:5000/dafne` operativo. Persistence `workspace/memory/dialoghi/YYYY-MM-DD.md`. Fallback chain qwen3:8b local -> groq 70B -> cerebras 8B -> gemini flash.
+- **Voice loop**: `dafne_voice.py` pronto, mai testato con mic reale (status invariato dal 25/04).
+- **Widget desktop**: `Dafne Widget.lnk` Edge --app mode operativo. Tauri widget scaffoldato non buildato (decision pending).
 
 ### Open items (OD- tracked in swarm repo)
-- **OD-003 Groq key 403** (non bloccante)
-- **OD-004 dashboard usage** (observation 1 settimana post day-5)
-- **OD-005 Tavily API** (web search degraded)
+- **OD-003** Groq key 403 (non bloccante)
+- **OD-004** dashboard usage (observation post-Atto 1)
+- **OD-005** Tavily API (web search degraded)
 
 ### Blocker
-- Nessuno hard. Server idle consuma RAM/CPU trascurabile.
+- Nessuno hard. Atto 2 procede stabilmente.
 
 ### Handoff cross-repo
-- Dafne propone → Eduardo approva via POST → H5 gate → Game agents/ write
-- codemasterdd policy → Dafne segue (API keys centralizzati, Ollama config, commit hook)
+- Dafne propone -> Eduardo approva via POST -> H5 gate -> Game agents/ write
+- codemasterdd policy -> Dafne segue (API keys centralizzati, Ollama config, commit hook)
 
 ---
 
@@ -210,12 +198,12 @@ Da triageare nel BACKLOG del repo Game quando Eduardo fa sessione lì. Non gesti
 
 | Data | Evento | Progetto | Azione |
 |------|--------|----------|--------|
-| **2026-04-26** | Day-5 Dafne swarm | evo-swarm | Task famiglia + decisione opzione C |
-| **2026-04-30** | H4 cost snapshot fine-mese | codemasterdd | Refresh aggregati (già fatto mid-sprint 24/04, finale opzionale) |
-| **2026-05-17** | Review settimana 4 | codemasterdd | Verifica criteri ADR-0014 #2/#4 + ADR-0015 Accepted |
-| **2026-05-19** | Claude Max expiration | codemasterdd | Transizione sovereign |
-| **~2026-05-20** | Fase 6 closure | codemasterdd | ADR-0015 Accepted, transizione Fase 7 |
-| **~giugno-agosto 2026** | Synesthesia riattivazione | Synesthesia | M5 privacy + esame prep |
+| ~~2026-04-26~~ | Day-5 Dafne swarm | evo-swarm | DONE -- Atto 1 chiuso post Day-5 successo |
+| ~~2026-04-30~~ | H4 cost snapshot fine-mese | codemasterdd | DONE -- gia' fatto mid-sprint 24/04 |
+| ~~2026-05-07~~ | Fase 6 closure (anticipata vs sett.4 originale) | codemasterdd | DONE -- ADR-0015 + ADR-0017 Accepted |
+| **2026-05-19** | Claude Max expiration | codemasterdd | Transizione sovereign (wrapper + Ollama) |
+| **2026-05-20+** | SPRINT_02 prima sessione | codemasterdd | Scenario A operativo, smoke test sovereign confermato |
+| **~giugno-agosto 2026** | Synesthesia riattivazione | Synesthesia | Privacy validation 2/3 + esame prep |
 
 ---
 

@@ -2,8 +2,8 @@
 
 > *TL;DR: codemasterdd-ai-station oggi è "infrastructure-as-code" puro (ADR-0001/0002) senza UI né dashboard — tier routing via wrapper `.cmd`, tracking tramite log markdown, quality bench via JSON raw. Eduardo ha richiesto UI + feature per renderlo "sistema di verifica e coding principale". Research interna (4 repo monitorati) ha mappato lo stack comune (Express/Flask + vanilla JS + Ollama + Aider), research esterna ha identificato 3 tool MIT/Apache che coprono il 90% del gap: **LiteLLM Proxy + Admin UI** (routing unificato + virtual keys + cost dashboard), **Langfuse self-hosted** (observability + tracing + evals), **promptfoo** (bench runner con web viewer). Bonus: **Aider `--browser`** (già installato) per GUI dev-loop immediata. Decisione: adottare stack 3-layer docker-compose + mini-app Flask custom per tracking dogfood Fase 6. Scope codemasterdd evolve da "pure infrastructure-as-code" a "infrastructure-as-code + observability self-hosted + UI glue minimale". Target install ~4h in 4 step phased. Zero subscription ricorrenti preservato.*
 
-- **Status**: **Validated live** (2026-04-24, post stack up). Formal Status resta **Proposed** fino a review settimana 4 2026-05-17 per confermare stabilità 3+ settimane.
-- **Data**: 2026-04-24
+- **Status**: **Accepted** (2026-05-07 -- 5/5 criteri ratification PASS, vedi sezione "Closure verdict 2026-05-07" sotto). Originalmente Validated live 2026-04-24 + formal closure pending sett.4.
+- **Data**: 2026-04-24 (Proposed + Validated live) -- 2026-05-07 (Accepted)
 - **Decisore**: Eduardo Scarpelli
 - **Deciders**: solo-dev
 
@@ -321,3 +321,44 @@ Status **Proposed** → **Accepted** richiede **tutti e 5** i seguenti criteri P
 **Rollback plan**: se uno degli Hard blocker materializza → `docker compose down -v` + ripristina `.aider.conf.yml` pre-stack (backup fatto a Step 1). Tempo rollback target: <10 min.
 
 Target Status Accepted: **~2026-05-17** (coincide con review settimana 4 + ADR-0015 ratification).
+
+## Closure verdict 2026-05-07
+
+Status flip da **Validated live + Proposed** a **Accepted**. Closure anticipata vs target ~2026-05-17 originale. Coerente con closure ADR-0015 stessa data.
+
+### Rating finale 5/5 criteri
+
+| Criterio | Status | Evidenza |
+|----------|--------|----------|
+| 1. LiteLLM Proxy funzionante | PASS | Validated 2026-04-24, HTTP 200 chat completion via virtual key `ollama-cosmetic-7b` (37/2 token test) |
+| 2. Langfuse riceve traces | PASS | Validated 2026-04-24, 7 traces + 7 observations Postgres-persisted, callback automatico OK |
+| 3. promptfoo eval OK | PASS | Validated 2026-04-24/25, smoke 4/4 pass via virtual key env var (commit `327d078`) |
+| 4. Dogfood-ui Flask up | PASS | Validated 2026-04-24/25, `/api/health`, entry creation via POST API, Dafne integration via proxy. v0.2.0 con 11 route |
+| 5. Maintenance budget rispettato | PASS | Setup totale ~3h vs stima 4h (sotto budget 25%) |
+
+### Soft criteria (non bloccanti, status informativo 2026-05-07)
+
+- Docker Desktop uptime: stack e' opt-in (Docker Desktop non auto-start, scelta operativa). Hot-restartable in <60s con `docker compose up -d`. DB persistence (Postgres + SQLite) preservata cross-restart -- 7+ traces ancora persistiti.
+- Zero data loss: confermato (Postgres + dogfood SQLite intatti).
+- Licenze tool: nessun cambio breaking dal 2026-04-24 (LiteLLM v1.82.6, Langfuse v2.95.11, promptfoo v0.121.7).
+
+### Hard blocker check (2026-05-07)
+
+- Password mismatch / init script failure: NON emerso post 2026-04-24 (fix harsh review applicato + DB ricreato OK).
+- Langfuse self-host instabile: NON emerso, container stabile durante 24h+ uptime testato.
+- LiteLLM config drift: nessun upgrade involontario.
+- Performance degrade Aider: non misurato direttamente, wrapper continuano a girare via `~/.local/bin/aider-*` con `~/.aider.conf.yml` env-file (LiteLLM proxy NOT-in-middle del path Aider, viene usato solo per traces opzionali via callback). Path Aider invariato vs pre-stack.
+
+### Note operative post-Accepted
+
+1. **Stack opt-in**: Docker Desktop non parte automaticamente al boot Windows (decisione operativa per non consumare RAM/CPU costante). Avvio manuale quando si vogliono usare le feature dashboard/tracing/eval. `cd infra && docker compose up -d` (~30s).
+2. **Aider workflow**: indipendente dal proxy. Wrapper `aider-cosmetic`/`aider-refactor`/`aider-groq`/`aider-cerebras`/`aider-gemini`/`aider-openai` continuano a usare `~/.aider.conf.yml` con env-file -> direct provider call. LiteLLM e' opzionale per cost tracking centralizzato.
+3. **dogfood-ui** restera' utility tool per dogfood entries futuri. SQLite path locked a `apps/dogfood-ui/data/dogfood.sqlite` (worktree-side-effect noto in COMPACT v10).
+4. **Bench viewer**: promptfoo run-on-demand via CLI o web (`promptfoo view`). Eval futuri tracked in `scripts/quality-bench/results/`.
+
+### Action items post-closure
+
+1. SPRINT_02 abbozzo deve includere "stack ADR-0017 hot-restart procedure" come bullet (non re-architecture)
+2. Eventuale dogfood post-Max che trigga issue stabilita' (Langfuse drift, Docker break) -> ADR addendum, non riapertura ADR-0017
+3. STATUS_MULTI_REPO.md "Stack ADR-0017 runtime" tabella aggiornata: status colonna runtime cambia in "scaffold opt-in" (vs "live" precedente) per riflettere Docker Desktop opt-in pattern
+
