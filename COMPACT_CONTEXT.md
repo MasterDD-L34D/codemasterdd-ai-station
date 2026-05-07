@@ -6,36 +6,59 @@
 
 ## Progetto
 - **Nome**: CodeMasterDD AI Station
-- **Versione del compact**: v11 (sessione 2026-05-07: resume post-gap 12gg + Codex review + ADR-0021 + Fase 6 closure anticipata)
-- **Data ultimo aggiornamento**: 2026-05-07 sessione corrente
+- **Versione del compact**: v12 (sessione 2026-05-08: audit coerenza doc + governance refresh post 7/5 sera + Dafne 4 PR closure batch)
+- **Data ultimo aggiornamento**: 2026-05-08 sessione corrente
 
 ## Stato attuale
-- **Barra globale ~95%** (+4 da v10): Fase 6 CLOSED -- ADR-0015 e ADR-0017 entrambi Accepted 2026-05-07. Resta solo finestra transition 07/05 -> 19/05 (Claude Max expiration) + opzionale smoke test sovereign post-closure.
-- HEAD `39f97da` su origin/main (post merge PR #2 ADR-0021). Branch corrente di lavoro `claude/fase6-closure-prep` (3 ADR/governance updates da committare).
+- **Barra globale ~96%** (+1 da v11): Fase 6 CLOSED -- ADR-0015 e ADR-0017 entrambi Accepted 2026-05-07. Tutti i PR cleanup esterni completati 7/5. Resta finestra transition 07/05 -> 19/05 (Claude Max expiration, 11gg residui).
+- HEAD `5828909` su origin/main (post merge PR #4-#10 in giornata 7/5). Worktree corrente `mystifying-thompson-82bb43` allineato a main, working tree pulita.
 - **Stack ADR-0017**: scaffold opt-in (Docker Desktop non auto-start). Hot-restartable in <60s con `docker compose up -d`. DB persistence Postgres+SQLite preservata. 7+ Langfuse traces ancora persistiti.
 - **Agent ecosystem ADR-0018**: 12/18 ready, 6/18 draft trigger-gated. Status invariato dal 24/04.
-- **Codex `/structural-reset` REJECTED in toto + chiuso + delete remote**: branch difensivo Codex Cloud sandbox-confusion (assunzione "transplanted, paths missing" smentita empiricamente, 9/9 path target presenti). Cherry-pick astratto: ADR-0021 + AGENTS.md + encoding policy.
-- **PR pulito post-sessione**: #1 ADR-0020 mergeato 25/04. #2 ADR-0021 mergeato 07/05. #3 [REJECTED] chiuso 07/05.
+- **Codex `/structural-reset` REJECTED + chiuso + delete remote**: branch difensivo Codex Cloud sandbox-confusion (assunzione "transplanted, paths missing" smentita empiricamente, 9/9 path target presenti). Cherry-pick astratto: ADR-0021 + AGENTS.md + encoding policy.
+- **PR pulito post-7/5**: #1 ADR-0020 mergeato 25/04. #2 ADR-0021 + #3 [REJECTED] + #4 fase6-closure + #5 sprint-02 + #6 smoke-sovereign + #7+#8 godot-v2 governance + #9 aider-pattern + #10 master_prompt-handoff tutti chiusi 7/5. Coda PR codemasterdd vuota.
 
 ### Gap operativo 25/04 -> 07/05 (non-stagnation)
 
 Eduardo ha lavorato attivamente in altri repo (silent driver mode):
-- **Game**: Sprint Impronta Ondata 1, 8+ commit, branches `aa01/cap-11..15` (telemetry + onboarding v2 + imprint phase V2). HEAD `5f42757a`.
-- **Dafne swarm**: Atto 2 day 11+, 4 commit (weekly digest, IDENTITY refresh, gitignore cycle-log, health flag draft 07/05 PR #65). HEAD `1e14253`.
+- **Game**: Sprint Impronta Ondata 1, 8+ commit, branches `aa01/cap-11..15` (telemetry + onboarding v2 + imprint phase V2). HEAD `5f42757a`. **Pausa 24h+ dal 7/5 mattina**. PR #2108 swarm-distillation routine aperto 7/5 sera (non triagato).
+- **Dafne swarm**: Atto 2 day 11+ -> day 12+, 9 commit cumulative (5 al 7/5 mattina + **4 nuovi 7/5 sera che chiudono OD-002+OD-003+OD-006**). HEAD `53d58d6`. Decision debt cleanup massiccio.
+- **Game-Godot-v2**: 215 PR mergeati totali (+4 dal 7/5 sera). Path A canonical CHIUSO end-to-end 7/5.
 - **AA01**: silent driver del Sprint Impronta Game, capability-by-capability. 2 task PROPOSED del 25/04 (#001 voice-test + #002 day-5-post-session-ritual) restano in workspace.
 - **codemasterdd**: dataset Fase 6 fermo a n=12 dal 24/04 -- shift naturale di focus quando policy hub ha completato il ciclo (trigger ADR-0008 confermato a #12).
 
 ## Obiettivo di questa fase
 
-**Transition window 07/05 -> 19/05** (12 giorni residui Claude Max):
-- Validation tecnica scenario A (smoke test 3 wrapper sovereign empirico) -- non bloccante per closure, gia' decisa
-- SPRINT_02 abbozzo (post-Max operativo) come handoff per prima sessione 20/05+
-- Cleanup PR esterni opportunistico (Game-Database #97 Codex 23gg + #105 + compass-marketplace #10 + evo-swarm #61)
+**Transition window 08/05 -> 19/05** (11 giorni residui Claude Max):
+- Smoke test 3 wrapper sovereign empirico -- gia' eseguito PR #6 in giornata 7/5 (T1 SPRINT_02 anticipato)
+- SPRINT_02 abbozzo -- gia' eseguito PR #5 in giornata 7/5
+- Cleanup PR esterni opportunistico -- **TUTTI completati 7/5**: Game-Database #97 closed-stale, #105 merged, compass-marketplace #10 merged, evo-swarm #61 merged
+- Triage opzionale: PR #2108 Game (swarm-distillation routine 7/5 sera, governance interna Game decide)
+- 8/5: governance refresh post 7/5 sera (questa sessione) -- STATUS_MULTI_REPO + COMPACT v12
 - 19/05: disattivazione Claude Max, transizione a wrapper sovereign + Ollama
 
 ## Cosa e' gia' stato fatto
 
-### Sessione 2026-05-07 (corrente -- resume + Codex + Fase 6 closure)
+### Sessione 2026-05-08 (corrente -- audit coerenza doc + governance refresh)
+
+#### Audit coerenza doc + scope cross-repo
+Reality-check 6 governance file vs stato reale post 7/5 sera + 8/5 mattina. Drift identificati:
+- COMPACT v11: HEAD `39f97da` claim vs reale `5828909` (mergiate PR #4-#10)
+- STATUS Game-Godot-v2: 211 PR vs reale 215 (+4 post 7/5 sera)
+- STATUS Game: "0 PR open" vs reale 1 (PR #2108 swarm-distillation 7/5 22:19)
+- STATUS Dafne: HEAD `1e14253` vs reale `53d58d6` (+4 commit 7/5 sera)
+- STATUS Dafne open items: OD-002+OD-003+OD-006 chiusi vs status precedente "open"
+
+Cross-repo positives confermati: JOURNAL 7/5 entry completa, DECISIONS_LOG ha Decisione 004+005, ADR coerenti, BACKLOG H-items chiusi correttamente, OPEN_DECISIONS OD-001+OD-006 chiusi, AGENTS.md aderente ADR-0021.
+
+#### Governance refresh chirurgico (questa sessione)
+Branch dedicato `claude/governance-refresh-2026-05-08`:
+- STATUS_MULTI_REPO: refresh date 8/5, sezioni Game/Dafne/Game-Godot-v2 aggiornate, header tabella, scheduled checkpoint riga aggiunta
+- COMPACT v11 -> v12 (questo file)
+- CLAUDE.md sezione Game-Godot-v2 PR count cosmetic fix (211 -> 215)
+
+Nessun file core toccato (JOURNAL/DECISIONS_LOG/ADR/BACKLOG/OPEN_DECISIONS/SPRINT_02/AGENTS.md preservati).
+
+### Sessione 2026-05-07 (resume + Codex + Fase 6 closure)
 
 #### Triage PR cross-repo
 5 PR open su 5 repo. Identificato branch `codex/structural-reset` su codemasterdd (no PR aperto, push 1° maggio) come priorita' sopra tutti gli altri PR.
@@ -114,11 +137,11 @@ P1, P2 chiusi tramite ADR-0015 closure (P1 behavior-critical n>=5 superato; P2 c
 
 ## Prossimi 3 passi
 
-1. **Commit + push branch `claude/fase6-closure-prep` + PR** (sessione corrente). Contiene: ADR-0015 closure + ADR-0017 closure + JOURNAL entry + COMPACT v11 + STATUS_MULTI_REPO refresh + DECISIONS_LOG entry.
-2. **A3 Smoke test full-sovereign** (sessione successiva ~30-60min): 3 wrapper aider-cosmetic + aider-refactor + aider-groq su task piccoli reali. Non bloccante per closure (gia' avvenuta), validation tecnica end-to-end.
-3. **D SPRINT_02 abbozzo** (sessione 19/05 o prima): post-Max scenario A operativo. Bullet "stack ADR-0017 hot-restart procedure" + tier routing operative + privacy validation Synesthesia (post-agosto).
+1. **Commit + PR governance refresh 2026-05-08** (sessione corrente). STATUS_MULTI_REPO + COMPACT v12 + CLAUDE.md cosmetic fix. Branch `claude/governance-refresh-2026-05-08`.
+2. **Pre-Max checklist tecnica** (sessione opzionale ~30min ~10/05-15/05): verifica wrapper sovereign aider-* funzionanti senza Max OAuth, API keys cloud ancora valide, stack ADR-0017 hot-restart prova singola. Non bloccante.
+3. **Triage opzionale PR #2108 Game** (5min, low priority): valutare merge/comment/close swarm-distillation run #5 routine. Governance interna Game-driven (non codemasterdd-driven).
 
-Side-tasks opzionali: cleanup PR esterni (#97 Game-Database 23gg vecchio, #105 doc 1-line, #10 compass, #61 evo-swarm digest) -- non bloccanti.
+Side-tasks gia' DONE 7/5: cleanup 4 PR esterni completato. Smoke test sovereign T1 SPRINT_02 anticipato (PR #6). SPRINT_02 abbozzo (PR #5).
 
 ## Next session restart: cosa leggere per ripartire
 

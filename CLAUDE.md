@@ -98,21 +98,21 @@ _(completato il 2026-04-19 — vedi "Stack installato")_
 - Dipendenze specifiche progetti (da Evo-Tactics e Synesthesia)
 - Eventuali MCP server (filesystem, github) se emergono bisogni reali
 
-## Progetti monitorati (status 2026-05-07)
+## Progetti monitorati (status 2026-05-08)
 
 - **Evo-Tactics (Game)** — co-op tactical game d20, monorepo Node+Python (Vue3 bundle)
   - GitHub: `github.com/MasterDD-L34D/Game`
   - Path Lenovo: `C:\dev\Game`
   - Stack: Node 22 + Python 3.10, xstate@5, inkjs, Vue3 bundle
   - Compat runtime: Node 24 system-level (validato n=710+ test)
-  - **Status 2026-05-07**: **Sprint Impronta Ondata 1 in pieno corso**, HEAD `5f42757a` (CAP-15 imprint phase V2). 8+ commit dal 25/04 driven da AA01 silent-driver mode (CAP-11 biome-resolution, CAP-12 player telemetry, CAP-13 imprint mockup + UX patch, CAP-14 onboarding v2, CAP-15 imprint V2). PR aperto Game-Database #97 (Codex 23gg+ stale, awaiting rebase) + #2101 plan-v3-2 sentience T4 audit.
+  - **Status 2026-05-08**: **Sprint Impronta Ondata 1 in pausa 24h+** (HEAD `5f42757a` invariato dal 7/5 mattina, CAP-15 imprint phase V2). 8+ commit dal 25/04 driven da AA01 silent-driver mode (CAP-11 biome-resolution, CAP-12 player telemetry, CAP-13 imprint mockup + UX patch, CAP-14 onboarding v2, CAP-15 imprint V2). PR aperto: **#2108 swarm-distillation run #5** (Dafne automation 7/5 sera 22:19, da triagare). PR #97 Game-Database CLOSED stale 7/5.
   - **Integration con Dafne swarm**: repo target. Pipeline `docs/pipeline-swarm-to-game.md`. Hook commit-msg globale applicato.
 
 - **Evo-Tactics Godot v2 (Game-Godot-v2)** — Godot 4.x port di Evo-Tactics, **pivot 2026-04-29**
   - GitHub: `github.com/MasterDD-L34D/Game-Godot-v2`
   - Path Lenovo: `C:\dev\Game-Godot-v2\` (cloned 2026-05-07, 20.7 MB)
   - Stack: Godot 4.x (engine native, GDScript), 200 test file GUT (~1719 test asserts), addons + scenes + scripts + tests + tools
-  - **Status 2026-05-07 sera**: **211 PR mergeati totali**, 5 oggi (#207 phone composer + #208 AiProgressMeter HUD + #209 gdlint cleanup CI + #210 PassiveStatusApplier + #211 MissionTimer). Path A canonical CHIUSO end-to-end + Sprint AC bundle 15 sub-sprint chiuso. 0 PR open ora.
+  - **Status 2026-05-08**: **215 PR mergeati totali** (+4 dal 7/5 sera, dettaglio non triagato in codemasterdd -- governance interna autosufficiente). 5 PR documentati cross-repo del 7/5 sera: #207 phone composer + #208 AiProgressMeter HUD + #209 gdlint cleanup CI + #210 PassiveStatusApplier + #211 MissionTimer. Path A canonical CHIUSO end-to-end + Sprint AC bundle 15 sub-sprint chiuso. 0 PR open ora.
   - **Governance interna autosufficiente**: repo ha `CLAUDE.md` proprio (con `caveman mode` + Path A status detail) + `AGENTS.md` proprio per Codex (multi-client pattern adottato indipendentemente, **conferma ADR-0021 con uso reale**) + `.claude/SAFE_CHANGES.md` + `.claude/TASK_PROTOCOL.md`. Codemasterdd NON sovrascrive — monitora solo.
   - **Hook globali codemasterdd**: applicati automaticamente via `core.hooksPath` user-level. Conventional Commits + silent-fail Layer 2 ADR-0020 attivi su Game-Godot-v2 senza setup repo-specific.
   - **Relazione con Game (Vue3)**: parallel-run during port phase. Vue3 mantiene Sprint Impronta gameplay (logica + telemetria + onboarding CAP-11..15); Godot v2 ricostruisce shell visuale + UX + canonical engine. Long-term: Godot v2 frontend canonical, Vue3 archive (decisione futura, NON ancora ADR).
