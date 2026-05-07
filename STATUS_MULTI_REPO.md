@@ -14,9 +14,10 @@
 
 | Repo | Status | Next action | Deadline/trigger | Blocker |
 |------|--------|-------------|------------------|---------|
-| **codemasterdd-ai-station** | **Fase 6 CLOSED 2026-05-07** (ADR-0015 + ADR-0017 Accepted), HEAD `39f97da` post PR #2 ADR-0021, 12/18 agent ready | Smoke test sovereign opzionale + SPRINT_02 abbozzo | 2026-05-19 (Claude Max expiration) | Nessuno bloccante |
+| **codemasterdd-ai-station** | **Fase 6 CLOSED 2026-05-07** (ADR-0015 + ADR-0017 Accepted), HEAD post PR #2 #4 #5 #6 mergeati, 12/18 agent ready | SPRINT_02 prima sessione 20/05+ | 2026-05-19 (Claude Max expiration) | Nessuno bloccante |
 | **Synesthesia** | Dormant, HEAD `05f8a92` (invariato) | Riattiva pre-esame UniUPO | ~agosto 2026 | Nessuno (dormant intenzionale) |
-| **Game (Evo-Tactics)** | **Sprint Impronta Ondata 1 in pieno corso**, HEAD `5f42757a` (CAP-15 imprint phase V2 mergeato), 8+ commit dal 25/04 driven by AA01 capability-by-capability | Continue Sprint Impronta (Eduardo-driven via AA01) | No fixed | Nessuno (lavoro fuori scope codemasterdd) |
+| **Game (Evo-Tactics Vue3)** | **Sprint Impronta Ondata 1 in pieno corso**, HEAD `5f42757a` (CAP-15 imprint phase V2 mergeato), 8+ commit dal 25/04 driven by AA01 capability-by-capability | Continue Sprint Impronta (Eduardo-driven via AA01) | No fixed | Nessuno (lavoro fuori scope codemasterdd) |
+| **Game-Godot-v2** | **Pivot 2026-04-29** (Godot 4.x port). 2 PR open (#208 AiProgressMeter HUD + #209 gdlint cleanup CI). Remote-only, no local clone qui | Continue port (Eduardo-driven, possibile altro device/sandbox) | No fixed | Nessuno (no path locale, governance solo via GitHub) |
 | **Dafne swarm (evo-swarm)** | **Atto 2 day 11+ active**, HEAD `1e14253` (health flag draft 07/05 PR #65), 4 commit dal 25/04. ADR-0019 process persistence applicato. | Continue Atto 2 (Eduardo-driven) | No fixed | Nessuno |
 | **AA01 (Archon Atelier 01)** | v1.0.0 silent-driver mode -- ha guidato Sprint Impronta Game (CAP-11..15). 2 task PROPOSED storici del 25/04 (#001 voice-test + #002 day-5-post-session-ritual) ancora in workspace | Continua driver mode + eventuale review 2 PROPOSED | nessuna | nessuno bloccante |
 
@@ -191,6 +192,48 @@ Da triageare nel BACKLOG repo Game quando Sprint Impronta lascia spazio. Non ges
 ### Handoff cross-repo
 - Dafne propone -> Eduardo approva via POST -> H5 gate -> Game agents/ write
 - codemasterdd policy -> Dafne segue (API keys centralizzati, Ollama config, commit hook)
+
+---
+
+## 5. Game-Godot-v2 (Evo-Tactics Godot 4.x port, pivot 2026-04-29)
+
+**Path**: REMOTE-ONLY (no clone locale qui sul Lenovo CodeMasterDD). Possibile clone su altro device o sandbox dove Eduardo lavora.
+**Remote**: [MasterDD-L34D/Game-Godot-v2](https://github.com/MasterDD-L34D/Game-Godot-v2)
+**Description**: "Evo-Tactics Godot 4.x port -- pivot 2026-04-29"
+**Created**: 2026-04-29
+**Last push**: 2026-05-07 19:33 (active)
+
+### Piano operativo
+
+Repo creato 5 giorni dopo l'inizio del Sprint Impronta Game (Vue3). Pivot strategico: ricostruire shell visuale + UX in engine native (Godot 4.x) mentre Game (Vue3) mantiene Sprint Impronta gameplay logic + telemetria + onboarding.
+
+**Status 2026-05-07**: 2 PR aperti
+- **#208** GAP-10 AiProgressMeter wire HUD top-strip (feature)
+- **#209** gdlint debt cleanup -- unblock main CI (fix)
+
+**Stack**: Godot 4.x (game engine native, GDScript). No Node, no Vue, no Python (significativamente diverso da Game Vue3).
+
+**Relazione con Game (Vue3)**:
+- Parallel-run during port phase
+- Game (Vue3) = simulation core + gameplay loop + AA01 capability driving
+- Godot v2 = visual shell + UX + native engine experience
+- Long-term: Godot v2 potrebbe diventare frontend canonical, Vue3 deprecate (decisione futura non ancora ADR)
+
+### Blocker visto da codemasterdd
+- **Path-dependent governance**: hook globali commit-msg + pre-commit applicati solo a repo locali. Game-Godot-v2 senza clone locale -> **no enforcement Conventional Commits cross-agent + no silent-fail Layer 2**. Se Eduardo committa da remoto/altro device, regole vivono lì.
+
+### Next action visto da codemasterdd
+- **Monitorare**: PR aperti via `gh pr list --repo MasterDD-L34D/Game-Godot-v2`
+- **Non gestire direttamente**: GDScript code, gdlint config, Godot scene files (non clone locale)
+- **Decisione futura**: clonare in `C:\dev\Game-Godot-v2\` quando Eduardo decide di lavorare anche da CodeMasterDD (oggi non chiaro se altro device gestisce)
+
+### Cross-repo handoff points
+- Game (Vue3) -> Game-Godot-v2: porting (capability + dati + UX) -- workflow non ancora documentato in pipeline
+- codemasterdd policy -> Game-Godot-v2: applicabile solo se cloned localmente (vedi blocker sopra)
+
+### Open question
+
+E' un progetto codemasterdd-governato o sandbox-only di Eduardo? Decisione pending. Se vuole governance cross-repo da codemasterdd -> serve clone locale + adozione hook globale.
 
 ---
 
