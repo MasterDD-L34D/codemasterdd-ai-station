@@ -22,16 +22,20 @@
 | 0012 | RAM 64GB upgrade impact | Accepted + Validated | 2026-04-22 | qwen3:30b +31% speed tier 2 stabile |
 | 0013 | Tier 3 cloud free providers | Accepted (75 test + OK user) | 2026-04-23 | Groq/Cerebras tier 3 primary; OpenAI/Gemini capability-max |
 | 0014 | Fase 6 timeline compression | Accepted (OK user) | 2026-04-23 | 3 mesi → ~4 settimane; chiusura ~20/05 |
-| 0015 | Fase 7 budget decision full-sovereign | **Proposed** | 2026-04-24 | Opzione A $0-50/anno + deroga criterio #3 (Synesthesia dormant fino agosto) |
+| 0015 | Fase 7 budget decision full-sovereign | **Accepted 2026-05-07** | 2026-04-24 (P) -> 2026-05-07 (A) | Opzione A $0-50/anno confermato + deroga criterio #3 (Synesthesia dormant) + soft-override esteso n>=12 |
 | 0016 | Constraint-count routing dimension | **Proposed** | 2026-04-24 | 2D matrix classe + constraint-count; 5+ strict → manual Claude Code |
-| 0017 | UI + observability stack | **Proposed** (4/5 criteri live validated 2026-04-24) | 2026-04-24 | LiteLLM Proxy + Langfuse + promptfoo + Aider browser + Flask mini-app custom |
+| 0017 | UI + observability stack | **Accepted 2026-05-07** (5/5 criteri PASS) | 2026-04-24 (P) -> 2026-05-07 (A) | LiteLLM Proxy + Langfuse + promptfoo + Aider browser + Flask mini-app, scaffold opt-in post-closure |
 | 0018 | Agent readiness protocol (3-gate smoke+research+tuning) | **Accepted** | 2026-04-24 | Ogni agent `draft` fino passaggio gate. 11/18 ready dopo batch P0+P1, 7/18 draft |
 | 0019 | Dafne process persistence (3 opzioni A/B/C) | **Accepted** | 2026-04-24 | Opzione A wrapper PS auto-restart (committato Dafne repo `c638098`), B Task Scheduler post-Fase 6, C Docker deferred |
+| 0020 | Silent-fail Python guardrail (extension pre-commit) | **Accepted** | 2026-04-25 | Pre-commit hook globale Layer 2: bare `except:` + `except: pass` one-liner blocked. Bypass: `# silent-ok`. PR #1 mergeato. |
+| 0021 | Multi-client instruction files (AGENTS.md + Codex anti-confusion) | **Accepted** | 2026-05-07 | AGENTS.md preamble Codex sandbox-aware + CLAUDE.md autoritativo + encoding ASCII-first nuovi doc. PR #2 mergeato. Trigger: branch `codex/structural-reset` REJECTED per false-premise sandbox-confusion. |
 
 ### In review (Proposed, awaiting Accepted trigger)
-- **ADR-0015** — Fase 7 budget decision full-sovereign. Trigger Accepted: review settimana 4 (~2026-05-17) con verifica criteri #2 reliability + #4 cost confermati + no fail rate regression. Input 2026-04-24: Synesthesia dormant fino agosto 2026 → criterio #3 derogato.
-- **ADR-0016** — Constraint-count routing dimension. Trigger Accepted: n≥3 data points addizionali (constraint=4 explicit LOCAL, 2-transform LOCAL, 5-strict LOCAL). Update 2026-04-24: +1 data point (#12 constraint=4 parity-based, partial) → constraint specificity identificata come sub-dimensione.
-- **ADR-0017** — UI + observability stack. Trigger Accepted: step 0-4 rollout phased completato senza blocker entro Sprint 02 (~2026-05-17). Scope codemasterdd evolve "infrastructure-as-code" → "infrastructure-as-code + observability self-hosted + UI glue minimale".
+- **ADR-0016** -- Constraint-count routing dimension. Trigger Accepted: n>=3 data points addizionali (constraint=4 explicit LOCAL, 2-transform LOCAL, 5-strict LOCAL). Update 2026-04-24: +1 data point (#12 constraint=4 parity-based, partial). Stato 2026-05-07: dataset Fase 6 closed a n=12, ulteriori data points emergeranno organicamente in SPRINT_02 post-Max.
+
+### Accepted 2026-05-07 (closure batch Fase 6)
+- **ADR-0015** -- Closure anticipata vs target sett.4 originale. Soft-override esteso n>=12 con 5 rationale: trigger ADR-0008 confermato, behavior 5/3 superato, fail rate strict 8.3%, zero silent-corruption, anti-pattern dogfood sintetici.
+- **ADR-0017** -- 5/5 criteri ratification PASS (LiteLLM + Langfuse + promptfoo + dogfood-ui + maintenance budget). Stack scaffold opt-in (Docker Desktop manual start), persistence DB preservata, hot-restartable in <60s.
 
 ### Note coerenza
 - **0007 vs 0008**: 0008 depreca whole solo per behavior-critical; cosmetic+whole resta valido (faithfulness non critica).
@@ -78,3 +82,28 @@ Formato granulare per decisioni che non meritano ADR (reversibili, locali, non v
   - Pointer+adozione esplicita → scelta.
 - **Conseguenze**: Claude Code future sessions devono leggere archivio per regole operative meta. Lista fonti di verità (CLAUDE_OPERATING_RULES #1) estesa.
 - **Azioni derivate**: edit `CLAUDE.md` per pointer + statement adozione.
+
+### Decisione 004 -- Codex `/structural-reset` REJECTED per false-premise sandbox-confusion
+- **Data**: 2026-05-07
+- **Titolo**: Branch `codex/structural-reset` (Codex Cloud, 2026-05-01) REJECTED in toto, cherry-pick 3/4 concept astratti via ADR-0021
+- **Decisione presa**: branch chiuso (PR #3 [REJECTED] formal + delete remote ref). Cherry-pick: AGENTS.md + encoding policy + pointer multi-client. Deferred: `config/machine-profile.example.yaml` (riprendere se entra Mac mini come device secondario).
+- **Perche'**: branch contiene 43 file +3690/-2186 basati su premessa "transplanted checkout, all paths missing". Verifica empirica 2026-05-07 sul PC corretto: tutti 9 path target (Game/Synesthesia/Dafne/AA01/wrapper aider/api keys/dogfood log/SQLite/promptfoo) esistono fisicamente. Codex Cloud sandbox confondeva "non vedo path Windows assoluti" con "non esistono". Mergeare in toto avrebbe cancellato CLAUDE.md -312, MODEL_ROUTING.md -359, STATUS_MULTI_REPO.md -247.
+- **Alternative considerate**:
+  - Merge full -> rigetto (perderemmo governance reale per stato dormant falso)
+  - Cherry-pick selettivo concept ADAPT -> scelta (3 di 4)
+  - Close veloce senza cherry-pick -> rigetto (perderemmo concept utili emersi)
+- **Conseguenze**: ADR-0021 Accepted, AGENTS.md attivo come instruction file Codex, encoding policy ASCII-first nuovi doc. Pattern Codex Cloud confusion documentato come caso-studio.
+- **Azioni derivate**: ADR-0021 mergeato (PR #2). Branch deleted da origin. Mitigation strutturale anti-ricorrenza in AGENTS.md preamble.
+
+### Decisione 005 -- Fase 6 closure anticipata 2026-05-07
+- **Data**: 2026-05-07
+- **Titolo**: Fase 6 closed con ADR-0015 + ADR-0017 entrambi Accepted, anticipato vs target sett.4 originale (~2026-05-17)
+- **Decisione presa**: closure anticipata di 10 giorni rispetto al target ADR-0015 originale per riconoscere realta' empirica (dataset fermo a n=12 dal 24/04, focus shiftato a Game Sprint Impronta + Dafne Atto 2 + AA01).
+- **Perche'**: forzare n>=15 in 12 giorni residui (07/05 -> 19/05) richiederebbe dogfood sintetici, anti-pattern documentato in ADR-0014 ("data per decidere, non collect data"). Trigger ADR-0008 "FULL-SOVEREIGN VIABLE" gia' confermato empiricamente al dogfood #12. Behavior-critical 5/3 superato (167%). Fail rate 8.3% << threshold 30%. Decision support gia' raggiunto.
+- **Alternative considerate**:
+  - Push aggressivo n=12 -> n>=15 in 12 giorni con task sintetici -> rigetto (anti-pattern)
+  - Extension Fase 6 di 1-2 settimane (scenario C ADR-0015) -> rigetto (costo bridge stack senza valore aggiunto)
+  - Mantenere status Proposed fino sett.4 -> rigetto (statusquo per status quo, ADR-0014 anti-hoarding)
+  - Closure anticipata con soft-override esteso e rationale documentato -> scelta
+- **Conseguenze**: scenario A full-sovereign $0-50/anno operativo da 19/05. Window 12 giorni ora orientata a smoke test sovereign opzionale + SPRINT_02 abbozzo + cleanup PR esterni. Privacy validation Synesthesia (criterio #3) retroattiva post-agosto.
+- **Azioni derivate**: ADR-0015 status flip (Proposed -> Accepted). ADR-0017 status flip (Validated live + Proposed -> Accepted, 5/5 criteri PASS). JOURNAL entry +87 righe. COMPACT v11. STATUS_MULTI_REPO refresh.

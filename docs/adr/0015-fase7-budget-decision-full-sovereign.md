@@ -2,8 +2,8 @@
 
 > *TL;DR: Fase 6 ha chiuso 3/4 criteri ADR-0014 PASS (quality 75 test / cost 0.074% budget / reliability on-track verso n=20). Criterio #3 (privacy Synesthesia n≥3) **de-facto non chiudibile** entro 2026-05-19: Synesthesia è progetto dormant fino esame UniUPO agosto 2026, dataset reale acquisibile solo post-agosto. Decisione: adottare **scenario A (full-sovereign $0-50/anno)** post-Max con deroga esplicita su criterio #3, completamento privacy validation rinviata a riattivazione Synesthesia. Trigger ADR-0008 "FULL-SOVEREIGN VIABLE" già confermato empirically mid-sprint (cosmetic 93% / behavior 70-80% / corruption 0 / mix success 83%). Claude Pro declassato definitivamente a opzione emergency-only.*
 
-- **Status**: **Proposed** (2026-04-24 — draft preparatorio per ratification a review settimana 4 ~2026-05-17)
-- **Data**: 2026-04-24
+- **Status**: **Accepted** (2026-05-07 -- closure anticipata vs review sett.4 originale ~2026-05-17, vedi sezione "Closure verdict 2026-05-07" sotto)
+- **Data**: 2026-04-24 (Proposed) -- 2026-05-07 (Accepted)
 - **Decisore**: Eduardo Scarpelli
 - **Deciders**: solo-dev (single-user workstation)
 
@@ -116,6 +116,59 @@ Quando Synesthesia torna attiva (sessione lavoro reale pre-esame UniUPO):
 2. Tracking entries in `logs/aider-delegation-YYYY-MM.md` con field `privacy_policy_enforced: true/false`.
 3. Al raggiungimento n=3 → ADR-0014 criterio #3 **retroattivamente PASS**, annotare in DECISIONS_LOG come "Decisione NNN".
 4. Se emergono pattern anomali (policy violation / silent privacy leak) → ADR addendum correttivo immediato.
+
+## Closure verdict 2026-05-07
+
+ADR Accepted con closure anticipata vs target ~2026-05-17 originale. Rationale: 12 giorni di gap operativo su codemasterdd (24/04 -> 07/05) per shift focus su Game Sprint Impronta + Dafne Atto 2 day 11+ + AA01 driver-mode. Dataset codemasterdd-Fase 6 fermo a n=12 dal 24/04. Push a n>=15 in 12 giorni richiederebbe forzare task sintetici, anti-pattern documentato in ADR-0014 ("anti-hoarding... collect data per decidere, non per collect data").
+
+### Status criteri ADR-0014 alla closure
+
+| Criterio | Status finale | Dato | Note |
+|----------|---------------|------|------|
+| #1 Quality bench | PASS | 75 test Leetcode, 5 stack 100% pass@1 | Confermato 2026-04-23, no regressioni |
+| #2 Reliability dogfood | PASS (soft-override) | n=12, fail rate strict 8.3% (1/12), behavior 5/3 superato (167%), zero silent-corruption working-tree | Vedi sotto |
+| #3 Privacy Synesthesia | DEROGATO | 1/3 -- Synesthesia dormant fino esame UniUPO ~ago 2026 | Retroattivo post-agosto |
+| #4 Cost <$20/mese | PASS | $0.0148 cumulative (0.074% budget) | Margine 99.93% |
+
+### Soft-override criterio #2 esteso
+
+ADR-0015 originale (2026-04-24) prevedeva soft-override n>=15 con fail rate <15%. Al 2026-05-07 il dataset reale e' n=12 (3 sotto target soft).
+
+**Override esteso a n=12 con i seguenti rationale (additivi)**:
+
+1. **Trigger ADR-0008 "FULL-SOVEREIGN VIABLE" confermato empiricamente mid-sprint** (sessione 2026-04-24 dogfood #12): cosmetic 93% / behavior 70-80% / corruption 0 / mix success 83%. Il valore decisionale del dataset e' raggiunto -- dogfood aggiuntivi ridondanti per decision support.
+2. **Behavior-critical 5/3 superato (167%)**: il sotto-target piu' rilevante dal punto di vista qualita' (behavior change vs cosmetic) e' superato di larga misura. Il numero assoluto n=12 sotto-pesa la composizione qualitativa del dataset.
+3. **Fail rate strict 8.3% << threshold 30%**: il margine di sicurezza statistico (banda 21.7 punti percentuali sotto threshold) sostiene la decisione anche con n moderato.
+4. **Zero silent-corruption working-tree** su 12 esecuzioni reali: il rischio operativo principale identificato in ADR-0008 e' empiricamente assente.
+5. **Forzatura a n>=15 in 12 giorni produce dogfood sintetici** (non organici): contraddice ADR-0014 "data per decidere".
+
+### Trigger di ri-evaluation rimasti attivi
+
+Soft-override e' valido se nei 12 giorni residui (07/05 -> 19/05) NON emergono questi pattern:
+
+- silent-corruption >= 1 caso reale (non test): hard blocker, switch a scenario B ibrido
+- fail rate cumulative >15% (oltre il margine di sicurezza)
+- privacy violation in repo non-sensitive (cloud delegation leak)
+
+Se dataset cresce naturalmente con qualche dogfood opportunistic da smoke test sovereign (vedi ADR-0015 follow-up post-closure), update inline metriche senza riaprire ADR.
+
+### Decisione confermata
+
+**Scenario A -- Full-sovereign $0-50/anno** post 2026-05-19. Stack:
+
+- Tier 1-2 locale: Qwen Coder 7B / 14B Q2 / 30B MoE (RTX 5060 + 64GB RAM)
+- Tier 3 cloud free: Groq llama-3.3-70b primary + Cerebras llama3.1-8b secondary
+- Tier 4 cloud paid: OpenAI gpt-4o-mini emergency-only (ccusage monitorato)
+- Claude Max: disattivato 2026-05-19, non rinnovato
+- Claude Pro: NOT acquired, scenario B declassato definitivamente
+
+### Action items post-closure
+
+1. Smoke test full-sovereign empirico end-to-end (3 wrapper aider-cosmetic + aider-refactor + aider-groq) -- validation tecnica, dogfood entries opzionali
+2. SPRINT_02 abbozzo (post-Max scenario A operativo) -- handoff per prima sessione 20/05+
+3. Privacy validation Synesthesia rinviata a riattivazione ~agosto 2026 -- ADR-0014 criterio #3 retroattivo a quel momento
+4. STATUS_MULTI_REPO + COMPACT v11 update con stato closure
+5. JOURNAL entry chiusura Fase 6
 
 ## Consequences
 
