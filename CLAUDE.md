@@ -232,8 +232,8 @@ codemasterdd-ai-station/
 - **Post Max** — task-routing (vedi ADR-0008 per rationale completo):
   - Query one-shot → `ollama run qwen2.5-coder:7b` (114 tok/s)
   - Read/explain + CREATE single file → Aider + Qwen 7B + `whole`
-  - **Cosmetic edit** (JSDoc, docstrings, rename, lint-fix) → **Aider + Qwen 7B + `whole`** (format compatibile, faithfulness non critica)
-  - **Behavior-critical edit** (refactor, bug fix, logic change) → **Aider + Qwen 14B Q2_K + `--edit-format diff`** (safe failure; ~20-40% retry manuale ma zero silent-corruption)
+  - **Cosmetic edit** (JSDoc, docstrings, rename, lint-fix) → **Aider + Qwen 7B + `whole`** (format compatibile, faithfulness non critica). **CAVEAT 2026-05-07**: pattern wrong-target-file su file in subdir + docstring self-referenziato (vedi `docs/patterns/aider-wrong-target-file.md`). Mitigation: usare `aider-refactor` (diff format) anche per cosmetic se file in subdir profonde con docstring header che cita filename.
+  - **Behavior-critical edit** (refactor, bug fix, logic change) → **Aider + Qwen 14B Q2_K + `--edit-format diff`** (safe failure; ~20-40% retry manuale ma zero silent-corruption). **Default safer anche per cosmetic** se file in subdir + docstring self-ref (vedi caveat sopra).
   - **Behavior-critical escalation** (quando 14B Q2 safe-fails, es. task R1-type 1-line value change) → **Aider + qwen3-coder:30b + diff** (MoE 30B-A3B, tier 2 fallback prima di Claude Pro; speed 2× slower + RAM tight ma risolve anti-pattern — vedi ADR-0009 addendum)
   - Multi-file refactor / debug strategico → OpenRouter pay-per-use (Sonnet/Opus) o Claude Pro come backbone
   - **⚠️ DEPRECATO**: Aider + 14B Q2 + `whole` — silent-corruption deterministico su task "edit single file" semplici, vedi ADR-0008
