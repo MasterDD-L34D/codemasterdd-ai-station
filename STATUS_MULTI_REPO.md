@@ -16,9 +16,9 @@
 |------|--------|-------------|------------------|---------|
 | **codemasterdd-ai-station** | **Fase 6 CLOSED 2026-05-07** (ADR-0015 + ADR-0017 Accepted), HEAD post PR #2 #4 #5 #6 mergeati, 12/18 agent ready | SPRINT_02 prima sessione 20/05+ | 2026-05-19 (Claude Max expiration) | Nessuno bloccante |
 | **Synesthesia** | Dormant, HEAD `05f8a92` (invariato) | Riattiva pre-esame UniUPO | ~agosto 2026 | Nessuno (dormant intenzionale) |
-| **Game (Evo-Tactics Vue3)** | **Sprint Impronta Ondata 1 in pausa 24h** (HEAD `5f42757a` invariato dal 7/5 mattina). **PR #2108 open** swarm-distillation run #5 (Dafne automated 7/5 sera 22:19, da triagare) | Triage PR #2108 + continue Sprint Impronta (Eduardo-driven) | No fixed | Nessuno (PR #2108 routine, low priority) |
+| **Game (Evo-Tactics Vue3)** | **Sprint Impronta Ondata 1 in pausa dal 26/04** (HEAD `5f42757a` invariato, ~12gg). **PR #2108 open** swarm-distillation run #5 (branch `claude/...`, Claude Code session 7/5 sera 22:19 UTC, da triagare) | Triage PR #2108 + continue Sprint Impronta (Eduardo-driven) | No fixed | Nessuno (PR #2108 routine, low priority) |
 | **Game-Godot-v2** | **215 PR mergeati totali** (+4 post 7/5 sera, dettaglio non triagato in codemasterdd), Path A canonical CHIUSO end-to-end. Cloned 2026-05-07 in `C:\dev\Game-Godot-v2\` (20.7 MB). Hook globali applicati. Governance interna autosufficiente | Continue port (Eduardo-driven), supportare cross-repo se serve | No fixed | Nessuno |
-| **Dafne swarm (evo-swarm)** | **Atto 2 day 12+ active**, HEAD `53d58d6` (4 PR pushati 7/5 sera: #67 anchor split + #68 OD-006 close + #69 tournament survivor fix + #70 OD-002+OD-003 close). 3 OD storici chiusi in 1 sera. | Continue Atto 2 (Eduardo-driven) | No fixed | Nessuno |
+| **Dafne swarm (evo-swarm)** | **Atto 2 day 12+ active**, HEAD `a87da39` (4 PR pushati 7/5 sera: #67 anchor split + #68 OD-006 close + #69 tournament survivor fix + #70 OD-002+OD-003 close + 1 PR 8/5 00:29: #71 proposals lock fix). 3 OD storici chiusi. | Continue Atto 2 (Eduardo-driven) | No fixed | Nessuno |
 | **AA01 (Archon Atelier 01)** | v1.0.0 silent-driver mode -- ha guidato Sprint Impronta Game (CAP-11..15). 2 task PROPOSED storici del 25/04 (#001 voice-test + #002 day-5-post-session-ritual) ancora in workspace | Continua driver mode + eventuale review 2 PROPOSED | nessuna | nessuno bloccante |
 
 ### Stack ADR-0017 runtime (aggiornato 2026-05-08, status invariato dal 7/5)
@@ -121,15 +121,15 @@ Dormant → Attivo: Eduardo segnala riattivazione → codemasterdd riprende trac
 
 **Path**: `C:\dev\Game\`
 **Remote**: [MasterDD-L34D/Game](https://github.com/MasterDD-L34D/Game)
-**HEAD 2026-05-08**: `5f42757a Merge branch 'aa01/cap-15-imprint-phase' into main (CAP-15 phase merge)` (invariato dal 7/5 mattina, pausa 24h+)
+**HEAD 2026-05-08**: `5f42757a Merge branch 'aa01/cap-15-imprint-phase' into main (CAP-15 phase merge)` (invariato dal 26/04 12:53 CET, pausa Sprint Impronta ~12gg)
 
-**Open PR**: **#2108** swarm-distillation run #5 stress mechanics + biomi extreme (creato 7/5 22:19 via Dafne automation, NON triagato da codemasterdd)
+**Open PR**: **#2108** swarm-distillation run #5 stress mechanics + biomi extreme (branch `claude/swarm-distillation-2026-05-08`, Claude Code session creato 7/5 22:19 UTC, NON triagato da codemasterdd)
 
 ### Piano operativo
 
 Governance del Game vive **nel Game repo stesso** (`docs/governance/`). codemasterdd non dirige, **monitora**.
 
-- **Sprint Impronta Ondata 1 in pausa 24h+** (driven by AA01 silent driver mode, 25/04 -> 07/05):
+- **Sprint Impronta Ondata 1 in pausa dal 26/04** (driven by AA01 silent driver mode, attivita' clusterata 25-26/04):
   - **CAP-11** biome-resolution merge
   - **CAP-12** PlayerRunTelemetry schema + endpoint
   - **CAP-13** imprint-mockup + UX patch anchor "qual e' la mia creatura"
@@ -168,11 +168,11 @@ Da triageare nel BACKLOG repo Game quando Sprint Impronta lascia spazio. Non ges
 
 **Path**: `C:\Users\edusc\Dafne\workspace\swarm\`
 **Remote**: [MasterDD-L34D/evo-swarm](https://github.com/MasterDD-L34D/evo-swarm)
-**HEAD 2026-05-08**: `53d58d6 docs(decisions): close OD-002 + OD-003, defer OD-004 + STATUS slot (#70)`
+**HEAD 2026-05-08**: `a87da39 fix(dafne): proposals lock reentrant + reject gameplay-mechanic-designer (#71)` (4 commit 7/5 sera + 1 commit 8/5 00:29 CET)
 
 ### Piano operativo (Atto 2 day 12+ active)
 
-- **Atto 2 in piena attivita'**: Atto 1 chiuso post-Day-5 (2026-04-26 successo). 9 commit dal 25/04 (5 fino al 7/5 mattina + 4 nuovi 7/5 sera):
+- **Atto 2 in piena attivita'**: Atto 1 chiuso post-Day-5 (2026-04-26 successo). 10 commit dal 25/04 (5 fino al 7/5 mattina + 4 nuovi 7/5 sera + 1 nuovo 8/5 00:29):
   - `ae82652` weekly digest 27/04 (PR #61)
   - `cf779ef` weekly digest 27/04 atto 2 routine
   - `abcbc4e` gitignore cycle-log archive + .bak rotation (#63)
@@ -182,6 +182,7 @@ Da triageare nel BACKLOG repo Game quando Sprint Impronta lascia spazio. Non ges
   - `b38904d` close OD-006 outcome A + STATUS slot (#68) -- 7/5 sera
   - `7a0df9d` tournament survivor fallback + keys.env load .bat fix (#69) -- 7/5 sera
   - `53d58d6` close OD-002 + OD-003, defer OD-004 (#70) -- 7/5 sera
+  - `a87da39` proposals lock reentrant + reject gameplay-mechanic-designer (#71) -- 8/5 00:29 CET
 - **3 OD storici chiusi in 1 sera**: OD-002, OD-003, OD-006 risolti. Decision debt cleanup massiccio.
 - **Pilastro 2 evoluzione**: IDENTITY refresh suggerisce day 11+ ha generato apprendimenti meta sull'identita' di Dafne. Anchor split (pillar 3<->4) in #67 documenta evoluzione concreta.
 - **Process persistence**: ADR-0019 applicato. Server runnable via `START-SWARM-PERSISTENT.ps1`.

@@ -20,8 +20,8 @@
 ### Gap operativo 25/04 -> 07/05 (non-stagnation)
 
 Eduardo ha lavorato attivamente in altri repo (silent driver mode):
-- **Game**: Sprint Impronta Ondata 1, 8+ commit, branches `aa01/cap-11..15` (telemetry + onboarding v2 + imprint phase V2). HEAD `5f42757a`. **Pausa 24h+ dal 7/5 mattina**. PR #2108 swarm-distillation routine aperto 7/5 sera (non triagato).
-- **Dafne swarm**: Atto 2 day 11+ -> day 12+, 9 commit cumulative (5 al 7/5 mattina + **4 nuovi 7/5 sera che chiudono OD-002+OD-003+OD-006**). HEAD `53d58d6`. Decision debt cleanup massiccio.
+- **Game**: Sprint Impronta Ondata 1, 8+ commit clusterati 25-26/04, branches `aa01/cap-11..15` (telemetry + onboarding v2 + imprint phase V2). HEAD `5f42757a` (26/04 12:53 CET). **Pausa Sprint Impronta dal 26/04 (~12gg)**. PR #2108 Claude Code session swarm-distillation aperto 7/5 sera (non triagato).
+- **Dafne swarm**: Atto 2 day 11+ -> day 12+, 10 commit cumulative (5 al 7/5 mattina + **4 nuovi 7/5 sera che chiudono OD-002+OD-003+OD-006** + 1 nuovo 8/5 00:29 PR #71 lock fix). HEAD `a87da39`. Decision debt cleanup massiccio.
 - **Game-Godot-v2**: 215 PR mergeati totali (+4 dal 7/5 sera). Path A canonical CHIUSO end-to-end 7/5.
 - **AA01**: silent driver del Sprint Impronta Game, capability-by-capability. 2 task PROPOSED del 25/04 (#001 voice-test + #002 day-5-post-session-ritual) restano in workspace.
 - **codemasterdd**: dataset Fase 6 fermo a n=12 dal 24/04 -- shift naturale di focus quando policy hub ha completato il ciclo (trigger ADR-0008 confermato a #12).
@@ -44,8 +44,9 @@ Eduardo ha lavorato attivamente in altri repo (silent driver mode):
 Reality-check 6 governance file vs stato reale post 7/5 sera + 8/5 mattina. Drift identificati:
 - COMPACT v11: HEAD `39f97da` claim vs reale `5828909` (mergiate PR #4-#10)
 - STATUS Game-Godot-v2: 211 PR vs reale 215 (+4 post 7/5 sera)
-- STATUS Game: "0 PR open" vs reale 1 (PR #2108 swarm-distillation 7/5 22:19)
-- STATUS Dafne: HEAD `1e14253` vs reale `53d58d6` (+4 commit 7/5 sera)
+- STATUS Game: "0 PR open" vs reale 1 (PR #2108 swarm-distillation Claude Code session 7/5 22:19 UTC)
+- STATUS Game: claim "in pieno corso" 7/5 vs reale pausa Sprint Impronta dal 26/04 (~12gg, drift accuracy preesistente perpetuato in v1 refresh, fixato in v2)
+- STATUS Dafne: HEAD `1e14253` vs reale `a87da39` (+5 commit: 4 il 7/5 sera + 1 il 8/5 00:29 CET)
 - STATUS Dafne open items: OD-002+OD-003+OD-006 chiusi vs status precedente "open"
 
 Cross-repo positives confermati: JOURNAL 7/5 entry completa, DECISIONS_LOG ha Decisione 004+005, ADR coerenti, BACKLOG H-items chiusi correttamente, OPEN_DECISIONS OD-001+OD-006 chiusi, AGENTS.md aderente ADR-0021.

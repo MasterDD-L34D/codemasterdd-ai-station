@@ -105,7 +105,7 @@ _(completato il 2026-04-19 — vedi "Stack installato")_
   - Path Lenovo: `C:\dev\Game`
   - Stack: Node 22 + Python 3.10, xstate@5, inkjs, Vue3 bundle
   - Compat runtime: Node 24 system-level (validato n=710+ test)
-  - **Status 2026-05-08**: **Sprint Impronta Ondata 1 in pausa 24h+** (HEAD `5f42757a` invariato dal 7/5 mattina, CAP-15 imprint phase V2). 8+ commit dal 25/04 driven da AA01 silent-driver mode (CAP-11 biome-resolution, CAP-12 player telemetry, CAP-13 imprint mockup + UX patch, CAP-14 onboarding v2, CAP-15 imprint V2). PR aperto: **#2108 swarm-distillation run #5** (Dafne automation 7/5 sera 22:19, da triagare). PR #97 Game-Database CLOSED stale 7/5.
+  - **Status 2026-05-08**: **Sprint Impronta Ondata 1 in pausa dal 26/04** (HEAD `5f42757a` invariato 12:53 CET, CAP-15 imprint phase V2). 8+ commit clusterati 25-26/04 driven da AA01 silent-driver mode (CAP-11 biome-resolution, CAP-12 player telemetry, CAP-13 imprint mockup + UX patch, CAP-14 onboarding v2, CAP-15 imprint V2). PR aperto: **#2108 swarm-distillation run #5** (branch `claude/swarm-distillation-2026-05-08`, Claude Code session 7/5 22:19 UTC, da triagare). PR #97 Game-Database CLOSED stale 7/5.
   - **Integration con Dafne swarm**: repo target. Pipeline `docs/pipeline-swarm-to-game.md`. Hook commit-msg globale applicato.
 
 - **Evo-Tactics Godot v2 (Game-Godot-v2)** — Godot 4.x port di Evo-Tactics, **pivot 2026-04-29**
