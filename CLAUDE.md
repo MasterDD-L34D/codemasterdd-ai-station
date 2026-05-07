@@ -176,6 +176,14 @@ Nessuno dei 3 repo ha CI integration. Monitoring manuale:
 - backup/ per config sensibili (gitignored)
 - .env (gitignored, template in .env.example)
 
+### Encoding e charset (ADR-0021)
+- Nuovi file `.md` creati da agent (Codex, Aider, Claude Code) → **ASCII-first** per body prose
+- Consentiti: emoji status (⚠️ ✅ 🔴), simboli matematici (≥, ≤, →) se semanticamente rilevanti
+- **Evitare** in body nuovi doc: em-dash `—`, middot `·`, smart quotes `'` `'` `"` `"` → usare `--`, `|`, `'`, `"`
+- **Eccezione convention progetto**: titoli ADR (`# ADR-NNNN — Title`) e header sintetici mantengono em-dash per coerenza con i 20+ ADR esistenti. La policy ASCII si applica al body prose, non al template title.
+- File legacy con mojibake (`Ã`, `â€”`): **frozen**, no global rewrite cieco. Fix mirato solo se file attivamente confusing per task corrente.
+- Razionale: ridurre artifact cross-tool (Windows shell, Codex Cloud sandbox, Aider whole/diff format)
+
 ## Struttura repository (evoluta 2026-04-24 post ADR-0017 scaffolding)
 ```
 codemasterdd-ai-station/
@@ -279,3 +287,5 @@ Il repo adotta lo schema governance di `Archivio_Libreria_Operativa_Progetti/` (
 5. `Archivio_.../07_CLAUDE_CODE_OPERATING_PACKAGE/CLAUDE_OPERATING_RULES.md` — regole meta
 6. `BACKLOG.md` + `OPEN_DECISIONS.md` — cosa è aperto ora
 7. ADR rilevanti se il task tocca topic noto
+
+**Per agent multi-client** (Codex Cloud, OpenCode, agent web-based o sandbox-confined): leggere prima `AGENTS.md` (preamble anti-confusion sandbox + path map + encoding policy) — ADR-0021. CLAUDE.md resta autoritativo per dettaglio operativo.
