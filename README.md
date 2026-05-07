@@ -35,10 +35,10 @@ Questa è la workstation **primaria e autosufficiente** di Eduardo Scarpelli: tu
 - **19/04**: ✅ setup base completato
 - **20-22/04**: ✅ Ollama + Qwen stack + migrazione progetti + bench + RAM upgrade
 - **22-23/04**: ✅ tier 3 cloud stack + quality bench + Fase 6 inaugurata
-- **Fino 19/05 (Claude Max expiration)**: Fase 6 tracking compresso — target n≥20 dogfood + quality bench continuation
-- **~20/05/2026**: ADR-0015 budget decision finale → target **full-sovereign $0-50/anno** (Ollama locale + cloud free-tier, **zero subscription ricorrenti**)
+- **Fino 19/05 (Claude Max expiration)**: Fase 6 CLOSED 2026-05-07 (n=12 con soft-override esteso, ADR-0015 Accepted)
+- **~20/05/2026**: ADR-0015 Accepted 2026-05-07: scenario A full-sovereign confermato
 
-Per i dettagli operativi e le convenzioni di lavoro con Claude Code, vedi [CLAUDE.md](./CLAUDE.md). Per storia decisionale completa, `docs/adr/` (14 ADR).
+Per i dettagli operativi e le convenzioni di lavoro con Claude Code, vedi [CLAUDE.md](./CLAUDE.md). Per storia decisionale completa, `docs/adr/` (21 ADR).
 
 ## Governance & navigazione
 

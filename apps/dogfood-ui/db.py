@@ -49,6 +49,14 @@ class Database:
             c.executescript(SCHEMA)
 
     def insert_entry(self, payload: dict[str, Any]) -> int:
+        valid_classes = {'cosmetic', 'behavior', 'strategic'}
+        if payload['classe'] not in valid_classes:
+            raise ValueError(f"Invalid classe: {payload['classe']}. Must be one of {valid_classes}")
+
+        valid_stacks = {'7B-local', '14B-Q2-local', '30B-MoE-local', 'groq-70b', 'cerebras-8b', 'gemini-flash', 'openai-mini', 'claude'}
+        if payload['stack'] not in valid_stacks:
+            raise ValueError(f"Invalid stack: {payload['stack']}. Must be one of {valid_stacks}")
+
         now_iso = datetime.now(timezone.utc).isoformat(timespec="seconds")
         with self.connect() as c:
             cur = c.execute(
