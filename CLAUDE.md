@@ -88,6 +88,7 @@ Target: piattaforma AI sovereign con zero subscription fisse post-maggio 2026.
   - `deepseek-r1:8b` (Q4_K_M, 5.2 GB disk / 6.0 GB loaded, digest `6995872bfe4c`, 8.2B params, architecture qwen3 + R1 distillation, ctx 128K nativo, installato 2026-04-22) — **tier reasoning locale**: 74.57 tok/s @ ctx 8192 **100% GPU full-fit** (unico 8B locale full-VRAM), 47.46 @ ctx 16384. Thinking mode R1-distilled per chain-of-thought esteso. Usare per task reasoning/debug logica, NON coder-specialist (Qwen domina per coding). Vedi `docs/research/bench-post-ram-upgrade-2026-04-22.md`
   - `gpt-oss:120b` (MXFP4, 65 GB disk, digest `a951a23b46a1`, **116.8B params**, ctx 128K, installato 2026-04-22) — **NON viable locale**: runtime richiede ~70 GB RAM > 63 GB totali. Via Cerebras catalog free tier bloccato (paid-only). Tenuto su disco come reference per future upgrade RAM (96/128 GB) o paid cloud access. Bench non eseguito per safety OOM.
   - `qwen2.5-coder:32b` (Q4_K_M, 19 GB, digest `b92d6a0bd47e`, dense 32B, installato 2026-04-22) — **SCARTATO tier routing**: bench 3.65 tok/s @ ctx 8192 (ADR-0012 addendum), 8.4× più lento di qwen3-coder:30b MoE. Reference only per comparison dense vs MoE.
+  - **Modelli aggiuntivi** (installati ~2 settimane fa per esplorazione, non bench-coperti codemasterdd, non in tier routing primario): `qwen3:8b` (5.2 GB, fallback chain Dafne tier 1), `qwen3.5:latest` (6.6 GB), `qwen3.6:latest` (23 GB), `qwen2.5:32b-instruct-q4_K_M` (19 GB, NON coder-specialist), `phi4:14b` (9.1 GB), `deepseek-r1:14b` (9.0 GB, scaling-up della 8b), `mistral:latest` (4.4 GB), `nomic-embed-text:latest` (274 MB, embedding utility). Bench/ADR opzionale post-Max se emergono use case concreti. Verifica presence: `ollama list`.
 - Aider 0.86.2 (installato 2026-04-20 via `python -m pip install aider-install && aider-install`, binary `C:\Users\edusc\.local\bin\aider.exe`) — **client agentic consigliato per workflow sovereign**
 - VSCode Cline extension `saoudrizwan.claude-dev` v3.79.0 (installata 2026-04-20) — **NOT viable come agentic con Qwen 7B**, vedi `docs/adr/0006-cline-qwen-viability.md`
 
@@ -98,21 +99,21 @@ _(completato il 2026-04-19 — vedi "Stack installato")_
 - Dipendenze specifiche progetti (da Evo-Tactics e Synesthesia)
 - Eventuali MCP server (filesystem, github) se emergono bisogni reali
 
-## Progetti monitorati (status 2026-05-07)
+## Progetti monitorati (status 2026-05-08)
 
 - **Evo-Tactics (Game)** — co-op tactical game d20, monorepo Node+Python (Vue3 bundle)
   - GitHub: `github.com/MasterDD-L34D/Game`
   - Path Lenovo: `C:\dev\Game`
   - Stack: Node 22 + Python 3.10, xstate@5, inkjs, Vue3 bundle
   - Compat runtime: Node 24 system-level (validato n=710+ test)
-  - **Status 2026-05-07**: **Sprint Impronta Ondata 1 in pieno corso**, HEAD `5f42757a` (CAP-15 imprint phase V2). 8+ commit dal 25/04 driven da AA01 silent-driver mode (CAP-11 biome-resolution, CAP-12 player telemetry, CAP-13 imprint mockup + UX patch, CAP-14 onboarding v2, CAP-15 imprint V2). PR aperto Game-Database #97 (Codex 23gg+ stale, awaiting rebase) + #2101 plan-v3-2 sentience T4 audit.
+  - **Status 2026-05-08**: **Sprint Impronta Ondata 1 in pausa dal 26/04** (HEAD `5f42757a` invariato 12:53 CET, CAP-15 imprint phase V2). 8+ commit clusterati 25-26/04 driven da AA01 silent-driver mode (CAP-11 biome-resolution, CAP-12 player telemetry, CAP-13 imprint mockup + UX patch, CAP-14 onboarding v2, CAP-15 imprint V2). PR aperto: **#2108 swarm-distillation run #5** (branch `claude/swarm-distillation-2026-05-08`, Claude Code session 7/5 22:19 UTC, da triagare). PR #97 Game-Database CLOSED stale 7/5.
   - **Integration con Dafne swarm**: repo target. Pipeline `docs/pipeline-swarm-to-game.md`. Hook commit-msg globale applicato.
 
 - **Evo-Tactics Godot v2 (Game-Godot-v2)** — Godot 4.x port di Evo-Tactics, **pivot 2026-04-29**
   - GitHub: `github.com/MasterDD-L34D/Game-Godot-v2`
   - Path Lenovo: `C:\dev\Game-Godot-v2\` (cloned 2026-05-07, 20.7 MB)
   - Stack: Godot 4.x (engine native, GDScript), 200 test file GUT (~1719 test asserts), addons + scenes + scripts + tests + tools
-  - **Status 2026-05-07 sera**: **211 PR mergeati totali**, 5 oggi (#207 phone composer + #208 AiProgressMeter HUD + #209 gdlint cleanup CI + #210 PassiveStatusApplier + #211 MissionTimer). Path A canonical CHIUSO end-to-end + Sprint AC bundle 15 sub-sprint chiuso. 0 PR open ora.
+  - **Status 2026-05-08**: **215 PR mergeati totali** (+4 dal 7/5 sera, dettaglio non triagato in codemasterdd -- governance interna autosufficiente). 5 PR documentati cross-repo del 7/5 sera: #207 phone composer + #208 AiProgressMeter HUD + #209 gdlint cleanup CI + #210 PassiveStatusApplier + #211 MissionTimer. Path A canonical CHIUSO end-to-end + Sprint AC bundle 15 sub-sprint chiuso. 0 PR open ora.
   - **Governance interna autosufficiente**: repo ha `CLAUDE.md` proprio (con `caveman mode` + Path A status detail) + `AGENTS.md` proprio per Codex (multi-client pattern adottato indipendentemente, **conferma ADR-0021 con uso reale**) + `.claude/SAFE_CHANGES.md` + `.claude/TASK_PROTOCOL.md`. Codemasterdd NON sovrascrive — monitora solo.
   - **Hook globali codemasterdd**: applicati automaticamente via `core.hooksPath` user-level. Conventional Commits + silent-fail Layer 2 ADR-0020 attivi su Game-Godot-v2 senza setup repo-specific.
   - **Relazione con Game (Vue3)**: parallel-run during port phase. Vue3 mantiene Sprint Impronta gameplay (logica + telemetria + onboarding CAP-11..15); Godot v2 ricostruisce shell visuale + UX + canonical engine. Long-term: Godot v2 frontend canonical, Vue3 archive (decisione futura, NON ancora ADR).

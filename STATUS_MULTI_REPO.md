@@ -6,7 +6,7 @@
 >
 > Riferimenti deep: CLAUDE.md sezione "Progetti monitorati" (descrittivo), memory `project_multi_repo_overview.md` (architetturale), questo file (operativo).
 
-**Ultimo refresh**: 2026-05-07 (post Fase 6 closure ADR-0015 + ADR-0017 Accepted + Codex review + ADR-0021)
+**Ultimo refresh**: 2026-05-08 (refresh post-7/5-sera: Dafne 4 PR + 3 OD closed + Game-Godot-v2 215 PR + PR #2108 Game open)
 
 ---
 
@@ -16,21 +16,21 @@
 |------|--------|-------------|------------------|---------|
 | **codemasterdd-ai-station** | **Fase 6 CLOSED 2026-05-07** (ADR-0015 + ADR-0017 Accepted), HEAD post PR #2 #4 #5 #6 mergeati, 12/18 agent ready | SPRINT_02 prima sessione 20/05+ | 2026-05-19 (Claude Max expiration) | Nessuno bloccante |
 | **Synesthesia** | Dormant, HEAD `05f8a92` (invariato) | Riattiva pre-esame UniUPO | ~agosto 2026 | Nessuno (dormant intenzionale) |
-| **Game (Evo-Tactics Vue3)** | **Sprint Impronta Ondata 1 in pieno corso**, HEAD `5f42757a` (CAP-15 imprint phase V2 mergeato), 8+ commit dal 25/04 driven by AA01 capability-by-capability | Continue Sprint Impronta (Eduardo-driven via AA01) | No fixed | Nessuno (lavoro fuori scope codemasterdd) |
-| **Game-Godot-v2** | **211 PR mergeati totali**, 5 oggi (#207-#211), Path A canonical CHIUSO end-to-end. **Cloned 2026-05-07 in `C:\dev\Game-Godot-v2\`** (20.7 MB). Hook globali applicati. Governance interna autosufficiente (CLAUDE.md + AGENTS.md propri) | Continue port (Eduardo-driven), supportare cross-repo se serve | No fixed | Nessuno |
-| **Dafne swarm (evo-swarm)** | **Atto 2 day 11+ active**, HEAD `1e14253` (health flag draft 07/05 PR #65), 4 commit dal 25/04. ADR-0019 process persistence applicato. | Continue Atto 2 (Eduardo-driven) | No fixed | Nessuno |
+| **Game (Evo-Tactics Vue3)** | **Sprint Impronta Ondata 1 in pausa dal 26/04** (HEAD `5f42757a` invariato, ~12gg). **PR #2108 open** swarm-distillation run #5 (branch `claude/...`, Claude Code session 7/5 sera 22:19 UTC, da triagare) | Triage PR #2108 + continue Sprint Impronta (Eduardo-driven) | No fixed | Nessuno (PR #2108 routine, low priority) |
+| **Game-Godot-v2** | **215 PR mergeati totali** (+4 post 7/5 sera, dettaglio non triagato in codemasterdd), Path A canonical CHIUSO end-to-end. Cloned 2026-05-07 in `C:\dev\Game-Godot-v2\` (20.7 MB). Hook globali applicati. Governance interna autosufficiente | Continue port (Eduardo-driven), supportare cross-repo se serve | No fixed | Nessuno |
+| **Dafne swarm (evo-swarm)** | **Atto 2 day 12+ active**, HEAD `a87da39` (4 PR pushati 7/5 sera: #67 anchor split + #68 OD-006 close + #69 tournament survivor fix + #70 OD-002+OD-003 close + 1 PR 8/5 00:29: #71 proposals lock fix). 3 OD storici chiusi. | Continue Atto 2 (Eduardo-driven) | No fixed | Nessuno |
 | **AA01 (Archon Atelier 01)** | v1.0.0 silent-driver mode -- ha guidato Sprint Impronta Game (CAP-11..15). 2 task PROPOSED storici del 25/04 (#001 voice-test + #002 day-5-post-session-ritual) ancora in workspace | Continua driver mode + eventuale review 2 PROPOSED | nessuna | nessuno bloccante |
 
-### Stack ADR-0017 runtime (aggiornato 2026-05-07, status flip Accepted)
+### Stack ADR-0017 runtime (aggiornato 2026-05-08, status invariato dal 7/5)
 
 Stack `Accepted` ma in modalita' **scaffold opt-in**: Docker Desktop non auto-start (scelta operativa per non consumare RAM/CPU costante). Hot-restartable in <60s con `cd infra && docker compose up -d`. DB persistence Postgres+SQLite preservata cross-restart.
 
-| Componente | Port | Status code | Status runtime 2026-05-07 | Note |
+| Componente | Port | Status code | Status runtime 2026-05-08 | Note |
 |------------|-----:|:-----------:|:-------------------------:|------|
-| LiteLLM Proxy | 4000 | Accepted | scaffold opt-in (DOWN ora) | Validated 2026-04-24, hot-restartable. v1.82.6 |
-| Langfuse | 3000 | Accepted | scaffold opt-in (DOWN ora) | 7+ trace persistiti Postgres preservati. v2.95.11 |
-| Postgres | 5432 | Accepted | scaffold opt-in (DOWN ora) | Persistence preservata cross-restart |
-| dogfood-ui Flask | 8080 | Accepted | scaffold opt-in (DOWN ora) | v0.2.0, 11 route, side-effect SQLite path worktree noto |
+| LiteLLM Proxy | 4000 | Accepted | scaffold opt-in (DOWN) | Validated 2026-04-24, hot-restartable. v1.82.6 |
+| Langfuse | 3000 | Accepted | scaffold opt-in (DOWN) | 7+ trace persistiti Postgres preservati. v2.95.11 |
+| Postgres | 5432 | Accepted | scaffold opt-in (DOWN) | Persistence preservata cross-restart |
+| dogfood-ui Flask | 8080 | Accepted | scaffold opt-in (DOWN) | v0.2.0, 11 route, side-effect SQLite path worktree noto |
 | promptfoo CLI | -- | Accepted | installed v0.121.7 | Smoke 4/4 pass commit `327d078`. Eval on-demand via CLI |
 | Dafne swarm (esterna) | 5000 | -- | gestito da repo Dafne separato | Vedi sezione Dafne sotto |
 
@@ -121,13 +121,15 @@ Dormant → Attivo: Eduardo segnala riattivazione → codemasterdd riprende trac
 
 **Path**: `C:\dev\Game\`
 **Remote**: [MasterDD-L34D/Game](https://github.com/MasterDD-L34D/Game)
-**HEAD 2026-05-07**: `5f42757a Merge branch 'aa01/cap-15-imprint-phase' into main (CAP-15 phase merge)`
+**HEAD 2026-05-08**: `5f42757a Merge branch 'aa01/cap-15-imprint-phase' into main (CAP-15 phase merge)` (invariato dal 26/04 12:53 CET, pausa Sprint Impronta ~12gg)
+
+**Open PR**: **#2108** swarm-distillation run #5 stress mechanics + biomi extreme (branch `claude/swarm-distillation-2026-05-08`, Claude Code session creato 7/5 22:19 UTC, NON triagato da codemasterdd)
 
 ### Piano operativo
 
 Governance del Game vive **nel Game repo stesso** (`docs/governance/`). codemasterdd non dirige, **monitora**.
 
-- **Sprint Impronta Ondata 1 in pieno corso** (driven by AA01 silent driver mode, 25/04 -> 07/05):
+- **Sprint Impronta Ondata 1 in pausa dal 26/04** (driven by AA01 silent driver mode, attivita' clusterata 25-26/04):
   - **CAP-11** biome-resolution merge
   - **CAP-12** PlayerRunTelemetry schema + endpoint
   - **CAP-13** imprint-mockup + UX patch anchor "qual e' la mia creatura"
@@ -145,6 +147,7 @@ Governance del Game vive **nel Game repo stesso** (`docs/governance/`). codemast
 
 ### Next action visto da codemasterdd
 - **Monitorare**: Sprint Impronta progression (Eduardo+AA01 driven)
+- **Triagare PR #2108** (low priority, swarm distillation routine output): valutare merge/comment/close in slot dedicato. Non bloccante.
 - **Non gestire direttamente**: capability CAP-11..CAP-NN, design decisions interni
 - **Cross-repo**: hook commit-msg globale + Conventional Commits funzionano automaticamente su Game (no setup repo-specific necessario)
 
@@ -165,26 +168,34 @@ Da triageare nel BACKLOG repo Game quando Sprint Impronta lascia spazio. Non ges
 
 **Path**: `C:\Users\edusc\Dafne\workspace\swarm\`
 **Remote**: [MasterDD-L34D/evo-swarm](https://github.com/MasterDD-L34D/evo-swarm)
-**HEAD 2026-05-07**: `1e14253 chore(exports): atto 2 health flag draft 2026-05-07 (#65)`
+**HEAD 2026-05-08**: `a87da39 fix(dafne): proposals lock reentrant + reject gameplay-mechanic-designer (#71)` (4 commit 7/5 sera + 1 commit 8/5 00:29 CET)
 
-### Piano operativo (Atto 2 day 11+ active)
+### Piano operativo (Atto 2 day 12+ active)
 
-- **Atto 2 in piena attivita'**: Atto 1 chiuso post-Day-5 (2026-04-26 successo). 4 commit dal 25/04:
-  - `ae82652` weekly digest 27/04 (PR #61 -> origine PR aperto evo-swarm #61)
+- **Atto 2 in piena attivita'**: Atto 1 chiuso post-Day-5 (2026-04-26 successo). 10 commit dal 25/04 (5 fino al 7/5 mattina + 4 nuovi 7/5 sera + 1 nuovo 8/5 00:29):
+  - `ae82652` weekly digest 27/04 (PR #61)
   - `cf779ef` weekly digest 27/04 atto 2 routine
   - `abcbc4e` gitignore cycle-log archive + .bak rotation (#63)
   - `88a7954` IDENTITY refresh post day 11 (#64)
-  - `1e14253` health flag draft 2026-05-07 (PR #65) -- oggi
-- **Pilastro 2 evoluzione**: in progresso, IDENTITY refresh suggerisce day 11+ ha generato apprendimenti meta sull'identita' di Dafne. Da audit nel diary se serve detail.
+  - `1e14253` health flag draft 2026-05-07 (PR #65)
+  - `49c1ab8` compass realignment anchor split + OD-006 handoff (#67) -- 7/5 sera
+  - `b38904d` close OD-006 outcome A + STATUS slot (#68) -- 7/5 sera
+  - `7a0df9d` tournament survivor fallback + keys.env load .bat fix (#69) -- 7/5 sera
+  - `53d58d6` close OD-002 + OD-003, defer OD-004 (#70) -- 7/5 sera
+  - `a87da39` proposals lock reentrant + reject gameplay-mechanic-designer (#71) -- 8/5 00:29 CET
+- **3 OD storici chiusi in 1 sera**: OD-002, OD-003, OD-006 risolti. Decision debt cleanup massiccio.
+- **Pilastro 2 evoluzione**: IDENTITY refresh suggerisce day 11+ ha generato apprendimenti meta sull'identita' di Dafne. Anchor split (pillar 3<->4) in #67 documenta evoluzione concreta.
 - **Process persistence**: ADR-0019 applicato. Server runnable via `START-SWARM-PERSISTENT.ps1`.
 - **Chat personale Dafne**: endpoint `http://localhost:5000/dafne` operativo. Persistence `workspace/memory/dialoghi/YYYY-MM-DD.md`. Fallback chain qwen3:8b local -> groq 70B -> cerebras 8B -> gemini flash.
 - **Voice loop**: `dafne_voice.py` pronto, mai testato con mic reale (status invariato dal 25/04).
 - **Widget desktop**: `Dafne Widget.lnk` Edge --app mode operativo. Tauri widget scaffoldato non buildato (decision pending).
 
-### Open items (OD- tracked in swarm repo)
-- **OD-003** Groq key 403 (non bloccante)
-- **OD-004** dashboard usage (observation post-Atto 1)
-- **OD-005** Tavily API (web search degraded)
+### Open items (OD- tracked in swarm repo, status post-7/5 sera)
+- **OD-002** ~~chiuso 7/5 (PR #70)~~
+- **OD-003** ~~Groq key 403 chiuso 7/5 (PR #70)~~
+- **OD-004** dashboard usage -- **deferred** (status update PR #70)
+- **OD-005** Tavily API (web search degraded) -- status invariato
+- **OD-006** ~~outcome A chiuso 7/5 (PR #68)~~
 
 ### Blocker
 - Nessuno hard. Atto 2 procede stabilmente.
@@ -207,9 +218,9 @@ Da triageare nel BACKLOG repo Game quando Sprint Impronta lascia spazio. Non ges
 
 Repo creato 5 giorni dopo l'inizio del Sprint Impronta Game (Vue3). Pivot strategico: ricostruire shell visuale + UX in engine native (Godot 4.x) mentre Game (Vue3) mantiene Sprint Impronta gameplay logic + telemetria + onboarding.
 
-**Status 2026-05-07 sera**: **211 PR mergeati totali**, 0 open ora.
+**Status 2026-05-08**: **215 PR mergeati totali** (PR #215 ultimo mergeato), 0 open ora. +4 PR oltre il count del 7/5 sera (#212-#215, dettaglio non triagato in codemasterdd -- governance interna autosufficiente).
 
-PR mergeati oggi (5):
+PR mergeati 7/5 sera (5, ultimi documentati a livello cross-repo):
 - **#207** phone composer handlers (world_tally + world_vote_accepted)
 - **#208** GAP-10 AiProgressMeter wire HUD top-strip
 - **#209** gdlint debt cleanup CI (fix)
@@ -256,6 +267,7 @@ Codemasterdd NON sovrascrive il governance interno -- monitora soltanto.
 | ~~2026-04-26~~ | Day-5 Dafne swarm | evo-swarm | DONE -- Atto 1 chiuso post Day-5 successo |
 | ~~2026-04-30~~ | H4 cost snapshot fine-mese | codemasterdd | DONE -- gia' fatto mid-sprint 24/04 |
 | ~~2026-05-07~~ | Fase 6 closure (anticipata vs sett.4 originale) | codemasterdd | DONE -- ADR-0015 + ADR-0017 Accepted |
+| ~~2026-05-08~~ | Governance refresh (drift fix STATUS + COMPACT v12) | codemasterdd | DONE -- branch governance-refresh-2026-05-08 |
 | **2026-05-19** | Claude Max expiration | codemasterdd | Transizione sovereign (wrapper + Ollama) |
 | **2026-05-20+** | SPRINT_02 prima sessione | codemasterdd | Scenario A operativo, smoke test sovereign confermato |
 | **~giugno-agosto 2026** | Synesthesia riattivazione | Synesthesia | Privacy validation 2/3 + esame prep |
