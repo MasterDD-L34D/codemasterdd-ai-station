@@ -98,15 +98,23 @@ _(completato il 2026-04-19 — vedi "Stack installato")_
 - Dipendenze specifiche progetti (da Evo-Tactics e Synesthesia)
 - Eventuali MCP server (filesystem, github) se emergono bisogni reali
 
-## Progetti monitorati (status 2026-04-24)
+## Progetti monitorati (status 2026-05-07)
 
-- **Evo-Tactics** — co-op tactical game d20, monorepo Node+Python
+- **Evo-Tactics (Game)** — co-op tactical game d20, monorepo Node+Python (Vue3 bundle)
   - GitHub: `github.com/MasterDD-L34D/Game`
   - Path Lenovo: `C:\dev\Game`
   - Stack: Node 22 + Python 3.10, xstate@5, inkjs, Vue3 bundle
   - Compat runtime: Node 24 system-level (validato n=710+ test)
-  - **Integration 2026-04-24**: repo target dello swarm Dafne (vedi sotto). Branch `swarm/register-agents-2026-04-24` contiene 2 agent registrati (gameplay-prototyper, combat-engineer) + runtime state sync. PR pending su GitHub UI.
-  - **File chiave toccati da swarm**: `agents/agents_index.json` (registry 11 agent), `agents/*.md` + `.ai/*/PROFILE.md` (definizioni), `docs/flint-status.json` (monitor telemetria), `data/flow-shell/atlas-snapshot.json`
+  - **Status 2026-05-07**: **Sprint Impronta Ondata 1 in pieno corso**, HEAD `5f42757a` (CAP-15 imprint phase V2). 8+ commit dal 25/04 driven da AA01 silent-driver mode (CAP-11 biome-resolution, CAP-12 player telemetry, CAP-13 imprint mockup + UX patch, CAP-14 onboarding v2, CAP-15 imprint V2). PR aperto Game-Database #97 (Codex 23gg+ stale, awaiting rebase) + #2101 plan-v3-2 sentience T4 audit.
+  - **Integration con Dafne swarm**: repo target. Pipeline `docs/pipeline-swarm-to-game.md`. Hook commit-msg globale applicato.
+
+- **Evo-Tactics Godot v2 (Game-Godot-v2)** — Godot 4.x port di Evo-Tactics, **pivot 2026-04-29**
+  - GitHub: `github.com/MasterDD-L34D/Game-Godot-v2`
+  - Path Lenovo: **NESSUNO** (remote-only, repo creato 29/04, no clone locale qui). Possibile clone su altro device/sandbox dove Eduardo lavora.
+  - Stack: Godot 4.x (game engine native)
+  - **Status 2026-05-07**: 2 PR open (#208 GAP-10 AiProgressMeter HUD, #209 gdlint debt cleanup unblock CI). Last push 19:33 oggi.
+  - **Relazione con Game (Vue3)**: parallel-run during port phase. Vue3 mantiene Sprint Impronta gameplay (logica + telemetria + onboarding); Godot v2 ricostruisce shell visuale + UX in engine native. Long-term: Godot v2 potrebbe diventare frontend canonical, Vue3 archive (decisione futura, NON ancora ADR).
+  - **Governance**: codemasterdd monitora via STATUS_MULTI_REPO; nessun guard rail commit globale applicato finche' repo non e' cloned localmente (path-dependent).
 
 - **Synesthesia** — web app esame UniUPO
   - GitHub: `github.com/MasterDD-L34D/synesthesia`
@@ -133,13 +141,17 @@ _(completato il 2026-04-19 — vedi "Stack installato")_
 ```
 codemasterdd-ai-station (policy + infrastruttura)
        │
-       ├─── Evo-Tactics (C:\dev\Game)
-       │         ↑
-       │         │ swarm produce → integra manualmente
-       │         │
+       ├─── Evo-Tactics Vue3 (C:\dev\Game) ── Sprint Impronta active (CAP-11..15)
+       │         ↑                   │
+       │         │ swarm produce     │ AA01 capability driving
+       │         │                   ↓
+       │         │            ┌── Evo-Tactics Godot v2 (REMOTE-ONLY)
+       │         │            │     pivot 2026-04-29, parallel-run port
+       │         │            │
        └─── Dafne swarm (C:\Users\edusc\Dafne\workspace\swarm)
                  ↑
                  │ governance + pilastri + metriche empirical
+                 │ (Atto 2 day 11+ active)
 ```
 
 ### Monitoring cross-repo (sessione 2026-04-24)
