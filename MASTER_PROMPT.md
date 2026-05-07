@@ -19,12 +19,13 @@ Contesto progetto:
 - Tipo: infrastructure-as-code personale + registry decisionale transizione AI sovereign
 - Natura: NON prodotto, NON libreria, NON codice di progetti reali (quelli in Evo-Tactics + Synesthesia separati)
 - Owner: Eduardo Scarpelli, solo-dev
-- Stato: barra 88%, Fase 6 (empirical tracking compressa) al 40% (8/20 dogfood), HEAD 5ef8e9c clean
-- Deadline hard: 2026-05-19 (Claude Max expiration). Fase 6 closure target 2026-05-20.
+- Stato: **barra ~95%, Fase 6 CLOSED 2026-05-07** (ADR-0015 + ADR-0017 entrambi Accepted). Scenario A full-sovereign confermato. Transition window 12gg residui.
+- Deadline hard: 2026-05-19 (Claude Max expiration, NON rinnovo). SPRINT_02 prima sessione 20/05+.
 - Hardware: Lenovo LOQ Tower, Intel Core Ultra 7 255HX + RTX 5060 8GB VRAM + 64GB DDR5-5600
-- Stack attivo: Claude Code 2.1 Opus 4.7 + Aider 0.86 + 6 wrapper + 5 Ollama models + 4 cloud keys (Groq/Cerebras/Gemini/OpenAI)
-- 14 ADR in docs/adr/ (ultimi 3 Accepted 2026-04-23: RAM upgrade + cloud tier 3 + timeline compression)
-- Per onboarding rapido: leggi PROJECT_BRIEF.md + COMPACT_CONTEXT.md + CLAUDE.md in quest'ordine
+- Stack attivo: Claude Code 2.1 Opus 4.7 + Aider 0.86 + 7 wrapper (cosmetic/refactor/groq/cerebras/gemini/openai + log) + 16 Ollama models + 4 cloud keys (Groq/Cerebras/Gemini/OpenAI)
+- 21 ADR in docs/adr/ (ultimi 4 Accepted 2026-05-07: ADR-0015 budget Fase 7 + ADR-0017 stack + ADR-0021 multi-client AGENTS.md, oltre a ADR-0020 silent-fail Python 25/04)
+- Per agent multi-client (Codex Cloud, OpenCode, sandbox-based): leggere `AGENTS.md` PRIMA per anti-confusion preamble
+- Per onboarding rapido: leggi `CLAUDE.md` + `COMPACT_CONTEXT.md` v11 + `STATUS_MULTI_REPO.md` + `SPRINT_02.md` in quest'ordine
 
 Tipo di progetto:
 software / infrastructure-as-code / decisional archive
