@@ -55,9 +55,29 @@ Cross-repo positives confermati: JOURNAL 7/5 entry completa, DECISIONS_LOG ha De
 Branch dedicato `claude/governance-refresh-2026-05-08`:
 - STATUS_MULTI_REPO: refresh date 8/5, sezioni Game/Dafne/Game-Godot-v2 aggiornate, header tabella, scheduled checkpoint riga aggiunta
 - COMPACT v11 -> v12 (questo file)
-- CLAUDE.md sezione Game-Godot-v2 PR count cosmetic fix (211 -> 215)
+- CLAUDE.md sezione Game-Godot-v2 PR count cosmetic fix (211 -> 215) + sezione Game pausa Sprint Impronta corretta + Stack installato +1 riga "modelli aggiuntivi"
 
 Nessun file core toccato (JOURNAL/DECISIONS_LOG/ADR/BACKLOG/OPEN_DECISIONS/SPRINT_02/AGENTS.md preservati).
+
+#### Pre-Max checklist tecnica (locale read-only, eseguita questa sessione)
+Verifica wrapper sovereign + API keys + stack hot-restart-ready in vista 19/05 expiration:
+- 6 wrapper aider-* presenti in `C:/Users/edusc/.local/bin/` (cosmetic, refactor, groq, cerebras, gemini, openai) + aider-log + aider.exe v0.86.2
+- API keys `~/.config/api-keys/keys.env` 609 bytes presente; Aider config global `~/.aider.conf.yml` 235 bytes presente
+- Aider 0.86.2, promptfoo 0.121.7 (vs latest 0.121.10, lag minor), 16 modelli Ollama presenti
+- Docker compose `infra/docker-compose.yaml` config validation OK (`docker compose config --quiet` exit 0)
+- Drift trovato: CLAUDE.md "Stack installato" Ollama documentava 8 modelli, reali 16. +1 riga "modelli aggiuntivi" added.
+
+Esito: sovereign stack pronto per 19/05 transition. Nessun blocker tecnico.
+
+#### Triage operativo PR #2108 Game (chat-only delivery)
+PR #2108 Game (docs research distillation run #5 evo-swarm). Analisi codemasterdd:
+- Safety: docs-only additive (1 file nuovo +211/-0), no edit `data/core/`, gate ratifica preservato (5 open questions per game-side review)
+- CI: governance + paths-filter SUCCESS, altri SKIPPED (atteso docs-only)
+- Branch: `claude/swarm-distillation-2026-05-08` -> Claude Code session, NON Dafne automation
+- Conflitti: nessuno, mergeable
+- Pattern coerente vs altri `docs/research/2026-04-25-skiv-*.md` esistenti
+
+Raccomandazione: **merge-ready** dal POV codemasterdd. Decisione merge resta Game-side per ownership boundary CLAUDE.md ("monitora solo"). Tentato `gh pr comment 2108` -> sandbox correttamente bloccato (External System Write su repo non-codemasterdd richiede auth esplicita, non coperta da Auto Mode generico). Lezione salvata in `feedback_external_repo_action_boundary.md`.
 
 ### Sessione 2026-05-07 (resume + Codex + Fase 6 closure)
 
