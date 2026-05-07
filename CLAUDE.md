@@ -110,11 +110,12 @@ _(completato il 2026-04-19 — vedi "Stack installato")_
 
 - **Evo-Tactics Godot v2 (Game-Godot-v2)** — Godot 4.x port di Evo-Tactics, **pivot 2026-04-29**
   - GitHub: `github.com/MasterDD-L34D/Game-Godot-v2`
-  - Path Lenovo: **NESSUNO** (remote-only, repo creato 29/04, no clone locale qui). Possibile clone su altro device/sandbox dove Eduardo lavora.
-  - Stack: Godot 4.x (game engine native)
-  - **Status 2026-05-07**: 2 PR open (#208 GAP-10 AiProgressMeter HUD, #209 gdlint debt cleanup unblock CI). Last push 19:33 oggi.
-  - **Relazione con Game (Vue3)**: parallel-run during port phase. Vue3 mantiene Sprint Impronta gameplay (logica + telemetria + onboarding); Godot v2 ricostruisce shell visuale + UX in engine native. Long-term: Godot v2 potrebbe diventare frontend canonical, Vue3 archive (decisione futura, NON ancora ADR).
-  - **Governance**: codemasterdd monitora via STATUS_MULTI_REPO; nessun guard rail commit globale applicato finche' repo non e' cloned localmente (path-dependent).
+  - Path Lenovo: `C:\dev\Game-Godot-v2\` (cloned 2026-05-07, 20.7 MB)
+  - Stack: Godot 4.x (engine native, GDScript), 200 test file GUT (~1719 test asserts), addons + scenes + scripts + tests + tools
+  - **Status 2026-05-07 sera**: **211 PR mergeati totali**, 5 oggi (#207 phone composer + #208 AiProgressMeter HUD + #209 gdlint cleanup CI + #210 PassiveStatusApplier + #211 MissionTimer). Path A canonical CHIUSO end-to-end + Sprint AC bundle 15 sub-sprint chiuso. 0 PR open ora.
+  - **Governance interna autosufficiente**: repo ha `CLAUDE.md` proprio (con `caveman mode` + Path A status detail) + `AGENTS.md` proprio per Codex (multi-client pattern adottato indipendentemente, **conferma ADR-0021 con uso reale**) + `.claude/SAFE_CHANGES.md` + `.claude/TASK_PROTOCOL.md`. Codemasterdd NON sovrascrive — monitora solo.
+  - **Hook globali codemasterdd**: applicati automaticamente via `core.hooksPath` user-level. Conventional Commits + silent-fail Layer 2 ADR-0020 attivi su Game-Godot-v2 senza setup repo-specific.
+  - **Relazione con Game (Vue3)**: parallel-run during port phase. Vue3 mantiene Sprint Impronta gameplay (logica + telemetria + onboarding CAP-11..15); Godot v2 ricostruisce shell visuale + UX + canonical engine. Long-term: Godot v2 frontend canonical, Vue3 archive (decisione futura, NON ancora ADR).
 
 - **Synesthesia** — web app esame UniUPO
   - GitHub: `github.com/MasterDD-L34D/synesthesia`
