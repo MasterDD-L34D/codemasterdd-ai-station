@@ -6,27 +6,26 @@
 
 ---
 
-### [OD-001] ~~Scenario Budget Fase 7 (ADR-0015)~~ **CLOSED 2026-04-24**
+### [OD-001] ~~Scenario Budget Fase 7 (ADR-0015)~~ **CLOSED 2026-04-24 (Proposed) → ratificato 2026-05-07 (Accepted)**
 
 - **Livello**: system / workflow / budget
-- **Stato**: **CLOSED** — formalizzato in **ADR-0015 Proposed 2026-04-24**. Opzione A (full-sovereign $0-50/anno) selezionata come default, con **deroga esplicita criterio #3 privacy** (Synesthesia dormant fino esame UniUPO agosto 2026). Ratification a review settimana 4 (~2026-05-17).
+- **Stato**: **CLOSED + RATIFIED** — formalizzato in **ADR-0015 Proposed 2026-04-24** → **Accepted 2026-05-07** (sessione Fase 6 closure, PR #4 mergeato). Opzione A (full-sovereign $0-50/anno) confermata, con **deroga esplicita criterio #3 privacy** (Synesthesia dormant fino esame UniUPO ~ago 2026, retroattivo a riattivazione).
 - **Ambiguità originale**: quale scenario adottare post-Claude Max (2026-05-19)? (A full-sovereign / B ibrido Pro / C extension)
 - **Decisione finale**: A — full-sovereign. B declassato (quality parity 5/5 stack + 70B cloud parity vs 14B Q2 local empirically confermata). C scartato (costo bridge 3 mesi ingiustificato senza lavoro reale su Synesthesia).
-- **File coinvolti (output)**: `docs/adr/0015-fase7-budget-decision-full-sovereign.md` (Proposed), `DECISIONS_LOG.md` aggiornato.
-- **Trigger Accepted**: review settimana 4 con criteri #2 reliability + #4 cost confermati + nessuna regressione fail rate o silent-corruption.
+- **File coinvolti (output)**: `docs/adr/0015-fase7-budget-decision-full-sovereign.md` (Accepted), `DECISIONS_LOG.md` aggiornato.
+- **Trigger Accepted ratificati**: soft-override esteso n>=12 con 5 rationale additivi (trigger ADR-0008 confermato a #12, behavior 5/3 superato 167%, fail rate 8.3%, zero silent-corruption, no dogfood sintetici).
 
 ---
 
-### [OD-002] Fix cp1252 Windows wrapper — tenere o sostituire
+### [OD-002] ~~Fix cp1252 Windows wrapper — tenere o sostituire~~ **CLOSED 2026-05-07 (soglia raggiunta)**
 
 - **Livello**: system / tooling
-- **Stato**: proposta (deployato, monitoring)
-- **Ambiguità**: il fix `chcp 65001 + PYTHONIOENCODING=utf-8` nei 6 wrapper `.cmd` tiene sotto retry loop reale? Oppure serve switch a PowerShell wrapper (`.ps1`) o `aider --no-pretty` cumulativo?
-- **Perché conta**: è l'unico bug noto che blocca stabilità wrapper cloud. Una singola occorrenza rompe retry → Aider crash → manual rescue.
-- **Miglior default proposto**: osservare. Se prossima retry loop → safe-fail pulito → mantenere. Se crash ricorrente → M3 backlog (PowerShell wrapper).
-- **Rischio se ignorata**: scoperta a chiusura Fase 6 o durante sovereign real-world → blocker critico.
-- **File o moduli coinvolti**: `~/.local/bin/aider-*.cmd` (6 file), `logs/aider-delegation-2026-04.md`.
-- **Prossima azione consigliata**: T3 di `SPRINT_01.md` — monitoring empirico durante T1/T2 naturali. Documentare esito in JOURNAL.
+- **Stato**: **CLOSED — non bloccante**. n=15 cumulative dogfood + smoke (Fase 6 closure) **senza retry loop naturale osservato**. Trigger di pazienza ADR-0014 raggiunto: il fix `chcp 65001 + PYTHONIOENCODING=utf-8` deployato ha tenuto in tutti i task reali; nessun crash UnicodeEncodeError post-deploy. Switch alternative (PowerShell wrapper M3) **deferred** senza trigger empirico.
+- **Ambiguità originale**: il fix tiene sotto retry loop reale? Oppure serve switch a PowerShell wrapper o `aider --no-pretty` cumulativo?
+- **Decisione finale**: **mantenere fix `.cmd` deployato**. Re-trigger condizionale: se ≥1 crash UnicodeEncodeError emerge in SPRINT_02 (T1 SPRINT_02 trigger) → riapertura via M3 backlog (PowerShell wrapper alternative).
+- **Perché conta originale**: era l'unico bug noto che bloccava stabilità wrapper cloud. Empirically risolto.
+- **File o moduli coinvolti**: `~/.local/bin/aider-*.cmd` (6 file invariati), `logs/aider-delegation-2026-04.md` (12 entries clean).
+- **Prossima azione**: nessuna proattiva. Solo reactive monitoring durante T2 SPRINT_02 (dogfood organico continuativo).
 
 ---
 

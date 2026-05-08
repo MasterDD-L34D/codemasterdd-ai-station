@@ -38,7 +38,7 @@
 - [x] ~~**U2-test** — Step 2 Langfuse live~~ **DONE 2026-04-24/25**: container `codemasterdd-langfuse-web` UP 6h+, `/api/public/health` 200 (v2.95.11). Callback LiteLLM → Langfuse validato (7+ traces + 7 observations persistiti in Postgres durante sessione maratona). **Gap residuo**: creazione project + API key via UI (`http://localhost:3000`) se si vuole dashboard separato per queries.
 - [x] ~~**U3-test** — Step 3 promptfoo live~~ **DONE 2026-04-25 insieme con Eduardo**: virtual key `dogfood-ui` creata via `http://localhost:4000/ui/` (Max Budget $5, 30d reset). Configs `promptfoo.config.yaml` + `promptfoo-smoke.yaml` aggiornate a `OPENAI_API_KEY` env var pattern (no key hardcoded in repo). **Smoke eval 4/4 PASS** (Qwen 7B local + Groq 70B cloud, 2 Python code-completion problems, 3s duration, 517 token totali). Output `results/promptfoo-smoke.json`. End-to-end LiteLLM proxy routing validato con virtual key.
 - [x] ~~**U4-test** — Step 4 dogfood-ui live~~ **DONE 2026-04-24/25**: HTTP 200, v0.2.0, `/api/health` returns status ok (litellm/langfuse reachable, dafne unreachable atteso, db.count=0). 11 route registered (UI + API + Dafne proxy). **Finding side-effect**: Flask host process lanciato da worktree `mystifying-keller-84cb03`, DB path hardcoded a quel worktree → DB separato per-worktree non intenzionale. Non bloccante finché si legge dati dal log markdown (source of truth), ma U6 migrazione va orientata al worktree main/canonical.
-- [ ] **U5** — ADR-0017 ratification: se U0-U4 test completati entro ~2026-05-17 review settimana 4 senza blocker → Status → Accepted + update CLAUDE.md scope repo evolution. **U1/U2/U4 validated 2026-04-25 auto-mode**; U3 gate su virtual key manuale (Eduardo ~15min); U0-browser tangenziale.
+- [x] ~~**U5** — ADR-0017 ratification: se U0-U4 test completati entro ~2026-05-17 review settimana 4 senza blocker → Status → Accepted + update CLAUDE.md scope repo evolution.~~ **DONE 2026-05-07 anticipato**: ADR-0017 **Accepted** in sessione Fase 6 closure (PR #4 mergeato). 5/5 criteri ratification PASS. Stack scaffold opt-in (Docker Desktop manual start). U1/U2/U4 validated. U3 promptfoo smoke 4/4 PASS via virtual key Eduardo-created.
 - [x] ~~**U6** — Migrazione entries existing log → dogfood.sqlite~~ **SCRIPT READY 2026-04-25 auto-mode**: `scripts/migrate-log-to-sqlite.py` legge la cumulative table finale di `logs/aider-delegation-YYYY-MM.md` + enrichment dict hardcoded per cost/tokens/commit_hash dei 12 entries aprile. Parse validato dry-run: 12/12 entries mapped, outcomes/stack/constraint-count normalizzati. Supporta `--dry-run`, `--force` override, idempotency via duplicate check. **Esecuzione reale deferred**: DB canonical deve stare in main repo `C:/dev/codemasterdd-ai-station/apps/dogfood-ui/data/dogfood.sqlite`, non in worktree. Eduardo da main: `python scripts/migrate-log-to-sqlite.py --log logs/aider-delegation-2026-04.md --db apps/dogfood-ui/data/dogfood.sqlite`. Prerequisito: stop Flask `mystifying-keller-84cb03`, rilancia da main. Follow-up opzionale: secondary pass parser sezioni narrative per arricchire entries futuri senza manual enrichment dict update.
 
 ## Bloccato da
@@ -49,19 +49,25 @@
 
 ---
 
-## Primo sprint consigliato
+## Sprint corrente
 
-> Dettaglio completo in `SPRINT_01.md`. Sintesi qui per navigazione rapida.
+> **SPRINT_01 ✅ CLOSED early-hit 2026-04-24** (target dataset 12 dogfood + ≥3 behavior raggiunto in 1gg, vs 2 settimane previste). Dettaglio storico in `SPRINT_01.md`.
+>
+> **SPRINT_02 🟡 PLANNING (finestra 20/05 → ~19/06)** — prima sessione full-sovereign post Claude Max expiration. Dettaglio in `SPRINT_02.md`. Sintesi qui per navigazione rapida.
 
-- **Obiettivo sprint**: portare dataset Fase 6 da 6 → ≥12 dogfood (di cui ≥3 behavior-critical) + validare empiricamente fix cp1252 + mantenere cost tracking attivo. Finestra: **2026-04-23 → 2026-05-06** (2 settimane).
-- **Task 1** — Dogfood behavior-critical cloud #2-3 [H1]: identificare 2 task behavior-critical reali in `scripts/` del repo e delegarli via `aider-groq`/`aider-cerebras` con diff + no-auto-commits. Candidato primario: retry logic su `scripts/quality-bench/run-bench.ps1`.
-- **Task 2** — Dogfood cosmetic mix n+5 [H2]: JSDoc/help sections su script PS1/SH residui, portare cumulativo a ≥10.
-- **Task 3** — Monitoring empirico fix cp1252 [H3/OD-002]: osservare durante T1/T2, decisione "tiene/fallisce".
+- **Obiettivo sprint**: validare empiricamente scenario A (full-sovereign $0-50/anno) in uso normale + cleanup PR esterni opportunistico + cost tracking primo mese reale + raccolta dogfood organici post-closure (target soft n>=20 cumulative). Zero silent-corruption deve rimanere invariato.
+- **Task T1** — Smoke test sovereign empirico ✅ **DONE 2026-05-07 anticipato** (PR #6, 2/3 wrapper PASS, pattern wrong-target-file documentato).
+- **Task T2** — Dogfood organico continuativo (target soft n>=20 cumulative entro 19/06).
+- **Task T3** — Stack ADR-0017 hot-restart procedure validation (<60s up + endpoint health).
+- **Task T4** — Cleanup PR esterni opportunistico ✅ **DONE 2026-05-07** (4/4 PR triagati).
+- **Task T5** — Cost tracking primo mese full-sovereign (~15/06): target <$5/mese, atteso <$1.
+- **Task T6** — Privacy validation Synesthesia preview (opportunistic, skip se dormant come atteso).
+- **Task T7** — Review fine sprint + ADR addendum se serve.
 - **Definition of done**:
-  - ≥12 dogfood totali, ≥3 behavior-critical, 0 silent-corruption cumulative
-  - 1 decisione chiara su fix cp1252
-  - 1 snapshot cost mid-sprint + 1 review settimana 2 documentata
-  - M6 commit eseguito
+  - 5/5 task non-anticipated chiusi (T2/T3/T5/T6/T7)
+  - Dataset >= 18 entries entro 2026-06-19, fail rate cumulative <15%, zero silent-corruption
+  - Cost mensile cumulative <$5 confermato
+  - Decisione SPRINT_03 scope chiara
 
 ---
 
