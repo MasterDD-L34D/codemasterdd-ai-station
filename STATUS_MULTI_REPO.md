@@ -6,7 +6,7 @@
 >
 > Riferimenti deep: CLAUDE.md sezione "Progetti monitorati" (descrittivo), memory `project_multi_repo_overview.md` (architetturale), questo file (operativo).
 
-**Ultimo refresh**: 2026-05-08 (refresh post-7/5-sera: Dafne 4 PR + 3 OD closed + Game-Godot-v2 215 PR + PR #2108 Game open)
+**Ultimo refresh**: 2026-05-08 (refresh post-7/5-sera: Dafne 4 PR + 3 OD closed + Game-Godot-v2 215 PR + PR #2108 Game open + pattern automation cron 4h `skiv-monitor` riconosciuto auto-skip)
 
 ---
 
@@ -16,7 +16,7 @@
 |------|--------|-------------|------------------|---------|
 | **codemasterdd-ai-station** | **Fase 6 CLOSED 2026-05-07** (ADR-0015 + ADR-0017 Accepted), HEAD post PR #2 #4 #5 #6 mergeati, 12/18 agent ready | SPRINT_02 prima sessione 20/05+ | 2026-05-19 (Claude Max expiration) | Nessuno bloccante |
 | **Synesthesia** | Dormant, HEAD `05f8a92` (invariato) | Riattiva pre-esame UniUPO | ~agosto 2026 | Nessuno (dormant intenzionale) |
-| **Game (Evo-Tactics Vue3)** | **Sprint Impronta Ondata 1 in pausa dal 26/04** (HEAD `5f42757a` invariato, ~12gg). **PR #2108 open** swarm-distillation run #5 (branch `claude/...`, Claude Code session 7/5 sera 22:19 UTC, da triagare) | Triage PR #2108 + continue Sprint Impronta (Eduardo-driven) | No fixed | Nessuno (PR #2108 routine, low priority) |
+| **Game (Evo-Tactics Vue3)** | **Sprint Impronta Ondata 1 in pausa dal 26/04** (HEAD `5f42757a` invariato, ~12gg). **PR #2108 open** swarm-distillation run #5 (Claude Code session 7/5 sera). +N PR automation cron 4h `auto/skiv-monitor-update` (pattern ricorrente, no codemasterdd-tracked) | Triage PR #2108 + continue Sprint Impronta (Eduardo-driven). Auto-skip PR cron skiv-monitor | No fixed | Nessuno (routine, low priority) |
 | **Game-Godot-v2** | **215 PR mergeati totali** (+4 post 7/5 sera, dettaglio non triagato in codemasterdd), Path A canonical CHIUSO end-to-end. Cloned 2026-05-07 in `C:\dev\Game-Godot-v2\` (20.7 MB). Hook globali applicati. Governance interna autosufficiente | Continue port (Eduardo-driven), supportare cross-repo se serve | No fixed | Nessuno |
 | **Dafne swarm (evo-swarm)** | **Atto 2 day 12+ active**, HEAD `a87da39` (4 PR pushati 7/5 sera: #67 anchor split + #68 OD-006 close + #69 tournament survivor fix + #70 OD-002+OD-003 close + 1 PR 8/5 00:29: #71 proposals lock fix). 3 OD storici chiusi. | Continue Atto 2 (Eduardo-driven) | No fixed | Nessuno |
 | **AA01 (Archon Atelier 01)** | v1.0.0 silent-driver mode -- ha guidato Sprint Impronta Game (CAP-11..15). 2 task PROPOSED storici del 25/04 (#001 voice-test + #002 day-5-post-session-ritual) ancora in workspace | Continua driver mode + eventuale review 2 PROPOSED | nessuna | nessuno bloccante |
@@ -123,7 +123,9 @@ Dormant → Attivo: Eduardo segnala riattivazione → codemasterdd riprende trac
 **Remote**: [MasterDD-L34D/Game](https://github.com/MasterDD-L34D/Game)
 **HEAD 2026-05-08**: `5f42757a Merge branch 'aa01/cap-15-imprint-phase' into main (CAP-15 phase merge)` (invariato dal 26/04 12:53 CET, pausa Sprint Impronta ~12gg)
 
-**Open PR**: **#2108** swarm-distillation run #5 stress mechanics + biomi extreme (branch `claude/swarm-distillation-2026-05-08`, Claude Code session creato 7/5 22:19 UTC, NON triagato da codemasterdd)
+**Open PR**:
+- **#2108** swarm-distillation run #5 stress mechanics + biomi extreme (branch `claude/swarm-distillation-2026-05-08`, Claude Code session creato 7/5 22:19 UTC). Triagato chat-only 2026-05-08: merge-ready dal POV codemasterdd, decisione Game-side per ownership boundary.
+- **PR automation cron 4h** (branch `auto/skiv-monitor-update`, author `github-actions[bot]`): rigenerato ogni ~4h dal workflow `skiv-monitor.yml`. Scope safe-list `data/derived/skiv_monitor/` + `docs/skiv/MONITOR.md`. **Pattern auto-skip**: codemasterdd NON traccia numero PR specifico (cambia continuamente), NON valuta merge (deterministico Game-side). Esempio storico: #2117 (8/5 02:45 UTC) triagato come reference.
 
 ### Piano operativo
 
@@ -148,6 +150,7 @@ Governance del Game vive **nel Game repo stesso** (`docs/governance/`). codemast
 ### Next action visto da codemasterdd
 - **Monitorare**: Sprint Impronta progression (Eduardo+AA01 driven)
 - **Triagare PR #2108** (low priority, swarm distillation routine output): valutare merge/comment/close in slot dedicato. Non bloccante.
+- **Auto-skip PR cron 4h `skiv-monitor`** (`auto/skiv-monitor-update` branch): pattern automation safe-list-confined, no triage codemasterdd-side; decisione merge Game-side deterministica.
 - **Non gestire direttamente**: capability CAP-11..CAP-NN, design decisions interni
 - **Cross-repo**: hook commit-msg globale + Conventional Commits funzionano automaticamente su Game (no setup repo-specific necessario)
 
