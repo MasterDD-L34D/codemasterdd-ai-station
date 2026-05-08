@@ -65,10 +65,26 @@ Tier routing OpenCode-specifico:
 | Use case | OpenCode tier | Validato? |
 |----------|---------------|-----------|
 | Default agentic single-shot | `ollama/qwen3-coder:30b` | YES (smoke #19) |
-| Cloud free fast (TPM permitting) | `cerebras/llama3.3-70b` o `cerebras/llama3.1-8b` | TODO (TPM da verificare) |
-| Cloud free fallback | `groq/llama-3.1-8b-instant` (TPM 30k) | TODO |
 | Cloud paid emergency | `openai/gpt-4o-mini` | non testato (tier 4 emergency) |
-| **NON usare con OpenCode** | qwen2.5-coder family (7B/14B/32B) | smoke #17 + #20 |
+| **NON usare con OpenCode (modello locale)** | qwen2.5-coder family (7B/14B/32B) | smoke #17 + #20 fail tool-call raw JSON |
+| **NON usare con OpenCode (cloud free)** | Groq/Cerebras free 8B-70B | smoke #18/#21/#22/#23 fail TPM/context limit |
+
+**Cloud free providers -- findings consolidati (smoke #21-#24, addendum 2026-05-08 sera)**:
+
+| Provider | Modello | Limit | Compat OpenCode default? |
+|----------|---------|-------|--------------------------|
+| Groq | llama-3.3-70b-versatile | TPM 12k | ❌ FAIL (request 50k) |
+| Groq | llama-3.1-8b-instant | TPM 6k | ❌ FAIL (request 50k) |
+| Cerebras | llama3.3-70b | paid-only | ❌ FAIL (no free access) |
+| Cerebras | llama3.1-8b | context 8k | ❌ FAIL loop (request 12k+) |
+| Google | gemini-2.0-flash-exp | deprecated v1beta | ❌ 404 |
+| Google | gemini-2.5-flash | TBD | ❓ INCONCLUSIVE (output non captured) |
+
+**Conclusione cloud free**: nessun provider cloud free tier testato e' viable per OpenCode default context (~50k token). Solo Ollama local sovereign opera senza rate-limit.
+
+**Modelli cloud non ancora testati (OpenCode-compat TBD, probabili paid tier)**: Cerebras qwen-3-235b-a22b-instruct-2507, gpt-oss-120b, zai-glm-4.7.
+
+**Conseguenza tier routing**: OpenCode workflow rimane **sovereign-only** (Ollama 30B MoE). Cloud free per agentic non viable senza Dev Tier paid upgrade. Aider-* wrapper restano via principale per cloud free delegation (constraint single-file, context << 50k).
 
 Distinction esplicita Aider vs OpenCode:
 
@@ -178,12 +194,14 @@ Task type?
 ## Follow-up
 
 - [x] Config OpenCode applicata (`~/.config/opencode/opencode.json` v2)
-- [x] 5 smoke entries log (`logs/aider-delegation-2026-05.md`)
+- [x] 9 smoke entries log (`logs/aider-delegation-2026-05.md`, entries #16-#24)
 - [x] ADR-0022 scritto (questo file, Proposed)
+- [x] **Validare cloud free providers OpenCode-compat** (smoke #21-#24 addendum 2026-05-08 sera): tutti FAIL TPM/context limit. Solo Ollama local viable.
 - [ ] Aggiornare CLAUDE.md sezione "Priorita' modelli AI" con sezione OpenCode tier (post-Accepted)
 - [ ] Aggiornare `MODEL_ROUTING.md` con decision tree Aider vs OpenCode
-- [ ] Validare cloud free providers OpenCode-compat: cerebras llama3.3-70b TPM check, groq llama-3.1-8b-instant check
-- [ ] Test OpenCode + qwen3-coder:30b su task edit reale (smoke #21+ pendente, attesa dogfood organico SPRINT_02)
+- [ ] Test cloud paid tier OpenCode-compat: cerebras qwen-3-235b / gpt-oss-120b / zai-glm-4.7 (deferred, condizionale a budget)
+- [ ] Test OpenCode + qwen3-coder:30b su task edit reale (smoke #25+ pendente, attesa dogfood organico SPRINT_02)
+- [ ] Aggiornare CLAUDE.md var name `GEMINI_API_KEY` -> nota dual-name (`GEMINI_API_KEY` per Aider/LiteLLM, `GOOGLE_GENERATIVE_AI_API_KEY` per OpenCode native Google provider)
 - [ ] **Trigger Accepted**: n>=2 dogfood organici reali OpenCode (non solo smoke read-only) confermano tier routing senza fail mode nuovi
 
 ## Riferimenti
