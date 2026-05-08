@@ -93,6 +93,7 @@ def aggregate_stats(entries: list[sqlite3.Row]) -> dict[str, Any]:
 
 
 def empty_stats() -> dict[str, Any]:
+    """Return empty stats dict matching aggregate_stats() schema for no-entries case."""
     return {
         "total": 0,
         "outcomes": {},
