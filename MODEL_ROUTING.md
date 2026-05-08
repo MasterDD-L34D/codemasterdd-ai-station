@@ -48,7 +48,7 @@ Applicata in concreto:
 - [x] **Aider 0.86.2** (6 wrapper in `~/.local/bin/`)
 - [x] **Ollama 0.21.0** (5 modelli attivi + 3 reference-only)
 - [x] **API esterne**: Groq + Cerebras (free) + Gemini + OpenAI (paid)
-- [ ] OpenCode → **non installato** (framework archivio lo menziona; valutato non necessario dato Aider+Ollama copre)
+- [x] **OpenCode v1.14.41** (npm global, installato 2026-05-08; tier multi-step agentic con tool calls; ADR-0022 Accepted 2026-05-09)
 - [ ] NotebookLM → usato saltuariamente da browser per corpus analysis, non integrato repo
 - [ ] ChatGPT → saltuario, non integrato
 
@@ -110,11 +110,22 @@ Applicata in concreto:
 - **Strumento preferito**: Aider + wrapper (`aider-groq`, `aider-cerebras`, `aider-gemini`, `aider-openai`)
 - **Modello cloud primario**: `groq/llama-3.3-70b-versatile` (free, 630 tok/s)
 - **Perché proprio lui**: free tier 6000 tok/min + LPU speed + capability 70B dense
+- **OpenCode + cloud free NON viable** (ADR-0022): TPM 6-12k Groq + context 8k Cerebras 8B << OpenCode default request ~50k token. OpenCode resta sovereign-only (Ollama 30B MoE).
 - **Cosa NON mandare al cloud**:
   - Codice repo cliente (sempre)
   - Synesthesia `controllers/`/`routes/`/`middlewares/` (auth sensitive)
   - Segreti / env vars / API keys / token
   - Output che contenga i sopra
+
+### Se devo fare task multi-step agentic con tool calls
+- **Strumento preferito**: OpenCode (NOT Aider, scope diverso)
+- **Modello sovereign default**: `ollama/qwen3-coder:30b` MoE A3B (tier 1 OpenCode, ADR-0022 Accepted 2026-05-09)
+- **Tool calls supportati**: Read, Edit, Bash, ListFiles, Glob, Grep, MCP servers integration
+- **Use case esempio**: refactor multi-file con orchestration di Read+Edit coordinati, GitHub agent, ACP server, esplorazione interattiva TUI mode
+- **Cosa NON usare con OpenCode**:
+  - Qwen 2.5 Coder family (7B/14B/32B): tool call raw JSON non eseguito
+  - Cloud free tier (rate-limited TPM o context-limited)
+  - Qualsiasi task adatto a single-file edit semplice (Aider e' superiore: faithful diff, latency 7B 5s vs OpenCode 30B 45s)
 
 ---
 
@@ -153,7 +164,7 @@ Applicata in concreto:
 |---------|-------------------|-------|---------------|-------------------|
 | `qwen2.5-coder:7b` | Ollama locale | tier 1 cosmetic | JSDoc, docstring, rename, batch≥5, working tree clean | behavior-critical (silent-corruption whole ADR-0008) |
 | `qwen2.5-coder:14b-q2_K` | Ollama locale | tier 2 behavior default | refactor, bug fix, logic change single-file | task semplici <10 righe (overhead), multi-file >3 |
-| `qwen3-coder:30b` (MoE) | Ollama locale | tier 2 escalation | quando 14B Q2 safe-fails, behavior-critical + ctx wide | single-file semplice (overhead); task che richiede 70B+ capability |
+| `qwen3-coder:30b` (MoE) | Ollama locale | tier 2 escalation Aider + tier 1 default OpenCode | Aider: quando 14B Q2 safe-fails. OpenCode: default agentic single-shot (ADR-0022 Accepted, 3/3 PASS validati) | single-file semplice via Aider (overhead); task >70B capability needed; cloud free OpenCode (NON viable per OpenCode default context) |
 | `deepseek-r1:8b` | Ollama locale | tier reasoning | chain-of-thought esplicito, debug logico, math/proof | coding standard (Qwen domina); batch/iterazione (thinking verbose) |
 | `gemma4:latest` | Ollama locale | tier multimodal | OCR screenshot, audio dictation, vision analysis | coding (non coder-specialist); task text-only |
 | `groq/llama-3.3-70b-versatile` | Cloud free (6k tok/min) | tier 3 behavior cloud | Online, privacy OK, capability 70B needed | repo sensitive, quota limit, offline |

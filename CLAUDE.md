@@ -65,7 +65,7 @@ Target: piattaforma AI sovereign con zero subscription fisse post-maggio 2026.
 - **Provider attivi** (free-tier):
   - **Groq** (`GROQ_API_KEY`) — LPU inference veloce, tier free 6000 tok/min, candidato tier 3 prioritario. Model examples: `groq/llama-3.3-70b-versatile`, `groq/qwen-2.5-coder-32b`
   - **Cerebras** (`CEREBRAS_API_KEY`) — WSE inference massima velocità, tier free generoso. Model examples: `cerebras/llama3.3-70b`
-  - **Google Gemini** (`GEMINI_API_KEY`) — 60 req/min free. Model examples: `gemini/gemini-2.0-flash-exp`
+  - **Google Gemini** (`GEMINI_API_KEY` per Aider/LiteLLM; `GOOGLE_GENERATIVE_AI_API_KEY` per OpenCode native Google provider — dual-name necessario, vedi ADR-0022 follow-up) — 60 req/min free. Model examples: `gemini/gemini-2.5-flash` (`gemini-2.0-flash-exp` deprecated v1beta 404)
   - **OpenAI** (`OPENAI_API_KEY`) — pay-per-use (no free tier generoso). Model examples: `gpt-4o`, `gpt-4o-mini`
 - **Uso bash sessions**: `set -a; source ~/.config/api-keys/keys.env; set +a` (non auto-caricato da Claude Code bash)
 - **Policy**: keys MAI in repo, MAI in registry (no setx), MAI in commit. Revoca rapida: `Remove-Item keys.env`. Vedi `docs/adr/0013-tier3-cloud-free-providers.md` per decision rationale.
@@ -241,6 +241,17 @@ codemasterdd-ai-station/
   - Riferimenti decisionali: `docs/adr/0007-aider-qwen-quantization-findings.md` + `docs/adr/0008-aider-whole-format-silent-corruption.md`
   - **Seconda dimensione routing (in review)**: `docs/adr/0016-constraint-count-routing-dimension.md` (Proposed 2026-04-24). Estende matrice classe-based con **constraint-count**: 1 qualsiasi tier / 2-3 additive+preserve → 14B Q2 local o 70B cloud / 2 fix+transform → downgrade 14B Q2 (7B skippa transform) / **5+ strict → manual Claude Code**. Consultare per task con ≥3 constraint espliciti nel prompt. Status Accepted trigger: n≥3 data points addizionali.
 
+- **OpenCode tier (multi-step agentic, distinto da Aider)** — ADR-0022 Accepted 2026-05-09:
+  - **Default sovereign**: `opencode run --model "ollama/qwen3-coder:30b"` — MoE A3B tool-use native, validato 3/3 (smoke read + 2 dogfood edit reali #25-#26 PASS 1st-try)
+  - **NON usare con OpenCode**:
+    - Qwen 2.5 Coder family (7B + 14B Q2): emette tool call come JSON raw stringificato in stdout (NON eseguito da OpenCode `run`). Sweet spot Aider non si trasferisce.
+    - Cloud free tier 8B-70B (Groq llama-3.3-70b TPM 12k / llama-3.1-8b-instant TPM 6k / Cerebras llama3.1-8b context 8k / Cerebras llama3.3-70b paid-only): tutti rate-limited o context-limited vs OpenCode default request ~50k token.
+  - **Cloud paid emergency**: `openai/gpt-4o-mini` (tier 4, monitorare ccusage)
+  - **Quando usare OpenCode vs Aider**:
+    - **Aider** (single-file edit, constraint-respect, faithful diff): cosmetic / behavior-critical su 1 file con vincoli espliciti
+    - **OpenCode** (multi-step agentic con tool calls coordinati): task che richiedono Read+Edit+Bash+ListFiles, multi-file refactor con tool orchestration, MCP server integration, GitHub agent
+  - Riferimenti decisionali: `docs/adr/0022-opencode-tooluse-model-routing.md` (Accepted) + `logs/aider-delegation-2026-05.md` (gitignored, entries #16-#26)
+
 - **Safety protocol per Aider** (valido sempre):
   - `git diff HEAD~1` post-edit prima di pushare: commit message generati dall'LLM riflettono l'intent, non necessariamente il diff reale
   - Evitare `--yes-always` in repo con working tree sporco
@@ -253,14 +264,19 @@ codemasterdd-ai-station/
   - Bypass guard rail con `git commit --no-verify`, non raccomandato
 
 - **Wrapper CLI per delegazione** (in `C:\Users\edusc\.local\bin\`, eseguibili da cmd.exe):
-  - **Locali (tier 1-2 sovereign)**:
+  - **Aider locali (tier 1-2 sovereign)**:
     - `aider-cosmetic <file>` → 7B + whole (JSDoc, docstrings, rename, lint-fix) — 114 tok/s
     - `aider-refactor <file>` → 14B Q2 + diff + no-auto-commits (refactor, bug fix, logic change) — 25 tok/s
-  - **Cloud (tier 3-4, aggiunti 2026-04-23 combo F+D, vedi ADR-0013)**:
+  - **Aider cloud (tier 3-4, aggiunti 2026-04-23 combo F+D, vedi ADR-0013)**:
     - `aider-groq <file>` → groq/llama-3.3-70b-versatile + diff + no-auto-commits — 630 tok/s free tier
     - `aider-cerebras <file>` → cerebras/llama3.1-8b + diff + no-auto-commits — 733 tok/s free tier
     - `aider-gemini <file>` → gemini/gemini-2.5-flash + diff + no-auto-commits (attenzione thinking budget)
     - `aider-openai <file>` → openai/gpt-4o-mini + diff + no-auto-commits — **paid, monitorare ccusage**
+  - **OpenCode (tier multi-step agentic, ADR-0022 Accepted 2026-05-09)**: in `C:\Users\edusc\AppData\Roaming\npm\opencode.ps1` (npm global v1.14.41):
+    - `opencode run --model "ollama/qwen3-coder:30b" "<task>"` → tier 1 sovereign default (MoE A3B tool-use native)
+    - Config: `~/.config/opencode/opencode.json` (5 provider mappati, env vars from `~/.config/api-keys/keys.env`)
+    - **NON usare** Qwen 2.5 Coder family con OpenCode (raw JSON tool call non eseguito)
+    - **NON viable** cloud free 8B-70B (rate-limited TPM o context vs request ~50k)
   - **Privacy guard rail**: cloud OK solo su repo non-sensitive (`codemasterdd-ai-station` sì, Evo-Tactics/Synesthesia verificare caso-per-caso, repo cliente MAI). Vedi `docs/patterns/delegation-to-aider.md` Extension tier 3 cloud.
 
 - **Delegation protocol Claude Code → Aider**: vedi `docs/patterns/delegation-to-aider.md` — decision tree classification, formato handoff, review loop, tracking fail rate per Fase 6
