@@ -6,17 +6,19 @@
 
 ## Progetto
 - **Nome**: CodeMasterDD AI Station
-- **Versione del compact**: v13 (sessione 2026-05-08 sera: pattern auto-skip skiv-monitor + drift cleanup ROADMAP/BACKLOG/OPEN_DECISIONS post Fase 6 closure)
-- **Data ultimo aggiornamento**: 2026-05-08 sera
+- **Versione del compact**: v14 (sessione 8/5 sera -> 9/5 notte: transition attiva sovereign + ADR-0022 OpenCode tool-use routing Accepted, 10 PR mergeati giornata)
+- **Data ultimo aggiornamento**: 2026-05-09
 
 ## Stato attuale
-- **Barra globale ~97%** (+1 da v12): Fase 6 + Fase 7 CLOSED -- ADR-0015 e ADR-0017 entrambi Accepted 2026-05-07. ROADMAP + BACKLOG + OPEN_DECISIONS ora coerenti con stato reale (PR #13 8/5 sera). Tutti i piani strategici allineati. Resta finestra transition 08/05 -> 19/05 (Claude Max expiration, 11gg residui).
-- HEAD `f8a4bb3` su origin/main (post merge PR #11 + #12 + #13 in giornata 8/5). Worktree corrente `hardcore-keller-72c77e` allineato a main, working tree pulita.
-- **Stack ADR-0017**: scaffold opt-in (Docker Desktop non auto-start). Hot-restartable in <60s con `docker compose up -d`. DB persistence Postgres+SQLite preservata. 7+ Langfuse traces ancora persistiti.
+- **Barra globale ~98%** (+1 da v13): Fase 6 + Fase 7 CLOSED. ADR-0022 OpenCode tool-use routing Accepted 2026-05-09. **Transition active sovereign 11gg pre-Max expiration completata in setup + validazione**: OpenCode v1.14.41 installato, stack ADR-0017 attivato active mode, 11 entries log (9 smoke + 2 dogfood reali) PASS pattern Ollama 30B MoE.
+- HEAD `6208bd1` su origin/main (post merge PR #11-#20 in giornata 8/5 -> 9/5 notte). Worktree corrente `hardcore-keller-72c77e` allineato a main, working tree pulita.
+- **Stack ADR-0017 ACTIVE MODE 8/5 sera**: LiteLLM:4000 + Langfuse:3000 + Postgres + dogfood-ui:8080 UP. T3 SPRINT_02 hot-restart validation anticipato + passato (<60s endpoint health, persistence preservata). Da spegnere `docker compose down` a chiusura sessione.
+- **OpenCode v1.14.41** (npm global) installato 8/5 sera. Config `~/.config/opencode/opencode.json` con 5 provider mappati. Default `ollama/qwen3-coder:30b` (tier 1 sovereign, ADR-0022 Accepted).
 - **Agent ecosystem ADR-0018**: 12/18 ready, 6/18 draft trigger-gated. Status invariato dal 24/04.
 - **Codex `/structural-reset` REJECTED + chiuso + delete remote**: branch difensivo Codex Cloud sandbox-confusion (assunzione "transplanted, paths missing" smentita empiricamente, 9/9 path target presenti). Cherry-pick astratto: ADR-0021 + AGENTS.md + encoding policy.
-- **PR pulito 7-8/5**: #1 ADR-0020 mergeato 25/04. #2 ADR-0021 + #3 [REJECTED] + #4 fase6-closure + #5 sprint-02 + #6 smoke-sovereign + #7+#8 godot-v2 governance + #9 aider-pattern + #10 master_prompt-handoff (7/5) + **#11 governance refresh + #12 skiv-monitor pattern + #13 drift cleanup** (8/5) tutti mergeati. Coda PR codemasterdd vuota.
-- **Pattern automation auto-skip**: workflow Game-side `auto/skiv-monitor-update` cron 4h riconosciuto (PR #12). codemasterdd NON traccia PR-specifico (cambia ogni 4h, sarebbe noise) NE valuta merge (deterministico Game-side, scope safe-list-confined `data/derived/skiv_monitor/` + `docs/skiv/`).
+- **PR pulito 7/5 -> 9/5 notte**: 7/5 (10 PR #1-#10 governance/Codex/closure/sprint/smoke/godot/aider/master_prompt) + 8/5 mattino-sera (10 PR #11-#20: governance refresh #11, skiv pattern #12, drift cleanup #13, journal/compact #14, ADR-0022 Proposed #15 + addendum #16 + dogfood #17 + #18 + Accepted #19 + tier integration #20). **20 PR mergeati cumulativi 7-9/5**. Coda PR codemasterdd vuota.
+- **Pattern automation auto-skip**: workflow Game-side `auto/skiv-monitor-update` cron 4h riconosciuto (PR #12). codemasterdd NON traccia PR-specifico ne' valuta merge (Game-side deterministico).
+- **ADR-0022 OpenCode tool-use routing Accepted**: tier OpenCode-specifico distinto da Aider. Default `ollama/qwen3-coder:30b` MoE A3B (3/3 PASS). Cloud free non viable (rate-limited). Qwen 2.5 Coder family non tool-use OpenCode-compat.
 
 ### Gap operativo 25/04 -> 07/05 (non-stagnation)
 
@@ -38,6 +40,35 @@ Eduardo ha lavorato attivamente in altri repo (silent driver mode):
 - 19/05: disattivazione Claude Max, transizione a wrapper sovereign + Ollama
 
 ## Cosa e' gia' stato fatto
+
+### Sessione 2026-05-09 (transition attiva sovereign + ADR-0022 OpenCode routing Accepted)
+
+#### Pattern strategico
+"non ci conviene incominciare a usare opencode e infra prima che claude max finisca?" -- transition ATTIVA con safety net Claude Max invece di stop passivo + cold-cutover.
+
+#### Setup transition
+- OpenCode v1.14.41 installato (npm global, dopo Path 1 PowerShell installer 404 + sandbox bloccato `irm | iex` per missing auth -> fallback npm safer)
+- Config `~/.config/opencode/opencode.json` 5 provider mappati a tier ADR-0008
+- Stack ADR-0017 active mode: docker compose up -d -> 4 endpoint UP (LiteLLM/Langfuse/Postgres/dogfood-ui), T3 SPRINT_02 hot-restart anticipato + passato
+
+#### Smoke test (entries #16-#24)
+9 smoke validation tool-use compat. Findings critici:
+1. **Qwen 2.5 Coder family** (7B/14B Q2) NON tool-use OpenCode-compat (raw JSON in stdout)
+2. **Cloud free 8B-70B** tutti rate-limited TPM o context vs OpenCode default 50k token
+3. **Solo Ollama qwen3-coder:30b MoE** viable per OpenCode default sovereign
+4. Discovery: env var Gemini differisce tra tool (`GEMINI_API_KEY` Aider vs `GOOGLE_GENERATIVE_AI_API_KEY` OpenCode)
+
+#### Dogfood OpenCode reali (entries #25-#26)
+- #25 (PR #17): docstring `empty_stats()` stats.py -- PASS 1st-try, +1/-0
+- #26 (PR #18): docstring `_auth_header()` langfuse_client.py -- PASS 1st-try, +1/-0, indentazione classe preservata
+
+PASS rate Ollama 30B MoE OpenCode: **3/3** (smoke + 2 edit reali).
+
+#### ADR-0022 ciclo completo
+- PR #15: Proposed (199 righe MADR, 4 opzioni, decision tree)
+- PR #16: addendum cloud findings (status invariato Proposed)
+- PR #19: ratification Proposed -> Accepted (post 2/2 dogfood reali)
+- PR #20: integrazione tier OpenCode in CLAUDE.md + MODEL_ROUTING.md (dual-name Gemini, decision tree, scenario routing)
 
 ### Sessione 2026-05-08 sera (pattern auto-skip skiv-monitor + drift cleanup piani strategici)
 
@@ -127,7 +158,7 @@ JOURNAL entry +87 righe (questa sessione). COMPACT v11 (questo file). STATUS_MUL
 
 ## Decisioni prese
 
-### ADR strategici (21 totali, indice in DECISIONS_LOG)
+### ADR strategici (22 totali, indice in DECISIONS_LOG)
 - **ADR-0008** Hub pattern tier routing (cosmetic/behavior/escalation)
 - **ADR-0011** Commit governance cross-agent
 - **ADR-0012** RAM 64GB upgrade
@@ -140,6 +171,7 @@ JOURNAL entry +87 righe (questa sessione). COMPACT v11 (questo file). STATUS_MUL
 - **ADR-0019** Dafne process persistence -- Accepted 2026-04-24
 - **ADR-0020** Silent-fail Python guardrail -- Accepted 2026-04-25 (PR #1 mergeato)
 - **ADR-0021** Multi-client instruction files (AGENTS.md + Codex anti-confusion) -- **Accepted 2026-05-07** (PR #2 mergeato)
+- **ADR-0022** OpenCode tool-use model routing (tier OpenCode distinto da Aider) -- **Accepted 2026-05-09** (PR #15 Proposed + #19 Accepted, 3/3 dogfood Ollama 30B MoE PASS)
 
 ### Decisioni non-ADR (operative minori, in DECISIONS_LOG)
 - **001** Adozione schema framework archivio
@@ -172,16 +204,17 @@ P1, P2 chiusi tramite ADR-0015 closure (P1 behavior-critical n>=5 superato; P2 c
 
 ## Prossimi 3 passi
 
-1. **2026-05-19 Claude Max expiration** (hard date, 11gg residui). Nessuna azione richiesta lato codemasterdd: stack sovereign gia' verificato pronto (pre-Max checklist 8/5 mattino). Disattivazione attesa silente.
-2. **2026-05-20+ SPRINT_02 prima sessione full-sovereign** (Fase 8 ROADMAP). T2 dogfood organico (target soft n>=20 cumulative entro 19/06) + T3 stack hot-restart validation + T5 cost tracking primo mese (~15/06, target <$5) + T7 review fine sprint. T1+T4 gia' anticipated DONE 7/5.
-3. **Opportunistic transition 8-19/05**: nessun task forzato. Monitor Game-Godot-v2 PR cycle, pattern wrong-target-file (n>=2 trigger ADR addendum 0008 / nuovo 0022).
+1. **2026-05-19 Claude Max expiration** (hard date, 10gg residui). Nessuna azione richiesta: stack sovereign gia' verificato + transition active validata (8/5 sera). Disattivazione attesa silente.
+2. **2026-05-20+ SPRINT_02 prima sessione full-sovereign** (Fase 8 ROADMAP). T2 dogfood organico (target soft n>=20 cumulative entro 19/06) + T5 cost tracking primo mese (~15/06, target <$5) + T7 review fine sprint. T1+T3+T4 gia' anticipated DONE.
+3. **Opportunistic transition 9-19/05**: continuare uso reale OpenCode su task piccoli; eventualmente refresh "Evoluzione post Fase 6" + drift secondari MODEL_ROUTING (deferred questo PR per scope-control); test cloud paid tier OpenCode-compat (cerebras qwen-3-235b / gpt-oss-120b / zai-glm-4.7) condizionale.
 
-Side-tasks gia' DONE 7-8/5:
-- 7/5: ADR-0015 + ADR-0017 Accepted (PR #4 + ratification), SPRINT_02 abbozzo (PR #5), smoke sovereign T1 (PR #6), Game-Godot-v2 governance (PR #7+#8), pattern aider wrong-target (PR #9), master_prompt handoff (PR #10), 4 PR esterni triagati (Game-Database #97 close + #105 #61 #10 merge)
-- 8/5 mattino: governance refresh post 7/5 sera + Dafne 4 PR + COMPACT v12 (PR #11)
-- 8/5 sera: pattern auto-skip skiv-monitor (PR #12), drift cleanup ROADMAP+BACKLOG+OPEN_DECISIONS (PR #13)
+Side-tasks gia' DONE 7/5 -> 9/5 notte:
+- 7/5: ADR-0015 + ADR-0017 Accepted (PR #4), SPRINT_02 abbozzo (PR #5), smoke sovereign T1 (PR #6), Game-Godot-v2 governance (PR #7+#8), pattern aider wrong-target (PR #9), master_prompt handoff (PR #10), 4 PR esterni triagati
+- 8/5 mattino: governance refresh post 7/5 (PR #11)
+- 8/5 sera: pattern auto-skip skiv (PR #12), drift cleanup ROADMAP+BACKLOG+OPEN_DECISIONS (PR #13), JOURNAL+COMPACT v13 (PR #14)
+- **9/5 notte (transition attiva)**: ADR-0022 Proposed (PR #15) + addendum cloud (PR #16) + dogfood OpenCode #25 (PR #17) + #26 (PR #18) + ADR-0022 Accepted (PR #19) + tier OpenCode in CLAUDE.md+MODEL_ROUTING (PR #20) + COMPACT v14 + JOURNAL append (PR pendente)
 
-Coda PR codemasterdd vuota. Tutti i piani strategici allineati allo stato reale.
+Cumulativo: **20 PR mergeati 7-9/5** (10 il 7/5 + 10 il 8/5 -> 9/5 notte). Tutti i piani strategici allineati allo stato reale.
 
 ## Next session restart: cosa leggere per ripartire
 
