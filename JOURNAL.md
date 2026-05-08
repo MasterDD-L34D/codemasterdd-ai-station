@@ -1519,3 +1519,70 @@ Giornata governance refresh post sessione 7/5 sera (12h auto-mode, 8 PR mergeati
 - **OD-002 cp1252 closure formale**: dataset n=15 senza retry loop naturale supera soglia di pazienza ADR-0014. Re-trigger condizionale documentato (≥1 crash UnicodeEncodeError in SPRINT_02 -> M3 backlog reactive). Decisione anti-bloat: non manteniamo OD aperti senza signal empirico.
 - **External-repo boundary feedback validato 2x**: PR #2108 Game (mattino) + #2117 Game (sera) entrambi triagati chat-only senza sandbox-bypass tentativi. Pattern stabile.
 - 3 PR consecutivi mergeati oggi (#11 mattino + #12 + #13 sera) con file core preservati: JOURNAL/COMPACT/DECISIONS_LOG/CLAUDE/AGENTS/ADR/SPRINT immutati eccetto questa entry + COMPACT v13 prossimo bump.
+
+---
+
+## 2026-05-09 (transizione attiva ADR-0022 OpenCode -- maratona sera 8/5 -> notte 9/5)
+
+### Contesto
+
+Sessione iniziata 8/5 sera in continuita' con governance refresh + drift cleanup, evolve a **transizione attiva sovereign 11gg pre-Max expiration** dopo proposal Eduardo: "non ci conviene incominciare a usare su questo pc opencode e le altre infra prima che claude max finisca?".
+
+Pattern strategico applicato: invece di stop passivo + cold-cutover 19/05, **transition attiva con safety net Claude Max** per validare end-to-end sovereign stack PRIMA che il fallback scompaia.
+
+### Completato
+
+#### Setup transition active (~15min)
+- **OpenCode v1.14.41** installato via `npm install -g opencode-ai` (Path 1 PowerShell installer 404; sandbox correttamente bloccato `irm | iex` senza auth esplicita -> fallback npm safer).
+- **Config** `~/.config/opencode/opencode.json` con 5 provider mappati a tier ADR-0008 (Ollama 4 modelli + Groq + Cerebras + Google + OpenAI).
+- **Stack ADR-0017 active mode**: `cd infra && docker compose up -d` -> LiteLLM:4000 + Langfuse:3000 + Postgres + dogfood-ui:8080 tutti UP. **T3 SPRINT_02 hot-restart validation anticipato + passato** (<60s da `up -d` a endpoint health, persistence preservata, zero regressione post-13gg downtime).
+
+#### Smoke test OpenCode (entries #16-#24, 9 smoke)
+Validation tool-use compatibility 5 stack + 4 cloud free providers:
+
+| Stack | Result | Pattern |
+|-------|--------|---------|
+| Ollama qwen2.5-coder:7b (no tools) | PASS basic IO | "TEST" -> "TEST" |
+| Ollama qwen2.5-coder:7b (read tool) | **FAIL** raw JSON | tool-not-exec |
+| Ollama qwen2.5-coder:14b-Q2 (read tool) | **FAIL** raw JSON | stesso pattern 7B |
+| Ollama qwen3-coder:30b MoE | **PASS** tool-use native | read tool eseguita correttamente |
+| Groq llama-3.3-70b | **FAIL** TPM 12k vs 50k | rate-limit free tier |
+| Groq llama-3.1-8b-instant | **FAIL** TPM 6k vs 50k | rate-limit free tier |
+| Cerebras llama3.3-70b | **FAIL** paid-only | no free access |
+| Cerebras llama3.1-8b | **FAIL** context 8k loop | timeout 60s |
+| Gemini 2.5 Flash | INCONCLUSIVE | output non captured |
+
+**Findings critici**:
+1. **Qwen 2.5 Coder family (7B/14B Q2/32B) NON tool-use OpenCode-compat**: emette tool call come JSON raw stringificato in stdout (NON eseguito da OpenCode `run`). Sweet spot Aider non si trasferisce.
+2. **Cloud free tier 8B-70B NON viable per OpenCode default context** (~50k token): tutti rate-limited TPM 6-12k o context-limited 8k.
+3. **Solo Ollama qwen3-coder:30b MoE A3B viable** per workflow OpenCode default sovereign.
+4. Discovery secondario: env var Gemini differisce tra tool (`GEMINI_API_KEY` Aider/LiteLLM vs `GOOGLE_GENERATIVE_AI_API_KEY` OpenCode native).
+
+#### Dogfood OpenCode reali (entries #25-#26, 2 edit reali PASS)
+Validazione end-to-end OpenCode + qwen3-coder:30b su task edit veri (non smoke read-only):
+
+- **#25** (PR #17): docstring `empty_stats()` in `apps/dogfood-ui/stats.py` -- PASS 1st-try, AST valid, diff +1/-0
+- **#26** (PR #18): docstring `_auth_header()` in `apps/dogfood-ui/langfuse_client.py` -- PASS 1st-try, AST valid, diff +1/-0, indentazione classe (8 spaces) preservata
+
+PASS rate cumulativo Ollama 30B MoE OpenCode: **3/3** (smoke read + 2 edit reali). Pattern wrong-target-file (ADR-0008) NON osservato.
+
+#### ADR-0022 OpenCode tool-use model routing
+- **PR #15**: scrittura ADR-0022 status Proposed (199 righe MADR format, 4 opzioni considerate, decision tree completo)
+- **PR #16**: addendum cloud findings consolidati (status invariato Proposed)
+- **PR #19**: ratification Proposed -> Accepted post 2/2 dogfood reali completati
+- **PR #20**: integrazione tier OpenCode in CLAUDE.md (sezione Priorita modelli AI + Wrapper CLI + dual-name Gemini) + MODEL_ROUTING.md (stack disponibili + tabella modelli + nuovo scenario routing)
+
+### Da fare (next sessions)
+
+- **2026-05-19 Claude Max expiration** (hard date, ora 10gg residui)
+- **2026-05-20+ SPRINT_02 prima sessione full-sovereign**: T2 dogfood organico, T3 hot-restart (gia' validato anticipato), T5 cost tracking primo mese, T6 privacy preview, T7 review
+- **Opportunistic transition 9-19/05**: continuare uso reale OpenCode su task piccoli; eventualmente refresh "Evoluzione post Fase 6" + drift secondari MODEL_ROUTING (deferred questo PR per scope-control)
+- **Post-budget**: test cloud paid tier OpenCode-compat (cerebras qwen-3-235b / gpt-oss-120b / zai-glm-4.7), condizionale a esigenza reale
+
+### Note
+
+- **Pattern transition attiva validato**: 6 PR sera 8/5 -> notte 9/5 mergeati senza fail mode nuovi. ADR-0022 da Proposed a Accepted in stessa giornata grazie a 2 dogfood reali immediati con safety net Claude Max ancora attivo. Anti-pattern stop-and-wait correttamente evitato.
+- **Auto Mode + sandbox guard rail**: bloccato 1 azione (irm | iex install script) per missing auth esplicita -> ho applicato fallback npm safer senza forzare permission. Pattern "trust but verify" rispettato.
+- **Stack ADR-0017 active mode**: utile durante transition (Langfuse traces autocaptured per debug futuro tool-use issues). Da spegnere a chiusura sessione (`docker compose down` in `infra/`).
+- **Sviluppo cumulativo giornata 8-9/5**: 10 PR mergeati in stesso giorno operativo (governance refresh mattino #11 -> tier OpenCode finale #20). Pattern lean-hyperactive validato senza file core poison: JOURNAL/COMPACT/DECISIONS_LOG aggiornati incrementalmente, ADR scritti con evidence empirica, no rewrite cieco.
+- **OpenCode != Aider drop-in replacement**: validazione empirica costringe distinzione tier routing tool-specifico. 2 tool, 2 use case, 2 tier matrix. Cognitive overhead accettato per chiarezza scope.
