@@ -15,6 +15,7 @@ class LangfuseClient:
         self.timeout = timeout
 
     def _auth_header(self) -> dict[str, str]:
+        """Returns Basic auth header dict for Langfuse API requests, or empty dict if keys are not configured."""
         if not (self.public_key and self.secret_key):
             return {}
         token = base64.b64encode(f"{self.public_key}:{self.secret_key}".encode("utf-8")).decode("ascii")
