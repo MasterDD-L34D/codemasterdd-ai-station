@@ -6,16 +6,17 @@
 
 ## Progetto
 - **Nome**: CodeMasterDD AI Station
-- **Versione del compact**: v12 (sessione 2026-05-08: audit coerenza doc + governance refresh post 7/5 sera + Dafne 4 PR closure batch)
-- **Data ultimo aggiornamento**: 2026-05-08 sessione corrente
+- **Versione del compact**: v13 (sessione 2026-05-08 sera: pattern auto-skip skiv-monitor + drift cleanup ROADMAP/BACKLOG/OPEN_DECISIONS post Fase 6 closure)
+- **Data ultimo aggiornamento**: 2026-05-08 sera
 
 ## Stato attuale
-- **Barra globale ~96%** (+1 da v11): Fase 6 CLOSED -- ADR-0015 e ADR-0017 entrambi Accepted 2026-05-07. Tutti i PR cleanup esterni completati 7/5. Resta finestra transition 07/05 -> 19/05 (Claude Max expiration, 11gg residui).
-- HEAD `5828909` su origin/main (post merge PR #4-#10 in giornata 7/5). Worktree corrente `mystifying-thompson-82bb43` allineato a main, working tree pulita.
+- **Barra globale ~97%** (+1 da v12): Fase 6 + Fase 7 CLOSED -- ADR-0015 e ADR-0017 entrambi Accepted 2026-05-07. ROADMAP + BACKLOG + OPEN_DECISIONS ora coerenti con stato reale (PR #13 8/5 sera). Tutti i piani strategici allineati. Resta finestra transition 08/05 -> 19/05 (Claude Max expiration, 11gg residui).
+- HEAD `f8a4bb3` su origin/main (post merge PR #11 + #12 + #13 in giornata 8/5). Worktree corrente `hardcore-keller-72c77e` allineato a main, working tree pulita.
 - **Stack ADR-0017**: scaffold opt-in (Docker Desktop non auto-start). Hot-restartable in <60s con `docker compose up -d`. DB persistence Postgres+SQLite preservata. 7+ Langfuse traces ancora persistiti.
 - **Agent ecosystem ADR-0018**: 12/18 ready, 6/18 draft trigger-gated. Status invariato dal 24/04.
 - **Codex `/structural-reset` REJECTED + chiuso + delete remote**: branch difensivo Codex Cloud sandbox-confusion (assunzione "transplanted, paths missing" smentita empiricamente, 9/9 path target presenti). Cherry-pick astratto: ADR-0021 + AGENTS.md + encoding policy.
-- **PR pulito post-7/5**: #1 ADR-0020 mergeato 25/04. #2 ADR-0021 + #3 [REJECTED] + #4 fase6-closure + #5 sprint-02 + #6 smoke-sovereign + #7+#8 godot-v2 governance + #9 aider-pattern + #10 master_prompt-handoff tutti chiusi 7/5. Coda PR codemasterdd vuota.
+- **PR pulito 7-8/5**: #1 ADR-0020 mergeato 25/04. #2 ADR-0021 + #3 [REJECTED] + #4 fase6-closure + #5 sprint-02 + #6 smoke-sovereign + #7+#8 godot-v2 governance + #9 aider-pattern + #10 master_prompt-handoff (7/5) + **#11 governance refresh + #12 skiv-monitor pattern + #13 drift cleanup** (8/5) tutti mergeati. Coda PR codemasterdd vuota.
+- **Pattern automation auto-skip**: workflow Game-side `auto/skiv-monitor-update` cron 4h riconosciuto (PR #12). codemasterdd NON traccia PR-specifico (cambia ogni 4h, sarebbe noise) NE valuta merge (deterministico Game-side, scope safe-list-confined `data/derived/skiv_monitor/` + `docs/skiv/`).
 
 ### Gap operativo 25/04 -> 07/05 (non-stagnation)
 
@@ -38,7 +39,20 @@ Eduardo ha lavorato attivamente in altri repo (silent driver mode):
 
 ## Cosa e' gia' stato fatto
 
-### Sessione 2026-05-08 (corrente -- audit coerenza doc + governance refresh)
+### Sessione 2026-05-08 sera (pattern auto-skip skiv-monitor + drift cleanup piani strategici)
+
+#### PR #12 -- pattern auto-skip skiv-monitor cron 4h
+Triage chat-only PR #2117 Game (8/5 02:45 UTC, automation `github-actions[bot]` workflow `skiv-monitor.yml` cron 4h). Diff +229/-212, 4 file in safe-list `data/derived/skiv_monitor/` + `docs/skiv/MONITOR.md`. Pattern coerente, merge-ready POV codemasterdd. Decisione: pattern auto-skip esplicito documentato in STATUS_MULTI_REPO (4 edit minimali). PR #12 mergeato `6ec8681` 11:06 UTC. Nessun PR-specifico tracking futuro (cambia ogni 4h).
+
+#### PR #13 -- drift cleanup ROADMAP + BACKLOG + OPEN_DECISIONS
+Esposizione "stato e ripresa" ha rivelato drift accumulato ~14gg dietro nel ROADMAP (mai refreshato da PR #11). Refresh chirurgico 7 punti drift:
+- ROADMAP (4): Fase 6 IN PROGRESS 40% -> CLOSED 7/5; Fase 7 BLOCKED -> CLOSED 7/5; Fase 8 PLANNED -> PLANNING transition window 11gg + 7 task SPRINT_02 mappati; Calendario sintetico 23/04 -> 8/5 con milestone reali Fase 6+7 closed
+- BACKLOG (2): U5 ADR-0017 ratification "if completati" -> DONE Accepted 7/5 anticipato; "Primo sprint consigliato" SPRINT_01 -> Sprint corrente SPRINT_02 planning (T1+T4 anticipated DONE)
+- OPEN_DECISIONS (2): OD-001 dettaglio "Proposed 24/04" -> "Accepted 7/5" + soft-override 5 rationale; **OD-002 cp1252 closure formale** (n=15 cumulative senza retry loop naturale, soglia ADR-0014 raggiunta, M3 PowerShell wrapper deferred reactive)
+
+Scope chirurgico: nessun file core toccato (JOURNAL/COMPACT/DECISIONS_LOG/CLAUDE/AGENTS/ADR/SPRINT preservati). PR #13 mergeato `f8a4bb3` 11:20 UTC.
+
+### Sessione 2026-05-08 mattino (audit coerenza doc + governance refresh)
 
 #### Audit coerenza doc + scope cross-repo
 Reality-check 6 governance file vs stato reale post 7/5 sera + 8/5 mattina. Drift identificati:
@@ -158,11 +172,16 @@ P1, P2 chiusi tramite ADR-0015 closure (P1 behavior-critical n>=5 superato; P2 c
 
 ## Prossimi 3 passi
 
-1. **Commit + PR governance refresh 2026-05-08** (sessione corrente). STATUS_MULTI_REPO + COMPACT v12 + CLAUDE.md cosmetic fix. Branch `claude/governance-refresh-2026-05-08`.
-2. **Pre-Max checklist tecnica** (sessione opzionale ~30min ~10/05-15/05): verifica wrapper sovereign aider-* funzionanti senza Max OAuth, API keys cloud ancora valide, stack ADR-0017 hot-restart prova singola. Non bloccante.
-3. **Triage opzionale PR #2108 Game** (5min, low priority): valutare merge/comment/close swarm-distillation run #5 routine. Governance interna Game-driven (non codemasterdd-driven).
+1. **2026-05-19 Claude Max expiration** (hard date, 11gg residui). Nessuna azione richiesta lato codemasterdd: stack sovereign gia' verificato pronto (pre-Max checklist 8/5 mattino). Disattivazione attesa silente.
+2. **2026-05-20+ SPRINT_02 prima sessione full-sovereign** (Fase 8 ROADMAP). T2 dogfood organico (target soft n>=20 cumulative entro 19/06) + T3 stack hot-restart validation + T5 cost tracking primo mese (~15/06, target <$5) + T7 review fine sprint. T1+T4 gia' anticipated DONE 7/5.
+3. **Opportunistic transition 8-19/05**: nessun task forzato. Monitor Game-Godot-v2 PR cycle, pattern wrong-target-file (n>=2 trigger ADR addendum 0008 / nuovo 0022).
 
-Side-tasks gia' DONE 7/5: cleanup 4 PR esterni completato. Smoke test sovereign T1 SPRINT_02 anticipato (PR #6). SPRINT_02 abbozzo (PR #5).
+Side-tasks gia' DONE 7-8/5:
+- 7/5: ADR-0015 + ADR-0017 Accepted (PR #4 + ratification), SPRINT_02 abbozzo (PR #5), smoke sovereign T1 (PR #6), Game-Godot-v2 governance (PR #7+#8), pattern aider wrong-target (PR #9), master_prompt handoff (PR #10), 4 PR esterni triagati (Game-Database #97 close + #105 #61 #10 merge)
+- 8/5 mattino: governance refresh post 7/5 sera + Dafne 4 PR + COMPACT v12 (PR #11)
+- 8/5 sera: pattern auto-skip skiv-monitor (PR #12), drift cleanup ROADMAP+BACKLOG+OPEN_DECISIONS (PR #13)
+
+Coda PR codemasterdd vuota. Tutti i piani strategici allineati allo stato reale.
 
 ## Next session restart: cosa leggere per ripartire
 
