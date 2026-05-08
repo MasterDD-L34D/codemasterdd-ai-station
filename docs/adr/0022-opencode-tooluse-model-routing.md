@@ -2,8 +2,8 @@
 
 > *TL;DR: smoke test 2026-05-08 (n=5 entries #16-#20) ha empiricamente validato che Qwen 2.5 Coder family (sia 7B che 14B Q2) NON e' tool-use native compatibile con OpenCode `run` mode -- emette tool call come JSON raw stringificato che OpenCode passa in stdout senza eseguire. Solo Qwen3-Coder 30B MoE A3B esegue correttamente i tool call. Si introduce **tier routing OpenCode-specifico** (distinto da Aider tier ADR-0008): default `ollama/qwen3-coder:30b`, NON usare Qwen 2.5 Coder family con OpenCode. Aider e OpenCode coesistono come tool per use case diversi (single-file edit vs multi-step agentic). Cloud free 70B (Groq llama-3.3) rate-limited TPM 12k vs context 50k OpenCode -- non viable senza upgrade Dev Tier o context trim.*
 
-- **Status**: Proposed
-- **Data**: 2026-05-08
+- **Status**: Accepted
+- **Data**: 2026-05-08 Proposed -> 2026-05-09 Accepted (ratification post 2/2 dogfood organici reali)
 - **Decisore**: Eduardo Scarpelli
 - **Tipo decisione**: tier routing tool-specifico (OpenCode workflow)
 
@@ -191,18 +191,33 @@ Task type?
 - 5 smoke entries documentate in log (gitignored), validation reference
 - ADR-0017 stack active mode + Langfuse traces utili per debugging futuro tool-use issues
 
+## Ratification (Accepted 2026-05-09)
+
+Trigger Accepted raggiunto:
+
+- **Dogfood #25** (PR #17 mergeato): docstring `empty_stats()` in `apps/dogfood-ui/stats.py` -- PASS 1st-try, AST valid, diff +1/-0
+- **Dogfood #26** (PR #18 mergeato): docstring `_auth_header()` in `apps/dogfood-ui/langfuse_client.py` -- PASS 1st-try, AST valid, diff +1/-0, indentazione classe (8 spaces) preservata correttamente
+
+PASS rate cumulativo Ollama 30B MoE OpenCode: **3/3** (smoke read #19 + edit reali #25 + #26).
+
+Pattern wrong-target-file (ADR-0008) NON osservato in nessuno dei 3 test reali.
+
+Decision tree Aider vs OpenCode validato empiricamente:
+- Aider single-file edit: tier 14B Q2 + diff (ADR-0007/0008) preservato
+- OpenCode multi-step agentic: tier qwen3-coder:30b MoE (questo ADR) confermato
+
 ## Follow-up
 
 - [x] Config OpenCode applicata (`~/.config/opencode/opencode.json` v2)
-- [x] 9 smoke entries log (`logs/aider-delegation-2026-05.md`, entries #16-#24)
-- [x] ADR-0022 scritto (questo file, Proposed)
-- [x] **Validare cloud free providers OpenCode-compat** (smoke #21-#24 addendum 2026-05-08 sera): tutti FAIL TPM/context limit. Solo Ollama local viable.
-- [ ] Aggiornare CLAUDE.md sezione "Priorita' modelli AI" con sezione OpenCode tier (post-Accepted)
+- [x] 11 entries log (`logs/aider-delegation-2026-05.md`, entries #16-#26: 9 smoke + 2 dogfood reali)
+- [x] ADR-0022 scritto (questo file, Proposed -> Accepted 2026-05-09)
+- [x] **Validare cloud free providers OpenCode-compat** (smoke #21-#24): tutti FAIL TPM/context limit. Solo Ollama local viable.
+- [x] **Test OpenCode + qwen3-coder:30b su task edit reale** (dogfood #25 + #26 entrambi PASS 1st-try, PR #17 + #18 mergeati 2026-05-08)
+- [x] **Trigger Accepted raggiunto**: 2/2 dogfood organici reali confermano tier routing senza fail mode nuovi
+- [ ] Aggiornare CLAUDE.md sezione "Priorita' modelli AI" con sezione OpenCode tier (post-Accepted, ora attivabile)
 - [ ] Aggiornare `MODEL_ROUTING.md` con decision tree Aider vs OpenCode
-- [ ] Test cloud paid tier OpenCode-compat: cerebras qwen-3-235b / gpt-oss-120b / zai-glm-4.7 (deferred, condizionale a budget)
-- [ ] Test OpenCode + qwen3-coder:30b su task edit reale (smoke #25+ pendente, attesa dogfood organico SPRINT_02)
+- [ ] Test cloud paid tier OpenCode-compat: cerebras qwen-3-235b / gpt-oss-120b / zai-glm-4.7 (deferred, condizionale a budget post-19/05)
 - [ ] Aggiornare CLAUDE.md var name `GEMINI_API_KEY` -> nota dual-name (`GEMINI_API_KEY` per Aider/LiteLLM, `GOOGLE_GENERATIVE_AI_API_KEY` per OpenCode native Google provider)
-- [ ] **Trigger Accepted**: n>=2 dogfood organici reali OpenCode (non solo smoke read-only) confermano tier routing senza fail mode nuovi
 
 ## Riferimenti
 
