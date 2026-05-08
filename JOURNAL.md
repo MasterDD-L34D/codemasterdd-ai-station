@@ -1476,3 +1476,46 @@ Stack è "scaffold opt-in" (Docker Desktop non auto-start, hot-restartable in <6
 - **Lean-honest applicato**: closure ADR-0015 anticipata vs target sett.4 originale per onestà sui dati reali invece di forzare dogfood sintetici. Scelta documentata > criterio finto-chiuso.
 - **Game/Dafne/AA01 attivi**: il gap codemasterdd di 12 giorni non è stagnation — è shift naturale di focus quando il policy hub ha completato il suo ciclo (Fase 6 chiudibile da 24/04 trigger ADR-0008). Pattern positivo, non drift.
 - Stack ADR-0017 è hot-restartable senza ripetere setup. Docker Desktop start manuale quando si usa la dashboard.
+
+---
+
+## 2026-05-08 (governance accuracy + drift cleanup post-Fase 6 closure)
+
+### Contesto
+
+Giornata governance refresh post sessione 7/5 sera (12h auto-mode, 8 PR mergeati). Tre slot operativi:
+1. Mattino: governance refresh chirurgico post 7/5 sera + Dafne 4 PR + COMPACT v12 (PR #11 mergeato)
+2. Pomeriggio: pre-Max checklist tecnica + audit accuracy errors review-found + PR #2108 Game triage chat-only
+3. Sera (sessione corrente): pattern auto-skip skiv-monitor + refresh ROADMAP/BACKLOG/OPEN_DECISIONS
+
+### Completato
+
+#### Mattino (PR #11)
+- COMPACT v11 -> v12: refresh post 7/5 sera con accuracy fixes (HEAD `5828909` reale vs claim, Game-Godot-v2 215 PR vs 211 stale, Dafne `a87da39` +5 commit, OD-002+003+006 chiusi)
+- STATUS_MULTI_REPO refresh: header date 8/5, sezioni Game (pausa Sprint Impronta dal 26/04 ~12gg), Dafne (Atto 2 day 12+ con 4 PR sera 7/5 + #71 lock fix), Game-Godot-v2 (215 mergeati)
+- CLAUDE.md cosmetic: PR count 211->215, sezione Game pausa Impronta corretta, Stack installato +1 riga "modelli aggiuntivi" (16 modelli reali vs 8 documentati)
+- Pre-Max checklist tecnica: 6 wrapper aider-* presenti, API keys 609 bytes, Aider 0.86.2, promptfoo 0.121.7, 16 modelli Ollama, docker-compose validation OK -> sovereign stack pronto per 19/05
+- Triage chat-only PR #2108 Game: docs-only additive merge-ready POV codemasterdd, decisione resta Game-side (ownership boundary). Sandbox correttamente bloccato `gh pr comment` -> lezione `feedback_external_repo_action_boundary.md`
+
+#### Sera (PR #12 + #13, sessione corrente)
+- **PR #12** pattern auto-skip `auto/skiv-monitor-update` cron 4h: 4 edit minimali a STATUS_MULTI_REPO (header refresh + snapshot Game row + sezione Open PR + next action). PR #2117 (8/5 02:45 UTC) documentato come reference one-shot. Merged `6ec8681` 11:06 UTC.
+- **PR #13** governance refresh chirurgico ROADMAP + BACKLOG + OPEN_DECISIONS:
+  - ROADMAP (4 punti): Fase 6 IN PROGRESS 40% -> CLOSED 7/5; Fase 7 BLOCKED -> CLOSED 7/5; Fase 8 PLANNED -> PLANNING transition window 11gg + 7 task SPRINT_02 mappati; Calendario sintetico 23/04 -> 8/5 con milestone reali
+  - BACKLOG (2 punti): U5 ADR-0017 ratification "if completati" -> DONE Accepted 7/5 anticipato; "Primo sprint consigliato" SPRINT_01 -> Sprint corrente SPRINT_02 planning (T1+T4 anticipated DONE)
+  - OPEN_DECISIONS (2 punti): OD-001 dettaglio "Proposed 24/04" -> "Accepted 7/5" + soft-override 5 rationale; OD-002 cp1252 "monitoring" -> CLOSED soglia raggiunta n=15 senza retry loop naturale, M3 PowerShell wrapper deferred reactive
+  - Merged `f8a4bb3` 11:20 UTC
+
+### Da fare
+
+- **2026-05-19 Claude Max expiration** (hard date, 11gg residui)
+- **2026-05-20+ SPRINT_02 prima sessione full-sovereign** (Fase 8 ROADMAP / "Fase 7 post-Max" SPRINT_02 colloquiale): T2 dogfood organico, T3 stack hot-restart validation, T5 cost tracking primo mese, T6 privacy preview opportunistic, T7 review fine sprint
+- **Opportunistic transition 8-19/05**: monitor Game-Godot-v2 PR cycle, cost tracking primo mese full-sovereign, pattern wrong-target-file monitorare (n>=2 trigger ADR addendum 0008/nuovo 0022)
+- **Post agosto 2026** (riattivazione Synesthesia): completare privacy validation 2/3 -> ADR-0014 criterio #3 retroattivo PASS
+
+### Note
+
+- **Lean honest applicato**: drift ROADMAP ~14gg dietro identificato durante esposizione "stato e ripresa", non durante refresh PR #11 mattino (scope chirurgico voluto era diverso). Riconoscimento + fix esplicito > pretesa che PR #11 avesse coperto tutto.
+- **PR #12 lezione meta**: pattern automation cron 4h `skiv-monitor` ricorre nei repo-target. Auto-skip esplicito (no codemasterdd-tracking PR-specifico, no merge valuation) evita noise futuro. Pattern documentato in STATUS_MULTI_REPO sezione Game per onboarding sessioni successive.
+- **OD-002 cp1252 closure formale**: dataset n=15 senza retry loop naturale supera soglia di pazienza ADR-0014. Re-trigger condizionale documentato (≥1 crash UnicodeEncodeError in SPRINT_02 -> M3 backlog reactive). Decisione anti-bloat: non manteniamo OD aperti senza signal empirico.
+- **External-repo boundary feedback validato 2x**: PR #2108 Game (mattino) + #2117 Game (sera) entrambi triagati chat-only senza sandbox-bypass tentativi. Pattern stabile.
+- 3 PR consecutivi mergeati oggi (#11 mattino + #12 + #13 sera) con file core preservati: JOURNAL/COMPACT/DECISIONS_LOG/CLAUDE/AGENTS/ADR/SPRINT immutati eccetto questa entry + COMPACT v13 prossimo bump.
