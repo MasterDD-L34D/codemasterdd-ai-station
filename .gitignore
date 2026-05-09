@@ -60,9 +60,14 @@ backup/*
 !.env.example
 
 # === Claude Code ===
-.claude/
+.claude/*
 !.claude/agents/
 !.claude/agents/**
+!.claude/settings.json
+.claude/worktrees/
+.claude/scheduled_tasks.lock
+# Note: .claude/settings.local.json resta gitignored (personal overrides via pattern .claude/*)
+# Note: .claude/.session-start-head e' gitignored (marker file H12 hook)
 .aider*
 
 # === Quality bench results (framework tracked, run outputs ignored) ===
