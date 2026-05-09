@@ -26,7 +26,7 @@
 
 - [ ] **M7** -- Backup automation API keys daily rotation (V4 mitigation). Script PowerShell scheduled task. Encryption at rest opzionale. Trigger: post H8 completato.
 - [ ] **M8** -- Hook integrity smoke test settimanale (V4 mitigation). Script che fa commit dummy + verifica blocco/accept. Cron Windows scheduled. Trigger: opportunistic SPRINT_02.
-- [ ] **M9** -- Tooling `task-classify <file> <description>` per ridurre cognitive overhead decision tree (C2 risoluzione). Wrapper bash/PS che chiede 3 domande e ritorna comando aider/opencode pronto. Trigger: post H9 bench (insight su throughput effettivo).
+- [x] ~~**M9** -- Tooling `task-classify <file> <description>` per ridurre cognitive overhead decision tree (C2 risoluzione).~~ **DONE 2026-05-09 sera**: `scripts/task-classify.ps1` (~210 righe) implementa decision tree CLAUDE.md + ADR-0008/0016/0022. Mode interactive (5-6 domande con default + colored hints + Set-Clipboard) + parametric (`-Quiet` per pipe/test). 9/9 smoke PASS coprendo: cosmetic locale/cloud/cerebras, behavior locale/groq/borderline-4-constraint, multi-step opencode, cosmetic-subdir-self-ref mitigation, strategic short-circuit, constraints>=5 short-circuit. Install globale Eduardo manual: `Copy-Item scripts/task-classify.ps1 ~/.local/bin/` + `.cmd` wrapper. Effort reale: ~25min.
 - [ ] **M10** -- Bench OpenCode + Groq con `--max-tokens` ridotto (E3 risoluzione). Verificare se cloud free 70B viable per task piccoli (<5k context). Trigger: opportunistic SPRINT_02.
 
 ## Priorità media
