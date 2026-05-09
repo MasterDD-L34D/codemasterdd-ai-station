@@ -16,7 +16,7 @@
 | 0006 | Cline + Qwen 7B viability | Accepted (NOT viable agentic) | 2026-04-20 | Scartato Cline, fallback Aider |
 | 0007 | Aider + Qwen quantization | Partially Superseded (whole deprecated by 0008) | 2026-04-20 | 14B Q2_K sweet spot behavior |
 | 0008 | Aider whole format silent-corruption | Accepted (hub pattern backbone) | 2026-04-21 | Whole deprecated behavior-critical → tier routing |
-| 0009 | Upgrade trigger framework | Proposed (T2 materialized by 0012) | 2026-04-21 | Framework trigger hardware/cloud |
+| 0009 | Upgrade trigger framework | **Accepted 2026-05-09** (partial T2 materialized by 0012; T1/T3 reference) | 2026-04-21 (P) -> 2026-05-09 (A) | Framework trigger hardware/cloud/client. T2 RAM upgrade DONE. T1 Qwen3-Coder-Next + T3 client alternative continuano come reference. ADR-0022 OpenCode T3-adjacent (coexist, non sostituisce Aider). |
 | 0010 | MADR format + skill policy | Accepted | 2026-04-22 | MADR da 0010 in poi; skill install richiede preview + ADR |
 | 0011 | Cross-agent commit governance | Accepted (validated) | 2026-04-22 | commit-msg hook globale + wrapper verify |
 | 0012 | RAM 64GB upgrade impact | Accepted + Validated | 2026-04-22 | qwen3:30b +31% speed tier 2 stabile |
@@ -29,9 +29,13 @@
 | 0019 | Dafne process persistence (3 opzioni A/B/C) | **Accepted** | 2026-04-24 | Opzione A wrapper PS auto-restart (committato Dafne repo `c638098`), B Task Scheduler post-Fase 6, C Docker deferred |
 | 0020 | Silent-fail Python guardrail (extension pre-commit) | **Accepted** | 2026-04-25 | Pre-commit hook globale Layer 2: bare `except:` + `except: pass` one-liner blocked. Bypass: `# silent-ok`. PR #1 mergeato. |
 | 0021 | Multi-client instruction files (AGENTS.md + Codex anti-confusion) | **Accepted** | 2026-05-07 | AGENTS.md preamble Codex sandbox-aware + CLAUDE.md autoritativo + encoding ASCII-first nuovi doc. PR #2 mergeato. Trigger: branch `codex/structural-reset` REJECTED per false-premise sandbox-confusion. |
+| 0022 | OpenCode tool-use model routing (tier dedicato vs Aider) | **Accepted 2026-05-09** | 2026-05-08 (P) -> 2026-05-09 (A) | Tier OpenCode-specifico distinto da Aider tier ADR-0008. Default `ollama/qwen3-coder:30b` MoE A3B (3/3 PASS empirico). NON usare con OpenCode: Qwen 2.5 Coder family (raw JSON tool call) + cloud free 8B-70B (rate-limited TPM/context). PR #15 Proposed + #16 addendum cloud + #19 Accepted + #20 integrazione CLAUDE.md+MODEL_ROUTING. |
 
 ### In review (Proposed, awaiting Accepted trigger)
-- **ADR-0016** -- Constraint-count routing dimension. Trigger Accepted: n>=3 data points addizionali (constraint=4 explicit LOCAL, 2-transform LOCAL, 5-strict LOCAL). Update 2026-04-24: +1 data point (#12 constraint=4 parity-based, partial). Stato 2026-05-07: dataset Fase 6 closed a n=12, ulteriori data points emergeranno organicamente in SPRINT_02 post-Max.
+- **ADR-0016** -- Constraint-count routing dimension. Trigger Accepted: n>=3 data points addizionali (constraint=4 explicit LOCAL, 2-transform LOCAL, 5-strict LOCAL). Update 2026-04-24: +1 data point (#12 constraint=4 parity-based, partial). Stato 2026-05-09: dataset Fase 6 closed a n=12 + smoke OpenCode 9 + dogfood OpenCode 2 = ulteriori data points emergeranno organicamente in SPRINT_02 post-Max.
+
+### Accepted 2026-05-09 (transition active sovereign)
+- **ADR-0022** -- OpenCode tool-use model routing. Tier dedicato OpenCode distinto da Aider. Validato n=11 entries (9 smoke + 2 dogfood reali #25-#26 PASS 1st-try) con Ollama qwen3-coder:30b MoE A3B come default sovereign. Cloud free non viable (rate-limited). Qwen 2.5 Coder family non tool-use OpenCode-compat.
 
 ### Accepted 2026-05-07 (closure batch Fase 6)
 - **ADR-0015** -- Closure anticipata vs target sett.4 originale. Soft-override esteso n>=12 con 5 rationale: trigger ADR-0008 confermato, behavior 5/3 superato, fail rate strict 8.3%, zero silent-corruption, anti-pattern dogfood sintetici.
@@ -94,6 +98,19 @@ Formato granulare per decisioni che non meritano ADR (reversibili, locali, non v
   - Close veloce senza cherry-pick -> rigetto (perderemmo concept utili emersi)
 - **Conseguenze**: ADR-0021 Accepted, AGENTS.md attivo come instruction file Codex, encoding policy ASCII-first nuovi doc. Pattern Codex Cloud confusion documentato come caso-studio.
 - **Azioni derivate**: ADR-0021 mergeato (PR #2). Branch deleted da origin. Mitigation strutturale anti-ricorrenza in AGENTS.md preamble.
+
+### Decisione 006 -- Transition active sovereign 8-9/5 (validation pre-Max expiration)
+- **Data**: 2026-05-08 sera -> 2026-05-09 notte
+- **Titolo**: Adozione transition attiva (vs cold-cutover 19/05) per validare end-to-end stack sovereign con safety net Claude Max
+- **Decisione presa**: invece di stop passivo + switch sovereign il 19/05 senza fallback, **attivare ora (8-9/5) lo stack sovereign completo** (OpenCode + Ollama 30B MoE + stack ADR-0017 active mode) per scoprire findings critici PRIMA che Claude Max scompaia.
+- **Perche'**: 11gg residui sono finestra naturale per validation con safety net. Cold-cutover senza test reale e' rischio inutile (hardcoded gap stack scoperti il 20/05 senza fallback = blocker). Pattern lean: ogni minuto investito ora vale 10 minuti post-Max in trouble-shooting.
+- **Alternative considerate**:
+  - Stop passivo + cold-cutover 19/05 -> rigetto (rischio hardcoded gaps non scoperti)
+  - Skip OpenCode + restare Aider only -> rigetto (limita esplorazione tool-use agentic alternative)
+  - Migrazione completa OpenCode + abbandonare Aider -> rigetto (perdita 12 dogfood Aider validati)
+  - Transition attiva con OpenCode + Ollama + stack ADR-0017 active mode -> scelta (ADR-0022 + dogfood #25 + #26 emergono naturalmente)
+- **Conseguenze**: 4 findings critici scoperti (Qwen 2.5 Coder non tool-use OpenCode-compat / cloud free 8B-70B rate-limited / Qwen3 30B MoE viable / env var Gemini differisce). ADR-0022 ratificato Accepted in stessa giornata grazie a 2 dogfood reali. Tier routing OpenCode-specifico documentato in CLAUDE.md + MODEL_ROUTING.md. T3 SPRINT_02 hot-restart anticipato + passato.
+- **Azioni derivate**: ADR-0022 Proposed (PR #15) -> Accepted (PR #19). 12 PR mergeati 8-9/5. Stack ADR-0017 down a chiusura sessione (volumes preservati per restart futuro). 10gg residui pre-Max ora con confidence empirica end-to-end.
 
 ### Decisione 005 -- Fase 6 closure anticipata 2026-05-07
 - **Data**: 2026-05-07

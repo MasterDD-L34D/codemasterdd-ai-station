@@ -2,10 +2,11 @@
 
 > *TL;DR: upgrade stack AI locale guidato da trigger espliciti/misurabili (T1 modello Qwen3-Coder-Next, T2 hardware RAM/VRAM/Mac mini, T3 switch client Aider→alternativa), non da hype release o calendar. Baseline: dati Fase 6 empirici 3 mesi post-Claude Max. Trade-off: ritardo adoption SOTA per affidabilità decisionale.*
 
-**Status**: Proposed
-**Data**: 2026-04-21
+**Status**: Accepted (partial T2 materialized by ADR-0012; framework T1/T3 attivo come reference)
+**Data**: 2026-04-21 (Proposed) -> 2026-05-09 (Status update Accepted post empirical validation)
 **Decisore**: Eduardo Scarpelli
 **Tipo decisione**: strategica + tecnica (revisione Fase 2 ADR-0001, follow-up ADR-0007/0008)
+**Status note 2026-05-09**: T2 hardware trigger materializzato da ADR-0012 (RAM 64GB upgrade 2026-04-22, qwen3:30b stabile, 30B MoE non piu' RAM-bound). T1 modello (Qwen3-Coder-Next 80B MoE) e T3 client (Aider→alternativa) restano come framework trigger reference. Aggiornamento NEW: client tier 2 OpenCode (ADR-0022 Accepted 2026-05-09) e' un caso T3-adjacent -- NON ha sostituito Aider, e' coexisting tool con scope diverso (multi-step agentic vs single-file edit). Framework upgrade trigger continua a guidare future evoluzioni (es. Mac mini hardware, Qwen3 rilascio futuro, eventual MCP server adoption).
 
 ## Contesto
 

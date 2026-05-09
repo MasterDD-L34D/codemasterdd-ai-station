@@ -224,13 +224,15 @@ Applicata in concreto:
 
 ---
 
-## Decisione finale attuale
+## Decisione finale attuale (refresh post-Fase 6 closure + ADR-0022 Accepted 9/5)
 
-- **Workflow primario del progetto**: Claude Code Opus (fino 19/05) per comprensione/planning/multi-file; Aider + Qwen local per coding 1-file routine; Aider + Groq cloud per coding 1-file speed-critical
-- **Strumento principale di comprensione**: Claude Code nativo (Glob/Grep/Read)
-- **Strumento principale di esecuzione**: Aider con wrapper tier-appropriate (classificazione CLAUDE.md)
+- **Workflow primario fino 19/05**: Claude Code Opus per comprensione/planning/multi-file/strategic; Aider + Qwen local per coding 1-file routine; Aider + Groq/Cerebras cloud per coding 1-file speed-critical (privacy permitting); **OpenCode + qwen3-coder:30b** per multi-step agentic con tool calls coordinati (nuovo da 8-9/5)
+- **Workflow post 19/05 (Fase 8 sovereign)**: Aider + Ollama come daily-driver, OpenCode + Ollama 30B MoE per agentic multi-step, cloud free Aider-side per speed/capability marginale (NON OpenCode -- rate-limited). Claude Code dismesso.
+- **Strumento principale di comprensione**: Claude Code nativo (Glob/Grep/Read) -- post 19/05 Aider repo-map mode + Ollama
+- **Strumento principale di esecuzione single-file**: Aider con wrapper tier-appropriate (classificazione CLAUDE.md)
+- **Strumento principale di esecuzione agentic multi-step**: OpenCode + qwen3-coder:30b (ADR-0022)
 - **Strumento principale di archivio / orchestrazione**: Claude Code scrive docs/, logs/, memory; ADR come decision persistence
-- **Prossimo test da fare sul routing**: dogfood behavior-critical #3+ per bilanciare dataset cloud (1 success + 1 REJECT al 23/04 sera) + validare OD-006 constraint-count routing con n≥3 task di constraint-count variabile
+- **Prossimo test da fare sul routing** (deferred SPRINT_02): n>=3 data points constraint-count addizionali per ADR-0016 Accepted; dogfood organici OpenCode reali verso n>=20 cumulative
 
 ---
 
@@ -257,16 +259,24 @@ Dogfood Fase 6 n=8 rivela **pattern nuovo non previsto nella matrice originale**
 
 **Cause ipotetica**: LLM ≤70B hanno capacity per preservare ~2-3 constraint simultaneamente. Oltre, iniziano a "dimenticare" i meno prominenti nel prompt — tipicamente quelli trasformativi (vs fix puntuali più concreti).
 
-## Evoluzione attesa post Fase 6 (ADR-0015)
+## Evoluzione post Fase 6 (ADR-0015 Accepted 2026-05-07, scenario A confermato)
 
-Scenario **A full-sovereign** (preferito):
-- Claude Code: dismesso daily, retained via API key solo per strategic raro (budget <$10/mese)
-- Tier 0 strategic → Groq 70B via `aider-groq` per ADR/planning leggero
-- Tier 1-4 invariato (free + locale)
+**Scenario A full-sovereign $0-50/anno** confermato Accepted 2026-05-07. Operativo da 2026-05-19 (Claude Max expiration). Soft-override esteso n>=12 con 5 rationale empirici.
 
-Scenario **B ibrido Claude Pro**:
-- Claude Pro $20/mese attivato → Claude Code OAuth continua daily-driver
-- Qwen locale come privacy-first per repo sensibili
-- Cloud free come speed backup
+**Stack operativo Fase 8**:
+- **Claude Code**: dismesso daily-driver. NON acquisito Claude Pro $240/anno (scenario B declassato per quality parity 70B cloud + 14B Q2 locale).
+- **Tier 0 strategic** -> Groq 70B via `aider-groq` per ADR/planning leggero quando privacy permitting. Per repo sensibili: Qwen 14B Q2 + diff locale.
+- **Tier 1 sovereign default Aider**: Qwen 7B (cosmetic) + 14B Q2 (behavior) locali, ADR-0007/0008
+- **Tier 1 sovereign default OpenCode** (NEW da ADR-0022): qwen3-coder:30b MoE A3B per multi-step agentic con tool calls
+- **Tier 2 escalation Aider**: qwen3-coder:30b quando 14B Q2 safe-fails
+- **Tier 3 cloud free**: Groq llama-3.3-70b + Cerebras llama3.1-8b (Aider-side) per single-file speed/capability marginal. **NOTA: NON viable per OpenCode** (rate-limited TPM/context, ADR-0022 addendum).
+- **Tier 4 paid emergency**: openai/gpt-4o-mini via aider-openai, ccusage monitor
 
-Decisione finale in ADR-0015 a ~2026-05-20.
+**Privacy validation Synesthesia (criterio #3 ADR-0014) DEROGATO retroattivo**: completamento post agosto 2026 quando Synesthesia riattiva pre-esame UniUPO. Documentato in ADR-0015.
+
+**Trigger ri-evaluation soft-override (validi durante SPRINT_02)**:
+- silent-corruption working-tree >=1 caso reale -> ADR-0015 addendum + scenario B revisited
+- fail rate cumulative >15% -> revisione routing tier
+- privacy violation in repo non-sensitive -> ADR addendum reactive
+
+Cumulative al 2026-05-09: zero trigger attivati. PASS rate empirico OpenCode 30B MoE 3/3, Aider Fase 6 fail rate 8.3%.
