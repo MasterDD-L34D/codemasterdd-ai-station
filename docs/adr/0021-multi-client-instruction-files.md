@@ -2,10 +2,11 @@
 
 > *TL;DR: la review del branch `codex/structural-reset` (rejected 2026-05-07) ha esposto un pattern Codex Cloud sandbox che confonde "non vedo i path Windows assoluti" con "i path non esistono / il repo è transplanted". Si introduce `AGENTS.md` come instruction file Codex-specifico con anti-confusion preamble. `CLAUDE.md` resta unica fonte autoritativa progetto-specifica; `AGENTS.md` è breve e rimanda. Adottato anche encoding policy ASCII-first per nuovi doc per ridurre mojibake cross-tool.*
 
-- **Status**: Accepted
+- **Status**: **Accepted (early, n=1, ratification check 2026-06-07)**
 - **Data**: 2026-05-07
 - **Decisore**: Eduardo Scarpelli
 - **Tipo decisione**: meta-operativa (instruction surface)
+- **Early-acceptance rationale (ADR-0010 addendum 2026-05-09)**: validation n=1 (ricognizione passiva Game-Godot-v2 governance autosufficiente -- pattern AGENTS.md gia' adottato da Eduardo indipendentemente). Ratification check obbligatorio entro 2026-06-07 con dati cumulative aggiuntivi (uso effettivo AGENTS.md da Codex Cloud / OpenCode / nuovo agent client).
 
 ## Context and Problem Statement
 
