@@ -227,7 +227,7 @@ Applicata in concreto:
 ## Decisione finale attuale (refresh post-Fase 6 closure + ADR-0022 Accepted 9/5)
 
 - **Workflow primario fino 19/05**: Claude Code Opus per comprensione/planning/multi-file/strategic; Aider + Qwen local per coding 1-file routine; Aider + Groq/Cerebras cloud per coding 1-file speed-critical (privacy permitting); **OpenCode + qwen3-coder:30b** per multi-step agentic con tool calls coordinati (nuovo da 8-9/5)
-- **Workflow post 19/05 (Fase 8 sovereign)**: Aider + Ollama come daily-driver, OpenCode + Ollama 30B MoE per agentic multi-step, cloud free Aider-side per speed/capability marginale (NON OpenCode -- rate-limited). Claude Code dismesso.
+- **Workflow post 19/05 (Fase 8 sovereign)**: Aider + Ollama come daily-driver, OpenCode + Ollama 30B MoE per agentic multi-step, cloud free Aider-side per speed/capability marginale (NON OpenCode -- rate-limited). Claude Code Max OAuth dismesso. **Tier 0 strategic** -> Claude API on-demand pay-per-use con budget cap $10-20/mese (ADR-0023 Proposed 2026-05-09). Trigger reactivation Pro: utilizzo >$20/mese 2 mesi consecutivi.
 - **Strumento principale di comprensione**: Claude Code nativo (Glob/Grep/Read) -- post 19/05 Aider repo-map mode + Ollama
 - **Strumento principale di esecuzione single-file**: Aider con wrapper tier-appropriate (classificazione CLAUDE.md)
 - **Strumento principale di esecuzione agentic multi-step**: OpenCode + qwen3-coder:30b (ADR-0022)
