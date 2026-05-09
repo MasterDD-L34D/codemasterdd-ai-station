@@ -1586,3 +1586,78 @@ PASS rate cumulativo Ollama 30B MoE OpenCode: **3/3** (smoke read + 2 edit reali
 - **Stack ADR-0017 active mode**: utile durante transition (Langfuse traces autocaptured per debug futuro tool-use issues). Da spegnere a chiusura sessione (`docker compose down` in `infra/`).
 - **Sviluppo cumulativo giornata 8-9/5**: 10 PR mergeati in stesso giorno operativo (governance refresh mattino #11 -> tier OpenCode finale #20). Pattern lean-hyperactive validato senza file core poison: JOURNAL/COMPACT/DECISIONS_LOG aggiornati incrementalmente, ADR scritti con evidence empirica, no rewrite cieco.
 - **OpenCode != Aider drop-in replacement**: validazione empirica costringe distinzione tier routing tool-specifico. 2 tool, 2 use case, 2 tier matrix. Cognitive overhead accettato per chiarezza scope.
+
+---
+
+## 2026-05-09 mattino-mezzogiorno (resume routine + harsh review + 6 H-tasks BACKLOG)
+
+### Contesto
+
+Resume sessione post pausa notte 8-9/5. Eduardo richiede operazioni routine + cleanup + analisi affondo flow chart. Pattern: lean-hyperactive 8 PR in 4-5h con quality non sacrificata.
+
+### Completato
+
+#### Mattino: routine + memory consolidation + Tier 1 cleanup
+- **PR #22** STATUS_MULTI_REPO refresh 9/5 mattino (4 punti accuracy: header + codemasterdd HEAD + Game NEW PR DRAFT + stack ADR-0017 active mode validato)
+- **PR #23** Tier 1 cleanup pending: DECISIONS_LOG (ADR-0022 row + Decisione 006 + ADR-0009 status flip Proposed -> Accepted partial T2) + MODEL_ROUTING drift secondari (Decisione finale + Evoluzione post Fase 6) + ADR-0009 file update
+- **Memory consolidation** (skill `consolidate-memory`): 6 file out-of-repo refresh (sovereign_evaluation + multi_repo_overview + strategic_docs + hub_delegation_pattern + migrations_pending + MEMORY.md index). Drift -15gg fixato cumulativo.
+
+#### Mezzogiorno: Harsh review flow chart + 2 ADR scaffold + 6 H-tasks
+- **Eduardo richiesta**: "analizzarl o affondo per vedere vulnerability/choke/errori/inesattezze + report dettagliato"
+- **Lancio harsh-reviewer agent** (sub-agent) → produces:
+  - 2 vulnerabilita' BLOCKING (V1 strategic tier post-Max + V2 privacy bypass)
+  - 3 SIGNIFICANT (V3 sample size + V4 SP-of-failure + V5 trust boundary)
+  - 4 choke points quantificati (C1-C4)
+  - 5 errori/inesattezze
+  - 7 edge cases prioritizzati (3 HIGH + 3 MED + 1 LOW)
+  - 5 process smells (mia aggiunta)
+- **6 questions BLOCKING** convertite in vibecoding (Eduardo richiesta no gergo). Risposte:
+  - 1A: Claude API on-demand $10-20/mese cap
+  - 2A: Wrapper enforcement automatico
+  - 3B: Early-acceptance flag
+  - 4A: 1 giornata bench mixed-workload pre-Max
+  - 5A+: Soft-deadline 2026-09-30 + AA01 attivazione Ondata 1+2
+  - 6A: Stop hook automatico
+- **PR #24**: harsh review report + ADR-0023 (Strategic tier post-Max API on-demand) + ADR-0024 (Vue3 archive timeline) + BACKLOG H7-H12 + Decisione 007
+- **PR #25**: H7 ADR-0023 integration CLAUDE.md + MODEL_ROUTING + log scaffold
+- **PR #26**: H9 bench mixed-workload + batched + MAX=2 (3 bench eseguiti). Findings critici:
+  - Drift documentazione -30% per Qwen 14B Q2 (17.62 vs 25 doc)
+  - +43% upside qwen3-coder:30b MoE (32.98 vs 23 doc)
+  - Batched workflow saving 37% (29.24s su 79.17s)
+  - MAX=2 NON migliora workflow 3-tier (contrarian finding)
+- **PR #27** H8 BLOCKING privacy guard rail tecnico (1h reale vs 1gg stima): 4 wrapper cmd cloud + whitelist + 2/2 smoke test PASS
+- **PR #28** H10 early-acceptance flag (30min reale vs 2-3h stima): ADR-0010 addendum + ADR-0021/0022 retroactive flag con ratification check 2026-06-07/06-09
+- **PR #29** H12 stop hook automatico (45min reale): 2 PowerShell scripts + .claude/settings.json project + .gitignore fix + 3/3 smoke test PASS
+
+#### Cleanup branch + COMPACT v14 -> v15 bump
+- 7 branch locali stale eliminati (cleanup post mass-merge)
+- Worktree allineato a HEAD `2a8aebe` post PR #29
+- COMPACT v14 -> v15 (questo PR)
+
+### Da fare
+
+- **Eduardo direct (azioni standalone)**:
+  - H7 setup: aggiungere `ANTHROPIC_API_KEY` a `~/.config/api-keys/keys.env` (~5min via Anthropic Console) -- pre-19/05
+  - H11: attivare AA01 silent-driver mode su Sprint Impronta Ondata 1+2 status-phase-a
+  - H12 attivazione su sessione corrente: NON serve (`/hooks` desktop app non disponibile, hook attiva automatico a prossima sessione)
+- **Calendarizzati**:
+  - 2026-05-19 Claude Max expiration (10gg residui, no action richiesta, stack pronto)
+  - 2026-05-20+ SPRINT_02 prima sessione Fase 8 sovereign
+  - 2026-06-07 ratification check ADR-0021
+  - 2026-06-09 ratification check ADR-0022
+- **Deferred SPRINT_02**: M7-M10 (backup automation, hook integrity smoke, task-classify tooling, OpenCode token-trim) + T7 review fine sprint MAX=2 re-eval
+
+### Note
+
+- **Pattern lean-hyperactive validato 9/5**: 8 PR mergeati in 4-5h con effort reale tipicamente <50% delle stime BACKLOG. Esempi:
+  - H8 (privacy guard rail): 1h reale vs 1gg stima
+  - H9 (bench): 1h reale incluso 3 bench vs 1gg stima
+  - H10 (early-acceptance flag): 30min vs 2-3h stima
+  - H12 (stop hook): 45min vs 30-60min stima
+  Razionale: scope chirurgico + Claude Max attivo per analysis + tooling pronto (skill + agent + bash).
+- **Harsh review valore meta**: 2 BLOCKING risolti in 1 giornata. Pattern "auto-criticism con harsh-reviewer agent + decisioni Eduardo + execute" e' replicabile.
+- **MAX=2 contrarian finding**: ipotesi non confermate empirically. Workflow 3-tier alternato == swap continuo indipendentemente da MAX=N. Rationale: VRAM 8GB single-model + 3-tier > MAX cache. Insight inatteso, salva da change config sub-ottimale.
+- **Privacy guard rail tecnico shift**: classification manuale → tool enforcement. Anti-pattern "disciplina umana" sostituito con guard rail automatico. Pre-aborts su synesthesia/repo cliente confermati funzionanti.
+- **ADR Accepted threshold rivisto**: status workflow ora supporta `Accepted (early, n=N, ratification check YYYY-MM-DD)`. Trasparenza trade-off velocita' decision vs evidence cumulativa. ADR-0021 + ADR-0022 retroactive flag.
+- **Stop hook drift mitigation**: hook attivera' automatico in prossima sessione (non in questa, settings watcher limitazione design). Pattern: hook configurato -> immediate effect alla prossima session start.
+- **21 PR mergeati cumulativi 8/5 sera -> 9/5 mezzogiorno** (10 sera 8/5 + 11 mattino-mezzogiorno 9/5). Coda PR vuota cross-repo. ADR cumulativi: 24 totali (22 + ADR-0023 Proposed + ADR-0024 Proposed). 7 decisioni non-ADR (001-007).
