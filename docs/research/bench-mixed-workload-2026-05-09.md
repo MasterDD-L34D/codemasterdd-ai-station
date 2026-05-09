@@ -63,36 +63,67 @@ Su workflow alternato continuo, **42.3% del tempo viene speso in swap modello**,
 - 30 task × 11/12 swap rate × 3s/swap = ~82s swap overhead
 - **Totale: ~277s = 4.6 min** di cui solo 3.25min (70%) e' eval utile
 
-### F3. Ordine workflow conta enormemente
+### F3. Ordine workflow conta enormemente -- VALIDATION EMPIRICA 2026-05-09
 
-I 4 task 7B (T1, T2, T3, T4) hanno avg wall 3.43s ma **sono dispersi** nell'ordine di esecuzione: T1, T2 (post 14B+30B), T3 (post 14B+30B di nuovo), T4 (post 14B+30B finale). Ognuno e' un swap.
+I 4 task 7B (T1, T2, T3, T4) hanno avg wall 3.43s ma **sono dispersi** nell'ordine di esecuzione mixed. Ognuno e' un swap.
 
-In ordine **batched** (es. tutti 7B → tutti 14B → tutti 30B), avresti solo 2 swap totali invece di 11. Impact:
-- Mixed (attuale): 33.52s swap overhead
-- Batched (ipotetico): ~6s swap overhead (2 swap × 3s)
-- **Saving potenziale: ~27s (34% del workflow)**
+Bench batched eseguito subito dopo (run order [1..12], solo 2 swap forced) per validare hypothesis:
 
-## Decisione su `OLLAMA_MAX_LOADED_MODELS=2`
+| Workflow | Total elapsed | Swap count | Swap overhead | % workflow |
+|----------|---------------|------------|---------------|------------|
+| **Mixed** (11 swap forced) | 79.17s | 11 | 33.52s | 42.3% |
+| **Batched** (2 swap, run [1..12]) | **49.93s** | 2 | 6.22s | **12.5%** |
+| **Saving** | **-29.24s** | **-9** | **-27.30s** | **-37%** |
 
-**Ipotesi**: setting `=2` permette 2 modelli simultanei in cache, riducendo swap del ~50% in workflow alternato.
+**Saving empirico 37% del workflow** confermato (vs ipotesi 34%). Validation: batch task per modello prima di switch riduce significativamente il workflow time.
 
-### Pro
-- Swap overhead potenzialmente 50% ridotto = risparmio ~17s in workflow tipo
-- Per workflow agentic (OpenCode 30B + Aider 14B Q2 simultanei se lavoro su 2 task paralleli) sarebbe ideale
+**Throughput per modello invariato** (no degradation):
+- 7B batched: 100.75 tok/s avg (stesso di mixed)
+- 14B Q2 batched: 17.62 tok/s (stesso)
+- 30B MoE batched: 32.20 tok/s avg (vs 32.98 mixed, ~2% delta noise)
 
-### Contro
-- **RAM tight**: 30B (~22GB) + 14B Q2 (~6GB) + 7B (~5GB) cache = ~33GB modelli + KV cache + OS (~10GB) + Aider/OpenCode runtime (~2GB) + altre app (~5GB) = ~50GB
-- Margine 64GB - 50GB = ~14GB. Se Eduardo apre Brave/Chrome con 20+ tab + Docker stack ADR-0017 active mode, va in pressione
-- VRAM 8GB resta single-model concurrent (RTX 5060 limit). Swap GPU resta forzato. Solo cache RAM speedup
-- ADR-0004 originale preferiva `=1` per consistency
+Output: `scripts/bench-mixed-workload/results/results-2026-05-09-maxloaded1-batched.json`
 
-### Conservatorismo: NON cambiare a `=2` ora
+## Decisione su `OLLAMA_MAX_LOADED_MODELS=2` -- VALIDATION EMPIRICA 2026-05-09
 
-**Razionale**:
-1. Workflow attuale `=1` ha swap overhead 42% MA throughput accettabile (79s per 12 task = ~6.6s/task avg)
-2. Cambio richiede Ollama daemon restart manuale + observation period
-3. Pre-19/05 transition window NON e' momento per esperimenti config che impattano stabilita'
-4. Decisione **deferred SPRINT_02 T7 review** con dati workflow reale (non bench sintetico)
+**Ipotesi originale**: setting `=2` permette 2 modelli simultanei in cache, riducendo swap del ~50% in workflow alternato.
+
+**Test empirico eseguito** (bench MAX=2 mixed workflow, stessi 12 task forced-swap):
+
+| Config | Total elapsed | Swap count | Swap overhead | % workflow |
+|--------|---------------|------------|---------------|------------|
+| **MAX=1 mixed** (baseline) | 79.17s | 11 | 33.52s | 42.3% |
+| **MAX=2 mixed** | **81.51s** | **11** | 34.90s | **42.8%** |
+
+**Risultato CONTRARIAN**: MAX=2 NON ha ridotto il numero di swap. Workflow time praticamente identico (delta +1.4s dentro variance noise).
+
+### Razionale empirico per cui MAX=2 non aiuta
+
+1. **Workflow alterna 3 modelli** (7B, 14B Q2, 30B). MAX=2 puo' tenere solo 2 in cache. 3° modello forza sempre eviction. Esempio:
+   - T1 7B caricato (MAX=2 cache: [7B])
+   - T5 14B Q2 caricato (cache: [7B, 14B Q2])
+   - T9 30B caricato → 14B Q2 evicted (cache: [7B, 30B]). Swap counted.
+   - T2 7B richiamato (gia' in cache → no swap? ma osservato ancora swap)
+
+2. **VRAM 8GB limit single-model GPU**: anche se MAX=2 cache RAM, GPU offload e' single-model concurrent. Quando nuovo modello richiesto, deve essere caricato in VRAM (eviction modello precedente da GPU). Cache RAM helpa solo se modello successivo === modello precedente in cache RAM e non e' stato eviction da GPU.
+
+3. **Workflow forced-swap** (test design): mixed alternation = 11 swap forced indipendentemente da MAX=N. Cache RAM speedup minore di GPU swap dominante.
+
+### Quando MAX=2 sarebbe utile (estrapolazione)
+
+- **Workflow 2-modelli only**: es. Aider 14B Q2 + OpenCode 30B (entrambi behavior/agentic) senza 7B coinvolto → MAX=2 evita ogni swap dopo carico iniziale.
+- **Workflow Eduardo simultanee 2 sessioni** (Aider + OpenCode parallel, modelli diversi): vantaggio cache.
+- **Pattern user normale** dove tier 1 (7B) raramente usato durante una sessione: cache 14B Q2 + 30B disponibili.
+
+### Decisione finale: MAX=1 INVARIATO
+
+**Razionale ratificato empiricamente**:
+1. ADR-0004 MAX=1 confermato corretto per workflow 3-tier misto (no benefit MAX=2 nel use case attuale)
+2. Cambio MAX=2 richiede Ollama restart + ha rischio RAM tight (30B+14B+7B = ~33GB modelli). Non vale beneficio nullo.
+3. **Pre-19/05 transition window NON cambiare config esistente** senza upside provato.
+4. Re-evaluation MAX=2 candidato SE workflow Eduardo evolve a 2-tier dominant (es. solo Aider behavior + OpenCode agentic, no cosmetic) -> deferred SPRINT_02 T7 review.
+
+Output bench MAX=2: `scripts/bench-mixed-workload/results/results-2026-05-09-maxloaded2-mixed.json`
 
 ## Update CLAUDE.md throughput
 
@@ -120,9 +151,9 @@ Decision matrix CLAUDE.md sezione "Priorita modelli AI" implicazioni:
 
 1. **CLAUDE.md tier table update** con throughput mixed-workload (questo PR)
 2. **Decision matrix** aggiornata per riflettere 14B Q2 drift -30% e 30B MoE upside +43%
-3. **MAX_LOADED_MODELS=1 invariato** pre-19/05. Re-bench `=2` deferred SPRINT_02 T7
+3. **MAX_LOADED_MODELS=1 invariato** pre-19/05. **Re-bench `=2` ESEGUITO 2026-05-09** -> contrarian finding: nessun beneficio per workflow 3-tier misto. Razionale empirico: 11 swap forced invariato (MAX=2 cache 2 modelli su 3 alternati = sempre eviction). MAX=2 candidato solo se workflow evolve a 2-tier dominant.
 4. **Sample size n=4 per tier** insufficiente per claim "Accepted" definitivo. ADR-0009 addendum NON status flip, solo data update reference. Future bench con n>=10 per ratification.
-5. **Workflow optimization batched > mixed** (F3): suggerimento NON-binding "se possibile, batch task per modello prima di switch". Eduardo discrezione.
+5. **Workflow optimization batched > mixed** (F3): **raccomandazione FORTE quantificata** (no piu' non-binding). Validation empirica 2026-05-09: batched riduce workflow time del 37% (29.24s saving su 79.17s totale). Throughput per-modello invariato. Quando workflow include task multiple per stesso modello, raggrupparli prima di switch.
 
 ## Riferimenti
 

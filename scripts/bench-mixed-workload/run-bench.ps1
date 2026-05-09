@@ -11,7 +11,9 @@
 # Per testare =2: -MaxLoadedModels 2 (richiede preflight env var change + Ollama daemon restart manuale).
 
 param(
-    [int]$MaxLoadedModels = 1
+    [int]$MaxLoadedModels = 1,
+    [ValidateSet("mixed", "batched")]
+    [string]$Order = "mixed"
 )
 
 $ErrorActionPreference = "Stop"
@@ -20,7 +22,7 @@ $resultsDir = Join-Path $PSScriptRoot "results"
 $null = New-Item -ItemType Directory -Path $resultsDir -Force
 
 $dateStr = Get-Date -Format "yyyy-MM-dd"
-$outFile = Join-Path $resultsDir "results-$dateStr-maxloaded$MaxLoadedModels.json"
+$outFile = Join-Path $resultsDir "results-$dateStr-maxloaded$MaxLoadedModels-$Order.json"
 
 Write-Host "Bench mixed-workload start | MAX_LOADED_MODELS=$MaxLoadedModels | outFile=$outFile"
 
@@ -37,9 +39,14 @@ try {
 $prompts = Get-Content $promptsFile -Raw | ConvertFrom-Json
 $tasksById = @{}
 foreach ($t in $prompts.tasks) { $tasksById[[int]$t.id] = $t }
-$runOrder = $prompts._run_order
 
-Write-Host "Loaded $($prompts.tasks.Count) tasks, run order: $($runOrder -join ',')"
+if ($Order -eq "batched") {
+    $runOrder = @(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12)
+} else {
+    $runOrder = $prompts._run_order
+}
+
+Write-Host "Loaded $($prompts.tasks.Count) tasks, run order [$Order]: $($runOrder -join ',')"
 
 # Bench results
 $results = @{
