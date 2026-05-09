@@ -2,10 +2,11 @@
 
 > *TL;DR: smoke test 2026-05-08 (n=5 entries #16-#20) ha empiricamente validato che Qwen 2.5 Coder family (sia 7B che 14B Q2) NON e' tool-use native compatibile con OpenCode `run` mode -- emette tool call come JSON raw stringificato che OpenCode passa in stdout senza eseguire. Solo Qwen3-Coder 30B MoE A3B esegue correttamente i tool call. Si introduce **tier routing OpenCode-specifico** (distinto da Aider tier ADR-0008): default `ollama/qwen3-coder:30b`, NON usare Qwen 2.5 Coder family con OpenCode. Aider e OpenCode coesistono come tool per use case diversi (single-file edit vs multi-step agentic). Cloud free 70B (Groq llama-3.3) rate-limited TPM 12k vs context 50k OpenCode -- non viable senza upgrade Dev Tier o context trim.*
 
-- **Status**: Accepted
-- **Data**: 2026-05-08 Proposed -> 2026-05-09 Accepted (ratification post 2/2 dogfood organici reali)
+- **Status**: **Accepted (early, n=3, ratification check 2026-06-09)**
+- **Data**: 2026-05-08 Proposed -> 2026-05-09 Accepted (early)
 - **Decisore**: Eduardo Scarpelli
 - **Tipo decisione**: tier routing tool-specifico (OpenCode workflow)
+- **Early-acceptance rationale (ADR-0010 addendum 2026-05-09)**: validation n=3 (1 smoke read + 2 dogfood edit reali, 3/3 PASS Ollama qwen3-coder:30b MoE). Sample piccolo ma 3/3 e' signal forte, no contrarian. Ratification check obbligatorio entro 2026-06-09 con n>=10 task cumulative naturali OR contrarian event handled (es. tool-use raw JSON pattern Qwen3 family in nuovo modello).
 
 ## Context and Problem Statement
 

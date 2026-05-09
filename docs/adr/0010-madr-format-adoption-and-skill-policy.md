@@ -70,6 +70,34 @@ Sezioni minime:
 
 TL;DR 1-liner retroattivo **verrà aggiunto ai 9 ADR esistenti** (add-only, zero logic change) per uniformità reader-quick-glance.
 
+### Status workflow + early-acceptance flag (addendum 2026-05-09)
+
+Trigger addendum: harsh review 2026-05-09 ha identificato V3 SIGNIFICANT (sample size empirici sotto threshold per claim "Accepted"). Eduardo scelta 3B (Decisione 007 in DECISIONS_LOG): early-acceptance flag esplicito.
+
+**Stati ADR validi**:
+- `Proposed` — decisione formulata, validation in corso, NON applicata operativamente
+- `Accepted` — decisione validated empirically con sample sufficient (n>=10 OR contrarian event handled), applicata operativamente
+- **`Accepted (early, n=N, ratification check YYYY-MM-DD)`** — decisione applicata operativamente MA validation con sample piccolo (n<10). Ratification check obbligatorio entro 30gg con dati addizionali. Format: `n=N` indica sample dimension al momento Accepted, `ratification check YYYY-MM-DD` e' deadline per re-evaluation
+- `Superseded by ADR-NNNN` — decisione sostituita da ADR successivo
+- `Deprecated` — decisione non piu' valida ma preserve per audit trail
+
+**Trigger early-acceptance**:
+- Sample size n<10 al momento decisione
+- Validation qualitativa (es. 5/5 criteri PASS ma criteri sono soft)
+- Pattern empirico osservato in n=1 ricognizione passiva
+
+**Ratification check process**:
+- Data deadline: 30gg da Accepted (early)
+- Output: una di queste 3 azioni
+  1. Status flip a `Accepted` (validation cumulativa raggiunto n>=10 + zero contrarian)
+  2. ADR addendum con findings empirici + status flip o `Superseded`
+  3. Status flip a `Deprecated` se contrarian event emerso
+
+**ADR retroactive flag** (applicati 2026-05-09):
+- ADR-0017 -- Accepted 2026-05-07 con 5/5 criteri qualitativi -> NO flag (criteri concreti, non early)
+- ADR-0021 -- Accepted 2026-05-07 con n=1 ricognizione (Game-Godot-v2 governance autosufficiente) -> flag `Accepted (early, n=1, ratification check 2026-06-07)`
+- ADR-0022 -- Accepted 2026-05-09 con n=3 dogfood (1 smoke + 2 edit reali) -> flag `Accepted (early, n=3, ratification check 2026-06-09)`
+
 ### Skill install policy
 ```
 Nuova skill candidate → gh skill preview <repo> <skill>
