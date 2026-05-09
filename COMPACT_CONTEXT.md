@@ -6,12 +6,12 @@
 
 ## Progetto
 - **Nome**: CodeMasterDD AI Station
-- **Versione del compact**: v15 (sessione 2026-05-09 mattino-mezzogiorno: routine + harsh review + 6 H-tasks BACKLOG + 11 PR mergeati. Cumulative 8-9/5: 21 PR.)
-- **Data ultimo aggiornamento**: 2026-05-09 mezzogiorno
+- **Versione del compact**: v16 (sessione 2026-05-09 sera: 4 task M-deferred SPRINT_02 cascata M9->M8->M7->M10. Cumulative 8-9/5: 25 PR equivalent (21 mergeati + 4 commit branch worktree pendenti PR).)
+- **Data ultimo aggiornamento**: 2026-05-09 sera
 
 ## Stato attuale
-- **Barra globale ~99%** (+1 da v14): Fase 6 + Fase 7 CLOSED. ADR-0022 + ADR-0023 + ADR-0024 nuovi. **Window pre-19/05 completata routine + harsh review fixes**: 8 PR 9/5 mattino-mezzogiorno + 6 H-tasks BACKLOG completati (H7-H12). Privacy guard rail tecnico attivo. Stop hook drift mitigation deployed. ADR early-acceptance flag governance. Bench mixed-workload empirico (drift documentazione corretto). Niente piu' BLOCKING tecnico. 10gg residui pre-Max expiration.
-- HEAD `2a8aebe` su origin/main (post merge PR #11-#29 in giornate 8-9/5). Worktree corrente `hardcore-keller-72c77e` allineato a main, working tree pulita.
+- **Barra globale ~99%** (invariata da v15 -- M-deferred non sposta gauge strategica): Fase 6 + Fase 7 CLOSED. ADR-0022 + ADR-0023 + ADR-0024 nuovi. **Window pre-19/05 completata routine + harsh review fixes + tooling deferred SPRINT_02 anticipato**: 8 PR 9/5 mattino-mezzogiorno (H7-H12) + 4 commit 9/5 sera (M7-M10 branch worktree pending PR). Privacy guard rail tecnico attivo. Stop hook drift mitigation deployed. Tooling task-classify/smoke-hooks/backup-keys/bench-cloud-free pronto. Niente piu' BLOCKING tecnico. 10gg residui pre-Max expiration.
+- HEAD origin/main `dfe9dfd` (post merge PR #11-#30 in giornate 8-9/5). **Worktree corrente `recursing-mirzakhani-da8bb3` ahead 4 commit** branch `claude/recursing-mirzakhani-da8bb3` (M9 c74966c + M8 912b91a + M7 bb78999 + M10 fe94dbe), pending push + PR.
 - **Stack ADR-0017 ACTIVE MODE 8/5 sera**: LiteLLM:4000 + Langfuse:3000 + Postgres + dogfood-ui:8080 UP. T3 SPRINT_02 hot-restart validation anticipato + passato (<60s endpoint health, persistence preservata). Da spegnere `docker compose down` a chiusura sessione.
 - **OpenCode v1.14.41** (npm global) installato 8/5 sera. Config `~/.config/opencode/opencode.json` con 5 provider mappati. Default `ollama/qwen3-coder:30b` (tier 1 sovereign, ADR-0022 Accepted).
 - **Agent ecosystem ADR-0018**: 12/18 ready, 6/18 draft trigger-gated. Status invariato dal 24/04.
@@ -40,6 +40,29 @@ Eduardo ha lavorato attivamente in altri repo (silent driver mode):
 - 19/05: disattivazione Claude Max, transizione a wrapper sovereign + Ollama
 
 ## Cosa e' gia' stato fatto
+
+### Sessione 2026-05-09 sera (M7-M10 deferred SPRINT_02 cascata 4-task pre-Max)
+
+#### Pattern strategico
+Eduardo opzione 3 = opportunistic SPRINT_02 deferred. 4 voci M7/M8/M9/M10 in cascata ordine lean-rischio crescente.
+
+#### M9 task-classify tooling (~25min, commit `c74966c`)
+`scripts/task-classify.ps1` (~210 righe). Decision tree CLAUDE.md "Trigger delega in-session" + ADR-0008/0016/0022. Mode interactive 5-6 domande + parametric `-Quiet`. Smoke 9/9 PASS coprenti tutte branche tier (cosmetic locale/cloud/cerebras + behavior locale/groq/borderline-4 + multi-step opencode + cosmetic-subdir-self-ref mitigation + strategic + 5+constraint short-circuit). Install Eduardo manual `~/.local/bin/`.
+
+#### M8 hook integrity smoke test (~40min, commit `912b91a`)
+`scripts/smoke-test-hooks.ps1` (~210 righe). 12 test cases: commit-msg ADR-0011 (5) + silent-corruption ADR-0008 (3) + silent-fail Python ADR-0020 (4). Pattern 1 scratch repo per test in `$env:TEMP/hook-smoke-$PID/`. Smoke 12/12 PASS. Schedule weekly Sunday 09:00. 2 fix iter: PS5.1 native `2>&1` ErrorRecord + 1-repo-per-test isolation.
+
+#### M7 backup-api-keys daily rotation (~30min, commit `bb78999`)
+`scripts/backup-api-keys.ps1` (~160 righe). Daily snapshot keys.env -> `backup/api-keys/api-keys-YYYY-MM-DD.env` (gitignored). Encryption opt-in DPAPI `-Encrypt`. Idempotent intra-giorno + rotation 30gg + ACL strict best-effort + integrity check round-trip. Smoke 3/3 PASS. Schedule daily 03:00. Recovery DPAPI snippet documentata.
+
+#### M10 bench OpenCode cloud free (~1h, commit `fe94dbe`)
+`scripts/bench-opencode-cloud-free.ps1` + `docs/research/bench-opencode-cloud-free-2026-05-09.md`. Esecuzione effettiva n=3 conclusivo (T2/T5 file-attached skipped per yargs `--file` greedy). **ADR-0022 CONFIRMED**: T1 groq/llama-3.3-70b TPM 12k vs richiesto 49698 BLOCKED -2.7x..-4.1x; T4 cerebras/llama3.1-8b ctx 8192 vs 12228 BLOCKED -1.5x; T3 groq/qwen-2.5-coder-32b DECOMMISSIONED. Discovery: nessun `--max-tokens` CLI esposto OpenCode (ipotesi M10 invalidata). Side-action: `~/.config/opencode/opencode.json` refresh rimosso `qwen-2.5-coder-32b` (out-of-repo). 2 fix iter: PS5.1 Start-Process `+` array + opencode TUI hang Start-Process -> bypass bash inline `timeout 90` diretto.
+
+#### Effort cascata
+4 task = ~2h45min (vs stima medium 4-6h). Pattern lean-hyperactive 4° giornata consecutiva confermato.
+
+#### Branch state
+4 commit ahead di main su `claude/recursing-mirzakhani-da8bb3`, pending push + PR Eduardo auth esplicita.
 
 ### Sessione 2026-05-09 mattino-mezzogiorno (routine + harsh review + 6 H-tasks)
 
@@ -241,19 +264,22 @@ P1, P2 chiusi tramite ADR-0015 closure (P1 behavior-critical n>=5 superato; P2 c
    - 2026-06-07 ratification check ADR-0021
    - 2026-06-09 ratification check ADR-0022
 3. **Deferred SPRINT_02 / opportunistic post-19/05**:
-   - M7 backup automation API keys
-   - M8 hook integrity smoke test settimanale
-   - M9 task-classify tooling (riduce cognitive overhead C2)
-   - M10 OpenCode + cloud free token-trim test
+   - ~~M7 backup automation API keys~~ DONE 9/5 sera
+   - ~~M8 hook integrity smoke test settimanale~~ DONE 9/5 sera
+   - ~~M9 task-classify tooling~~ DONE 9/5 sera
+   - ~~M10 OpenCode + cloud free token-trim test~~ DONE 9/5 sera (n=3 conclusivo, ADR-0022 confirmed)
+   - **L6 (NEW da M10)** OpenCode plugin custom o tool-set trim per cloud free viable -- solo se gpt-4o-mini emergency budget eccessivo
    - T7 review fine sprint MAX=2 re-eval se workflow evolve 2-tier dominant
 
-Side-tasks gia' DONE 7/5 -> 9/5 notte:
+Side-tasks gia' DONE 7/5 -> 9/5 sera:
 - 7/5: ADR-0015 + ADR-0017 Accepted (PR #4), SPRINT_02 abbozzo (PR #5), smoke sovereign T1 (PR #6), Game-Godot-v2 governance (PR #7+#8), pattern aider wrong-target (PR #9), master_prompt handoff (PR #10), 4 PR esterni triagati
 - 8/5 mattino: governance refresh post 7/5 (PR #11)
 - 8/5 sera: pattern auto-skip skiv (PR #12), drift cleanup ROADMAP+BACKLOG+OPEN_DECISIONS (PR #13), JOURNAL+COMPACT v13 (PR #14)
-- **9/5 notte (transition attiva)**: ADR-0022 Proposed (PR #15) + addendum cloud (PR #16) + dogfood OpenCode #25 (PR #17) + #26 (PR #18) + ADR-0022 Accepted (PR #19) + tier OpenCode in CLAUDE.md+MODEL_ROUTING (PR #20) + COMPACT v14 + JOURNAL append (PR pendente)
+- **9/5 notte (transition attiva)**: ADR-0022 Proposed (PR #15) + addendum cloud (PR #16) + dogfood OpenCode #25 (PR #17) + #26 (PR #18) + ADR-0022 Accepted (PR #19) + tier OpenCode in CLAUDE.md+MODEL_ROUTING (PR #20) + COMPACT v14 + JOURNAL append
+- 9/5 mattino-mezzogiorno: STATUS+memory (PR #22-#23), 6 H-tasks (PR #24-#29)
+- **9/5 sera**: M9 task-classify (commit `c74966c`), M8 smoke-hooks (`912b91a`), M7 backup-keys (`bb78999`), M10 bench cloud free (`fe94dbe`) -- 4 commit branch worktree pendenti PR
 
-Cumulativo: **20 PR mergeati 7-9/5** (10 il 7/5 + 10 il 8/5 -> 9/5 notte). Tutti i piani strategici allineati allo stato reale.
+Cumulativo: **21 PR mergeati cumulative + 4 commit branch ahead** 7-9/5. Branch `claude/recursing-mirzakhani-da8bb3` pending push + PR Eduardo.
 
 ## Next session restart: cosa leggere per ripartire
 
