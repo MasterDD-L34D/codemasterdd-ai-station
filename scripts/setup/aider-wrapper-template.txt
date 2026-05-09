@@ -1,0 +1,35 @@
+REM ===========================================================
+REM Aider wrapper privacy guard block template (H8 ADR-0023)
+REM Inserisci queste righe DOPO `chcp 65001` + `set PYTHONIOENCODING`
+REM PRIMA della chiamata `aider --model ...` nei wrapper:
+REM - aider-groq.cmd
+REM - aider-cerebras.cmd
+REM - aider-gemini.cmd
+REM - aider-openai.cmd
+REM ===========================================================
+
+REM Privacy guard rail check
+set "REPO_ROOT="
+for /f "delims=" %%i in ('git rev-parse --show-toplevel 2^>nul') do set "REPO_ROOT=%%i"
+if "%REPO_ROOT%"=="" (
+    echo ERROR: not in a git repo. aider-WRAPPERNAME aborted ^(privacy guard rail H8^).
+    exit /b 1
+)
+set "REPO_ROOT_WIN=%REPO_ROOT:/=\%"
+set "WHITELIST=%USERPROFILE%\.config\aider-privacy-whitelist.txt"
+if not exist "%WHITELIST%" (
+    echo ERROR: privacy whitelist not found at %WHITELIST%
+    echo aider-WRAPPERNAME aborted ^(privacy guard rail H8^).
+    exit /b 1
+)
+findstr /B /I /C:"%REPO_ROOT_WIN%" "%WHITELIST%" >nul 2>&1
+if errorlevel 1 (
+    echo ERROR: repo NOT in cloud-OK whitelist:
+    echo   repo: %REPO_ROOT_WIN%
+    echo   whitelist: %WHITELIST%
+    echo aider-WRAPPERNAME aborted ^(privacy guard rail H8 ADR-0023^).
+    echo If repo should be cloud-OK, add path to whitelist and retry.
+    exit /b 1
+)
+
+REM (rest of wrapper: aider --model ... %*)

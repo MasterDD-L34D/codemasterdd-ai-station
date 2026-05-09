@@ -297,7 +297,14 @@ codemasterdd-ai-station/
     - Config: `~/.config/opencode/opencode.json` (5 provider mappati, env vars from `~/.config/api-keys/keys.env`)
     - **NON usare** Qwen 2.5 Coder family con OpenCode (raw JSON tool call non eseguito)
     - **NON viable** cloud free 8B-70B (rate-limited TPM o context vs request ~50k)
-  - **Privacy guard rail**: cloud OK solo su repo non-sensitive (`codemasterdd-ai-station` sì, Evo-Tactics/Synesthesia verificare caso-per-caso, repo cliente MAI). Vedi `docs/patterns/delegation-to-aider.md` Extension tier 3 cloud.
+  - **Privacy guard rail tecnico (H8 ADR-0023, Accepted 2026-05-09)**:
+    - Wrapper cloud (`aider-groq` / `aider-cerebras` / `aider-gemini` / `aider-openai`) controllano automaticamente repo via `git rev-parse --show-toplevel` + whitelist `~/.config/aider-privacy-whitelist.txt`. Se repo non whitelisted → ABORT con error, no source code inviato a cloud.
+    - **Repo whitelisted (cloud OK)**: codemasterdd-ai-station, Game (public), Game-Godot-v2 (public).
+    - **Repo NON whitelisted (sovereign-only enforcement)**: Synesthesia (mixed privacy, controllers/ sensitive), repo cliente futuri.
+    - Setup/verify: `scripts/setup/install-privacy-guard.ps1` (idempotente, rilanciabile).
+    - Test logica: `scripts/setup/test-privacy-guard.cmd` (verifica whitelist hit/miss).
+    - Template wrapper: `scripts/setup/aider-wrapper-template.txt`.
+    - Bypass deliberato (es. workflow Synesthesia views/): aggiungere repo a whitelist temporaneamente, ripristinare post-task. Anti-pattern: commentare il check inline (perde guard rail).
 
 - **Delegation protocol Claude Code → Aider**: vedi `docs/patterns/delegation-to-aider.md` — decision tree classification, formato handoff, review loop, tracking fail rate per Fase 6
 
