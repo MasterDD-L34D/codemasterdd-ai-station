@@ -230,13 +230,21 @@ codemasterdd-ai-station/
 
 ## Priorità modelli AI
 - **Durante Claude Max (fino 19/05/2026)**: Opus 4.7 per tutto
+- **Tier 0 strategic post-Max (2026-05-20+)** — ADR-0023 Proposed 2026-05-09:
+  - Strategic = NON-delegabile (multi-file refactor ≥3 file, debug architetturale, ADR draft, synthesis cross-source, constraint ≥5 strict). Vedi ADR-0008 per rationale.
+  - **Default**: Claude API pay-per-use on-demand con budget cap mensile $10-20, tracciato in ccusage. Eduardo autorizza spend esplicitamente per task strategic complesso, poi torna sovereign.
+  - **Setup**: `ANTHROPIC_API_KEY` in `~/.config/api-keys/keys.env` (verificare presenza, eventualmente generare via Anthropic Console)
+  - **Tracking**: `logs/claude-api-spend-2026-MM.md` (gitignored) entry per sessione (data, task, token, cost, outcome)
+  - **Trigger reactivation Pro**: utilizzo cumulative >$20/mese per 2 mesi consecutivi → ratification ADR-0023 addendum revisita Scenario A vs B
+  - **Costo stimato**: $5-15/mese in working assumption (1-3 task strategic complessi/mese)
+  - Riferimento: `docs/adr/0023-strategic-tier-post-max-api-on-demand.md`
 - **Post Max** — task-routing (vedi ADR-0008 per rationale completo):
   - Query one-shot → `ollama run qwen2.5-coder:7b` (114 tok/s)
   - Read/explain + CREATE single file → Aider + Qwen 7B + `whole`
   - **Cosmetic edit** (JSDoc, docstrings, rename, lint-fix) → **Aider + Qwen 7B + `whole`** (format compatibile, faithfulness non critica). **CAVEAT 2026-05-07**: pattern wrong-target-file su file in subdir + docstring self-referenziato (vedi `docs/patterns/aider-wrong-target-file.md`). Mitigation: usare `aider-refactor` (diff format) anche per cosmetic se file in subdir profonde con docstring header che cita filename.
   - **Behavior-critical edit** (refactor, bug fix, logic change) → **Aider + Qwen 14B Q2_K + `--edit-format diff`** (safe failure; ~20-40% retry manuale ma zero silent-corruption). **Default safer anche per cosmetic** se file in subdir + docstring self-ref (vedi caveat sopra).
   - **Behavior-critical escalation** (quando 14B Q2 safe-fails, es. task R1-type 1-line value change) → **Aider + qwen3-coder:30b + diff** (MoE 30B-A3B, tier 2 fallback prima di Claude Pro; speed 2× slower + RAM tight ma risolve anti-pattern — vedi ADR-0009 addendum)
-  - Multi-file refactor / debug strategico → OpenRouter pay-per-use (Sonnet/Opus) o Claude Pro come backbone
+  - Multi-file refactor / debug strategico → **Claude API on-demand** (tier 0 ADR-0023 sopra) o OpenRouter pay-per-use (alternativa)
   - **⚠️ DEPRECATO**: Aider + 14B Q2 + `whole` — silent-corruption deterministico su task "edit single file" semplici, vedi ADR-0008
   - Riferimenti decisionali: `docs/adr/0007-aider-qwen-quantization-findings.md` + `docs/adr/0008-aider-whole-format-silent-corruption.md`
   - **Seconda dimensione routing (in review)**: `docs/adr/0016-constraint-count-routing-dimension.md` (Proposed 2026-04-24). Estende matrice classe-based con **constraint-count**: 1 qualsiasi tier / 2-3 additive+preserve → 14B Q2 local o 70B cloud / 2 fix+transform → downgrade 14B Q2 (7B skippa transform) / **5+ strict → manual Claude Code**. Consultare per task con ≥3 constraint espliciti nel prompt. Status Accepted trigger: n≥3 data points addizionali.
