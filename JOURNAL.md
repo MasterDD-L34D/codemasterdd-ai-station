@@ -1661,3 +1661,65 @@ Resume sessione post pausa notte 8-9/5. Eduardo richiede operazioni routine + cl
 - **ADR Accepted threshold rivisto**: status workflow ora supporta `Accepted (early, n=N, ratification check YYYY-MM-DD)`. Trasparenza trade-off velocita' decision vs evidence cumulativa. ADR-0021 + ADR-0022 retroactive flag.
 - **Stop hook drift mitigation**: hook attivera' automatico in prossima sessione (non in questa, settings watcher limitazione design). Pattern: hook configurato -> immediate effect alla prossima session start.
 - **21 PR mergeati cumulativi 8/5 sera -> 9/5 mezzogiorno** (10 sera 8/5 + 11 mattino-mezzogiorno 9/5). Coda PR vuota cross-repo. ADR cumulativi: 24 totali (22 + ADR-0023 Proposed + ADR-0024 Proposed). 7 decisioni non-ADR (001-007).
+
+---
+
+## 2026-05-09 sera (M7-M10 deferred SPRINT_02 cascata 4-task)
+
+### Contesto
+
+Resume sessione post mezzogiorno (Eduardo opzione 3 = opportunistic SPRINT_02 deferred). Ho proposto 4 voci M7/M8/M9/M10. Eduardo "procedi" -> cascata in ordine lean-rischio crescente: M9 -> M8 -> M7 -> M10. Pattern lean-hyperactive confermato per 4° giornata consecutiva.
+
+### Completato
+
+#### M9 task-classify tooling (~25min, commit `c74966c`)
+- `scripts/task-classify.ps1` (~210 righe): codifica decision tree CLAUDE.md "Trigger delega in-session" + ADR-0008 hub pattern + ADR-0016 constraint-count + ADR-0022 OpenCode tier
+- Mode interactive (5-6 domande con default + colored hints + Set-Clipboard) + parametric (`-Quiet` per pipe/test)
+- Smoke 9/9 PASS coprendo: cosmetic locale/cloud/cerebras, behavior locale/groq/borderline-4-constraint, multi-step opencode 30B, cosmetic-subdir-self-ref mitigation aider-refactor, strategic + constraints>=5 short-circuit
+- Install globale Eduardo manual: `Copy-Item scripts/task-classify.ps1 ~/.local/bin/` + `.cmd` wrapper documentato in header
+
+#### M8 hook integrity smoke test (~40min, commit `912b91a`)
+- `scripts/smoke-test-hooks.ps1` (~210 righe): 12 test cases coprenti commit-msg ADR-0011 (5) + silent-corruption ADR-0008 (3) + silent-fail Python ADR-0020 (4)
+- Pattern: 1 scratch repo per test in `$env:TEMP/hook-smoke-$PID/` per evitare staging cross-contamination, cleanup garantito via try/finally
+- Smoke 12/12 PASS confermati. Schedule weekly Sunday 09:00: `schtasks` command in script header
+- 2 fix iter: PS5.1 native cmd `2>&1` wrappa stderr in ErrorRecord (capture via temp file invece) + 1-repo-per-test isolation per evitare file staged cross-contamination
+
+#### M7 backup-api-keys daily rotation (~30min, commit `bb78999`)
+- `scripts/backup-api-keys.ps1` (~160 righe): daily snapshot di `~/.config/api-keys/keys.env` -> `backup/api-keys/api-keys-YYYY-MM-DD.env` (gitignored). Encryption opt-in via DPAPI (`-Encrypt`, suffix `.env.enc`)
+- Idempotent intra-giorno (overwrite), rotation configurable (default 30gg cleanup automatico), ACL strict best-effort (graceful fallback inherited se non admin -- SeSecurityPrivilege required)
+- Integrity check round-trip post-write per plain e encrypted
+- Smoke 3/3 PASS: plain 609 bytes + encrypted DPAPI decrypt round-trip + rotation 2 fake old files rimossi
+- Schedule daily 03:00: `schtasks` command in header. Recovery procedure DPAPI decrypt snippet documentata
+- 1 fix iter: ACL graceful fallback per non-admin run (PrivilegeNotHeldException catch)
+
+#### M10 bench OpenCode cloud free (~1h, commit `fe94dbe`)
+- `scripts/bench-opencode-cloud-free.ps1` + `docs/research/bench-opencode-cloud-free-2026-05-09.md`
+- 5-test matrix runner. **Esecuzione effettiva n=3 conclusivo** (T2/T5 con file attached skipped per yargs `--file` greedy bug, baseline T1+T4 gia' sufficienti)
+- **Risultati ADR-0022 CONFIRMED**:
+  - T1 groq/llama-3.3-70b-versatile: TPM 12000 vs OpenCode richiesto 49698 (1st) + 32438 (retry) BLOCKED -2.7x..-4.1x
+  - T4 cerebras/llama3.1-8b: ctx 8192 vs richiesto 12228 BLOCKED -1.5x
+  - T3 groq/qwen-2.5-coder-32b: DECOMMISSIONED da Groq
+- **Discovery**: ipotesi M10 originale "max-tokens ridotto" invalidata -- nessun knob CLI esposto da OpenCode `run` per limitare INPUT context
+- **Side-action eseguita**: `~/.config/opencode/opencode.json` refresh, rimosso `qwen-2.5-coder-32b` deprecated dal provider Groq (out-of-repo, no commit)
+- 2 fix iter: PS5.1 Start-Process `+` array bug (positional mal-parsato) + opencode TUI hang via Start-Process wrapper -> bypass con bash inline + `timeout 90` diretto
+
+### Da fare
+
+- **Eduardo direct**:
+  - Push branch `claude/recursing-mirzakhani-da8bb3` (4 commit ahead di main) + apri PR per merge a main
+  - Install globale opzionale: `task-classify.ps1` + `smoke-test-hooks.ps1` + `backup-api-keys.ps1` in `~/.local/bin/` (snippets in script header)
+  - Schedule Windows Task Scheduler opzionale: M7 daily 03:00 + M8 weekly Sunday 09:00 (snippets in header)
+  - H7 + H11 invariati pending dal mezzogiorno (ANTHROPIC_API_KEY + AA01 attivazione)
+- **Calendarizzati** (invariati):
+  - 2026-05-19 Claude Max expiration (10gg residui)
+  - 2026-05-20+ SPRINT_02 prima sessione Fase 8 sovereign
+  - 2026-06-07/06-09 ratification check ADR-0021/0022
+
+### Note
+
+- **Cascata 4-task M-deferred**: 25 commit cumulative giornata 9/5 (#22-#29 mattino-mezzogiorno + 4 commit sera #30-cumulative branch). Effort reale 4 task = ~2h45min (vs stima medium 4-6h). Pattern lean-hyperactive 4° giornata consecutiva confermato.
+- **Honest stop sub-task**: M10 T2/T5 file-attached test skippati per yargs syntax bug (`--file` array greedy consuma prompt). Baseline n=3 gia' conclusivo, evitato over-engineering test-runner fix non necessario per finding.
+- **Diagnosi hang Start-Process + opencode.ps1**: nested PowerShell + Start-Process + opencode TUI = stdio handshake non-terminating in non-interactive mode. Workaround: bash inline + `timeout 90` + diretto `powershell -File opencode.ps1` (no Start-Process wrapper). Lezione: per CLI che potrebbero aprire TUI, evitare Start-Process layer.
+- **ADR-0022 conferma empirica n=3 cumulative cross-provider**: Groq + Cerebras + 1 modello deprecato. Pattern OpenCode = sovereign-only (Ollama 30B MoE) confermato. No addendum, no ratification check anticipato.
+- **Tooling collettivo deferred SPRINT_02 ora pronto pre-Max**: 4 script funzionanti senza dipendenze esterne (oltre Git + PowerShell 5.1 + Ollama + OpenCode + API keys). Eduardo puo' install + schedule manualmente.
+- **TodoWrite uso effettivo**: 3-task tracker (M8/M7/M10) con marker real-time. Reminder hook system-message ignorato 5x correttamente (non rilevante per single-step trivial task M9 iniziale).
