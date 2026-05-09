@@ -6,12 +6,12 @@
 
 ## Progetto
 - **Nome**: CodeMasterDD AI Station
-- **Versione del compact**: v14 (sessione 8/5 sera -> 9/5 notte: transition attiva sovereign + ADR-0022 OpenCode tool-use routing Accepted, 10 PR mergeati giornata)
-- **Data ultimo aggiornamento**: 2026-05-09
+- **Versione del compact**: v15 (sessione 2026-05-09 mattino-mezzogiorno: routine + harsh review + 6 H-tasks BACKLOG + 11 PR mergeati. Cumulative 8-9/5: 21 PR.)
+- **Data ultimo aggiornamento**: 2026-05-09 mezzogiorno
 
 ## Stato attuale
-- **Barra globale ~98%** (+1 da v13): Fase 6 + Fase 7 CLOSED. ADR-0022 OpenCode tool-use routing Accepted 2026-05-09. **Transition active sovereign 11gg pre-Max expiration completata in setup + validazione**: OpenCode v1.14.41 installato, stack ADR-0017 attivato active mode, 11 entries log (9 smoke + 2 dogfood reali) PASS pattern Ollama 30B MoE.
-- HEAD `6208bd1` su origin/main (post merge PR #11-#20 in giornata 8/5 -> 9/5 notte). Worktree corrente `hardcore-keller-72c77e` allineato a main, working tree pulita.
+- **Barra globale ~99%** (+1 da v14): Fase 6 + Fase 7 CLOSED. ADR-0022 + ADR-0023 + ADR-0024 nuovi. **Window pre-19/05 completata routine + harsh review fixes**: 8 PR 9/5 mattino-mezzogiorno + 6 H-tasks BACKLOG completati (H7-H12). Privacy guard rail tecnico attivo. Stop hook drift mitigation deployed. ADR early-acceptance flag governance. Bench mixed-workload empirico (drift documentazione corretto). Niente piu' BLOCKING tecnico. 10gg residui pre-Max expiration.
+- HEAD `2a8aebe` su origin/main (post merge PR #11-#29 in giornate 8-9/5). Worktree corrente `hardcore-keller-72c77e` allineato a main, working tree pulita.
 - **Stack ADR-0017 ACTIVE MODE 8/5 sera**: LiteLLM:4000 + Langfuse:3000 + Postgres + dogfood-ui:8080 UP. T3 SPRINT_02 hot-restart validation anticipato + passato (<60s endpoint health, persistence preservata). Da spegnere `docker compose down` a chiusura sessione.
 - **OpenCode v1.14.41** (npm global) installato 8/5 sera. Config `~/.config/opencode/opencode.json` con 5 provider mappati. Default `ollama/qwen3-coder:30b` (tier 1 sovereign, ADR-0022 Accepted).
 - **Agent ecosystem ADR-0018**: 12/18 ready, 6/18 draft trigger-gated. Status invariato dal 24/04.
@@ -41,7 +41,33 @@ Eduardo ha lavorato attivamente in altri repo (silent driver mode):
 
 ## Cosa e' gia' stato fatto
 
-### Sessione 2026-05-09 (transition attiva sovereign + ADR-0022 OpenCode routing Accepted)
+### Sessione 2026-05-09 mattino-mezzogiorno (routine + harsh review + 6 H-tasks)
+
+#### Mattino (PR #22 + PR #23 + memory consolidation)
+- PR #22: STATUS_MULTI_REPO refresh 9/5 (4 punti accuracy)
+- PR #23: Tier 1 cleanup pending (DECISIONS_LOG + MODEL_ROUTING + ADR-0009 status)
+- Memory consolidation skill: 6 file out-of-repo refresh post drift -15gg
+
+#### Mezzogiorno (PR #24-#29 + harsh review + 6 H-tasks)
+- Harsh review flow chart via harsh-reviewer agent: 2 BLOCKING + 3 SIGNIFICANT + 4 choke + 5 errori + 7 edge cases + 5 process smells
+- 6 questions Eduardo BLOCKING vibecoded + risposte 1A 2A 3B 4A 5A+ 6A
+- PR #24: harsh review report + ADR-0023 + ADR-0024 + BACKLOG H7-H12 + Decisione 007
+- PR #25 H7: ADR-0023 integration CLAUDE.md + MODEL_ROUTING
+- PR #26 H9: bench mixed-workload + batched + MAX=2 (3 bench, drift docs corretto, contrarian MAX=2)
+- PR #27 H8 BLOCKING: privacy guard rail tecnico (4 wrapper + whitelist, 2/2 smoke PASS)
+- PR #28 H10: ADR early-acceptance flag (ADR-0010 addendum + retroactive ADR-0021/0022)
+- PR #29 H12: stop hook automatico (2 PowerShell + .claude/settings.json + 3/3 smoke)
+
+#### Effort lean-hyperactive
+8 PR mergeati in 4-5h, effort reale tipicamente <50% stime (es. H8 1h vs 1gg, H10 30min vs 2-3h).
+
+#### Trigger calendarizzati post-merge
+- 2026-05-19: Claude Max expiration (10gg residui)
+- 2026-05-20+: SPRINT_02 prima sessione full-sovereign
+- 2026-06-07: ratification check ADR-0021
+- 2026-06-09: ratification check ADR-0022
+
+### Sessione 2026-05-08 sera -> 9/5 notte (transition attiva sovereign + ADR-0022 OpenCode routing Accepted)
 
 #### Pattern strategico
 "non ci conviene incominciare a usare opencode e infra prima che claude max finisca?" -- transition ATTIVA con safety net Claude Max invece di stop passivo + cold-cutover.
@@ -158,7 +184,7 @@ JOURNAL entry +87 righe (questa sessione). COMPACT v11 (questo file). STATUS_MUL
 
 ## Decisioni prese
 
-### ADR strategici (22 totali, indice in DECISIONS_LOG)
+### ADR strategici (24 totali, indice in DECISIONS_LOG)
 - **ADR-0008** Hub pattern tier routing (cosmetic/behavior/escalation)
 - **ADR-0011** Commit governance cross-agent
 - **ADR-0012** RAM 64GB upgrade
@@ -171,7 +197,9 @@ JOURNAL entry +87 righe (questa sessione). COMPACT v11 (questo file). STATUS_MUL
 - **ADR-0019** Dafne process persistence -- Accepted 2026-04-24
 - **ADR-0020** Silent-fail Python guardrail -- Accepted 2026-04-25 (PR #1 mergeato)
 - **ADR-0021** Multi-client instruction files (AGENTS.md + Codex anti-confusion) -- **Accepted 2026-05-07** (PR #2 mergeato)
-- **ADR-0022** OpenCode tool-use model routing (tier OpenCode distinto da Aider) -- **Accepted 2026-05-09** (PR #15 Proposed + #19 Accepted, 3/3 dogfood Ollama 30B MoE PASS)
+- **ADR-0022** OpenCode tool-use model routing (tier OpenCode distinto da Aider) -- **Accepted (early, n=3, ratification check 2026-06-09)** (PR #15 Proposed + #19 Accepted + #28 retroactive flag)
+- **ADR-0023** Strategic tier post-Max API on-demand budget cap -- **Proposed 2026-05-09** (Eduardo scelta 1A, $10-20/mese cap + trigger reactivation Pro)
+- **ADR-0024** Vue3 archive + Godot v2 canonical timeline 2026-09-30 -- **Proposed 2026-05-09** (Eduardo scelta 5A+, soft-deadline + AA01 attivazione H11)
 
 ### Decisioni non-ADR (operative minori, in DECISIONS_LOG)
 - **001** Adozione schema framework archivio
@@ -204,9 +232,20 @@ P1, P2 chiusi tramite ADR-0015 closure (P1 behavior-critical n>=5 superato; P2 c
 
 ## Prossimi 3 passi
 
-1. **2026-05-19 Claude Max expiration** (hard date, 10gg residui). Nessuna azione richiesta: stack sovereign gia' verificato + transition active validata (8/5 sera). Disattivazione attesa silente.
-2. **2026-05-20+ SPRINT_02 prima sessione full-sovereign** (Fase 8 ROADMAP). T2 dogfood organico (target soft n>=20 cumulative entro 19/06) + T5 cost tracking primo mese (~15/06, target <$5) + T7 review fine sprint. T1+T3+T4 gia' anticipated DONE.
-3. **Opportunistic transition 9-19/05**: continuare uso reale OpenCode su task piccoli; eventualmente refresh "Evoluzione post Fase 6" + drift secondari MODEL_ROUTING (deferred questo PR per scope-control); test cloud paid tier OpenCode-compat (cerebras qwen-3-235b / gpt-oss-120b / zai-glm-4.7) condizionale.
+1. **Eduardo direct (azioni standalone)**:
+   - H7 setup ANTHROPIC_API_KEY in `~/.config/api-keys/keys.env` (~5min via Anthropic Console) -- pre-19/05 priority
+   - H11 AA01 attivazione Sprint Impronta Ondata 1+2 status-phase-a (apri AA01 workspace)
+2. **Calendarizzati passive** (no immediate action):
+   - 2026-05-19 Claude Max expiration (10gg residui, stack pronto)
+   - 2026-05-20+ SPRINT_02 prima sessione Fase 8 sovereign (T1+T3+T4 anticipated DONE; restano T2 dogfood organico + T5 cost tracking + T7 review)
+   - 2026-06-07 ratification check ADR-0021
+   - 2026-06-09 ratification check ADR-0022
+3. **Deferred SPRINT_02 / opportunistic post-19/05**:
+   - M7 backup automation API keys
+   - M8 hook integrity smoke test settimanale
+   - M9 task-classify tooling (riduce cognitive overhead C2)
+   - M10 OpenCode + cloud free token-trim test
+   - T7 review fine sprint MAX=2 re-eval se workflow evolve 2-tier dominant
 
 Side-tasks gia' DONE 7/5 -> 9/5 notte:
 - 7/5: ADR-0015 + ADR-0017 Accepted (PR #4), SPRINT_02 abbozzo (PR #5), smoke sovereign T1 (PR #6), Game-Godot-v2 governance (PR #7+#8), pattern aider wrong-target (PR #9), master_prompt handoff (PR #10), 4 PR esterni triagati
