@@ -30,12 +30,18 @@
 | 0020 | Silent-fail Python guardrail (extension pre-commit) | **Accepted** | 2026-04-25 | Pre-commit hook globale Layer 2: bare `except:` + `except: pass` one-liner blocked. Bypass: `# silent-ok`. PR #1 mergeato. |
 | 0021 | Multi-client instruction files (AGENTS.md + Codex anti-confusion) | **Accepted** | 2026-05-07 | AGENTS.md preamble Codex sandbox-aware + CLAUDE.md autoritativo + encoding ASCII-first nuovi doc. PR #2 mergeato. Trigger: branch `codex/structural-reset` REJECTED per false-premise sandbox-confusion. |
 | 0022 | OpenCode tool-use model routing (tier dedicato vs Aider) | **Accepted 2026-05-09** | 2026-05-08 (P) -> 2026-05-09 (A) | Tier OpenCode-specifico distinto da Aider tier ADR-0008. Default `ollama/qwen3-coder:30b` MoE A3B (3/3 PASS empirico). NON usare con OpenCode: Qwen 2.5 Coder family (raw JSON tool call) + cloud free 8B-70B (rate-limited TPM/context). PR #15 Proposed + #16 addendum cloud + #19 Accepted + #20 integrazione CLAUDE.md+MODEL_ROUTING. |
+| 0023 | Strategic tier post-Max API on-demand budget cap | **Proposed 2026-05-09** | 2026-05-09 | Claude API pay-per-use $10-20/mese cap. Strategic NON-delegabile (ADR-0008) + Pro NOT acquisito (ADR-0015 Scenario A) -> fallback formalizzato. Trigger reactivation Pro: utilizzo >$20/mese 2 mesi consecutivi. ccusage tracking. Risolve V1 BLOCKING harsh review 9/5. |
+| 0024 | Vue3 archive + Godot v2 canonical timeline | **Proposed 2026-05-09** | 2026-05-09 | Soft-deadline archive Vue3 entro 2026-09-30 (4 mesi). Review trimestrale 2026-08-01. Trigger archive: 60gg silenzio commit Vue3 main OR feature parity Godot v2 dichiarata Eduardo. AA01 attivazione esplicita Sprint Impronta Ondata 1+2 (Eduardo direct H11). Risolve edge case HIGH harsh review 9/5. |
 
 ### In review (Proposed, awaiting Accepted trigger)
 - **ADR-0016** -- Constraint-count routing dimension. Trigger Accepted: n>=3 data points addizionali (constraint=4 explicit LOCAL, 2-transform LOCAL, 5-strict LOCAL). Update 2026-04-24: +1 data point (#12 constraint=4 parity-based, partial). Stato 2026-05-09: dataset Fase 6 closed a n=12 + smoke OpenCode 9 + dogfood OpenCode 2 = ulteriori data points emergeranno organicamente in SPRINT_02 post-Max.
 
 ### Accepted 2026-05-09 (transition active sovereign)
 - **ADR-0022** -- OpenCode tool-use model routing. Tier dedicato OpenCode distinto da Aider. Validato n=11 entries (9 smoke + 2 dogfood reali #25-#26 PASS 1st-try) con Ollama qwen3-coder:30b MoE A3B come default sovereign. Cloud free non viable (rate-limited). Qwen 2.5 Coder family non tool-use OpenCode-compat.
+
+### Proposed 2026-05-09 (post-harsh-review fixes)
+- **ADR-0023** -- Strategic tier post-Max Claude API on-demand budget cap. Risoluzione V1 BLOCKING harsh review (strategic tier post-19/05 buco nero). Budget cap $10-20/mese tracciato ccusage. Trigger reactivation Pro >$20/mese 2 mesi consecutivi.
+- **ADR-0024** -- Vue3 Game archive + Godot v2 canonical timeline 2026-09-30. Risoluzione edge case HIGH "Game pivot Vue3->Godot definitivo pre-settembre". Soft-deadline 4 mesi + review trimestrale + trigger 60gg silenzio. AA01 attivazione esplicita Ondata 1+2 (Eduardo direct H11).
 
 ### Accepted 2026-05-07 (closure batch Fase 6)
 - **ADR-0015** -- Closure anticipata vs target sett.4 originale. Soft-override esteso n>=12 con 5 rationale: trigger ADR-0008 confermato, behavior 5/3 superato, fail rate strict 8.3%, zero silent-corruption, anti-pattern dogfood sintetici.
@@ -98,6 +104,25 @@ Formato granulare per decisioni che non meritano ADR (reversibili, locali, non v
   - Close veloce senza cherry-pick -> rigetto (perderemmo concept utili emersi)
 - **Conseguenze**: ADR-0021 Accepted, AGENTS.md attivo come instruction file Codex, encoding policy ASCII-first nuovi doc. Pattern Codex Cloud confusion documentato come caso-studio.
 - **Azioni derivate**: ADR-0021 mergeato (PR #2). Branch deleted da origin. Mitigation strutturale anti-ricorrenza in AGENTS.md preamble.
+
+### Decisione 007 -- Risposte 6 questions BLOCKING harsh review (2026-05-09)
+- **Data**: 2026-05-09 mattino
+- **Titolo**: Eduardo ha risposto alle 6 questions BLOCKING/SIGNIFICANT/MEDIUM identificate da harsh review flow chart 2026-05-09 (`docs/reviews/flow-chart-harsh-review-2026-05-09.md`)
+- **Decisione presa**: 6 scelte ratificate, 6 task derivate (BACKLOG H7-H12), 2 ADR scaffold (ADR-0023 + ADR-0024 Proposed):
+
+| Q | Domanda | Scelta | Action item |
+|---|---------|--------|-------------|
+| 1 | Strategic tier post-19/05 chi lo fa? | A -- Claude API on-demand $10-20/mese cap | ADR-0023 Proposed (H7) |
+| 2 | Privacy guard rail tecnico? | A -- Wrapper enforcement automatico | Task H8 (1gg pre-19/05) |
+| 3 | ADR Accepted threshold? | B -- Early-acceptance flag | Task H10 (status workflow update) |
+| 4 | Bench mixed-workload pre-Max? | A -- 1 giornata dedicato | Task H9 (9-15/5 preferibile 9-10/5) |
+| 5 | Vue3 -> Godot archive timing? | A+ -- Soft-deadline 2026-09-30 + AA01 attivazione Ondata 1+2 | ADR-0024 Proposed + Task H11 (Eduardo direct) |
+| 6 | Memory drift mitigation? | A -- Stop hook automatico | Task H12 (settings.json hook) |
+
+- **Perche'**: harsh review identificato 2 BLOCKING (V1 strategic tier + V2 privacy bypass) + 1 SIGNIFICANT (V3 sample size) + 4 choke points + edge cases. Senza decisioni esplicite, transition window 10gg pre-Max chiude con vulnerabilita' note. Decisioni Eduardo direzionano fix in 3-4 giornate fattibili nel window.
+- **Alternative considerate**: per ogni Q opzioni B/C/D presentate harsh-reviewer mode. Eduardo ha scelto A in 5/6 (B in 3 con motivazione "trasparenza pura").
+- **Conseguenze**: ADR-0023 + ADR-0024 Proposed (questo PR scaffold). 6 task BACKLOG H7-H12. 4 task M7-M10 deferred SPRINT_02 / opportunistic. Report harsh review salvato `docs/reviews/flow-chart-harsh-review-2026-05-09.md`.
+- **Azioni derivate**: questo PR (1) salva report + crea ADR-0023 + ADR-0024 scaffold + aggiorna BACKLOG H7-H12 + DECISIONS_LOG. (2) Eduardo direct: H11 attivazione AA01 standalone. (3) Sessioni successive: H7-H10 + H12 fix prima 19/05.
 
 ### Decisione 006 -- Transition active sovereign 8-9/5 (validation pre-Max expiration)
 - **Data**: 2026-05-08 sera -> 2026-05-09 notte

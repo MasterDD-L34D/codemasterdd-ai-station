@@ -13,6 +13,22 @@
 - [x] ~~**H5** — Review settimana 2 formale (~2026-05-07): count dogfood, fail rate, ETA chiusura. Decisione on-track / extension.~~ **DONE 2026-04-24 (anticipata)**: sprint 01 early-hit ha reso review immediata sensata. Esito: **on-track, no mid-course correction**. 2/4 criteri ADR-0014 PASS (quality, cost), 2/4 on-track (reliability 11/20, privacy 1/3). Next checkpoint settimana 4 (~2026-05-17). Dettaglio in JOURNAL entry `2026-04-24 (review settimana 2 anticipata)`.
 - [x] ~~**H6** — Validare empiricamente OD-006 (routing threshold constraint-count).~~ **DONE 2026-04-24**: n=6 data points cross-tier raccolti (dogfood #6/#7/#8/#9/#10/#11). OD-006 **chiuso via ADR-0016** (Proposed 2026-04-24). Follow-up: raccogliere n≥3 data points addizionali per gap (constraint=4, 2-transform LOCAL, 5-strict LOCAL) verso ADR-0016 Accepted.
 
+### Task derivati da harsh review 2026-05-09 (Decisione 007)
+
+- [ ] **H7** -- ADR-0023 strategic tier post-Max API on-demand. Status: scaffold Proposed PR (questo PR). Action items: verifica `ANTHROPIC_API_KEY` presente in `~/.config/api-keys/keys.env`, creare `logs/claude-api-spend-2026-05.md` (gitignored), CLAUDE.md + MODEL_ROUTING update post-merge. Trigger Accepted: n>=2 task strategic completati post-19/05 con cost <$20/mese.
+- [ ] **H8** -- Privacy guard rail tecnico (V2 BLOCKING resolution). Wrapper script `aider-groq.cmd` / `aider-cerebras.cmd` / `aider-gemini.cmd` / `aider-openai.cmd` con runtime check `git rev-parse --show-toplevel` + whitelist `~/.config/aider-privacy-whitelist.txt`. Abort se repo non in lista cloud-OK. Effort: 1gg. **Priorita' pre-19/05**.
+- [ ] **H9** -- Bench mixed-workload pre-19/05 (C1 + V3 sample size). 10-20 task realistici alternati tier 1 (Qwen 7B) / tier 2 (14B Q2) / tier 2.5 (30B MoE). Misure: tempo totale, swap overhead Ollama, throughput effettivo. Decisione `OLLAMA_MAX_LOADED_MODELS=2` o resta `=1`. Effort: 1gg. **Da fare con Claude Max ancora attivo per design e analysis**. Window: 9-15/5 (preferibile 9-10/5).
+- [ ] **H10** -- ADR status workflow update con flag "early-acceptance". CLAUDE.md / DECISIONS_LOG / ADR-0010 (MADR format) aggiornare per supportare status "Accepted (early, n=N, ratification check fra Ngg)". ADR-0021 + ADR-0022 retroactive flag (early-acceptance). Effort: 2-3h.
+- [ ] **H11** -- Eduardo direct: attiva AA01 silent-driver mode su Sprint Impronta Ondata 1+2 status-phase-a (PR Game DRAFT #2138 + #2139). codemasterdd traccia ma non esegue (AA01 vive in `C:\Users\edusc\aa01\` NON git). Trigger ADR-0024 follow-up.
+- [ ] **H12** -- Stop hook automatico per JOURNAL/COMPACT/memory drift mitigation (C3 risoluzione). Configurare Claude Code stop hook che detecta cambio HEAD git + chiede "session significativa? y/n + 1-line summary". Settings.json hook config. Effort: 30-60min setup. Reference: skill `update-config` per implementazione.
+
+### Task derivati da harsh review (deferred SPRINT_02 / opportunistic)
+
+- [ ] **M7** -- Backup automation API keys daily rotation (V4 mitigation). Script PowerShell scheduled task. Encryption at rest opzionale. Trigger: post H8 completato.
+- [ ] **M8** -- Hook integrity smoke test settimanale (V4 mitigation). Script che fa commit dummy + verifica blocco/accept. Cron Windows scheduled. Trigger: opportunistic SPRINT_02.
+- [ ] **M9** -- Tooling `task-classify <file> <description>` per ridurre cognitive overhead decision tree (C2 risoluzione). Wrapper bash/PS che chiede 3 domande e ritorna comando aider/opencode pronto. Trigger: post H9 bench (insight su throughput effettivo).
+- [ ] **M10** -- Bench OpenCode + Groq con `--max-tokens` ridotto (E3 risoluzione). Verificare se cloud free 70B viable per task piccoli (<5k context). Trigger: opportunistic SPRINT_02.
+
 ## Priorità media
 
 - [x] ~~**M1** — JOURNAL entry 2026-04-23 documentando integrazione framework archivio + 11 file governance + rationale.~~ **DONE**: entry in JOURNAL `2026-04-23 (sera — integrazione framework archivio)` + follow-up `2026-04-24 notte` aggiunta.
