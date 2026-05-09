@@ -1,0 +1,79 @@
+{
+  "_comment": "Bench mixed-workload H9 (BACKLOG 2026-05-09). 12 task alternati 7B/14B-Q2/30B-MoE per forzare 11 swap continui e misurare overhead. Prompt sono realistic mini-task (no file edit, solo inference) per isolare swap overhead pulito da Aider/OpenCode internals.",
+  "_design": "Ordine alternato: T1-7B, T5-14B, T9-30B, T2-7B, T6-14B, T10-30B, T3-7B, T7-14B, T11-30B, T4-7B, T8-14B, T12-30B. 11 transizioni modello = 11 swap forced.",
+  "_run_order": [1, 5, 9, 2, 6, 10, 3, 7, 11, 4, 8, 12],
+  "tasks": [
+    {
+      "id": 1,
+      "model": "qwen2.5-coder:7b",
+      "tier": "1-cosmetic",
+      "prompt": "Add a 1-line Python docstring to this function. Reply with only the function body including the docstring, no explanation:\n\ndef parse_json(path):\n    with open(path) as f:\n        return json.load(f)"
+    },
+    {
+      "id": 2,
+      "model": "qwen2.5-coder:7b",
+      "tier": "1-cosmetic",
+      "prompt": "Add a 1-line JSDoc to this function. Reply with only the function with JSDoc, no explanation:\n\nfunction sumArray(arr) {\n    return arr.reduce((a, b) => a + b, 0);\n}"
+    },
+    {
+      "id": 3,
+      "model": "qwen2.5-coder:7b",
+      "tier": "1-cosmetic",
+      "prompt": "Rename variable 'tmp' to 'cached_value' in this snippet. Reply only with renamed code:\n\nlet tmp = localStorage.getItem('user');\nif (tmp) console.log(tmp);"
+    },
+    {
+      "id": 4,
+      "model": "qwen2.5-coder:7b",
+      "tier": "1-cosmetic",
+      "prompt": "Add type hint to function parameter and return. Reply only with the typed function:\n\ndef double(x):\n    return x * 2"
+    },
+    {
+      "id": 5,
+      "model": "qwen2.5-coder:14b-instruct-q2_K",
+      "tier": "2-behavior",
+      "prompt": "Identify the bug in this Python function and reply with the fixed version:\n\ndef divide(a, b):\n    return a / b\n\n# called: divide(10, 0)"
+    },
+    {
+      "id": 6,
+      "model": "qwen2.5-coder:14b-instruct-q2_K",
+      "tier": "2-behavior",
+      "prompt": "Refactor this function to use a list comprehension. Reply only with refactored code:\n\ndef squares(n):\n    result = []\n    for i in range(n):\n        result.append(i * i)\n    return result"
+    },
+    {
+      "id": 7,
+      "model": "qwen2.5-coder:14b-instruct-q2_K",
+      "tier": "2-behavior",
+      "prompt": "Add error handling for missing key. Reply with the safer version:\n\nfunction getUserId(data) {\n    return data.user.id;\n}"
+    },
+    {
+      "id": 8,
+      "model": "qwen2.5-coder:14b-instruct-q2_K",
+      "tier": "2-behavior",
+      "prompt": "Convert this loop to use enumerate(). Reply only with refactored code:\n\nfor i in range(len(items)):\n    print(i, items[i])"
+    },
+    {
+      "id": 9,
+      "model": "qwen3-coder:30b",
+      "tier": "2.5-escalation",
+      "prompt": "Refactor this nested loop into a more efficient single pass. Reply only with the refactored code:\n\ndef find_pairs(arr, target):\n    pairs = []\n    for i in range(len(arr)):\n        for j in range(i+1, len(arr)):\n            if arr[i] + arr[j] == target:\n                pairs.append((arr[i], arr[j]))\n    return pairs"
+    },
+    {
+      "id": 10,
+      "model": "qwen3-coder:30b",
+      "tier": "2.5-escalation",
+      "prompt": "Convert this synchronous code to async/await. Reply only with the async version:\n\nfunction loadData(url) {\n    const response = fetch(url);\n    const json = response.json();\n    return json;\n}"
+    },
+    {
+      "id": 11,
+      "model": "qwen3-coder:30b",
+      "tier": "2.5-escalation",
+      "prompt": "Add proper exception handling preserving the original error. Reply with the safer version:\n\ndef load_config(path):\n    with open(path) as f:\n        return json.loads(f.read())"
+    },
+    {
+      "id": 12,
+      "model": "qwen3-coder:30b",
+      "tier": "2.5-escalation",
+      "prompt": "Add input validation: arr must be non-empty list of numbers. Reply with validated function:\n\ndef average(arr):\n    return sum(arr) / len(arr)"
+    }
+  ]
+}

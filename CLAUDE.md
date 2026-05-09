@@ -34,13 +34,25 @@ Target: piattaforma AI sovereign con zero subscription fisse post-maggio 2026.
 ## Capacità AI locali (Lenovo da solo)
 - Modelli **full-GPU** su 8 GB VRAM: fino a 7-8B a quality piena (Qwen 2.5 Coder 7B, Qwen 3 8B, DeepSeek 7B)
 - Modelli **14B**: entrano parzialmente (60-75% GPU + CPU spill 25-40%) — usabili ma throughput ridotto
-- Velocità **misurate** (sustained eval, prompt DoublyLinkedList Python):
+- Velocità **misurate** (sustained eval, prompt DoublyLinkedList Python isolated single-task):
 
-| Modello | Tok/s | GPU offload | Uso consigliato |
-|---------|-------|-------------|-----------------|
-| Qwen 2.5 Coder 7B Q4_K_M | **114** | 100% | query one-shot, create, read/explain |
+| Modello | Tok/s isolato | GPU offload | Uso consigliato |
+|---------|--------------|-------------|-----------------|
+| Qwen 2.5 Coder 7B Q4_K_M | 114 | 100% | query one-shot, create, read/explain |
 | Qwen 2.5 Coder 14B Q3_K_M | 10.8 | 62% | sconsigliato (hallucination su constraint) |
-| Qwen 2.5 Coder 14B **Q2_K** | **18.7** | 73% | **agentic edit (sweet spot + faithful)** |
+| Qwen 2.5 Coder 14B **Q2_K** | 18.7 | 73% | **agentic edit (sweet spot + faithful)** |
+
+- Velocità **mixed-workload** (bench H9 2026-05-09, n=4 per tier, 11 swap forced, vedi `docs/research/bench-mixed-workload-2026-05-09.md`):
+
+| Modello | Tok/s isolato | Tok/s mixed (n=4) | Drift | Note workflow misto |
+|---------|--------------|------------------|-------|---------------------|
+| Qwen 2.5 Coder 7B Q4_K_M | 114 | **100.75** | -12% | Realistic per workflow continuo |
+| Qwen 2.5 Coder 14B Q2_K | 18.7-25 | **17.62** | **-30% vs 25 doc** | Sweet spot ma drift significativo |
+| qwen3-coder:30b MoE A3B | 23 | **32.98** | **+43% upside** | **Discovery positiva**: superiore a doc precedente, ora competitive con 14B Q2 in throughput + capability superiore |
+
+**Swap overhead** (workflow alternato 7B/14B/30B): **3047ms/swap × 11 swap = 33.5s su 79.2s totale = 42.3%** del workflow misto.
+
+**Mitigation quantificata** (bench batched 2026-05-09): se task per stesso modello vengono raggruppati prima di switch (run [4×7B → 4×14B Q2 → 4×30B]), workflow time scende a **49.9s (saving 37%)** con solo 2 swap. Throughput per-modello invariato. Raccomandazione: **quando possibile, batch task per modello** (es. tutti i cosmetic 7B prima, poi tutti behavior 14B Q2, poi escalation 30B MoE).
 
 - Stack agentic sovereign consigliato: **Aider + Qwen 14B Q2_K** — vedi `docs/adr/0007-aider-qwen-quantization-findings.md`
 - Env vars Ollama applicate (User scope, persistenti) — config rationale: `docs/adr/0004-ollama-rtx5060-config.md` + `docs/adr/0007-aider-qwen-quantization-findings.md`
