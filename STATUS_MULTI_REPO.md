@@ -6,7 +6,7 @@
 >
 > Riferimenti deep: CLAUDE.md sezione "Progetti monitorati" (descrittivo), memory `project_multi_repo_overview.md` (architetturale), questo file (operativo).
 
-**Ultimo refresh**: 2026-05-08 (refresh post-7/5-sera: Dafne 4 PR + 3 OD closed + Game-Godot-v2 215 PR + PR #2108 Game open + pattern automation cron 4h `skiv-monitor` riconosciuto auto-skip)
+**Ultimo refresh**: 2026-05-09 mattino (post transition active sovereign 8/5 sera -> 9/5 notte: 12 PR codemasterdd #11-#21 mergeati, **ADR-0022 OpenCode tool-use Accepted**, OpenCode v1.14.41 installato. Game: PR #2108 mergeato 8/5 11:15 UTC; **NEW 2 PR DRAFT 9/5 mattino**: #2138 + #2139 `feat/status-phase-a-*` possibile Ondata 2 status-effect)
 
 ---
 
@@ -14,16 +14,16 @@
 
 | Repo | Status | Next action | Deadline/trigger | Blocker |
 |------|--------|-------------|------------------|---------|
-| **codemasterdd-ai-station** | **Fase 6 CLOSED 2026-05-07** (ADR-0015 + ADR-0017 Accepted), HEAD post PR #2 #4 #5 #6 mergeati, 12/18 agent ready | SPRINT_02 prima sessione 20/05+ | 2026-05-19 (Claude Max expiration) | Nessuno bloccante |
+| **codemasterdd-ai-station** | **Fase 6+7 CLOSED + ADR-0022 OpenCode tool-use Accepted 9/5**. HEAD `a71d653` post PR #21 (12 PR mergeati 8-9/5: governance refresh + drift cleanup + ADR-0022 ciclo + transition active sovereign). 12/18 agent ready. | SPRINT_02 prima sessione 20/05+ (T1+T3+T4 anticipated DONE) | 2026-05-19 (Claude Max expiration, 10gg residui) | Nessuno bloccante |
 | **Synesthesia** | Dormant, HEAD `05f8a92` (invariato) | Riattiva pre-esame UniUPO | ~agosto 2026 | Nessuno (dormant intenzionale) |
-| **Game (Evo-Tactics Vue3)** | **Sprint Impronta Ondata 1 in pausa dal 26/04** (HEAD `5f42757a` invariato, ~12gg). **PR #2108 open** swarm-distillation run #5 (Claude Code session 7/5 sera). +N PR automation cron 4h `auto/skiv-monitor-update` (pattern ricorrente, no codemasterdd-tracked) | Triage PR #2108 + continue Sprint Impronta (Eduardo-driven). Auto-skip PR cron skiv-monitor | No fixed | Nessuno (routine, low priority) |
+| **Game (Evo-Tactics Vue3)** | **Sprint Impronta Ondata 1 in pausa dal 26/04** (HEAD `5f42757a`, ~13gg). PR #2108 swarm-distillation **MERGED 8/5 11:15 UTC**. **NEW 9/5 mattino: 2 PR DRAFT** `feat/status-phase-a-glossary` (#2138, 5 status-effect traits) + `feat/status-phase-a-policy` (#2139, debuff target preference) -- possible Ondata 2 status-effect feature flow. +N PR cron 4h `auto/skiv-monitor-update` auto-skip pattern. | Aspetta PR #2138/#2139 escano DRAFT prima di triage chat-only. Continue Sprint Impronta (Eduardo+AA01 driven). Auto-skip PR cron skiv-monitor. | No fixed | Nessuno (DRAFT non bloccanti, routine PR cron auto-skip) |
 | **Game-Godot-v2** | **215 PR mergeati totali** (+4 post 7/5 sera, dettaglio non triagato in codemasterdd), Path A canonical CHIUSO end-to-end. Cloned 2026-05-07 in `C:\dev\Game-Godot-v2\` (20.7 MB). Hook globali applicati. Governance interna autosufficiente | Continue port (Eduardo-driven), supportare cross-repo se serve | No fixed | Nessuno |
 | **Dafne swarm (evo-swarm)** | **Atto 2 day 12+ active**, HEAD `a87da39` (4 PR pushati 7/5 sera: #67 anchor split + #68 OD-006 close + #69 tournament survivor fix + #70 OD-002+OD-003 close + 1 PR 8/5 00:29: #71 proposals lock fix). 3 OD storici chiusi. | Continue Atto 2 (Eduardo-driven) | No fixed | Nessuno |
 | **AA01 (Archon Atelier 01)** | v1.0.0 silent-driver mode -- ha guidato Sprint Impronta Game (CAP-11..15). 2 task PROPOSED storici del 25/04 (#001 voice-test + #002 day-5-post-session-ritual) ancora in workspace | Continua driver mode + eventuale review 2 PROPOSED | nessuna | nessuno bloccante |
 
-### Stack ADR-0017 runtime (aggiornato 2026-05-08, status invariato dal 7/5)
+### Stack ADR-0017 runtime (aggiornato 2026-05-09, post transition active 8/5 sera)
 
-Stack `Accepted` ma in modalita' **scaffold opt-in**: Docker Desktop non auto-start (scelta operativa per non consumare RAM/CPU costante). Hot-restartable in <60s con `cd infra && docker compose up -d`. DB persistence Postgres+SQLite preservata cross-restart.
+Stack `Accepted` con **transition active validata 8/5 sera** (`docker compose up -d` per smoke OpenCode + dogfood reali, T3 SPRINT_02 hot-restart anticipato + passato in <60s). **Stack DOWN 9/5 fine sessione** (cleanup volumes preservati). Default mode resta **scaffold opt-in** (Docker Desktop non auto-start). Hot-restartable in <60s con `cd infra && docker compose up -d`. DB persistence Postgres+SQLite preservata cross-restart + 7+ Langfuse traces persistiti per debug futuro.
 
 | Componente | Port | Status code | Status runtime 2026-05-08 | Note |
 |------------|-----:|:-----------:|:-------------------------:|------|
