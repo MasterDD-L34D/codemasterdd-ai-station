@@ -59,7 +59,6 @@ Stack `Accepted` con **transition active validata 8/5 sera** (`docker compose up
 
 ### Decisioni pendenti
 - ADR-0016 (Proposed) awaiting n>=3 data points addizionali
-- Decisione 004 (operativa, da scrivere in DECISIONS_LOG): Codex `/structural-reset` REJECTED 2026-05-07
 
 ### Sub-agent ecosystem (`.claude/agents/`)
 
