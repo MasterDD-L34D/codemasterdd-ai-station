@@ -19,9 +19,15 @@ Target: piattaforma AI sovereign con zero subscription fisse post-maggio 2026.
   - **Zero subscription ricorrenti** (abbandono Claude Max + no Claude Pro richiesto)
 
 ## Estensioni future (opzionali, non pianificate)
-- Mac mini M4 Pro 48GB come **upgrade AI inference** se/quando budget permette
+- **Mac mini M4 Pro 48GB** come **upgrade AI inference** se/quando budget permette
   - Aggiungerebbe capacità modelli 30B+ Ollama
   - **NON è dependency** del piano: Lenovo funziona pienamente da solo
+- **Hyperspace Pods** (P2P AI Compute Clusters via libp2p) come **alternativa Mac mini scenario** (added 2026-05-10)
+  - Pool device (Lenovo + futuro Mac mini + family/friends) in private cluster condiviso, NO infrastruttura proprietaria
+  - Distributed inference + model sharing LAN ~1Gbps, NO cloud, NO central server (allineamento sovereign-first ADR-0015)
+  - Hardware compatible: RTX 5060 8GB qualifies (VRAM 4GB minimum). License open (Pi MIT)
+  - **Status**: REFERENCE only fase 1. Audit privacy P2P required PRE-install. Trigger evaluation: Mac mini scenario / VRAM 8GB constraint sentito / device pooling family-friends interest emerge
+  - Dettaglio: REFERENCE_INDEX EXT-03 + memory `reference_hyperspace_pods.md`
 
 ## Hardware (definitivo)
 - **CodeMasterDD** (Lenovo LOQ Tower 17IAX10, desktop)
@@ -150,7 +156,20 @@ _(completato il 2026-04-19 — vedi "Stack installato")_
   - **Avvio**: `cd C:\Users\edusc\Dafne\workspace\swarm && .\START-SWARM.ps1` → dashboard `http://localhost:5000`
   - **Dettaglio completo**: memoria `reference_dafne_swarm.md` + `CAMEL-INTEGRATION.md` nel repo swarm
 
+- **Vault (vault-shared)** — knowledge management LLM-wiki personale Eduardo, **sibling-peer monitored** (added 2026-05-10)
+  - GitHub: `github.com/MasterDD-L34D/vault`
+  - Path Lenovo: `C:\dev\vault-shared\`
+  - Stack: Karpathy LLM-wiki + ACCESS structure (Atlas/Cards/Sources/Spaces) + 7 production agent (Quality Gate workflow smoke->draft->production 3-gate) + Ollama LAN (Qwen + deepseek-r1) + Claude variants
+  - Status 2026-05-10: **7/7 PRODUCTION milestone hit** (vault-linter v2 nested-YAML FP 0%, design-watcher v2 deepseek-r1 recall +33pp, ollama-dispatcher v1 -91% wall claim methodology TBR). 15+ commit 30gg. LLM routing matrix v1.0 (commit reference path stabile `vault-shared/llm-routing.json`, NO hash citato per drift risk).
+  - **Privacy**: sovereign-only (NON in `~/.config/aider-privacy-whitelist.txt`). Contiene UniUPO esame + GDR campagne curated + GPT-Prompts library + Dev/Synesthesia academic + Dev/Evo-Tactics design notes.
+  - **Relazione codemasterdd**: sibling-peer disjoint scope. NO write-path bidirezionale. Cross-pattern reference one-way: vault llm-routing matrix v1.0 -> potential MODEL_ROUTING.md addendum (methodology Quality Gate Step 2 con split metrics + keep_alive + retries + output validation).
+  - **Hook globali**: compat VALIDATED 2026-05-10 (empty commit test PASS, reverted post-test). Vault `core.hooksPath` punta a `C:/Users/edusc/.local/share/git-hooks`.
+  - **Boundary**: codemasterdd NON scrive su vault-shared. Vault-shared self-governs. Eduardo media bidirezionale via personal workflow. SPOF accepted risk documentato.
+  - **Dettaglio completo**: memoria `project_vault_shared.md` + sezione 6 in `STATUS_MULTI_REPO.md`
+
 ### Relazioni inter-repo
+
+**Monitored ecosystem** (codemasterdd policy + write-path o monitoring SLA):
 
 ```
 codemasterdd-ai-station (policy + infrastruttura)
@@ -165,7 +184,20 @@ codemasterdd-ai-station (policy + infrastruttura)
        └─── Dafne swarm (C:\Users\edusc\Dafne\workspace\swarm)
                  ↑
                  │ governance + pilastri + metriche empirical
-                 │ (Atto 2 day 11+ active)
+                 │ (Atto 2 day 14+ active)
+```
+
+**Sibling-peer disjoint** (sovereign-only, NO write-path bidirezionale, cross-reference one-way):
+
+```
+vault-shared (C:\dev\vault-shared)
+       │ Knowledge management LLM-wiki Karpathy + 7 production agents
+       │ Stack overlap: Ollama LAN + Qwen + deepseek-r1 + Claude variants
+       │ Cross-pattern reference one-way -> codemasterdd MODEL_ROUTING addendum
+       │ Privacy: sovereign-only (UniUPO + GDR + GPT-Prompts + Dev notes)
+       │ Hook globali: compatibili (validated 2026-05-10)
+       │ Boundary: NO write-path codemasterdd-side
+       │ Eduardo media tutti i flow
 ```
 
 ### Monitoring cross-repo (sessione 2026-04-24)
