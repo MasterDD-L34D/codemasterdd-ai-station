@@ -19,9 +19,15 @@ Target: piattaforma AI sovereign con zero subscription fisse post-maggio 2026.
   - **Zero subscription ricorrenti** (abbandono Claude Max + no Claude Pro richiesto)
 
 ## Estensioni future (opzionali, non pianificate)
-- Mac mini M4 Pro 48GB come **upgrade AI inference** se/quando budget permette
+- **Mac mini M4 Pro 48GB** come **upgrade AI inference** se/quando budget permette
   - Aggiungerebbe capacità modelli 30B+ Ollama
   - **NON è dependency** del piano: Lenovo funziona pienamente da solo
+- **Hyperspace Pods** (P2P AI Compute Clusters via libp2p) come **alternativa Mac mini scenario** (added 2026-05-10)
+  - Pool device (Lenovo + futuro Mac mini + family/friends) in private cluster condiviso, NO infrastruttura proprietaria
+  - Distributed inference + model sharing LAN ~1Gbps, NO cloud, NO central server (allineamento sovereign-first ADR-0015)
+  - Hardware compatible: RTX 5060 8GB qualifies (VRAM 4GB minimum). License open (Pi MIT)
+  - **Status**: REFERENCE only fase 1. Audit privacy P2P required PRE-install. Trigger evaluation: Mac mini scenario / VRAM 8GB constraint sentito / device pooling family-friends interest emerge
+  - Dettaglio: REFERENCE_INDEX EXT-03 + memory `reference_hyperspace_pods.md`
 
 ## Hardware (definitivo)
 - **CodeMasterDD** (Lenovo LOQ Tower 17IAX10, desktop)

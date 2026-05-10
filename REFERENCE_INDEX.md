@@ -246,3 +246,30 @@ Indice completo in `DECISIONS_LOG.md`. Path: `docs/adr/NNNN-topic.md`.
 - **Anti-pattern**: bulk import speculativo (YAGNI ADR-0005), continuous sync upstream, blind import (supply-chain vector).
 - **Skill candidate per codemasterdd** (top-tier match, da validate fit empirico): claude-memory-kit / mcp-development / continuous-learning / docker-best-practices / accessibility-wcag / python-best-practices / git-advanced.
 - **Note**: integrato 2026-05-10 via AA01 task `2026-05-aa01-001-two-repos-analysis-integratio` research-long preset. Memory `reference_external_toolkits.md` per cherry-pick policy completa.
+
+### REF-EXT02
+- **Codice**: EXT-02
+- **Titolo**: Autoresearch tools (multi-candidate)
+- **Funzione**: autonomous AI experiment loop / research agents -- candidate per overnight research workflow + dogfood expansion SPRINT_03+
+- **Stato**: research-only (NO clone), strategic candidate evaluation
+- **Top candidate**: [`199-biotechnologies/autoresearch-cli`](https://github.com/199-biotechnologies/autoresearch-cli) -- "any AI coding agent" integration -> direct fit Aider/OpenCode/Claude Code codemasterdd stack
+- **Alternative (Karpathy pattern coerente vault-shared)**: [`karpathy/autoresearch`](https://github.com/karpathy/autoresearch) MIT, single-GPU PyTorch + uv, modifies train.py iteratively (5min/iter, val_bpb metric), tested H100 (RTX 5060 8GB potenzialmente sotto-spec per full training, ma orchestrazione pattern valuable)
+- **Other candidates**: AutoResearch/autora (theorist+experimentalist agents), aiming-lab/AutoResearchClaw (idea-to-paper end-to-end), openags/Auto-Research (UI-driven generalist scientist)
+- **Use case codemasterdd**: deferred SPRINT_03+ quando emerge use case concreto (overnight autonomous research / dogfood expansion). NO install pre-emptive (YAGNI ADR-0005).
+- **Privacy**: tools generic, no Eduardo source code -> cloud OK irrelevante
+- **Note**: integrato 2026-05-10 scope extension AA01 task 001. Memory `reference_autoresearch_tools.md` per evaluation completa.
+
+### REF-EXT03
+- **Codice**: EXT-03
+- **Titolo**: [Hyperspace Pods](https://hyperspace.sh/) -- Private AI Compute Clusters
+- **Funzione**: P2P decentralized AI cluster: pool laptops/desktops in shared inference network (no cloud, no central server). Allineamento sovereign-first codemasterdd.
+- **Stato**: strategic research candidate (research-only fase 1, pre-audit privacy)
+- **Stack**: libp2p v3 + GossipSub + Kademlia DHT + Circuit Relay v2 + Yamux + Noise encryption
+- **License**: open source CLI + network + SDK (Pi component MIT). Web app + Thor backend source-available.
+- **CLI install**: `curl -fsSL https://download.hyper.space/api/install | bash` (Linux/macOS) / `curl ... | powershell -` (Windows admin)
+- **Hardware**: VRAM 4GB minimum (GTX 1650) -- RTX 5060 8GB QUALIFIES. CPU-only relay/embedding mode supportato.
+- **Capabilities** (9): Inference / Embedding / Storage / Memory / Relay / Validation / Orchestration / Caching / Proxy
+- **Strategic relevance codemasterdd**: roadmap menziona "Mac mini M4 Pro 48GB" come future inference upgrade (CLAUDE.md "Estensioni future"). Pods abilita scenario *senza* infrastruttura proprietaria: Eduardo pool Lenovo + (futuro) Mac mini + altri device family/friends in shared cluster.
+- **Use case codemasterdd**: REFERENCE only fase 1. Install opportunistic SE/QUANDO Mac mini entra device fleet OR scenario distributed inference emerge post-Max sovereign expansion.
+- **Privacy gate**: P2P inference -- **AUDIT REQUIRED PRIMA install** (user query data flow + Pod trust mesh model + LAN model sharing). NO install pre-audit.
+- **Note**: integrato 2026-05-10 scope extension AA01 task 001. Memory `reference_hyperspace_pods.md` per detail strategico + ADR addendum trigger.
