@@ -1723,3 +1723,62 @@ Resume sessione post mezzogiorno (Eduardo opzione 3 = opportunistic SPRINT_02 de
 - **ADR-0022 conferma empirica n=3 cumulative cross-provider**: Groq + Cerebras + 1 modello deprecato. Pattern OpenCode = sovereign-only (Ollama 30B MoE) confermato. No addendum, no ratification check anticipato.
 - **Tooling collettivo deferred SPRINT_02 ora pronto pre-Max**: 4 script funzionanti senza dipendenze esterne (oltre Git + PowerShell 5.1 + Ollama + OpenCode + API keys). Eduardo puo' install + schedule manualmente.
 - **TodoWrite uso effettivo**: 3-task tracker (M8/M7/M10) con marker real-time. Reminder hook system-message ignorato 5x correttamente (non rilevante per single-step trivial task M9 iniziale).
+
+---
+
+## 2026-05-09 sera tardi -> 2026-05-10 (housekeeping + AA01 audit + H11 + H7 scaffold)
+
+### Contesto
+
+Continuazione marathon 9/5 sera oltre commit `cb248d5` v16. Eduardo sequenza esplicita "facciamo tutti i pending" -> "lancia tu lo script" -> "passa a h11" -> "facciamo i caveat mancanti" -> "3+2" (housekeeping bundle). Complete 4 PR addizionali oltre i 5 commit branch base. Cambio data 9/5 -> 10/5 durante sessione.
+
+### Completato
+
+#### PR #31 mergeato (M9-M10 cascata)
+Push branch `claude/recursing-mirzakhani-da8bb3` 5 commit + PR creato e mergeato squash. Squash merge `ae3ca88` integra: M9 task-classify + M8 smoke-hooks + M7 backup-keys + M10 bench-cloud-free + JOURNAL/COMPACT v16.
+
+#### Install globale 3 script + .cmd wrapper
+- `cp scripts/{task-classify,smoke-test-hooks,backup-api-keys}.ps1 ~/.local/bin/`
+- 3 `.cmd` wrapper creati (`@powershell -NoProfile -ExecutionPolicy Bypass -File ...ps1 %*`)
+- Smoke wrapper 3/3 PASS post-install
+
+#### PR #32 mergeato (install-schtasks setup)
+Sandbox bloccato `schtasks /Create` direct via Auto Mode (Unauthorized Persistence policy). Mitigation: `scripts/setup/install-schtasks.ps1` ~145 righe idempotente con default install + `-Verify` + `-Uninstall` modes. Smoke `-Verify` PASS (2/2 ABSENT detected). PR #32 mergeato squash `8cf4994`.
+
+#### Eduardo auth esplicita "lancia tu lo script" -> schtasks installati
+- ApiKeysBackup daily 03:00 -> backup-api-keys.ps1 -Quiet
+- HookIntegritySmoke weekly Sunday 09:00 -> smoke-test-hooks.ps1 -Quiet
+- Verify post-install: 2/2 PRESENT, prossima esecuzione 10/05 03:00 + 09:00, stato Pronta
+
+#### PR #33 mergeato (H11 closure superseded by reality)
+Reality check H11: PR Game #2138 + #2139 status-phase-a GIA' MERGED (memory v14 stale indicava DRAFT). AA01 audit workspace: 2 task PROPOSED del 25/04 stale one-shot reactive (eventi 26/04 passati 13gg). Action: archive entrambi con `--status=TIMEOUT`, workspace 0 attivi, INDEX.md 3 entries, archive readonly chmod -R a-w. PR #33 mergeato squash `9ec352c`.
+
+#### AA01 caveat completati (out-of-repo)
+- `tests/smoke.sh` MANCANTE -> creato (~140 righe), 6/6 PASS lifecycle end-to-end (capture->classify->promote->propose->archive REJECT con self-cleanup)
+- 2 fix iter: `set -e` rimosso (interferiva con classify.sh stderr) + pattern find `*smoke-${TS}*` (sed strip leading underscore)
+- Bootstrap audit-replay: idempotente (deps 3/3 OK + profile.yml + .gitkeep + struttura PASS)
+- Side-finding: `just` NON installato, fallback `bash scripts/<cmd>.sh` validato OK
+- Memory `project_aa01_studio.md` aggiornata: stato post-audit + caveat operativi + workflow task tipico
+
+#### Housekeeping 10/5 mattina (3+2 bundle)
+- H7 scaffolding: `logs/claude-api-spend-2026-05.md` (gitignored via `logs/*`) con header + template entry + aggregati cumulative + riferimenti ADR-0023
+- Cleanup 3 branch local stale: `claude/recursing-mirzakhani-da8bb3` + `claude/install-schtasks-setup` + `claude/h11-aa01-closure` deleted local (mergeati squash + remote deleted)
+- JOURNAL extension entry (questa) + COMPACT v17 (PR #?? questa sessione)
+
+### Da fare
+
+- **Eduardo direct (residuo unico irriducibile)**:
+  - **H7 ANTHROPIC_API_KEY** in `~/.config/api-keys/keys.env` via Anthropic Console (~5min). Scaffold log gia' pronto.
+- **Calendarizzati** (invariati):
+  - 2026-05-19 Claude Max expiration (9gg residui)
+  - 2026-05-20+ SPRINT_02 prima sessione Fase 8 sovereign
+  - 2026-06-07/06-09 ratification check ADR-0021/0022
+
+### Note
+
+- **Sequenza esplicita Eduardo + autorizzazioni discrete**: pattern "facciamo tutti i pending" -> "lancia tu lo script" -> "passa a h11" -> "3+2" mostra granularita' decisioni Eduardo per ogni external/persistent action. Auto Mode minimize interruptions ma NON salta privilege escalation. Pattern lesson: Auto Mode efficace su routine code, NON su system-level (schtasks, AA01-modify).
+- **Sandbox guardrail Unauthorized Persistence**: schtasks via PowerShell tool BLOCKED senza explicit Eduardo authorization. Mitigation pattern uguale a H8 install-privacy-guard.ps1 (script in `scripts/setup/` Eduardo-run). Preserva safety + workflow continua.
+- **AA01 audit-then-replay applicato a se stesso**: bootstrap.sh sandbox-blocked -> audit Read manuale + replay deps verifica via `command -v`. Lesson L-2026-04-001 self-applicata, conferma pattern.
+- **H11 reality check valore**: memory drift di 24h (v14 dice DRAFT, realta' MERGED) -> verifica empirica vs assumption beats every time. Eduardo "Eduardo direct" task originale superseded by reality, archive 2 task stale + close. Effort minimo (30min audit + archive), valore alto (workspace pulito + memory refresh).
+- **Cumulative 10/5 transizione**: 24 PR mergeati cumulative 7-10/5 (3 in giornata 10/5 mattina/sera tardi: #31 + #32 + #33). 8gg residui pre-Max al 11/5. Stack tecnico + governance + AA01 tutti pronti. Pre-Max checklist: zero blocking residuo.
+- **Stop hook H12**: ancora NON osservato attivare in sessione corrente (settings.json project-level, attiva al SessionStart prossimo). Atteso: prima invocazione Claude Code post questa sessione mostra summary commit changed se HEAD diverso da marker.
