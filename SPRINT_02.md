@@ -4,6 +4,8 @@
 >
 > **Status 2026-05-07**: **Planning** (sprint inizia 20/05 dopo Claude Max expiration 19/05). Abbozzo preparatorio per primo onboarding sovereign.
 >
+> **Update 2026-05-10**: pre-validation in autonomy: **T3 hot-restart PASS** (stack ready ~12s, 38 traces preserved post 13gg+ down, regression `dogfood-ui` VALID_STACKS desync trovata e fixata, entry POST 12->13). **T4 cleanup PR esterni gia' COMPLETO** (i 4 PR target gia' triagati 7/5: #97 Game-Database closed-as-stale post-rebase abort, #105/#10/#61 mergeati). Restano per 20/05+: T1 smoke sovereign, T2 dogfood organico, T5 cost tracking, T7 review.
+>
 > **Sprint objective**: validare empiricamente scenario A (full-sovereign $0-50/anno) in uso normale + cleanup PR esterni opportunistico + cost tracking primo mese reale + raccolta dogfood organici post-closure (target soft n>=20 cumulative). Zero silent-corruption deve rimanere invariato.
 
 ---

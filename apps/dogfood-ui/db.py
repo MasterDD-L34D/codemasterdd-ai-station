@@ -53,7 +53,19 @@ class Database:
         if payload['classe'] not in valid_classes:
             raise ValueError(f"Invalid classe: {payload['classe']}. Must be one of {valid_classes}")
 
-        valid_stacks = {'7B-local', '14B-Q2-local', '30B-MoE-local', 'groq-70b', 'cerebras-8b', 'gemini-flash', 'openai-mini', 'claude'}
+        valid_stacks = {
+            '7B-local-whole',
+            '14B-Q2-local-diff',
+            '30B-MoE-local-diff',
+            'R1-8B-local',
+            'gemma4-multimodal-local',
+            'groq-70b-cloud',
+            'cerebras-8b-cloud',
+            'gemini-flash-cloud',
+            'openai-4o-mini-cloud',
+            'claude-code-direct',
+            'other',
+        }
         if payload['stack'] not in valid_stacks:
             raise ValueError(f"Invalid stack: {payload['stack']}. Must be one of {valid_stacks}")
 

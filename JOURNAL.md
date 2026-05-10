@@ -1782,3 +1782,57 @@ Reality check H11: PR Game #2138 + #2139 status-phase-a GIA' MERGED (memory v14 
 - **H11 reality check valore**: memory drift di 24h (v14 dice DRAFT, realta' MERGED) -> verifica empirica vs assumption beats every time. Eduardo "Eduardo direct" task originale superseded by reality, archive 2 task stale + close. Effort minimo (30min audit + archive), valore alto (workspace pulito + memory refresh).
 - **Cumulative 10/5 transizione**: 24 PR mergeati cumulative 7-10/5 (3 in giornata 10/5 mattina/sera tardi: #31 + #32 + #33). 8gg residui pre-Max al 11/5. Stack tecnico + governance + AA01 tutti pronti. Pre-Max checklist: zero blocking residuo.
 - **Stop hook H12**: ancora NON osservato attivare in sessione corrente (settings.json project-level, attiva al SessionStart prossimo). Atteso: prima invocazione Claude Code post questa sessione mostra summary commit changed se HEAD diverso da marker.
+
+---
+
+## 2026-05-10 mattina (SPRINT_02 pre-validation T3 + T4 in autonomy)
+
+### Contesto
+
+Resume da compact v17. Eduardo "si procedi con cleanup e dopo facciamo sprint 02" -> "parti con t3+t4 triage ora in autonomy". Cleanup git stale + T3 hot-restart validation + T4 cleanup PR esterni triage. Worktree: `magical-villani-f2af96` su HEAD `f293982` (post-#34).
+
+### Completato
+
+#### Cleanup git stale (5 worktree + 5 branch)
+- `git worktree remove` Permission denied su tutte (Windows lock processi attivi). Fallback `git worktree prune` ha pulito tracking metadata per 4 stale + 1 corrente.
+- 4 branch local stale eliminate: `claude/distracted-colden-c50d3a`, `claude/hardcore-keller-72c77e`, `claude/journal-compact-v15-9may-final`, `claude/mystifying-thompson-82bb43` (tutti `-d` safe, mergeati).
+- 1 branch H7 squash-merged: `claude/h7-scaffolding-housekeeping` (-d con warning, deleted).
+- 5 directory orphan filesystem residue (lock processi attivi, Eduardo manualmente quando vuole): distracted-colden, dreamy-hamilton, hardcore-keller, infallible-murdock, recursing-mirzakhani.
+- Branch tracking finale: solo `claude/magical-villani-f2af96` corrente.
+
+#### T3 stack ADR-0017 hot-restart validation PASS
+- `docker compose up -d` da infra/: 11.7s wallclock (target <60s).
+- LiteLLM `/health/readiness` 200, Langfuse `/api/public/health` 200, postgres healthy.
+- Trace count Langfuse: **38 preservati** post 13gg+ downtime (target 7+, no DB corruption).
+- Polling iniziale PowerShell `Invoke-WebRequest` ha avuto issue IPv6 binding (false negative 122s timeout). Curl bash con `127.0.0.1` esplicito ha confermato 200 OK.
+- Dogfood-ui Flask up (port 8080), DB SQLite 12 entries preserved.
+- POST `/api/entries` test entry T3: **regression trovata** -> 500 Internal Server Error.
+
+#### T3 regression detection + fix (path A direct manuale)
+- Diagnosi: `apps/dogfood-ui/db.py:56` `valid_stacks` desync con `apps/dogfood-ui/app.py:184-196` `VALID_STACKS`. App.py source-of-truth (commit `8c70728` smoke sovereign ha esteso form `7B-local-whole`/`14B-Q2-local-diff` + R1 + Gemma + Other), db.py fermo a commit `6924482` initial scaffold con short forms `7B-local`/`claude`/`openai-mini` etc.
+- Fix: db.py:56 valid_stacks aggiornato sync con app.py (5 righe -> 12 righe set multi-line). Outcome validation + field name desync (`retries`/`retry_count`, `tokens_in`/`tokens_sent`) lasciati per scope SPRINT_02 T2 organic fix.
+- Restart Flask + re-POST: **{"id":13,"status":"created"}**. DB count 12 -> 13.
+- Stack docker stop (default scaffold OFF per ADR-0017 spec).
+
+#### T4 cleanup PR esterni: triage findings = ZERO action
+- `gh pr view` su 4 PR target SPRINT_02 spec:
+  - **Game-Database #97** state CLOSED (not merged). Comment Eduardo 7/5 21:11: "Chiusura come stale (rebase tentato 7/5, abort)". Sprint Impronta CAP-11..15 ha gia' coperto taxonomy detail browsing con architettura aggiornata.
+  - **Game-Database #105** MERGED 7/5 18:36.
+  - **compass-marketplace #10** MERGED 7/5 18:37.
+  - **evo-swarm #61** MERGED 7/5 17:39.
+- T4 already complete pre-sprint -> SPRINT_02.md aggiornato status header per riflettere finding.
+
+### Da fare
+
+- **Eduardo direct (residuo invariato)**: H7 ANTHROPIC_API_KEY in `~/.config/api-keys/keys.env` via Anthropic Console (~5min).
+- **Push branch + PR (auth Eduardo)**: branch `claude/magical-villani-f2af96` ha 2 file modificati (db.py fix + JOURNAL + SPRINT_02 docs). Decidere se commit + push + PR o lascia local.
+- **Calendarizzati invariati**: 19/05 Max expiration | 20/05+ SPRINT_02 prima sessione full-sovereign | 06/06 ratification check ADR-0021/0022.
+
+### Note
+
+- **Hub pattern path A choice**: regression fix scelta direct manuale per atomicita' T3 closure. Path B (delega aider-refactor) era valida ma overhead non giustificato per 5-righe set sync. Lesson: hub pattern e' default ma non assoluto, decision strategic (source-of-truth app.py vs db.py) era piu' valore di delega meccanica.
+- **dogfood-ui field name desync residuo**: `retries`/`retry_count` + `tokens_in`/`tokens_sent` + missing outcome validation in db.py. Funcionalmente OK (default 0 silent), ma logging incomplete. Candidato SPRINT_02 T2 organic fix (single-file behavior, ~15 righe, classe sovereign-OK).
+- **Windows lock pattern worktree**: 5 directory orphan post `worktree remove` Permission denied. Pattern: processi che hanno cwd dentro worktree (terminali Claude Code precedenti, editor, antivirus indexer) tengono dirent locked. Mitigation `worktree prune` pulisce metadata git, directory fisiche residuano - non bloccano sviluppo.
+- **PowerShell IPv6 bind quirk**: `Invoke-WebRequest http://localhost:4000` fail 60 retry/120s, mentre `curl http://127.0.0.1:4000` succeeds 200 immediato. Lesson: per health-check Docker stack su Windows usare 127.0.0.1 esplicito, non localhost.
+- **Cumulative 10/5 (giornata 24h)**: PR #31 + #32 + #33 + #34 mergeati la sera 9/5/notte 10/5 + cleanup git + T3+T4 in mattinata 10/5. Branch corrente `magical-villani-f2af96` 2 file modificati (db.py + governance docs), pendente decision Eduardo per push/PR.
+- **SPRINT_02 ready**: T3 + T4 pre-validati. Restano T1 (smoke sovereign primo task post-Max), T2 (dogfood organico continuativo), T5 (cost tracking), T7 (review fine sprint). T6 dormant. **9gg residui pre-Max** (Max expiration 19/05).
