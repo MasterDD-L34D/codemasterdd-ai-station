@@ -280,3 +280,26 @@ Dogfood Fase 6 n=8 rivela **pattern nuovo non previsto nella matrice originale**
 - privacy violation in repo non-sensitive -> ADR addendum reactive
 
 Cumulative al 2026-05-09: zero trigger attivati. PASS rate empirico OpenCode 30B MoE 3/3, Aider Fase 6 fail rate 8.3%.
+
+---
+
+## Research input esterno (added 2026-05-10)
+
+### Vault-shared LLM routing matrix v1.0 (sibling-peer reference)
+
+vault-shared (`C:/dev/vault-shared`, sibling-peer codemasterdd) ha una decision matrix derivata da bench A/B claude-vs-ollama. Cross-reference per codemasterdd MODEL_ROUTING:
+
+- **Path stabile**: `C:/dev/vault-shared/llm-routing.json` (vault repo, NO commit hash citato per drift risk in repo Eduardo-driven)
+- **Doc methodology**: `vault-shared/docs/research/` -- 5 research report formali (dispatcher, design-watcher, ingestor, pathfinder-pdf-indexer, vault-linter), tutti dated 2026-05-10 Quality Gate Step 2
+- **Methodology rigorosa**: split metrics (cold_load_s + inference_s + wall_s) + keep_alive=-1 per modello caldo + retries con exponential backoff + output validation (word count check + retry stricter prompt)
+- **Pattern emersi**: A/B variants + multi-claude self-tune + 3-gate workflow (smoke -> draft -> production)
+- **Claim metric esempio**: ollama-dispatcher v1 -91% wall vs baseline (METHODOLOGY TBR -- non audited codemasterdd-side al moment of integration)
+
+**NON adoption diretta**: vault scope content-routing != codemasterdd code-edit. Reference solo, per inspiration potential MODEL_ROUTING addendum:
+- Metric "wall time reduction %" pattern (codemasterdd traccia tok/s + workflow time, NON wall reduction %)
+- Categoria "content-routing vs code-edit-routing" distinction esplicita
+- Multi-variant Claude self-tune A/B (codemasterdd ha dogfood ma NON A/B variants stesso modello)
+
+**Boundary**: codemasterdd NON adotta vault metric come ground truth senza audit empirico. Reference solo per pattern + methodology.
+
+**Integrato**: 2026-05-10 via AA01 task `2026-05-aa01-001-two-repos-analysis-integratio` research-long preset. Memory `project_vault_shared.md` + STATUS_MULTI_REPO sezione 6.

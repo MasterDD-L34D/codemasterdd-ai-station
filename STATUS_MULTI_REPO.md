@@ -20,6 +20,7 @@
 | **Game-Godot-v2** | **~230 PR mergeati cumulative** (+15 PR 7-10/5: #212-#216 + altri). HEAD origin/main `7b92724` (B-NEW-14+15 phone host Conferma mondo CTA fix). Path A canonical CHIUSO end-to-end. Cloned 2026-05-07 in `C:\dev\Game-Godot-v2\`. Hook globali applicati. Governance interna autosufficiente | Continue port (Eduardo-driven), supportare cross-repo se serve | No fixed | Nessuno |
 | **Dafne swarm (evo-swarm)** | **Atto 2 day 14+ active**, HEAD origin/main `9255b4b` post PR #102 (fase 8 evaluation A/B + PII redaction, 8/5 16:39 CET). **30 PR mergeati 7-10/5 cumulative** (cleanup decision debt + governance refresh + dashboard fase 8). HEAD locale stale `a87da39` (Eduardo non ha pulled). 0 PR open al 10/5. | Continue Atto 2 (Eduardo-driven), pull locale se Eduardo riprende workflow Dafne | No fixed | Nessuno |
 | **AA01 (Archon Atelier 01)** | v1.0.0 silent-driver mode. **2 task PROPOSED storici 25/04 ARCHIVED 9/5 sera** (TIMEOUT one-shot reactive) via H11 closure session, workspace 0 attivi, INDEX.md 3 entries, archive readonly. Smoke test end-to-end PASS 6/6. Memory `project_aa01_studio.md` aggiornata. | Continua driver mode + eventuale nuovo task quando emerge | nessuna | nessuno bloccante |
+| **vault-shared (Vault Knowledge Mgmt)** | **Sibling-peer Eduardo, monitored. 7/7 production agents milestone 2026-05-10**. HEAD `2007a8a` (15+ commit 30gg, intensive 10/5). LLM routing matrix v1.0 (research input MODEL_ROUTING). Stack overlap codemasterdd: Ollama LAN + Claude variants + deepseek-r1. Privacy: sovereign-only (academic UniUPO + IP curated). Hook globali compat VALIDATED 10/5. | Continue (Eduardo-driven). Cross-pattern reference one-way (vault -> codemasterdd MODEL_ROUTING addendum). NO write-path codemasterdd-side. | No fixed | Nessuno (sibling-peer disjoint scope) |
 
 ### Stack ADR-0017 runtime (aggiornato 2026-05-10 post T3 SPRINT_02 hot-restart 2nd pass)
 
@@ -279,6 +280,54 @@ Codemasterdd NON sovrascrive il governance interno -- monitora soltanto.
 ### Cross-repo handoff points
 - Game (Vue3) -> Game-Godot-v2: porting (capability + dati + UX) -- workflow non ancora documentato in pipeline
 - codemasterdd policy -> Game-Godot-v2: hook globali applicati (validato), governance interna autonomia preservata
+
+---
+
+## 6. vault-shared (sibling-peer Eduardo)
+
+**Path**: `C:\dev\vault-shared\`
+**Remote**: [MasterDD-L34D/vault](https://github.com/MasterDD-L34D/vault)
+
+### Relazione con codemasterdd
+
+Sibling-peer disjoint scope:
+- codemasterdd = infrastructure-as-code + governance + 4 progetti monitored + AA01
+- vault-shared = knowledge management content (Karpathy LLM-wiki ACCESS) + 7 production agents on content
+- Disjoint: NO bidirectional dependency, NO write-path codemasterdd-side, NO formal monitoring SLA
+- Cross-reference one-way: vault llm-routing matrix v1.0 -> potential research input MODEL_ROUTING.md addendum codemasterdd
+- Eduardo media tutti i flow
+
+### Stack overlap codemasterdd
+
+- Ollama LAN (stesso daemon Lenovo) + qwen2.5-coder family + deepseek-r1 + Claude variants
+- 7 production agent (vault-linter, ingestor-claude, dispatcher-claude, ollama-dispatcher, pathfinder-pdf-indexer, vault-ingestor, evo-tactics-design-watcher)
+- LLM routing matrix v1.0 (vault-shared/llm-routing.json) basata su bench A/B claude vs ollama (methodology Quality Gate Step 2 con split metrics + keep_alive + retries + output validation)
+- Quality Gate workflow (smoke -> draft -> production 3-gate) -- pattern transferibile
+
+### Privacy
+
+**Sovereign-only**: NON in `~/.config/aider-privacy-whitelist.txt`. Aider-cloud su file vault = ABORT.
+
+Rationale (validato spot-check empirico 2026-05-10):
+1. Academic integrity: `Spaces/UniUPO/` + `Spaces/Dev/Synesthesia/` (DEPLOY, FEEDBACK_FORM, SCREENSHOT_GUIDE) -- esame UniUPO in corso
+2. Curated narrative IP: `Spaces/GDR/HaoJin` (Pathfinder Torneo, Obsidian Foundry Pack v0.2.8) + Valdombra + Pathfinder + CharacterForge
+3. Cross-project strategic info: `Spaces/Dev/Evo-Tactics` + `Flint` design notes
+4. Prompt library asset: `Spaces/GPT-Prompts/Master-DD v1-v6` + Dispatcher + VTT
+5. Owner principle: vault CLAUDE.md riga 1-3 dichiara "Vault personale Eduardo Scarpelli"
+
+Note: claim originale "Spaces/Personal/" da CLAUDE.md vault NON ESISTE empirically (drift documentazione vault-internal). Verdict sovereign-only invariato per altre 4 ragioni.
+
+### Hook globali
+
+Compatible VALIDATED 2026-05-10 (empty commit test PASS, reverted post-test per boundary respect). Vault `core.hooksPath` = `C:/Users/edusc/.local/share/git-hooks` (codemasterdd hook globali ATTIVI). Pattern emoji-leading description ("feat(milestone): 🎯 ...") compatibile con regex commit-msg.
+
+### Boundary
+
+Codemasterdd NON scrive su vault-shared. Vault-shared self-governs. Eduardo media bidirezionale via personal workflow.
+
+### SPOF accepted risk
+
+Vault-shared workflow richiede Eduardo per ogni promote/tune/quality-gate -- intentional SPOF su personal workflow. Mitigation = backup + recovery, NON delegation.
 
 ---
 

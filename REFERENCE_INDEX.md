@@ -228,3 +228,21 @@ Indice completo in `DECISIONS_LOG.md`. Path: `docs/adr/NNNN-topic.md`.
 - **Funzione**: source material esterno triato (sessione claude.ai browser 2026-04-21)
 - **Stato**: frozen. Retained per audit trail.
 - **Uso consigliato**: non re-leggere senza motivo specifico. Contenuto utile già integrato in docs/.
+
+---
+
+## EXT — External Claude Code Catalogs (added 2026-05-10)
+
+### REF-EXT01
+- **Codice**: EXT-01
+- **Titolo**: `awesome-claude-code-toolkit` (rohitg00 community OSS Apache 2.0)
+- **Path locale**: `C:/dev/scratch/awesome-claude-code-toolkit/`
+- **Remote**: `github.com/rohitg00/awesome-claude-code-toolkit.git`
+- **License**: Apache 2.0 (attribution required per file imported)
+- **Funzione**: catalog community per cherry-pick selettivo agents/skills/hooks/rules/mcp-configs/templates
+- **Stato**: live (cloned per evaluation), pull-when-needed reference
+- **Inventario**: 135 agents (10 cat) + 35+ skills (38 dirs) + 42 commands + 20 hooks + 15 rules + 7 templates + 14 MCP configs + 176+ plugins
+- **Uso consigliato**: NO bulk import. Cherry-pick on-demand quando un task reale richiede skill specifica. Audit-then-replay obbligatorio (read full file prima adopt). Lock commit hash al momento dell'import effettivo (NON pre-emptive).
+- **Anti-pattern**: bulk import speculativo (YAGNI ADR-0005), continuous sync upstream, blind import (supply-chain vector).
+- **Skill candidate per codemasterdd** (top-tier match, da validate fit empirico): claude-memory-kit / mcp-development / continuous-learning / docker-best-practices / accessibility-wcag / python-best-practices / git-advanced.
+- **Note**: integrato 2026-05-10 via AA01 task `2026-05-aa01-001-two-repos-analysis-integratio` research-long preset. Memory `reference_external_toolkits.md` per cherry-pick policy completa.
