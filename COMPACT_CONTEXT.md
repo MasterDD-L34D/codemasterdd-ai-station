@@ -6,12 +6,12 @@
 
 ## Progetto
 - **Nome**: CodeMasterDD AI Station
-- **Versione del compact**: v16 (sessione 2026-05-09 sera: 4 task M-deferred SPRINT_02 cascata M9->M8->M7->M10. Cumulative 8-9/5: 25 PR equivalent (21 mergeati + 4 commit branch worktree pendenti PR).)
-- **Data ultimo aggiornamento**: 2026-05-09 sera
+- **Versione del compact**: v17 (sessione 2026-05-09 sera tardi -> 10/5 mattina: housekeeping + AA01 audit + H11 closure + H7 scaffold. Cumulative 7-10/5: 24 PR mergeati.)
+- **Data ultimo aggiornamento**: 2026-05-10 mattina
 
 ## Stato attuale
-- **Barra globale ~99%** (invariata da v15 -- M-deferred non sposta gauge strategica): Fase 6 + Fase 7 CLOSED. ADR-0022 + ADR-0023 + ADR-0024 nuovi. **Window pre-19/05 completata routine + harsh review fixes + tooling deferred SPRINT_02 anticipato**: 8 PR 9/5 mattino-mezzogiorno (H7-H12) + 4 commit 9/5 sera (M7-M10 branch worktree pending PR). Privacy guard rail tecnico attivo. Stop hook drift mitigation deployed. Tooling task-classify/smoke-hooks/backup-keys/bench-cloud-free pronto. Niente piu' BLOCKING tecnico. 10gg residui pre-Max expiration.
-- HEAD origin/main `dfe9dfd` (post merge PR #11-#30 in giornate 8-9/5). **Worktree corrente `recursing-mirzakhani-da8bb3` ahead 4 commit** branch `claude/recursing-mirzakhani-da8bb3` (M9 c74966c + M8 912b91a + M7 bb78999 + M10 fe94dbe), pending push + PR.
+- **Barra globale ~99%** (invariata da v16): Fase 6 + Fase 7 CLOSED. ADR-0022 + ADR-0023 + ADR-0024. **Window pre-19/05 chiusa anticipata su tutti i task pre-Max**: 8 PR 9/5 mattino-mezzogiorno (H7-H12) + 4 PR 9/5 sera-tardi/10/5 (#30 v15 final + #31 cascata M9-M10 + #32 install-schtasks + #33 H11 closure superseded). Privacy guard rail tecnico attivo. Stop hook deployed (atteso prima activation prossima session). Tooling task-classify/smoke-hooks/backup-keys/bench-cloud-free installato globale + scheduled daily/weekly. AA01 lifecycle smoke 6/6 PASS, workspace pulito. Niente piu' BLOCKING tecnico. 9gg residui pre-Max al 10/5.
+- HEAD origin/main `9ec352c` (post merge PR #31-#33 in giornata 9/5 sera-tardi -> 10/5). **Worktree corrente `recursing-mirzakhani-da8bb3` su nuovo branch `claude/h7-scaffolding-housekeeping`** (1 commit ahead per H7+JOURNAL+COMPACT v17 housekeeping bundle, pending push + PR).
 - **Stack ADR-0017 ACTIVE MODE 8/5 sera**: LiteLLM:4000 + Langfuse:3000 + Postgres + dogfood-ui:8080 UP. T3 SPRINT_02 hot-restart validation anticipato + passato (<60s endpoint health, persistence preservata). Da spegnere `docker compose down` a chiusura sessione.
 - **OpenCode v1.14.41** (npm global) installato 8/5 sera. Config `~/.config/opencode/opencode.json` con 5 provider mappati. Default `ollama/qwen3-coder:30b` (tier 1 sovereign, ADR-0022 Accepted).
 - **Agent ecosystem ADR-0018**: 12/18 ready, 6/18 draft trigger-gated. Status invariato dal 24/04.
@@ -40,6 +40,39 @@ Eduardo ha lavorato attivamente in altri repo (silent driver mode):
 - 19/05: disattivazione Claude Max, transizione a wrapper sovereign + Ollama
 
 ## Cosa e' gia' stato fatto
+
+### Sessione 2026-05-09 sera tardi -> 2026-05-10 mattina (housekeeping + AA01 + H11 + H7)
+
+#### Pattern strategico
+Continuazione marathon 9/5 oltre commit `cb248d5` v16. Sequenza esplicita Eduardo: "facciamo tutti i pending" -> "lancia tu lo script" -> "passa a h11" -> "facciamo i caveat mancanti" -> "3+2". 4 PR addizionali oltre i 5 commit base, cambio data 9/5 -> 10/5 durante sessione.
+
+#### PR #31 mergeato (`ae3ca88`): cascata M9-M10 squash
+- Squash merge 5 commit: M9 task-classify + M8 smoke-hooks + M7 backup-keys + M10 bench-cloud-free + JOURNAL/COMPACT v16
+- Smoke wrapper 3/3 PASS post-install in `~/.local/bin/`
+
+#### PR #32 mergeato (`8cf4994`): install-schtasks setup
+- Sandbox bloccato schtasks direct via Auto Mode (Unauthorized Persistence policy) -> mitigation `scripts/setup/install-schtasks.ps1` ~145 righe idempotente (default install + `-Verify` + `-Uninstall`)
+- Eduardo auth esplicita -> 2 schtasks installati: ApiKeysBackup daily 03:00 + HookIntegritySmoke weekly Sunday 09:00
+
+#### PR #33 mergeato (`9ec352c`): H11 closure superseded by reality
+- Reality check: PR Game #2138 + #2139 status-phase-a GIA' MERGED (memory v14 stale)
+- AA01 audit workspace: 2 task PROPOSED 25/04 stale one-shot reactive (eventi 26/04 passati 13gg)
+- Action: archive entrambi `--status=TIMEOUT`, workspace 0 attivi, INDEX.md 3 entries cumulative
+
+#### AA01 caveat completati (out-of-repo, no commit codemasterdd)
+- `tests/smoke.sh` MANCANTE -> creato (~140 righe), 6/6 PASS lifecycle end-to-end (capture->classify->promote->propose->archive REJECT con self-cleanup)
+- 2 fix iter: `set -e` rimosso interferiva classify.sh stderr, find pattern `*smoke-${TS}*` sed strip leading underscore
+- Bootstrap audit-replay: idempotente (deps 3/3 OK + profile.yml + .gitkeep + struttura PASS)
+- Side-finding: `just` NON installato, fallback `bash scripts/<cmd>.sh` validato OK
+- Memory `project_aa01_studio.md` aggiornata: stato post-audit + caveat operativi + workflow task tipico
+
+#### Housekeeping 10/5 mattina (3+2 bundle)
+- H7 scaffolding: `logs/claude-api-spend-2026-05.md` (gitignored via `logs/*`) con header + template entry + aggregati cumulative + ADR-0023 reference
+- Cleanup 3 branch local stale: `claude/recursing-mirzakhani-da8bb3` + `claude/install-schtasks-setup` + `claude/h11-aa01-closure` deleted local (mergeati squash + remote deleted)
+- JOURNAL extension entry + COMPACT v16 -> v17 (questo PR)
+
+#### Branch state
+1 commit ahead di main su `claude/h7-scaffolding-housekeeping`, pending push + PR.
 
 ### Sessione 2026-05-09 sera (M7-M10 deferred SPRINT_02 cascata 4-task pre-Max)
 
@@ -255,9 +288,9 @@ P1, P2 chiusi tramite ADR-0015 closure (P1 behavior-critical n>=5 superato; P2 c
 
 ## Prossimi 3 passi
 
-1. **Eduardo direct (azioni standalone)**:
-   - H7 setup ANTHROPIC_API_KEY in `~/.config/api-keys/keys.env` (~5min via Anthropic Console) -- pre-19/05 priority
-   - H11 AA01 attivazione Sprint Impronta Ondata 1+2 status-phase-a (apri AA01 workspace)
+1. **Eduardo direct (azioni standalone, residuo unico)**:
+   - **H7 setup ANTHROPIC_API_KEY** in `~/.config/api-keys/keys.env` (~5min via Anthropic Console) -- pre-19/05 priority. Scaffold log `logs/claude-api-spend-2026-05.md` gia' pronto (gitignored).
+   - ~~H11 AA01 attivazione~~ DONE 9/5 sera (superseded by reality, 2 task stale archived TIMEOUT)
 2. **Calendarizzati passive** (no immediate action):
    - 2026-05-19 Claude Max expiration (10gg residui, stack pronto)
    - 2026-05-20+ SPRINT_02 prima sessione Fase 8 sovereign (T1+T3+T4 anticipated DONE; restano T2 dogfood organico + T5 cost tracking + T7 review)
