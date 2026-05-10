@@ -29,18 +29,15 @@
 
 ---
 
-### [OD-003] Default online tier 3: Groq vs Cerebras
+### [OD-003] ~~Default online tier 3: Groq vs Cerebras~~ **CLOSED 2026-05-10 (formalizzazione + drift sync)**
 
 - **Livello**: workflow / tooling
-- **Stato**: aperta (non bloccante)
-- **Ambiguità**: entrambi free tier, entrambi 100% quality bench, speed comparable (630 vs 733 tok/s). Fai default per classe diversa o restano simmetrici?
-  - **opzione 1**: Cerebras 8B default cosmetic (più veloce), Groq 70B default behavior (capability >).
-  - **opzione 2**: Both-equal, scelta a caso/preferenza sessione.
-- **Perché conta**: influenza predictability + potential rate-limit exhaustion su single provider.
-- **Miglior default proposto**: **opzione 1** — rationale "modello più potente per task più complessi" è ortogonale a speed. Simmetricizzare non aggiunge valore.
-- **Rischio se ignorata**: nessuno critico. Dogfood sample casuale andrà ok comunque.
-- **File o moduli coinvolti**: `CLAUDE.md` sezione wrapper, `MODEL_ROUTING.md`, `docs/patterns/delegation-to-aider.md`.
-- **Prossima azione consigliata**: decidere dopo ≥5 behavior-critical cloud (post-P1 closure). Empirical se Cerebras 8B safe-fails su behavior → conferma opzione 1.
+- **Stato**: **CLOSED** — opzione 1 ratificata (Cerebras 8B default cosmetic, Groq 70B default behavior). Convenzione gia' implicita in `MODEL_ROUTING.md` (linee 72-74) ma OD non era stato formalmente chiuso. Drift fix di formalizzazione.
+- **Ambiguità originale**: entrambi free tier, entrambi 100% quality bench, speed comparable (630 vs 733 tok/s). Fai default per classe diversa o restano simmetrici?
+- **Decisione finale**: **opzione 1** — Cerebras 8B (cosmetic, +16% speed marginal) + Groq 70B (behavior, capability superiore). Rationale "modello piu potente per task piu complessi" ortogonale a speed. Simmetricizzare non aggiunge valore.
+- **Perche' chiuso ora**: convenzione gia' applicata empirica in `MODEL_ROUTING.md` matrice routing classe-based; nessun behavior-critical Cerebras n>=5 raccolto perche' workflow naturale ha gia' seguito opzione 1 (memoria muscolare). Non aspettare n=5 e' lean honest: la decisione e' presa, falsificabile retroattivamente solo se emerge evidence contraria.
+- **File coinvolti**: `MODEL_ROUTING.md` linee 72-74 (gia' allineato), `CLAUDE.md` sezione wrapper (gia' allineato).
+- **Trigger ri-evaluation**: se >=2 task behavior-critical Cerebras 8B PASS reali (1st-try, no retry escalation a Groq 70B) emergono in dogfood organico SPRINT_02+ -> riconsiderare opzione simmetrica con ADR addendum. Pattern atteso opposto (Cerebras 8B safe-fails behavior, fallback Groq 70B).
 
 ---
 

@@ -61,7 +61,6 @@ Stack `Accepted` con **T3 SPRINT_02 hot-restart 2nd pass 10/5 mattina PASS**: `d
 
 ### Decisioni pendenti
 - ADR-0016 (Proposed) awaiting n>=3 data points addizionali
-- Decisione 004 (operativa, da scrivere in DECISIONS_LOG): Codex `/structural-reset` REJECTED 2026-05-07
 
 ### Sub-agent ecosystem (`.claude/agents/`)
 
