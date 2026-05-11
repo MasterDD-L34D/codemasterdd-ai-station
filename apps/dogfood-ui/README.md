@@ -163,8 +163,10 @@ cp apps/dogfood-ui/data/dogfood.sqlite backup/dogfood-$(date +%Y%m%d).sqlite
 Una volta configurate `LANGFUSE_PUBLIC_KEY` + `LANGFUSE_SECRET_KEY`:
 
 - Dashboard mostra "Langfuse: reachable" in health
-- Se fornisci `langfuse_trace_id` in POST /api/entries (o via form `/entries/new`) -> appare colonna "Trace" nelle tabelle con link cliccabile a `${LANGFUSE_HOST}/trace/${trace_id}`
-- TODO futuro: auto-pull trace metadata (tokens, cost, latency) da Langfuse quando trace_id fornito
+- Se fornisci `langfuse_trace_id` in POST /api/entries (o via form `/entries/new`) -> appare colonna "Trace" nelle tabelle con link cliccabile alla UI Langfuse
+- URL del link: `${LANGFUSE_HOST}/project/${LANGFUSE_PROJECT_ID}/traces/${trace_id}` quando `LANGFUSE_PROJECT_ID` e' configurato (canonical path Langfuse UI), altrimenti fallback `${LANGFUSE_HOST}/trace/${trace_id}` (best-effort redirect su Langfuse Cloud)
+- Auto-pull metadata: se Langfuse e' raggiungibile, l'app fa GET `/api/public/traces/{id}` e auto-popola `tokens_sent`, `tokens_received`, `cost_usd`, `latency_ms` quando l'utente non li ha esplicitati nel POST. Valori espliciti del client NON vengono mai sovrascritti. Su 404 / connection error degrada silente (entry salvata senza enrichment)
+- Configurazione: setta `LANGFUSE_PROJECT_ID` (oltre a `LANGFUSE_PUBLIC_KEY`/`LANGFUSE_SECRET_KEY`/`LANGFUSE_HOST`) nell'env per attivare URL project-scoped e auto-pull
 
 ## Test
 

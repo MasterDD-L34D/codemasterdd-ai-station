@@ -20,6 +20,7 @@ CREATE TABLE IF NOT EXISTS entries (
     tokens_sent       INTEGER NOT NULL DEFAULT 0,
     tokens_received   INTEGER NOT NULL DEFAULT 0,
     cost_usd          REAL NOT NULL DEFAULT 0,
+    latency_ms        INTEGER NOT NULL DEFAULT 0,
     commit_hash       TEXT,
     note              TEXT,
     langfuse_trace_id TEXT
@@ -47,6 +48,9 @@ class Database:
     def init_schema(self) -> None:
         with self.connect() as c:
             c.executescript(SCHEMA)
+            existing = {row["name"] for row in c.execute("PRAGMA table_info(entries)")}
+            if "latency_ms" not in existing:
+                c.execute("ALTER TABLE entries ADD COLUMN latency_ms INTEGER NOT NULL DEFAULT 0")
 
     def insert_entry(self, payload: dict[str, Any]) -> int:
         valid_classes = {'cosmetic', 'behavior', 'strategic'}
@@ -76,8 +80,8 @@ class Database:
                 INSERT INTO entries
                     (created_at, task_description, classe, stack, constraint_count,
                      outcome, retry_count, tokens_sent, tokens_received, cost_usd,
-                     commit_hash, note, langfuse_trace_id)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                     latency_ms, commit_hash, note, langfuse_trace_id)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """,
                 (
                     now_iso,
@@ -90,6 +94,7 @@ class Database:
                     int(payload.get("tokens_sent", 0) or 0),
                     int(payload.get("tokens_received", 0) or 0),
                     float(payload.get("cost_usd", 0) or 0),
+                    int(payload.get("latency_ms", 0) or 0),
                     payload.get("commit_hash", ""),
                     payload.get("note", ""),
                     payload.get("langfuse_trace_id", ""),

@@ -11,6 +11,7 @@
             <th>Retry</th>
             <th>Tok s/r</th>
             <th>Cost</th>
+            <th>Latency</th>
             <th>Commit</th>
             <th>Trace</th>
             <th></th>
@@ -29,10 +30,11 @@
             <td>{{ e.retry_count }}</td>
             <td>{{ e.tokens_sent }}/{{ e.tokens_received }}</td>
             <td>${{ '{:.4f}'.format(e.cost_usd) }}</td>
+            <td>{{ (e.latency_ms ~ ' ms') if e.latency_ms else '—' }}</td>
             <td><code>{{ e.commit_hash[:7] if e.commit_hash else '—' }}</code></td>
             <td>
                 {% if e.langfuse_trace_id %}
-                <a href="{{ langfuse_host }}/trace/{{ e.langfuse_trace_id }}" target="_blank" rel="noopener noreferrer" title="Open trace {{ e.langfuse_trace_id }} in Langfuse"><code>{{ e.langfuse_trace_id[:8] }}</code></a>
+                <a href="{{ langfuse_trace_url(e.langfuse_trace_id) }}" target="_blank" rel="noopener noreferrer" title="Open trace {{ e.langfuse_trace_id }} in Langfuse"><code>{{ e.langfuse_trace_id[:8] }}</code></a>
                 {% else %}
                 —
                 {% endif %}
@@ -45,7 +47,7 @@
         </tr>
         {% endfor %}
         {% if not entries %}
-        <tr><td colspan="13" class="empty">Nessuna entry</td></tr>
+        <tr><td colspan="14" class="empty">Nessuna entry</td></tr>
         {% endif %}
     </tbody>
 </table>

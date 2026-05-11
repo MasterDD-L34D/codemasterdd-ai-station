@@ -37,6 +37,7 @@ LITELLM_ENDPOINT = os.environ.get("LITELLM_ENDPOINT", "http://localhost:4000")
 LANGFUSE_HOST = os.environ.get("LANGFUSE_HOST", "http://localhost:3000")
 LANGFUSE_PUBLIC_KEY = os.environ.get("LANGFUSE_PUBLIC_KEY", "")
 LANGFUSE_SECRET_KEY = os.environ.get("LANGFUSE_SECRET_KEY", "")
+LANGFUSE_PROJECT_ID = os.environ.get("LANGFUSE_PROJECT_ID", "")
 DAFNE_HOST = os.environ.get("DAFNE_HOST", "http://localhost:5000")
 
 # ---------------------------------------------------------------------------
@@ -56,10 +57,19 @@ def create_app() -> Flask:
     )
     dafne = DafneClient(host=DAFNE_HOST)
 
+    host = LANGFUSE_HOST.rstrip("/")
+
+    def langfuse_trace_url(trace_id: str) -> str:
+        if LANGFUSE_PROJECT_ID:
+            return f"{host}/project/{LANGFUSE_PROJECT_ID}/traces/{trace_id}"
+        return f"{host}/trace/{trace_id}"
+
     @app.context_processor
     def inject_langfuse_ctx() -> dict[str, Any]:
         return {
-            "langfuse_host": LANGFUSE_HOST.rstrip("/"),
+            "langfuse_host": host,
+            "langfuse_project_id": LANGFUSE_PROJECT_ID,
+            "langfuse_trace_url": langfuse_trace_url,
             "langfuse_configured": bool(LANGFUSE_PUBLIC_KEY),
         }
 
@@ -105,8 +115,12 @@ def create_app() -> Flask:
                 for e in errors:
                     flash(e, "error")
                 return render_template("new_entry.html", form=payload)
+            pulled = enrich_from_langfuse(payload, lf)
             entry_id = db.insert_entry(payload)
-            flash(f"Entry #{entry_id} saved.", "success")
+            if pulled:
+                flash(f"Entry #{entry_id} saved. Auto-filled from Langfuse: {', '.join(pulled)}.", "success")
+            else:
+                flash(f"Entry #{entry_id} saved.", "success")
             return redirect(url_for("list_entries"))
         return render_template("new_entry.html", form={})
 
@@ -147,8 +161,13 @@ def create_app() -> Flask:
             errors = validate_entry(payload)
             if errors:
                 return jsonify({"errors": errors}), 400
+            pulled = enrich_from_langfuse(payload, lf)
             entry_id = db.insert_entry(payload)
-            return jsonify({"id": entry_id, "status": "created"}), 201
+            return jsonify({
+                "id": entry_id,
+                "status": "created",
+                "langfuse_autofilled": pulled,
+            }), 201
         entries = db.list_entries(limit=int(request.args.get("limit", 100)))
         return jsonify([entry_to_dict(e) for e in entries])
 
@@ -202,6 +221,27 @@ VALID_STACKS = {
     "claude-code-direct",
     "other",
 }
+
+
+def enrich_from_langfuse(payload: dict[str, Any], lf: LangfuseClient) -> list[str]:
+    """Best-effort auto-pull of tokens/cost/latency from Langfuse.
+
+    Only fills payload fields that are zero/missing - never overrides explicit
+    user-supplied values. Returns the list of field names that were auto-filled
+    (empty if no trace_id, Langfuse unreachable, or trace had no usable data).
+    """
+    trace_id = (payload.get("langfuse_trace_id") or "").strip()
+    if not trace_id:
+        return []
+    metadata = lf.fetch_metadata(trace_id)
+    if not metadata:
+        return []
+    filled: list[str] = []
+    for key in ("tokens_sent", "tokens_received", "cost_usd", "latency_ms"):
+        if key in metadata and not payload.get(key):
+            payload[key] = metadata[key]
+            filled.append(key)
+    return filled
 
 
 def validate_entry(payload: dict[str, Any]) -> list[str]:
