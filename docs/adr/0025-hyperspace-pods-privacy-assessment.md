@@ -1,11 +1,19 @@
-# ADR-0025 -- Hyperspace Pods privacy assessment (Phase 1 audit)
+# ADR-0025 -- Hyperspace Pods privacy assessment (NO-GO empirico)
 
-> *TL;DR: Phase 1 privacy audit deep su Hyperspace Pods (P2P AI Compute Clusters via libp2p) completata 2026-05-11 con multi-source synthesis (6 fonti, AA01 task aa01-003). Findings: encryption strong (Noise XX libp2p), Pod private mode con AES-256-GCM capsules + Raft consensus, **MA**: source aios-cli **private monorepo** (memory `reference_hyperspace_pods.md` aveva claim inaccurate "open source", fixed in questa session), bootstrap nodes 6/6 hyperspaceai-controlled, 5 GossipSub topic broadcast experiment results network-wide + ~5min GitHub archival default mode, telemetry opt-out NOT documented esplicito. **Verdict: CONDITIONAL GO** con 5 hard gates obbligatori prima di Phase 2 trial. NO install fino a trigger reale (Mac mini scenario / VRAM 8GB constraint / device pooling family/friends).*
+> *TL;DR: Hyperspace Pods (P2P AI Compute Clusters via libp2p) **NO-GO definitivo** per stack sovereign codemasterdd. Verdict basato su empirical trial 30s daemon `v5.73.8` (AA01 task aa01-001 decisions D-017 + D-018) condotto **2026-05-10 sera / 2026-05-11 mattina** (sessione precedente). 3 finding architetturali non-config-fixable: (1) auto-update FORCED 680 MB on startup, NO opt-out; (2) **local Ollama models auto-esposti** alla network 2M+ peer **senza consenso** (`Loading ollama:qwen2.5-coder:7b: 0%` visible nei log daemon startup); (3) pulse round voting ATTIVO con isolation flags `--no-agent --no-research --no-causes --no-api --profile relay`. Empirical pktmon capture (120149 pkt outbound in 3 min): **30+ destinazioni IP TUTTE PUBBLICHE** (DigitalOcean bootstrap pool + GitHub Releases CDN + Cloudflare + GCP + Contabo VPS + CherryServers), **zero traffic LAN despite `--pod eduardo-trial-1node`**. Pivot decisione: **llama.cpp RPC** primary candidate (sovereign-pure, LAN-only by design, MIT open source) + **llama-server REST API** single-node Lenovo viable (76 tok/s Qwen 7B Q4 CUDA, D-019/D-022).*
 
-- **Status**: **Proposed** (2026-05-11)
+- **Status**: **Proposed** (2026-05-11) -- Eduardo final accept/reject
 - **Data**: 2026-05-11
-- **Decisore**: Eduardo Scarpelli (final accept/reject)
+- **Decisore**: Eduardo Scarpelli
 - **Deciders**: solo-dev
+- **Supersedes**: nessuno (Hyperspace era REFERENCE-only)
+- **Related**: AA01 task `2026-05-aa01-001-2026-05-10-fleet-discovery-pod-design` decisions D-001 to D-022
+
+## Process honesty note
+
+Questo ADR è stato inizialmente scritto **2026-05-11 notte** in AA01 task aa01-003 con verdict **CONDITIONAL GO** basato su autoresearch web-only multi-source (6 fonti). **AMEND post discovery** (2026-05-11 notte+1): refresh-verify state interno mancato → task aa01-001 fleet-discovery aveva già completato audit empirico 30s daemon trial con verdict opposto NO-GO definitivo (D-017, 99% confidence). Mio audit web-only ha DUPLICATO 4-5h di lavoro empirico + reached verdict ERRATO (CONDITIONAL GO) perché empirical trial 30s ha rivelato 3 finding architetturali che documentazione pubblica + autoresearch web NON espongono.
+
+Lesson L-2026-05-002 (in promotion da DRAFT aa01-001 fleet-discovery): empirical trial breve > documentation cycles per architectural decisions, anti-pattern "documentation ground truth assumption". Memory `feedback_governance_refresh_verify` violata in mia sessione 2026-05-11: pre-edit refresh state INTERNO mancato.
 
 ## Context and Problem Statement
 
@@ -13,266 +21,204 @@ Memory `reference_hyperspace_pods.md` (added 2026-05-10) REFERENCE-only fase 1 c
 
 Hardware compat OK (RTX 5060 8GB qualifies VRAM minimum 4GB + Ryzen 4070 SUPER 12GB compatible).
 
-Audit Phase 1 trigger: Eduardo "auto modo con archon aa01 e autoresearch come core per le decisioni" (sessione 2026-05-11). Plan integration `docs/plans/integration-aa01-vault-hyperspace-2026-05.md` Obiettivo 3 prevedeva:
-- 5 ambiti privacy audit (P2P data flow / Pod trust model / GossipSub messages / Thor backend / LAN model sharing)
-- Multi-source synthesis enforce (memory `feedback_autoresearch_default.md` 8-step checklist)
-- Output ADR Proposed con verdict GO / NO-GO / CONDITIONAL GO + decision tree Phase 2 trigger
+Audit trail completo:
+1. **2026-05-10 sera**: AA01 task aa01-001 fleet-discovery startato + audit Phase 4 originale web-only → verdict CONDITIONAL GO (DRAFT/02)
+2. **2026-05-10 sera**: D-007 NO-GO premature post one-shot README re-audit
+3. **2026-05-10 sera**: D-009 CONDITIONAL GO RESTORED post Eduardo pushback + autoresearch multi-source
+4. **2026-05-11 mattina**: D-011 pivot exo (basato su Archon 7-step + multi-source autoresearch); Hyperspace ABANDON
+5. **2026-05-11 mattina**: D-013 abandonment exo (Windows non supportato falsified) + pivot Ollama+SSH
+6. **2026-05-11 mattina**: D-015 RE-FRAME goal + Hyperspace v5.x re-evaluation (Archon 7-step) → CONDITIONAL GO restored Phase 6-sextus
+7. **2026-05-11 mattina**: **D-017 empirical trial 30s daemon Hyperspace v5.73.8 → NO-GO DEFINITIVO 99% confidence**
+8. **2026-05-11 mattina**: D-018 pivot llama.cpp RPC primary candidate
+9. **2026-05-11 mattina**: D-019 Phase 6-septies llama.cpp PASS Lenovo standalone (Qwen 7B Q4 CUDA, 76 tok/s tg32, ~5060 sm_120)
+10. **2026-05-11 mattina**: D-020/D-021 Phase 7-septies BLOCKED (DESKTOP AVG quarantine + rpc-server silent-exit Windows bug)
+11. **2026-05-11 mattina**: D-022 Option D llama-server REST API smoke PASS Lenovo (0.34s latency 50-token chat completion)
 
-Audit eseguito via AA01 task `2026-05-aa01-003-2026-05-11-hyperspace-phase-1-privacy-au` con 6 fonti parallel:
-1. hyperspaceai/aios-cli README (GitHub)
-2. hyperspaceai/agi README (GitHub)
-3. hyperspace.computer docs (URL 404, captured come finding)
-4. libp2p Noise spec
-5. libp2p GossipSub v1.1 spec
-6. WebSearch "hyperspace.sh privacy security audit 2026"
-+ Phase 1.2: changelog.hyper.space + hyper.space root
-
-Audit log integrale: `C:/Users/edusc/aa01/workspace/2026-05-aa01-003-*/DRAFT/01-five-ambiti-synthesis.md` + `DRAFT/02-adr-scaffold-and-trigger.md`.
+22 decisions documentate in `aa01/workspace/2026-05-aa01-001-2026-05-10-fleet-discovery-pod-design/decisions.md`.
 
 ## Decision
 
-**CONDITIONAL GO** -- 5 hard gates obbligatori prima di Phase 2 trial.
+**NO-GO Hyperspace adoption per use case sovereign codemasterdd.**
 
-### Findings per 5 ambiti
+Tutti i 3 finding architetturali emersi durante empirical trial 30s daemon Hyperspace v5.73.8 (D-017) sono **architetturali, non config-fixable**:
 
-#### Ambito 1 -- P2P data flow + encryption
+### Finding empirico 1 -- Auto-update FORCED at startup, NO opt-out
 
-**Findings**:
-- Encryption channel libp2p Noise XX (ChaChaPoly + SHA256 + Curve25519) -- e2e strong, forward secrecy
-- 2 data flow modes: `--local` (NO network) vs `--p2p` (network inference, routing to "best peer")
-- Metadata leak unavoidable: connection timing + message size + handshake patterns visible to network observer
+- Daemon scarica v5.73.8 → v5.73.9 (680 MB) IMMEDIATAMENTE su startup
+- Anche con manual zip install user-dir + service NON registrato
+- Updater logic dentro al binary, NON solo timer Linux/macOS files
+- Mitigation tentata pre-install (manual zip extract) NON sufficiente
+- Bug osservato: "[UPDATE] Wrote v5.73.9 but launcher on disk still reports vunknown. Auto-update paused for 0h to avoid restart loop." -- "0h" suggerisce bug stato
 
-**Verdict ambito**: encryption strong, MA `--p2p` mode routing logic + Pod isolation enforcement NON dettagliato fonti pubbliche.
+**Implication**: sovereign principle "audit-then-replay" violato architettura -- binary cambia post-install senza consenso utente. Reproducibilita' build impossibile.
 
-#### Ambito 2 -- Pod trust model
+### Finding empirico 2 -- Local Ollama models auto-esposti SENZA CONSENSO (privacy violation severa)
 
-**Findings**:
-- Pod = private AI clusters, members install CLI + form mesh + pool compute
-- AES-256-GCM encrypted capsules portable + self-hosting via Docker
-- Membership control mechanism NOT detailed in fonti pubbliche (chi invita / kicker / ban / reputation Pod-internal TBD)
+- Log daemon startup: "Loading ollama:qwen2.5-coder:7b: 0%"
+- Daemon ha scoperto Ollama locale Lenovo + sta caricando IL Qwen 7B locale per esporlo come inference resource alla network 2M+ peer
+- Documentation feature ("Discovers and uses locally installed Ollama models out of the box") era opt-in implicito MA empirical e' **opt-out only** (richiede uninstall Ollama o disable Hyperspace)
+- **Implicazione PRIVACY GRAVE**: sovereign-only stack codemasterdd Lenovo (Aider + OpenCode + Ollama 8 modelli) sarebbe esposto al network al primo daemon start
+- Behavior NON documented in changelog / README / Twitter announcement
 
-**Verdict ambito**: capability OK in principio, granularity controls UNKNOWN.
+### Finding empirico 3 -- Pulse round voting ATTIVO despite isolation flags
 
-#### Ambito 3 -- GossipSub messages telemetry
+- Log: "[NETWORK] -> Elected for pulse round"
+- Pulse rounds = network consensus voting (parte sistema economic incentive USDC)
+- Flags `--no-agent --no-research --no-causes --no-api --profile relay` NON disabilitano pulse participation
+- Conferma: even minimal-relay node partecipa al consenso economic-incentive network-wide
+- "1-node Pod" framing marketing != architectural isolation reale
 
-**Findings critici**:
-- **5 GossipSub topic NOTI default mode** broadcasted network-wide: `research/rounds`, `search/experiments`, `finance/experiments`, `cause/skills`, `cause/inspiration`
-- Performance metrics + model results flowing through ~1s latency + ~2min CRDT consensus + **~5min GitHub archival** (data persistence PUBLIC default)
-- GossipSub spec esplicit: "specification doesn't address privacy properties" -- topic subscriptions + content visible within mesh topology
-- Opt-out flags NOT clearly specified
+### Pktmon capture analysis (D-018, 120149 pkt 3 min)
 
-**Verdict ambito**: major concern per default mode. Pod private mode forse isola, MA confirm trial.
+Empirical network monitoring durante 3-min daemon run con `--pod eduardo-trial-1node --no-agent --no-research --no-causes --no-api --profile relay --mode chill --headless`:
 
-#### Ambito 4 -- Thor backend FOSS vs source-available
+- **120149 pkt outbound** in 3 min
+- **30+ destinazioni IP uniche, TUTTE PUBBLICHE** (zero traffic LAN 192.168.1.0/24 fleet)
+- Provider mappati: DigitalOcean (5+ IPs Hyperspace bootstrap pool), GitHub Releases CDN (auto-update download), Cloudflare (assets hyperspace.sh), Google Cloud, Contabo VPS, CherryServers VPS
+- Top destinations: 138.197.168.9 (DO, 26460 pkt), 64.225.82.25 (DO, 25065 pkt), 185.199.110.133 (cdn-185-199-110-133.github.com, 14112 pkt)
+- **Implicazione**: `--pod <name>` flag NON isola routing-level. Daemon partecipa al global P2P regardless.
 
-**Finding critico**:
-- aios-cli repo esplicit: "**This is a release-only repository... source code lives in a private monorepo**"
-- License MIT dichiarata MA source NOT public
-- **Contradice memory `reference_hyperspace_pods.md` riga 13** -- accuracy fix immediato
-- NextronSystems Thor (WebSearch result) != Hyperspace Thor (omonima cybersecurity scanner)
-- Hyperspace Thor = TurboQuant data-oblivious vector quantization (KV cache + vector search)
-- 6 bootstrap nodes hyperspaceai-controlled geographically distributed (US East/EU West/Asia Pacific/US West/South America/Oceania) -- SPOF dependency initial
-- AVM (Agent Virtual Machine, v5.40.11 April 2026) = security layer con "supply-chain protection + sandboxed installations + behavioral scanning + neurosymbolic gates rules first block always wins"
+### Aggravanti accessori
 
-**Verdict ambito**: source private = MAJOR concern sovereign-first. Bootstrap controlled = limited decentralization. AVM security layer good in principio MA source FOSS portion TBD.
+- AVM Windows non in release matrix (404)
+- Chain blockchain Windows non disponibile (404)
+- AES-GCM JS fallback (no Rust addon Windows secondary)
+- Pod scope `--pod eduardo-trial-1node` NON ha prevented network connection
+- Capture pktmon riempito da auto-update download 680 MB vs inference traffic
 
-#### Ambito 5 -- LAN model sharing isolation
+## Path forward: llama.cpp RPC primary candidate
 
-**Findings**:
-- Native GPU inference (CUDA/Metal via node-llama-cpp)
-- Models: Qwen, GLM-5, GGUF formats
-- "One member downloads model, rest pull from LAN ~1Gbps" claim
-- Transport protocols + checksum verify + format detail NOT documented
-- Pod isolation via AES-256-GCM capsules -- in-Pod sharing OK
-- Cross-Pod / public mesh sharing isolation UNKNOWN
+Decision D-018 + empirical validation D-019/D-022:
 
-**Verdict ambito**: in-Pod sharing capability OK, cross-Pod isolation TBD trial.
+### Razionale llama.cpp RPC
 
-### Cross-ambito condensato
+- **License**: MIT (open source, audit-then-replay possibile)
+- **Windows binary native**: ggml-org/llama.cpp Releases CUDA 13.1 builds
+- **LAN-only by design**: security warning explicit "Never run on open networks"
+- **Pure sovereign**: no bootstrap, no telemetry, no auto-update, no economic system
+- **Heterogeneous CUDA**: 5060 sm_120 + 4070S sm_89 + 2070S sm_75 + 1050Ti sm_61 supportato via tensor-split
+- **GGUF compat**: Ollama models reusable (no duplicate download)
 
-**Pattern emerged**:
-1. Sovereign-first principle stress: source private + bootstrap controlled + GitHub archival public mode default = trust transitive su organization
-2. Pod mode private = isolation key (AES-256-GCM capsules + Raft consensus + Docker self-hosting) -- capability strong, enforcement detail TBD
-3. Telemetry default-on con 5 topic publici = primary privacy concern per default mode
-4. Local-first claims valid in `--local` mode, `--p2p` mode increase exposure
-5. Audit reproducibility limited: docs 404 + source private = gap insanabile fonti pubbliche
+### Validation empirica (D-019/D-022)
 
-### 5 hard gates (CONDITIONAL GO criteria)
+**Single-node Lenovo PASS** (Phase 6-septies):
+- llama.cpp Windows CUDA work confirmed: RTX 5060 sm_120 detected, ggml-cuda.dll loaded
+- Performance baseline Qwen 7B Q4: pp16 931 tok/s + tg32 **76 tok/s** CUDA Lenovo
+- Performance vs Ollama: 76 vs 114 tok/s = -33% slowdown (Ollama piu' veloce single-node, llama.cpp unlocks distributed via RPC)
+- llama-server REST API Option D PASS: 0.34s latency 50-token chat completion (OpenAI-compatible `POST /v1/chat/completions`)
 
-#### Gate 1 -- Pod mode only
+**Multi-node Phase 7-septies BLOCKED tonight** (D-020/D-021):
+- DESKTOP-B9L203E: AVG Antivirus quarantine 41 file post-extract (1 sopravvive: `libomp140.x86_64.dll` MS-signed). Eduardo manual UI AV exclusion needed
+- DESKTOP-B9L203E driver 536.99 -> max CUDA 12.2 (incompat llama.cpp CUDA 12.4 + 13.1, needs driver update >=545)
+- LAPTOP-D73A8DIE went to sleep durante test
+- rpc-server CPU-only Windows: silent-exit 10s no error message (b9097 build bug hypothesis)
 
-Operazione exclusively via Pod privato creation. NON join default mesh con 5 topic GossipSub publici.
+### Trade-off llama.cpp RPC accettato
 
-**Verificable**: Pod creation CLI flow + Wireshark/tcpdump network egress monitoring durante trial 1-node Lenovo (24h baseline).
-
-#### Gate 2 -- Telemetry empirical opt-out
-
-Test trial 1-node, identificare mandatory telemetry vs opt-out flags. "Cost receipts on every request" semantica -- locale vs server-side?
-
-**Verificable**: trial 1-node + network egress monitoring 24h continuous + scan opzioni CLI/config.
-
-#### Gate 3 -- Source verifiable portion
-
-aios-cli source NOT pubblico. Verificare:
-- Thor self-hosting Docker image pubblico esiste?
-- Quale subset funzionalita' e' reproducible build via FOSS?
-- AVM source FOSS?
-
-**Verificable**: search hyperspaceai org repos public + DockerHub registry + license analysis ogni componente disponibile.
-
-#### Gate 4 -- Trust model Pod live verification
-
-Documenta admin/kick/ban capability durante trial 2-node:
-- Chi invita
-- Chi puo' kicker / ban revoke
-- Chi vede encrypted capsule key
-
-**Verificable**: trial 2-node (Lenovo + 1 device test) + admin operations test scenarios.
-
-#### Gate 5 -- Bootstrap SPOF acceptable
-
-6 bootstrap nodes hyperspaceai-controlled. Test cached peer list ricovery + Pod mesh sopravvive bootstrap down.
-
-**Verificable**: trial con bootstrap nodes blocked (firewall rule) + observe se Pod private continua funzionare.
+- **POC stage**: fragile, manual config (vs Ollama auto-discovery)
+- **Manual peer discovery**: no auto-discovery, comma-separated addresses
+- Mitigation: Phase 6-septies + 7-septies trial empirical incremental
 
 ## Options considered
 
-### Opzione A -- CONDITIONAL GO (scelta)
+### Opzione A -- NO-GO Hyperspace + pivot llama.cpp RPC (scelta)
 
-5 hard gates + Phase 2 trial isolated 1-node prima multi-node adoption.
+Validato empirically via aa01-001 22 decisions audit cycle.
 
 **Pro**:
-- Allow exploration use case Mac mini extension / device pooling
-- Preserve sovereign-first via Pod private mode validation empirico
-- Reactivation criteria clear per pivot a NO-GO se trial fail
+- Sovereign principle preserved (LAN-only + open source MIT + audit-then-replay possibile)
+- Empirical validation done (D-019 single-node PASS Lenovo)
+- llama-server REST API fallback ready (D-022 Option D)
+- Cleanup post-trial preserved per future audit reference
 
 **Contro**:
-- Trial setup overhead (1-2 sessioni Phase 2 + 24h+ observation periodo)
-- Source private restrictive per pure sovereign audit purist position
+- Phase 7-septies multi-node BLOCKED tonight (AVG + driver + rpc-server bug)
+- POC stage fragility accepted as trade-off
 
-### Opzione B -- NO-GO
+### Opzione B -- CONDITIONAL GO Hyperspace 5 gate (mio ADR-0025 original)
 
-Adoption Hyperspace NON allowed. Continue scenario Mac mini standalone (ADR-0009 / 0024 derivati).
+5 hard gates per Phase 2 trial isolated.
 
-**Pro**: Sovereign-first principle strict respect, NO black-box dependency
-**Contro**: Loss of distributed inference capability potential, Mac mini scenario solitario more expensive ($1500+ vs $0 infrastruttura compagni)
+**Pro**: web-research-based + multi-source synthesis
+**Contro**: empirical trial 30s ha rivelato 3 finding architetturali NON detectable da web-only. Gate 1 (Pod mode only) **architetturalmente non raggiungibile** (D-017 empirical proof).
 
-**Verdict**: scartata -- gates Phase 2 trial mitigano gran parte concerns. NO-GO premature senza empirical trial.
+**Verdict**: scartata post discovery aa01-001 D-017.
 
-### Opzione C -- GO clean (install + use default)
+### Opzione C -- GO clean
 
-Adoption immediate without restrictions.
+Install + use default.
 
-**Pro**: zero overhead
-**Contro**: violates sovereign-first principle (source private + telemetry default-on + bootstrap SPOF), high privacy risk default mesh participation
-
-**Verdict**: scartata -- audit findings revelano risks NON acceptable senza gates.
+**Verdict**: scartata immediate -- 3 finding empirici (auto-update FORCED + Ollama auto-expose + pulse voting) violano sovereign principle architetturalmente.
 
 ## Consequences
 
-### Positive (se Phase 2 trial PASS tutti 5 gates)
-- Distributed inference capability validated per Mac mini scenario / device pooling family
-- AES-256-GCM encrypted capsules + Raft consensus = Pod isolation strong validated empirico
-- Multi-device heterogeneous sharding (MLX Apple Silicon + CUDA Lenovo) = future-proof
-- Foundation per ADR derivati (ADR-0009 / 0024 addendum Mac mini scenario riformulato)
+### Positive
+- Sovereign-first principle preserved
+- llama.cpp RPC single-node Lenovo validato empirico
+- llama-server REST API pattern viable per future LAN cross-node routing (HTTP REST piu' debuggable di Ollama-CLI dispatch)
+- 22 decisions documented = audit trail completo per future reference
+- Lesson L-2026-05-002 cattura 3 anti-pattern + 4 pattern positive
 
 ### Negative
-- Source aios-cli private monorepo = NO ispezione codice gestione weights/queries direct (license MIT trust transitive)
-- Bootstrap nodes 6/6 hyperspaceai-controlled = limited decentralization (mitigation: cached peer list)
-- Audit reproducibility limited fonti pubbliche
+- Hyperspace abandoned (capability distributed inference Pod-private NOT available come pure sovereign)
+- Phase 7-septies multi-node BLOCKED (DESKTOP AV + driver update + rpc-server Windows bug)
+- Pivot path llama.cpp RPC = POC stage fragility accepted
 
 ### Mitigations
-- Trial Phase 2 = empirical validation prima multi-node
-- Memory `reference_hyperspace_pods.md` accuracy fix immediate (questa session)
-- Reactivation criteria per pivot NO-GO se gates 1-5 fail
+- llama-server REST API fallback (D-022) per single-node Lenovo deployment immediate
+- Defer Phase 7-septies multi-node a SPRINT_03+ trigger:
+  - Source-build llama.cpp Windows + verify rpc-server bug fix
+  - Mac mini scenario (Apple Silicon + MLX path)
+  - vLLM + Ray cluster con WSL2 + GPU passthrough
+  - Petals private swarm (P2P pattern simile Hyperspace ma open-source)
 
-## Phase 2 trigger (decision tree)
+## Cleanup post-trial (done 2026-05-11 mattina)
 
-```
-Trigger Eduardo (Mac mini scenario / VRAM 8GB constraint / family pooling)
-  |
-  ├── Gate 1 verifiable -> Pod mode private creation possible?
-  |     ├── NO -> NO-GO (FAIL)
-  |     └── YES -> proceed Gate 2
-  |
-  ├── Gate 2 trial 1-node -> 24h observation OK telemetry?
-  |     ├── Mandatory telemetry detected -> NO-GO (FAIL)
-  |     └── Opt-out validated -> proceed Gate 3
-  |
-  ├── Gate 3 verify -> Thor Docker + AVM source FOSS portion?
-  |     ├── NO ALL black-box -> NO-GO (FAIL)
-  |     └── Partial verifiable -> proceed Gate 4
-  |
-  ├── Gate 4 trial 2-node -> admin/kick/ban OK?
-  |     ├── Trust model insufficient -> NO-GO (FAIL)
-  |     └── Verified -> proceed Gate 5
-  |
-  ├── Gate 5 -> bootstrap SPOF acceptable?
-  |     ├── Cached peer list NON funziona -> NO-GO (FAIL)
-  |     └── Mesh sopravvive bootstrap down -> Phase 3 GO
-  |
-  Phase 3: ADR scaffold integration + MODEL_ROUTING addendum
-```
-
-## Phase 2 trial setup (futuro, se trigger reale)
-
-1. **Setup environment**: Lenovo CodeMasterDD primario test machine. Network monitoring Wireshark/tcpdump (capture egress 24h).
-2. **Install**: `hyperspace` CLI Lenovo only (1-node, NO multi-node initially)
-3. **Pod creation**: private Pod via CLI invite-link or local-only mode
-4. **Observation 24h**: log all egress destinations + payload (size + frequency)
-5. **Source audit**: scan hyperspaceai org repos public + DockerHub + license analysis
-6. **Documenta finding**: `docs/research/hyperspace-trial-phase-2-<date>.md` separate
-7. **Decision Eduardo**: continue Phase 3 multi-node o stop Phase 2
+- `Remove-Item -Recurse $env:USERPROFILE\.hyperspace` (Lenovo)
+- Capture pktmon 262 MB logs preserved per future audit reference
+- Lesson L-2026-05-002 amplified con 3 anti-pattern + 4 pattern positive
 
 ## Related
 
-- **Memory** `reference_hyperspace_pods.md` -- accuracy fix immediato (sezione License/source + Thor backend + 5 GossipSub topics + bootstrap SPOF + 5 gate)
-- **Plan** `docs/plans/integration-aa01-vault-hyperspace-2026-05.md` Obiettivo 3 (completion via questo ADR)
-- **AA01 task** `2026-05-aa01-003-2026-05-11-hyperspace-phase-1-privacy-au` -- audit log completo
-- **Research doc** `docs/research/hyperspace-privacy-audit-2026-05-11.md` -- volumetric synthesis 5 ambiti + cross-source
-- **ADR-0009** Upgrade strategy (Mac mini scenario alternative)
-- **ADR-0023** Strategic tier post-Max (Phase 1 multi-source synthesis = Tier 0 capability)
-- **ADR-0024** Vue3 archive / Godot canonical timeline (parallel-run Game pivot context)
-- **Feedback** `autoresearch_default` -- methodology enforced
+- **AA01 task** `2026-05-aa01-001-2026-05-10-fleet-discovery-pod-design` -- 22 decisions audit trail completo
+- **Lesson L-2026-05-002** (in promotion da DRAFT/07 → learnings/) -- Hyperspace audit cycle 3 anti-pattern + 4 pattern positive
+- **Memory** `reference_hyperspace_pods.md` -- status update "ABANDONED post-trial" + reference L-2026-05-002
+- **Plan** `docs/plans/integration-aa01-vault-hyperspace-2026-05.md` Obiettivo 3 (Hyperspace audit -- NO-GO outcome formalized)
+- **ADR-0009** Upgrade strategy (Mac mini scenario alternative -- riformulato post-Hyperspace abandonment)
+- **ADR-0023** Strategic tier post-Max (Phase 1 multi-source synthesis Tier 0)
+- **Feedback** `autoresearch_default` -- methodology enforced ma INSUFFICIENT senza empirical trial per architectural decisions
+- **Feedback** `governance_refresh_verify` -- pattern violato in mia sessione 2026-05-11 (refresh state INTERNO mancato)
 
 ## Notes
 
 ### Ratification
 
-Status **Proposed** (NOT Accepted). Eduardo decide accept/reject/modify durante review PR.
+Status **Proposed**. Eduardo decide accept/reject/modify. Verdict NO-GO supportato empirico in aa01-001 D-017 99% confidence.
 
-### Source quality limitations (transparency)
+### Lesson methodology (L-2026-05-002)
 
-- `hyperspace.computer` docs URL 404 (official docs unavailable durante audit 2026-05-11)
-- aios-cli source private (NO direct code audit)
-- 3rd-party security audit independent NOT found via WebSearch
-- Findings basati su README + community + libp2p protocol spec + changelog vendor
-- Source reliability score: 6 fonti indipendenti, 1 MAJOR finding cross-source (private monorepo), 0 audit terzo
+3 anti-pattern documentati:
+1. **One-shot README audit**: produce verdict confidente ma sbagliato
+2. **Marketing != implementation**: Twitter announcement framing != architectural primitives
+3. **Documentation ground truth assumption**: 4 cicli audit documentale missed quello che 30s empirical trial ha rivelato direttamente
 
-### Reactivation triggers (per pivot a NO-GO post-trial)
+4 pattern positive:
+1. **Autoresearch obbligatorio per audit** (memory `feedback_autoresearch_default.md` 8-step checklist)
+2. **Empirical trial breve per architectural decisions** (30s daemon trial > 4 cicli audit documentale)
+3. **Archon 7-step First Principles per high-stakes** (RESTATE + CHALLENGE + RED-TEAM + CALIBRATE)
+4. **Falsifying experiment economic check pre-commit** (~30s WebFetch verify top-1 assumption prima di formalizzare decision con confidence elevata)
 
-- Pod mode forza join default mesh first (Gate 1 fail)
-- Mandatory telemetry NON disabilitabile (Gate 2 fail)
-- All components black-box closed source (Gate 3 fail)
-- No Pod admin / kick / ban capability (Gate 4 fail)
-- Bootstrap mandatory dependency con NO recovery (Gate 5 fail)
-- Trial mostra prompt/weight leak network-wide (any Gate fail)
+### Reactivation triggers (per riconsiderazione futura)
+
+- Hyperspace release con architectural redesign (opt-out auto-update + opt-out Ollama expose + opt-out pulse voting tutti enforceable via config flags persistenti)
+- 3rd-party security audit indipendente che documenta isolation reale Pod mode
+- Source full open-source (no private monorepo)
+- Empirical re-trial 30s capture con verdict different finding
+
+Senza questi trigger, status **ABANDONED** definitivo.
 
 ### Non-negotiable
 
-- NO install Phase 1 (audit-only completato 2026-05-11)
-- NO join public mesh prima Pod private trial validato
-- Phase 2 trial separate scope (NON in codemasterdd repo, output research doc destination)
-- Eduardo final accept/reject prima Phase 2 trigger
-
-### Sourcing methodology validation
-
-Memory `feedback_autoresearch_default.md` 8-step checklist:
-1. ✅ Multi-source > 1 (6 fonti indipendenti)
-2. ✅ Parallel research (batch fetch synthesis)
-3. ✅ Synthesis NOT one-shot (cross-ambito + contradictions)
-4. ✅ Finding cross-source emerged (source private monorepo)
-5. ✅ Gap identified (docs 404 + 3rd-party audit absent)
-6. ✅ Cost-benefit verdict cross-source (CONDITIONAL GO con 5 gate)
-7. ✅ Attribution memory/plan/AA01 preserved
-8. ✅ Audit log AA01 DRAFT 01 + 02 + decisions.md (D-001 to D-005)
+- NO install Hyperspace finché trigger reactivation soddisfatto
+- llama.cpp RPC POC stage fragility accettata come trade-off sovereign
+- Pivot path Phase 7-septies deferred SPRINT_03+ trigger (Mac mini scenario o major workflow change >32 GB models)
