@@ -1914,6 +1914,80 @@ Validation: privacy guard rail H8 logico (vault NOT whitelisted -> aider-groq ex
 
 ---
 
+## 2026-05-11 notte + 2026-05-12 mattina (plan integration AA01+Vault+Hyperspace + ADR-0025 amend + AA01 lifecycle)
+
+### Contesto
+
+Continuazione marathon 11/5 post closure ritual sera. Eduardo richiesto execution plan integration 3 obiettivi (Vault sibling-peer + Hyperspace audit + AA01 inbox capture). Auto mode + protocolli AA01 + autoresearch enforce.
+
+### Completato
+
+#### Workflow 1 -- Vault sibling-peer adoption (Obiettivo 2 plan integration)
+- AA01 task `aa01-002-vault-integration-readonly` lifecycle completo (inbox + classify + promote + Phase 0-5 + lesson L-2026-05-003 + archive SHIP)
+- 4 DRAFT (00-04) + plan.md + decisions.md (D-001 Phase 5 autoresearch pivot)
+- Research doc `docs/research/vault-patterns-adoption-2026-05-11.md` con 5 pattern decisions + finding autoresearch
+- Finding chiave: ADR-0018 (Accepted 2026-04-24) gia' definisce 3-gate identico al Quality Gate vault -> Pattern A2 ADOPT -> SKIP redundant + ADR-0018 promette `SMOKE_TEST_TEMPLATE.md` mai creato (gap 17gg)
+- Pattern B EXPAND ADOPT: `.claude/agents/SMOKE_TEST_TEMPLATE.md` (chiude gap esistente) + `.claude/agents/SUB_AGENT_TEMPLATE.md` (scaffolding nuovo agent)
+- Lesson L-2026-05-003 cross-repo pattern adoption methodology
+
+#### Workflow 2 -- Hyperspace audit Phase 1 + AMEND post discovery (Obiettivo 3 plan integration)
+- AA01 task `aa01-003-hyperspace-phase-1-privacy-au` startato web-only autoresearch 6 fonti (parallel)
+- ADR-0025 originale Proposed CONDITIONAL GO con 5 hard gates
+- **DISCOVERY 2026-05-12 notte+1**: refresh-verify state interno MANCATO. Task aa01-001 fleet-discovery aveva gia' 22 decisions (D-001 to D-022) Hyperspace audit empirico completo con verdict NO-GO definitivo (D-017, 99% confidence)
+- Empirical 30s daemon trial Hyperspace v5.73.8 (D-017) ha rivelato 3 finding architetturali (non config-fixable):
+  1. Auto-update FORCED 680 MB on startup, NO opt-out
+  2. Local Ollama models auto-esposti SENZA CONSENSO (qwen2.5-coder:7b loading visible startup log)
+  3. Pulse round voting ATTIVO despite isolation flags
+- Pktmon capture 3 min (D-018): 120149 pkt outbound, 30+ destinazioni IP TUTTE PUBBLICHE, zero LAN traffic despite `--pod eduardo-trial-1node` flag
+- **AMEND ADR-0025**: CONDITIONAL GO -> **NO-GO empirico definitivo** + reference D-017/D-018 + process honesty note transparency
+- **AMEND research doc**: include empirical findings primary + web research secondary corroborate
+- **AMEND memory `reference_hyperspace_pods.md`**: status "ABANDONED post-empirical-trial" + pivot llama.cpp RPC primary
+- **REJECT aa01-003** (duplicate web-only audit)
+- **SHIP aa01-001 fleet-discovery** + Lesson L-2026-05-002 (Hyperspace audit cycle 3 anti-pattern + 4 pattern positive)
+- Pivot llama.cpp RPC: D-019 Phase 6-septies PASS Lenovo (Qwen 7B Q4 tg32 76 tok/s CUDA) + D-022 Option D llama-server REST API PASS (0.34s latency 50-token chat). Multi-node Phase 7-septies BLOCKED tonight (DESKTOP AVG + driver + rpc-server Windows bug), defer SPRINT_03+ trigger
+
+#### PR #48 codemasterdd
+- 6 commit atomici:
+  1. `d20affc` docs(research): vault pattern adoption + autoresearch revised
+  2. `62b06ed` feat(agents): add SMOKE_TEST_TEMPLATE closing ADR-0018 gap
+  3. `9d162e5` feat(agents): add SUB_AGENT_TEMPLATE scaffolding
+  4. `f048693` docs(research): hyperspace pods privacy audit phase 1 (web-only, AMENDED da #6)
+  5. `eb658ad` docs(adr): adr-0025 hyperspace pods privacy conditional go (AMENDED da #6)
+  6. `b36a7df` docs(adr): amend adr-0025 to no-go empirical post discovery
+- PR title + body updated cover scope expanded + process honesty note
+
+#### AA01 cleanup completato
+- Workspace 0 task attivi (era 3)
+- Archive 7 entries (era 4, +3 oggi: 2 SHIP + 1 REJECT)
+- 3 lessons riusabili (L-2026-04-001 + L-2026-05-002 + L-2026-05-003)
+
+#### Memory updates
+- `project_vault_shared.md`: 6/7 production + path drift fix + 5 pattern decisions + reactivation triggers
+- `reference_hyperspace_pods.md`: **ABANDONED definitivo** + 3 finding empirici + pktmon capture + pivot llama.cpp RPC + lesson L-2026-05-002 cross-link
+- `project_aa01_studio.md`: post-archive state + counter Three Strikes + anti-pattern refresh-verify emerged
+
+### Da fare next session
+
+- Eduardo review PR #48 (6 commit, decisione accept/reject/modify per ADR-0025 NO-GO)
+- Phase 2 trial Hyperspace: trigger-deferred indefinitely (status ABANDONED)
+- Phase 7-septies llama.cpp multi-node: trigger-deferred SPRINT_03+ (Mac mini scenario o major workflow change)
+- SPRINT_02 T2+T5+T7 (post 20/05+ Max expiration)
+- H7 ANTHROPIC_API_KEY setup Eduardo-direct (residuo da plan precedente)
+
+### Note (process honesty)
+
+**Mio error sessione**: in 2026-05-11 sera ho startato aa01-003 hyperspace audit web-only SENZA refresh-verify state interno (aa01-001 22 decisions empirico gia' presente). Memory `feedback_governance_refresh_verify` violata. Ho duplicato 4-5h di lavoro empirico precedente.
+
+Recovery: amend ADR-0025 + transparent process honesty note (sezione apertura ADR + research doc) preserved per audit trail. Lesson L-2026-05-002 + L-2026-05-003 cattura methodology corretta per future:
+- Refresh state interno (memory + ADR + filesystem) PRIMA di azione = OBBLIGATORIO
+- Web/external research = NECESSARY ma INSUFFICIENT
+- Empirical trial breve per architectural decisions high-stakes
+- Multi-source synthesis con weighting (internal > external, empirical > documentation)
+
+**Validation positiva**: autoresearch multi-source enforce ha permesso recovery rapido (cross-check governance interna Pattern A2 redundancy ADR-0018 + gap SMOKE_TEST_TEMPLATE.md identificati). Methodology e' robusta quando applicata completa (incluso cross-check INTERNO, non solo esterno).
+
+---
+
 ## 2026-05-11 sera (closure ritual: merge batch 5 PR + issue #46 cleanup + integration plan)
 
 ### Contesto
