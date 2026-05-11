@@ -163,7 +163,7 @@ cp apps/dogfood-ui/data/dogfood.sqlite backup/dogfood-$(date +%Y%m%d).sqlite
 Una volta configurate `LANGFUSE_PUBLIC_KEY` + `LANGFUSE_SECRET_KEY`:
 
 - Dashboard mostra "Langfuse: reachable" in health
-- Se fornisci `langfuse_trace_id` in POST /api/entries → link cliccabile verso Langfuse UI (non ancora implementato)
+- Se fornisci `langfuse_trace_id` in POST /api/entries (o via form `/entries/new`) -> appare colonna "Trace" nelle tabelle con link cliccabile a `${LANGFUSE_HOST}/trace/${trace_id}`
 - TODO futuro: auto-pull trace metadata (tokens, cost, latency) da Langfuse quando trace_id fornito
 
 ## Test

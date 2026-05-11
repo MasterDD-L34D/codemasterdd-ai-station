@@ -56,6 +56,13 @@ def create_app() -> Flask:
     )
     dafne = DafneClient(host=DAFNE_HOST)
 
+    @app.context_processor
+    def inject_langfuse_ctx() -> dict[str, Any]:
+        return {
+            "langfuse_host": LANGFUSE_HOST.rstrip("/"),
+            "langfuse_configured": bool(LANGFUSE_PUBLIC_KEY),
+        }
+
     # -----------------------------------------------------------------------
     # Routes
     # -----------------------------------------------------------------------
@@ -90,6 +97,7 @@ def create_app() -> Flask:
                 "tokens_received": int(request.form.get("tokens_received", 0) or 0),
                 "cost_usd": float(request.form.get("cost_usd", 0) or 0),
                 "commit_hash": request.form.get("commit_hash", "").strip(),
+                "langfuse_trace_id": request.form.get("langfuse_trace_id", "").strip(),
                 "note": request.form.get("note", "").strip(),
             }
             errors = validate_entry(payload)

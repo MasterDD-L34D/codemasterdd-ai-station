@@ -94,6 +94,11 @@
     </label>
 
     <label>
+        Langfuse trace ID (optional)
+        <input type="text" name="langfuse_trace_id" maxlength="200" value="{{ form.langfuse_trace_id or '' }}" placeholder="es. trace-uuid-da-Langfuse">
+    </label>
+
+    <label>
         Note
         <textarea name="note" rows="3" maxlength="1000">{{ form.note or '' }}</textarea>
     </label>
