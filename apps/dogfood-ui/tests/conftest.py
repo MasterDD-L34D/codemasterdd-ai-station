@@ -21,9 +21,19 @@ if str(APP_DIR) not in sys.path:
 def app_factory(tmp_path, monkeypatch):
     """Returns a callable that builds a fresh app bound to a tmp SQLite DB.
 
-    Caller can pass env vars (LANGFUSE_PROJECT_ID etc.) before building.
+    Caller can pass env vars (LANGFUSE_PROJECT_ID etc.) before building. All
+    Langfuse/Dafne/LiteLLM env vars are cleared first so the test environment
+    never inherits a developer's exported config (e.g. a real
+    LANGFUSE_PROJECT_ID flipping URL rendering to project-scoped mode).
     """
+    HERMETIC_VARS = (
+        "LANGFUSE_HOST", "LANGFUSE_PUBLIC_KEY", "LANGFUSE_SECRET_KEY",
+        "LANGFUSE_PROJECT_ID", "DAFNE_HOST", "LITELLM_ENDPOINT",
+    )
+
     def _build(**env: str):
+        for var in HERMETIC_VARS:
+            monkeypatch.delenv(var, raising=False)
         for k, v in env.items():
             monkeypatch.setenv(k, v)
         # Reload the module so module-level config picks up monkeypatched env.

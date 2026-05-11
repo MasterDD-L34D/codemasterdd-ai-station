@@ -21,20 +21,24 @@ def test_health_endpoint(client):
 
 
 def test_create_entry_via_form_persists_trace_id(client):
-    r = client.post("/entries/new", data={
-        "task_description": "form test",
-        "classe": "cosmetic",
-        "stack": "other",
-        "constraint_count": "0",
-        "outcome": "success",
-        "retry_count": "0",
-        "tokens_sent": "0",
-        "tokens_received": "0",
-        "cost_usd": "0",
-        "commit_hash": "",
-        "langfuse_trace_id": "form-trace-001",
-        "note": "",
-    }, follow_redirects=True)
+    # Mock get_trace so the form POST does not fire a real HTTP request to
+    # http://lf.example.com via enrich_from_langfuse. This test only cares
+    # about URL rendering, not metadata auto-pull (covered separately).
+    with patch("langfuse_client.LangfuseClient.get_trace", return_value=None):
+        r = client.post("/entries/new", data={
+            "task_description": "form test",
+            "classe": "cosmetic",
+            "stack": "other",
+            "constraint_count": "0",
+            "outcome": "success",
+            "retry_count": "0",
+            "tokens_sent": "0",
+            "tokens_received": "0",
+            "cost_usd": "0",
+            "commit_hash": "",
+            "langfuse_trace_id": "form-trace-001",
+            "note": "",
+        }, follow_redirects=True)
     assert r.status_code == 200
     body = r.get_data(as_text=True)
     # Fallback URL (no LANGFUSE_PROJECT_ID set in the default fixture)
