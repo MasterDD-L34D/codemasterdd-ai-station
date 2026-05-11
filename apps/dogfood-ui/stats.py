@@ -120,6 +120,80 @@ def empty_stats() -> dict[str, Any]:
     }
 
 
+def aggregate_by_day(entries: list[sqlite3.Row]) -> list[dict[str, Any]]:
+    """Group entries by UTC day -> [{'date': 'YYYY-MM-DD', 'count': int, 'cost_usd': float}, ...]
+
+    Sorted ascending by date. Missing days within the [min, max] range are NOT
+    backfilled — the consumer (e.g. sparkline) can interpolate / step.
+    """
+    if not entries:
+        return []
+    daily: dict[str, dict[str, float]] = {}
+    for e in entries:
+        created = (e["created_at"] or "")[:10]  # 'YYYY-MM-DD' prefix from ISO
+        if not created:
+            continue
+        bucket = daily.setdefault(created, {"count": 0, "cost_usd": 0.0})
+        bucket["count"] += 1
+        bucket["cost_usd"] += float(e["cost_usd"] or 0)
+    return [
+        {"date": d, "count": int(v["count"]), "cost_usd": round(v["cost_usd"], 4)}
+        for d, v in sorted(daily.items())
+    ]
+
+
+def build_sparkline_svg(
+    points: list[float],
+    *,
+    width: int = 480,
+    height: int = 120,
+    pad: int = 8,
+    stroke: str = "#3b82f6",
+    fill: str = "#3b82f650",
+    label: str = "",
+) -> str:
+    """Render a minimal polyline + area sparkline as inline SVG.
+
+    No JS, no external CSS. Returns an empty <svg> placeholder when points is
+    empty or has a single value (no meaningful trend).
+    """
+    if not points:
+        return (
+            f'<svg viewBox="0 0 {width} {height}" width="{width}" height="{height}" '
+            f'role="img" aria-label="{label or "empty chart"}">'
+            f'<text x="{width // 2}" y="{height // 2}" text-anchor="middle" '
+            f'fill="#9ca3af" font-size="13">no data</text></svg>'
+        )
+
+    pmin, pmax = min(points), max(points)
+    span = (pmax - pmin) or 1.0
+    n = len(points)
+    inner_w = width - 2 * pad
+    inner_h = height - 2 * pad
+
+    def x(i: int) -> float:
+        return pad + (inner_w * i / max(n - 1, 1))
+
+    def y(v: float) -> float:
+        return pad + inner_h - (inner_h * (v - pmin) / span)
+
+    coords = " ".join(f"{x(i):.1f},{y(v):.1f}" for i, v in enumerate(points))
+    # Area fill: close the polyline down to the baseline
+    area = f"{pad:.1f},{pad + inner_h:.1f} {coords} {pad + inner_w:.1f},{pad + inner_h:.1f}"
+
+    aria = label or "trend"
+    return (
+        f'<svg viewBox="0 0 {width} {height}" width="{width}" height="{height}" '
+        f'role="img" aria-label="{aria}">'
+        f'<polygon points="{area}" fill="{fill}" stroke="none"/>'
+        f'<polyline points="{coords}" fill="none" stroke="{stroke}" stroke-width="2" '
+        f'stroke-linecap="round" stroke-linejoin="round"/>'
+        f'<text x="{pad}" y="{pad + 4}" font-size="11" fill="#6b7280">max {pmax:g}</text>'
+        f'<text x="{pad}" y="{height - pad // 2}" font-size="11" fill="#6b7280">min {pmin:g}</text>'
+        f'</svg>'
+    )
+
+
 def parse_promptfoo_results(path: Path) -> dict[str, Any]:
     """Parse promptfoo JSON output into dashboard-friendly structure."""
     with path.open("r", encoding="utf-8") as f:

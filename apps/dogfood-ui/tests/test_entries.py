@@ -131,6 +131,26 @@ def test_trace_link_uses_project_scoped_url_when_configured(client_with_project)
     assert "lf.example.com/trace/trace-xyz" not in body
 
 
+def test_stats_page_renders_sparklines_when_entries_exist(client):
+    # Seed one entry → daily aggregation has 1 day → sparkline emits a polyline
+    client.post("/api/entries", json={
+        "task_description": "sparkline seed",
+        "classe": "cosmetic",
+        "stack": "other",
+        "outcome": "success",
+        "cost_usd": 0.0042,
+    })
+    body = client.get("/stats").get_data(as_text=True)
+    assert "<svg" in body
+    assert "Entries per giorno" in body
+    assert "Cost USD per giorno" in body
+
+
+def test_stats_page_renders_empty_state_with_no_entries(client):
+    body = client.get("/stats").get_data(as_text=True)
+    assert "Nessuna entry ancora" in body
+
+
 def test_delete_entry(client):
     r = client.post("/api/entries", json={
         "task_description": "to delete",

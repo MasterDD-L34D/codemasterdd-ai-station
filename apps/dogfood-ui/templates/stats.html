@@ -5,6 +5,39 @@
 <h1>Stats aggregate</h1>
 
 <section class="panel">
+    <h2>Trend giornaliero ({{ daily|length }} giorni)</h2>
+    {% if daily %}
+    <div class="charts-row">
+        <figure class="chart">
+            <figcaption>Entries per giorno</figcaption>
+            {{ sparkline_count | safe }}
+        </figure>
+        <figure class="chart">
+            <figcaption>Cost USD per giorno</figcaption>
+            {{ sparkline_cost | safe }}
+        </figure>
+    </div>
+    <details>
+        <summary>Dati giornalieri ({{ daily|length }} righe)</summary>
+        <table class="data-table">
+            <thead><tr><th>Data</th><th>Entries</th><th>Cost USD</th></tr></thead>
+            <tbody>
+                {% for d in daily %}
+                <tr>
+                    <td class="nowrap">{{ d.date }}</td>
+                    <td>{{ d.count }}</td>
+                    <td>${{ '{:.4f}'.format(d.cost_usd) }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </details>
+    {% else %}
+    <p class="empty">Nessuna entry ancora — i grafici appariranno dopo il primo POST.</p>
+    {% endif %}
+</section>
+
+<section class="panel">
     <h2>Outcomes</h2>
     <pre class="json-block">{{ stats.outcomes | tojson(indent=2) }}</pre>
 </section>
