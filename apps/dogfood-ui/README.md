@@ -192,7 +192,24 @@ curl http://localhost:8080/api/stats | jq .total
 # → http://localhost:8080
 ```
 
-Test formale pytest da aggiungere in `tests/` in sprint futuri.
+### Pytest suite
+
+```bash
+# 1. Install pytest (one-off, already in requirements.txt)
+pip install pytest
+
+# 2. Run all tests (18 test cases, ~1s)
+cd apps/dogfood-ui
+python -m pytest tests/ -v
+```
+
+Coverage:
+
+- `tests/test_langfuse_client.py` -> `extract_trace_metadata` shape tolerance (trace-level vs observations[], seconds-to-ms conversion, legacy promptTokens/completionTokens names, zero/empty handling).
+- `tests/test_entries.py` -> health endpoint, form + JSON entry creation, validation errors, Langfuse auto-pull (fill / no-override / graceful degradation), project-scoped URL rendering, delete.
+- `tests/test_csv_export.py` -> empty DB, headers + filename, CSV escaping (commas / quotes / embedded newlines), Download CSV button presence.
+
+Ogni test usa una SQLite DB isolata in `tmp_path` via fixture `app_factory` (vedi `tests/conftest.py`) -> nessun side effect su `data/dogfood.sqlite`.
 
 ## Export CSV
 
