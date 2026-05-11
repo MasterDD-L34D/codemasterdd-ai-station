@@ -1911,3 +1911,70 @@ Validation: privacy guard rail H8 logico (vault NOT whitelisted -> aider-groq ex
 - **Multi-source autoresearch pre-decision**: 5 candidate Autoresearch evaluati + ranking fit, vs default one-shot README "best match". Feedback `autoresearch_default` 10/5 applicato: NO-GO erroneo restored a CONDITIONAL GO via multi-source synthesis. Pattern replicato in PR #39 senza riconvocare il pattern (parallel research embedded).
 - **Cumulative 7-11/5**: 29 PR mergeati codemasterdd cumulative (5 mattinata 10/5 + 24 7-9/5). Coda PR vuota. 22 ADR + 7 decisioni non-ADR. 11gg/9gg/8gg countdown to Max expiration (10gg residui shift naturale 10->9 il 10/5 + 8 il 11/5).
 - **Stop hook H12 root cause trovato + fix applicato 11/5**: marker `.claude/.session-start-head` NON esiste (mai esistito) ne' in main repo ne' in worktree. Diagnostic empirico 11/5: (1) script hook funzionano standalone (manual invocation crea marker); (2) `CLAUDE_PROJECT_DIR` env var **e' vuoto in shell Claude Code 2.1.128** (verificato via `env | grep CLAUDE`); (3) `"shell": "powershell"` field probabilmente ignorato dal hook engine; (4) comando `& "..."` passato a bash/cmd dove `&` NON e' call operator -> fail silenzioso. **Fix applicato**: rimosso `"shell": "powershell"` field + cambiato command a `powershell -NoProfile -ExecutionPolicy Bypass -File "${CLAUDE_PROJECT_DIR}/scripts/hooks/<name>.ps1"`. Validation: prossima session SessionStart dovrebbe creare marker (Claude Code interpola `${CLAUDE_PROJECT_DIR}` internamente prima di passare al shell, secondo doc). Se marker non emerge alla prossima session -> ulteriore debug necessario (fallback: hardcode path via `git rev-parse --show-toplevel`).
+
+---
+
+## 2026-05-11 sera (closure ritual: merge batch 5 PR + issue #46 cleanup + integration plan)
+
+### Contesto
+
+Continuazione marathon 11/5 dopo PR #41 v18 housekeeping merged. Pattern strategico: triage open PR + Eduardo conferma auth bulk merge + post-merge cleanup orphan branches + plan formalization per next session integration AA01+Vault+Hyperspace.
+
+### Completato
+
+#### Merge batch 5 PR codemasterdd (PR #43+#44/#45+#40+#41 sequenza)
+Triage 4 PR open + 1 merged (#42). Eduardo "si confermo" -> merge sequence:
+- **PR #43** squash `6165905`: pytest base dogfood-ui 18 tests
+- **PR #44 auto-closed**: base branch `claude/dogfood-ui-tests` deleted via #43 `--delete-branch` -> GitHub auto-close. **Rescue cherry-pick**: nuovo branch `claude/dogfood-ui-charts-rebased` da `origin/main` + cherry-pick commit `589279d` (sparklines) -> **PR #45** creato + squash `6cd79c8`. Audit comment su #44 con redirect a #45.
+- **PR #40** squash `f437480`: governance fleet hardware Ryzen RTX 4070 SUPER 12GB scoperto + LAN 4 device + AA01 task 002
+- **PR #41** squash `32838b4`: mio housekeeping v18 + OD-007 + hook fix
+
+Sandbox guard rail invocato 1 volta: force-push `--force-with-lease` denied per safety -> fallback nuovo branch (sandbox-friendly path).
+
+#### Issue #46 cleanup orphan branches + structural toggle
+Eduardo creato issue da Ryzen (sandbox limitations) con checklist 9 orphan branches + SHA + PR association.
+
+**Verify pre-delete** (safety check): per ogni branch `gh pr list --head` -> PR merged confermato (single edge `claude/dogfood-ui-charts` PR #44 closed-not-merged ma work cherry-picked in #45 squash merged).
+
+**Bulk delete sandbox flow**:
+- 1st attempt: 9 branches via `gh api -X DELETE` denied per "high-severity action requires precise user intent naming targets"
+- Mitigation: enumerated target list in chat + Eduardo "si" explicit confirm
+- 2nd attempt: 9/9 OK
+- `git fetch --prune` cleanup 9 tracking ref
+
+**Structural toggle**: `gh api -X PATCH repos/... -F delete_branch_on_merge=true` -> confermato `{"delete_branch_on_merge": true}`. Future merge auto-pulizia attiva. Edge case PR auto-closed (come #44) ancora possibile ma raro.
+
+Issue #46 chiusa con audit comment.
+
+#### Auto-analisi sessione + plan formalization next session
+Eduardo richiesta "autoanalisi e prepara piano per prossima sessione". Output:
+- Self-analysis (3 pattern worked + 3 friction + 1 meta-pattern)
+- Plan 3 obiettivi sequenziati: AA01 hub + Vault read-only + Hyperspace privacy audit
+- Sequencing 3 sessioni (~1.5h + 2h + 3h), dipendenza esplicita Hyperspace -> Vault lessons
+- Risk flag Claude Max 8gg residui (Hyperspace audit ideally entro 19/05)
+
+Plan committed: `docs/plans/integration-aa01-vault-hyperspace-2026-05.md` (questa sessione, branch `claude/closure-ritual-2026-05-11`).
+
+### Da fare (next session handoff)
+
+**Eduardo direct (residuo invariato)**:
+- H7 ANTHROPIC_API_KEY in `~/.config/api-keys/keys.env` via Anthropic Console (~5min)
+
+**Calendarizzati** (invariati):
+- 2026-05-19 Claude Max expiration (**8gg residui al 11/5 sera**)
+- 2026-05-20+ SPRINT_02 prima sessione Fase 8 sovereign (T2/T5/T7 restanti)
+- 2026-06-07 ratification check ADR-0021
+- 2026-06-09 ratification check ADR-0022
+
+**Next session focus** (vedi `docs/plans/integration-aa01-vault-hyperspace-2026-05.md`):
+- Obiettivo 1: AA01 inbox capture aa01-003 + aa01-004 + classify + promote 1
+- Obiettivo 2 Phase 0: Vault read-only deep dive parziale
+- Stop hook validation: prima cosa next session - `ls .claude/.session-start-head`. Se marker esiste -> fix H12 v18 confermato. Se assente -> ulteriore debug (fallback `git rev-parse`).
+
+### Note
+
+- **Cumulative 7-11/5**: 30 PR mergeati codemasterdd (29 al 11/5 mid-day + 1 closure ritual stesso 11/5 sera previsto). delete_branch_on_merge attivo, no piu' orphan automatic.
+- **Pattern auth re-confirm**: sandbox guard rail richiede explicit user intent naming targets per high-severity ops (bulk delete 9 branches), anche con issue-link disponibile. Pattern lesson: future bulk-ops anticipate enumerate in chat prima della richiesta auth.
+- **Cherry-pick rescue PR #44 -> #45**: pattern audit-then-replay applicato a force-push denial. Non-destructive workaround che mantiene git history clean (vecchio branch resta con closed PR audit, nuovo branch + PR replicano content semantic).
+- **Auto-analisi meta**: Auto Mode efficace su routine + verification. **Ogni destructive cross-boundary** (force-push, bulk-delete, external repo write) richiede explicit re-confirm. Intenzionale, non bug. Future sessions: anticipa pattern, presenta enumerato target.
+- **OD-007 counter pre-next-session**: 1 SHIP (aa01-001) + 1 in progress (aa01-002). Plan punta a +2 task (aa01-003 Vault + aa01-004 Hyperspace), portando counter a 2 SHIP + 2 in progress = 4 task totali. Three Strikes trigger NON sui count assoluti ma sulla frizione concreta -- monitor durante aa01-003/004 per signal.
