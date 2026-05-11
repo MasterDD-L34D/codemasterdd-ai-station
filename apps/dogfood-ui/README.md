@@ -215,11 +215,14 @@ Ogni test usa una SQLite DB isolata in `tmp_path` via fixture `app_factory` (ved
 
 `GET /entries/export.csv` -> download UTF-8 CSV con tutte le entries (limit 10000). Header `Content-Disposition: attachment; filename="dogfood-entries-<ISO-timestamp>.csv"`. Colonne: `id, created_at, task_description, classe, stack, constraint_count, outcome, retry_count, tokens_sent, tokens_received, cost_usd, latency_ms, commit_hash, note, langfuse_trace_id`. Pulsante "Download CSV" nella pagina `/entries`. Compatibile con Excel / LibreOffice / pandas (`pd.read_csv`).
 
+## Trend giornaliero
+
+La pagina `/stats` mostra due sparkline inline SVG (zero JS, zero CDN) sopra la dump JSON: **entries per giorno** + **cost USD per giorno**, raggruppati per data ISO UTC del `created_at`. Renderizzati server-side da `stats.build_sparkline_svg(points)` -> `<polyline>` + area fill scalati al viewBox. Sotto le sparkline c'e' una tabella `<details>` collassabile con i valori giornalieri esatti. Allineato con la postura sovereign-first del progetto: nessun script remoto, accessibile (role="img" + aria-label).
+
 ## Future extensions
 
 - Auto-import entries da `logs/aider-delegation-YYYY-MM.md` (parser markdown -> SQLite)
 - Excel `.xlsx` export (openpyxl) se l'UTF-8 CSV non basta per workflow downstream
-- Charts (Chart.js o plotly) per trend temporali
 - Filtro + search nella lista entries
 - Trigger Aider direttamente dall'UI (POST form → subprocess `aider-refactor`)
 - Pull trace metadata da Langfuse quando `langfuse_trace_id` specificato
