@@ -6,12 +6,13 @@
 
 ## Progetto
 - **Nome**: CodeMasterDD AI Station
-- **Versione del compact**: v17 (sessione 2026-05-09 sera tardi -> 10/5 mattina: housekeeping + AA01 audit + H11 closure + H7 scaffold. Cumulative 7-10/5: 24 PR mergeati.)
-- **Data ultimo aggiornamento**: 2026-05-10 mattina
+- **Versione del compact**: v18 (sessione 2026-05-10 mid-morning continuation: SPRINT_02 T3+T4 pre-validation + governance refresh #35-#39 + vault-shared sibling-peer integration + autoresearch/hyperspace reference. Cumulative 7-11/5: 29 PR mergeati codemasterdd.)
+- **Data ultimo aggiornamento**: 2026-05-11 mattina
 
 ## Stato attuale
-- **Barra globale ~99%** (invariata da v16): Fase 6 + Fase 7 CLOSED. ADR-0022 + ADR-0023 + ADR-0024. **Window pre-19/05 chiusa anticipata su tutti i task pre-Max**: 8 PR 9/5 mattino-mezzogiorno (H7-H12) + 4 PR 9/5 sera-tardi/10/5 (#30 v15 final + #31 cascata M9-M10 + #32 install-schtasks + #33 H11 closure superseded). Privacy guard rail tecnico attivo. Stop hook deployed (atteso prima activation prossima session). Tooling task-classify/smoke-hooks/backup-keys/bench-cloud-free installato globale + scheduled daily/weekly. AA01 lifecycle smoke 6/6 PASS, workspace pulito. Niente piu' BLOCKING tecnico. 9gg residui pre-Max al 10/5.
-- HEAD origin/main `9ec352c` (post merge PR #31-#33 in giornata 9/5 sera-tardi -> 10/5). **Worktree corrente `recursing-mirzakhani-da8bb3` su nuovo branch `claude/h7-scaffolding-housekeeping`** (1 commit ahead per H7+JOURNAL+COMPACT v17 housekeeping bundle, pending push + PR).
+- **Barra globale ~99%** (invariata da v16): Fase 6 + Fase 7 CLOSED. ADR-0022 + ADR-0023 + ADR-0024. **Window pre-19/05 chiusa anticipata su tutti i task pre-Max + SPRINT_02 T3+T4 anticipated DONE 10/5 mattina**. Privacy guard rail tecnico attivo. Stop hook deployed (NON ancora osservato trigger, verifica deferred). Tooling task-classify/smoke-hooks/backup-keys/bench-cloud-free installato globale + scheduled daily/weekly. AA01 lifecycle smoke 6/6 PASS + workspace pulito + 1 task formale eseguito 10/5 (`aa01-001` two-repos analysis). Sibling-peer vault-shared integrato in dashboard governance (monitored, sovereign-only, NO write-path codemasterdd-side). Reference repo aggiunti (awesome-claude-code-toolkit + Autoresearch multi-candidate + Hyperspace Pods). Niente piu' BLOCKING tecnico. **8gg residui pre-Max al 11/5**.
+- HEAD origin/main `30b16e0` (post merge PR #42 dogfood-ui Langfuse trace link/CSV export 11/5 16:19 UTC; cumulative 7-11/5 26 PR mergeati codemasterdd). **Worktree corrente `hungry-haibt-4a83aa` su branch `claude/journal-compact-v18-housekeeping`** (4 commit ahead per JOURNAL+COMPACT v18 + OD-007 + hook fix + OD-007 task #002 sync, PR #41 OPEN).
+- **PR in coda cross-branch** (triage 11/5 mid-day): #40 fleet hardware drift fix (CLAUDE.md+MODEL_ROUTING+REFERENCE_INDEX+STATUS_MULTI_REPO, AA01 task 002 fleet-discovery-pod-design, **Ryzen 9600X scoperto RTX 4070 SUPER 12GB +50% VRAM vs Lenovo** -> tier 2 14B/2.5 22B Q4 viable secondary inference; LAN 4 device fleet incluso 2 moglie PC); #43 pytest dogfood-ui 18 test (standalone su #42); #44 sparklines SVG server-side (stacked su #43); #41 mio housekeeping. Tutti MERGEABLE CLEAN.
 - **Stack ADR-0017 ACTIVE MODE 8/5 sera**: LiteLLM:4000 + Langfuse:3000 + Postgres + dogfood-ui:8080 UP. T3 SPRINT_02 hot-restart validation anticipato + passato (<60s endpoint health, persistence preservata). Da spegnere `docker compose down` a chiusura sessione.
 - **OpenCode v1.14.41** (npm global) installato 8/5 sera. Config `~/.config/opencode/opencode.json` con 5 provider mappati. Default `ollama/qwen3-coder:30b` (tier 1 sovereign, ADR-0022 Accepted).
 - **Agent ecosystem ADR-0018**: 12/18 ready, 6/18 draft trigger-gated. Status invariato dal 24/04.
@@ -40,6 +41,52 @@ Eduardo ha lavorato attivamente in altri repo (silent driver mode):
 - 19/05: disattivazione Claude Max, transizione a wrapper sovereign + Ollama
 
 ## Cosa e' gia' stato fatto
+
+### Sessione 2026-05-10 mid-morning (SPRINT_02 T3+T4 + governance refresh #35-#39 + vault-shared integration)
+
+#### Pattern strategico
+Continuazione marathon 10/5 oltre PR #34 (v17 housekeeping). 5 PR mergeati 04:25 -> 11:26 CEST coprendo: SPRINT_02 pre-validation T3 (stack hot-restart 2nd pass) + T4 (cleanup PR esterni triage) + dogfood-ui regression fix + 3 governance refresh (status / backlog / open_decisions drift sync) + AA01-driven integration di 4 repo identificati autonomamente (vault-shared + toolkit + autoresearch + hyperspace).
+
+#### PR #35 mergeato (`0da13ff`): SPRINT_02 pre-validation T3+T4 + dogfood-ui regression fix
+- **T3 hot-restart 2nd pass PASS**: `docker compose up -d` 11.7s wallclock (target <60s), LiteLLM + Langfuse 200 OK, **38 trace preservati post 13gg+ downtime** (volume codemasterdd-postgres-data integrity), dogfood-ui up
+- **Regression detection**: POST `/api/entries` 500 ValueError -- `apps/dogfood-ui/db.py:56` `valid_stacks` desync con `app.py:184-196` `VALID_STACKS` (commit `6924482` initial scaffold vs `8c70728` smoke sovereign extension)
+- **Fix path A direct**: db.py:56 valid_stacks aggiornato sync con app.py (5 -> 12 righe set). Re-POST {"id":13,"status":"created"}. Field name desync residuo (`retries`/`retry_count` + `tokens_in`/`tokens_sent`) lasciato T2 organic SPRINT_02
+- **T4 cleanup PR esterni triage**: 4 PR target gia' triagati 7/5 (Game-Database #97 closed-stale + #105 + compass-marketplace #10 + evo-swarm #61 mergeati). SPRINT_02 status header aggiornato
+- **Runbook nuovo** `docs/runbook/adr-0017-hot-restart.md` (127 righe): 5 edge cases documentati (PowerShell IPv6 quirk + LiteLLM 172.18.0.1 health-check + trace count preservation + dogfood-ui regression + field name desync)
+- Cleanup git: 4 branch local stale deleted + worktree prune
+
+#### PR #36 mergeato (`ee1edea`): STATUS_MULTI_REPO refresh post 7-10/5 cross-repo
+Verify HEAD origin/main empirico via `gh` API (drift mitigation pattern PR #11 caso-studio). Updates: codemasterdd HEAD `a71d653` -> `0da13ff`; Game (Vue3) `7dd18ad` post #2159 BASELINE_WR fix 30 PR mergeati 7-10/5 stream K4/FASE 5/AI sim/skiv; Game-Godot-v2 215 -> ~230 PR (+15); Dafne `9255b4b` Atto 2 day 14+; AA01 2 task PROPOSED storici archived 9/5. Status-phase-a chiarito (PR Game #2138/#2139 GIA' MERGED al 9/5, memory v14 stale). Sprint Impronta narrative corretto.
+
+#### PR #37 mergeato (`e24c070`): BACKLOG H9 drift sync (1 riga)
+Sync `[ ]` a `[x]` H9. Bench mixed-workload gia' eseguito 9/5 (commits `cbdf2ed` + `11cac69`) ma BACKLOG checkbox dimenticato. Drift fix.
+
+#### PR #38 mergeato (`516d9a8`): OD-003 closure + drift fix a3+a4
+- A3 OD-003 closure: Cerebras 8B cosmetic default + Groq 70B behavior default (opzione 1 formalizzata, gia' implicita in MODEL_ROUTING)
+- A4 drift fix: STATUS_MULTI_REPO rimossa entry stale "Decisione 004 da scrivere"
+- A2 honest skip: dogfood cosmetic gap n=7->n>=10 NON forzato (working rule "niente forzatura quota")
+
+#### PR #39 mergeato (`3735d32`): vault-shared sibling-peer + 3 reference repo (autoresearch + hyperspace + toolkit)
+AA01-driven autonomous task `2026-05-aa01-001-two-repos-analysis-integration` (preset research-long, phase 1-5 standard + Phase 4 harsh-reviewer REWORK verdict 2 BLOCKING + 2 SIGNIFICANT + 1 MINOR fixati).
+
+**Integrazione vault-shared** (MasterDD-L34D/vault):
+- Sibling-peer monitored, sovereign-only (NON whitelisted privacy guard rail)
+- 7/7 production agents milestone 2026-05-10 (Quality Gate workflow smoke->draft->production 3-gate)
+- Stack overlap codemasterdd: Ollama LAN + Qwen + deepseek-r1 + Claude variants
+- Privacy validato spot-check empirico (academic UniUPO + IP curated GDR + design notes Dev)
+- Hook globali compat VALIDATED (empty commit test PASS, reverted)
+- LLM routing matrix v1.0 -> research input MODEL_ROUTING.md (no commit hash drift risk)
+- Boundary: NO write-path codemasterdd-side, sibling-peer disjoint scope
+
+**Reference repo** (REFERENCE_INDEX entries):
+- awesome-claude-code-toolkit (rohitg00 OSS Apache 2.0): pull-when-needed cherry-pick, audit-then-replay, attribution header, NO bulk import
+- Autoresearch (multi-candidate eval): top fit 199-biotechnologies/autoresearch-cli (any AI coding agent) + alternative Karpathy/autoresearch MIT, deferred SPRINT_03+ overnight research
+- Hyperspace Pods (strategic Mac mini scenario alternative): libp2p v3 + GossipSub + Kademlia DHT, RTX 5060 8GB qualifies, AUDIT REQUIRED PRE-install (P2P data flow + Pod trust mesh)
+
+File codemasterdd-side: STATUS_MULTI_REPO (+98) + CLAUDE.md (+36) + MODEL_ROUTING (+23) + REFERENCE_INDEX (+45) + 4 memory file nuovi (project_vault_shared + reference_external_toolkits + reference_autoresearch_tools + reference_hyperspace_pods) + project_multi_repo_overview update + MEMORY.md +4.
+
+#### Branch state
+1 commit ahead di main su `claude/journal-compact-v18-housekeeping` (questo PR JOURNAL + COMPACT v18).
 
 ### Sessione 2026-05-09 sera tardi -> 2026-05-10 mattina (housekeeping + AA01 + H11 + H7)
 
@@ -281,38 +328,40 @@ P1, P2 chiusi tramite ADR-0015 closure (P1 behavior-critical n>=5 superato; P2 c
 ## File / output importanti
 - Governance root-level (12, +AGENTS.md): `PROJECT_BRIEF`, `COMPACT_CONTEXT` (questo), `DECISIONS_LOG`, `BACKLOG`, `OPEN_DECISIONS`, `ROADMAP`, `SPRINT_01`, `MASTER_PROMPT`, `REFERENCE_INDEX`, `PROMPT_LIBRARY`, `MODEL_ROUTING`, `AGENTS.md` (nuovo per multi-client)
 - Convenzioni: `CLAUDE.md` (autoritativo) + `AGENTS.md` (Codex preamble) + `Archivio_.../07_CLAUDE_CODE_OPERATING_PACKAGE/*` (meta-rules)
-- Diario: `JOURNAL.md` (entry 2026-05-07 +87 righe)
-- Decision history: `docs/adr/` (21 file, ultimi ADR-0015 e ADR-0017 e ADR-0020 e ADR-0021 Accepted)
-- Operational log: `logs/aider-delegation-2026-04.md` (12 dogfood, fermo dal 24/04)
+- Diario: `JOURNAL.md` (entries cumulative 7-11/5, ultime 2026-05-10 mattina + mid-morning)
+- Decision history: `docs/adr/` (24 file, ultimi ADR-0015/0017/0020/0021/0022 Accepted + ADR-0023/0024 Proposed)
+- Operational log: `logs/aider-delegation-2026-04.md` (12 dogfood) + `2026-05.md` non ancora popolato (SPRINT_02 T2 organico apre)
 - Framework archivio: `Archivio_Libreria_Operativa_Progetti/`
+- Reference index: `REFERENCE_INDEX.md` (EXT-01 toolkit + EXT-02 autoresearch + EXT-03 hyperspace-pods)
+- Runbook: `docs/runbook/adr-0017-hot-restart.md` (NEW 10/5 con 5 edge cases)
 
 ## Prossimi 3 passi
 
 1. **Eduardo direct (azioni standalone, residuo unico)**:
    - **H7 setup ANTHROPIC_API_KEY** in `~/.config/api-keys/keys.env` (~5min via Anthropic Console) -- pre-19/05 priority. Scaffold log `logs/claude-api-spend-2026-05.md` gia' pronto (gitignored).
-   - ~~H11 AA01 attivazione~~ DONE 9/5 sera (superseded by reality, 2 task stale archived TIMEOUT)
 2. **Calendarizzati passive** (no immediate action):
-   - 2026-05-19 Claude Max expiration (10gg residui, stack pronto)
-   - 2026-05-20+ SPRINT_02 prima sessione Fase 8 sovereign (T1+T3+T4 anticipated DONE; restano T2 dogfood organico + T5 cost tracking + T7 review)
+   - 2026-05-19 Claude Max expiration (**8gg residui al 11/5**, stack pronto)
+   - 2026-05-20+ SPRINT_02 prima sessione Fase 8 sovereign (**T1+T3+T4 anticipated DONE**; restano T2 dogfood organico + T5 cost tracking + T7 review)
    - 2026-06-07 ratification check ADR-0021
    - 2026-06-09 ratification check ADR-0022
 3. **Deferred SPRINT_02 / opportunistic post-19/05**:
-   - ~~M7 backup automation API keys~~ DONE 9/5 sera
-   - ~~M8 hook integrity smoke test settimanale~~ DONE 9/5 sera
-   - ~~M9 task-classify tooling~~ DONE 9/5 sera
-   - ~~M10 OpenCode + cloud free token-trim test~~ DONE 9/5 sera (n=3 conclusivo, ADR-0022 confirmed)
+   - **T2 dogfood-ui field name desync** residuo (`retries`/`retry_count` + `tokens_in`/`tokens_sent` + outcome validation) -- candidato perfetto aider-refactor smoke post-Max (~15 righe single-file behavior, sovereign-OK)
    - **L6 (NEW da M10)** OpenCode plugin custom o tool-set trim per cloud free viable -- solo se gpt-4o-mini emergency budget eccessivo
    - T7 review fine sprint MAX=2 re-eval se workflow evolve 2-tier dominant
+   - Trigger-gated: 6 agent draft `.claude/agents/` (ADR-0018 3-gate readiness)
+   - Trigger-gated: Hyperspace Pods audit privacy P2P se Mac mini scenario / device pooling family interest emerge
 
-Side-tasks gia' DONE 7/5 -> 9/5 sera:
+Side-tasks gia' DONE 7/5 -> 10/5:
 - 7/5: ADR-0015 + ADR-0017 Accepted (PR #4), SPRINT_02 abbozzo (PR #5), smoke sovereign T1 (PR #6), Game-Godot-v2 governance (PR #7+#8), pattern aider wrong-target (PR #9), master_prompt handoff (PR #10), 4 PR esterni triagati
 - 8/5 mattino: governance refresh post 7/5 (PR #11)
 - 8/5 sera: pattern auto-skip skiv (PR #12), drift cleanup ROADMAP+BACKLOG+OPEN_DECISIONS (PR #13), JOURNAL+COMPACT v13 (PR #14)
 - **9/5 notte (transition attiva)**: ADR-0022 Proposed (PR #15) + addendum cloud (PR #16) + dogfood OpenCode #25 (PR #17) + #26 (PR #18) + ADR-0022 Accepted (PR #19) + tier OpenCode in CLAUDE.md+MODEL_ROUTING (PR #20) + COMPACT v14 + JOURNAL append
 - 9/5 mattino-mezzogiorno: STATUS+memory (PR #22-#23), 6 H-tasks (PR #24-#29)
-- **9/5 sera**: M9 task-classify (commit `c74966c`), M8 smoke-hooks (`912b91a`), M7 backup-keys (`bb78999`), M10 bench cloud free (`fe94dbe`) -- 4 commit branch worktree pendenti PR
+- **9/5 sera**: M9 task-classify (commit `c74966c`), M8 smoke-hooks (`912b91a`), M7 backup-keys (`bb78999`), M10 bench cloud free (`fe94dbe`) -- mergeati squash PR #31
+- **9/5 sera tardi -> 10/5 mattina**: install-schtasks setup (PR #32) + H11 closure superseded (PR #33) + v17 housekeeping (PR #34)
+- **10/5 mid-morning**: T3+T4 SPRINT_02 pre-validation + dogfood-ui regression fix (PR #35) + STATUS refresh (PR #36) + BACKLOG H9 sync (PR #37) + OD-003 closure + a3+a4 drift (PR #38) + vault-shared sibling-peer + autoresearch + hyperspace + toolkit (PR #39)
 
-Cumulativo: **21 PR mergeati cumulative + 4 commit branch ahead** 7-9/5. Branch `claude/recursing-mirzakhani-da8bb3` pending push + PR Eduardo.
+Cumulativo: **29 PR mergeati codemasterdd cumulative 7-10/5** (20 al 9/5 notte + 5 al 9/5 sera tardi/10/5 mattina + 4 mid-morning 10/5). Branch corrente `claude/journal-compact-v18-housekeeping` 1 commit ahead per JOURNAL extension + COMPACT v18.
 
 ## Next session restart: cosa leggere per ripartire
 

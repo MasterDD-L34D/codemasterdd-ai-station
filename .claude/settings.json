@@ -6,8 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "shell": "powershell",
-            "command": "& \"${CLAUDE_PROJECT_DIR}/scripts/hooks/session-start-marker.ps1\"",
+            "command": "powershell -NoProfile -ExecutionPolicy Bypass -File \"${CLAUDE_PROJECT_DIR}/scripts/hooks/session-start-marker.ps1\"",
             "timeout": 5
           }
         ]
@@ -18,8 +17,7 @@
         "hooks": [
           {
             "type": "command",
-            "shell": "powershell",
-            "command": "& \"${CLAUDE_PROJECT_DIR}/scripts/hooks/journal-drift-check.ps1\"",
+            "command": "powershell -NoProfile -ExecutionPolicy Bypass -File \"${CLAUDE_PROJECT_DIR}/scripts/hooks/journal-drift-check.ps1\"",
             "timeout": 10
           }
         ]
