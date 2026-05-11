@@ -2052,3 +2052,87 @@ Plan committed: `docs/plans/integration-aa01-vault-hyperspace-2026-05.md` (quest
 - **Cherry-pick rescue PR #44 -> #45**: pattern audit-then-replay applicato a force-push denial. Non-destructive workaround che mantiene git history clean (vecchio branch resta con closed PR audit, nuovo branch + PR replicano content semantic).
 - **Auto-analisi meta**: Auto Mode efficace su routine + verification. **Ogni destructive cross-boundary** (force-push, bulk-delete, external repo write) richiede explicit re-confirm. Intenzionale, non bug. Future sessions: anticipa pattern, presenta enumerato target.
 - **OD-007 counter pre-next-session**: 1 SHIP (aa01-001) + 1 in progress (aa01-002). Plan punta a +2 task (aa01-003 Vault + aa01-004 Hyperspace), portando counter a 2 SHIP + 2 in progress = 4 task totali. Three Strikes trigger NON sui count assoluti ma sulla frizione concreta -- monitor durante aa01-003/004 per signal.
+
+---
+
+## 2026-05-12 (mattina -- cleanup worktree + Pattern D governance-lint adoption end-to-end)
+
+### Pattern strategico
+Continuazione marathon 11/5+12/5 post merge PR #48+#49 (closure ritual). Eduardo richiesta cleanup worktree+branch residui (`git worktree remove` + `git branch -D`) -> applicato metodo Protocol 1 refresh-verify + Protocol 2 autoresearch multi-source per classification ogni candidato. Successivamente "procedere in auto mode con risolvere piani aperti + OD" -> AA01 workflow Pattern D adoption end-to-end (capture+classify+promote+research+implement+PR+ship+lesson promote).
+
+### Completato
+
+#### PR #50 squash `dcf744a` -- COMPACT v20 -> v21 drift fix
+- Aggiornato HEAD origin/main `f3fdc92` -> `30e94ee` (post PR #49 merge)
+- Coda PR "1 nuova PR closure pending" -> "VUOTA post-merge #49"
+- 8gg -> 7gg residui pre-Max
+- Worktree corrente "funny-dirac-82131b orphan" -> "practical-kowalevski-1f7c9e synced"
+- Cumulative 31 -> 32 PR (7-12/5)
+- **Hyperspace Phase 1 RIMOSSA** da "deferred opportunistic" (contraddittorio con ADR-0025 ABANDONED definitivo D-017 99% confidence)
+- Nuova sezione cronologica "Sessione 2026-05-12 mattina (worktree cleanup metodologico + drift fix v20->v21)"
+- Diff +41/-8 (scope chirurgico)
+
+#### Cleanup worktree+branch metodologico (Protocol 1+2 applied per ogni candidato)
+- **6 branch claude/* eliminati**:
+  - `claude/funny-dirac-82131b` (merged PR #48)
+  - `claude/closure-2026-05-12-aa01-integration` (merged PR #49)
+  - `claude/optimistic-shannon-26ff0e` (merged PR #39)
+  - `claude/closure-ritual-2026-05-11` (1 commit superseded: COMPACT v19 -> v20 post #48, integration plan IDENTICO main)
+  - `claude/journal-compact-v18-housekeeping` (4 commit superseded: fix h12 hook PRESENTE main via PR #41 squash `32838b4`)
+  - `claude/goofy-noether-e8a08e` (3 commit obsoleti: branch 3117 righe IN MENO main, contenuti riimplementati PR #38+#39)
+- **3 worktree rimosse**: funny-dirac-82131b, optimistic-shannon-26ff0e, goofy-noether-e8a08e
+- **5 dir filesystem orfane rimosse** (0 items residui): distracted-colden, hardcore-keller, hungry-haibt, magical-villani, recursing-mirzakhani
+- **13 sessioni Claude orfane** (PID 11/5 16:03-21:24) holding Windows file lock killed manualmente by Eduardo per sbloccare worktree removal
+
+#### PR #51 squash `0350be5` -- governance-lint MVP from vault Pattern D ADOPT
+- Source: cherry-pick concept da vault-shared `production/agents/vault-linter.md` (audit-then-replay PowerShell-native, NO clone)
+- `scripts/governance-lint.ps1` (~190 righe) -- READ-ONLY drift detection MVP
+- 3 check categories:
+  - CHECK-1 COMPACT_CONTEXT.md HEAD claim vs origin/main reality (threshold lag>1 evita FP sistematici post-merge)
+  - CHECK-2 Coda PR claim consistency vs `gh pr list`
+  - CHECK-3 JOURNAL.md last entry stale (>14gg threshold, `Select-Last` per append-only)
+- Output `logs/governance-lint-YYYY-MM-DD.md` (gitignored via `logs/*`)
+- Flags: `-Quiet`, `-OutputStdout`. Exit code 0/1/2 (ALL-CLEAR/WARNING/CRITICAL)
+- Smoke 3 iterazioni self-applied: 2 bug discover (Select-First su append-only + threshold lag=1 FP), convergenza 3/3 ALL-CLEAR
+- Research doc addendum: `docs/research/vault-patterns-adoption-2026-05-12-pattern-c-governance-lint.md`
+
+#### AA01 task SHIP -- 2026-05-aa01-001-2026-05-11-vault-integration-readonly
+- Phase 0 (catalog 7 agent + Quality Gate methodology + routing matrix)
+- Phase 1+2 ABBREVIATED time-bound (1 agent sample + 6 frontmatter scanned)
+- Phase 3 adoption decision (Pattern D ADOPT MVP)
+- Phase 4 research doc finalization (addendum lean a research PR #39)
+- Phase 5 implementation + PR atomic #51
+- Status: SHIP archive
+- Lesson L-2026-05-005 promoted a `learnings/L-2026-05-005-dogfood-driven-self-bug-discovery.md` (id collision fixed da L-2026-05-004 esistente)
+
+#### Drift discovery cross-session
+1. **Vault status drift**: 7/7 agent `status: draft` frontmatter ma location `production/agents/`. Memory codemasterdd valid via "location = ground truth" interpretation
+2. **OD-007 counter aa01 numbering schema**: AA01 promote script ha generato task ID `2026-05-aa01-001-...` non `aa01-003-...`. Possibile reset counter mese o convention diversa. Defer Eduardo per management AA01-internal
+3. **JOURNAL append-only ordering**: oldest-first non newest-first (discover via dogfood self-applied governance-lint Run 1)
+
+### Da fare (next session handoff)
+
+**Eduardo direct (invariato)**:
+- H7 ANTHROPIC_API_KEY in `~/.config/api-keys/keys.env` via Anthropic Console (~5min)
+
+**Calendarizzati** (invariati):
+- 2026-05-19 Claude Max expiration (**7gg residui al 12/5 mattina**)
+- 2026-05-20+ SPRINT_02 prima sessione Fase 8 sovereign
+- 2026-06-07 ratification check ADR-0021
+- 2026-06-09 ratification check ADR-0022
+
+**Deferred opportunistic** (post questa sessione):
+- T2 dogfood-ui field name desync (candidato aider-refactor smoke post-Max)
+- L6 OpenCode plugin (trigger budget gpt-4o-mini excess)
+- 6 agent draft `.claude/agents/` (ADR-0018 3-gate readiness)
+- Governance-lint checks 4-7 expand (Three Strikes monitor SPRINT_03+: markdown links / OD-ADR cross-ref / ADR Proposed age / worktree orphan)
+- Governance-lint schedule install GovernanceLintWeekly (template `install-schtasks.ps1` esistente)
+
+### Note
+
+- **Cumulative 7-12/5**: 33 PR mergeati codemasterdd (32 v21 + 1 PR #51). delete_branch_on_merge auto-toggle attivo.
+- **Pattern dogfood-driven self-bug-discovery validato** (L-2026-05-005): tooling read-only MVP -> skip fixture sintetica + run su reality come fixture primary + fix on output anomaly. Convergenza 3 iter ~30min per 2 bug fixati. Applicabilita futura: ogni health-check/audit/observability tool.
+- **Pattern threshold tuning empirico** (L-2026-05-005): metric numerica con baseline event-driven (post-merge lag=1) richiede `threshold > baseline + tolerance` per evitare FP sistematici. Default `> 0` = FP magnet.
+- **Pattern time-bound Phase abbreviation** (L-2026-05-005): preset research-long NON significa eseguire tutte Phase. Phase abbreviation esplicita > Phase complete con drift overhead. Adoption decision raggiunta in ~90min vs stima ~3h.
+- **OD-007 update**: counter aa01 task ora 2 SHIP (aa01-001 + this session vault-integration) + 1 in progress (aa01-002 fleet-discovery) + 1 REJECTED (aa01-003 hyperspace-audit, 11/5 notte). Nessuna frizione tool-selection osservata in vault-integration -> trigger Three Strikes NON ancora attivato. Disciplina, non feature.
+- **Worktree corrente** `practical-kowalevski-1f7c9e`: branch orphan post merge #50 (upstream `[gone]`). Resta live per questa sessione. Cleanup eventuale next session (analogo a goofy-noether pattern: post-merge worktree obsoleta).
