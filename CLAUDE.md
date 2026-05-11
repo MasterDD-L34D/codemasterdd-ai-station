@@ -362,6 +362,69 @@ codemasterdd-ai-station/
   - **Tracking**: ogni delega effettuata → entry in `logs/aider-delegation-YYYY-MM.md`. Task strategici eseguiti direttamente → tracciati solo se rilevanti per ratio statistica
   - **Anti-pattern**: default inerziale "faccio io direct" senza classification è un miss; ogni Edit/Write senza step di classification contraddice hub pattern ADR-0008
 
+## Cognitive workflow protocols (ADR-0026)
+
+Per audit / eval / decision / pivot significativo, applicare 4 cognitive workflow protocols (triple anchor: ADR-0026 + memory + questa sezione). Vedi `docs/adr/0026-cognitive-workflow-protocols.md` per dettaglio + caso studio + anti-pattern.
+
+### Protocol 1 -- Refresh-verify state interno (PRE-action OBBLIGATORIO)
+
+Prima di azione significativa, verifica state interno:
+- AA01 workspace + decisions logs task correlati (`cd C:/Users/edusc/aa01 && bash scripts/status.sh`)
+- Memory recente (`MEMORY.md` index + file rilevanti)
+- ADR existing che coprono scope
+- Git state + `gh pr list` repo monitored
+- Filesystem check file promessi (es. template promessi ADR)
+
+**Trigger**: ogni audit / eval / new ADR / strategic decision.
+**Anti-pattern**: ereditare narrative da COMPACT/JOURNAL precedente senza re-verify (caso studio mio error 2026-05-11 ADR-0025 amend).
+**Reference**: memory `feedback_governance_refresh_verify`.
+
+### Protocol 2 -- Autoresearch multi-source (per audit / eval / research)
+
+Multi-source parallel investigation + synthesis weighted (NON one-shot README). 8-step checklist in memory `feedback_autoresearch_default`. Weighting: **internal > external**, **empirical > documentation**, recent > old, multiple corroborate > single signal.
+
+**Trigger**: ogni audit / eval / research significativa.
+**Anti-pattern**: one-shot README fetch + verdict confidente.
+
+### Protocol 3 -- Archon v2 7-step First Principles (high-stakes)
+
+Per decisioni high-stakes (architectural lock-in irreversibile / pivot / abandonment), applicare Archon protocol: RESTATE + ENUMERATE + DECOMPOSE + CHALLENGE + RECONSTRUCT + RED-TEAM + CALIBRATE (verdict + confidence + falsifying experiment ~30s-5min PRE-commit).
+
+**Trigger**: audit >=3 cicli verdict opposti / architectural irreversibile / "sono sicuro?" introspection.
+**Anti-pattern**: skip Archon per decision time-sensitive sub-15min (over-engineered).
+**Path AA01**: `C:/Users/edusc/aa01/archon/system/ARCHON_v2_{SYSTEM,BOOTSTRAP}.md`.
+**Reference**: memory `reference_archon_protocol`.
+
+### Protocol 4 -- AA01 workspace audit trail (workflow standard)
+
+Per audit / eval / research / pivot >=30min effort + cross-session value, usare AA01 workflow standard:
+1. Capture `inbox/<YYYY-MM-DD-slug>.md`
+2. `bash scripts/classify.sh inbox/<file>`
+3. `bash scripts/promote.sh inbox/<file> <preset>` (preset: research-long / code-sprint / design-iteration / idea-capture / code-long-alpha / code-maintenance)
+4. DRAFT → PROPOSED → lesson obbligatoria SHIP
+5. Archive `--status=SHIP|REJECT|DORMANT|TIMEOUT`
+6. Promote lesson `learnings/L-YYYY-MM-NNN-<slug>.md`
+
+**Trigger**: ogni audit/eval/research >=30min + cross-session value.
+**Anti-pattern**: F2 cimitero (archive senza lesson), F3 confused re-opening, F4 inbox-zero theater (auto-promote senza confirm).
+**Path AA01**: `C:/Users/edusc/aa01/` (separato codemasterdd, NON-git, disciplina personale).
+**Reference**: memory `project_aa01_studio`.
+
+### Combined methodology (lesson L-2026-05-002 + L-2026-05-003)
+
+```
+[Trigger: audit / eval / decision significativa]
+  → Protocol 1 Refresh-verify state interno (OBBLIGATORIO)
+  → Protocol 4 AA01 workspace audit trail (start)
+  → Protocol 2 Autoresearch multi-source (NECESSARY ma INSUFFICIENT)
+  → [Decision high-stakes irreversibile?]
+        ├── SI → Protocol 3 Archon 7-step + CALIBRATE falsifying experiment
+        └── NO → empirical trial breve per architectural validation
+  → Output: ADR Proposed / research doc / lesson / archive AA01 SHIP
+```
+
+**Reference completo**: ADR-0026 + lesson L-2026-05-002 (Hyperspace audit cycle 3 anti-pattern + 4 pattern positive) + lesson L-2026-05-003 (cross-repo pattern adoption cross-check governance interna).
+
 ## Aggiornamento JOURNAL
 A fine sessione significativa, aggiungere entry in JOURNAL.md:
 - Data YYYY-MM-DD
