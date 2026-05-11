@@ -83,6 +83,25 @@
 
 ---
 
+### [OD-007] AA01 capability registry / scan function -- deferred Three Strikes
+
+- **Livello**: workflow / tooling (AA01-side, esterno a codemasterdd)
+- **Stato**: **DEFERRED 2026-05-11** -- pattern Three Strikes applicato a feature-internal AA01 (non solo preset/rule come documentato in AGENTS.md AA01).
+- **Ambiguita' originale**: AA01 oggi sceglie tool (sub-agent codemasterdd, skill, plugin, MCP, wrapper aider) a discrezione dell'agent-in-sessione. Es. PR #39 ho usato harsh-reviewer perche' lo sapevo io, non perche' AA01 me l'abbia suggerito. Una funzione `scan-capabilities` che inventaria `.claude/agents/` (18 sub-agent codemasterdd) + skill + plugin + MCP + wrapper aider e mappa per preset/phase ridurrebbe il bias di "chi ha piu' memoria recente vince".
+- **Perche' conta**: scaling oltre 1-2 agent-in-sessione, eventuale handoff cross-CLI (Claude Code / Codex / Cursor / Gemini / Cline tutti citati in AA01 AGENTS.md come master entry point), e drift di tool selection task-by-task.
+- **Decisione attuale**: **opzione C aspettare 2-3 task AA01 in piu'**. Three Strikes: feature esiste solo dopo 3 task la richiedono. Finora 1 task AA01-driven (`aa01-001` two-repos-analysis). Disciplina, non feature.
+- **File coinvolti (futuro)**: eventuale `C:/Users/edusc/aa01/scripts/scan-capabilities.sh` + `.aa01/capability-registry.json` + AGENTS.md AA01 update sezione "Adattabilita' multi-asse".
+- **Trigger reactivation**:
+  - Task AA01 #2 o #3 dove emerge **frizione concreta** del tipo "quale agent uso per Phase X?" / "duplicazione: scelgo sempre lo stesso agent perche' e' l'unico che ricordo" / "skill X esiste ma non ho saputo usarla"
+  - OR Eduardo identifica un caso d'uso specifico (es. AA01 task multi-CLI handoff dove serve sapere cosa puo' fare ogni CLI)
+- **Tradeoff principali documentati**:
+  - **Boundary**: AA01 in `C:/Users/edusc/aa01/` separato da codemasterdd. Lo scan deve sapere where-to-look (config `aa01-tool-search-paths` o env var). Cross-coupling vs reusabilita'.
+  - **Staleness**: skill/agent/plugin cambiano session-by-session. Scan one-shot all'avvio, refresh on-demand, o cache TTL?
+  - **Three Strikes governance**: stessa disciplina che AA01 applica a preset/rule, ora applicata a feature-internal AA01.
+- **Prossima azione**: nessuna proattiva. Solo reactive monitoring durante task AA01 futuri (aspetta task #2 / #3 per signal).
+
+---
+
 ## Regola pratica
 
 Se la decisione:
