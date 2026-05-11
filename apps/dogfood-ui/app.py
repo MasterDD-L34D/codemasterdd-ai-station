@@ -24,7 +24,7 @@ from flask import Flask, render_template, request, redirect, url_for, jsonify, f
 from db import Database
 from langfuse_client import LangfuseClient
 from dafne_client import DafneClient
-from stats import aggregate_stats, parse_promptfoo_results
+from stats import aggregate_stats, aggregate_by_day, build_sparkline_svg, parse_promptfoo_results
 
 # ---------------------------------------------------------------------------
 # Config
@@ -139,8 +139,26 @@ def create_app() -> Flask:
 
     @app.route("/stats")
     def stats_view():
-        stats = aggregate_stats(db.list_entries())
-        return render_template("stats.html", stats=stats)
+        entries = db.list_entries()
+        stats = aggregate_stats(entries)
+        daily = aggregate_by_day(entries)
+        sparkline_count = build_sparkline_svg(
+            [d["count"] for d in daily],
+            label="Entries per day",
+            stroke="#3b82f6", fill="#3b82f650",
+        )
+        sparkline_cost = build_sparkline_svg(
+            [d["cost_usd"] for d in daily],
+            label="Cost USD per day",
+            stroke="#10b981", fill="#10b98150",
+        )
+        return render_template(
+            "stats.html",
+            stats=stats,
+            daily=daily,
+            sparkline_count=sparkline_count,
+            sparkline_cost=sparkline_cost,
+        )
 
     @app.route("/bench")
     def bench_view():
