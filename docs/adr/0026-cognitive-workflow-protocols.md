@@ -275,3 +275,86 @@ Status **Proposed**. Eduardo decide accept/reject/modify.
 - Cherry-pick policy: NO clone Archon docs in codemasterdd
 - AA01 path personale (Eduardo-only), NON portable
 - Lesson L-2026-05-002 + L-2026-05-003 cited + accessibili per future session
+
+---
+
+## Addendum 2026-05-12 -- AA01 conditional fit assessment
+
+Eduardo (2026-05-12) ha sollevato introspection question post ADR merge: "AA01 è davvero definitivamente parte di codemasterdd?". Applied Protocol 3 Archon 7-step self-assessment (caso studio meta-application).
+
+### Verdict honest post Archon 7-step
+
+**AA01 è CONDITIONAL permanent fit, NOT clean permanent integration.**
+
+ADR-0026 original ha implicitly assumed permanent integration. Honest re-assessment: integration è **conditional**, non strict permanent.
+
+### 4 Conditions per "permanent fit" status
+
+| # | Condition | Verifiable empirico |
+|---|-----------|---------------------|
+| C1 | Eduardo continues personal workflow | AA01 NON automatable, dipende su personal discipline |
+| C2 | AA01 path stability | `C:/Users/edusc/aa01/` location persists (cross-device fragile) |
+| C3 | Use case frequency >=1-2 task/settimana | Lessons cumulative growth rate |
+| C4 | CLAUDE.md section Cognitive workflow NON drifta | Section "Cognitive workflow protocols" present + memory `project_aa01_studio` not-stale |
+
+### 5 Failure modes (RED-TEAM)
+
+1. **Cambio computer Eduardo** senza AA01 transfer → reference broken
+2. **AA01 dormante 30gg+** → drift, lessons fresh non scritte
+3. **CLAUDE.md drift**: sessioni future rimuovono section Cognitive → Protocol 4 invisible
+4. **Ridondanza vs git**: lesson potrebbe stare direct in `docs/lessons/` codemasterdd → AA01 archive overhead
+5. **Memory drift**: `project_aa01_studio` non aggiornata → references invalidate
+
+### Indicatori early-warning
+
+- `bash scripts/status.sh` non-run 7gg+ → segno disuso
+- Memory `project_aa01_studio` non-updated 30gg+ → drift starting
+- ADR future NON citano AA01 task → de-coupling de facto
+- Lesson cumulative <5 in 90gg → insufficient value capture
+
+### Falsifying experiment economico (~30min)
+
+**Trigger**: 30-day review checkpoint **2026-06-12** (e poi quarterly):
+
+1. `cd C:/Users/edusc/aa01 && bash scripts/status.sh` check (1 min)
+2. Memory `project_aa01_studio` last-updated date (30s)
+3. CLAUDE.md grep "Cognitive workflow protocols" present (30s)
+4. Lessons cumulative count vs 30gg ago (1 min)
+5. Lesson L-2026-05-004+ candidate emerged? (depends)
+
+**Pass criteria**: tutto green + >=1 lesson cumulative growth/mese.
+**Fail criteria**: any rosso → reactivation evaluation o downgrade decision.
+
+### Reactivation NO-GO triggers
+
+Se durante checkpoint emerge:
+- Cambio computer without AA01 transfer
+- 60gg+ AA01 dormante (no activity)
+- <5 lessons cumulative in 90gg
+
+→ ADR-0026 downgrade Protocol 4 da "workflow standard" a "optional discipline".
+
+### Honest re-framing post-assessment
+
+Originale ADR-0026: "AA01 è workflow standard" (implicit permanent)
+Re-framing: "AA01 è **conditional workflow standard** con 4 conditions + 30-day review checkpoint"
+
+CLAUDE.md section Cognitive workflow protocols NON cambia (resta authoritative reference) ma ADR governance riflette honest caveat conditional.
+
+### Empirical value preserved (ultimi 30gg)
+
+- 22 decisions aa01-001 PRESERVED cross-session (Hyperspace audit 4-cycle)
+- 3 lessons consolidate (L-2026-04-001 + L-2026-05-002 + L-2026-05-003)
+- ~5h re-work prevented post mio error 2026-05-11
+- Process honesty pattern catturato (recovery via amend transparency)
+
+Value reale > zero. Conditional fit ha sense pragmatic.
+
+### Lesson L-2026-05-004 derived
+
+Meta-lesson "AA01 conditional fit assessment via Archon 7-step self-application":
+- Pattern positive: Archon protocol può applicarsi a meta-introspection (governance Protocol stesso applied a Protocol)
+- Pattern positive: honest conditional verdict > permissive permanent claim
+- Pattern positive: 30-day review checkpoint > one-shot ADR + drift
+
+Vedi `C:/Users/edusc/aa01/learnings/L-2026-05-004-aa01-conditional-fit-meta-assessment.md`.
