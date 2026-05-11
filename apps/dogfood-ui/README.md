@@ -163,8 +163,10 @@ cp apps/dogfood-ui/data/dogfood.sqlite backup/dogfood-$(date +%Y%m%d).sqlite
 Una volta configurate `LANGFUSE_PUBLIC_KEY` + `LANGFUSE_SECRET_KEY`:
 
 - Dashboard mostra "Langfuse: reachable" in health
-- Se fornisci `langfuse_trace_id` in POST /api/entries → link cliccabile verso Langfuse UI (non ancora implementato)
-- TODO futuro: auto-pull trace metadata (tokens, cost, latency) da Langfuse quando trace_id fornito
+- Se fornisci `langfuse_trace_id` in POST /api/entries (o via form `/entries/new`) -> appare colonna "Trace" nelle tabelle con link cliccabile alla UI Langfuse
+- URL del link: `${LANGFUSE_HOST}/project/${LANGFUSE_PROJECT_ID}/traces/${trace_id}` quando `LANGFUSE_PROJECT_ID` e' configurato (canonical path Langfuse UI), altrimenti fallback `${LANGFUSE_HOST}/trace/${trace_id}` (best-effort redirect su Langfuse Cloud)
+- Auto-pull metadata: se Langfuse e' raggiungibile, l'app fa GET `/api/public/traces/{id}` e auto-popola `tokens_sent`, `tokens_received`, `cost_usd`, `latency_ms` quando l'utente non li ha esplicitati nel POST. Valori espliciti del client NON vengono mai sovrascritti. Su 404 / connection error degrada silente (entry salvata senza enrichment)
+- Configurazione: setta `LANGFUSE_PROJECT_ID` (oltre a `LANGFUSE_PUBLIC_KEY`/`LANGFUSE_SECRET_KEY`/`LANGFUSE_HOST`) nell'env per attivare URL project-scoped e auto-pull
 
 ## Test
 
@@ -192,10 +194,14 @@ curl http://localhost:8080/api/stats | jq .total
 
 Test formale pytest da aggiungere in `tests/` in sprint futuri.
 
+## Export CSV
+
+`GET /entries/export.csv` -> download UTF-8 CSV con tutte le entries (limit 10000). Header `Content-Disposition: attachment; filename="dogfood-entries-<ISO-timestamp>.csv"`. Colonne: `id, created_at, task_description, classe, stack, constraint_count, outcome, retry_count, tokens_sent, tokens_received, cost_usd, latency_ms, commit_hash, note, langfuse_trace_id`. Pulsante "Download CSV" nella pagina `/entries`. Compatibile con Excel / LibreOffice / pandas (`pd.read_csv`).
+
 ## Future extensions
 
-- Auto-import entries da `logs/aider-delegation-YYYY-MM.md` (parser markdown → SQLite)
-- CSV/Excel export
+- Auto-import entries da `logs/aider-delegation-YYYY-MM.md` (parser markdown -> SQLite)
+- Excel `.xlsx` export (openpyxl) se l'UTF-8 CSV non basta per workflow downstream
 - Charts (Chart.js o plotly) per trend temporali
 - Filtro + search nella lista entries
 - Trigger Aider direttamente dall'UI (POST form → subprocess `aider-refactor`)

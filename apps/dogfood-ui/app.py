@@ -11,13 +11,15 @@ Port:   8080 (cambia via PORT env var)
 from __future__ import annotations
 
 import os
+import csv
+import io
 import json
 import sqlite3
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-from flask import Flask, render_template, request, redirect, url_for, jsonify, flash
+from flask import Flask, render_template, request, redirect, url_for, jsonify, flash, Response
 
 from db import Database
 from langfuse_client import LangfuseClient
@@ -37,6 +39,7 @@ LITELLM_ENDPOINT = os.environ.get("LITELLM_ENDPOINT", "http://localhost:4000")
 LANGFUSE_HOST = os.environ.get("LANGFUSE_HOST", "http://localhost:3000")
 LANGFUSE_PUBLIC_KEY = os.environ.get("LANGFUSE_PUBLIC_KEY", "")
 LANGFUSE_SECRET_KEY = os.environ.get("LANGFUSE_SECRET_KEY", "")
+LANGFUSE_PROJECT_ID = os.environ.get("LANGFUSE_PROJECT_ID", "")
 DAFNE_HOST = os.environ.get("DAFNE_HOST", "http://localhost:5000")
 
 # ---------------------------------------------------------------------------
@@ -55,6 +58,22 @@ def create_app() -> Flask:
         secret_key=LANGFUSE_SECRET_KEY,
     )
     dafne = DafneClient(host=DAFNE_HOST)
+
+    host = LANGFUSE_HOST.rstrip("/")
+
+    def langfuse_trace_url(trace_id: str) -> str:
+        if LANGFUSE_PROJECT_ID:
+            return f"{host}/project/{LANGFUSE_PROJECT_ID}/traces/{trace_id}"
+        return f"{host}/trace/{trace_id}"
+
+    @app.context_processor
+    def inject_langfuse_ctx() -> dict[str, Any]:
+        return {
+            "langfuse_host": host,
+            "langfuse_project_id": LANGFUSE_PROJECT_ID,
+            "langfuse_trace_url": langfuse_trace_url,
+            "langfuse_configured": bool(LANGFUSE_PUBLIC_KEY),
+        }
 
     # -----------------------------------------------------------------------
     # Routes
@@ -76,6 +95,11 @@ def create_app() -> Flask:
         entries = db.list_entries(limit=500)
         return render_template("entries.html", entries=entries)
 
+    @app.route("/entries/export.csv", methods=["GET"])
+    def export_entries_csv():
+        entries = db.list_entries(limit=10000)
+        return _csv_response(entries, filename_prefix="dogfood-entries")
+
     @app.route("/entries/new", methods=["GET", "POST"])
     def new_entry():
         if request.method == "POST":
@@ -90,6 +114,7 @@ def create_app() -> Flask:
                 "tokens_received": int(request.form.get("tokens_received", 0) or 0),
                 "cost_usd": float(request.form.get("cost_usd", 0) or 0),
                 "commit_hash": request.form.get("commit_hash", "").strip(),
+                "langfuse_trace_id": request.form.get("langfuse_trace_id", "").strip(),
                 "note": request.form.get("note", "").strip(),
             }
             errors = validate_entry(payload)
@@ -97,8 +122,12 @@ def create_app() -> Flask:
                 for e in errors:
                     flash(e, "error")
                 return render_template("new_entry.html", form=payload)
+            pulled = enrich_from_langfuse(payload, lf)
             entry_id = db.insert_entry(payload)
-            flash(f"Entry #{entry_id} saved.", "success")
+            if pulled:
+                flash(f"Entry #{entry_id} saved. Auto-filled from Langfuse: {', '.join(pulled)}.", "success")
+            else:
+                flash(f"Entry #{entry_id} saved.", "success")
             return redirect(url_for("list_entries"))
         return render_template("new_entry.html", form={})
 
@@ -139,8 +168,13 @@ def create_app() -> Flask:
             errors = validate_entry(payload)
             if errors:
                 return jsonify({"errors": errors}), 400
+            pulled = enrich_from_langfuse(payload, lf)
             entry_id = db.insert_entry(payload)
-            return jsonify({"id": entry_id, "status": "created"}), 201
+            return jsonify({
+                "id": entry_id,
+                "status": "created",
+                "langfuse_autofilled": pulled,
+            }), 201
         entries = db.list_entries(limit=int(request.args.get("limit", 100)))
         return jsonify([entry_to_dict(e) for e in entries])
 
@@ -196,6 +230,27 @@ VALID_STACKS = {
 }
 
 
+def enrich_from_langfuse(payload: dict[str, Any], lf: LangfuseClient) -> list[str]:
+    """Best-effort auto-pull of tokens/cost/latency from Langfuse.
+
+    Only fills payload fields that are zero/missing - never overrides explicit
+    user-supplied values. Returns the list of field names that were auto-filled
+    (empty if no trace_id, Langfuse unreachable, or trace had no usable data).
+    """
+    trace_id = (payload.get("langfuse_trace_id") or "").strip()
+    if not trace_id:
+        return []
+    metadata = lf.fetch_metadata(trace_id)
+    if not metadata:
+        return []
+    filled: list[str] = []
+    for key in ("tokens_sent", "tokens_received", "cost_usd", "latency_ms"):
+        if key in metadata and not payload.get(key):
+            payload[key] = metadata[key]
+            filled.append(key)
+    return filled
+
+
 def validate_entry(payload: dict[str, Any]) -> list[str]:
     errors: list[str] = []
     if not payload.get("task_description"):
@@ -211,6 +266,31 @@ def validate_entry(payload: dict[str, Any]) -> list[str]:
 
 def entry_to_dict(row: sqlite3.Row) -> dict[str, Any]:
     return dict(row)
+
+
+CSV_COLUMNS = [
+    "id", "created_at", "task_description", "classe", "stack",
+    "constraint_count", "outcome", "retry_count",
+    "tokens_sent", "tokens_received", "cost_usd", "latency_ms",
+    "commit_hash", "note", "langfuse_trace_id",
+]
+
+
+def _csv_response(entries: list[sqlite3.Row], filename_prefix: str) -> Response:
+    buf = io.StringIO()
+    writer = csv.DictWriter(buf, fieldnames=CSV_COLUMNS, extrasaction="ignore")
+    writer.writeheader()
+    for row in entries:
+        d = dict(row)
+        d.setdefault("latency_ms", 0)
+        writer.writerow({k: d.get(k, "") for k in CSV_COLUMNS})
+    stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+    filename = f"{filename_prefix}-{stamp}.csv"
+    return Response(
+        buf.getvalue(),
+        mimetype="text/csv; charset=utf-8",
+        headers={"Content-Disposition": f'attachment; filename="{filename}"'},
+    )
 
 
 # ---------------------------------------------------------------------------
