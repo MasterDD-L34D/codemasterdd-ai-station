@@ -6,7 +6,7 @@
 >
 > Riferimenti deep: CLAUDE.md sezione "Progetti monitorati" (descrittivo), memory `project_multi_repo_overview.md` (architetturale), questo file (operativo).
 
-**Ultimo refresh**: 2026-05-10 mattina (post 9/5 sera->10/5 mattina: codemasterdd PR #22-#35 mergeati cumulative 25 PR 7-10/5 + T3+T4 SPRINT_02 pre-validation + cleanup git stale; Game origin/main `7dd18ad` post #2159 BASELINE_WR fix 30 PR mergeati 7-10/5 stream K4/FASE 5/AI sim; Game-Godot-v2 ~230 PR cumulative (+15 post 7/5 sera); Dafne origin/main `9255b4b` PR #102 fase 8 evaluation A/B + PII redaction Atto 2 day 14+).
+**Ultimo refresh**: 2026-05-12 mattina (cross-repo triage chat-only: codemasterdd HEAD `6228bc3` post PR #52 cumulative 33 PR 7-12/5 + Pattern D vault adoption + worktree cleanup metodologico; **Game MAJOR DRIFT**: HEAD `36c9822` post PR #2258, **200 PR mergeati last 14d** sprint attivissimo Phase B + Brigandine + Conviction + trait-editor Vue3 rebuild -- claim originale "pausa 26/04" TOTALMENTE OBSOLETO; **Game-Godot-v2** HEAD `e2f9d3d` post PR #247 +32 PR dal 7/5 cluster 30 PR mergeati 11/5 sera 16:36-22:51 UTC; Dafne stable HEAD `9255b4b` post PR #102 8/5 14:39, 4gg inattivita' post dashboard sprint; **vault-shared HEAD `054cad6` 11/5** 8 commit 11/5 PC scan + hybrid search + Ollama fallback chain).
 
 ---
 
@@ -14,13 +14,13 @@
 
 | Repo | Status | Next action | Deadline/trigger | Blocker |
 |------|--------|-------------|------------------|---------|
-| **codemasterdd-ai-station** | **Fase 6+7 CLOSED**. HEAD `0da13ff` post PR #35 squash-merge 10/5 mattina (25 PR mergeati 7-10/5 cumulative: #11-#21 transition active sovereign + #22-#34 housekeeping + #35 T3+T4 SPRINT_02 pre-validation con dogfood-ui regression fix + runbook hot-restart). 12/18 agent ready. | SPRINT_02 prima sessione 20/05+ (**T1+T3+T4 anticipated DONE**, restano T2/T5/T7) | 2026-05-19 (Claude Max expiration, **9gg residui**) | Nessuno bloccante. H7 ANTHROPIC_API_KEY pending Eduardo direct (Anthropic Console ~5min) |
+| **codemasterdd-ai-station** | **Fase 6+7 CLOSED**. HEAD `6228bc3` post PR #52 12/5 mattina (33 PR mergeati 7-12/5 cumulative: #11-#21 transition active sovereign + #22-#34 housekeeping + #35 T3+T4 SPRINT_02 + #36-#49 cleanup/ADR-0025-26/integration plan + **#50 v21 drift fix + #51 governance-lint MVP Pattern D vault + #52 session closure**). 12/18 agent ready. Pattern D ADOPT: `scripts/governance-lint.ps1` (3 check MVP). | SPRINT_02 prima sessione 20/05+ (T1+T3+T4 anticipated DONE, restano T2/T5/T7) | 2026-05-19 (Claude Max expiration, **7gg residui**) | Nessuno bloccante. H7 ANTHROPIC_API_KEY pending Eduardo direct (Anthropic Console ~5min) |
 | **Synesthesia** | Dormant, HEAD `05f8a92` (invariato) | Riattiva pre-esame UniUPO | ~agosto 2026 | Nessuno (dormant intenzionale) |
-| **Game (Evo-Tactics Vue3)** | HEAD locale `5f42757a` invariato dal 26/04 (Eduardo non ha pulled), ma **origin/main attivo `7dd18ad` con 30 PR mergeati 7-10/5** stream paralleli: K4 Approach B closure (#2154 9/5), FASE 5 nightly AI sim cron + threshold (#2153/#2155 9/5), BASELINE_WR empirical fix (#2159 10/5), skiv-monitor auto-update (#2152 10/5). Sprint Impronta-specific stato non noto cross-repo (governance interna). 3 PR open al 10/5: #2156 yaml-loader + #2157 registry sync + #2160 tier-s-data-fixes (claude branches, da triagare chat-only se serve). | Triage chat-only PR open se Eduardo richiede. Continue monitoring (no codemasterdd action proattiva) | No fixed | Nessuno (governance interna Game) |
-| **Game-Godot-v2** | **~230 PR mergeati cumulative** (+15 PR 7-10/5: #212-#216 + altri). HEAD origin/main `7b92724` (B-NEW-14+15 phone host Conferma mondo CTA fix). Path A canonical CHIUSO end-to-end. Cloned 2026-05-07 in `C:\dev\Game-Godot-v2\`. Hook globali applicati. Governance interna autosufficiente | Continue port (Eduardo-driven), supportare cross-repo se serve | No fixed | Nessuno |
-| **Dafne swarm (evo-swarm)** | **Atto 2 day 14+ active**, HEAD origin/main `9255b4b` post PR #102 (fase 8 evaluation A/B + PII redaction, 8/5 16:39 CET). **30 PR mergeati 7-10/5 cumulative** (cleanup decision debt + governance refresh + dashboard fase 8). HEAD locale stale `a87da39` (Eduardo non ha pulled). 0 PR open al 10/5. | Continue Atto 2 (Eduardo-driven), pull locale se Eduardo riprende workflow Dafne | No fixed | Nessuno |
-| **AA01 (Archon Atelier 01)** | v1.0.0 silent-driver mode. **2 task PROPOSED storici 25/04 ARCHIVED 9/5 sera** (TIMEOUT one-shot reactive) via H11 closure session, workspace 0 attivi, INDEX.md 3 entries, archive readonly. Smoke test end-to-end PASS 6/6. Memory `project_aa01_studio.md` aggiornata. | Continua driver mode + eventuale nuovo task quando emerge | nessuna | nessuno bloccante |
-| **vault-shared (Vault Knowledge Mgmt)** | **Sibling-peer Eduardo, monitored. 7/7 production agents milestone 2026-05-10**. HEAD `2007a8a` (15+ commit 30gg, intensive 10/5). LLM routing matrix v1.0 (research input MODEL_ROUTING). Stack overlap codemasterdd: Ollama LAN + Claude variants + deepseek-r1. Privacy: sovereign-only (academic UniUPO + IP curated). Hook globali compat VALIDATED 10/5. | Continue (Eduardo-driven). Cross-pattern reference one-way (vault -> codemasterdd MODEL_ROUTING addendum). NO write-path codemasterdd-side. | No fixed | Nessuno (sibling-peer disjoint scope) |
+| **Game (Evo-Tactics Vue3)** | **MAJOR DRIFT vs claim "pausa 26/04"**: HEAD `36c9822` post PR #2258 11/5 22:54 UTC. **200 PR mergeati last 14d** sprint attivissimo multi-track: TKT-M14 Conviction system (3 phases) + TKT-P2 Brigandine seasonal (3 phases) + TKT-C1 trait-editor Vue3 rebuild + TKT-C4 mutation forbidden paths + TKT-M15 CT bar promotion engine + TKT-P6 rewind safety valve + Phase B Day 4/5/7/8 OOA audit + Path C handoff + ADR-2026-05-11 schema canonical migration ACCEPTED + master-dd verdict batch 11 decisioni + COMPACT v38->v39->v40. 11/5 cascata 27 PR (#2228-#2258 in ~13h). PR open: solo #2257 skiv-monitor (auto-skip pattern). | Continue monitoring (Eduardo-driven). NO codemasterdd action proattiva. Sprint Impronta narrative SUPERSEDED da scope ampliato Phase B + Brigandine + Conviction. | No fixed | Nessuno (governance interna Game autonoma) |
+| **Game-Godot-v2** | **247 PR mergeati cumulative** (+32 PR dal 7/5, cluster 30 PR mergeati 11/5 sera 16:36-22:51 UTC). HEAD origin/main `e2f9d3d` PR #247 (sprint-context checkpoint execution wave 12/5 closure 9 PR shipped). Path A canonical CHIUSO + Sprint AC bundle closed. Cloned 2026-05-07 in `C:\dev\Game-Godot-v2\`. Hook globali applicati. Governance interna autosufficiente | Continue port (Eduardo-driven), supportare cross-repo se serve | No fixed | Nessuno |
+| **Dafne swarm (evo-swarm)** | **Stable post-dashboard sprint**, HEAD origin/main `9255b4b` post PR #102 (fase 8 evaluation A/B + PII redaction, 8/5 14:39 UTC). **20 PR cascata 8/5** (PR #83-#102 dashboard fase 0-8 + Tier 4 fix x3 + orchestrator CO-02 + compass anchor fix). **4gg inattivita' post 8/5** (no commit dal 8/5). 0 PR open. Atto 2 status post-sprint indeterminate (probabilmente concluded post dashboard fase 8). | Continue (Eduardo-driven), pull locale se workflow Dafne riprende | No fixed | Nessuno |
+| **AA01 (Archon Atelier 01)** | v1.0.0 silent-driver mode. Counter 12/5: **2 SHIP + 1 in progress + 1 REJECTED + 1 vault-integration SHIP this session** = 4 task processati 7-12/5. Workspace 0 attivi, archive **8 entries**, **5 lessons** in `learnings/` (L-2026-04-001 + L-2026-05-002/003/004 + L-2026-05-005 dogfood-driven self-bug-discovery promoted 12/5). Inbox 4 file orfani residual (cleanup opportunity). | Continua driver mode + nuovo task quando emerge. OD-007 Three Strikes counter: frizione tool-selection NON osservata. | nessuna | nessuno bloccante |
+| **vault-shared (Vault Knowledge Mgmt)** | **Sibling-peer Eduardo, monitored. 7/7 production agents milestone 2026-05-10** (frontmatter drift `status: draft` rilevato 12/5: ground truth = location production/agents/, memory caveat). HEAD `054cad6` 2026-05-11T15:44 UTC, **8 commit 11/5** (PC scan + Downloads bulk ingest atomize + hybrid search + Ollama local fallback chain + canonical decision matrix + post-session tune). LLM routing matrix v1.0 path `Extras/config/llm-routing.json`. Stack overlap codemasterdd: Ollama LAN + qwen2.5-coder family + deepseek-r1 + Claude variants. Privacy: sovereign-only (NOT cloud whitelist). Hook globali compat VALIDATED. **Pattern D ADOPT codemasterdd 2026-05-12** (governance-lint.ps1 PR #51, audit-then-replay NO clone). | Continue (Eduardo-driven). Cross-pattern reference one-way (vault -> codemasterdd governance-lint + MODEL_ROUTING addendum). NO write-path codemasterdd-side. | No fixed | Nessuno (sibling-peer disjoint scope) |
 
 ### Stack ADR-0017 runtime (aggiornato 2026-05-10 post T3 SPRINT_02 hot-restart 2nd pass)
 
@@ -128,27 +128,38 @@ Dormant → Attivo: Eduardo segnala riattivazione → codemasterdd riprende trac
 **Remote**: [MasterDD-L34D/Game](https://github.com/MasterDD-L34D/Game)
 **HEAD locale 2026-04-26**: `5f42757a Merge branch 'aa01/cap-15-imprint-phase' into main (CAP-15 phase merge)` -- invariato dal 26/04 12:53 CET (Eduardo non ha pulled localmente)
 
-**HEAD origin/main 2026-05-10**: `7dd18ad fix(sim): BASELINE_WR.cautious 0.85 -> 0.95 empirical N=40 update (#2159)` -- repo MOLTO attivo: **30 PR mergeati 7-10/5** stream paralleli (K4 Approach B + FASE 5 nightly cron + AI sim threshold + skiv-monitor auto-update). Sprint Impronta-specific stato non noto cross-repo (governance Game-interna).
+**HEAD origin/main 2026-05-12 mattina**: `36c9822 chore(phase-b): Day 5/8 OOA audit + Path C handoff preserve (#2258)` -- **repo ATTIVISSIMO**: **200 PR mergeati last 14d**, NON pausa. Sprint multi-track scope ampliato post 26/04 con Phase B + Brigandine + Conviction + trait-editor Vue3 rebuild.
 
-**Open PR al 10/5**:
-- **#2160** `claude/tier-s-data-fixes` (cross-domain audit Tier S+M+L1, 10 ticket gap fixes)
-- **#2157** `claude/registry-sync-2026-05-10` (BACKLOG + COMPACT post 10/5 cron P0 + sweep PR)
-- **#2156** `claude/sweep-yaml-loader` (opt-in YAML scenario loader per AI sim harness)
-- **PR automation cron 4h** (branch `auto/skiv-monitor-update`, author `github-actions[bot]`): pattern auto-skip codemasterdd-side invariato.
+**Open PR al 12/5**:
+- **#2257** `claude/skiv-monitor` auto-update stato + feed creatura (cron 4h automation, pattern auto-skip codemasterdd-side invariato)
 
-**PR mergeati 7-10/5 highlights** (campione, dettaglio non triagato cross-repo per ownership boundary):
-- #2159 BASELINE_WR.cautious 0.85->0.95 empirical fix (10/5)
-- #2155 CI nightly AI sim split WS port from HTTP TUNNEL (9/5)
-- #2154 closure session 9/5 sera K4 Approach B + 4 task autonomous (9/5)
-- #2153 FASE 5 nightly cron + threshold checker drift detection (9/5)
-- #2152 skiv-monitor auto-update + feed creatura (10/5)
-- #2138 + #2139 status-phase-a glossary + policy (gia' MERGED al 9/5 sera tardi -- memory v14 stale indicava DRAFT)
+**Cascata 11/5 sera (27 PR mergeati in ~13h, #2228-#2258)**:
+- **TKT-M14 Conviction system 3 phases** (#2248 A combat + #2249 B narrative + #2250 C api endpoints close AC3)
+- **TKT-P2 Brigandine seasonal campaign 3 phases** (#2251 A engine + #2252 B yaml content + #2253 C api endpoints 6+10 tests)
+- **TKT-C1 trait-editor Vue3 rebuild** (#2243 AngularJS->Vue3 4/5 surface + #2247 FE editor view full close C1 ADR-2026-05-10)
+- **TKT-M14-A elevation + terrain** (#2246 P1 Tattica)
+- **TKT-M15 CT bar audit + promotion engine** (#2242 4.5/5 acceptance + 17 test) + **TKT-M15-FE** UI promotion accept/defer (#2245)
+- **TKT-P6 rewind safety valve** (#2241 3-snapshot buffer + #2244 P6-FE rewind HUD)
+- **TKT-C4 mutation forbidden paths** (#2239 12/12 kinds Phase 6 complete)
+- **TKT-B1 V6 UI TV dashboard polish** (#2240 proactive 4 scoped edits)
+- **TKT-C6 Game Balance & Economy Tuning skill** (#2238 install-doc canonical)
+- **species_expansion schema canonical migration** (#2237 morph_slots -> trait_plan, ADR-2026-05-11 ACCEPTED + #2230 ADR Proposed earlier in day)
+- **Phase B governance** (#2229 Day 4 monitor + #2232 Day 5 grace iter4 + #2256 Day 7 closure pre-stage + #2258 Day 5/8 OOA audit + Path C handoff)
+- **master-dd verdict batch 11 decisioni ACCEPT** (#2234)
+- **2 T3 species ship** (#2235 tempestarius_psionicus + magmocardium_furens close trait residue)
+- **TKT-P2 species Phase A engine** (#2251)
+- **dist auto-build mission-console** (#2221 source-driven)
+- **ennea dedup duration tie-break fix** (#2255 Lealista buff wins over Coordinatore)
+- **closure docs COMPACT v38->v39->v40** + memory save 2026-05-11 (#2233 + #2254)
+- **fix tests baseline-drift service** (#2227 restore 6 failures)
+- **docs p4 Thought Cabinet round-mode adoption** (#2226 Sprint 6 +14gg)
+- **chore governance weekly drift audit** (#2228 11/5)
 
 ### Piano operativo
 
 Governance del Game vive **nel Game repo stesso** (`docs/governance/`). codemasterdd non dirige, **monitora**.
 
-- **Sprint Impronta Ondata 1 status non noto cross-repo** (HEAD locale invariato 26/04, ma origin/main attivo con stream diversi 7-10/5: K4 Approach B + FASE 5 + AI sim). CAP-11..15 attivita' clusterata 25-26/04 driven by AA01 silent driver mode resta storia:
+- **Sprint Impronta narrative SUPERSEDED 2026-05-12**: HEAD locale invariato 26/04, ma origin/main ha pivotato a scope ampliato Phase B + Brigandine + Conviction + trait-editor Vue3 rebuild + master-dd verdict batch. CAP-11..15 attivita' clusterata 25-26/04 driven by AA01 silent driver mode resta storia originaria, ora multi-track post-Impronta:
   - **CAP-11** biome-resolution merge
   - **CAP-12** PlayerRunTelemetry schema + endpoint
   - **CAP-13** imprint-mockup + UX patch anchor "qual e' la mia creatura"
@@ -241,16 +252,15 @@ Da triageare nel BACKLOG repo Game quando Sprint Impronta lascia spazio. Non ges
 
 Repo creato 5 giorni dopo l'inizio del Sprint Impronta Game (Vue3). Pivot strategico: ricostruire shell visuale + UX in engine native (Godot 4.x) mentre Game (Vue3) mantiene Sprint Impronta gameplay logic + telemetria + onboarding.
 
-**Status 2026-05-10**: **~230 PR mergeati cumulative** (PR #216 ultimo documentato + altri post-7/5 fino al 10/5: 15 PR mergeati 7-10/5 totali). 0 PR open al 10/5. HEAD origin/main `7b92724 fix(phone): host Conferma mondo CTA + timeout 60s/retry + WS handler register (B-NEW-14+15+B-NEW-7-v2)`. Dettaglio non triagato in codemasterdd -- governance interna autosufficiente.
+**Status 2026-05-12 mattina**: **247 PR mergeati cumulative** (+32 PR dal 7/5 sera, cluster 30 PR mergeati 11/5 sera 16:36-22:51 UTC, #218-#247). 0 PR open. HEAD origin/main `e2f9d3d docs(sprint-context): checkpoint execution wave 2026-05-12 closure -- 9 PR shipped (#247)`. Dettaglio non triagato in codemasterdd -- governance interna autosufficiente.
 
-PR mergeati 7/5 sera (5, ultimi documentati a livello cross-repo):
-- **#207** phone composer handlers (world_tally + world_vote_accepted)
-- **#208** GAP-10 AiProgressMeter wire HUD top-strip
-- **#209** gdlint debt cleanup CI (fix)
-- **#210** GAP-7 PassiveStatusApplier wire main.gd combat setup
-- **#211** GAP-5 MissionTimer countdown HUD wire
+PR mergeati 11/5 sera (campione highlights, dettaglio Game-side):
+- **#247** sprint-context checkpoint execution wave 12/5 closure (9 PR shipped)
+- **#246** C1 Playwright playtest agent combat 5R + phone airplane reconnect
+- **#245** C2 P2 Phase C+D bundle CampaignApi + HudView season indicator
+- Cluster #218-#244 (vari): wave execution multi-track parallel
 
-Milestone: **Path A canonical CHIUSO end-to-end** + Sprint AC bundle 15 sub-sprint (#171-#185, AC.6-AC.18) + W3.5 4 nuove scene + W4 wire CoopApi+LoadingOverlay+ErrorBanner.
+Milestone: **Path A canonical CHIUSO end-to-end** + Sprint AC bundle 15 sub-sprint (#171-#185, AC.6-AC.18) + W3.5 4 nuove scene + W4 wire CoopApi+LoadingOverlay+ErrorBanner. Post 7/5: wave execution attivissimo 11/5 sera con 30+ PR mergeati cluster.
 
 **Stack**: Godot 4.x (engine native, GDScript). 200 test file GUT (~1719 test asserts, 178 scripts). addons + scenes + scripts + tests + tools. No Node, no Vue, no Python (radicalmente diverso da Game Vue3).
 
@@ -329,6 +339,13 @@ Codemasterdd NON scrive su vault-shared. Vault-shared self-governs. Eduardo medi
 
 Vault-shared workflow richiede Eduardo per ogni promote/tune/quality-gate -- intentional SPOF su personal workflow. Mitigation = backup + recovery, NON delegation.
 
+### Update 2026-05-12 (Pattern D ADOPT + drift verifications)
+
+- **HEAD reale verificato**: `054cad6 feat(pc-scan): inventory + Downloads bulk ingest + atomize` (11/5 15:44 UTC). 8 commit cluster 11/5 (PC scan + hybrid search qmd+FTS5+Smart Connections + Ollama local fallback chain mistral+qwen3:8b + canonical decision matrix optimal-hybrid-pattern + post-session tune Global+Vault CLAUDE.md + AGENT_PROTOCOL).
+- **Pattern D ADOPT codemasterdd 2026-05-12**: vault `production/agents/vault-linter.md` concept transfer -> `scripts/governance-lint.ps1` (PR #51 merge `0350be5`, audit-then-replay PowerShell-native, NO clone). 3 check MVP (COMPACT HEAD sync + Coda PR claim + JOURNAL stale). Smoke 3/3 ALL-CLEAR self-applied. Future expansion Three Strikes SPRINT_03+. Cross-pattern reference one-way preserved.
+- **Status drift findings**: 7/7 vault agent `status: draft` frontmatter ma in `production/agents/` (memory codemasterdd valid via "location = ground truth" interpretation, caveat noted L-2026-05-005).
+- **No bidirectional dependency**: codemasterdd governance-lint NON conosce vault concept name nei file di codice (solo nel commit message + research doc + lesson). Replay clean separation.
+
 ---
 
 ## Scheduled checkpoints
@@ -339,7 +356,8 @@ Vault-shared workflow richiede Eduardo per ogni promote/tune/quality-gate -- int
 | ~~2026-04-30~~ | H4 cost snapshot fine-mese | codemasterdd | DONE -- gia' fatto mid-sprint 24/04 |
 | ~~2026-05-07~~ | Fase 6 closure (anticipata vs sett.4 originale) | codemasterdd | DONE -- ADR-0015 + ADR-0017 Accepted |
 | ~~2026-05-08~~ | Governance refresh (drift fix STATUS + COMPACT v12) | codemasterdd | DONE -- branch governance-refresh-2026-05-08 |
-| **2026-05-19** | Claude Max expiration | codemasterdd | Transizione sovereign (wrapper + Ollama) |
+| ~~2026-05-12~~ | Cross-repo triage chat-only + STATUS drift fix major (Game 200 PR 14d + Godot-v2 +32 + Dafne stable + vault HEAD update) | codemasterdd | DONE -- questa PR |
+| **2026-05-19** | Claude Max expiration | codemasterdd | **7gg residui al 12/5 mattina**. Transizione sovereign (wrapper + Ollama) |
 | **2026-05-20+** | SPRINT_02 prima sessione | codemasterdd | Scenario A operativo, smoke test sovereign confermato |
 | **~giugno-agosto 2026** | Synesthesia riattivazione | Synesthesia | Privacy validation 2/3 + esame prep |
 
