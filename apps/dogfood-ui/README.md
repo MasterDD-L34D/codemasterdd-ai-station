@@ -194,10 +194,14 @@ curl http://localhost:8080/api/stats | jq .total
 
 Test formale pytest da aggiungere in `tests/` in sprint futuri.
 
+## Export CSV
+
+`GET /entries/export.csv` -> download UTF-8 CSV con tutte le entries (limit 10000). Header `Content-Disposition: attachment; filename="dogfood-entries-<ISO-timestamp>.csv"`. Colonne: `id, created_at, task_description, classe, stack, constraint_count, outcome, retry_count, tokens_sent, tokens_received, cost_usd, latency_ms, commit_hash, note, langfuse_trace_id`. Pulsante "Download CSV" nella pagina `/entries`. Compatibile con Excel / LibreOffice / pandas (`pd.read_csv`).
+
 ## Future extensions
 
-- Auto-import entries da `logs/aider-delegation-YYYY-MM.md` (parser markdown → SQLite)
-- CSV/Excel export
+- Auto-import entries da `logs/aider-delegation-YYYY-MM.md` (parser markdown -> SQLite)
+- Excel `.xlsx` export (openpyxl) se l'UTF-8 CSV non basta per workflow downstream
 - Charts (Chart.js o plotly) per trend temporali
 - Filtro + search nella lista entries
 - Trigger Aider direttamente dall'UI (POST form → subprocess `aider-refactor`)

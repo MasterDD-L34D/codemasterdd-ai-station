@@ -11,13 +11,15 @@ Port:   8080 (cambia via PORT env var)
 from __future__ import annotations
 
 import os
+import csv
+import io
 import json
 import sqlite3
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-from flask import Flask, render_template, request, redirect, url_for, jsonify, flash
+from flask import Flask, render_template, request, redirect, url_for, jsonify, flash, Response
 
 from db import Database
 from langfuse_client import LangfuseClient
@@ -92,6 +94,11 @@ def create_app() -> Flask:
     def list_entries():
         entries = db.list_entries(limit=500)
         return render_template("entries.html", entries=entries)
+
+    @app.route("/entries/export.csv", methods=["GET"])
+    def export_entries_csv():
+        entries = db.list_entries(limit=10000)
+        return _csv_response(entries, filename_prefix="dogfood-entries")
 
     @app.route("/entries/new", methods=["GET", "POST"])
     def new_entry():
@@ -259,6 +266,31 @@ def validate_entry(payload: dict[str, Any]) -> list[str]:
 
 def entry_to_dict(row: sqlite3.Row) -> dict[str, Any]:
     return dict(row)
+
+
+CSV_COLUMNS = [
+    "id", "created_at", "task_description", "classe", "stack",
+    "constraint_count", "outcome", "retry_count",
+    "tokens_sent", "tokens_received", "cost_usd", "latency_ms",
+    "commit_hash", "note", "langfuse_trace_id",
+]
+
+
+def _csv_response(entries: list[sqlite3.Row], filename_prefix: str) -> Response:
+    buf = io.StringIO()
+    writer = csv.DictWriter(buf, fieldnames=CSV_COLUMNS, extrasaction="ignore")
+    writer.writeheader()
+    for row in entries:
+        d = dict(row)
+        d.setdefault("latency_ms", 0)
+        writer.writerow({k: d.get(k, "") for k in CSV_COLUMNS})
+    stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+    filename = f"{filename_prefix}-{stamp}.csv"
+    return Response(
+        buf.getvalue(),
+        mimetype="text/csv; charset=utf-8",
+        headers={"Content-Disposition": f'attachment; filename="{filename}"'},
+    )
 
 
 # ---------------------------------------------------------------------------
