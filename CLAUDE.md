@@ -66,9 +66,21 @@ Target: piattaforma AI sovereign con zero subscription fisse post-maggio 2026.
   - `OLLAMA_CONTEXT_LENGTH=8192` (ridotto da 16384 il 2026-04-20 su 16GB RAM: +36% speed su 14B Q2 liberando KV cache da CPU spill. Override per-request `num_ctx: 16384` per task multi-file. **Post upgrade 64GB 2026-04-22: il razionale originale è decaduto — rivalidare bench empirico prima di riportare default a 16384**, vedi `docs/adr/0012-ram-upgrade-64gb-impact.md`.)
 - **Nuova capacità post 2026-04-22 (64GB RAM)**: modelli 30B+ non più RAM-bound; qwen3-coder:30b tier 2 non più borderline; Qwen 2.5 Coder 32B Q4 (~19-20GB) diventa candidato benchmarkable; 14B Q3_K_M potrebbe tornare competitivo con ctx più alto. Tutti i valori tok/s in tabella rimangono **validi** (misurati pre-upgrade, ma non RAM-bound) — rebench opzionale solo per scoprire se ctx più largo cambia la decision matrix.
 
-## Ecosistema device
-- **CodeMasterDD** (Lenovo LOQ Tower 17IAX10): workstation primaria AI agentic
-- **Ryzen 9600X desktop**: PC appoggio corrente, dismissione graduale quando CodeMasterDD ha tutto
+## Ecosistema device (aggiornato 2026-05-10 post LAN discovery + Ryzen capability reveal)
+
+Fleet Eduardo on-LAN 192.168.1.0/24 (4 PC totali, 2 di Eduardo + 2 di moglie):
+
+- **CodeMasterDD** (Lenovo LOQ Tower 17IAX10, 192.168.1.121): workstation primaria AI agentic
+- **DESKTOP-T77TMKT** (192.168.1.222) -- **Ryzen 9600X desktop EDUARDO** (rivelato 2026-05-10 NON in dismissione): MSI MS-7E26 mobo, **RTX 4070 SUPER 12GB VRAM** (+50% vs Lenovo 8GB), 31GB RAM, Windows 11 build 26200, OpenSSH server 9.5 attivo. **Capability tier**: 14B Q4 full-GPU + 22B Q4 split + Codestral 22B + SDXL/Flux. AI stack inizialmente assente (Ollama/Python/Aider non installati al 2026-05-10), install pending.
+- **DESKTOP-B9L203E** (192.168.1.37) -- secondary desktop **moglie**: Windows DESKTOP-XXX hostname, MAC Samsung OUI 2C:F0:5D, capability TBD, OpenSSH non attivo (install pending Eduardo direct)
+- **LAPTOP-D73A8DIE** (192.168.1.130) -- laptop **moglie**: Windows LAPTOP-XXX hostname, MAC A0:A4:C5, capability TBD, OpenSSH non attivo (install pending Eduardo direct)
+
+**Drift fix 2026-05-10**: claim originale "Ryzen 9600X desktop: PC appoggio corrente, dismissione graduale" e' OBSOLETO. Ryzen ha 4070 SUPER 12GB > Lenovo 5060 8GB per modelli 14B-22B. Ryzen e' **secondary inference active** + complementary tier capability, NOT phase-out.
+
+**Strategic implication fleet-aware**:
+- Lenovo: tier 1 cosmetic (7B Q4 full-GPU 114 tok/s) + agentic hub (Aider/OpenCode/Claude Code stack) + 30B MoE Ollama partial
+- Ryzen: tier 2 behavior (14B Q4 full-GPU atteso ~30-40 tok/s) + 22B Q4 split + image gen
+- DESKTOP-B9L203E + LAPTOP-D73A8DIE: capability TBD, role Pod TBD post onboarding SSH
 
 ## Configurazione sicurezza applicata (19/04/2026)
 - BitLocker: triplo layer disabilitato
