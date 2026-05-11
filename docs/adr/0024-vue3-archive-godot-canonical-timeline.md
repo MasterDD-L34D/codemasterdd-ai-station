@@ -135,6 +135,55 @@ Setup:
 - [ ] **Pipeline swarm-to-game**: Dafne integration target documentation update (Vue3 OR Godot v2 OR both based on archive status)
 - [ ] **Trigger Accepted** (status flip Proposed -> Accepted): post 2026-08-01 review trimestrale con dati empirici (commit count Vue3, feature parity check, AA01 driver progress).
 
+## Sub-events timeline (addendum 2026-05-12)
+
+**Trigger addendum**: Game OPEN_DECISIONS OD-023 (APERTA 2026-05-12) cita esplicitamente questo ADR e raccomanda clarification scope disjoint vs Game ADR-2026-05-05 (Phase B 7gg grace closure).
+
+### Scope disjoint clarification
+
+Vue3 codebase archive timeline ADR-0024 e Phase B web archive Game ADR-2026-05-05 sono **scope disjoint** (sub-event timeline distinta):
+
+| Scope | ADR governance | Path target | Timeline | Sub-event relation |
+|-------|----------------|-------------|----------|---------------------|
+| **Phase B web archive** | Game `docs/adr/ADR-2026-05-05-cutover-godot-v2-fase-3-formal.md` | `Game/apps/play/` FE only (Cloudflare deploy + Web export) | **2026-05-14 mattina UTC** (formal closure Day 7 grace) | **Sub-event di** archive Vue3 repo-wide |
+| **Vue3 codebase archive** | codemasterdd ADR-0024 (questo) | Game/ repo-wide (apps/ + frontend/ + tools/ + tests/ etc., escluso .git history preservata) | **2026-09-30 soft-deadline** (4 mesi) | Macro-event include Phase B come step intermedio |
+
+### Cascade timeline graphical
+
+```
+2026-05-14 14:00 UTC -- Phase B formal closure (Game ADR-2026-05-05 §13.4 cascade actions)
+                        |-- web-v1-final tag
+                        |-- apps/play/ archive
+                        |-- README banner
+                        |
+                        |  [Sprint Impronta Vue3 continues active per Game master-dd cascade verdict]
+                        |  [Pillar deltas v40 confirmed: P4 closure imminent]
+                        |
+2026-08-01 -- Review trimestrale ADR-0024 mid-point check
+              |-- commit count Vue3 30gg
+              |-- feature parity Godot v2 assessment
+              |-- ratification deadline: anticipa / conferma / estende
+              |
+2026-09-30 -- Soft-deadline ADR-0024 archive Vue3 codebase-wide
+              |-- IF trigger objective hit (60gg silenzio O feature parity)
+              |   -> archive activated via ADR-0024 addendum
+              |-- IF trigger NOT hit
+              |   -> review trimestrale dictate continue/extend/abort
+```
+
+### Verdict Game OD-023 (autonomous resolution path)
+
+Game OD-023 propone **Path C ORA + Path A Day 8** (canonical execution 2026-05-14 mattina UTC). Path D "ADR amendment 30gg grace extension" (26/35 scoring) NON adottato. Codemasterdd ADR-0024 INVARIATO su soft-deadline 2026-09-30 -- solo clarification scope disjoint aggiunta qui.
+
+**Cross-repo dependency note**: Game OD-023 marked "Cross-repo ai-station alignment" raccomanda "Amendment ai-station ADR-0024 § Sub-events timeline raccomandato Sprint Q+ NON oggi". Questo addendum risolve raccomandazione preserving original ADR-0024 decision invariato.
+
+### No conflict reaffirmed
+
+- Game ADR-2026-05-05 e codemasterdd ADR-0024 NON conflict: sub-event vs macro-event timeline
+- Phase B archive 2026-05-14 NON archive Vue3 codebase-wide (continua attivo per Sprint Impronta + post-verdict cascade work)
+- Vue3 codebase archive 2026-09-30 INCLUDE archive di `apps/play/` ma post-Phase-B-closure storia gia' completata
+- Sprint Impronta + Brigandine + Conviction + trait-editor Vue3 rebuild work (200 PR 14d) sono **attivita interim** Vue3 pre-2026-09-30 deadline, NON contraddicono archive
+
 ## Riferimenti
 
 - CLAUDE.md sezione "Progetti monitorati" -> "Evo-Tactics Godot v2 (Game-Godot-v2)" (descrittivo invariato, statement "Vue3 archive decisione futura" formalizzato in questo ADR)
@@ -145,3 +194,5 @@ Setup:
 - Harsh review: `docs/reviews/flow-chart-harsh-review-2026-05-09.md` (edge case HIGH "Game pivot Vue3->Godot")
 - Decisione 007 in `DECISIONS_LOG.md` (Eduardo scelta 5A+)
 - BACKLOG H11 (AA01 attivazione Ondata 1+2 Eduardo direct)
+- Game `OPEN_DECISIONS.md` OD-023 -- Phase B execution date verdict 2026-05-12 (cross-repo dependency citata)
+- Game `docs/adr/ADR-2026-05-05-cutover-godot-v2-fase-3-formal.md` -- scope `apps/play/` web archive Phase B

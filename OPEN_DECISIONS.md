@@ -83,6 +83,26 @@
 
 ---
 
+### [OD-008] Cross-repo dependency Game OD-023 -- Phase B Day 7 closure 2026-05-14 sub-event di ADR-0024
+
+- **Livello**: cross-repo strategic (codemasterdd <-> Game)
+- **Stato**: **TRACKED 2026-05-12** -- ADR-0024 addendum "Sub-events timeline" shipped questa PR risolve raccomandazione Game OD-023. Cross-repo dependency formalizzata.
+- **Ambiguita originale**: Game `OPEN_DECISIONS.md` OD-023 (APERTA 2026-05-12) cita esplicitamente codemasterdd ADR-0024:
+  > "Cross-repo ai-station alignment: ADR-0024 Proposed 2026-05-09 = Vue3 archive soft-deadline 2026-09-30 (4 mesi). Conflict apparente con Game/ ADR-2026-05-05 (7gg grace). Risolto via Opt B+C combined: scope disjoint (Game = FE apps/play/ only, ai-station = Vue3 repo-wide). Amendment ai-station ADR-0024 § Sub-events timeline raccomandato Sprint Q+ NON oggi."
+- **Decisione codemasterdd-side**: ADR-0024 addendum shipped questa PR chiarisce scope disjoint senza alterare original decision (soft-deadline 2026-09-30 invariata). Phase B web archive 2026-05-14 = **sub-event** di Vue3 codebase-wide archive 2026-09-30.
+- **Perche conta**:
+  - Tracciabilita cross-repo dependency (codemasterdd OPEN_DECISIONS riflette stato Game OD-023)
+  - Anti-drift: future sessione legge OD-008 + capisce immediate che Phase B 14/5 NON archive Vue3 repo-wide
+  - Game OD-023 path verdict (Path C ORA + Path A Day 8) NOT codemasterdd action -- Eduardo direct Game-side
+- **File coinvolti questa PR**:
+  - `docs/adr/0024-vue3-archive-godot-canonical-timeline.md` (addendum "Sub-events timeline")
+  - `STATUS_MULTI_REPO.md` (entry forthcoming 2026-05-14 + Game row OD-023 mention)
+  - `OPEN_DECISIONS.md` (questa OD-008)
+- **Prossima azione**: monitor Game OD-023 resolution 2026-05-14 post-Phase-B closure. Update OD-008 to CLOSED quando Game OD-023 chiusa + Phase B web archive completata.
+- **Reactivation trigger**: Game/ ADR-2026-05-05 amendment (es. grace extension oltre 7gg, scope changes, abort) -> potenziale ADR-0024 follow-up addendum
+
+---
+
 ### [OD-007] AA01 capability registry / scan function -- deferred Three Strikes
 
 - **Livello**: workflow / tooling (AA01-side, esterno a codemasterdd)
