@@ -1836,3 +1836,78 @@ Resume da compact v17. Eduardo "si procedi con cleanup e dopo facciamo sprint 02
 - **PowerShell IPv6 bind quirk**: `Invoke-WebRequest http://localhost:4000` fail 60 retry/120s, mentre `curl http://127.0.0.1:4000` succeeds 200 immediato. Lesson: per health-check Docker stack su Windows usare 127.0.0.1 esplicito, non localhost.
 - **Cumulative 10/5 (giornata 24h)**: PR #31 + #32 + #33 + #34 mergeati la sera 9/5/notte 10/5 + cleanup git + T3+T4 in mattinata 10/5. Branch corrente `magical-villani-f2af96` 2 file modificati (db.py + governance docs), pendente decision Eduardo per push/PR.
 - **SPRINT_02 ready**: T3 + T4 pre-validati. Restano T1 (smoke sovereign primo task post-Max), T2 (dogfood organico continuativo), T5 (cost tracking), T7 (review fine sprint). T6 dormant. **9gg residui pre-Max** (Max expiration 19/05).
+
+---
+
+## 2026-05-10 mid-morning (governance refresh post-T3+T4 + vault-shared integration + autoresearch/hyperspace refs)
+
+### Contesto
+
+Continuazione marathon 10/5 oltre PR #35 (T3+T4 SPRINT_02 pre-validation + dogfood-ui regression fix). Sequenza Eduardo nel corso della mattinata: A1+A2+A3+A4 drift fix + AA01-driven autonomous task per identificare 2 repo da integrare (vault-shared + awesome-claude-code-toolkit) + estensione mid-session a 2 reference repo (Autoresearch + Hyperspace Pods). 4 PR addizionali mergeati 05:15 -> 11:26 CEST.
+
+### Completato
+
+#### PR #36 mergeato (`ee1edea`): STATUS_MULTI_REPO refresh post 7-10/5 cross-repo
+Refresh accuracy post 25+ PR codemasterdd cumulative + ~100 PR cross-repo. Verify HEAD origin/main empirico via `gh` API per evitare drift tipo PR #11 8/5 caso-studio. Updates: codemasterdd HEAD `a71d653` -> `0da13ff`; Game (Vue3) `7dd18ad` post #2159 BASELINE_WR fix (30 PR mergeati 7-10/5 K4/FASE 5/AI sim/skiv); Game-Godot-v2 215 -> ~230 PR cumulative; Dafne `9255b4b` post #102 fase 8 evaluation A/B + PII redaction (Atto 2 day 14+); AA01 2 task PROPOSED storici 25/04 ARCHIVED 9/5 sera via H11. Stack ADR-0017: T3 2nd pass PASS + 38 trace preservati + runbook nuovo `docs/runbook/adr-0017-hot-restart.md`. Status-phase-a feature flow chiarito (PR #2138/#2139 GIA' MERGED al 9/5 sera tardi, memory v14 stale). Sprint Impronta narrative corretto (HEAD locale invariato dal 26/04 NON implica pausa, origin/main attivo stream diversi).
+
+#### PR #37 mergeato (`e24c070`): BACKLOG H9 closed (drift sync)
+Sync H9 da `[ ]` a `[x]` con summary done. Bench n=4 per tier (7B / 14B Q2 / 30B MoE) gia' eseguito 9/5 mezzogiorno (commits `cbdf2ed` + `11cac69` + CLAUDE.md aggiornato) ma BACKLOG checkbox dimenticato. Drift fix di 1 riga.
+
+#### PR #38 mergeato (`516d9a8`): OD-003 closure + status drift fix a3+a4
+A3 OD-003 closure: Cerebras 8B = cosmetic default + Groq 70B = behavior default (opzione 1 formalizzata). Convenzione gia' implicita in `MODEL_ROUTING.md` linee 72-74, sync formale + drift recovery. A4 drift fix: `STATUS_MULTI_REPO` rimossa entry stale "Decisione 004 da scrivere in DECISIONS_LOG" (decisione gia' scritta linea 96-106 dal 7/5). A2 honest skip: dogfood cosmetic gap n=7->n>=10 NON forzato (Sprint working rule SPRINT_02 line 107 esplicito niente forzatura quota).
+
+#### PR #39 mergeato (`3735d32`): vault-shared sibling-peer + 3 reference repo (autoresearch + hyperspace pods + toolkit)
+Integrazione 4 repo identificati autonomamente via AA01 task formale `2026-05-aa01-001-two-repos-analysis-integration` (preset research-long) + extension mid-session.
+
+**vault-shared** (MasterDD-L34D/vault) -- sibling-peer monitored, sovereign-only:
+- 7/7 production agents milestone hit 2026-05-10 (Quality Gate workflow smoke -> draft -> production 3-gate)
+- Stack overlap codemasterdd: Ollama LAN + Qwen + deepseek-r1 + Claude variants
+- Privacy validato spot-check empirico (4 rationale: academic UniUPO + IP curated GDR + design notes Dev + prompt library)
+- Hook globali compat VALIDATED 2026-05-10 (empty commit test PASS, reverted post-test)
+- LLM routing matrix v1.0 -> research input MODEL_ROUTING (no commit hash citato per drift risk repo Eduardo-driven, methodology TBR audit)
+- Boundary: NO write-path codemasterdd-side, sibling-peer disjoint scope
+
+**awesome-claude-code-toolkit** (rohitg00 OSS Apache 2.0) -- REFERENCE_INDEX:
+- Inventario 135 agents / 35 skills / 42 commands / 20 hooks / 15 rules / 176+ plugins
+- Cherry-pick policy: pull-when-needed, audit-then-replay, lock at-import NON pre-emptive, attribution header, NO bulk import (YAGNI ADR-0005)
+- NO continuous sync upstream (snapshot at-import immutable)
+
+**Autoresearch** (multi-candidate evaluation, deferred SPRINT_03+):
+- Top fit codemasterdd: 199-biotechnologies/autoresearch-cli (any AI coding agent integration)
+- Alternative Karpathy-pattern coerente vault-shared: karpathy/autoresearch (MIT, single-GPU PyTorch+uv, val_bpb metric)
+- Other evaluated: AutoResearch/autora, AutoResearchClaw, openags
+- Use case: overnight research workflow / dogfood expansion. NO install pre-emptive (YAGNI)
+
+**Hyperspace Pods** (strategic candidate Mac mini scenario alternative):
+- hyperspace.sh + hyperspaceai/aios-cli + hyperspaceai/agi distributed
+- Architettura libp2p v3 + GossipSub + Kademlia DHT + Circuit Relay v2 + Yamux + Noise encryption
+- Hardware compatible: RTX 5060 8GB qualifies (VRAM 4GB minimum)
+- Use case: pool Lenovo + futuro Mac mini + family/friends device in shared private cluster, NO cloud / NO central server
+- Privacy gate: AUDIT REQUIRED PRE-install (P2P data flow + Pod trust mesh + GossipSub messages + Thor backend)
+- Trigger evaluation: Mac mini extension / VRAM 8GB constraint / device pooling interest
+
+Workflow AA01 task 001: hypothesis identificata autonoma + Eduardo conferma 5/5 + Phase 1-3 + Phase 4 harsh-reviewer REWORK verdict (2 BLOCKING + 2 SIGNIFICANT + 1 MINOR fixati surgical) + Phase 5 codemasterdd-side write. File toccati codemasterdd: STATUS_MULTI_REPO (+98) + CLAUDE.md (+36) + MODEL_ROUTING (+23) + REFERENCE_INDEX (+45) + 4 memory file (project_vault_shared NEW + reference_external_toolkits NEW + reference_autoresearch_tools NEW + reference_hyperspace_pods NEW + project_multi_repo_overview update + MEMORY.md +4).
+
+Validation: privacy guard rail H8 logico (vault NOT whitelisted -> aider-groq exit 1) + hook globali compat empirico vault (test reverted boundary respect).
+
+### Da fare
+
+- **Eduardo direct (residuo invariato)**:
+  - **H7 ANTHROPIC_API_KEY** in `~/.config/api-keys/keys.env` via Anthropic Console (~5min). Scaffold log gia' pronto in `logs/claude-api-spend-2026-05.md`.
+- **Calendarizzati** (invariati):
+  - 2026-05-19 Claude Max expiration (**8gg residui al 11/5**)
+  - 2026-05-20+ SPRINT_02 prima sessione Fase 8 sovereign (T1/T2/T5/T7 restanti)
+  - 2026-06-07 ratification check ADR-0021
+  - 2026-06-09 ratification check ADR-0022
+- **Deferred SPRINT_02 / opportunistic post-19/05**:
+  - T2 dogfood-ui field name desync residuo (`retries`/`retry_count` + `tokens_in`/`tokens_sent` + outcome validation), ~15 righe single-file behavior, classe sovereign-OK -- candidato perfetto aider-refactor smoke post-Max
+  - L6 OpenCode plugin custom o tool-set trim per cloud free viable (solo se gpt-4o-mini budget eccessivo)
+  - T7 review fine sprint MAX=2 re-eval
+
+### Note
+
+- **Cumulative giornata 10/5**: 5 PR mergeati 04:25 -> 11:26 CEST (#34 v17 + #35 T3+T4 + #36 status + #37 H9 + #38 OD-003 + #39 vault-shared/refs). Effort reale ~6-7h cumulative spread across pattern lean-hyperactive 5° giornata consecutiva.
+- **AA01-driven autonomous task pattern**: PR #39 esecuzione via task formale AA01 con phase 1-5 standard + harsh-reviewer Phase 4 gate. REWORK verdict catturato 2 BLOCKING che PR diretto avrebbe missato. Validazione pattern "AA01-mediated audit-then-write".
+- **Multi-source autoresearch pre-decision**: 5 candidate Autoresearch evaluati + ranking fit, vs default one-shot README "best match". Feedback `autoresearch_default` 10/5 applicato: NO-GO erroneo restored a CONDITIONAL GO via multi-source synthesis. Pattern replicato in PR #39 senza riconvocare il pattern (parallel research embedded).
+- **Cumulative 7-11/5**: 29 PR mergeati codemasterdd cumulative (5 mattinata 10/5 + 24 7-9/5). Coda PR vuota. 22 ADR + 7 decisioni non-ADR. 11gg/9gg/8gg countdown to Max expiration (10gg residui shift naturale 10->9 il 10/5 + 8 il 11/5).
+- **Stop hook H12 ancora NON osservato attivare**: settings.json project-level dovrebbe triggerare SessionStart prossima invocazione, ma 5 PR consecutive 10/5 senza marker visibile. Possibile root cause: marker `.claude/.session-start-head` create solo first-time, refresh successive silent. Verifica deferred a prossima session esplicita.
