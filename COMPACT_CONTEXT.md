@@ -6,17 +6,17 @@
 
 ## Progetto
 - **Nome**: CodeMasterDD AI Station
-- **Versione del compact**: v20 (sessione 2026-05-11 notte + 2026-05-12 mattina: plan integration AA01+Vault+Hyperspace **DONE** via PR #48 MERGED (8 commit atomici). 4 cognitive workflow protocols formalized in ADR-0026 (triple anchor: ADR + memory + CLAUDE.md). Hyperspace status **ABANDONED definitivo** post empirical 30s trial (D-017 99% confidence) + amend ADR-0025 NO-GO. AA01 cleanup: workspace 0 attivi, archive 7 entries, 3 lessons riusabili (L-2026-04-001 + L-2026-05-002 Hyperspace cycle + L-2026-05-003 cross-repo adoption). Pivot llama.cpp RPC primary + REST API single-node Lenovo PASS (D-019/D-022). Cumulative 7-12/5: **31 PR mergeati** codemasterdd. Verification empirica end-to-end 9/9 PASS post-ADR-0026.)
-- **Data ultimo aggiornamento**: 2026-05-12 mattina
+- **Versione del compact**: v21 (sessione 2026-05-12 mattina post-cleanup + drift fix v20->v21: PR #49 confermato MERGEATO (addendum E2 archon symmetric conditional fit + amend ADR-0026 aa01 conditional fit + COMPACT v20). **Worktree cleanup metodologico**: 3 worktree + 6 branch claude/* + 5 dir filesystem orfane rimosse via Protocol 1 refresh-verify + Protocol 2 autoresearch multi-source (verifica per ognuno: merged-in-main / superseded-by-newer-PR / empty-orphan). Hyperspace Phase 1 privacy audit RIMOSSO da deferred opportunistic (allinea con ADR-0025 ABANDONED post empirical 30s trial D-017 99% confidence). 7gg residui pre-Max al 12/5 mattina. Cumulative 7-12/5: **32 PR mergeati** codemasterdd (31 v20 + 1 closure ritual #49). Coda PR codemasterdd VUOTA.)
+- **Data ultimo aggiornamento**: 2026-05-12 mattina (post-cleanup)
 
 ## Stato attuale
-- **Barra globale ~99.5%**: Fase 6 + Fase 7 CLOSED. ADR-0022 + ADR-0023 + ADR-0024 + **ADR-0025 Hyperspace NO-GO empirico** (Proposed, post amend) + **ADR-0026 Cognitive workflow protocols** (Proposed, formalize AA01 + autoresearch + Archon + refresh-verify come operating rules triple anchor). Hyperspace status **ABANDONED definitivo** post 30s empirical trial D-017 99% confidence. Pivot llama.cpp RPC primary (D-018) + REST API single-node Lenovo PASS (D-019 76 tok/s Qwen 7B Q4 CUDA + D-022 0.34s REST). Multi-node Phase 7-septies BLOCKED tonight (DESKTOP AVG + driver + rpc-server Windows bug), defer SPRINT_03+. **8gg residui pre-Max al 12/5 mattina**. Verification empirica end-to-end 9/9 PASS post-ADR-0026 (AA01 scripts + Archon paths + memory + triple anchor + templates + PR + Hyperspace cleanup + sub-agent smoke test delegation-classifier 8.2s + lessons accessible).
-- HEAD origin/main `f3fdc92` (post **merge PR #48 11/5 22:46 UTC**, 8 commit atomici bundle: vault 3 + hyperspace 2 + amend 1 + journal 1 + ADR-0026 1; cumulative 7-12/5 **31 PR mergeati codemasterdd**). Branch `claude/funny-dirac-82131b` auto-deleted (delete_branch_on_merge toggle). **Worktree corrente `funny-dirac-82131b` (orphan post-merge) ON nuovo branch `claude/closure-2026-05-12-aa01-integration`** (1 commit ahead per COMPACT v20 + JOURNAL final + memory session resumption update, pending push + PR).
+- **Barra globale ~99.5%**: Fase 6 + Fase 7 CLOSED. ADR-0022 + ADR-0023 + ADR-0024 + **ADR-0025 Hyperspace NO-GO empirico** (Proposed, post amend) + **ADR-0026 Cognitive workflow protocols** (Proposed, formalize AA01 + autoresearch + Archon + refresh-verify come operating rules triple anchor). Hyperspace status **ABANDONED definitivo** post 30s empirical trial D-017 99% confidence. Pivot llama.cpp RPC primary (D-018) + REST API single-node Lenovo PASS (D-019 76 tok/s Qwen 7B Q4 CUDA + D-022 0.34s REST). Multi-node Phase 7-septies BLOCKED tonight (DESKTOP AVG + driver + rpc-server Windows bug), defer SPRINT_03+. **7gg residui pre-Max al 12/5 mattina**. Verification empirica end-to-end 9/9 PASS post-ADR-0026 (AA01 scripts + Archon paths + memory + triple anchor + templates + PR + Hyperspace cleanup + sub-agent smoke test delegation-classifier 8.2s + lessons accessible).
+- HEAD origin/main `30e94ee` (post **merge PR #49 12/5 mattina**, addendum E2 archon symmetric conditional fit + amend ADR-0026 aa01 + COMPACT v20; precedente PR #48 11/5 22:46 UTC 8 commit atomici vault/hyperspace/amend/journal/ADR-0026). Cumulative 7-12/5: **32 PR mergeati codemasterdd**. delete_branch_on_merge auto-toggle attivo. **Worktree corrente `practical-kowalevski-1f7c9e`** synced con main 0 commit ahead.
 - **AA01 cleanup completato**: workspace 0 task attivi (era 3), archive 7 entries (era 4, +3 sessione 11/5 notte: 2 SHIP + 1 REJECT), 3 lessons riusabili in `learnings/`:
   - `L-2026-04-001` (process audit-replay pattern sandbox-restricted-agent)
   - **`L-2026-05-002-hyperspace-audit-cycle.md`** (3 anti-pattern + 4 pattern positive: empirical trial > documentation cycles)
   - **`L-2026-05-003-cross-repo-pattern-adoption.md`** (cross-check governance interna pre-adoption esterna)
-- **Coda PR codemasterdd**: VUOTA post-merge #48 (1 nuova PR closure pending push, scope contenuto).
+- **Coda PR codemasterdd**: VUOTA post-merge #49 (cleanup session 12/5 mattina chiude branch+worktree residui, drift fix v20->v21 in questa PR).
 - **Stack ADR-0017 ACTIVE MODE 8/5 sera**: LiteLLM:4000 + Langfuse:3000 + Postgres + dogfood-ui:8080 UP. T3 SPRINT_02 hot-restart validation anticipato + passato (<60s endpoint health, persistence preservata). Da spegnere `docker compose down` a chiusura sessione.
 - **OpenCode v1.14.41** (npm global) installato 8/5 sera. Config `~/.config/opencode/opencode.json` con 5 provider mappati. Default `ollama/qwen3-coder:30b` (tier 1 sovereign, ADR-0022 Accepted).
 - **Agent ecosystem ADR-0018**: 12/18 ready, 6/18 draft trigger-gated. Status invariato dal 24/04.
@@ -45,6 +45,39 @@ Eduardo ha lavorato attivamente in altri repo (silent driver mode):
 - 19/05: disattivazione Claude Max, transizione a wrapper sovereign + Ollama
 
 ## Cosa e' gia' stato fatto
+
+### Sessione 2026-05-12 mattina (worktree+branch cleanup metodologico + drift fix v20->v21)
+
+#### Pattern strategico
+Cleanup operativo post marathon 11/5+12/5 PR #48+#49. Eduardo richiesta esplicita rimozione worktree+branch residui via comandi suggeriti (3 worktree + 3 branch). Applicato Protocol 1 refresh-verify + Protocol 2 autoresearch multi-source per ogni candidato (merged-status / superseded-content / filesystem-orphan classification).
+
+#### Cleanup eseguito (sequenza)
+- **Tentativi iniziali bloccati** da 13 sessioni Claude orfane (PID 11/5 16:03-21:24) lock-holding worktree dirs Windows. Eduardo kill manuale post escalation.
+- **6 branch claude/* eliminati**:
+  - `claude/funny-dirac-82131b` (merged PR #48)
+  - `claude/closure-2026-05-12-aa01-integration` (merged PR #49)
+  - `claude/optimistic-shannon-26ff0e` (merged PR #39)
+  - `claude/closure-ritual-2026-05-11` (1 commit superseded: COMPACT v19 -> v20 post #48, integration plan IDENTICO in main, JOURNAL absorbed)
+  - `claude/journal-compact-v18-housekeeping` (4 commit superseded: fix h12 hook PRESENTE in main via PR #41 squash-merge `32838b4`, v18 housekeeping superseded da v20)
+  - `claude/goofy-noether-e8a08e` (3 commit obsoleti: branch 3117 righe IN MENO di main, contenuti tutti riimplementati in PR #38+#39+altri successivi)
+- **3 worktree rimosse** via `git worktree remove`: `funny-dirac-82131b`, `optimistic-shannon-26ff0e`, `goofy-noether-e8a08e`
+- **5 dir filesystem orfane** (0 items, residui post-cleanup parziale precedente) rimosse: `distracted-colden-c50d3a`, `hardcore-keller-72c77e`, `hungry-haibt-4a83aa`, `magical-villani-f2af96`, `recursing-mirzakhani-da8bb3`
+
+#### Drift identificati nel refresh + fix in questa PR
+1. **COMPACT v20 lag 1 PR**: HEAD `f3fdc92` (post #48) -> reale `30e94ee` (post #49). Fix: aggiornato.
+2. **Coda PR claim "1 nuova PR closure pending push"**: era PR #49, ora mergeata. Fix: aggiornato a "VUOTA post-merge #49".
+3. **Hyperspace Phase 1 ancora in "deferred opportunistic"**: contraddittorio con ADR-0025 ABANDONED definitivo (D-017 99% confidence empirical trial). Fix: rimosso da deferred.
+4. **Worktree `funny-dirac-82131b` citata come "orphan post-merge"**: rimossa in questa sessione. Fix: aggiornato a `practical-kowalevski-1f7c9e` synced.
+5. **Residui pre-Max**: 8gg -> 7gg.
+
+#### Stato finale repo
+- Worktrees: solo `main` + `practical-kowalevski-1f7c9e` (corrente)
+- Branch claude/*: solo `practical-kowalevski-1f7c9e` (corrente)
+- `.claude/worktrees/`: dir pulita (no orfane filesystem-only)
+- `.git/worktrees/` internal: solo entry corrente
+
+#### Branch state
+1 commit ahead di main su `claude/practical-kowalevski-1f7c9e` (questo PR drift fix v20 -> v21).
 
 ### Sessione 2026-05-11 sera (closure ritual: merge batch + cleanup + integration plan)
 
@@ -383,10 +416,10 @@ P1, P2 chiusi tramite ADR-0015 closure (P1 behavior-critical n>=5 superato; P2 c
    - 2026-06-09 ratification check ADR-0022
 4. **Deferred SPRINT_02 / opportunistic**:
    - **T2 dogfood-ui field name desync** residuo (`retries`/`retry_count` + `tokens_in`/`tokens_sent`) -- candidato aider-refactor smoke post-Max
-   - **Obiettivo 3 integration plan**: Hyperspace Phase 1 privacy audit (~3h, ideally entro 19/05 con Max attivo per multi-source synthesis strategic)
    - **L6** OpenCode plugin custom / tool-set trim -- solo se gpt-4o-mini emergency budget eccessivo
    - Trigger-gated: 6 agent draft `.claude/agents/` (ADR-0018 3-gate readiness)
-   - OD-007 capability registry **Three Strikes monitor** durante aa01-003/004 (counter pre 2 task = 1 SHIP + 1 in progress)
+   - OD-007 capability registry **Three Strikes monitor** durante aa01-003 (counter 2/3: 1 SHIP aa01-001 + 1 in progress aa01-002, Hyperspace audit aa01-003 REJECTED counted come non-frizione)
+   - ~~Hyperspace Phase 1 privacy audit~~ **RIMOSSO**: ADR-0025 ABANDONED definitivo post empirical 30s trial D-017 99% confidence (12/5 mattina drift fix).
 
 Side-tasks gia' DONE 7/5 -> 10/5:
 - 7/5: ADR-0015 + ADR-0017 Accepted (PR #4), SPRINT_02 abbozzo (PR #5), smoke sovereign T1 (PR #6), Game-Godot-v2 governance (PR #7+#8), pattern aider wrong-target (PR #9), master_prompt handoff (PR #10), 4 PR esterni triagati
@@ -400,7 +433,7 @@ Side-tasks gia' DONE 7/5 -> 10/5:
 - **11/5 mid-day**: dogfood-ui Langfuse trace link + CSV (PR #42) + v18 housekeeping mio (PR #41) -- 2 PR mergeati
 - **11/5 sera (closure ritual)**: pytest dogfood-ui (PR #43) + sparklines rescue (#44 closed -> #45) + governance fleet (PR #40) + Issue #46 cleanup 9 orphan + delete_branch_on_merge toggle + integration plan formalized -- **5 PR + 9 branch deleted + 1 toggle + 1 plan committed**
 
-Cumulativo: **30 PR mergeati codemasterdd cumulative 7-11/5** (29 al 11/5 mid-day + 1 closure ritual sera). delete_branch_on_merge attivo. Coda PR codemasterdd VUOTA. Branch corrente `claude/closure-ritual-2026-05-11` 1 commit ahead per plan + JOURNAL + COMPACT v19.
+Cumulativo: **32 PR mergeati codemasterdd cumulative 7-12/5** (29 al 11/5 mid-day + 1 closure ritual 11/5 sera + 1 PR #48 11/5 22:46 UTC + 1 PR #49 12/5 mattina). delete_branch_on_merge attivo. Coda PR codemasterdd VUOTA. Branch corrente `claude/practical-kowalevski-1f7c9e` 1 commit ahead per drift fix v20 -> v21 (questo PR).
 
 ## Next session restart: cosa leggere per ripartire
 
