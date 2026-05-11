@@ -358,3 +358,95 @@ Meta-lesson "AA01 conditional fit assessment via Archon 7-step self-application"
 - Pattern positive: 30-day review checkpoint > one-shot ADR + drift
 
 Vedi `C:/Users/edusc/aa01/learnings/L-2026-05-004-aa01-conditional-fit-meta-assessment.md`.
+
+---
+
+## Addendum 2026-05-12 (E2 review enhancement) -- Protocol 3 Archon conditional fit (symmetric Protocol 4)
+
+Review 4-angoli post-addendum AA01 ha identificato **asimmetria logica**: Protocol 4 AA01 dichiarato CONDITIONAL fit MA Protocol 3 Archon implicitly permanent. Entrambi sono personal workflow Eduardo-tied + filesystem-tied + non-automatable.
+
+Applichiamo conditional fit assessment symmetric a Protocol 3 Archon per coerenza.
+
+### Verdict honest Protocol 3 Archon
+
+**Archon è CONDITIONAL fit symmetric Protocol 4 AA01**, MA con frequency profile diverso:
+- AA01 = high-frequency (1-2 task/settimana, ogni audit/eval/research >=30min)
+- Archon = low-frequency (>=1 high-stakes decision/mese, irreversibile o cost-recovery >2h se errata)
+
+Value-per-invocation Archon > AA01, MA discipline-fragility maggiore (less practice = more drift risk).
+
+### 4 Conditions Archon (mirror Protocol 4 AA01)
+
+| # | Condition Archon | Mirror Protocol 4 | Verifiable empirico |
+|---|------------------|---------------------|---------------------|
+| ArC1 | Eduardo continues personal Archon invocation | C1 AA01 personal workflow | NON automatable, depends su personal discipline |
+| ArC2 | Archon path `C:/Users/edusc/aa01/archon/system/` stability | C2 AA01 path stability | Subset of AA01 path -- IF AA01 lost THEN Archon lost (linked SPOF) |
+| ArC3 | Use case frequency >=1 high-stakes decision/mese applied | C3 use case frequency | Lessons cite "Archon 7-step" / "RESTATE" / "CALIBRATE" |
+| ArC4 | ADR-0026 + memory `reference_archon_protocol` NON drifta | C4 CLAUDE.md section NON drifta | Memory last-updated date + ADR cited |
+
+### 5 Failure modes Archon (RED-TEAM mirror)
+
+1. **AA01 path lost** → Archon path lost (linked SPOF, ArC2 fail trigger ArC4 cascade)
+2. **Archon mai invocato 60gg+** → discipline drift, lessons future NON applicano 7-step
+3. **"High-stakes decision" trigger mai attivato 90gg+** → Eduardo workflow NON ha decisioni irreversibili = over-engineering complaint risk
+4. **Memory `reference_archon_protocol` not-updated 60gg+** → drift, trigger phrases obsolete
+5. **Lesson methodology references Archon SOLO da L-2026-05-002 (originale)** → no cumulative empirical backing, single-source bias
+
+### Indicatori early-warning Archon
+
+- Lessons cumulative NON cite "Archon 7-step" / "RESTATE" / "CALIBRATE" / "RED-TEAM" → segno non applicato
+- Memory `reference_archon_protocol` last-updated 60gg+ → drift starting
+- ADR future high-stakes (architectural / pivot) NON applicano Archon → de-coupling de facto
+- Decision audit log AA01 task NON cita Archon 7-step references → workflow drift
+
+### Falsifying experiment economico Archon (~15min, checkpoint 30-day 2026-06-12 stesso AA01)
+
+1. Memory `reference_archon_protocol` last-updated date (30s)
+2. Grep recente lessons (90gg) per "Archon 7-step" / "RESTATE" / "CALIBRATE" / "RED-TEAM" (2 min)
+3. Count high-stakes decisions in archive 90gg che hanno applicato Archon vs decisioni che dovevano (10 min review)
+4. Lesson L-2026-05-005+ candidate che riferisce Archon? (depends)
+
+**Pass criteria**: memory <60gg + >=1 lesson cita Archon 90gg + >=1 high-stakes decision con Archon applied 90gg.
+**Fail criteria**: any rosso → Protocol 3 downgrade a "optional methodology reference" (NON workflow standard).
+
+### Reactivation NO-GO triggers Archon
+
+- AA01 path lost (linked SPOF)
+- Archon NON invocato 90gg+ in lessons
+- Eduardo dichiara explicitly "over-engineered, drop Archon"
+- High-stakes decisions count >=3 in 90gg che NON hanno applicato Archon
+
+→ ADR-0026 downgrade Protocol 3 da "high-stakes decision workflow" a "optional methodology reference".
+
+### Honest re-framing post-symmetric
+
+Originale ADR-0026: Protocol 3 Archon implicit permanent
+Symmetric (post E2): "Protocol 3 Archon = **conditional methodology** con 4 ArC conditions + linked SPOF AA01 + 30-day review checkpoint 2026-06-12"
+
+### Confidence Archon conditional fit: 70%
+
+5% riserva sotto AA01 (75%) perché:
+- Use case meno frequent → discipline più fragile
+- Value-per-invocation maggiore MA invocation più rara
+- Linked SPOF AA01 path → riserva ereditata
+
+### Empirical value preserved Archon (ultimi 30gg)
+
+- Applied 2x in aa01-001 fleet-discovery (D-011 + D-015) cycle audit Hyperspace
+- Caso study L-2026-05-002 Pattern positive 3 ("Archon 7-step First Principles per high-stakes")
+- Meta-application L-2026-05-004 (Archon to assess Protocol 4 AA01)
+- Decision quality empirical: D-011 pivot exo erroneous (Windows non supported falsified) mostrato Pattern positive 4 "falsifying experiment economic check" → Archon ha permesso CONVERGENCE finale a D-017 NO-GO empirico
+
+Value reale > zero. Conditional fit symmetric ha sense pragmatic.
+
+### Combined methodology lock-in awareness
+
+L-2026-05-004 ha catturato **lock-in personal workflow Eduardo** come pattern. Applicato a Protocol 3 Archon symmetric, esplicita:
+
+- Tutto stack cognitive (AA01 + Archon + autoresearch + vault) è personal-tied Eduardo
+- Solo Protocol 1 Refresh-verify + Protocol 2 Autoresearch sono governance-portable (NO filesystem AA01 dependency)
+- Protocol 3 Archon + Protocol 4 AA01 = personal discipline stack
+
+**Honest implication**: se Eduardo life-change (cross-device / browser-only / browser Projects + Claude), 50% del cognitive workflow ADR-0026 invalidato.
+
+**Mitigation pattern documented**: 30-day checkpoint 2026-06-12 monitora entrambi simultaneously.
