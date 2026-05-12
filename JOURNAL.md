@@ -3082,3 +3082,55 @@ Shift approccio: **deadline-driven -> trigger-emergent** + boundary respect cros
 - **Pattern re-eval calendarizzati documentato**: ogni post-cluster major updates trigger re-eval con Protocol 1+2. Anti-pattern: re-eval per re-eval-sake senza cluster intervening.
 - **Boundary respect mantained**: Phase B Day 7 removed perche' Game-autonoma. NON Eduardo-direct codemasterdd action. Allinea memoria + CLAUDE.md "monitora solo".
 - **Methodology framework finale 2026-05-12 sera**: 6 PR cluster + 13 lessons + ADR-0025/0026 ratified + vault sibling-peer aligned + calendar re-eval shift = **stato METHODOLOGY FRAMEWORK MATURE + STRATEGIC ALIGNMENT POST-CLUSTER**.
+
+## 2026-05-12 (notte -- cross-PC audit Ryzen + H7 ANTHROPIC setup + harsh-review PR #69)
+
+### Trigger
+
+Eduardo task originale: "controllo accesso Ryzen". Scope expanded via authorization "a+b" -> "facciamo tutto ora" -> "fai review e poi usa il metodo". Risultato: PR #69 con 9 drift + H7 capability + harsh-review trail.
+
+### Completato
+
+- **SSH key-based auth Lenovo->Ryzen ripristinato**: ed25519 keypair generato, deployed in `C:\ProgramData\ssh\administrators_authorized_keys` (Vgit admin -- Windows OpenSSH gotcha admin keys file)
+- **Cross-PC audit empirico** via SSH read-only probe Ryzen: 13 repo su `Desktop\repos\` + Game/Game-Godot-v2 su Desktop top + Vault origin Ryzen-side (NON Lenovo come documentato) + Vault-ops Python tooling EXISTS ONLY Ryzen + 9 repo Ryzen-only non in STATUS_MULTI_REPO + OneDrive NOT running (no leak)
+- **9 drift CLAUDE.md fixati in 4 commit consolidati** (PR #69): IP Lenovo `.121->.124` + IP Ryzen `.222->.225` + username `Vgit` + AI stack Ryzen + Game Ryzen path + Synesthesia Ryzen path + Vault origin lineage reframe + ACL keys.env (was claim "solo edusc inheritance disabled", reality inheritance ON + Administrators inherited) + ANTHROPIC provider entry
+- **H7 ANTHROPIC_API_KEY tier-0 strategic post-Max ADR-0023**: key generata Anthropic Console + added keys.env + smoke test Haiku 4.5 PASS (response "API_OK", cost $0.000044) + ACL hardening `icacls /inheritance:r /grant:r edusc:F SYSTEM:F` + tracking template `logs/claude-api-spend-2026-05.md` (gitignored)
+- **Memory user-side updates** (fuori repo): project_vault_shared.md (origin Ryzen reframe + push status RESOLVED + Lenovo IP) + project_synesthesia_dormant.md (Ryzen activity finding + coexistence non-oxymoronic) + MEMORY.md index vault summary
+- **Harsh-review PR #69** via skill `superpowers:requesting-code-review` (primo uso reale) + agent harsh-reviewer: 7/8 findings actionable (4 important + 3 minor + 4 missing items) + 1 pushback documentato (ASCII em-dash ADR-0021 convention progetto preserve vs nuovi doc strict)
+- **5 BACKLOG R1-R5 entries trigger-emergent** aggiunte (sezione "Task derivati da PR #69 harsh-review")
+- **PR #69 MERGED**: squash commit `946aff90` su main 23:28 GMT+2, branch remote auto-deleted
+
+### ADR-0026 protocols applicati transparently
+
+- **P1 Refresh-verify** state interno PRE-action: memory + ADR + git state + filesystem empirico
+- **P2 Autoresearch** multi-source: SSH probe Ryzen + Lenovo git cross-check + harsh-reviewer subagent indep + vault `Extras/config/llm-routing.json` read-only verify
+- **P3 Archon 7-step**: SKIP -- review findings non irreversibili high-stakes
+- **P4 AA01 capture**: SKIP -- consistent L-002 stop pattern audit-eval churn, batch unico mantenuto
+
+### Da fare (R1-R5 trigger-emergent, NESSUNA action calendarizzata)
+
+- R1 Q2 Game canonical: trigger prossima Lenovo Game write (fuse, NOT deferrable SPRINT_02 generic)
+- R2 DHCP reservation router: Eduardo-direct quando decide (L-002-respecting drift class kill)
+- R3 Ryzen hooksPath: depends Q1 commit workflow legitimacy Ryzen-side
+- R4 Aider whitelist Ryzen: trigger prima Aider session Ryzen
+- R5 Vault llm-routing IP update: Eduardo-direct vault commit (sibling-peer NO-WRITE codemasterdd)
+
+### Strategic deferred SPRINT_02 (Protocol 3 Archon candidates)
+
+- Q1 codemasterdd policy hub home: Lenovo `C:\dev` repo git vs Ryzen `Desktop\repos\_workspace\` orchestration area (8 sub-dir gia esistente: archives + desktop-meta + evo-tactics + game-design + operative-library + research-reports + synesthesia + vault-overflow)
+- Q2 Game canonical clone divergent (linked R1 fuse trigger)
+- Q3 9 Ryzen-only repos: STATUS_MULTI_REPO add vs silent-driver Ryzen-side autonomous
+
+### Cumulative session 12/5 ULTRA-finale post #69 merge
+
+- **51 PR cumulative 7-12/5 codemasterdd** (50 pre + PR #69)
+- Cluster 12/5 totale: **7 PR codemasterdd** (#63-#69) + 4 vault commits + 4 lessons promoted (L-010..L-013) + 1 lesson candidate (review pattern)
+- AA01 state: archive 15 + 13 lessons (invariato vs Bundle 5 closure)
+- HEAD codemasterdd post-merge: `946aff9` su main
+
+### Pattern emergenti questa sessione
+
+- **L-002 stop-pattern rispettato**: 9 drift cumulative in 1 batch consolidato (4 commit, 1 PR), NESSUN nuovo audit cycle aperto. Harsh-review 1-shot.
+- **Skill `superpowers:requesting-code-review` primo uso reale**: dispatched harsh-reviewer subagent template-conform, 7/8 finding accuracy empirical, pushback giustificato 1 finding. Pattern valida per future review cycles.
+- **Cross-PC ecosystem realta`** richiede architecture decisions deferred SPRINT_02 (Q1-Q3) -- NON forzare ora pre-Max 7gg.
+- **Eduardo-direct list pulita post-cluster**: H7 ✅ DONE + SPRINT_02 ⏸️ trigger 20/05+. ZERO calendarizzati artificial residui.
