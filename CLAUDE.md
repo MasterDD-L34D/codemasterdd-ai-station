@@ -66,12 +66,12 @@ Target: piattaforma AI sovereign con zero subscription fisse post-maggio 2026.
   - `OLLAMA_CONTEXT_LENGTH=8192` (ridotto da 16384 il 2026-04-20 su 16GB RAM: +36% speed su 14B Q2 liberando KV cache da CPU spill. Override per-request `num_ctx: 16384` per task multi-file. **Post upgrade 64GB 2026-04-22: il razionale originale è decaduto — rivalidare bench empirico prima di riportare default a 16384**, vedi `docs/adr/0012-ram-upgrade-64gb-impact.md`.)
 - **Nuova capacità post 2026-04-22 (64GB RAM)**: modelli 30B+ non più RAM-bound; qwen3-coder:30b tier 2 non più borderline; Qwen 2.5 Coder 32B Q4 (~19-20GB) diventa candidato benchmarkable; 14B Q3_K_M potrebbe tornare competitivo con ctx più alto. Tutti i valori tok/s in tabella rimangono **validi** (misurati pre-upgrade, ma non RAM-bound) — rebench opzionale solo per scoprire se ctx più largo cambia la decision matrix.
 
-## Ecosistema device (aggiornato 2026-05-10 post LAN discovery + Ryzen capability reveal)
+## Ecosistema device (aggiornato 2026-05-12 post IP + username + AI stack drift fix; base 2026-05-10 LAN discovery + Ryzen capability reveal)
 
 Fleet Eduardo on-LAN 192.168.1.0/24 (4 PC totali, 2 di Eduardo + 2 di moglie):
 
-- **CodeMasterDD** (Lenovo LOQ Tower 17IAX10, 192.168.1.121): workstation primaria AI agentic
-- **DESKTOP-T77TMKT** (192.168.1.222) -- **Ryzen 9600X desktop EDUARDO** (rivelato 2026-05-10 NON in dismissione): MSI MS-7E26 mobo, **RTX 4070 SUPER 12GB VRAM** (+50% vs Lenovo 8GB), 31GB RAM, Windows 11 build 26200, OpenSSH server 9.5 attivo. **Capability tier**: 14B Q4 full-GPU + 22B Q4 split + Codestral 22B + SDXL/Flux. AI stack inizialmente assente (Ollama/Python/Aider non installati al 2026-05-10), install pending.
+- **CodeMasterDD** (Lenovo LOQ Tower 17IAX10, **192.168.1.124**): workstation primaria AI agentic. IP era `.121` al 2026-05-10 (DHCP lease churn).
+- **DESKTOP-T77TMKT** (**192.168.1.225**, user **`Vgit`** NON `edusc`) -- **Ryzen 9600X desktop EDUARDO** (rivelato 2026-05-10 NON in dismissione): MSI MS-7E26 mobo, **RTX 4070 SUPER 12GB VRAM** (verified 12282 MiB nvidia-smi 2026-05-12, driver 591.86 + CUDA 13.1), 31GB RAM, Windows 11 Pro build 26200, **OpenSSH server attivo + SSH key-based auth da Lenovo configurata 2026-05-12** (ed25519 in `C:\ProgramData\ssh\administrators_authorized_keys`, Vgit admin). IP drift `.222 -> .225` + username `Vgit` registrati 2026-05-12. **Capability tier**: 14B Q4 full-GPU + 22B Q4 split + Codestral 22B + SDXL/Flux. **AI stack partially installed 2026-05-12** (Python 3.13.2, Node 24.11.0, Git 2.51.2, VS Code, Ollama 0.23.2 binary present **MA server NON autostart + 0 modelli installati**; aider missing). Disk C: 157GB free.
 - **DESKTOP-B9L203E** (192.168.1.37) -- secondary desktop **moglie**: Windows DESKTOP-XXX hostname, MAC Samsung OUI 2C:F0:5D, capability TBD, OpenSSH non attivo (install pending Eduardo direct)
 - **LAPTOP-D73A8DIE** (192.168.1.130) -- laptop **moglie**: Windows LAPTOP-XXX hostname, MAC A0:A4:C5, capability TBD, OpenSSH non attivo (install pending Eduardo direct)
 
