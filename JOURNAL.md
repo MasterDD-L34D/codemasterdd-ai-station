@@ -2751,3 +2751,90 @@ Bundle 2 = methodological audit cross-session value, AA01 capture (>= 30min effo
 - **Cumulative 7-12/5 post Bundle 2**: **46 PR** codemasterdd (45 pre Bundle 2 + Bundle 2 questo PR pending)
 - **Combined methodology validation reflexive**: Bundle 1 (Protocol 1 + 4 partial) -> Bundle 2 (Protocol 4 AA01 capture full) -> Bundle 3 (Protocol 4 AA01 capture full + applicative scope)
 - **Decisione strategica**: stop pattern audit post Bundle 3 fino post-Max (L-002 anti-pattern churn confermato)
+
+---
+
+## 2026-05-12 (sera Bundle 3 applicative optimization audit AA01 SHIP)
+
+### Pattern strategico
+
+Bundle 3 = optimization applicativi audit cross-session value, AA01 capture. Apply method to applicative components (Protocol 4 AA01 workflow standard ADR-0026). Output: 2 research docs + L-2026-05-011 lesson promotion. Closure ciclo 3-bundle questa sessione.
+
+### Completato Bundle 3
+
+#### AA01 capture lifecycle complete
+- Inbox file `2026-05-12-bundle-3-applicative-optimization.md` capture
+- Promote forced `research-long` preset (classify confidence < 0.80 again, sistema-side accepted)
+- Workspace task `2026-05-aa01-001-2026-05-12-bundle-3-applicative-optimiza`
+- DRAFT compilato + lesson.md compilato + archive SHIP gate PASS
+
+#### B7 sub-agent ecosystem effectiveness review
+- Output: `docs/research/sub-agent-ecosystem-effectiveness-2026-05-12.md` (~160 righe)
+- 5 findings empirici:
+  - F1 Status matrix empirical conferma (18 sub-agent: 12 ready + 6 draft)
+  - F2 Smoke test coverage gap: 9/12 ready agents hanno smoke dedicated, 3 grandfathered mattina batch
+  - F3 Draft trigger-gated dormancy 18+gg: tutti 6 con trigger condition workflow-driven (Game pausa + Synesthesia dormant + DB schema non-active)
+  - F4 Templates Pattern B (PR #48 ADOPT) NON ancora applicati: 0 new sub-agent post-adoption
+  - F5 Invocation telemetry assente: agent name cite count proxy povero (dogfood-analyst 8 / delegation-classifier 6 / harsh-reviewer 4 / altri <3)
+- 4 REC ranked: accept grandfathered + document trigger expected + AA01 lesson pattern + STOP audit
+
+#### B8 hook chain effectiveness empirical smoke
+- Output: `docs/research/hook-chain-effectiveness-smoke-2026-05-12.md` (~150 righe)
+- 5 layer hook chain empirical smoke:
+  - Layer 1 commit-msg subject 72-char: 1A FAIL (103 chars) + 1B PASS (valid) = 2/2 PASS
+  - Layer 2 pre-commit silent-corruption ADR-0008: 2A FAIL ("test.py" content = filename) + 2B PASS = 2/2 PASS
+  - Layer 3 pre-commit silent-fail Python ADR-0020: 3A FAIL (bare except added) = 1/1 PASS
+  - Layer 4 Stop hook H12 .session-start-head marker: 40 bytes file HEAD `19d78f96...` FUNCTIONAL
+  - Layer 5 claude-mem plugin SessionStart collision: NO collision verified (parallel merge project + plugin scope independent)
+- **10/10 component checks empirical verified** cross-bundle (5 smoke Bundle 3 + 2 filesystem Bundle 3 + 3 collateral Bundle 1)
+- 4 REC: Accept current state + Re-verify Layer 5 trigger (3 sessioni sequential) + Optional weekly scheduled smoke M8 + STOP audit
+
+#### L-2026-05-011 lesson promotion
+- File: `learnings/L-2026-05-011-applicative-optimization-audit-pattern.md` (~150 righe)
+- 7-step Pattern applicative empirical smoke documentato
+- Anti-pattern + counter-examples + falsifier
+- Cross-session value HIGH (re-applicable applicative audit + plugin post-install verify + ecosystem governance review)
+
+### Closure ciclo 3-bundle
+
+**Cumulative session 12/5 sera (Bundle 1+2+3)**:
+- 3 PR codemasterdd: #63 Bundle 1 + #64 Bundle 2 + Bundle 3 (questo, pending)
+- **47 PR cumulative 7-12/5** post Bundle 3 (44 pre Bundle + 3 questa sessione)
+- 2 AA01 task SHIP: aa01-001 Bundle 2 methodological + aa01-001 Bundle 3 applicative (workspace cleanup 0 attivi)
+- **AA01 state post sessione**: archive **14 entries** + **11 lessons** in learnings/ (L-001 + L-002..L-011)
+- 5 research docs creati codemasterdd: 2 Bundle 2 + 2 Bundle 3 + 1 V1 vault handoff (Bundle 1)
+- 1 vault handoff Eduardo-direct (frontmatter drift 7/7 + CLAUDE.md drift 5-claim + README discoverability)
+- 1 memoria drift fix `project_vault_shared.md` 6/7 -> 7/7 PRODUCTION milestone hit
+- 1 COMPACT_CONTEXT.md v21 -> v22 drift fix
+
+**Empirical evidence raccolta**:
+- 10/10 component checks hook chain + plugin + privacy guard rail (Bundle 1+3)
+- Protocol 1 cite density 14 / Protocol 2 21 / Protocol 3 27 / Protocol 4 73 (Bundle 2)
+- Sub-agent 18 ecosystem + 9 smoke + 3 grandfathered + 6 dormant workflow-driven (Bundle 3)
+- Vault 7/7 PRODUCTION milestone empirical (Bundle 1)
+- 3 caso studi combined methodology HIGH/HIGH/MEDIUM (Bundle 2 reflexive)
+
+### Da fare (next session post-19/05 Max + Eduardo-direct residual)
+
+**Eduardo-direct (sempre Eduardo-direct, NO auto)**:
+- Ratification ADR-0025 + ADR-0026 (soft-default Accepted 2026-06-11)
+- H7 ANTHROPIC_API_KEY setup (Anthropic Console ~5min pre-19/05)
+- M11 #1 affaan-m cherry-pick post 1-week superpowers monitor (date soft 2026-05-19+)
+- M14 vault Card 3/4 sibling-peer boundary (#2 + #6 + #12)
+- Vault handoff doc execution (frontmatter drift fix + CLAUDE.md drift fix + README)
+- 2026-05-14 Phase B Day 7 closure execution
+
+**Calendarizzati**:
+- 2026-05-19 Claude Max expiration (**7gg residui**)
+- 2026-05-20+ SPRINT_02 prima sessione Fase 8 sovereign (T2/T5/T7 restanti)
+- 2026-06-07 ratification check ADR-0021
+- 2026-06-09 ratification check ADR-0022
+- 2026-06-11 ratification check ADR-0025 + ADR-0026 (30gg post Proposed)
+
+### Note finali
+
+- **Decisione strategica conferma**: stop pattern audit fino post-Max (Bundle 1+2+3 chiude ciclo, L-002 anti-pattern churn confermato)
+- **Combined methodology validation reflexive**: Bundle 1 (Protocol 1 + 4 partial) -> Bundle 2 (Protocol 4 + Pattern A reflexive) -> Bundle 3 (Protocol 4 + Pattern empirical applicative)
+- **Lesson cumulative cross-session value**: L-002/003/004/005/006/007/008/009/010/011 = 10 lesson framework methodology consolidato (era 8 al 12/5 mattina)
+- **Memory `project_session_resumption.md`** allineato a 12/5 sera (Bundle 1) + cumulative 47 PR post Bundle 3
+- **Sessione 12/5 sera raggiunge stato METHODOLOGY FRAMEWORK CONSOLIDATED**: 11 lessons + 26 ADR cumulative + ecosystem applicative empirical verified + 7gg residui pre-Max
