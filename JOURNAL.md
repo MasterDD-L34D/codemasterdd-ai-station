@@ -2696,3 +2696,58 @@ Applicato Protocol 1 refresh-verify (Eduardo CLAUDE.md cognitive workflow protoc
 - **Sibling-peer boundary respected**: vault audit read-only spot-check, handoff doc come deliverable (NO write vault-side)
 - **Cumulative 7-12/5 post Bundle 1**: **45 PR** codemasterdd (44 pre + Bundle 1 questo PR)
 - **AA01 state invariato**: 12 archive + 9 lessons (Bundle 1 NO AA01 capture richiesto, <30min cumulativi)
+
+---
+
+## 2026-05-12 (sera Bundle 2 methodological audit AA01 SHIP)
+
+### Pattern strategico
+
+Bundle 2 = methodological audit cross-session value, AA01 capture (>= 30min effort). Apply method to method (Protocol 4 AA01 workflow standard ADR-0026). Output: 2 research docs + L-2026-05-010 lesson promotion.
+
+### Completato Bundle 2
+
+#### AA01 capture lifecycle complete
+- Inbox file `2026-05-12-bundle-2-methodological-audit.md` capture
+- Classify confidence 0.65 -> promote forced `research-long` preset
+- Workspace task `2026-05-aa01-001-2026-05-12-bundle-2-methodological-audit` creato
+- DRAFT/bundle-2-summary.md + lesson.md compilato + archive SHIP
+
+#### B4 reflexive ADR-0026 effectiveness audit
+- Output: `docs/research/adr-0026-effectiveness-reflexive-audit-2026-05-12.md` (~170 righe)
+- Findings empirici 4:
+  - F1 Density gerarchia: Protocol 4 (73 cite) >> Protocol 3 (27) >> Protocol 2 (21) >> Protocol 1 (14)
+  - F2 Empirical effectiveness per protocol: 4/4 protocols CONFIRMED + caso studi documented
+  - F3 Combined methodology pattern reflexive validation questa sessione (Bundle 1 PRE-edit + Bundle 2 AA01 capture)
+  - F4 Cross-protocol synergy 3 caso studi: Hyperspace ABANDONED HIGH + M12 PIVOT HIGH + Bundle 1 hygiene MEDIUM
+- 3 gap identified mitigation candidate (NON urgent): Protocol 1 visibility risk + canonical example missing + Protocol 2 vs 3 boundary
+- REC: ADR-0026 ready Accepted ratification soft-default 2026-06-11
+
+#### V3 MODEL_ROUTING Quality Gate cross-pattern adoption research
+- Output: `docs/research/model-routing-quality-gate-cross-pattern-2026-05-12.md` (~150 righe)
+- Vault Quality Gate methodology (Step 1 SMOKE + Step 2 RESEARCH + Step 3 TUNING) rigorous content-routing
+- Codemasterdd code-edit routing pattern ad-hoc dogfood (ADR-0008 silent-corruption REACTIVE pre-promote = gap)
+- ADR-0022 OpenCode validation piu' Step-2-like rigorous (positive case study)
+- Cross-pattern mapping proposta Step 1/2/3 adapted code-edit (silent-corruption rate + retry rate + tok/s + constraint-count tolerance)
+- 4 REC: DEFER formal adoption fino post-Max SPRINT_02+ (allinea "stop pattern audit fino post-Max")
+- Trigger ADR-NEW candidate: Three Strikes (1 regress + 1 successful manual + 1 emergent tier promote)
+
+#### L-2026-05-010 lesson promotion
+- File: `learnings/L-2026-05-010-reflexive-methodology-audit-pattern.md` (~150 righe)
+- 2 pattern documented:
+  - Pattern A Reflexive audit (apply method to method): 7-step methodology
+  - Pattern B Cross-pattern adoption deferred decision: 7-step methodology
+- Anti-pattern documentati + counter-examples + falsifier per ognuno
+- Cross-session value HIGH (re-applicable future audit governance + cross-pattern adoption)
+
+### Da fare (Bundle 3)
+
+- Bundle 3 AA01 capture + B7 sub-agent ecosystem effectiveness review + B8 hook chain smoke
+
+### Note
+
+- **Protocol 4 AA01 workflow standard** applicato Bundle 2 (capture + classify + promote + execute + lesson + SHIP archive)
+- **AA01 state post Bundle 2**: archive **13 entries** (era 12) + **10 lessons** (era 9) + workspace 0 attivi
+- **Cumulative 7-12/5 post Bundle 2**: **46 PR** codemasterdd (45 pre Bundle 2 + Bundle 2 questo PR pending)
+- **Combined methodology validation reflexive**: Bundle 1 (Protocol 1 + 4 partial) -> Bundle 2 (Protocol 4 AA01 capture full) -> Bundle 3 (Protocol 4 AA01 capture full + applicative scope)
+- **Decisione strategica**: stop pattern audit post Bundle 3 fino post-Max (L-002 anti-pattern churn confermato)
