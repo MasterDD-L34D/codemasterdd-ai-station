@@ -2633,3 +2633,66 @@ Eduardo "continuiamo in auto mode" = closure activity. Post M12 INSTALL + M11 au
 - **Pattern Archon validated**: 3 caso-studi questa sessione (M11 obra INSTALL + M12 claude-mem PIVOT INSTALL + M11 #10 marketplace registered)
 - **Sessione 2026-05-12 raggiunge stato ECCELLENTE FINALE**: plugin ecosystem MAJOR upgrade + 4 new lessons methodology learnings/ + cross-repo coordination M11-M14 closed
 - **Methodology cross-session value preserved**: L-006/007/008/009 cumulative = methodology framework Archon + Karpathy + gh API + falsifying experiment + pivot pattern
+
+---
+
+## 2026-05-12 (sera Bundle 1 hygiene cluster + vault audit + claude-mem smoke + privacy smoke)
+
+### Pattern strategico
+
+Eduardo "continuiamo + concentrarsi su vault completare/migliorare + bug fix/ottimizzare processi decisionali e applicativi con metodo". Triage 3-bundle:
+- **Bundle 1** (questo) -- quick hygiene wins ~60min: B1 memory drift fix vault_shared + V1 vault handoff doc + B2 COMPACT v22 + B6 claude-mem smoke + B5 privacy guard rail smoke
+- **Bundle 2** (next) -- methodological audit AA01 capture: B4 reflexive ADR-0026 effectiveness + V3 MODEL_ROUTING Quality Gate adoption
+- **Bundle 3** (next) -- optimization applicativi AA01 capture: B7 sub-agent ecosystem review + B8 hook chain smoke
+
+Applicato Protocol 1 refresh-verify (Eduardo CLAUDE.md cognitive workflow protocols) PRE-azione: 4 evidence empirical raccolti (vault HEAD `2007a8a2` 7/7 PRODUCTION milestone, frontmatter drift 7/7 = 100%, governance-lint smoke 1 WARNING CHECK-1 COMPACT HEAD claim drift, memoria session_resumption.md outdated post 6 PR closure).
+
+### Completato Bundle 1
+
+#### B1 Memory drift fix project_vault_shared.md
+- Aggiornato 6/7 PRODUCTION + 1/7 hold draft -> **7/7 PRODUCTION milestone hit 2026-05-12** (HEAD `2007a8a2` "feat(milestone) 7/7 agents PRODUCTION")
+- Specificato design-watcher PROMOTED PRODUCTION (TASK-007 closed, deepseek-r1 v2 conflict recall 67->100%)
+- Specificato drift count empirical 7/7 (era 6/7) + handoff doc reference
+
+#### V1 Vault handoff doc per Eduardo
+- Doc `docs/aa01-handoff/2026-05-12-vault-frontmatter-drift-handoff.md` (~180 righe)
+- 3 findings empirici: frontmatter drift 100% / CLAUDE.md vs filesystem drift 5-claim / discoverability minor README
+- 3 fix options per finding (alternative ranked) + action checklist Eduardo-direct
+- Sibling-peer boundary respected: NO write vault-side da codemasterdd
+
+#### B2 COMPACT_CONTEXT.md v21->v22 drift fix
+- Versione header v22 + data 2026-05-12 sera
+- HEAD `19d78f9` post PR #62 closure tardo (era `30e94ee` post PR #49 mattina)
+- Cumulative 7-12/5: **44 PR** codemasterdd + 2 PR Godot-v2 (era 32)
+- Plugin ecosystem MAJOR upgrade documentato (3 plugins + 4 marketplaces + Bun + repomix)
+- AA01 state: workspace 0 + archive 12 + **9 lessons** (era 3)
+- Vault sibling-peer state 7/7 PRODUCTION + frontmatter drift handoff reference
+
+#### B6 claude-mem plugin post-install smoke
+- Plugin v13.2.0 cache complete: hooks/modes/scripts/skills/ui/.claude-plugin dirs presenti
+- Worker port 37777 ALIVE (Live activity viewer HTML response, sistema SessionStart hook fires confirmed questa sessione)
+- 6 hook lifecycle attivi: Setup + SessionStart + UserPromptSubmit + PreToolUse + PostToolUse + Stop
+- Apache-2.0 thedotmack/claude-mem repo, NO collision con project-scope `.claude/settings.json` (parallel merge SessionStart confermato sistema-side via system-reminder)
+- Verdict: **PASS no drift no regression**
+
+#### B5 Aider wrappers privacy guard rail smoke re-verify
+- Whitelist file `~/.config/aider-privacy-whitelist.txt` integrity OK (4 voci attive: codemasterdd + Game + Game-Godot-v2 ALLOW; vault + synesthesia commentati deliberatamente)
+- Wrapper aider-groq.cmd header logic intact (chcp 65001 UTF-8 + git rev-parse + whitelist check)
+- Smoke 4 scenari logic-only:
+  - Test 1 codemasterdd: ALLOW (correct) PASS
+  - Test 2 vault-shared: BLOCK (correct) PASS
+  - Test 3 synesthesia: BLOCK (correct) PASS
+  - Test 4 Game: ALLOW (correct) PASS
+- Verdict: **PASS 4/4 scenari, no drift H8 guard rail**
+
+### Da fare (Bundle 2 + Bundle 3)
+
+- Bundle 2 AA01 capture inbox + B4 reflexive ADR-0026 effectiveness audit + V3 MODEL_ROUTING Quality Gate adoption
+- Bundle 3 AA01 capture inbox + B7 sub-agent ecosystem effectiveness review + B8 hook chain smoke
+
+### Note
+
+- **Protocol 1 refresh-verify** ADR-0026 applicato PRE-Bundle 1 (vault HEAD empirical + governance-lint smoke 1 WARNING + memoria audit)
+- **Sibling-peer boundary respected**: vault audit read-only spot-check, handoff doc come deliverable (NO write vault-side)
+- **Cumulative 7-12/5 post Bundle 1**: **45 PR** codemasterdd (44 pre + Bundle 1 questo PR)
+- **AA01 state invariato**: 12 archive + 9 lessons (Bundle 1 NO AA01 capture richiesto, <30min cumulativi)
