@@ -89,7 +89,7 @@ Fleet Eduardo on-LAN 192.168.1.0/24 (4 PC totali, 2 di Eduardo + 2 di moglie):
 - Account: eduscarpelli@gmail.com (con Claude Max attivo)
 
 ## API keys tier 3 cloud (aggiunto 2026-04-22)
-- **Storage primario**: `C:\Users\edusc\.config\api-keys\keys.env` (ACL: solo `CODEMASTERDD\edusc:(F)`, inheritance disabilitata)
+- **Storage primario**: `C:\Users\edusc\.config\api-keys\keys.env` (ACL: `CODEMASTERDD\edusc:(F)` + `NT AUTHORITY\SYSTEM:(F)`, inheritance disabilitata via `icacls /inheritance:r`. SYSTEM kept per Windows backup/AV functionality; Administrators rimosso come escalation vector. Pre 2026-05-12 sera ACL claim "solo edusc" era drift documentazione: inheritance era ENABLED + Administrators inherited; hardening applicato durante H7 setup.)
 - **Backup locale**: `C:\dev\codemasterdd-ai-station\backup\api-keys-2026-04-22.env` (gitignored via `backup/*`, ACL identiche)
 - **Config Aider globale**: `C:\Users\edusc\.aider.conf.yml` contiene `env-file:` → auto-load in ogni sessione Aider (via LiteLLM)
 - **Provider attivi** (free-tier):
@@ -97,6 +97,7 @@ Fleet Eduardo on-LAN 192.168.1.0/24 (4 PC totali, 2 di Eduardo + 2 di moglie):
   - **Cerebras** (`CEREBRAS_API_KEY`) — WSE inference massima velocità, tier free generoso. Model examples: `cerebras/llama3.3-70b`
   - **Google Gemini** (`GEMINI_API_KEY` per Aider/LiteLLM; `GOOGLE_GENERATIVE_AI_API_KEY` per OpenCode native Google provider — dual-name necessario, vedi ADR-0022 follow-up) — 60 req/min free. Model examples: `gemini/gemini-2.5-flash` (`gemini-2.0-flash-exp` deprecated v1beta 404)
   - **OpenAI** (`OPENAI_API_KEY`) — pay-per-use (no free tier generoso). Model examples: `gpt-4o`, `gpt-4o-mini`
+  - **Anthropic** (`ANTHROPIC_API_KEY`) — **tier 0 strategic post-Max** on-demand pay-per-use (ADR-0023). Setup 2026-05-12 sera (smoke test Haiku 4.5 PASS, $0.000044). Budget cap mensile $10-20, trigger reactivation Pro >$20/mese × 2 mesi consecutivi. Tracking: `logs/claude-api-spend-2026-MM.md` (gitignored). Model examples: `claude-opus-4-7`, `claude-sonnet-4-6`, `claude-haiku-4-5-20251001`.
 - **Uso bash sessions**: `set -a; source ~/.config/api-keys/keys.env; set +a` (non auto-caricato da Claude Code bash)
 - **Policy**: keys MAI in repo, MAI in registry (no setx), MAI in commit. Revoca rapida: `Remove-Item keys.env`. Vedi `docs/adr/0013-tier3-cloud-free-providers.md` per decision rationale.
 
