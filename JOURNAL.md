@@ -2914,3 +2914,73 @@ Eduardo "fai tutti i residual possibili in auto". Triage residual handoff:
 - **Pattern auto-ratification ADR documentato**: Eduardo "fai tutti i residual possibili in auto" authorization pattern. Reversibility note in entrambi ADR (Eduardo puo' revert via amend Status -> Proposed se gap critico emerge). Supportato empirical Bundle 2 reflexive audit cumulative effectiveness validation.
 - **Boundary respect conferma**: vault sibling-peer NO-WRITE policy respected anche sotto "fai tutti residual" authorization. Pattern: user authorization generic NON override repo-specific policy memoria/CLAUDE.md (allinea con feedback_external_repo_action_boundary).
 - **Methodology framework finale post-residual**: ADR-0025 + ADR-0026 Accepted + 11 lessons + 13 ADR Accepted + ecosystem applicative empirical verified 10/10 + plugin ecosystem 3 installed + 4 marketplaces + cluster 7-12/5 = **48 PR cumulative**
+
+---
+
+## 2026-05-12 (sera vault handoff execution + M14 -- Eduardo per-task authorization)
+
+### Pattern strategico
+
+Eduardo "voglio fare 3 e 4" -> per-task authorization explicit. Override boundary policy "NO-WRITE vault sibling-peer" temporanea per scope bounded (3-4 commit atomic). Pattern emergente documentato in L-2026-05-012.
+
+### Completato vault-side (sotto authorization)
+
+#### #3 Vault handoff doc execution -- 3 commit pushed origin/main
+- **Commit 9186da55**: `fix(agents)` sync frontmatter status `draft` -> `production` 7/7 file in production/agents/. Drift count 7/7 -> 0/7. Source: Bundle 1 V1 handoff doc identified empirical 12/5 sera.
+- **Commit fdb92dde**: `docs(claude)` align Layout claim to filesystem reality (Opzione B lean). Rimosso 5 claim non implementati (Calendar/wip/draft/Sources/wiki/Spaces/Personal). Aggiunto layout reale (Vault-ops-remote + copilot + docs + production/agents).
+- **Commit 0a32f377**: `docs(readme)` add README.md root discoverability (Opzione A mirror, preserve Obsidian index.md). 62 righe README structured (identity + entry points + layout + Quality Gate + status + privacy + sibling-peer + license).
+- **Push status**: SUCCESS (origin/main HEAD `0a32f377`)
+
+#### #4 M14 vault Cards execution -- 1 commit LOCAL-only (push deferred)
+- **Commit 67c3bb28** (local-only): `feat(cards) m14 wave 2026-05-12 Claude Code resources cross-pattern`. 4 Card + 1 Atlas MOC:
+  - `Cards/m14-claude-resources-wave-2026-05-12/shanraisshan-best-practice-cross-pattern.md` (#2 52602 stars MIT cross-pattern review vs codemasterdd ADR -- 8 pattern reference candidate)
+  - `Cards/m14-claude-resources-wave-2026-05-12/hesreallyhim-awesome-claude-code-refresh.md` (#6 43498 stars NOASSERTION AUDIT-ONLY)
+  - `Cards/m14-claude-resources-wave-2026-05-12/dair-ai-prompt-engineering-guide.md` (#9 74479 stars MIT canonical reference RAG + AI agents + context engineering)
+  - `Cards/m14-claude-resources-wave-2026-05-12/voltagent-awesome-design-md-bookmark.md` (#12 76314 stars MIT BOOKMARK trigger-conditional Synesthesia/Godot v2 UX)
+  - `Atlas/m14-claude-resources-wave-2026-05-12-moc.md` MOC cross-link consolidato
+- **Push status**: **BLOCKED dal sistema** (boundary classifier ha interpretato "voglio fare 3 e 4" troppo generic per vault writes continuation). Eduardo-direct push deferred ~10s:
+  ```
+  cd /c/dev/vault-shared
+  git push origin main
+  ```
+
+### Completato codemasterdd-side
+
+#### REFERENCE_INDEX.md update
+- EXT-05 dair-ai aggiornato (74448 -> 74479 stars refresh + status post-Card)
+- EXT-07 shanraisshan/claude-code-best-practice NEW entry (52602 stars MIT, vault Card live)
+- EXT-08 hesreallyhim/awesome-claude-code NEW entry (43498 stars NOASSERTION AUDIT-ONLY)
+- EXT-09 VoltAgent/awesome-design-md NEW entry (76314 stars MIT BOOKMARK trigger-conditional)
+
+#### Memoria `project_vault_shared.md` update
+- Drift findings spot-check 12/5 sera -> **FIXED 12/5 sera** con 3 commit reference
+- M14 Cards/MOC documented + push deferred status explicit
+
+#### Lesson L-2026-05-012 promoted
+- File: `learnings/L-2026-05-012-vault-sibling-peer-write-under-explicit-authorization.md` (AA01-side)
+- Pattern emerged: Per-task boundary override (3-step)
+- Counter-examples + falsifier + anti-pattern documentati
+- Cross-link L-2026-05-010 (Bundle 2 methodological audit) + L-2026-05-011 (Bundle 3 applicative)
+
+### Skip rationale (NON applicable post-vault)
+
+Tutti i residual Eduardo-direct sono stati raggiunti per #3+#4. Residui restanti immutati:
+- H7 ANTHROPIC_API_KEY (browser Anthropic Console, NON eseguibile session)
+- M11 #1 affaan-m cherry-pick (temporal 1-week, 2026-05-19+)
+- Phase B Day 7 closure (calendarizzato 2026-05-14)
+- SPRINT_02 prima sessione (calendarizzato 2026-05-20+)
+
+### Cumulative session 12/5 finale (post vault handoff)
+
+- **49 PR cumulative 7-12/5 codemasterdd** post questa PR (48 pre + 1 questo PR)
+- **vault commits cumulative 12/5 sera**: 4 (3 pushed + 1 local-deferred)
+- AA01 state finale: archive 14 + **12 lessons** in learnings/ (L-001 + L-002..L-012)
+- Boundary pattern documentato: 3-step per-task override + system classifier final authority
+- Empirical evidence boundary respected: 3/4 vault writes auto-pushed, 1/4 system-blocked + transparent
+
+### Note finali sessione 12/5
+
+- **Pattern per-task boundary override documentato**: vault sibling-peer "NO-WRITE policy" CAN be overridden under Eduardo explicit per-task authorization + bounded scope + reversibility. Sistema classifier rimane final authority (deny push retry post-bounded-scope).
+- **Transparent communication post-block**: stop retry + Eduardo-direct push 1-comando + lesson promote = pattern healthy. NON bypass.
+- **Cluster 12/5 sera total**: 5 PR codemasterdd (#63 Bundle 1 + #64 Bundle 2 + #65 Bundle 3 + #66 residual + questo #vault handoff) + 4 vault commits (3 pushed + 1 local). Eduardo direct residual finalize push (~10s) per chiudere completamente.
+- **Methodology framework consolidato**: ADR-0026 4 protocols + 13 ADR Accepted + 12 lessons + ecosystem applicative + vault sibling-peer integrated + boundary override pattern. Cross-session value preserved.
