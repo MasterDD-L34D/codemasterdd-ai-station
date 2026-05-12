@@ -3134,3 +3134,51 @@ Eduardo task originale: "controllo accesso Ryzen". Scope expanded via authorizat
 - **Skill `superpowers:requesting-code-review` primo uso reale**: dispatched harsh-reviewer subagent template-conform, 7/8 finding accuracy empirical, pushback giustificato 1 finding. Pattern valida per future review cycles.
 - **Cross-PC ecosystem realta`** richiede architecture decisions deferred SPRINT_02 (Q1-Q3) -- NON forzare ora pre-Max 7gg.
 - **Eduardo-direct list pulita post-cluster**: H7 ✅ DONE + SPRINT_02 ⏸️ trigger 20/05+. ZERO calendarizzati artificial residui.
+
+## 2026-05-13 (notte auto-mode -- Phase 1 R2/R4/R5 + Phase 2 Q1/Q2/Q3/R1/R3 + ADR-0027)
+
+### Trigger
+
+Continuazione sessione 12/5 notte. Eduardo "voglio chiarirmi le idee abbiamo circa 7 giorni ancora di max e dobiamo sfruttarlo al massimo" -> "facciamo prima R1-R5 e poi A che ne pensi?" -> "procedi auto modo come raccomandato dal metodo".
+
+### Phase 1 (~30min) -- R2 + R4 + R5
+
+- **R2 DHCP reservation router**: TIM HUB DGA4132 AGTHP, Metodo A forum-validated (reservation FUORI DHCP pool `.100-.200`). Lenovo `e8:bf:e1:18:81:ca` -> `192.168.1.10` + Ryzen `d8:43:ae:b7:c4:e5` -> `192.168.1.11`. Drift class IPs PERMANENTLY KILLED.
+- **R4 Aider whitelist Ryzen**: scp Lenovo -> Ryzen + 3 mirror Ryzen path entries (codemasterdd + Game + Game-Godot-v2 Ryzen clones). 9 Ryzen-only repos DEFAULT SOVEREIGN. Vault Ryzen exclusion explicit.
+- **R5 vault llm-routing.json IP fix**: hardcoded `192.168.1.121:11434` -> `192.168.1.10:11434` (post-DHCP reservation Lenovo). Vault commit `1abaa743` Ryzen-side via L-012 per-task auth + Eduardo-direct local push (wincredman blocked non-interactive SSH). Sync 3-way validated (Ryzen + GitHub + Lenovo all at `1abaa743`).
+
+PR #71 + #72 merged. Phase 1 effort ~30min vs ~3h trial-and-error pre-autoresearch.
+
+### Phase 1 methodology lesson -- L-2026-05-014 candidate
+
+Initial approach R2: trial-and-error (Option 1/2/3 saving Lenovo entry, fail "IP in uso"). Eduardo intervention "non funziona, autoresearch non era nei piani? Tavily?" ha rivelato anti-pattern L-002 mio (trial-and-error without methodology). Recovery: 6 WebSearch + 1 WebFetch -> TIM AGTHP firmware quirk forum-validated workaround -> solved 1st attempt post-autoresearch.
+
+**L-2026-05-014 promoted to AA01 learnings**: "Autoresearch FIRST per problemi technical specifici, NOT trial-and-error. Forum technical Italian + multi-source convergence weighted > generic docs".
+
+### Phase 2 (~30min) -- Q1/Q2/Q3/R1/R3 + ADR-0027
+
+Auto-mode application ADR-0026 Protocols. **P1 Refresh-verify state interno SHORT-CIRCUITED Archon 7-step needs**:
+
+- **Q1 codemasterdd policy hub home**: FALSE DICHOTOMY empirical. Lenovo `C:\dev\codemasterdd-ai-station` = canonical policy hub (72+ PR history); Ryzen `Desktop\repos\codemasterdd-ai-station` = stale Codex branch `4b7c84a` 6 ahead NON main NON active; Ryzen `_workspace` = orchestration scratch (1.1GB, 8 sub-dir, operative-library mirror + scratch areas evo-tactics/vault-overflow/synesthesia). ORTOGONALI not competing.
+- **Q2 Game canonical**: NARRATIVE DRIFT case-study L-2026-05-002. PR #69 claim "Ryzen AHEAD" WRONG. Reality empirical: Lenovo `36c9822` PR #2258 = origin sync; Ryzen `5d27fc50` PR #2139 OLDER, **0 ahead / 107 BEHIND** origin/main, working tree dirty. Origin canonical de-facto, Lenovo synced primary, Ryzen stale sandbox.
+- **Q3 9 Ryzen-only repos**: 5 active + 4 dormant. Action minimal monitoring: add 5 active a STATUS_MULTI_REPO section 7 (claude-supermemory-local + compass-marketplace + Game-Database + Master-DD-Pathfinder-GPT + torneo-cremesi-site).
+- **R3 Ryzen hooksPath**: DORMANT no trigger (Eduardo NON commitica codemasterdd da Ryzen). Trigger emergent se futuro Q1 amendment.
+
+**ADR-0027 cross-PC clone architecture clarification Accepted** early (ADR-0010 pattern, low-stakes empirical). PR #73 merged commit `2a1281a`.
+
+### Phase 1 + 2 cumulative
+
+| Phase | Effort | PR | Items closed |
+|-------|--------|----|---------------|
+| Phase 1 | ~30min | #71 + #72 | R2 + R4 + R5 |
+| Phase 2 | ~30min | #73 | Q1 + Q2 + Q3 + R1 + R3 + ADR-0027 |
+| Vs full Archon estimate | ~3-5h saved | -- | -- |
+
+**Eduardo-direct list state**: H7 ✅ DONE (12/5 notte) + SPRINT_02 ⏸️ trigger 2026-05-20+ (6gg residui). ZERO calendarizzati artificial. BACKLOG R1-R5 TUTTI RESOLVED. C1+C2+Q3-update low-priority added.
+
+### Pattern emergenti questa sessione
+
+- **P1 Refresh-verify state interno SHORT-CIRCUITS Archon needs** quando empirical evidence rivela framing issues (Q1/Q2) vs architectural decisions. ~3-5h saved.
+- **L-2026-05-014 autoresearch first**: forum-validated empirical > trial-and-error.
+- **L-002 anti-pattern reinforced**: PR #69 narrative drift (Ryzen Game AHEAD) corretto via refresh-verify 24h later.
+- **Auto-mode disciplinato pre-Max**: 5 PR cluster 12/5 sera + 3 PR cluster 13/5 notte = **8 PR efficient cumulative session 12-13/5** + 14 ADR Accepted + 13 lessons.
