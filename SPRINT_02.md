@@ -6,7 +6,13 @@
 >
 > **Update 2026-05-10**: pre-validation in autonomy: **T3 hot-restart PASS** (stack ready ~12s, 38 traces preserved post 13gg+ down, regression `dogfood-ui` VALID_STACKS desync trovata e fixata, entry POST 12->13). **T4 cleanup PR esterni gia' COMPLETO** (i 4 PR target gia' triagati 7/5: #97 Game-Database closed-as-stale post-rebase abort, #105/#10/#61 mergeati). Restano per 20/05+: T1 smoke sovereign, T2 dogfood organico, T5 cost tracking, T7 review.
 >
-> **Sprint objective**: validare empiricamente scenario A (full-sovereign $0-50/anno) in uso normale + cleanup PR esterni opportunistico + cost tracking primo mese reale + raccolta dogfood organici post-closure (target soft n>=20 cumulative). Zero silent-corruption deve rimanere invariato.
+> **Update 2026-05-12 sera (post cluster Bundle 1+2+3+residual+vault handoff)**: scope amend critico necessario pre-start 20/05+. Cluster questa sessione ha introdotto NEW dimensions empirical NON considerate in original scope 2026-05-07:
+> - **Plugin ecosystem MAJOR upgrade**: 3 plugins (compass v0.4.3 + superpowers v5.1.0 + claude-mem v13.2.0) + 4 marketplaces + Bun v1.3.13 + repomix v1.14.0
+> - **Methodology framework MATURED**: 12 lessons L-001 + L-002..L-012 (era 3 al 2026-05-07) + 13 ADR Accepted (era 7) + ADR-0026 cognitive workflow protocols 4-protocol triple anchor
+> - **Vault sibling-peer aligned**: post questa sessione 4/4 commit pushed (frontmatter + CLAUDE.md + README + M14 Cards). Cross-pattern reference candidate identified DEFER fino SPRINT_02+ Three Strikes trigger.
+> - **Empirical evidence Claude Code usage intensivo**: 49 PR/6gg pre-Max = empirical justify tier 0 strategic post-Max via Claude API on-demand (ADR-0023 H7 confirmed).
+>
+> **Sprint objective AMENDED**: validare empiricamente scenario A (full-sovereign $0-50/anno) in uso normale + cleanup PR esterni opportunistico + cost tracking primo mese reale + raccolta dogfood organici post-closure (target soft n>=20 cumulative) + **NEW: dogfood plugin ecosystem real-use** (claude-mem hook lifecycle + superpowers skill auto-trigger + compass project-direction tracking) + **NEW: validate methodology framework effectiveness** post-Max sovereign (Protocol 1/2/3/4 application pattern via Aider/OpenCode vs Claude Code). Zero silent-corruption deve rimanere invariato.
 
 ---
 
@@ -74,6 +80,32 @@
 - **Cosa**: sessione ~30-45min ~2026-06-19: count dogfood + cost real + delta scenario A vs prediction + decisione SPRINT_03 scope.
 - **Output**: entry JOURNAL "Review SPRINT_02" + COMPACT v12 + eventuale ADR-0015 addendum se trigger ri-evaluation attivati (silent-corruption emersa, fail rate >15%, privacy violation).
 - **Success**: 3 decisioni chiare -- continuita' scenario A / mid-course correction / SPRINT_03 scope.
+
+### T8 NEW (2026-05-12 amend). Plugin ecosystem dogfood empirical
+- **Cosa**: real-use dogfood dei 3 plugin installati 12/5 (compass + superpowers + claude-mem) in workflow normale SPRINT_02.
+- **Sub-task**:
+  - **T8.1 claude-mem hook lifecycle empirical**: verify 6 hook lifecycle (Setup + SessionStart + UserPromptSubmit + PreToolUse + PostToolUse + Stop) fires + worker port 37777 persistence cross-session
+  - **T8.2 superpowers skill auto-trigger empirical**: count quale 14 skill auto-trigger durante session normale. Identify gap NON coperto -> possibile M11 #1 affaan-m cherry-pick trigger (organic, NON 1-week artificial)
+  - **T8.3 compass project-direction tracking**: verify compass status comando funziona + check session start drift detection
+- **Check**: ognuno empirical observation log opportunistic, NON forced
+- **Success**: 3/3 plugin observed real-use almeno 5 sessioni cumulative durante sprint. Lesson cross-pattern PASS / FAIL / NEEDS-TUNING.
+- **Failure mode**: se 2+ plugin friction reale -> ADR addendum reactive (disable or replace).
+
+### T9 NEW (2026-05-12 amend). Methodology framework effectiveness post-Max
+- **Cosa**: validate empirical ADR-0026 4 cognitive workflow protocols (Refresh-verify + Autoresearch + Archon + AA01) application via Aider/OpenCode/wrapper sovereign tier (vs Claude Code session).
+- **Sub-task**:
+  - **T9.1 Protocol 1 Refresh-verify** application via wrapper aider-* + OpenCode workflow. Verifica se friction emerge senza Claude Code real-time refresh
+  - **T9.2 Protocol 4 AA01 workspace** via sovereign tier (NO Claude Code session per AA01 lifecycle). Empirical capture + classify + promote + lesson + archive
+  - **T9.3 Protocol 3 Archon 7-step** application high-stakes decisions sovereign. ANCHOR_v2 system prompt invoked manually via Aider/OpenCode
+- **Check**: cite count protocols JOURNAL post-Max vs pre-Max (cumulative 14/21/27/73 al 2026-05-12)
+- **Success**: protocols continue applicable senza Claude Code OR identify gap requiring H7 ANTHROPIC_API_KEY (tier 0 strategic on-demand)
+- **Trigger ratification**: ADR-0026 addendum E3 IF gap identified empirical (post-Max friction concreta)
+
+### T10 NEW (2026-05-12 amend). Cross-pattern adoption Quality Gate deferred trigger
+- **Cosa**: Three Strikes trigger condition monitoring per ADR-NEW Tier promotion methodology (V3 Bundle 2 research doc).
+- **Trigger condition**: (1) 1 regress reale tier promotion ad-hoc + (2) 1 successful manual application Quality Gate Step methodology + (3) 1 emergent tier promote request (es. new Ollama model rotation)
+- **Success**: SE Three Strikes meet -> ADR-NEW draft + research doc cross-link a Bundle 2 V3 + vault Quality Gate methodology reference
+- **Skip se**: Three Strikes NON meet entro fine sprint (default expectation, methodology DEFER mantained)
 
 ## Trigger ADR (ri-evaluation soft-override ADR-0015)
 
