@@ -362,6 +362,26 @@ Vault-shared workflow richiede Eduardo per ogni promote/tune/quality-gate -- int
 
 ---
 
+## 7. Ryzen-only sibling repos (minimal monitoring, added 2026-05-13 notte via ADR-0027 Q3 outcome)
+
+5 repo attivi NON presenti su Lenovo `C:\dev\`, presenti solo su Ryzen `Desktop\repos\`. Tracking minimo informational: status snapshot, no piano operativo cross-repo dedicato. Trigger ADR addendum se uno cambia scope strategico.
+
+| Repo | Branch HEAD | Status | Note |
+|------|-------------|--------|------|
+| **claude-supermemory-local** | main `a72152b` | Active dev | Local SDK replacement Supermemory cloud; Eduardo lavoro recente |
+| **compass-marketplace** | `fix/marketplace-schema-source-string` `5943ffa` | Active dev | v0.4.3 fix in flight (compass plugin marketplace) |
+| **Game-Database** | main `91f5468` PR #105 | Active dev | DB layer cross-repo Game-side |
+| **Master-DD-Pathfinder-GPT** | `codex-fix-pr-542-follow-up-regressions-clean` `5bd2ccb` | Active Codex | Pathfinder GPT campaign tooling (Codex branch flight) |
+| **torneo-cremesi-site** | main `43eda85` PR #18 | Active dev | Static site Pathfinder Torneo |
+
+**Privacy classification**: 9 Ryzen-only repos (4 dormant + 5 above) default SOVEREIGN nel whitelist Aider Ryzen (`~/.config/aider-privacy-whitelist.txt` riga commento Q3-update). Add explicit whitelist quando privacy classification per-repo done (SPRINT_02 opportunistic).
+
+**Dormant repos** (silent-driver autonomous, no monitoring): Gpt, Item-generator, LeaD, pathfinder-1e-homebrew.
+
+**Cross-repo handoff** verso codemasterdd: nessuno attuale. compass-marketplace e claude-supermemory-local potrebbero trigger plugin ecosystem dogfood (SPRINT_02 T8) se Eduardo decide installation.
+
+---
+
 ## Scheduled checkpoints
 
 | Data | Evento | Progetto | Azione |
