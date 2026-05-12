@@ -38,6 +38,13 @@
 - [ ] **M5** — Synesthesia privacy first-violation test: ≥1 sessione che tocchi `views/` (cloud OK) + `controllers/` (sovereign-only). Criterio 3 ADR-0014. **Priorità residua principale Sprint 01** (1/3 ancora).
 - [x] ~~**M6** — Commit delle 11 modifiche governance + entry JOURNAL.~~ **DONE 2026-04-23/24**: 11 commit sessione cumulative (sera + notte).
 
+### Task derivati da OCR screenshot wave 2026-05-12 (Eduardo trigger 12 top Claude Code repos)
+
+- [ ] **M11** — AA01 Task A: skills collection evaluation (4 repo: #1 affaan-m refresh, #3 obra/superpowers, #5 forrestchang/andrej-karpathy-skills, #10 anthropics/skills). Effort 4-6h. Preset `research-long`. Scaffold paste-ready: `docs/aa01-handoff/2026-05-12-A-skills-resources.md`. Output atteso: 2-5 skill installati in `~/.claude/skills/` cherry-pick + lesson decisional. Reference: `docs/reference/subagents-skills-candidates.md` sezione Wave 2026-05-12 categoria A.
+- [ ] **M12** — AA01 Task B: subagent + memory (#4 thedotmack/claude-mem INSTALL + #11 VoltAgent/awesome-claude-code-subagents refresh). Effort 2-3h. Preset `research-long`. Scaffold: `docs/aa01-handoff/2026-05-12-B-subagent-memory-resources.md`. Output: 1 memory system operativo (claude-mem preferito vs Memory Persistence di #1) + 0-2 subagent cherry-pick nuovi. Potenziale ADR-0027 candidato se SessionStart hook impact significativo (H12 interaction).
+- [ ] **M13** — AA01 Task C: dev-tools (#7 yamadashy/repomix INSTALL + #8 gsd-build/get-shit-done BOOKMARK comparativo vs AA01). Effort 2h. Preset `research-long`. Scaffold: `docs/aa01-handoff/2026-05-12-C-dev-tools-resources.md`. Output: repomix global install + lesson gsd-vs-AA01 pattern comparison.
+- [ ] **M14** — AA01 Task D: guides + awesome + design (#2 shanraisshan/claude-code-best-practice + #6 hesreallyhim/awesome-claude-code refresh + #9 dair-ai/Prompt-Engineering-Guide + #12 VoltAgent/awesome-design-md). Effort 1-2h. Preset `research-long` lightweight. Scaffold: `docs/aa01-handoff/2026-05-12-D-guides-awesome-design-resources.md`. Output: 1 lesson cross-pattern best-practice + vault Card Eduardo direct (boundary sibling-peer) + REFERENCE_INDEX.md link aggiunto a #9 dair-ai.
+
 ## Priorità bassa
 
 - [ ] **L1** — Re-bench discriminant hard problems custom (non-Leetcode). Fuori scope Fase 6.

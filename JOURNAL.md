@@ -2232,3 +2232,71 @@ NO action codemasterdd oggi (sub-event ADR-0024 codemasterdd, gia' chiarito adde
 - **Pattern scope discovery cross-stack**: TKT-P2 Phase D claim "~3h" Game COMPACT v40 era stale. Reality post-PR #245 = solo Main wire (~30min) + Phone organization (~30min) ~= 1h totale. Discovery via filesystem scan (find seasonal*) ha rivelato pre-existing infra. Pattern positive: NON fidarsi di TODO claim cumulative, verificare empirico filesystem prima di stimare effort.
 - **Game working tree dopo reset**: `main` locale = `origin/main` `36c9822d`. 13 backup `aa01/cap-*` branches preservano Sprint Impronta CAP-02..15b content. Branch `feat/swarm-register-tournament-survivors` obsoleto con stash collegato (recovery rare).
 - **Godot-v2 main**: post-pulled, post-2-PR mergeate, HEAD `a765e4e` (last PR #249 merge).
+
+## 2026-05-12 (sera -- OCR screenshot wave: 12 top Claude Code repos triage + 4 AA01 task scaffold)
+
+### Completato
+
+**Trigger**: Eduardo upload screenshot OCR `TOP CLAUDE CODE REPOSITORIES` 12 repo. Richiesta: verifica nomi reali + valutare pattern di inserzione codemasterdd + AA01 per "aggiungere tutti".
+
+**Protocol 1 + Protocol 2 applicati** (CLAUDE.md cognitive workflow):
+- Refresh-verify state interno: lettura CLAUDE.md sezioni AA01 + vault-shared + sub-agent + skill policy + ADR-0010 + ADR-0026
+- Autoresearch multi-source via subagent general-purpose: verifica MCP/WebSearch identita + stars reali per 12 repo
+
+**Discovery #1 -- OCR drift significativo**: font monospace ha distorto cifre stars. Drift importanti:
+- `obra/superpowers` OCR 148k -> reale ~16.6k (**9x inflato**, NON top-tier come l'OCR suggeriva)
+- `VoltAgent/awesome-claude-code-subagents` OCR 17.1k -> reale ~8.1-8.5k (**2x inflato**, refresh da 17.9k Apr 22 doc)
+- `thedotmack/claude-mem` OCR 49.6k -> reale ~70-75k (sotto-stimato)
+- `forrestchang/andrej-karpathy-skills` OCR 19.3k -> reale ~117-123k (sotto-stimato 6x)
+
+**Discovery #2 -- ADR-0027 NON necessario**: `docs/reference/subagents-skills-candidates.md` (esistente da 2026-04-22) gia copre policy install (delegando ad ADR-0010) + 3/12 repo (#1 affaan-m, #6 hesreallyhim, #11 VoltAgent subagents). Skip ADR nuovo, **estensione del file reference** sufficiente.
+
+**Decisioni Eduardo** (AskUserQuestion):
+1. Scope: install effettivo + cherry-pick (Recommended)
+2. Tracking: 4 task AA01 raggruppati per categoria (NOT 12 task singoli)
+
+**Deliverables sessione**:
+1. `docs/reference/subagents-skills-candidates.md` -- esteso sezione "Wave 2026-05-12 batch evaluation" con:
+   - OCR audit drift table
+   - 9 nuovi repo categorizzati (skills #3 #5 #10 + memory #4 + tools #7 #8 + guides #2 #9 + design #12) + refresh stars #1/#6/#11
+   - Decisioni preliminari per ognuno (INSTALL/BOOKMARK/SKIP/AUDIT-ONLY/DORMANT/REFRESH) con path target
+   - Riepilogo tabella 12-row con BACKLOG mapping M11-M14
+2. `docs/aa01-handoff/` nuova directory + README + 4 scaffold paste-ready:
+   - `2026-05-12-A-skills-resources.md` -- Task A skills (4 repo, effort 4-6h)
+   - `2026-05-12-B-subagent-memory-resources.md` -- Task B claude-mem + subagent refresh (2 repo, effort 2-3h)
+   - `2026-05-12-C-dev-tools-resources.md` -- Task C repomix + gsd (2 repo, effort 2h)
+   - `2026-05-12-D-guides-awesome-design-resources.md` -- Task D bookmark-heavy (4 repo, effort 1-2h)
+   - Workflow: scaffold codemasterdd -> Eduardo paste in AA01 inbox -> classify -> promote -> SHIP -> lesson
+3. `BACKLOG.md` -- sezione nuova "Task derivati da OCR screenshot wave 2026-05-12" con M11/M12/M13/M14 (uno per task AA01)
+4. Branch `claude/read-image-generate-list-iJwhs` + PR draft
+
+**Effort totale stimato per esecuzione SHIP (post-handoff)**: ~9-13h cumulative distribuita su 4 task indipendenti.
+
+**Boundary rispettati**:
+- AA01 (`C:/Users/edusc/aa01/`) NON-toccato direttamente (scaffold paste-ready + handoff manuale Eduardo)
+- vault-shared NON-toccato (boundary sibling-peer, Eduardo media tutti i Card writes)
+- Privacy guard rail: tutti 12 repo pubblici, cloud OK, no concern
+
+### Da fare (next session)
+
+**Eduardo direct (AA01 execution)**:
+- Paste 4 scaffold in `C:/Users/edusc/aa01/inbox/`
+- Classify + promote ognuno con preset `research-long`
+- Esecuzione M11 (priorita decidere: skills foundational, oppure M12 con claude-mem per memory persistence immediata)
+
+**Eduardo direct (vault parts)**:
+- Vault Card per #2 best-practice + #6 awesome refresh + #9 prompt-eng (Task D output post-SHIP)
+
+**Calendarizzati invariati**:
+- 2026-05-19 Claude Max expiration (7gg residui)
+- 2026-05-20+ SPRINT_02 Fase 8 sovereign
+- 2026-06-07 ratification ADR-0021
+- 2026-06-09 ratification ADR-0022
+
+### Note
+
+- **Pattern adoption "scaffold paste-ready in codemasterdd"**: AA01 boundary preserved (NO automatized write su `C:/Users/edusc/aa01/`), ma Claude Code session puo accelerare AA01 onboarding producendo scaffold pre-compilati con preset + criteri SHIP + anti-pattern. Nuovo asset directory: `docs/aa01-handoff/`. Pattern riusabile per future batch evaluation similari.
+- **OCR drift lesson**: stars OCR a 5+ cifre con font monospace troncato sono **strutturalmente inaffidabili**. Sempre verifica live GitHub o star-history. Anti-pattern: prioritizzazione basata su OCR stars senza validation.
+- **Refresh vs new pattern**: 3/12 repo (#1, #6, #11) gia in `subagents-skills-candidates.md` -> "refresh inline" + extension section, NON duplicato in nuovo file. Pattern preserva continuita storica + riduce sprawl reference.
+- **AA01 task granularity**: 4 task raggruppati per categoria (vs 12 individuali) e' compromise corretto -- riduce 12x AA01 workflow overhead senza perdere triage per-repo (mantenuto in master table reference).
+- **ADR-0027 candidato condizionale**: emerge solo se M12 (Task B) install claude-mem impatta SessionStart hook workflow gia attivo (H12) -- da valutare durante SHIP.
