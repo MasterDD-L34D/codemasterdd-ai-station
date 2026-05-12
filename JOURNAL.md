@@ -2136,3 +2136,99 @@ Continuazione marathon 11/5+12/5 post merge PR #48+#49 (closure ritual). Eduardo
 - **Pattern time-bound Phase abbreviation** (L-2026-05-005): preset research-long NON significa eseguire tutte Phase. Phase abbreviation esplicita > Phase complete con drift overhead. Adoption decision raggiunta in ~90min vs stima ~3h.
 - **OD-007 update**: counter aa01 task ora 2 SHIP (aa01-001 + this session vault-integration) + 1 in progress (aa01-002 fleet-discovery) + 1 REJECTED (aa01-003 hyperspace-audit, 11/5 notte). Nessuna frizione tool-selection osservata in vault-integration -> trigger Three Strikes NON ancora attivato. Disciplina, non feature.
 - **Worktree corrente** `practical-kowalevski-1f7c9e`: branch orphan post merge #50 (upstream `[gone]`). Resta live per questa sessione. Cleanup eventuale next session (analogo a goofy-noether pattern: post-merge worktree obsoleta).
+
+---
+
+## 2026-05-12 (pomeriggio -- TKT-P2 Phase D cross-stack closure + Game pull)
+
+### Pattern strategico
+
+Eduardo "procedi con metodo" su 3 task Eduardo-direct (Pull Game/Godot-v2 + TKT-P2 Phase D wire chain + Phase B Day 7 closure prep). Boundary `feedback_external_repo_action_boundary` rispettato: PR create + merge external richiede auth esplicita per ciascuno step. Eduardo conferma "1" + "si procedi con metodo" estende auth session-scope.
+
+### Completato
+
+#### Pull local checkouts (Game + Godot-v2)
+
+**Godot-v2** pull DONE (fast-forward).
+**Game** pull BLOCKED inizialmente -- diverging branches: 27 commit AA01 local + 486 commit origin + 295 file WIP refactor uncommitted.
+
+Investigation Protocol 1+2 multi-source revealed:
+- 23 commit local-only su branch `feat/swarm-register-tournament-survivors` (HEAD `5f42757a` 26/04, NEVER committed work post creation per reflog)
+- 27 commit local-only su `main` branch (Sprint Impronta CAP-02..15b via AA01 silent-driver direct-to-main workflow, MAI shipped a origin via PR)
+- 486 commit origin avanti (master-dd verdict cascade + Brigandine + Conviction + Phase B + 11 ticket scoped + ZERO outstanding queue)
+- 295 file working tree dirty = ABANDONED WIP pre-26/04 (Skiv-monitor + apps/backend deletion + governance updates)
+- 13 branch backup `aa01/cap-*` preservano content AA01 work
+- 3/4 file ADD del WIP verified shipped in origin via altre PR (skiv-monitor.yml + skiv_storylets.yaml + ADR-2026-04-25-skiv-as-monitor.md + playbook-90min)
+
+**Eduardo verdict**: Path A reset --hard origin/main confermato post-investigation. Safety net via stash + 13 backup branches.
+
+Path A execution:
+1. `git stash push -u -m "wip-pre-reset-2026-05-12 abandoned-refactor-snapshot"` (preserva 295 file)
+2. `git checkout main` (da feature branch a main)
+3. `git fetch origin && git reset --hard origin/main`
+4. Verify: HEAD `36c9822d` (post PR #2258), working tree clean, 13 backup branches aa01/cap-* INTACT
+
+#### TKT-P2 Brigandine Phase D cross-stack chain COMPLETE Godot-v2
+
+Discovery scope reale **molto piu' ridotto** del claim Game COMPACT v40 "~3h":
+- SeasonalEngine + SeasonalContentCatalog + SeasonalService + SeasonalPanel + CampaignApi + HudView.update_season **GIA' ESISTENTI** Godot-v2 pre-questa sessione
+- Solo Main.gd caller wire + Phone composer MODE_ORGANIZATION dispatch MANCAVANO
+
+**PR #248 Godot-v2 merged** (`88bdeb7`) -- Main.gd SeasonalService caller wire:
+- New `_seasonal_service: SeasonalService = null` (RefCounted holder)
+- `_setup_seasonal_service()` idempotent (instantiate + setup + signal connect + fetch_state async)
+- `_on_seasonal_state_loaded(state)` -> `_hud.update_season(state)` propagation
+- `_on_seasonal_error(msg)` -> `push_warning` + fallback `SeasonalEngine.initial_state()` local consumer
+- Call site `_setup_combat_phase()` after `_hud.set_actions_enabled(true)`
+- +32 LOC sub-threshold 50 LOC SAFE_CHANGES rule
+
+**PR #249 Godot-v2 merged** (`a765e4e`) -- Phone composer `MODE_ORGANIZATION`:
+- New `MODE_ORGANIZATION := "organization"` constant
+- New `PHONE_SEASONAL_PANEL_SCENE` preload
+- New `_seasonal_service: SeasonalService = null` member var (lazy)
+- New `_swap_mode` case `MODE_ORGANIZATION`: instantiate SeasonalPanel + lazy SeasonalService + `setup(_seasonal_service)`
+- New `_apply_phase_swap` `"organization"` -> `MODE_ORGANIZATION` mapping
+- +19 LOC sub-threshold
+
+**Cross-stack chain status finale**:
+- Game backend Phase A engine (#2251) + Phase B YAML (#2252) + Phase C 6 REST (#2253) - SHIPPED
+- Godot CampaignApi HTTP client + HudView TV season label (#245) - SHIPPED
+- Godot SeasonalPanel + SeasonalService - PRE-EXISTING
+- Godot Main.gd caller wire (#248) - NEW
+- Godot Phone composer MODE_ORGANIZATION (#249) - NEW
+
+Chain COMPLETE: backend -> HTTP client -> TV-side label -> phone composer mount.
+
+#### Phase B Day 7 closure prep (chat-only, NO execution oggi)
+
+Scheduled 2026-05-14 mattina UTC (Game ADR-2026-05-05 §13.4 cascade actions: web-v1-final tag + apps/play/ archive + README banner).
+
+Game OD-023 documenta 3 path scoring (Path A canonical Day 8 + Path C pre-flight ORA + Path D ADR amendment). Path C deliverables gia' shipped Game-side (handoff + museum + memory + OD). Path A canonical execution 14/5 ownership Eduardo direct.
+
+NO action codemasterdd oggi (sub-event ADR-0024 codemasterdd, gia' chiarito addendum PR #55).
+
+### Da fare (next session handoff)
+
+**Eduardo direct (invariato + nuovo entry)**:
+- H7 ANTHROPIC_API_KEY in `~/.config/api-keys/keys.env` via Anthropic Console (~5min, invariato)
+- **2026-05-14 Phase B Day 7 closure execution** (canonical cascade actions, ownership Eduardo direct Game-side, NO codemasterdd action)
+
+**Calendarizzati** (invariati):
+- 2026-05-19 Claude Max expiration (**7gg residui al 12/5 mattina**)
+- 2026-05-20+ SPRINT_02 prima sessione Fase 8 sovereign
+- 2026-06-07 ratification check ADR-0021
+- 2026-06-09 ratification check ADR-0022
+
+**Deferred opportunistic Godot-v2** (post Phase D closure):
+- Integration GUT test_main_seasonal_wire.gd (~30 LOC, atomic future PR)
+- Integration GUT test_phone_composer_organization.gd (~25 LOC, atomic future PR)
+- Server-side `phase_change "organization"` emission gate (Game/ side scope, NOT Godot)
+
+### Note
+
+- **Cumulative 7-12/5**: **36 PR mergeati codemasterdd** (33 pre + 1 PR #55 ADR-0024 addendum + 2 questa sessione PR n/a placeholder) + **2 PR Game-Godot-v2** (#248 + #249 TKT-P2 Phase D cross-stack).
+- **Pattern boundary external auth**: Eduardo "procedi con metodo" + "si procedi" + "1" generic auth estende session-scope (NO per-step confirmation richiesta dopo initial). Mantenuto per consistency comportamento ma con caveat: future high-stakes destructive sempre re-conferma esplicita (Path A reset Game e' stato re-confirmed esplicito post-investigation).
+- **Pattern investigation methodology**: 3-step empirical investigation (working tree state -> diff origin -> ancestor check -> backup integrity -> file content cross-ref) ha rivelato scope reale Game pull MOLTO piu' complesso del previsto (295 file WIP + 13 backup branches + abandoned refactor + master-dd verdict cascade ZERO outstanding). Investigation ha permesso Path A safe confidence-high.
+- **Pattern scope discovery cross-stack**: TKT-P2 Phase D claim "~3h" Game COMPACT v40 era stale. Reality post-PR #245 = solo Main wire (~30min) + Phone organization (~30min) ~= 1h totale. Discovery via filesystem scan (find seasonal*) ha rivelato pre-existing infra. Pattern positive: NON fidarsi di TODO claim cumulative, verificare empirico filesystem prima di stimare effort.
+- **Game working tree dopo reset**: `main` locale = `origin/main` `36c9822d`. 13 backup `aa01/cap-*` branches preservano Sprint Impronta CAP-02..15b content. Branch `feat/swarm-register-tournament-survivors` obsoleto con stash collegato (recovery rare).
+- **Godot-v2 main**: post-pulled, post-2-PR mergeate, HEAD `a765e4e` (last PR #249 merge).
