@@ -2,10 +2,49 @@
 
 > *TL;DR: post-19/05/2026 Claude Max OAuth scade. Strategic tier (multi-file refactor / debug architetturale / ADR draft / synthesis cross-source) e' NON-delegabile (ADR-0008). Senza Pro $240/anno acquisito (Scenario A full-sovereign confermato in ADR-0015), strategic tier necessita fallback formalizzato. Decisione: **Claude API pay-per-use on-demand con budget cap mensile $10-20** tracciato in ccusage. Quando emerge task strategic complesso (multi-file ≥3 OR constraint ≥5 OR debug architetturale), Eduardo autorizza spend per quella sessione esplicitamente, poi torna sovereign. Trigger reactivation Pro condizionale: se utilizzo medio API >$20/mese per 2 mesi consecutivi -> ratification ADR-0023 addendum revisita Scenario A vs B (Pro $240/anno = $20/mese effective, costo orario uguale ma flat-rate predicibile).*
 
-- **Status**: Proposed
-- **Data**: 2026-05-09
+- **Status**: Proposed (empirical support refresh 2026-05-12 sera, soft-default Accepted 2026-06-08 30gg post-Proposed)
+- **Data**: 2026-05-09 (originale) / 2026-05-12 sera (empirical refresh)
 - **Decisore**: Eduardo Scarpelli
 - **Tipo decisione**: budget + workflow tier 0 strategic post-19/05 expiration
+
+## Empirical refresh 2026-05-12 sera (re-eval calendarizzati Eduardo "procedi con metodo")
+
+Evidence empirical raccolta cluster session 12/5 sera (5 PR codemasterdd + 4 vault commits) ha **rafforzato** il razionale ADR-0023 H7:
+
+### Evidence 1 -- Claude Code usage intensivo pre-Max (49 PR/6gg)
+
+Cumulative 2026-05-07 -> 2026-05-12 = **49 PR codemasterdd 7-12/5** + 4 vault commits via Claude Code Max. Media ~8 PR/gg con quality high (governance + research + bundles + lessons + ratification). Empirical = **Claude Code session quality e velocita' sono daily-driver core**, NON luxury.
+
+### Evidence 2 -- Lessons cumulative high-leverage requirono Claude Code
+
+12 lessons (L-001 + L-002..L-012) cumulative methodology framework. Specifically:
+- **L-006 Karpathy autoresearch + Archon CALIBRATE methodology** -> synthesis cross-source emerged via Claude Code session 12/5 pomeriggio
+- **L-008 plugin install Archon + falsifying experiment** -> Protocol 3 Archon application richiede Claude Code reasoning quality
+- **L-009 Archon DEFER -> PIVOT pattern** -> high-stakes decision pattern via Claude Code reflexive
+- **L-010 Reflexive methodology audit** -> Bundle 2 B4 ADR-0026 effectiveness audit (cite count + density gerarchia + 3 caso studi)
+- **L-012 Vault sibling-peer write boundary override** -> Eduardo authorization pattern + sistema classifier final authority
+
+Tutti pattern high-stakes emerged via Claude Code quality reasoning, NON tier sovereign (Aider single-file + OpenCode multi-step tool calls). Empirical = **post-Max friction concreta** se NO tier 0 strategic on-demand.
+
+### Evidence 3 -- Plugin ecosystem MAJOR upgrade (NEW dimension)
+
+3 plugins (compass + superpowers v5.1.0 + claude-mem v13.2.0) installati 12/5 = NEW operational layer:
+- Skill auto-trigger (superpowers 14 skills) functioning ANCHE post-Max (plugin scope independent da Max subscription)
+- claude-mem 6 hook lifecycle persistent cross-session ANCHE post-Max
+- compass project-direction tracking ANCHE post-Max
+
+Plugin ecosystem ATTENUA friction Claude Code post-Max ma NON elimina need per tier 0 strategic. Synergy: plugins layer continuativo + Claude API on-demand budget cap $10-20 = balance ottimale.
+
+### Conclusion empirical refresh
+
+ADR-0023 H7 setup **RAFFORZATO 2026-05-12 sera**. Empirical evidence:
+- Usage intensivo Claude Code pre-Max = 49 PR/6gg
+- 12 lessons cumulative pattern high-leverage = need tier 0 strategic
+- Plugin ecosystem NEW operational layer attenua ma NON elimina need
+
+**Action H7**: invariato (Eduardo-direct ~5min Anthropic Console pre-19/05). Trigger reactivation Pro $240/anno mantained: utilizzo >$20/mese 2 mesi consecutivi -> addendum revisita Scenario A vs B.
+
+**Ratification check date**: ADR-0023 entro 2026-06-08 (30gg post Proposed 2026-05-09). Empirical refresh oggi (3gg post Proposed) supporta ratification anticipata SE Eduardo decide -- soft-default Accepted con empirical evidence Bundle 4 cluster questa sessione.
 
 ## Context and Problem Statement
 

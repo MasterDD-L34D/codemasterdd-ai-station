@@ -2984,3 +2984,101 @@ Tutti i residual Eduardo-direct sono stati raggiunti per #3+#4. Residui restanti
 - **Transparent communication post-block**: stop retry + Eduardo-direct push 1-comando + lesson promote = pattern healthy. NON bypass.
 - **Cluster 12/5 sera total**: 5 PR codemasterdd (#63 Bundle 1 + #64 Bundle 2 + #65 Bundle 3 + #66 residual + questo #vault handoff) + 4 vault commits (3 pushed + 1 local). Eduardo direct residual finalize push (~10s) per chiudere completamente.
 - **Methodology framework consolidato**: ADR-0026 4 protocols + 13 ADR Accepted + 12 lessons + ecosystem applicative + vault sibling-peer integrated + boundary override pattern. Cross-session value preserved.
+
+---
+
+## 2026-05-12 (sera Bundle 5 -- re-eval calendarizzati con metodo)
+
+### Pattern strategico
+
+Eduardo "voglio che riconsideri i calendarizzati, perche' sono li'? sono ancora validi con il metodo? vogliamo cambiare piani e approccio visto gli aggiornamenti fatti?" -> applicato Protocol 1 Refresh-verify + Protocol 2 Autoresearch ai 4 calendarizzati Eduardo-direct post cluster Bundle 1+2+3+residual+vault. Pattern emergente: **deadline-driven -> trigger-emergent shift**.
+
+### Re-eval calendarizzati 4-step methodology
+
+Per ogni calendarizzato: origine + empirical state + impact analysis updates sessione + verdict ranked.
+
+#### Calendarizzato 1: H7 ANTHROPIC_API_KEY pre-19/05
+- **Verdict**: **CONFIRM** + ADR-0023 amend empirical refresh
+- **Evidence**: 49 PR/6gg pre-Max + 12 lessons cumulative high-leverage + plugin ecosystem layer continuativo MA tier 0 strategic ancora needed
+- **Action**: invariato (Eduardo-direct ~5min)
+
+#### Calendarizzato 2: M11 #1 affaan-m post 1-week monitor
+- **Verdict**: **CHANGE** approach (deprecate 1-week artificial -> trigger-organic)
+- **Evidence**: Anti-pattern L-2026-05-002 audit churn + L-2026-05-011 dormancy workflow-driven OK
+- **Action**: monitor passivo via SPRINT_02 T8.2 superpowers skill auto-trigger observation. Re-trigger SE gap emerge real use.
+
+#### Calendarizzato 3: Phase B Day 7 closure 2026-05-14
+- **Verdict**: **REMOVE** (passive monitor only)
+- **Evidence**: Game-autonoma action + L-2026-05-012 boundary cross-repo + memoria "NON sovrascrive monitora solo"
+- **Action**: rimosso da Eduardo-direct codemasterdd list. Passive monitor SE sub-events cross-repo emergono.
+
+#### Calendarizzato 4: SPRINT_02 prima sessione 2026-05-20+
+- **Verdict**: **RETAIN + AMEND** scope
+- **Evidence**: Plugin ecosystem MAJOR + 12 lessons + ADR-0026 protocols NEW dimension non considerate original scope 2026-05-07
+- **Action**: SPRINT_02.md amend con T8 (plugin ecosystem dogfood) + T9 (methodology framework effectiveness post-Max) + T10 (Three Strikes Quality Gate trigger)
+
+### Completato Bundle 5
+
+#### A: SPRINT_02.md amend scope
+- Header update 2026-05-12 sera + 4 NEW dimensions documented
+- Sprint objective AMENDED: NEW T8 plugin ecosystem dogfood + NEW T9 methodology framework effectiveness post-Max
+- T8 sub-task: T8.1 claude-mem hook lifecycle empirical + T8.2 superpowers skill auto-trigger empirical + T8.3 compass project-direction tracking
+- T9 sub-task: T9.1 Protocol 1 sovereign + T9.2 Protocol 4 AA01 sovereign + T9.3 Protocol 3 Archon sovereign
+- T10 NEW: Three Strikes Quality Gate trigger (V3 Bundle 2 research doc reference)
+
+#### B: BACKLOG.md update calendar -> trigger-organic
+- M11 entry CHANGED: residual deferred Eduardo-direct -> trigger-condition organic (allinea L-002 + L-011)
+- Nuova sezione "Re-eval calendarizzati 2026-05-12 sera" con verdict per 4 calendarizzati + lesson L-013 reference
+
+#### C: ADR-0023 amend empirical evidence H7 confirmation
+- Status header update: empirical refresh 2026-05-12 sera
+- Sezione "Empirical refresh 2026-05-12 sera (re-eval calendarizzati)" aggiunta con 3 evidence:
+  - Evidence 1: Claude Code usage intensivo pre-Max (49 PR/6gg)
+  - Evidence 2: Lessons cumulative high-leverage requirono Claude Code (L-006 + L-008/9/10/12)
+  - Evidence 3: Plugin ecosystem MAJOR upgrade attenua ma NON elimina need
+- Ratification check date confirmed: ADR-0023 entro 2026-06-08 (soft-default Accepted possibile post-empirical refresh)
+
+#### L-2026-05-013 lesson promotion
+- File: `learnings/L-2026-05-013-re-eval-calendarizzati-pattern.md` (AA01-side)
+- Pattern 4-step Re-eval calendarizzati documented + counter-examples + falsifier + anti-pattern
+- Cross-link L-002/010/011/012 + ADR-0026 + Bundle 5 esempio applicato
+- Cross-session value HIGH (re-applicable post-cluster major updates)
+
+#### AA01 lifecycle SHIP
+- Capture inbox `2026-05-12-re-eval-calendarizzati.md` + promote `research-long`
+- Workspace task `2026-05-aa01-001-2026-05-12-re-eval-calendarizzati`
+- DRAFT + lesson.md compilati + archive SHIP gate PASS
+- AA01 state: archive **15 entries** (+1) + **13 lessons** (+1) + workspace 0 attivi
+
+### Lista pulita Eduardo-direct post-re-eval
+
+#### CONFIRM / RETAIN
+- **H7 ANTHROPIC_API_KEY**: ~5min, pre-19/05 (7gg)
+- **SPRINT_02 prima sessione**: 4 settimane, 2026-05-20+ (amended scope T8/T9/T10)
+
+#### CHANGE approach
+- **M11 #1 affaan-m**: trigger-condition organic gap-emerge (NON calendarizzato)
+
+#### REMOVE (passive monitor only)
+- **Phase B Day 7 closure**: Game-autonoma, codemasterdd osservatore passivo
+
+### Pattern emergente strategico documentato
+
+Shift approccio: **deadline-driven -> trigger-emergent** + boundary respect cross-repo. Pattern emerge da empirical evidence:
+- Anti-pattern L-002 audit churn (forced action senza trigger naturale)
+- Pattern L-011 dormancy workflow-driven OK (NOT failure validation)
+- Pattern L-012 per-task boundary override (Eduardo authorization specifico vs generic)
+
+### Cumulative session 12/5 finale (post Bundle 5)
+
+- **50 PR cumulative 7-12/5 codemasterdd** post questa PR (49 pre + 1 questo PR)
+- **Cluster 12/5 sera totale**: 6 PR codemasterdd (#63 + #64 + #65 + #66 + #67 + questo) + 4 vault commits
+- AA01 state finale: archive **15** + **13 lessons** (L-001 + L-002..L-013)
+- Methodology framework: 4 protocols ADR-0026 + 13 ADR Accepted + 13 lessons cumulative
+- Eduardo-direct list pulita post-re-eval: 2 confirmed + 1 changed (trigger-organic) + 1 removed (passive monitor)
+
+### Note finali
+
+- **Pattern re-eval calendarizzati documentato**: ogni post-cluster major updates trigger re-eval con Protocol 1+2. Anti-pattern: re-eval per re-eval-sake senza cluster intervening.
+- **Boundary respect mantained**: Phase B Day 7 removed perche' Game-autonoma. NON Eduardo-direct codemasterdd action. Allinea memoria + CLAUDE.md "monitora solo".
+- **Methodology framework finale 2026-05-12 sera**: 6 PR cluster + 13 lessons + ADR-0025/0026 ratified + vault sibling-peer aligned + calendar re-eval shift = **stato METHODOLOGY FRAMEWORK MATURE + STRATEGIC ALIGNMENT POST-CLUSTER**.

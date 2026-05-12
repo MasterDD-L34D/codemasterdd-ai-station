@@ -40,7 +40,7 @@
 
 ### Task derivati da OCR screenshot wave 2026-05-12 (Eduardo trigger 12 top Claude Code repos)
 
-- [x] ~~**M11** — AA01 Task A: skills collection evaluation~~ **PARTIAL DONE 2026-05-12 pomeriggio+tardo**: #3 obra/superpowers v5.1.0 **INSTALLED** PR #59 (Archon CALIBRATE 7-step + falsifying experiment 5/5 PASS) + #10 anthropics/skills **MARKETPLACE REGISTERED** PR #62 (17 skills bundle native accessible session). Residual deferred Eduardo-direct: #1 affaan-m post 1-week superpowers monitor (date soft 2026-05-19+) + #5 Karpathy AUDIT-ONLY (NO LICENSE blocker, default copyright). Lesson L-2026-05-008 promoted.
+- [x] ~~**M11** — AA01 Task A: skills collection evaluation~~ **PARTIAL DONE 2026-05-12 pomeriggio+tardo**: #3 obra/superpowers v5.1.0 **INSTALLED** PR #59 (Archon CALIBRATE 7-step + falsifying experiment 5/5 PASS) + #10 anthropics/skills **MARKETPLACE REGISTERED** PR #62 (17 skills bundle native accessible session). Residual Eduardo-direct **CHANGED 2026-05-12 sera re-eval calendarizzati** (allinea anti-pattern L-2026-05-002 audit churn + L-2026-05-011 dormancy workflow-driven): #1 affaan-m **DEPRECATED 1-week artificial deadline** -> trigger-condition organic (gap-emerge durante real use), monitor passivo via SPRINT_02 T8.2 superpowers skill auto-trigger observation. #5 Karpathy AUDIT-ONLY mantained (NO LICENSE blocker default copyright). Lesson L-2026-05-008 promoted + L-2026-05-013 re-eval calendarizzati pattern (in promotion).
 - [x] ~~**M12** — AA01 Task B: subagent + memory~~ **DONE 2026-05-12 pomeriggio**: #4 thedotmack/claude-mem v13.2.0 **INSTALLED** PR #61 (Archon CALIBRATE PIVOT 3 blocker auto-resolved: Bun runtime + hook collision empirical NO conflict + privacy SAME-TIER). Lesson L-2026-05-009 promoted. Bun v1.3.13 pre-req installato. Worker port 37777 + 6 hook lifecycle attivi. **Bundle 1 B6 smoke verify 12/5 sera**: NO collision project-scope + workflow PASS.
 - [x] ~~**M13** — AA01 Task C: dev-tools~~ **DONE 2026-05-12 mattina+pomeriggio**: #7 yamadashy/repomix v1.14.0 **INSTALLED** PR #58 via `npm install -g repomix`. Smoke test PASS (`docs/sessions/** + docs/aa01-handoff/**` pack 41886 bytes 12.160 tokens). #8 gsd-build/get-shit-done BOOKMARK reference comparativo vs AA01 (no install).
 - [ ] **M14** — AA01 Task D: guides + awesome + design. **PARTIAL DEFERRED** Eduardo-direct: #2 + #6 + #12 vault Card 3/4 sibling-peer boundary pending. #9 dair-ai/Prompt-Engineering-Guide REFERENCE_INDEX link bookmark candidate.
@@ -61,6 +61,17 @@
 
 - [x] ~~**ADR-0025 Hyperspace Pods NO-GO**~~ **Ratified Accepted 2026-05-12 sera auto** via Eduardo authorization. Empirical support: D-017 99% confidence + pktmon evidence + L-2026-05-002.
 - [x] ~~**ADR-0026 Cognitive workflow protocols**~~ **Ratified Accepted 2026-05-12 sera auto** via Eduardo authorization. Empirical support Bundle 2 reflexive audit (cite density + 3 caso studi HIGH + reflexive validation questa sessione).
+
+### Re-eval calendarizzati 2026-05-12 sera (Eduardo "procedi con metodo")
+
+Applicato Protocol 1 Refresh-verify + Protocol 2 Autoresearch ai 4 calendarizzati Eduardo-direct post cluster 12/5 sera. Shift approccio strategico: **deadline-driven -> trigger-emergent** + boundary respect cross-repo.
+
+- [x] ~~**H7 ANTHROPIC_API_KEY** (pre-19/05)~~ **CONFIRMED 2026-05-12 sera re-eval**. Empirical evidence 49 PR/6gg pre-Max session rafforza razionale ADR-0023 tier 0 strategic. Action invariato (Eduardo-direct ~5min). Pre-19/05 mantained.
+- [x] ~~**M11 #1 affaan-m post 1-week monitor**~~ **CHANGED 2026-05-12 sera re-eval**: deprecate 1-week artificial deadline (anti-pattern L-002 churn + L-011 dormancy workflow-driven OK) -> trigger-condition organic (gap-emerge real use). Monitor passivo via SPRINT_02 T8.2 superpowers skill auto-trigger observation.
+- [x] ~~**Phase B Day 7 closure 2026-05-14**~~ **REMOVED 2026-05-12 sera re-eval**: Game-autonoma action (governance interna autosufficiente), codemasterdd osservatore passivo (memoria + CLAUDE.md "NON sovrascrive monitora solo"). Allinea L-2026-05-012 boundary cross-repo.
+- [x] ~~**SPRINT_02 prima sessione 2026-05-20+**~~ **RETAINED + AMENDED 2026-05-12 sera re-eval**: scope refinement con cluster questa sessione findings (plugin ecosystem MAJOR + 12 lessons + ADR-0026). Aggiunti T8 plugin ecosystem dogfood + T9 methodology framework effectiveness post-Max + T10 Three Strikes Quality Gate trigger.
+
+**Lesson cumulative pattern**: L-2026-05-013 (in promotion) -- "Re-eval calendarizzati pattern: deadline-driven -> trigger-emergent shift via Protocol 1+2 application".
 
 ## Priorità bassa
 
