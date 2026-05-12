@@ -2,12 +2,25 @@
 
 > *TL;DR: Hyperspace Pods (P2P AI Compute Clusters via libp2p) **NO-GO definitivo** per stack sovereign codemasterdd. Verdict basato su empirical trial 30s daemon `v5.73.8` (AA01 task aa01-001 decisions D-017 + D-018) condotto **2026-05-10 sera / 2026-05-11 mattina** (sessione precedente). 3 finding architetturali non-config-fixable: (1) auto-update FORCED 680 MB on startup, NO opt-out; (2) **local Ollama models auto-esposti** alla network 2M+ peer **senza consenso** (`Loading ollama:qwen2.5-coder:7b: 0%` visible nei log daemon startup); (3) pulse round voting ATTIVO con isolation flags `--no-agent --no-research --no-causes --no-api --profile relay`. Empirical pktmon capture (120149 pkt outbound in 3 min): **30+ destinazioni IP TUTTE PUBBLICHE** (DigitalOcean bootstrap pool + GitHub Releases CDN + Cloudflare + GCP + Contabo VPS + CherryServers), **zero traffic LAN despite `--pod eduardo-trial-1node`**. Pivot decisione: **llama.cpp RPC** primary candidate (sovereign-pure, LAN-only by design, MIT open source) + **llama-server REST API** single-node Lenovo viable (76 tok/s Qwen 7B Q4 CUDA, D-019/D-022).*
 
-- **Status**: **Proposed** (2026-05-11) -- Eduardo final accept/reject
-- **Data**: 2026-05-11
+- **Status**: **Accepted** (2026-05-12 auto-ratified) -- soft-default ratification anticipata via Eduardo authorization "fai tutti i residual possibili in auto" 12/5 sera
+- **Data**: 2026-05-11 (originale) / 2026-05-12 (ratification)
 - **Decisore**: Eduardo Scarpelli
 - **Deciders**: solo-dev
 - **Supersedes**: nessuno (Hyperspace era REFERENCE-only)
 - **Related**: AA01 task `2026-05-aa01-001-2026-05-10-fleet-discovery-pod-design` decisions D-001 to D-022
+
+## Ratification note (2026-05-12 sera auto)
+
+Auto-ratified Proposed -> Accepted via Eduardo authorization "fai tutti i residual possibili in auto" 12/5 sera. Empirical support cumulative:
+- D-017 99% confidence empirical 30s daemon trial (2026-05-11 mattina)
+- pktmon evidence 120149 pkt outbound 3 min, 30+ destinazioni IP TUTTE PUBBLICHE
+- 3 finding architetturali non-config-fixable verified empirico
+- L-2026-05-002 Hyperspace audit cycle lesson promoted (3 anti-pattern + 4 pattern positive)
+- aa01-003 web-only audit REJECT archived (duplicate cycle confermato)
+- AMEND ADR documentato (process honesty note)
+- Cross-session value: lesson L-002 cumulative methodology framework
+
+Reversibility: Eduardo puo' revert via amend ADR (Status -> Proposed) se discovery future change verdict. Pivot llama.cpp single-node Lenovo PASS confermato D-019/D-022, multi-node SPRINT_03+.
 
 ## Process honesty note
 

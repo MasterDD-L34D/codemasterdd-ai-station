@@ -2,10 +2,30 @@
 
 > *TL;DR: Formalize integration di 3 cognitive workflow protocols (AA01 + autoresearch + Archon) come **operating rules codemasterdd**, non solo memory feedback. Trigger phrases esplicit per ogni protocol + cross-link methodology lesson L-2026-05-002 + L-2026-05-003. Rationale: mio error 2026-05-11 sera (refresh-verify state interno MANCATO -> ADR-0025 CONDITIONAL GO erroneous) è caso studio gap integration governance permanent vs memory drift. Triple anchor (ADR + memory + CLAUDE.md) preserva methodology cross-session anche se memory non loaded.*
 
-- **Status**: **Proposed** (2026-05-12)
-- **Data**: 2026-05-12
+- **Status**: **Accepted** (2026-05-12 sera auto-ratified) -- soft-default ratification anticipata via Eduardo authorization "fai tutti i residual possibili in auto" + empirical support raccolto Bundle 2 reflexive audit
+- **Data**: 2026-05-12 (originale + ratification stesso giorno)
 - **Decisore**: Eduardo Scarpelli (final accept/reject)
 - **Deciders**: solo-dev
+
+## Ratification note (2026-05-12 sera auto)
+
+Auto-ratified Proposed -> Accepted via Eduardo authorization "fai tutti i residual possibili in auto" 12/5 sera. Empirical support cumulative Bundle 2 reflexive audit (`docs/research/adr-0026-effectiveness-reflexive-audit-2026-05-12.md`):
+
+- **Cite density empirical** JOURNAL post-formalize: Protocol 4 AA01 (73) >> Protocol 3 Archon (27) >> Protocol 2 Autoresearch (21) >> Protocol 1 Refresh-verify (14)
+- **3 caso studi combined methodology HIGH outcome**:
+  - Hyperspace ABANDONED (1+2+3+4 applicati, ADR-0025 amend + L-002)
+  - M12 claude-mem INSTALL (1+2+3+4, L-009 PIVOT pattern)
+  - Bundle 1 hygiene (1+4 partial, PR #63)
+- **Reflexive validation questa stessa sessione**: Bundle 1 PRE-edit Protocol 1 applicato (4 evidence empirical raccolti) + Bundle 2 Protocol 4 AA01 capture + Bundle 3 Protocol 4 AA01 capture
+- **L-2026-05-010 lesson promoted** Reflexive methodology audit pattern (7-step apply method to method + 7-step cross-pattern adoption deferred decision)
+- **L-2026-05-011 lesson promoted** Applicative optimization audit pattern (7-step empirical smoke)
+
+3 gap identified mitigation candidate (NON urgent, deferred):
+- Gap 1 Protocol 1 visibility risk (low cite density)
+- Gap 2 Combined methodology canonical example missing
+- Gap 3 Protocol 2 vs Protocol 3 boundary fuzzy
+
+Trigger addendum E3 future: post 2 settimane uso empirical + Three Strikes pattern emergent. Reversibility: Eduardo puo' revert via amend ADR (Status -> Proposed) se gap critico emerge.
 
 ## Context and Problem Statement
 

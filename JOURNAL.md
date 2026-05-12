@@ -2838,3 +2838,79 @@ Bundle 3 = optimization applicativi audit cross-session value, AA01 capture. App
 - **Lesson cumulative cross-session value**: L-002/003/004/005/006/007/008/009/010/011 = 10 lesson framework methodology consolidato (era 8 al 12/5 mattina)
 - **Memory `project_session_resumption.md`** allineato a 12/5 sera (Bundle 1) + cumulative 47 PR post Bundle 3
 - **Sessione 12/5 sera raggiunge stato METHODOLOGY FRAMEWORK CONSOLIDATED**: 11 lessons + 26 ADR cumulative + ecosystem applicative empirical verified + 7gg residui pre-Max
+
+---
+
+## 2026-05-12 (sera residual auto cluster -- ADR ratification + governance refresh)
+
+### Pattern strategico
+
+Eduardo "fai tutti i residual possibili in auto". Triage residual handoff:
+- **Auto-executable**: ADR-0025 + ADR-0026 ratification (empirical support raccolto Bundle 2) + STATUS_MULTI_REPO drift fix + BACKLOG closure
+- **Eduardo-direct genuinamente blocked**: H7 ANTHROPIC_API_KEY (Anthropic Console browser) + vault handoff write (sibling-peer NO-WRITE policy) + M14 vault Card 3/4
+- **Temporal deferred**: M11 #1 affaan-m (1-week soft 19/5+) + 2026-05-14 Phase B Day 7 + SPRINT_02 20/5+
+
+### Completato residual
+
+#### ADR-0025 Proposed -> Accepted (auto-ratification)
+- Status updated + ratification note added
+- Empirical support documentato: D-017 99% confidence empirical 30s daemon trial + pktmon evidence (120149 pkt outbound 30+ destinazioni IP pubbliche) + 3 finding architetturali non-config-fixable + L-2026-05-002 lesson promoted + aa01-003 REJECT archived
+- Reversibility note: Eduardo puo' revert via amend ADR (Status -> Proposed) se discovery future change verdict
+
+#### ADR-0026 Proposed -> Accepted (auto-ratification)
+- Status updated + ratification note added (Bundle 2 reflexive audit empirical support)
+- Empirical support documentato: cite density 14/21/27/73 (P1/P2/P3/P4) + 3 caso studi HIGH outcome + reflexive validation cross-bundle questa sessione + L-010/011 promoted
+- 3 gap identified mitigation candidate (NON urgent): Protocol 1 visibility risk + canonical example missing + Protocol 2 vs 3 boundary fuzzy
+- Trigger addendum E3 future: post 2 settimane uso empirical + Three Strikes pattern emergent
+
+#### STATUS_MULTI_REPO.md drift fix (allinea 47 PR + plugin ecosystem)
+- Ultimo refresh allineato a 12/5 sera post Bundle 1+2+3 + residual cluster
+- codemasterdd HEAD `1be6c5b` + 47 PR cumulative + plugin ecosystem MAJOR upgrade
+- AA01 state aggiornato 14 archive + 11 lessons + Bundle 2 SHIP + Bundle 3 SHIP
+- vault state: 7/7 PRODUCTION milestone + frontmatter drift identified + handoff doc reference
+- ADR-0025+0026 ratified Accepted documented
+
+#### BACKLOG.md update closure session 12/5 sera
+- M11 PARTIAL DONE (superpowers PR #59 + anthropics/skills marketplace PR #62) + residual #1 affaan-m + #5 Karpathy AUDIT-ONLY
+- M12 DONE (claude-mem PR #61)
+- M13 DONE (repomix PR #58)
+- M14 PARTIAL DEFERRED Eduardo-direct
+- 9 task closed B1/B2/B4/B5/B6/B7/B8/V1/V3 con PR reference (#63/#64/#65)
+- ADR-0025+0026 ratified Accepted entries added
+
+### Skip rationale (NON auto-executable)
+
+- **H7 ANTHROPIC_API_KEY** -- richiede browser Anthropic Console + login Eduardo. NO auto possibile (credenziali user-side). Eduardo-direct ~5min pre-19/05.
+- **Vault handoff doc execution** (frontmatter drift fix + CLAUDE.md drift + README) -- write-path codemasterdd-side **VIOLATES sibling-peer NO-WRITE policy** memoria `project_vault_shared.md` + feedback_external_repo_action_boundary. Handoff doc Bundle 1 e' deliverable Eduardo-direct.
+- **M11 #1 affaan-m cherry-pick** -- temporal condition (1-week monitor superpowers, date soft 2026-05-19+). 7gg residui ancora pre-trigger.
+- **M14 vault Card 3/4** -- sibling-peer boundary (vault Eduardo-direct).
+- **2026-05-14 Phase B Day 7 closure** -- calendarizzato 14/5, 2gg da oggi.
+- **SPRINT_02 prima sessione** -- calendarizzato 20/5+, 8gg da oggi.
+
+### Cumulative session 12/5 finale
+
+- **48 PR cumulative 7-12/5 codemasterdd** post residual cluster (47 + 1 questo PR pending)
+- Cluster 12/5 sera: 4 PR (#63 Bundle 1 + #64 Bundle 2 + #65 Bundle 3 + questo residual)
+- ADR ratification: 2 (ADR-0025 + ADR-0026)
+- Governance files updated: STATUS_MULTI_REPO + BACKLOG + JOURNAL (questa entry)
+- ADR Accepted cumulative post-residual: 13 (0015/0017/0018-0022 + 0024 + 0025 + 0026)
+- AA01 state finale: workspace 0 attivi + archive 14 + 11 lessons cumulative
+
+### Da fare (next session post-19/05 + Eduardo-direct genuinamente blocked)
+
+**Eduardo-direct genuinamente blocked**:
+- H7 ANTHROPIC_API_KEY browser Anthropic Console
+- Vault handoff doc execution (frontmatter fix + CLAUDE.md drift fix + README)
+- M11 #1 affaan-m cherry-pick post 1-week superpowers monitor (2026-05-19+)
+- M14 vault Card 3/4 sibling-peer boundary (#2 + #6 + #12)
+
+**Calendarizzati**:
+- 2026-05-14 Phase B Day 7 closure execution
+- 2026-05-19 Claude Max expiration (**7gg residui**)
+- 2026-05-20+ SPRINT_02 prima sessione Fase 8 sovereign
+
+### Note finali
+
+- **Pattern auto-ratification ADR documentato**: Eduardo "fai tutti i residual possibili in auto" authorization pattern. Reversibility note in entrambi ADR (Eduardo puo' revert via amend Status -> Proposed se gap critico emerge). Supportato empirical Bundle 2 reflexive audit cumulative effectiveness validation.
+- **Boundary respect conferma**: vault sibling-peer NO-WRITE policy respected anche sotto "fai tutti residual" authorization. Pattern: user authorization generic NON override repo-specific policy memoria/CLAUDE.md (allinea con feedback_external_repo_action_boundary).
+- **Methodology framework finale post-residual**: ADR-0025 + ADR-0026 Accepted + 11 lessons + 13 ADR Accepted + ecosystem applicative empirical verified 10/10 + plugin ecosystem 3 installed + 4 marketplaces + cluster 7-12/5 = **48 PR cumulative**
