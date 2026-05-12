@@ -116,6 +116,52 @@ Script 41 righe JS standalone (zero dep) estratto da `rohitg00/awesome-claude-co
 
 OCR font monospace ha distrorto cifre. Validazione via star-history + GitHub-live 2026-05-12.
 
+### ⚠️ Audit correction 2026-05-12 tardo (PR audit gh API live)
+
+**Tabella OCR drift sopra contiene 3 errori MAJOR** scoperti via `gh api repos/<owner>/<repo>` live 2026-05-12 tardo (post PR #57 merge):
+
+| Repo | PR #57 claim | gh API REAL | Errore PR #57 |
+|------|--------------|-------------|---------------|
+| **obra/superpowers** | "~16.6k OCR inflato 9x" | **186639 stars MIT 2026-05-12** | **11x SOTTO real** — direction errata: OCR (148k) era PIU' VICINO real (186k) di PR #57 (16.6k). |
+| **VoltAgent/awesome-claude-code-subagents** | "~8.1-8.5k OCR inflato 2x" | **19575 stars MIT 2026-04-20** | **2.4x SOTTO** — OCR (17.1k) era effettivamente corretto. Pattern era CRESCITA (+9% Apr 22 -> 12/5) NON drift. |
+| **dair-ai/Prompt-Engineering-Guide** | "~58.2k" | **74448 stars MIT 2026-03-11** | -22% off. |
+
+**Root cause**: PR #57 ha usato source secondaria (probabilmente WebSearch cached o star-history page) invece di `gh api repos/<owner>/<repo>` live. Karpathy autoresearch weighting "empirical > documentation" violato.
+
+**License gaps undisclosed PR #57**:
+- #5 forrestchang/andrej-karpathy-skills: gh API `license: ?` unknown -> automatic AUDIT-ONLY gate
+- #10 anthropics/skills: gh API `license: ?` unknown -> per-skill license verify obbligatoria
+- #6 hesreallyhim/awesome-claude-code: `NOASSERTION` non standard -> BOOKMARK con caveat
+
+**Lesson L-2026-05-007** (AA01 learnings/) formalizza pattern "gh API live mandatory PRIMA di stars-based decision".
+
+### Re-decisione preliminare corretta (post audit gh API)
+
+| # | Repo | PR #57 decisione | Re-decisione (gh API corretto) |
+|---|------|------------------|---------------------------------|
+| #3 obra/superpowers | DORMANT "non top-tier" | **ELEVATE -> INSTALL CANDIDATE high-priority** (REAL 186k MIT = top tier) |
+| #11 VoltAgent subagents | REFRESH (rationale "OCR drift") | REFRESH (rationale: **crescita +9% Apr 22 -> 12/5**, NO drift) |
+| #5 forrestchang | AUDIT-ONLY | AUDIT-ONLY **+ license check obbligatoria PRE-cherry-pick** |
+| #10 anthropics/skills | INSTALL selective | INSTALL **GATED** per-skill license verification |
+| #6 hesreallyhim | BOOKMARK refresh | BOOKMARK **+ NOASSERTION license caveat** |
+
+### gh API live verified (12 repo, 2026-05-12 tardo)
+
+| # | Repo | Stars REAL | License | Last push |
+|---|------|------------|---------|-----------|
+| 1 | affaan-m/everything-claude-code | 179572 | MIT | 2026-05-12 |
+| 2 | shanraisshan/claude-code-best-practice | 52418 | MIT | 2026-05-11 |
+| 3 | obra/superpowers | **186639** | MIT | 2026-05-12 |
+| 4 | thedotmack/claude-mem | 74880 | Apache-2.0 | 2026-05-11 |
+| 5 | forrestchang/andrej-karpathy-skills | 125338 | **?** | 2026-04-20 |
+| 6 | hesreallyhim/awesome-claude-code | 43395 | **NOASSERTION** | 2026-04-27 |
+| 7 | yamadashy/repomix | 24609 | MIT | 2026-05-11 |
+| 8 | gsd-build/get-shit-done | 61572 | MIT | 2026-05-12 |
+| 9 | dair-ai/Prompt-Engineering-Guide | **74448** | MIT | 2026-03-11 |
+| 10 | anthropics/skills | 132353 | **?** | 2026-05-09 |
+| 11 | VoltAgent/awesome-claude-code-subagents | **19575** | MIT | 2026-04-20 |
+| 12 | VoltAgent/awesome-design-md | 75778 | MIT | 2026-05-11 |
+
 ### Wave 2026-05-12 — categoria A: skills-collection (#3, #5, #10) — refresh #1
 
 `anthropics/skills` ufficiale è **upstream marketplace skills**. Gli altri 3 sono catalog terzi. Cherry-pick = audit individual skill files, NO bulk install.

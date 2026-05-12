@@ -2300,3 +2300,59 @@ NO action codemasterdd oggi (sub-event ADR-0024 codemasterdd, gia' chiarito adde
 - **Refresh vs new pattern**: 3/12 repo (#1, #6, #11) gia in `subagents-skills-candidates.md` -> "refresh inline" + extension section, NON duplicato in nuovo file. Pattern preserva continuita storica + riduce sprawl reference.
 - **AA01 task granularity**: 4 task raggruppati per categoria (vs 12 individuali) e' compromise corretto -- riduce 12x AA01 workflow overhead senza perdere triage per-repo (mantenuto in master table reference).
 - **ADR-0027 candidato condizionale**: emerge solo se M12 (Task B) install claude-mem impatta SessionStart hook workflow gia attivo (H12) -- da valutare durante SHIP.
+
+---
+
+## 2026-05-12 (sera tardi -- Step 0 handoff pickup + M13 INSTALL + PR #57 audit correction)
+
+### Pattern strategico
+
+PR #57 sandbox merged 01:06 UTC. Step 0 metodologia obbligatoria handoff applicata: Protocol 1 refresh-verify + Protocol 2 autoresearch 12 repo. Eduardo direttive auto-mode + priorità con metodo + PR #57 ragionamento rivisitato + tutti ORA.
+
+### Completato
+
+#### Protocol 2 autoresearch 12 repo gh API live (Eduardo "tutti ORA")
+`gh api repos/<owner>/<repo>` parallel batch. **4/12 PR #57 stars claim WRONG**:
+- #3 obra/superpowers: PR #57 "~16.6k OCR inflato 9x" -> REAL **186639** (PR #57 11x SOTTO, direction errata)
+- #11 VoltAgent subagents: PR #57 "~8.1k OCR drift 2x" -> REAL **19575** (OCR Apr 22 era corretto, crescita +9%)
+- #9 dair-ai: PR #57 "~58.2k" -> REAL **74448** (-22% off)
+- License gaps undisclosed: #5 forrestchang `?` + #10 anthropics `?` + #6 hesreallyhim `NOASSERTION`
+
+Root cause: PR #57 ha usato source secondaria (cached) vs gh API live. Karpathy "empirical > documentation" violato.
+
+#### M13 Wave 2026-05-12 -- repomix INSTALL DONE
+- **repomix v1.14.0** npm global install (24609 stars MIT 2026-05-11 gh API verified)
+- Binary `C:\Users\edusc\AppData\Roaming\npm\repomix.cmd`
+- Smoke test PASS: pack `docs/sessions/** + docs/aa01-handoff/**` -> 41886 bytes 12.160 tokens "No suspicious files detected"
+- CLAUDE.md "Stack installato" repomix entry added
+- gsd-build/get-shit-done BOOKMARK (61572 MIT 2026-05-12, audit comparativo vs AA01 deferred)
+
+#### Subagents-skills-candidates.md audit correction
+Sezione "Audit correction 2026-05-12 tardo (PR audit gh API live)" added:
+- 3 errori MAJOR stars PR #57 documented
+- License gaps disclosed
+- Re-decisioni preliminari corrette (#3 obra ELEVATE INSTALL CANDIDATE, etc.)
+- 12 repo gh API verified table added
+
+#### AA01 task SHIP -- 2026-05-aa01-001-2026-05-12-c-dev-tools-resources
+- Phase 0-5 documented in DRAFT
+- Lesson **L-2026-05-007** promoted `learnings/L-2026-05-007-gh-api-empirical-stars-mandatory.md`
+- Pattern: gh API live mandatory PRIMA di stars-based decision. Karpathy weighting "empirical > documentation" enforced.
+- AA01 archive entries: 10 (+1 questa task)
+
+### Da fare (next session handoff)
+
+**Eduardo direct (residual M11-M12 + M14 vault)**:
+- M11 skills cherry-pick + per-file license verify (#3 obra ELEVATE, #1 #10 selective, #5 audit-only) -- 4-6h
+- M12 Archon Protocol 3 dry-run claude-mem + VoltAgent refresh -- 2-3h
+- M14 vault Card creation 4 BOOKMARK + REFERENCE_INDEX.md addendum #9 dair-ai -- 1-2h
+- H7 ANTHROPIC_API_KEY pre-19/05 (~5min)
+- 2026-05-14 Phase B Day 7 closure execution
+
+### Note
+
+- **Cumulative 7-12/5**: 40 PR cumulative codemasterdd (39 pre + questa PR audit correction) + 2 PR Godot-v2 codemasterdd-authored
+- **Pattern L-2026-05-007** validato: PR #57 4/12 errori = caso-studio empirical
+- **AA01 state**: 10 archive entries + 6 lessons learnings/ (+L-2026-05-007)
+- **Anti-pattern reinforce**: stars OCR + cached source = inaffidabili. Sempre gh API live PRIMA di decision tree.
+- **Step 0 handoff methodology validated**: Protocol 1 stop-on-missing-prereq applicato correttamente (file non trovato pre-fetch sandbox) + Protocol 2 autoresearch revealed PR #57 errori PRIMA di proporre M11-M14 action.
