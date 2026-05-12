@@ -40,10 +40,27 @@
 
 ### Task derivati da OCR screenshot wave 2026-05-12 (Eduardo trigger 12 top Claude Code repos)
 
-- [ ] **M11** — AA01 Task A: skills collection evaluation (4 repo: #1 affaan-m refresh, #3 obra/superpowers, #5 forrestchang/andrej-karpathy-skills, #10 anthropics/skills). Effort 4-6h. Preset `research-long`. Scaffold paste-ready: `docs/aa01-handoff/2026-05-12-A-skills-resources.md`. Output atteso: 2-5 skill installati in `~/.claude/skills/` cherry-pick + lesson decisional. Reference: `docs/reference/subagents-skills-candidates.md` sezione Wave 2026-05-12 categoria A.
-- [ ] **M12** — AA01 Task B: subagent + memory (#4 thedotmack/claude-mem INSTALL + #11 VoltAgent/awesome-claude-code-subagents refresh). Effort 2-3h. Preset `research-long`. Scaffold: `docs/aa01-handoff/2026-05-12-B-subagent-memory-resources.md`. Output: 1 memory system operativo (claude-mem preferito vs Memory Persistence di #1) + 0-2 subagent cherry-pick nuovi. Potenziale ADR-0027 candidato se SessionStart hook impact significativo (H12 interaction).
-- [ ] **M13** — AA01 Task C: dev-tools (#7 yamadashy/repomix INSTALL + #8 gsd-build/get-shit-done BOOKMARK comparativo vs AA01). Effort 2h. Preset `research-long`. Scaffold: `docs/aa01-handoff/2026-05-12-C-dev-tools-resources.md`. Output: repomix global install + lesson gsd-vs-AA01 pattern comparison.
-- [ ] **M14** — AA01 Task D: guides + awesome + design (#2 shanraisshan/claude-code-best-practice + #6 hesreallyhim/awesome-claude-code refresh + #9 dair-ai/Prompt-Engineering-Guide + #12 VoltAgent/awesome-design-md). Effort 1-2h. Preset `research-long` lightweight. Scaffold: `docs/aa01-handoff/2026-05-12-D-guides-awesome-design-resources.md`. Output: 1 lesson cross-pattern best-practice + vault Card Eduardo direct (boundary sibling-peer) + REFERENCE_INDEX.md link aggiunto a #9 dair-ai.
+- [x] ~~**M11** — AA01 Task A: skills collection evaluation~~ **PARTIAL DONE 2026-05-12 pomeriggio+tardo**: #3 obra/superpowers v5.1.0 **INSTALLED** PR #59 (Archon CALIBRATE 7-step + falsifying experiment 5/5 PASS) + #10 anthropics/skills **MARKETPLACE REGISTERED** PR #62 (17 skills bundle native accessible session). Residual deferred Eduardo-direct: #1 affaan-m post 1-week superpowers monitor (date soft 2026-05-19+) + #5 Karpathy AUDIT-ONLY (NO LICENSE blocker, default copyright). Lesson L-2026-05-008 promoted.
+- [x] ~~**M12** — AA01 Task B: subagent + memory~~ **DONE 2026-05-12 pomeriggio**: #4 thedotmack/claude-mem v13.2.0 **INSTALLED** PR #61 (Archon CALIBRATE PIVOT 3 blocker auto-resolved: Bun runtime + hook collision empirical NO conflict + privacy SAME-TIER). Lesson L-2026-05-009 promoted. Bun v1.3.13 pre-req installato. Worker port 37777 + 6 hook lifecycle attivi. **Bundle 1 B6 smoke verify 12/5 sera**: NO collision project-scope + workflow PASS.
+- [x] ~~**M13** — AA01 Task C: dev-tools~~ **DONE 2026-05-12 mattina+pomeriggio**: #7 yamadashy/repomix v1.14.0 **INSTALLED** PR #58 via `npm install -g repomix`. Smoke test PASS (`docs/sessions/** + docs/aa01-handoff/**` pack 41886 bytes 12.160 tokens). #8 gsd-build/get-shit-done BOOKMARK reference comparativo vs AA01 (no install).
+- [ ] **M14** — AA01 Task D: guides + awesome + design. **PARTIAL DEFERRED** Eduardo-direct: #2 + #6 + #12 vault Card 3/4 sibling-peer boundary pending. #9 dair-ai/Prompt-Engineering-Guide REFERENCE_INDEX link bookmark candidate.
+
+### Task derivati da session 2026-05-12 sera (Bundle 1+2+3 cluster)
+
+- [x] ~~**B1** — Memory drift fix `project_vault_shared.md` 6/7 → 7/7 PRODUCTION milestone hit.~~ **DONE 2026-05-12 sera Bundle 1 PR #63**. HEAD vault `2007a8a2` 7/7 PRODUCTION milestone confirmed empirical.
+- [x] ~~**B2** — COMPACT_CONTEXT v21 → v22 drift fix.~~ **DONE 2026-05-12 sera Bundle 1 PR #63**. 13 PR drift + plugin ecosystem MAJOR upgrade + AA01 state aggiornato.
+- [x] ~~**B4** — Reflexive ADR-0026 effectiveness audit.~~ **DONE 2026-05-12 sera Bundle 2 PR #64**. Research doc + 3 caso studi HIGH/HIGH/MEDIUM + 3 gap mitigation + ratification empirical support. ADR-0026 **Accepted ratificato auto 12/5 sera**.
+- [x] ~~**B5** — Aider wrappers privacy guard rail smoke re-verify.~~ **DONE 2026-05-12 sera Bundle 1 PR #63**. 4/4 scenari PASS (codemasterdd+Game ALLOW, vault+synesthesia BLOCK).
+- [x] ~~**B6** — claude-mem plugin post-install smoke + hook collision verify.~~ **DONE 2026-05-12 sera Bundle 1 PR #63**. Worker port 37777 ALIVE + NO collision project-scope.
+- [x] ~~**B7** — Sub-agent ecosystem effectiveness review.~~ **DONE 2026-05-12 sera Bundle 3 PR #65**. 18 sub-agent (12 ready + 6 draft) + 9/12 smoke + 6 dormant workflow-driven. Research doc + 4 REC.
+- [x] ~~**B8** — Hook chain effectiveness empirical smoke.~~ **DONE 2026-05-12 sera Bundle 3 PR #65**. 5 layer 5/5 PASS + 10/10 component checks cumulative cross-bundle. Research doc + 4 REC.
+- [x] ~~**V1** — Vault handoff doc Eduardo-direct (sibling-peer boundary respected).~~ **DONE 2026-05-12 sera Bundle 1 PR #63**. Doc `docs/aa01-handoff/2026-05-12-vault-frontmatter-drift-handoff.md` (frontmatter drift 7/7 + CLAUDE.md drift 5-claim + README discoverability). Eduardo-direct action 30-45min one-shot.
+- [x] ~~**V3** — MODEL_ROUTING Quality Gate cross-pattern adoption research.~~ **DONE 2026-05-12 sera Bundle 2 PR #64**. Research doc + 4 REC. ADR-NEW Tier promotion methodology candidate **DEFER fino SPRINT_02+** (Three Strikes trigger condition).
+
+### ADR ratification 2026-05-12 sera auto (residual cluster)
+
+- [x] ~~**ADR-0025 Hyperspace Pods NO-GO**~~ **Ratified Accepted 2026-05-12 sera auto** via Eduardo authorization. Empirical support: D-017 99% confidence + pktmon evidence + L-2026-05-002.
+- [x] ~~**ADR-0026 Cognitive workflow protocols**~~ **Ratified Accepted 2026-05-12 sera auto** via Eduardo authorization. Empirical support Bundle 2 reflexive audit (cite density + 3 caso studi HIGH + reflexive validation questa sessione).
 
 ## Priorità bassa
 
