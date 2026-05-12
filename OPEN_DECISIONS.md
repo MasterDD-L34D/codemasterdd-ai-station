@@ -100,6 +100,7 @@
   - `OPEN_DECISIONS.md` (questa OD-008)
 - **Prossima azione**: monitor Game OD-023 resolution 2026-05-14 post-Phase-B closure. Update OD-008 to CLOSED quando Game OD-023 chiusa + Phase B web archive completata.
 - **Reactivation trigger**: Game/ ADR-2026-05-05 amendment (es. grace extension oltre 7gg, scope changes, abort) -> potenziale ADR-0024 follow-up addendum
+- **Update 2026-05-12 pomeriggio**: Game local checkout pulled Path A reset --hard origin/main (post Protocol 1+2 investigation safe-confidence). 13 backup branches `aa01/cap-*` preservano Sprint Impronta CAP-02..15b content + stash safety net 295 file WIP refactor abandoned pre-26/04. Game OD-023 monitoring invariato. TKT-P2 Phase D cross-stack chain COMPLETE Godot-v2 (PR #248 + #249 merged questa sessione). Phase B Day 7 closure execution Eduardo-direct 14/5 mattina UTC (NO codemasterdd action).
 
 ---
 
