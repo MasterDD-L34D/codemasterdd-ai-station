@@ -219,16 +219,16 @@ OCR font monospace ha distrorto cifre. Validazione via star-history + GitHub-liv
 
 | # | Repo | Categoria | Decisione preliminare | Path |
 |---|------|-----------|----------------------|------|
-| 1 | affaan-m/everything-claude-code | skills | REFRESH (Memory subset escluso se claude-mem install) | `~/.claude/skills/` cherry-pick |
+| 1 | affaan-m/everything-claude-code | skills | **DEFER 2026-05-12** (Memory subset esclusa post claude-mem v13.2.0 INSTALLED. Skill catalog 100+ ha HIGH OVERLAP con superpowers v5.1.0 INSTALLED. Post 1-week monitor superpowers behavior + cherry-pick selective gap-only). | DEFER post-monitor superpowers usage |
 | 2 | shanraisshan/claude-code-best-practice | guide | BOOKMARK | vault Card Eduardo |
 | 3 | obra/superpowers | skills | **INSTALLED 2026-05-12** (post Archon CALIBRATE + falsifying experiment 5/5 PASS) | `~/.claude/plugins/cache/claude-plugins-official/superpowers/5.1.0/` |
-| 4 | thedotmack/claude-mem | memory | **DEFER 2026-05-12** (Archon CALIBRATE → 3 blocker: Bun runtime MISSING + H12 hook collision risk + privacy `@anthropic-ai/claude-agent-sdk` cloud calls per compression) | TBD post-blocker resolution + ADR-0027 candidate |
-| 5 | forrestchang/andrej-karpathy-skills | skills | AUDIT-ONLY (lessons learned, no install) | Lesson AA01 |
+| 4 | thedotmack/claude-mem | memory | **INSTALLED 2026-05-12** v13.2.0 (post Archon CALIBRATE PIVOT: 3 blocker auto-resolved -- Bun installed v1.3.13 + hook collision empirical NO conflict (plugin vs project scope separato) + privacy SAME-TIER come Claude Code attuale, NO new exposure) | `~/.claude/plugins/cache/thedotmack/claude-mem/13.2.0/` |
+| 5 | forrestchang/andrej-karpathy-skills | skills | **AUDIT-ONLY CONFERMATO 2026-05-12** -- LICENSE file MISSING (gh API verified), default copyright = NO right to clone/install. Lesson via README/CLAUDE.md read inspirational only. | NO install (license blocker) |
 | 6 | hesreallyhim/awesome-claude-code | awesome | REFRESH (re-scan curator) | vault Atlas index |
 | 7 | yamadashy/repomix | tool | INSTALL | `npm install -g` |
 | 8 | gsd-build/get-shit-done | tool | BOOKMARK (no install, audit vs AA01) | vault Card |
 | 9 | dair-ai/Prompt-Engineering-Guide | guide | BOOKMARK | vault Atlas + `REFERENCE_INDEX.md` |
-| 10 | anthropics/skills | skills | INSTALL selective (1-2 skill match) | `~/.claude/skills/` |
+| 10 | anthropics/skills | skills | **MARKETPLACE REGISTERED 2026-05-12** (17 skill catalog disponibili: algorithmic-art, brand-guidelines, canvas-design, claude-api, doc-coauthoring, docx, frontend-design, internal-comms, mcp-builder, pdf, pptx, skill-creator, slack-gif-creator, theme-factory, web-artifacts-builder, webapp-testing, xlsx). Per-skill cherry-pick Eduardo direct. | Marketplace `anthropic-agent-skills` registered, install via `claude plugin install <skill>@anthropic-agent-skills` |
 | 11 | VoltAgent/awesome-claude-code-subagents | subagents | REFRESH (re-audit catalogo) | `.claude/agents/` cherry-pick |
 | 12 | VoltAgent/awesome-design-md | design | BOOKMARK (clone read-only se trigger) | `C:\dev\` clone su trigger |
 

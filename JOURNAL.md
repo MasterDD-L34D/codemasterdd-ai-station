@@ -2495,3 +2495,77 @@ Eduardo "sono ritornato ora, per proseguire" + "A+B+C" bundle auto. Protocol 1 r
 - **AA01 state**: 11 archive + 7 lessons (invariato vs precedente)
 - **Lesson candidate L-2026-05-009**: "Archon CALIBRATE DEFER pattern -- 3+ blocker pre-resolution + reactivation trigger explicit" (promote learnings/ se Eduardo conferma)
 - **superpowers methodology**: 14 skills attivi cross-session (1 settimana monitor pending)
+
+---
+
+## 2026-05-12 (notte tardiva -- M12 claude-mem INSTALL pivot + M11 remaining auto)
+
+### Pattern strategico
+
+Eduardo "è deferred perché hai bisogno di me?" sfida challenge mio reasoning conservativo. Re-assessment honest: 2/3 blocker auto-resolvable + 1/3 privacy decision Eduardo binary. Eduardo "A" PROCEED → pivot DEFER → INSTALL.
+
+### Completato
+
+#### M12 Archon CALIBRATE PIVOT: DEFER → PROCEED
+
+**Re-assessment honest blocker**:
+1. Bun runtime MISSING → ✅ auto-installable
+2. H12 hook collision risk → ✅ empirical NO conflict (plugin scope vs project scope separato)
+3. Privacy `claude-agent-sdk` → ✅ SAME-TIER exposure come Claude Code attuale (NO new data tier)
+
+**Step 1 Bun install**:
+- `powershell -c "irm bun.sh/install.ps1 | iex"` → Bun v1.3.13 installed
+- Binary path: `C:\Users\edusc\.bun\bin\bun.exe`
+- Verify: `bun --version` → 1.3.13 PASS
+
+**Step 2 Privacy audit chat-only**:
+- `@anthropic-ai/claude-agent-sdk` = official Anthropic SDK (1404 stars, governed by Commercial Terms ToS)
+- Data flow: tool observations local SQLite + summary generation via Claude API (cloud) + compressed summary local
+- SAME exposure level Claude Code attuale Eduardo (NO new tier)
+- Caveat: privacy tags `<private>content</private>` available per sovereign-only repo future
+
+**Step 3 Decision gate Eduardo: A PROCEED**
+
+**Step 4 Install via marketplace pattern (coerente M11 obra)**:
+- `claude plugin marketplace add thedotmack/claude-mem` → marketplace registered
+- `claude plugin install claude-mem@thedotmack` → v13.2.0 enabled scope user
+- Cache: `~/.claude/plugins/cache/thedotmack/claude-mem/13.2.0/`
+- 6 hooks defined (Setup + SessionStart + UserPromptSubmit + PreToolUse + PostToolUse + Stop)
+
+**Step 5 Falsifying experiment 5/5 PASS**:
+- Install verify: claude-mem v13.2.0 enabled ✓
+- Cache structure: hooks/ + skills/ + scripts/ + modes/ + ui/ + package.json ✓
+- H12 collision check: NO conflict (project scope vs plugin scope separato, Claude Code parallel merge SessionStart) ✓
+- Reversibility: disable → verify → re-enable → verify PASS ✓
+- Hook full inventory: 6 hook types verified ✓
+
+**Step 6 commit prod = ENABLED**
+
+#### M11 remaining audit (Eduardo "C" both M12+M11 auto)
+
+- **#1 affaan-m/everything-claude-code**: skills catalog 100+ visible. Memory subset esclusa (claude-mem installed). HIGH OVERLAP con superpowers methodology (autonomous-loops, agentic-engineering, agent-architecture-audit, etc.). **DEFER 2026-05-12** post 1-week monitor superpowers usage + cherry-pick selective gap-only.
+- **#5 forrestchang/andrej-karpathy-skills**: LICENSE file decode FAIL via gh API. `license: ?` confermato → **NO LICENSE present**. Default copyright = NO right to clone/install. **AUDIT-ONLY** confirmed (read README/CLAUDE.md inspirational only, NO clone).
+- **#10 anthropics/skills**: `.claude-plugin/marketplace.json` (separate marketplace, NON in claude-plugins-official). **MARKETPLACE REGISTERED 2026-05-12** as `anthropic-agent-skills`. Catalog 17 skills disponibili (algorithmic-art, brand-guidelines, canvas-design, claude-api, doc-coauthoring, docx, frontend-design, internal-comms, mcp-builder, pdf, pptx, skill-creator, slack-gif-creator, theme-factory, web-artifacts-builder, webapp-testing, xlsx). Per-skill cherry-pick Eduardo direct.
+
+### Updates governance codemasterdd-side
+
+- `CLAUDE.md` "Stack installato": claude-mem v13.2.0 entry added (6 hooks + worker Bun + SQLite + privacy SAME-TIER caveat) + Bun v1.3.13 runtime entry
+- `docs/reference/subagents-skills-candidates.md` tabella riepilogo: #4 claude-mem DEFER → **INSTALLED 2026-05-12** + #1 affaan-m DEFER post-monitor + #5 AUDIT-ONLY license blocker + #10 MARKETPLACE REGISTERED
+- 4 marketplaces user-scope ora: claude-plugins-official + compass-marketplace + thedotmack + anthropic-agent-skills
+- 3 plugins installed: compass v0.4.3 + superpowers v5.1.0 + **claude-mem v13.2.0**
+
+### Da fare (next session handoff)
+
+**Eduardo direct (residual)**:
+- M11 #1 affaan-m cherry-pick post 1-week monitor superpowers behavior
+- M11 #10 anthropics/skills per-skill install selective (es. claude-api + skill-creator + mcp-builder priorities)
+- M14 vault Card 3/4 (#2 + #6 + #12 sibling-peer)
+- 2026-05-14 Phase B Day 7 closure
+- H7 ANTHROPIC_API_KEY pre-19/05
+
+### Note
+
+- **Cumulative 7-12/5**: 43 PR cumulative codemasterdd (42 pre + questa PR M12+M11) + 2 PR Godot-v2
+- **Pattern Archon CALIBRATE PIVOT**: DEFER decision NON terminale. Re-assessment honest può PIVOT a PROCEED se blocker resolvable auto-mode (Bun install) o downgrade conservative reasoning (privacy SAME-TIER no new exposure). L-2026-05-009 pattern documenta.
+- **Plugins ecosystem stato post-questa-sessione**: 3 plugin (compass + superpowers + claude-mem) + 4 marketplace registered + Bun runtime + 14 superpowers skills + 6 claude-mem hooks. Cumulative cross-session methodology framework MAJOR upgrade.
+- **AA01 state**: 11 archive + 7 lessons learnings/ (invariato)
