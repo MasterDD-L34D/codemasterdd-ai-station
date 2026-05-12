@@ -180,14 +180,41 @@ Indice completo in `DECISIONS_LOG.md`. Path: `docs/adr/NNNN-topic.md`.
 - **Titolo**: `docs/reference/agentshield-scan-2026-04-22.md`
 - **Funzione**: baseline AgentShield scan
 
-### REF-EXT-05 (M14 BOOKMARK 2026-05-12)
+### REF-EXT-05 (M14 BOOKMARK 2026-05-12, refreshed 2026-05-12 sera)
 - **Codice**: EXT-05
-- **Titolo**: `dair-ai/Prompt-Engineering-Guide` (74448 stars MIT 2026-03-11)
-- **URL**: https://github.com/dair-ai/Prompt-Engineering-Guide
-- **Funzione**: reference canonical Prompt Engineering + LLM techniques + RAG + agent patterns. Lookup-only navigator post-screening.
-- **Stato**: BOOKMARK (NO install eseguibile, multi-author manutenuto da DAIR.AI)
-- **Uso consigliato**: consultare per pattern prompt + few-shot + chain-of-thought + RAG quando emerge gap specifico in workflow Aider/OpenCode/Claude Code.
-- **Note**: M14 Wave 2026-05-12 task #9. Vault Card creation Eduardo direct (sibling-peer boundary). License MIT confermata via gh API live (L-2026-05-007 pattern enforced).
+- **Titolo**: `dair-ai/Prompt-Engineering-Guide` (74479 stars MIT 2026-05-12)
+- **URL**: https://github.com/dair-ai/Prompt-Engineering-Guide + hosted https://www.promptingguide.ai/
+- **Funzione**: reference canonical Prompt Engineering + LLM techniques + RAG + AI agents + context engineering. Lookup-only navigator post-screening.
+- **Stato**: BOOKMARK + Vault Card live (`Cards/m14-claude-resources-wave-2026-05-12/dair-ai-prompt-engineering-guide.md`).
+- **Uso consigliato**: consultare per pattern prompt + few-shot + chain-of-thought + RAG quando emerge gap specifico. Sezione "AI Agents" complementare a ADR-0018 + ADR-0026.
+- **Note**: M14 Wave 2026-05-12 task #9 EXECUTED 2026-05-12 sera (vault Card creation sotto Eduardo authorization "voglio fare 3 e 4"). License MIT empirical re-verify L-2026-05-007 pattern. Refresh stars 74448 -> 74479 (+31 in 1 day).
+
+### REF-EXT-07 (M14 BOOKMARK 2026-05-12 sera)
+- **Codice**: EXT-07
+- **Titolo**: `shanraisshan/claude-code-best-practice` (52602 stars MIT 2026-05-12)
+- **URL**: https://github.com/shanraisshan/claude-code-best-practice
+- **Funzione**: cross-pattern reference Claude Code features comprehensive (Subagents + Commands + Skills + Hooks + MCP + Plugins + Memory + Orchestration). Cherry-pick on-demand quando emerge gap codemasterdd-side.
+- **Stato**: BOOKMARK + Vault Card live (`Cards/m14-claude-resources-wave-2026-05-12/shanraisshan-best-practice-cross-pattern.md`)
+- **Cross-pattern review**: 8 pattern reference candidate identified (Orchestration Command->Agent->Skill + Routines + Power-ups + Auto/Fast Mode + Git Worktrees + Plugin marketplaces + Memory 4-layer + Ultrareview). DEFER formal ADR adoption fino SPRINT_02+ Three Strikes trigger.
+- **Note**: M14 Wave 2026-05-12 task #2 EXECUTED 2026-05-12 sera. License MIT empirical re-verify.
+
+### REF-EXT-08 (M14 AUDIT-ONLY 2026-05-12 sera)
+- **Codice**: EXT-08
+- **Titolo**: `hesreallyhim/awesome-claude-code` (43498 stars NOASSERTION 2026-05-12)
+- **URL**: https://github.com/hesreallyhim/awesome-claude-code
+- **Funzione**: awesome-list canonica community-curated per Claude Code. Refresh status check post-Apr 22 entries.
+- **Stato**: AUDIT-ONLY (NOASSERTION license = no clear rights, default copyright). Vault Card live (`Cards/m14-claude-resources-wave-2026-05-12/hesreallyhim-awesome-claude-code-refresh.md`)
+- **Uso consigliato**: NO clone NO derivative. Refresh scan periodic vs `docs/reference/subagents-skills-candidates.md` per identify entries post-Apr 22 non-catalogate. Same pattern come #5 Karpathy AUDIT-ONLY (L-2026-05-007 + L-008).
+- **Note**: M14 Wave 2026-05-12 task #6 EXECUTED 2026-05-12 sera.
+
+### REF-EXT-09 (M14 BOOKMARK trigger-conditional 2026-05-12 sera)
+- **Codice**: EXT-09
+- **Titolo**: `VoltAgent/awesome-design-md` (76314 stars MIT 2026-05-12)
+- **URL**: https://github.com/VoltAgent/awesome-design-md
+- **Funzione**: awesome-list DESIGN.md curated index (brand systems Linear/Vercel/Stripe/etc.). Reference per UX/brand standards.
+- **Stato**: BOOKMARK trigger-conditional. Vault Card live (`Cards/m14-claude-resources-wave-2026-05-12/voltagent-awesome-design-md-bookmark.md`)
+- **Trigger condition**: Synesthesia M5 BACKLOG riattivata (UI work post-esame UniUPO ~ago 2026) OR Game-Godot-v2 UX phase (post Path A canonical closure)
+- **Note**: M14 Wave 2026-05-12 task #12 EXECUTED 2026-05-12 sera. NO clone disk fino a trigger.
 
 ### REF-EXT-06 (M11 INSTALLED 2026-05-12)
 - **Codice**: EXT-06
