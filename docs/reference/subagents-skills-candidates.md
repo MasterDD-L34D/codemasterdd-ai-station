@@ -139,7 +139,7 @@ OCR font monospace ha distrorto cifre. Validazione via star-history + GitHub-liv
 
 | # | Repo | PR #57 decisione | Re-decisione (gh API corretto) |
 |---|------|------------------|---------------------------------|
-| #3 obra/superpowers | DORMANT "non top-tier" | **ELEVATE -> INSTALL CANDIDATE high-priority** (REAL 186k MIT = top tier) |
+| #3 obra/superpowers | DORMANT "non top-tier" | **ELEVATE -> INSTALL CANDIDATE high-priority** (REAL 186k MIT = top tier) **→ INSTALLED 2026-05-12 v5.1.0 (Archon CALIBRATE + falsifying experiment 5/5 PASS)** |
 | #11 VoltAgent subagents | REFRESH (rationale "OCR drift") | REFRESH (rationale: **crescita +9% Apr 22 -> 12/5**, NO drift) |
 | #5 forrestchang | AUDIT-ONLY | AUDIT-ONLY **+ license check obbligatoria PRE-cherry-pick** |
 | #10 anthropics/skills | INSTALL selective | INSTALL **GATED** per-skill license verification |
@@ -220,7 +220,7 @@ OCR font monospace ha distrorto cifre. Validazione via star-history + GitHub-liv
 |---|------|-----------|----------------------|------|
 | 1 | affaan-m/everything-claude-code | skills | REFRESH (Memory subset escluso se claude-mem install) | `~/.claude/skills/` cherry-pick |
 | 2 | shanraisshan/claude-code-best-practice | guide | BOOKMARK | vault Card Eduardo |
-| 3 | obra/superpowers | skills | DORMANT (overlap audit prima) | TBD post-audit |
+| 3 | obra/superpowers | skills | **INSTALLED 2026-05-12** (post Archon CALIBRATE + falsifying experiment 5/5 PASS) | `~/.claude/plugins/cache/claude-plugins-official/superpowers/5.1.0/` |
 | 4 | thedotmack/claude-mem | memory | INSTALL (preferito vs #1 Memory subset) | `~/.local/bin/` + hooks |
 | 5 | forrestchang/andrej-karpathy-skills | skills | AUDIT-ONLY (lessons learned, no install) | Lesson AA01 |
 | 6 | hesreallyhim/awesome-claude-code | awesome | REFRESH (re-scan curator) | vault Atlas index |

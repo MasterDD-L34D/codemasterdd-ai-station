@@ -2356,3 +2356,60 @@ Sezione "Audit correction 2026-05-12 tardo (PR audit gh API live)" added:
 - **AA01 state**: 10 archive entries + 6 lessons learnings/ (+L-2026-05-007)
 - **Anti-pattern reinforce**: stars OCR + cached source = inaffidabili. Sempre gh API live PRIMA di decision tree.
 - **Step 0 handoff methodology validated**: Protocol 1 stop-on-missing-prereq applicato correttamente (file non trovato pre-fetch sandbox) + Protocol 2 autoresearch revealed PR #57 errori PRIMA di proporre M11-M14 action.
+
+---
+
+## 2026-05-12 (sera tardissima -- M11 partial SHIP obra/superpowers INSTALL post Archon)
+
+### Pattern strategico
+Eduardo path A "INSTALL via falsifying experiment" + "A1 + step 2-6 fatti in auto". Re-decision PR #57 #3 obra/superpowers DORMANT -> INSTALL CANDIDATE -> INSTALLED. Archon Protocol 3 OBBLIGATORIO (architectural irreversibile) + falsifying experiment 5-step PRE-commit prod.
+
+### Completato
+
+#### Archon Protocol 3 -- 7-step CALIBRATE
+- RESTATE + ENUMERATE assumptions + DECOMPOSE primitives + CHALLENGE 5 perche' + RECONSTRUCT solo da primitives + RED-TEAM 12-mesi 5 cause + CALIBRATE verdict
+- Confidence: 70% pre-experiment
+- Falsifying experiment 5-step PRE-commit defined (~15-20min)
+
+#### Falsifying experiment 5/5 PASS
+- **Step 1** marketplace verified: anthropics/claude-plugins-official REAL 19126 stars Anthropic-managed
+- **Step 2** install: `claude plugin install superpowers@claude-plugins-official` -> v5.1.0 scope user
+- **Step 3** verify: cache + installed_plugins.json + settings.json ALL updated
+- **Step 4** conflict check: NO blocker vs CLAUDE.md autonomous + caveman + ADR-0026 (verification-before-completion ALLINEA Protocol 1)
+- **Step 5** reversibility: disable -> verify disabled -> re-enable -> verify enabled PASS
+
+#### Plugin state post-install
+- Installed: superpowers@claude-plugins-official v5.1.0 SHA `f2cbfbe`
+- Cache: `C:\Users\edusc\.claude\plugins\cache\claude-plugins-official\superpowers\5.1.0\`
+- Enabled scope user (effective ALL future Claude Code sessions)
+- 14 skills disponibili: brainstorming + writing-plans + executing-plans + subagent-driven-development + dispatching-parallel-agents + TDD + systematic-debugging + verification-before-completion + using-git-worktrees + requesting/receiving-code-review + finishing-a-development-branch + writing-skills + using-superpowers
+
+#### Updates governance codemasterdd-side
+- CLAUDE.md "Stack installato" entry superpowers v5.1.0 added (con full skills catalog + cross-reference Archon CALIBRATE)
+- subagents-skills-candidates.md riepilogo: #3 obra/superpowers DORMANT -> INSTALLED 2026-05-12
+- Audit table: re-decision entry "ELEVATE -> INSTALL CANDIDATE -> INSTALLED v5.1.0 (Archon + falsifying experiment 5/5 PASS)"
+
+#### AA01 task SHIP -- 2026-05-aa01-001-2026-05-12-a-skills-resources
+- Phase 0 Archon + Phase 1 falsifying experiment + Phase 2 commit prod
+- Lesson **L-2026-05-008** promoted `learnings/L-2026-05-008-claude-code-plugin-install-archon-falsifying-experiment.md`
+- Pattern formalizzato: Archon Protocol 3 + falsifying experiment 5-step PRE-commit prod per Claude Code plugin install via marketplace
+
+### M11 status finale
+- 1/4 SHIP: #3 obra/superpowers INSTALLED v5.1.0
+- 3/4 deferred Eduardo direct: #1 affaan-m REFRESH + #5 forrestchang AUDIT-ONLY license verify + #10 anthropics/skills INSTALL GATED per-skill license verify
+
+### Da fare (next session handoff)
+
+**Eduardo direct (residual)**:
+- M11 remaining 3/4 (#1 affaan-m + #5 forrestchang + #10 anthropics/skills) -- effort ~3-4h
+- M12 Archon Protocol 3 + claude-mem + VoltAgent refresh -- 2-3h
+- M14 vault Card 4 BOOKMARK + REFERENCE_INDEX.md addendum -- 1-2h
+- 2026-05-14 Phase B Day 7 closure
+- H7 ANTHROPIC_API_KEY pre-19/05
+
+### Note
+
+- **Cumulative 7-12/5**: 41 PR cumulative codemasterdd (40 pre + questa PR M11 partial) + 2 PR Godot-v2
+- **Pattern L-2026-05-008**: Archon Protocol 3 + falsifying experiment 5-step PRE-commit plugin install via Anthropic marketplace
+- **AA01 state**: 11 archive entries + 7 lessons learnings/ (+L-2026-05-008)
+- **superpowers methodology now active**: 14 skills auto-trigger cross-session future. Monitor 1 settimana per behavior impact + lesson outcome update.
