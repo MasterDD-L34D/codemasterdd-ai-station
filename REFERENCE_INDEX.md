@@ -180,6 +180,24 @@ Indice completo in `DECISIONS_LOG.md`. Path: `docs/adr/NNNN-topic.md`.
 - **Titolo**: `docs/reference/agentshield-scan-2026-04-22.md`
 - **Funzione**: baseline AgentShield scan
 
+### REF-EXT-05 (M14 BOOKMARK 2026-05-12)
+- **Codice**: EXT-05
+- **Titolo**: `dair-ai/Prompt-Engineering-Guide` (74448 stars MIT 2026-03-11)
+- **URL**: https://github.com/dair-ai/Prompt-Engineering-Guide
+- **Funzione**: reference canonical Prompt Engineering + LLM techniques + RAG + agent patterns. Lookup-only navigator post-screening.
+- **Stato**: BOOKMARK (NO install eseguibile, multi-author manutenuto da DAIR.AI)
+- **Uso consigliato**: consultare per pattern prompt + few-shot + chain-of-thought + RAG quando emerge gap specifico in workflow Aider/OpenCode/Claude Code.
+- **Note**: M14 Wave 2026-05-12 task #9. Vault Card creation Eduardo direct (sibling-peer boundary). License MIT confermata via gh API live (L-2026-05-007 pattern enforced).
+
+### REF-EXT-06 (M11 INSTALLED 2026-05-12)
+- **Codice**: EXT-06
+- **Titolo**: `obra/superpowers` v5.1.0 (186664 stars MIT 2026-05-12)
+- **URL**: https://github.com/obra/superpowers (via marketplace `anthropics/claude-plugins-official`)
+- **Funzione**: 14 skills methodology framework auto-trigger Claude Code (brainstorming + writing-plans + executing-plans + subagent-driven-development + dispatching-parallel-agents + TDD + systematic-debugging + verification-before-completion + using-git-worktrees + reviews + writing-skills)
+- **Stato**: **INSTALLED 2026-05-12** scope user (`~/.claude/plugins/cache/claude-plugins-official/superpowers/5.1.0/`). Effective ALL future Claude Code sessions Eduardo.
+- **Uso consigliato**: methodology layer additivo. Skill auto-trigger cross-session. Monitor 1 settimana behavior impact (Eduardo direct).
+- **Note**: M11 SHIP via Archon Protocol 3 CALIBRATE + falsifying experiment 5/5 PASS (PR #59). Lesson L-2026-05-008 methodology promote learnings/.
+
 ---
 
 ## SES — Sessioni log
