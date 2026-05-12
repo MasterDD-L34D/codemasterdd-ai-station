@@ -138,6 +138,7 @@ _(completato il 2026-04-19 — vedi "Stack installato")_
 - **Evo-Tactics (Game)** — co-op tactical game d20, monorepo Node+Python (Vue3 bundle)
   - GitHub: `github.com/MasterDD-L34D/Game`
   - Path Lenovo: `C:\dev\Game`
+  - **Path Ryzen**: `C:\Users\VGit\Desktop\Game` (HEAD `5d27fc50` PR #2139 — Ryzen-side AA01 silent-driver continues, AHEAD vs Lenovo HEAD `36c9822`; discovered 2026-05-12)
   - Stack: Node 22 + Python 3.10, xstate@5, inkjs, Vue3 bundle
   - Compat runtime: Node 24 system-level (validato n=710+ test)
   - **Status 2026-05-08**: **Sprint Impronta Ondata 1 in pausa dal 26/04** (HEAD `5f42757a` invariato 12:53 CET, CAP-15 imprint phase V2). 8+ commit clusterati 25-26/04 driven da AA01 silent-driver mode (CAP-11 biome-resolution, CAP-12 player telemetry, CAP-13 imprint mockup + UX patch, CAP-14 onboarding v2, CAP-15 imprint V2). PR aperto: **#2108 swarm-distillation run #5** (branch `claude/swarm-distillation-2026-05-08`, Claude Code session 7/5 22:19 UTC, da triagare). PR #97 Game-Database CLOSED stale 7/5.
@@ -154,7 +155,8 @@ _(completato il 2026-04-19 — vedi "Stack installato")_
 
 - **Synesthesia** — web app esame UniUPO
   - GitHub: `github.com/MasterDD-L34D/synesthesia`
-  - Path Lenovo: `C:\dev\synesthesia`
+  - Path Lenovo: `C:\dev\synesthesia` (dormant per Sprint plan UniUPO esame ~ago 2026)
+  - **Path Ryzen**: `C:\Users\VGit\Desktop\repos\synesthesia` (HEAD `05f8a92` Batch D /about + image zoom + notification — Ryzen-side activity discovered 2026-05-12; NON invalida `dormant` decision Eduardo project-level, da chiarire scope SPRINT_02 se Ryzen-side personal work o Sprint reactivation)
   - Stack: Node 20 ESM, Express, EJS, SQLite, Passport
   - Status: MVP funzionante
   - Privacy policy per-repo: `controllers/`/`routes/`/`middlewares/` sovereign-only; `views/`/`public/` cloud OK
@@ -172,11 +174,14 @@ _(completato il 2026-04-19 — vedi "Stack installato")_
   - **Avvio**: `cd C:\Users\edusc\Dafne\workspace\swarm && .\START-SWARM.ps1` → dashboard `http://localhost:5000`
   - **Dettaglio completo**: memoria `reference_dafne_swarm.md` + `CAMEL-INTEGRATION.md` nel repo swarm
 
-- **Vault (vault-shared)** — knowledge management LLM-wiki personale Eduardo, **sibling-peer monitored** (added 2026-05-10)
+- **Vault (vault-shared)** — knowledge management LLM-wiki personale Eduardo, **sibling-peer monitored** (added 2026-05-10; **origin lineage reframe 2026-05-12: Ryzen è la fonte originale, Lenovo è clone downstream**)
   - GitHub: `github.com/MasterDD-L34D/vault`
-  - Path Lenovo: `C:\dev\vault-shared\`
+  - **Origin Ryzen**: `C:\Users\VGit\Vault\` (clone originario, creato Ryzen-side; user Vgit; sync via origin/main)
+  - Path Lenovo (clone downstream): `C:\dev\vault-shared\`
+  - **Vault-ops Python tooling layer** (ingest/normalize/tune scripts + 3 SQLite DBs `qmd.db`/`qmd-v2.db`/`vault-search.db` + venv): **EXISTS ONLY Ryzen-side** in `C:\Users\VGit\Vault-ops\`. NON replicato Lenovo (operational tooling Ryzen-bound).
+  - Sync state 2026-05-12 sera: entrambi cloni a HEAD `67c3bb28` (M14 Cards wave), ahead/behind origin `0/0`. Push claim "deferred Eduardo-direct" in memory `project_vault_shared.md` linea 18 era OBSOLETE — push avvenuto, drift fixato 2026-05-12.
   - Stack: Karpathy LLM-wiki + ACCESS structure (Atlas/Cards/Sources/Spaces) + 7 production agent (Quality Gate workflow smoke->draft->production 3-gate) + Ollama LAN (Qwen + deepseek-r1) + Claude variants
-  - Status 2026-05-10: **7/7 PRODUCTION milestone hit** (vault-linter v2 nested-YAML FP 0%, design-watcher v2 deepseek-r1 recall +33pp, ollama-dispatcher v1 -91% wall claim methodology TBR). 15+ commit 30gg. LLM routing matrix v1.0 (commit reference path stabile `vault-shared/llm-routing.json`, NO hash citato per drift risk).
+  - Status 2026-05-10: **7/7 PRODUCTION milestone hit** (vault-linter v2 nested-YAML FP 0%, design-watcher v2 deepseek-r1 recall +33pp, ollama-dispatcher v1 -91% wall claim methodology TBR). 15+ commit 30gg. LLM routing matrix v1.0 (commit reference path stabile `vault-shared/llm-routing.json`, NO hash citato per drift risk; **eventuale Lenovo IP `192.168.1.121:11434` interno richiede rebench post `.124` DHCP churn**).
   - **Privacy**: sovereign-only (NON in `~/.config/aider-privacy-whitelist.txt`). Contiene UniUPO esame + GDR campagne curated + GPT-Prompts library + Dev/Synesthesia academic + Dev/Evo-Tactics design notes.
   - **Relazione codemasterdd**: sibling-peer disjoint scope. NO write-path bidirezionale. Cross-pattern reference one-way: vault llm-routing matrix v1.0 -> potential MODEL_ROUTING.md addendum (methodology Quality Gate Step 2 con split metrics + keep_alive + retries + output validation).
   - **Hook globali**: compat VALIDATED 2026-05-10 (empty commit test PASS, reverted post-test). Vault `core.hooksPath` punta a `C:/Users/edusc/.local/share/git-hooks`.
