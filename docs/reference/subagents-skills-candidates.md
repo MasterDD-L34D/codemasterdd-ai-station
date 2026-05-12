@@ -144,6 +144,7 @@ OCR font monospace ha distrorto cifre. Validazione via star-history + GitHub-liv
 | #5 forrestchang | AUDIT-ONLY | AUDIT-ONLY **+ license check obbligatoria PRE-cherry-pick** |
 | #10 anthropics/skills | INSTALL selective | INSTALL **GATED** per-skill license verification |
 | #6 hesreallyhim | BOOKMARK refresh | BOOKMARK **+ NOASSERTION license caveat** |
+| #4 thedotmack/claude-mem | INSTALL (preferito vs #1 Memory subset) | **DEFER post-Archon CALIBRATE 2026-05-12**: 3 blocker -- (a) Bun runtime MISSING (require pre-install separate), (b) H12 hook collision risk (claude-mem 6 hooks lifecycle vs codemasterdd `.claude/settings.json` SessionStart+Stop hooks, dry-run obbligatorio), (c) privacy concern `@anthropic-ai/claude-agent-sdk` dependency = cloud calls Anthropic API per ogni session compression (NON pure local come scaffold claim) |
 
 ### gh API live verified (12 repo, 2026-05-12 tardo)
 
@@ -221,7 +222,7 @@ OCR font monospace ha distrorto cifre. Validazione via star-history + GitHub-liv
 | 1 | affaan-m/everything-claude-code | skills | REFRESH (Memory subset escluso se claude-mem install) | `~/.claude/skills/` cherry-pick |
 | 2 | shanraisshan/claude-code-best-practice | guide | BOOKMARK | vault Card Eduardo |
 | 3 | obra/superpowers | skills | **INSTALLED 2026-05-12** (post Archon CALIBRATE + falsifying experiment 5/5 PASS) | `~/.claude/plugins/cache/claude-plugins-official/superpowers/5.1.0/` |
-| 4 | thedotmack/claude-mem | memory | INSTALL (preferito vs #1 Memory subset) | `~/.local/bin/` + hooks |
+| 4 | thedotmack/claude-mem | memory | **DEFER 2026-05-12** (Archon CALIBRATE → 3 blocker: Bun runtime MISSING + H12 hook collision risk + privacy `@anthropic-ai/claude-agent-sdk` cloud calls per compression) | TBD post-blocker resolution + ADR-0027 candidate |
 | 5 | forrestchang/andrej-karpathy-skills | skills | AUDIT-ONLY (lessons learned, no install) | Lesson AA01 |
 | 6 | hesreallyhim/awesome-claude-code | awesome | REFRESH (re-scan curator) | vault Atlas index |
 | 7 | yamadashy/repomix | tool | INSTALL | `npm install -g` |

@@ -2413,3 +2413,85 @@ Eduardo path A "INSTALL via falsifying experiment" + "A1 + step 2-6 fatti in aut
 - **Pattern L-2026-05-008**: Archon Protocol 3 + falsifying experiment 5-step PRE-commit plugin install via Anthropic marketplace
 - **AA01 state**: 11 archive entries + 7 lessons learnings/ (+L-2026-05-008)
 - **superpowers methodology now active**: 14 skills auto-trigger cross-session future. Monitor 1 settimana per behavior impact + lesson outcome update.
+
+---
+
+## 2026-05-12 (notte -- A+B+C bundle continue post-break: M14 codemasterdd + M12 Archon DEFER claude-mem + AA01 cleanup)
+
+### Pattern strategico
+
+Eduardo "sono ritornato ora, per proseguire" + "A+B+C" bundle auto. Protocol 1 refresh-verify state post-break + A (M14 codemasterdd-side) + B (M12 Archon Protocol 3 claude-mem) + C (AA01 inbox cleanup).
+
+### Completato
+
+#### A -- M14 partial codemasterdd-side
+- REFERENCE_INDEX.md addendum:
+  - REF-EXT-05: `dair-ai/Prompt-Engineering-Guide` BOOKMARK (74448 stars MIT, lookup-only navigator)
+  - REF-EXT-06: `obra/superpowers` v5.1.0 INSTALLED reference (M11 closure SHIP cross-link)
+- Vault Card creation (#2 + #6 + #12) restano Eduardo direct (boundary sibling-peer)
+
+#### B -- M12 Archon Protocol 3 CALIBRATE → DEFER claude-mem
+
+**Pre-investigation findings**:
+- claude-mem v13.2.0 Apache-2.0 (gh API verified, era 6.5.0 README badge stale)
+- Install method: `npx claude-mem install` (recommended) OR `/plugin marketplace add thedotmack/claude-mem` + `/plugin install claude-mem`
+- NOT in `anthropics/claude-plugins-official` (verified)
+- Architecture: 6 lifecycle hooks + Worker service Bun port 37700+(uid%100) + SQLite + Chroma vector DB + bullmq queue
+
+**Archon 7-step CALIBRATE**:
+- RESTATE: install claude-mem per persistent context across sessions vs JOURNAL/COMPACT manual?
+- ENUMERATE: 6 EMPIRICO + 4 CONVENZIONE + 1 EREDITATO + 5 IGNOTO
+- DECOMPOSE: 6 hooks + worker Bun + SQLite + Chroma + Claude Agent SDK + bullmq
+- CHALLENGE: install richiede pre-req Bun + risk hook collision + privacy cloud calls + complessità overhead
+- RECONSTRUCT: architectural change significativo NON additivo (vs obra/superpowers methodology layer)
+- RED-TEAM 12-mesi: 5 cause failure (Bun ecosystem fragility, H12 collision, privacy leak, worker overhead, maintainer abandon)
+- CALIBRATE verdict: **DEFER**
+
+**3 blocker identified PRE-install (no fix in auto-mode session)**:
+1. **Bun runtime MISSING**: `engines.bun: ">=1.0.0"` required. `bun --version` -> command not found. **Pre-install separate**.
+2. **H12 hook collision risk**: codemasterdd `.claude/settings.json` ha SessionStart + Stop hooks attivi (session-start-marker.ps1 + journal-drift-check.ps1). claude-mem aggiunge 6 hooks lifecycle. Dry-run obbligatorio + ADR-0027 candidate per Memory + Hook coordination.
+3. **Privacy concern**: dependency `@anthropic-ai/claude-agent-sdk` per compression observations -> **cloud calls Anthropic API ogni session** (NON pure local come scaffold AA01 claim). Privacy implication: codice + context potrebbe esposto Anthropic API. ADR codemasterdd dedicato require.
+
+**Verdict**: **DEFER 2026-05-12** post-Archon CALIBRATE. Reactivation trigger:
+- Bun runtime installed
+- H12 hook collision validated via dry-run scratch session
+- Privacy `@anthropic-ai/claude-agent-sdk` exposure clarified + acceptable
+- ADR-0027 Memory + Hook coordination drafted + Accepted
+
+#### B' -- VoltAgent subagents refresh
+- Catalog Apr 22 era flat structure, ora migrato `categories/01-10/` (drift structure)
+- 10 categorie: core-development / language-specialists / infrastructure / quality-security / data-ai / developer-experience / specialized-domains / business-product / meta-orchestration / research-analysis
+- Real stars 19575 MIT 2026-04-20 (gh API verified, OCR Apr 22 era corretto + crescita +9%)
+- 4 candidati Apr 22 (code-reviewer, test-automator, dependency-manager, debugger) likely still in `04-quality-security/` + `06-developer-experience/` post-migration
+- Cherry-pick decision: Eduardo direct (per-file copy `.claude/agents/`)
+- NO bulk install plugin (anti-pattern)
+
+#### C -- AA01 inbox cleanup
+- 2 file residual rimossi: `2026-05-12-A-skills-resources.md` + `2026-05-12-C-dev-tools-resources.md` (entrambi archive SHIP, content readonly preservato)
+- AA01 inbox finale: 0 file (clean state)
+
+### Updates governance codemasterdd-side
+
+- `REFERENCE_INDEX.md` +2 entry (REF-EXT-05 dair-ai BOOKMARK + REF-EXT-06 obra/superpowers INSTALLED ref)
+- `docs/reference/subagents-skills-candidates.md` tabella riepilogo + audit table: #4 claude-mem status INSTALL -> **DEFER 2026-05-12 (3 blocker)**
+
+### Da fare (next session handoff)
+
+**Eduardo direct (residual)**:
+- M11 remaining 3/4 (#1 affaan-m + #5 forrestchang license + #10 anthropics/skills GATED) -- 3-4h
+- M12 claude-mem REACTIVATION trigger conditional:
+  - (a) Install Bun runtime
+  - (b) Dry-run hook collision test
+  - (c) Privacy clarification Claude Agent SDK
+  - (d) ADR-0027 candidate draft
+- M14 vault Card 4 BOOKMARK Eduardo direct (sibling-peer boundary)
+- 2026-05-14 Phase B Day 7 closure
+- H7 ANTHROPIC_API_KEY pre-19/05
+
+### Note
+
+- **Cumulative 7-12/5**: 42 PR cumulative codemasterdd (41 pre + questa PR M14+M12 DEFER) + 2 PR Godot-v2
+- **Pattern Archon DEFER**: claude-mem caso-studio. Archon CALIBRATE genuino → DEFER quando blocker non-resolvable in current scope. NON forzare install se prerequisiti non soddisfatti.
+- **AA01 state**: 11 archive + 7 lessons (invariato vs precedente)
+- **Lesson candidate L-2026-05-009**: "Archon CALIBRATE DEFER pattern -- 3+ blocker pre-resolution + reactivation trigger explicit" (promote learnings/ se Eduardo conferma)
+- **superpowers methodology**: 14 skills attivi cross-session (1 settimana monitor pending)
