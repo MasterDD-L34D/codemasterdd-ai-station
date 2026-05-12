@@ -73,6 +73,18 @@ Applicato Protocol 1 Refresh-verify + Protocol 2 Autoresearch ai 4 calendarizzat
 
 **Lesson cumulative pattern**: L-2026-05-013 (in promotion) -- "Re-eval calendarizzati pattern: deadline-driven -> trigger-emergent shift via Protocol 1+2 application".
 
+### Task derivati da PR #69 harsh-review 2026-05-12 notte
+
+Applicato ADR-0026 P1 Refresh-verify + P2 Autoresearch multi-source + skill `superpowers:requesting-code-review` (harsh-reviewer subagent) su PR cross-PC drift fix. 5 finding actionable + 1 pushback documentato. P3 Archon SKIP (no irreversible high-stakes); P4 AA01 SKIP (consistent L-002).
+
+- [ ] **R1** -- Q2 Game canonical clone decision (fuse trigger BEFORE next Lenovo write). Lenovo HEAD `36c9822` passive vs Ryzen HEAD `5d27fc50` PR #2139 divergent. Originalmente deferred SPRINT_02; reviewer flagged fuse condition (3-way divergence Lenovo+Ryzen+GitHub se write Lenovo-side prima della decision). **Trigger**: prossima Lenovo `C:/dev/Game` session write. **Action**: ADR-grade 3-option decision (Lenovo canonical vs Ryzen canonical vs GitHub-only origin) prima di toccare Game Lenovo-side.
+- [ ] **R2** -- DHCP reservation router per Lenovo + Ryzen (kill IP drift class permanente). Setup ~5min one-time router admin UI. Trigger L-002-respecting fix (drift source, NON symptom). Eduardo-direct.
+- [ ] **R3** -- Ryzen vault + repos `core.hooksPath` install per commit-guard chain enforcement (ADR-0011 Conventional + ADR-0020 silent-fail). Currently NO hook configurato su Ryzen Git global config -> commit da Ryzen bypassa guard rail. Trigger: Eduardo decide se Ryzen-side commit workflow legitimate ongoing o passive monitor only. **Action**: `git config --global core.hooksPath <path>` su Ryzen (Ryzen-local clone hooks o sync da Lenovo via repo dedicato).
+- [ ] **R4** -- Aider privacy whitelist Ryzen propagation (ADR-0023 H8 enforcement). Currently `~/.config/aider-privacy-whitelist.txt` solo Lenovo. Se Eduardo usa Aider su Ryzen -> 0 enforcement sovereign-only repos. **Action**: scp o manual copy whitelist file Ryzen-side. Trigger: prima Aider session reale su Ryzen.
+- [ ] **R5** -- Vault `Extras/config/llm-routing.json` IP update hardcoded `192.168.1.121:11434` -> `.124` (Eduardo-direct vault-side, sibling-peer NO-WRITE da codemasterdd). **Verified empirical 2026-05-12 sera SSH read-only** (1 occurrence). Alternative: replace IP con mDNS hostname per kill drift permanent (correlato R2 DHCP reservation). Eduardo-direct ~2min vault commit.
+
+**Pushback documentato**: harsh-review #1 ASCII em-dash policy (5 em-dashes in new body prose CLAUDE.md:100/142/160/178/183). PUSHBACK applicato: ADR-0021 distingue "nuovi doc" strict vs "convention progetto" preserve. CLAUDE.md è long-running file con dozzine di em-dash storici (linee 1, 8, 13, 36, 42, 63-67, 96-99, 114-128, ...); switchare a `--` mid-file creerebbe inconsistenza, NON la fixerebbe. Eduardo approved 12/5 notte. Action: nessun fix em-dash.
+
 ## Priorità bassa
 
 - [ ] **L1** — Re-bench discriminant hard problems custom (non-Leetcode). Fuori scope Fase 6.
