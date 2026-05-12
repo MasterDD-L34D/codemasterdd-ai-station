@@ -157,7 +157,7 @@ _(completato il 2026-04-19 — vedi "Stack installato")_
 - **Synesthesia** — web app esame UniUPO
   - GitHub: `github.com/MasterDD-L34D/synesthesia`
   - Path Lenovo: `C:\dev\synesthesia` (dormant per Sprint plan UniUPO esame ~ago 2026)
-  - **Path Ryzen**: `C:\Users\VGit\Desktop\repos\synesthesia` (HEAD `05f8a92` Batch D /about + image zoom + notification — Ryzen-side activity discovered 2026-05-12; NON invalida `dormant` decision Eduardo project-level, da chiarire scope SPRINT_02 se Ryzen-side personal work o Sprint reactivation)
+  - **Path Ryzen**: `C:\Users\VGit\Desktop\repos\synesthesia` (HEAD `05f8a92` Batch D /about + image zoom + notification — discovered 2026-05-12). Dormant Sprint-track (UniUPO ago 2026); Ryzen-side personal-work attivo. Coexistence non oxymoronic: dormancy è scope-level codemasterdd governance, NON ban totale Eduardo. Clarify SPRINT_02.
   - Stack: Node 20 ESM, Express, EJS, SQLite, Passport
   - Status: MVP funzionante
   - Privacy policy per-repo: `controllers/`/`routes/`/`middlewares/` sovereign-only; `views/`/`public/` cloud OK
@@ -182,7 +182,7 @@ _(completato il 2026-04-19 — vedi "Stack installato")_
   - **Vault-ops Python tooling layer** (ingest/normalize/tune scripts + 3 SQLite DBs `qmd.db`/`qmd-v2.db`/`vault-search.db` + venv): **EXISTS ONLY Ryzen-side** in `C:\Users\VGit\Vault-ops\`. NON replicato Lenovo (operational tooling Ryzen-bound).
   - Sync state 2026-05-12 sera: entrambi cloni a HEAD `67c3bb28` (M14 Cards wave), ahead/behind origin `0/0`. Push claim "deferred Eduardo-direct" in memory `project_vault_shared.md` linea 18 era OBSOLETE — push avvenuto, drift fixato 2026-05-12.
   - Stack: Karpathy LLM-wiki + ACCESS structure (Atlas/Cards/Sources/Spaces) + 7 production agent (Quality Gate workflow smoke->draft->production 3-gate) + Ollama LAN (Qwen + deepseek-r1) + Claude variants
-  - Status 2026-05-10: **7/7 PRODUCTION milestone hit** (vault-linter v2 nested-YAML FP 0%, design-watcher v2 deepseek-r1 recall +33pp, ollama-dispatcher v1 -91% wall claim methodology TBR). 15+ commit 30gg. LLM routing matrix v1.0 (commit reference path stabile `vault-shared/llm-routing.json`, NO hash citato per drift risk; **eventuale Lenovo IP `192.168.1.121:11434` interno richiede rebench post `.124` DHCP churn**).
+  - Status 2026-05-10: **7/7 PRODUCTION milestone hit** (vault-linter v2 nested-YAML FP 0%, design-watcher v2 deepseek-r1 recall +33pp, ollama-dispatcher v1 -91% wall claim methodology TBR). 15+ commit 30gg. LLM routing matrix v1.0 path `Extras/config/llm-routing.json`. **DRIFT CONFIRMED 2026-05-12 sera empirical SSH read-only**: file hardcodes `http://192.168.1.121:11434` (1 occurrence vs reale `.124` Lenovo Ollama). Ryzen-side dispatch verso Lenovo Ollama fallirebbe se invocato. Fix vault-side Eduardo-direct (sibling-peer NO-WRITE da codemasterdd) — BACKLOG R5.
   - **Privacy**: sovereign-only (NON in `~/.config/aider-privacy-whitelist.txt`). Contiene UniUPO esame + GDR campagne curated + GPT-Prompts library + Dev/Synesthesia academic + Dev/Evo-Tactics design notes.
   - **Relazione codemasterdd**: sibling-peer disjoint scope. NO write-path bidirezionale. Cross-pattern reference one-way: vault llm-routing matrix v1.0 -> potential MODEL_ROUTING.md addendum (methodology Quality Gate Step 2 con split metrics + keep_alive + retries + output validation).
   - **Hook globali**: compat VALIDATED 2026-05-10 (empty commit test PASS, reverted post-test). Vault `core.hooksPath` punta a `C:/Users/edusc/.local/share/git-hooks`.
