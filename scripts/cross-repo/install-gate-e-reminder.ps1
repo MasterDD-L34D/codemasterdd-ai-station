@@ -43,26 +43,25 @@ if ($Uninstall) {
 }
 
 # Install command
-# Use msg.exe for simple user-visible popup to avoid nested quote complexity with schtasks /TR
-# msg * displays a dialog to the current session user
-$reminderText = "Gate E checkpoint: log coord events past week or run scripts/cross-repo/coord-event-log.ps1"
-$trAction = "msg %USERNAME% $reminderText"
+# Use coord-event-log.ps1 -ReminderOnly (file marker pattern, msg.exe absent on Win 11 Home).
+# Writes logs/gate-e-reminder-due-YYYY-WW.md visible at next interactive session start.
+$reminderCmd = "powershell -ExecutionPolicy Bypass -File `"$scriptPath`" -ReminderOnly"
 
 if ($DryRun) {
   Write-Host "=== DRY-RUN ===" -ForegroundColor Cyan
   Write-Host "Task name: $taskName"
   Write-Host "Schedule: WEEKLY Sunday 09:00"
-  Write-Host "Action: msg %USERNAME% popup reminder"
+  Write-Host "Action: coord-event-log.ps1 -ReminderOnly (file marker, no msg.exe)"
   Write-Host ""
   Write-Host "TR action that would be registered:"
-  Write-Host $trAction
+  Write-Host $reminderCmd
   Write-Host ""
   Write-Host "DRY-RUN OK. Run without -DryRun to install." -ForegroundColor Green
   exit 0
 }
 
 Write-Host "Installing schtasks $taskName..." -ForegroundColor Cyan
-schtasks /Create /SC WEEKLY /D SUN /TN $taskName /TR $trAction /ST 09:00 /F
+schtasks /Create /SC WEEKLY /D SUN /TN $taskName /TR $reminderCmd /ST 09:00 /F
 
 if ($LASTEXITCODE -eq 0) {
   Write-Host "PASS: task installed" -ForegroundColor Green

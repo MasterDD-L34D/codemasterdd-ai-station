@@ -13,20 +13,50 @@
 .PARAMETER NotesQuick
   Use with -Quiet for one-line entry.
 
+.PARAMETER ReminderOnly
+  Non-interactive mode: write/append a reminder marker file logs/gate-e-reminder-due-YYYY-WW.md
+  (week number). NO append to events log. Safe for schtasks (replaces msg.exe absent on Win 11 Home).
+
 .EXAMPLE
   .\coord-event-log.ps1
   (interactive mode, default)
 
 .EXAMPLE
   .\coord-event-log.ps1 -Quiet -NotesQuick "Grep cross-repo for PR status 15min cost"
+
+.EXAMPLE
+  .\coord-event-log.ps1 -ReminderOnly
+  (schtasks mode: writes logs/gate-e-reminder-due-YYYY-WW.md marker file, exit 0)
 #>
 
 param(
   [switch]$Quiet,
-  [string]$NotesQuick = ""
+  [string]$NotesQuick = "",
+  [switch]$ReminderOnly
 )
 
 $ErrorActionPreference = 'Stop'
+
+# -ReminderOnly mode: write file marker (safe for schtasks, no msg.exe required)
+if ($ReminderOnly) {
+  $now = Get-Date
+  $weekNum = Get-Date -UFormat "%V"
+  $year = $now.ToString("yyyy")
+  $timestamp = $now.ToString("yyyy-MM-dd HH:mm")
+  $reminderFile = "C:\dev\codemasterdd-ai-station\logs\gate-e-reminder-due-$year-W$weekNum.md"
+
+  $reminderContent = "## Gate E reminder due [$timestamp]`n`n" +
+    "Log past week coord events via ``scripts/cross-repo/coord-event-log.ps1``" +
+    "`n"
+
+  if (-not (Test-Path "C:\dev\codemasterdd-ai-station\logs")) {
+    New-Item -ItemType Directory -Path "C:\dev\codemasterdd-ai-station\logs" -Force | Out-Null
+  }
+
+  Add-Content -Path $reminderFile -Value $reminderContent -Encoding UTF8
+  Write-Host "PASS: reminder marker written to $reminderFile" -ForegroundColor Green
+  exit 0
+}
 
 $today = Get-Date -Format "yyyy-MM-dd"
 $month = Get-Date -Format "yyyy-MM"
