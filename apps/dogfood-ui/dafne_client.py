@@ -30,6 +30,7 @@ class DafneClient:
         self.host = host.rstrip("/")
         self.timeout = timeout
         self.ping_timeout = ping_timeout
+        self.last_error: str | None = None
 
     # -----------------------------------------------------------------------
     # Core fetchers (return None on failure = server down / endpoint 404)

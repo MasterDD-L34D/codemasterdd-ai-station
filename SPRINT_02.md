@@ -105,7 +105,83 @@ Refresh-verify pre-trigger SPRINT_02 attivo. Cluster 12-13/5 (8 PR cumulative) h
 - Decision: REVERTED via `git restore README.md` (smoke output non-persistent — file pristine, modifica solo in log)
 - Lesson reinforced: aider-cosmetic + Qwen 7B per file TOP-LEVEL semplici = wrapper FUNCTIONS but position-precision LIMITED. Mitigation per task content-sensitive: usare aider-refactor (14B Q2 + diff) anche per cosmetic non-trivial position requirements.
 
-**T1 #2 + T1 #3 pending** (aider-refactor 14B Q2 + aider-groq cloud llama-3.3-70b). Trigger natural durante next workflow session organic (post fatigue recovery + interactive shell preferable per Aider --yes-always anti-pattern avoidance).
+**T1 #2 + T1 #3 EXECUTED 2026-05-13 mattina (Eduardo "tutto" override)** -- entries #28 + #29 in `logs/aider-delegation-2026-05.md` (T1 #1 retro-log = #27; entries #25-#26 already used by OpenCode dogfood `empty_stats()` PR #17 + `_auth_header()` PR #18 -- cumulative dataset n=26 pre-T1 SPRINT_02):
+
+- **T1 #2 (aider-refactor Qwen 14B Q2 + diff on `apps/dogfood-ui/dafne_client.py`)**: 🟡 PARTIAL_FAIL safe. 1/3 SEARCH block applied (init `self.last_error = None` + docstring Attributes section). 2/3 fail SearchReplaceNoExactMatch (modello generato 4-space indent SEARCH vs reale 8-space dentro def). 3 reflections exhausted + summarizer cleanup error trailing (LiteLLM `cannot schedule new futures after shutdown`). Action: REVERTED via `git restore` (partial dangling = inutile half-state). Pattern conferma ADR-0008 (safe failure NO silent-corruption) + ADR-0016 (constraint=3 + indentation precision = 14B Q2 borderline).
+- **T1 #3 (aider-groq cloud llama-3.3-70b on `README.md`)**: 🔴 FAIL TPM 12000 rate-limit. 5 retry exponential backoff 2s/4s/8s/16s/32s, mai successo. ~12 minuti running prima di kill manual. Pattern: Aider context-pack (~10-11k tok/req) borderline TPM 12k Groq free tier 70B. Contraddizione apparente vs Entry #15 (smoke 7/5 PASS): hypothesis rolling TPM bucket caricato da concurrent probe debug. Cost: $0 (no token consumed billed).
+- **Side-finding (NON Aider)**: PowerShell `&` invocation `aider-groq.cmd` con REM line `(free tier 6000 tok/min)` ha creato 11 file VUOTI working tree (parsing artifact). Cleanup eseguito. Trigger lesson candidate L-2026-05-015 (PowerShell wrapper invocation pattern) -- NOT silent-corruption Aider.
+
+**T1 SPRINT_02 cumulative pass rate**: 0/3 PASS, 1/3 NON_COMPLIANT (#27 7B position), 1/3 PARTIAL_FAIL safe (#28 14B Q2 multi-block), 1/3 FAIL rate-limit (#29 Groq).
+
+**ADR-0015 trigger check post T1 #1+#2+#3**: silent-corruption=0, fail rate=4/29=14% (cumulative dataset n=29 post T1, in linea pattern smoke pre-existing), privacy=0. **Trigger NON attivati**. Empirical confirm pattern noti (no surprise).
+
+**Methodological caveat invariato**: T1 SPRINT_02 sotto Claude Max ACTIVE (6gg pre-Max). Validation NON "in assenza Max" come scope originale -- contamination documentata.
+
+**Next step organic**: T1 #2 retry possibile scope ridotto (singolo block init only, constraint=1) per validare 14B Q2 + diff isolato. T1 #3 retry possibile stack alternative (Cerebras 8B small file, o gpt-4o-mini paid <$0.01).
+
+**Manual fix consequenziale**: README.md "21 ADR" -> "28 ADR: 0001-0028" applicato manualmente Edit (Claude Code tier 0 strategic, NON wrapper delega) post-FAIL T1 #3, scope minimal 1-line stale doc fix che era target functional.
+
+**T1 #2 retry EXECUTED 2026-05-13 mezzogiorno (scope ridotto constraint=1)** -- entry #30:
+
+- **Task**: ridotto T1 #2 a constraint=1 isolato. Aggiungere SOLO `self.last_error: str | None = None` come ultima linea `__init__` (post `self.ping_timeout = ping_timeout`).
+- **Wrapper**: `aider-refactor.cmd` (Qwen 14B Q2 + diff)
+- **Outcome**: ✅ **PASS 1st-try**. Diff +1 line esatto, AST OK, posizione esatta richiesta. Tokens 7.6k sent / 52 recv. Latency ~30s (no reflection). $0 cost.
+- **Action**: KEPT (foundation per future error tracking ping/_get incrementale, valid Python).
+- **Empirical conferma ADR-0008 + ADR-0016**: 14B Q2 + diff PASS su constraint=1 vs PARTIAL_FAIL su constraint=3+indent (#28). Mitigation pattern: **decompose multi-block refactor in sequential single-block edits**.
+
+**T1 SPRINT_02 cumulative pass rate post retry (n=4)**: 1/4 PASS (#30 retry), 1/4 NON_COMPLIANT (#27), 1/4 PARTIAL_FAIL safe (#28), 1/4 FAIL rate-limit (#29).
+
+**T1 #4 EXECUTED 2026-05-13 mezzogiorno (alternative stack a Groq fail)** -- entry #31:
+
+- **Task**: README.md `Stack attivo (aggiornato 2026-04-23)` -> `(aggiornato 2026-05-13)` (date refresh post 12-13/5 plugin ecosystem expansion). Constraint=1.
+- **Wrapper**: `aider-cerebras.cmd` (Cerebras llama3.1-8b free tier + diff)
+- **Mitigation**: `--map-tokens 0 --no-stream` per evitare context overflow noto Cerebras 8k limit (entry #22)
+- **Outcome**: ✅ **PASS 1st-try**. Tokens 3.7k sent / 104 recv. Cost $0.00038 (free tier ma billed). Latency ~3.5min.
+- **Action**: KEPT change.
+- **Empirical conferma**: `aider-cerebras` viable per cosmetic doc piccoli con context mitigation. Validato 1/1 alternative stack a Groq 70B (T1 #3 FAIL TPM-rate-limit).
+- **Side-finding RICORRENTE**: PowerShell `&` invocation `aider-cerebras.cmd` REM line `(free tier limited a llama3.1-8b)` ha creato 12 file VUOTI working tree (stesso pattern T1 #3). Pattern PERSISTENT cross-wrapper. **L-2026-05-015 PROMOTION rinforzato**.
+
+**T1 SPRINT_02 cumulative pass rate FINAL (n=5)**: 2/5 PASS (#30 + #31), 1/5 NON_COMPLIANT (#27), 1/5 PARTIAL_FAIL safe (#28), 1/5 FAIL rate-limit (#29). Total cost $0.00038 (sotto $0.001 = 0.0019% $20 budget mensile).
+
+**Wrapper validation matrix**:
+- ✅ aider-refactor (14B Q2 local diff) constraint=1 PASS
+- ✅ aider-cerebras (Cerebras 8B + `--map-tokens 0`) constraint=1 PASS
+- 🟡 aider-cosmetic (7B local whole) constraint=1 NON_COMPLIANT position
+- 🔴 aider-groq (Groq 70B free tier) constraint=1 FAIL TPM 12k
+- 🟡 aider-refactor constraint=3+indent PARTIAL_FAIL safe (mitigation: decompose)
+
+**ADR-0015 Accepted scenario A SOVEREIGN VIABLE confermato empirical** (n=31 cumulative cross-wrapper post T1 SPRINT_02, 0 silent-corruption).
+
+**T1 #5 + T1 #6 EXECUTED 2026-05-13 mezzogiorno (wrapper quartet+2 completion)** -- entries #32 + #33:
+
+- **T1 #5 (aider-gemini Gemini 2.5 Flash on REFERENCE_INDEX.md)**: ✅ **PASS 1st-try**. Date refresh `2026-04-23 post ADR-0012/13/14` -> `2026-05-13 post ADR-0027/0028`. Tokens 24k sent (Gemini sembra non rispettare --map-tokens 0 fully) / 194 recv. Cost $0.0078. Latency ~6min lento. Filename hallucination in commentary ma SEARCH/REPLACE corretto. PowerShell pollution n=3 confermato cross-wrapper (L-2026-05-015 reproduce 100%).
+- **T1 #6 (aider-openai gpt-4o-mini on STATUS_MULTI_REPO.md)**: 🔴 **FAIL OpenAI quota exceeded**. 5 retry tutti rate-limit "You exceeded your current quota". NO PowerShell pollution (Aider exit veloce <30s, no parser window). NO edit attempted. Account `OPENAI_API_KEY` di Eduardo MAI funded oltre signup.
+
+**Wrapper validation matrix POST T1 SPRINT_02 FINAL n=7**:
+- ✅ aider-refactor (14B Q2 local diff) constraint=1 PASS
+- ✅ aider-cerebras (Cerebras 8B + `--map-tokens 0`) constraint=1 PASS, $0.0004
+- ✅ aider-gemini (Gemini 2.5 Flash + `--map-tokens 0`) constraint=1 PASS, $0.008
+- 🟡 aider-cosmetic (7B local whole) NON_COMPLIANT position
+- 🔴 aider-groq (Groq 70B free) FAIL TPM 12k bottleneck
+- 🔴 aider-openai (gpt-4o-mini paid) FAIL quota=0 (billing setup required)
+- 🟡 aider-refactor multi-block PARTIAL_FAIL safe (mitigation: decompose)
+
+**T1 SPRINT_02 cumulative pass rate FINAL n=7**: 3/7 PASS (43%), 1/7 NON_COMPLIANT, 1/7 PARTIAL_FAIL, 2/7 FAIL. Total cost $0.00818 (0.041% $20 budget mensile).
+
+**Verdetto wrapper ecosystem**:
+- Sovereign tier 1-2: aider-refactor workhorse. aider-cosmetic limited.
+- Cloud free fallback: 2/4 viable (cerebras + gemini). Groq broken, OpenAI not-funded.
+- Strategic tier 0 ADR-0023: ANTHROPIC API on-demand resta default post-Max ($0.000044 smoke).
+
+**ADR-0015 Accepted scenario A SOVEREIGN VIABLE confermato definitivamente** (n=33 cumulative, 0 silent-corruption, 2 fallback cloud + tier 0 strategic ANTHROPIC disponibile).
+
+**Manual fix consequenziale SPRINT_02 cluster**:
+- README.md "21 ADR" -> "28 ADR: 0001-0028" (Edit manual post-FAIL T1 #3)
+- README.md "Stack attivo (aggiornato 2026-04-23)" -> "(aggiornato 2026-05-13)" (T1 #4 cerebras PASS)
+- REFERENCE_INDEX.md "aggiornato 2026-04-23 post ADR-0012/13/14" -> "aggiornato 2026-05-13 post ADR-0027/0028" (T1 #5 gemini PASS)
+- STATUS_MULTI_REPO.md target T1 #6 NON applicato (FAIL quota), date refresh deferred opportunistic post-Max o manual Edit prossima sessione.
+
+**Lesson L-2026-05-015 PowerShell wrapper REM pollution**: n=3 instances reproducible (T1 #3+#4+#5). Pattern PERSISTENT cross-wrapper. PROMOTE candidate AA01 (Eduardo-direct).
 
 - **Cosa**: 3 wrapper aider-* eseguiti su task piccoli reali, validation tecnica end-to-end senza Claude Max.
   - `aider-cosmetic <file>` (Qwen 7B): JSDoc/docstring/rename su 1 file -- es. `apps/dogfood-ui/db.py` o `scripts/quality-bench/run-bench.ps1`
