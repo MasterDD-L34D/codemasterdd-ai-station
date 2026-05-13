@@ -53,6 +53,7 @@ class DafneClient:
             return None
 
     def status(self) -> dict[str, Any] | None:
+        """GET /api/status -- agents list + artifact count + ollama online flag."""
         return self._get("/api/status")
 
     def swarm_status(self) -> dict[str, Any] | None:
