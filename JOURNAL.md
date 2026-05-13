@@ -3182,3 +3182,116 @@ Auto-mode application ADR-0026 Protocols. **P1 Refresh-verify state interno SHOR
 - **L-2026-05-014 autoresearch first**: forum-validated empirical > trial-and-error.
 - **L-002 anti-pattern reinforced**: PR #69 narrative drift (Ryzen Game AHEAD) corretto via refresh-verify 24h later.
 - **Auto-mode disciplinato pre-Max**: 5 PR cluster 12/5 sera + 3 PR cluster 13/5 notte = **8 PR efficient cumulative session 12-13/5** + 14 ADR Accepted + 13 lessons.
+
+---
+
+## 2026-05-13 (mattina-sera tardi -- Cluster ULTRA-FINAL 9 PR + 4 ADR + harsh-reviewer 2x + Protocol 5+6 addendum + L-016 promote)
+
+### Trigger
+
+Continuazione sessione 13/5 notte. Eduardo "tutto" -> "auto-mode" -> "procedere ancora" -> "C" -> "B" -> "E+D" -> "1+2+3+4" -> "Lean closure JOURNAL + stop session".
+
+### Cluster ULTRA-FINAL 9 PR mergeati 13/5 mattina-sera tardi
+
+| PR | Subject | Cluster purpose |
+|----|---------|-----------------|
+| #77 | SPRINT_02 ACTIVE + T1 #1 smoke outcome | T1 #1 retro-log post Eduardo override "fai SPRINT_02 basta attendere" |
+| #78 | SPRINT_02 T1 wrapper smoke series cumulative | T1 #1+#2+#3 smoke (NON_COMPLIANT + PARTIAL_FAIL safe + FAIL TPM) + Codex P2 fix entry ID collision #26→#27/#28/#29 |
+| #79 | STATUS date refresh | 1-line manual fix STATUS_MULTI_REPO post T1 #6 quota fail |
+| #80 | T1 #7 cosmetic-diff fix + L-015 wrapper hardening | aider-cosmetic format whole→diff PASS + 6 wrapper REM parens removed L-015 mitigation Option B |
+| #81 | Groq bypass via OpenAI-compat autoresearch resolution | aider-groq-bypass.cmd nuovo wrapper via Protocol 2 Autoresearch (LiteLLM Issue #9296+ catch) |
+| #82 | post-harsh-review #1 fixes -- P0 security + ADR-0029 | CWE-214 process arg list exposure FIXED + ADR-0029 OpenRouter Decline + SPRINT_02 narrative revision matrice 3-colonne onesta |
+| #83 | ADR-0026 addendum Protocol 5+6 superpowers integration Option C | harsh-reviewer + brainstorming come optional toolkit con trigger guidance |
+| #84 | wrapper bus-factor fix + PR template cognitive protocols | 6 wrapper canonical scripts/wrappers/ + install-wrappers.ps1 idempotente + .github/PR template Y/N campi |
+| #85 | post-harsh-reviewer #2 actions consolidation Eduardo 4 decisions | SPRINT_02 re-baseline + ADR-0026 hard cap + PR template skip rule + L-016 promote + L-014 addendum + COMPACT v24 |
+
+### ADR shipped (4 in 36h post v23)
+
+- **ADR-0028** Tier promotion Quality Gate methodology (Three Strikes trigger, Proposed pre-session 13/5 notte) -- pre-existing pre-cluster
+- **ADR-0029** OpenRouter eval declined for sovereign-first BYOK pattern (Proposed) -- via P6 brainstorming 4 options A/B/C/D + Eduardo Option C decline
+- **ADR-0026 addendum P5+P6** superpowers integration Option C (formal addition cognitive protocols 4→6)
+- **ADR-0026 amendment hard cap** harsh-reviewer max 2/session ratified (post-harsh-reviewer #2 P1 #5 finding)
+
+### Lessons promoted/addendum
+
+- **L-2026-05-014 addendum n=2 reinforcement** (was n=1): case 2 aider-groq LiteLLM streaming bug bypass aggiunto al case 1 TIM AGTHP DHCP. Pattern reinforced cross-instance. Confidence post-n=2: HIGH.
+- **L-2026-05-016 NEW promoted**: "Cognitive protocols 5+6 measurement anti-aspirational pattern + reflexive cherry-picking detection". Pattern detection via harsh-reviewer #2 + autoresearch validation 3-source synthesis (arxiv 2601.04977 + PMC10138056 + dogfooding methodology). Counter ratified post-evidence: P5 n=2 LEGITIMATE / P6 n=2 conservative -1.
+
+### Methodology framework MATURE post-cluster
+
+- **6 cognitive protocols** (was 4): P1 Refresh-verify + P2 Autoresearch + P3 Archon + P4 AA01 + **P5 harsh-reviewer subagent (NEW)** + **P6 brainstorming skill (NEW)**
+- **PR template `.github/pull_request_template.md`** con sezione "Cognitive protocols applied" Y/N campi anti-aspirational measurement
+- **Hard cap harsh-reviewer max 2/session** ratified ADR-0026 amendment
+- **Skip rule micro PR <5 lines** ratified PR template
+- **Counter LEGITIMATE entrambi P5+P6 n=2** post Protocol 2 autoresearch validation (literature + harsh-reviewer #2 internal aligned)
+
+### Wrapper ecosystem ULTRA-FINAL post-cluster
+
+| Wrapper | Status | Method |
+|---------|--------|--------|
+| aider-cosmetic (Qwen 7B + diff) | ✅ VIABLE post-fix | direct Ollama |
+| aider-refactor (14B Q2 + diff) | ✅ VIABLE | direct Ollama |
+| aider-cerebras (8B + --map-tokens 0) | ✅ VIABLE | LiteLLM Cerebras |
+| aider-gemini (Flash + --map-tokens 0) | ✅ VIABLE | LiteLLM Gemini |
+| aider-openai (gpt-4o-mini paid) | ✅ VIABLE post 10 EUR | LiteLLM OpenAI |
+| aider-groq-bypass (70B via openai/) | ✅ VIABLE post P0 hardening | LiteLLM OpenAI compat → Groq URL |
+| ~~aider-groq~~ | DELETED | LiteLLM Groq adapter buggy |
+
+**6/6 effective wrappers VIABLE** + P0 security hardened (temp env-file pattern NTFS-protected NON in argv, CWE-214 mitigation) + bus-factor fix repo-tracked (scripts/wrappers/) + idempotent installer.
+
+### Cost cumulative session 13/5 mattina-sera tardi
+
+- **Cloud API spend**: $0.00818 (T1 SPRINT_02 wrapper smoke series)
+- **OpenAI funding una tantum**: €10 (post P0 #2 quota=0 + Sharing toggle ON eligible 2.5M tok/day pool free)
+- **Harsh-reviewer 2x invocations**: ~$1 (2 × ~$0.50 cumulative ~170K tokens)
+- **Total**: ~$11.85 una tantum (sotto cap $20/mese ADR-0023 large margin)
+
+### Counter Protocol 5+6 ULTRA-FINAL
+
+- **P5 harsh-reviewer**: n=2 LEGITIMATE empirical (1st PR #80+#81 + 2nd cluster ULTRA-FINAL META-level) → threshold Accepted ADR-0026 RAGGIUNTO
+- **P6 brainstorming**: n=2 LEGITIMATE conservative (OpenRouter eval ADR-0029 + Approach choice B) → threshold Accepted ADR-0026 RAGGIUNTO post decrement -1 (Approach E+D dentro stessa decision-tree EXCLUDED per cherry-picking detection literature)
+
+### SPRINT_02 status post re-baseline 13/5 pomeriggio
+
+- T1 ✅ DONE expanded (9 entries log + retry + bypass)
+- T2/T5/T7/T8/T9 🟢 IN-SCOPE residuo 6gg pre-Max esplicit (Eduardo decision #1 "in scope")
+- T3/T4 ✅ DONE pre-13/5
+- T6 🟡 OPPORTUNISTIC (dormant)
+- T10 🟡 DEFERRED-TRIGGER
+- NEW T11 Governance saturation review 🟡 OPPORTUNISTIC (lesson L-016 candidate)
+
+### Stop trigger applicato (harsh-reviewer #2 STOP RECOMMENDATION)
+
+> "STOP adding next 24h. No nuovi ADR, no nuovi PR. Mitigation L-002 burnout signal."
+
+Eduardo decisione finale: **lean closure JOURNAL + stop session**. Allinea Protocol L-002 stop-pattern.
+
+### Da fare (defer next session natural pacing)
+
+- BACKLOG H2 cosmetic gap 3 (opportunistic, no candidato organico immediate)
+- BACKLOG H3 cp1252 monitoring (low-pri)
+- BACKLOG M3/M5/M14 (dormant)
+- T2/T5/T7/T8/T9 SPRINT_02 in-scope (continue passive observation + cost tracking pre-Max + review fine sprint ~2026-05-19)
+- COMPACT v24 cross-validate next session refresh-verify (drift fix legacy preserved)
+
+### Note metodologiche apprese sessione
+
+- **Protocol 5 hard cap effective**: harsh-reviewer 2x same-session = max threshold counter, 3rd same-session = anti-pattern documented (ADR-0026 amendment ratified)
+- **Protocol 2 Autoresearch FIRST counter-validation**: applied per Eduardo decision #2 → evidence-based counter post-cherry-picking detection literature → P6 decremento -1 conservative (NON inflato)
+- **Protocol 6 brainstorming n=2 LEGITIMATE**: 3-approach pattern empirical strutturato decision rigor vs ad-hoc proposal
+- **Cluster-of-clusters anti-pattern detected**: harsh-reviewer #2 finding meta-level "escalation paranoia risk", mitigated via hard cap + STOP recommendation respected
+- **Reflexive validation cherry-picking pattern documented**: L-016 lesson PROMOTE per future cognitive protocols counter empirical validation
+
+### Session metrics
+
+- 9 PR mergeati same day
+- 4 ADR shipped 36h
+- 16 lessons cumulative AA01 (was 14, +2: L-014 addendum + L-016 NEW)
+- 60 PR cumulative 7-13/5 codemasterdd
+- ~$11.85 una tantum cost
+- 6gg residui pre-Max preservati per natural pacing post-restoration cognitive
+- Counter ADR-0026 ULTRA-FINAL: 6 protocols formalizzati + P5+P6 LEGITIMATE n=2 entrambi (NON inflato)
+
+### Stop session 2026-05-13 sera tardi
+
+Mitigation L-002 attiva. Restoration cognitive prioritized vs compound execution continuation. Defer next work natural emergence prossima sessione.
