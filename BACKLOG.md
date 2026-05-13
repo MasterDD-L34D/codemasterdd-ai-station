@@ -140,6 +140,14 @@ ADR-0026 Protocol 1 Refresh-verify ha SHORT-CIRCUITED Archon 7-step needs per Q1
   - Cost mensile cumulative <$5 confermato
   - Decisione SPRINT_03 scope chiara
 
+### Task derivati da spec V3 cross-repo orchestrator (PR #87 Opt 1.5 REDUCED)
+
+- [x] ~~**X1** Component 2 workflow doc + tracking template + dry-run validator (PR #87)~~ **DONE pre-Max**
+- [x] ~~**X2** Component 3 escalation gates A-E + Gate E discipline + weekly reminder cron (PR #87)~~ **DONE pre-Max**
+- [ ] **X3** Gate E empirical window 30gg post-Max (2026-05-20 -> 2026-06-19): Eduardo logging discipline + week 4 harsh-reviewer audit
+- [ ] **X4** Gate E decision evaluation (~2026-06-20): BUILD full / BUILD MINIMAL / DEFER based on empirical events count
+- [ ] **X5** Component 1 dashboard implementation (CONDITIONAL on X4 outcome >=5 events/wk OR 2-5 events/wk minimal scope)
+
 ---
 
 ## Dead weight / sospetti (da NON riaprire senza trigger)

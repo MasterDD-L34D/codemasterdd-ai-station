@@ -19,6 +19,33 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-05-13 (sera-tardi-ultra-2: cross-repo orchestrator design + impl pre-Max)
+
+### Completato
+
+- Brainstorming skill (Protocol 6) + Archon ciclo 1 + harsh-reviewer (Protocol 5) + Archon ciclo 2 self-falsification per cross-repo orchestrator decision strategic
+- Spec V3 Opt 1.5 REDUCED post Eduardo "Riavvio Archon ciclo 2" (trigger #1 unverified self-falsification)
+- PR #87 opened: spec V3 (3 commits v1 -> v2 -> v3 honest evolution)
+- Writing-plans skill -> implementation plan 11 task pre-Max
+- Component 2 (PR_WORKFLOW + PR_TEMPLATE + dry-run-pr.ps1 + tracking template)
+- Component 3 (ESCALATION_GATES + coord-event-log.ps1 + install-gate-e-reminder.ps1 + tracking template)
+- BACKLOG X1-X5 tasks tracking
+- 11+ commits cumulative su branch claude/cross-repo-orchestrator-spec-2026-05-13
+
+### Da fare
+
+- Gate E empirical window 30gg post-Max (5/20 -> 6/19): Eduardo logging discipline
+- Week 4 audit via harsh-reviewer subagent
+- Gate E decision evaluation (~6/20): Component 1 BUILD / MINIMAL / DEFER
+
+### Note
+
+- Methodology applied: 5 cognitive protocols cumulative (P1 + P3 ciclo 1 + P3 ciclo 2 + P5 + P6). Honest confidence trail 75% -> 70% -> 55%.
+- Lesson candidate L-2026-05-017 in promotion: Archon ciclo 2 self-falsification pattern (user "riavvia ciclo" = strongest signal trigger unverified)
+- Pre-Max residual: 6gg -> 5gg post questa sessione
+
+---
+
 ## 2026-04-19
 
 ### Completato
