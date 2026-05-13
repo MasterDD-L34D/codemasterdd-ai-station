@@ -121,6 +121,16 @@ Refresh-verify pre-trigger SPRINT_02 attivo. Cluster 12-13/5 (8 PR cumulative) h
 
 **Manual fix consequenziale**: README.md "21 ADR" -> "28 ADR: 0001-0028" applicato manualmente Edit (Claude Code tier 0 strategic, NON wrapper delega) post-FAIL T1 #3, scope minimal 1-line stale doc fix che era target functional.
 
+**T1 #2 retry EXECUTED 2026-05-13 mezzogiorno (scope ridotto constraint=1)** -- entry #30:
+
+- **Task**: ridotto T1 #2 a constraint=1 isolato. Aggiungere SOLO `self.last_error: str | None = None` come ultima linea `__init__` (post `self.ping_timeout = ping_timeout`).
+- **Wrapper**: `aider-refactor.cmd` (Qwen 14B Q2 + diff)
+- **Outcome**: ✅ **PASS 1st-try**. Diff +1 line esatto, AST OK, posizione esatta richiesta. Tokens 7.6k sent / 52 recv. Latency ~30s (no reflection). $0 cost.
+- **Action**: KEPT (foundation per future error tracking ping/_get incrementale, valid Python).
+- **Empirical conferma ADR-0008 + ADR-0016**: 14B Q2 + diff PASS su constraint=1 vs PARTIAL_FAIL su constraint=3+indent (#28). Mitigation pattern: **decompose multi-block refactor in sequential single-block edits**.
+
+**T1 SPRINT_02 cumulative pass rate post retry (n=4)**: 1/4 PASS (#30 retry), 1/4 NON_COMPLIANT (#27), 1/4 PARTIAL_FAIL safe (#28), 1/4 FAIL rate-limit (#29).
+
 - **Cosa**: 3 wrapper aider-* eseguiti su task piccoli reali, validation tecnica end-to-end senza Claude Max.
   - `aider-cosmetic <file>` (Qwen 7B): JSDoc/docstring/rename su 1 file -- es. `apps/dogfood-ui/db.py` o `scripts/quality-bench/run-bench.ps1`
   - `aider-refactor <file>` (Qwen 14B Q2 + diff): bug fix piccolo o cleanup logic su 1 file -- candidati: error handling helper `apps/dogfood-ui/dafne_client.py`, retry logic gia' robusto bench scripts
