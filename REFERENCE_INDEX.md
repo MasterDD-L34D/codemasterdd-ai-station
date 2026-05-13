@@ -28,7 +28,7 @@ Categorie attive:
 - **Titolo**: CLAUDE.md
 - **Categoria**: GOV
 - **Funzione**: convenzioni autoritative progetto-specifiche per Claude Code (stack, hardware, tier routing, trigger delega, safety protocol)
-- **Stato**: live, aggiornato 2026-04-23 post ADR-0012/13/14
+- **Stato**: live, aggiornato 2026-05-13 post ADR-0027/0028
 - **Uso consigliato**: consultare SEMPRE inizio sessione; single-source convenzioni operative progetto
 - **Modulo collegato**: regole meta-universali in `Archivio_.../07_.../CLAUDE_OPERATING_RULES.md`
 - **Note**: ~16KB, autoritativo. Non sostituisce regole 07 ma le coabita (CLAUDE.md progetto-specific, 07 meta-universali).

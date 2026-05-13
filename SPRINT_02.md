@@ -152,6 +152,37 @@ Refresh-verify pre-trigger SPRINT_02 attivo. Cluster 12-13/5 (8 PR cumulative) h
 
 **ADR-0015 Accepted scenario A SOVEREIGN VIABLE confermato empirical** (n=31 cumulative cross-wrapper post T1 SPRINT_02, 0 silent-corruption).
 
+**T1 #5 + T1 #6 EXECUTED 2026-05-13 mezzogiorno (wrapper quartet+2 completion)** -- entries #32 + #33:
+
+- **T1 #5 (aider-gemini Gemini 2.5 Flash on REFERENCE_INDEX.md)**: ✅ **PASS 1st-try**. Date refresh `2026-04-23 post ADR-0012/13/14` -> `2026-05-13 post ADR-0027/0028`. Tokens 24k sent (Gemini sembra non rispettare --map-tokens 0 fully) / 194 recv. Cost $0.0078. Latency ~6min lento. Filename hallucination in commentary ma SEARCH/REPLACE corretto. PowerShell pollution n=3 confermato cross-wrapper (L-2026-05-015 reproduce 100%).
+- **T1 #6 (aider-openai gpt-4o-mini on STATUS_MULTI_REPO.md)**: 🔴 **FAIL OpenAI quota exceeded**. 5 retry tutti rate-limit "You exceeded your current quota". NO PowerShell pollution (Aider exit veloce <30s, no parser window). NO edit attempted. Account `OPENAI_API_KEY` di Eduardo MAI funded oltre signup.
+
+**Wrapper validation matrix POST T1 SPRINT_02 FINAL n=7**:
+- ✅ aider-refactor (14B Q2 local diff) constraint=1 PASS
+- ✅ aider-cerebras (Cerebras 8B + `--map-tokens 0`) constraint=1 PASS, $0.0004
+- ✅ aider-gemini (Gemini 2.5 Flash + `--map-tokens 0`) constraint=1 PASS, $0.008
+- 🟡 aider-cosmetic (7B local whole) NON_COMPLIANT position
+- 🔴 aider-groq (Groq 70B free) FAIL TPM 12k bottleneck
+- 🔴 aider-openai (gpt-4o-mini paid) FAIL quota=0 (billing setup required)
+- 🟡 aider-refactor multi-block PARTIAL_FAIL safe (mitigation: decompose)
+
+**T1 SPRINT_02 cumulative pass rate FINAL n=7**: 3/7 PASS (43%), 1/7 NON_COMPLIANT, 1/7 PARTIAL_FAIL, 2/7 FAIL. Total cost $0.00818 (0.041% $20 budget mensile).
+
+**Verdetto wrapper ecosystem**:
+- Sovereign tier 1-2: aider-refactor workhorse. aider-cosmetic limited.
+- Cloud free fallback: 2/4 viable (cerebras + gemini). Groq broken, OpenAI not-funded.
+- Strategic tier 0 ADR-0023: ANTHROPIC API on-demand resta default post-Max ($0.000044 smoke).
+
+**ADR-0015 Accepted scenario A SOVEREIGN VIABLE confermato definitivamente** (n=33 cumulative, 0 silent-corruption, 2 fallback cloud + tier 0 strategic ANTHROPIC disponibile).
+
+**Manual fix consequenziale SPRINT_02 cluster**:
+- README.md "21 ADR" -> "28 ADR: 0001-0028" (Edit manual post-FAIL T1 #3)
+- README.md "Stack attivo (aggiornato 2026-04-23)" -> "(aggiornato 2026-05-13)" (T1 #4 cerebras PASS)
+- REFERENCE_INDEX.md "aggiornato 2026-04-23 post ADR-0012/13/14" -> "aggiornato 2026-05-13 post ADR-0027/0028" (T1 #5 gemini PASS)
+- STATUS_MULTI_REPO.md target T1 #6 NON applicato (FAIL quota), date refresh deferred opportunistic post-Max o manual Edit prossima sessione.
+
+**Lesson L-2026-05-015 PowerShell wrapper REM pollution**: n=3 instances reproducible (T1 #3+#4+#5). Pattern PERSISTENT cross-wrapper. PROMOTE candidate AA01 (Eduardo-direct).
+
 - **Cosa**: 3 wrapper aider-* eseguiti su task piccoli reali, validation tecnica end-to-end senza Claude Max.
   - `aider-cosmetic <file>` (Qwen 7B): JSDoc/docstring/rename su 1 file -- es. `apps/dogfood-ui/db.py` o `scripts/quality-bench/run-bench.ps1`
   - `aider-refactor <file>` (Qwen 14B Q2 + diff): bug fix piccolo o cleanup logic su 1 file -- candidati: error handling helper `apps/dogfood-ui/dafne_client.py`, retry logic gia' robusto bench scripts
