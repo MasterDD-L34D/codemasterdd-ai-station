@@ -143,14 +143,25 @@ Refresh-verify pre-trigger SPRINT_02 attivo. Cluster 12-13/5 (8 PR cumulative) h
 
 **T1 SPRINT_02 cumulative pass rate FINAL (n=5)**: 2/5 PASS (#30 + #31), 1/5 NON_COMPLIANT (#27), 1/5 PARTIAL_FAIL safe (#28), 1/5 FAIL rate-limit (#29). Total cost $0.00038 (sotto $0.001 = 0.0019% $20 budget mensile).
 
-**Wrapper validation matrix**:
-- ✅ aider-refactor (14B Q2 local diff) constraint=1 PASS
-- ✅ aider-cerebras (Cerebras 8B + `--map-tokens 0`) constraint=1 PASS
-- 🟡 aider-cosmetic (7B local whole) constraint=1 NON_COMPLIANT position
-- 🔴 aider-groq (Groq 70B free tier) constraint=1 FAIL TPM 12k
-- 🟡 aider-refactor constraint=3+indent PARTIAL_FAIL safe (mitigation: decompose)
+**Wrapper validation matrix HARSH-REVIEW REVISED 2026-05-13 pomeriggio (3-colonne onesta vs precedente "VIABLE" overclaim)**:
 
-**ADR-0015 Accepted scenario A SOVEREIGN VIABLE confermato empirical** (n=31 cumulative cross-wrapper post T1 SPRINT_02, 0 silent-corruption).
+| Wrapper | Default invocation | Mitigation richiesta | Fail mode persistente |
+|---------|---------------------|----------------------|------------------------|
+| aider-cosmetic (Qwen 7B) | 🔴 NON_COMPLIANT position (whole format) | ✅ PASS con `--edit-format diff` override (entry #34) | -- |
+| aider-refactor (Qwen 14B Q2) | ✅ PASS constraint=1 (entry #30) | ✅ PASS multi-block con decompose pattern | 🟡 PARTIAL_FAIL constraint=3+indent (entry #28) |
+| aider-cerebras (Cerebras 8B) | 🔴 FAIL context overflow 8k | ✅ PASS con `--map-tokens 0` (entry #31) | -- |
+| aider-gemini (Gemini 2.5 Flash) | 🔴 24k tok sent (ignora --map-tokens 0) | ✅ PASS con `--map-tokens 0 --no-stream` (entry #32, ~6min slow) | -- |
+| aider-openai (gpt-4o-mini) | 🔴 FAIL quota=0 originale | ✅ PASS post 10 EUR funding + Sharing toggle ON | -- |
+| aider-groq-bypass (Groq 70B via openai/) | 🟡 FAIL "Invalid API Key" senza --api-key override | ✅ PASS con temp env-file pattern (entry #36 + P0 fix) | -- |
+| ~~aider-groq~~ DELETED | -- | -- | LiteLLM Groq adapter buggy, RIMOSSO 2026-05-13 |
+
+**Pass rate REALE n=10**: 3/7 PASS at default invocation (43%), 4/7 PASS solo con mitigation specifica required, 1/7 fail mode persistente (multi-block constraint=3+indent).
+
+**Onesta narrative**: scenario A SOVEREIGN ha 6 path validati ma TUTTI tranne aider-refactor constraint=1 richiedono **mitigation flag specifico** (--map-tokens 0, --no-stream, --edit-format diff override, --env-file temp pattern). Workflow normale richiede consultare sempre matrice mitigation prima di invocazione, NON è "drop-in".
+
+**Implication operativa**: pre-Max post-19/05 il wrapper di default per task sovereign organic = **aider-refactor 14B Q2 + diff** (NO mitigation flag richiesta, entry #30 PASS pulito). Cloud wrapper (cerebras/gemini/openai/groq-bypass) attivare on-demand con flag set documentati.
+
+**ADR-0015 Accepted scenario A confermato empirical CONDIZIONATO** (n=36 cumulative, 0 silent-corruption invariato). Confermato robusto per uso disciplined con mitigation matrix referenced. NON confermato robusto per uso default-invocation drop-in.
 
 **T1 #5 + T1 #6 EXECUTED 2026-05-13 mezzogiorno (wrapper quartet+2 completion)** -- entries #32 + #33:
 
