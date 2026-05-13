@@ -1,21 +1,23 @@
-# SPRINT_02 detailed plan — T8/T9/T10 + Gate E integration (pre-Max preparation)
+# SPRINT_02 weekly cadence DELTA — T8/T9/T10 + Gate E + Week 4 audit
+
+> **DELTA — NOT REPLACEMENT.** This plan AMENDS the T8/T9/T10 sub-task breakdown in `SPRINT_02.md` with weekly cadence + Gate E logging integration + Week 4 harsh-reviewer audit. `SPRINT_02.md` rimane AUTORITATIVO per T1/T2/T5/T7 (no duplication here).
 
 > **For agentic workers post-Max**: REQUIRED SUB-SKILL: superpowers:subagent-driven-development OR superpowers:executing-plans. Use checkbox tracking.
 
-**Goal:** Execute SPRINT_02 4-week window (2026-05-20 → 2026-06-19) integrating T8 plugin ecosystem dogfood + T9 methodology framework effectiveness + T10 Three Strikes Quality Gate + Gate E logging discipline + Week 4 audit.
+**Goal:** Execute SPRINT_02 4-week window (2026-05-20 → 2026-06-19) integrating Gate E logging discipline + Week 4 audit + weekly cadence for SPRINT_02.md sub-tasks T8.1-T8.3 / T9.1-T9.3 / T10.1-T10.3.
 
-**Architecture:** Weekly cadence with concrete deliverables. Gate E (Component 1 trigger) overlaps SPRINT_02 timeline = combined workflow.
+**Architecture:** Weekly cadence with concrete weekly checkpoints. Gate E (Component 1 build trigger from spec V3 cross-repo orchestrator) overlaps SPRINT_02 timeline = combined workflow.
 
-**Tech Stack:** PowerShell scripts esistenti (`coord-event-log.ps1` for Gate E) + JOURNAL entries weekly + harsh-reviewer subagent week 4 + ccusage cost tracking.
+**Scope EXPLICITLY NOT IN THIS PLAN** (see SPRINT_02.md as authoritative):
+- T1 smoke wrapper sovereign — DONE 13/5
+- T2 dogfood organico — SPRINT_02.md target soft n≥20 cumulative (current n=36 superato)
+- T5 cost tracking — SPRINT_02.md GATED ~2026-06-15 end-of-month wait
+- T6 privacy validation Synesthesia — SPRINT_02.md OPPORTUNISTIC default skip
+- T7 review fine sprint — SPRINT_02.md ~2026-06-19 sessione 30-45min
 
-**Spec/SPRINT references:**
-- [SPRINT_02.md](../../SPRINT_02.md) — task headlines + Eduardo override notes
-- [docs/superpowers/specs/2026-05-13-cross-repo-orchestrator-design.md](../specs/2026-05-13-cross-repo-orchestrator-design.md) — Component 3 Gate E spec
-- [docs/superpowers/specs/2026-05-13-component-1-dashboard-design.md](../specs/2026-05-13-component-1-dashboard-design.md) — Component 1 pre-design (Gate E result-dependent)
+**Effort estimate REVISED** (post P1.1 harsh-review fix): **~1-2h/wk Eduardo direct** + ~3-5h cumulative W4 audit + decision. Original v1 claim "30min/wk" was 3-5x underestimate.
 
-**Effort estimate:** 4 weeks elapsed (calendar) + ~30min/wk Eduardo direct (logging discipline) + ~3-5h cumulative concentrated (week 4 audit + decision).
-
-**Confidence:** 60% (mid: SPRINT_02 base shipped already with ACTIVE override, this plan amends scope with deliverable specifics).
+**Confidence:** 60% (plan structurally honest post-rework; depends on logging discipline + Gate E threshold realism).
 
 ---
 
@@ -23,77 +25,54 @@
 
 - [ ] **P.1: Verify Component 2+3 deployed** (post-merge state)
 
-Run: `git -C C:/dev/codemasterdd-ai-station log --oneline | grep "cross-repo"` — expected commit `3e580e2 feat(cross-repo): orchestrator opt 1.5 reduced design + impl (#87)`
+Run: `git -C C:/dev/codemasterdd-ai-station log --oneline | grep "cross-repo orchestrator"` — expected commit `3e580e2`
 
 - [ ] **P.2: Verify cross-repo-pr-whitelist.txt installed**
 
-Run: `cat C:/Users/edusc/.config/cross-repo-pr-whitelist.txt | grep -v "^#" | grep -v "^$" | wc -l`
-Expected: 4 (Game / Game-Godot-v2 / Dafne / vault)
+Run: `cat C:/Users/edusc/.config/cross-repo-pr-whitelist.txt | grep -v "^#" | grep -v "^$" | wc -l` → expected 4
 
-- [ ] **P.3: Verify schtask GateELoggingReminder installed**
+- [ ] **P.3: Verify OR install schtask GateELoggingReminder**
 
-Run: `schtasks /Query /TN GateELoggingReminder | findstr "Pronta"`
-Expected: task ready, next run domenica successiva 09:00
+Run:
+```powershell
+if (-not (schtasks /Query /TN GateELoggingReminder 2>&1 | Select-String "Pronta")) {
+  Write-Host "Installing schtask..."; powershell -File C:/dev/codemasterdd-ai-station/scripts/cross-repo/install-gate-e-reminder.ps1
+}
+schtasks /Query /TN GateELoggingReminder
+```
+**P1.6 fix**: install if missing (NOT just verify-and-fail).
 
 - [ ] **P.4: Update STATUS_MULTI_REPO.md** with Sprint state
 
-Add row in apps section: "SPRINT_02 ACTIVE 2026-05-20 (week 1/4)"
+Add row: "SPRINT_02 ACTIVE 2026-05-20 (week 1/4 of 4)"
 
 - [ ] **P.5: Reset coord-events log for fresh window**
 
-Per Gate E spec V3: 30gg window starts 5/20. If `logs/coord-events-2026-05.md` has pre-window entries (test smoke from impl session), Eduardo manual: rename to `logs/coord-events-2026-05-pre-window.md` and create fresh `logs/coord-events-2026-05.md` via first invocation `coord-event-log.ps1`.
+If `logs/coord-events-2026-05.md` has pre-window entries → rename to `logs/coord-events-2026-05-pre-window.md`. Create fresh log via first invocation `coord-event-log.ps1`.
 
 ---
 
-## Week 1 (5/20 → 5/26) — Sovereign tier baseline + Gate E start
+## Weekly cadence (4 weeks)
 
-### T8.W1: Plugin ecosystem first-touch dogfood
+### Pattern (applies W1/W2/W3/W4)
 
-**Goal**: validate 3 plugins ESSENTIAL (compass + superpowers + claude-mem) operational sovereign.
+Ogni domenica (per matching schtask trigger Sun 09:00):
+1. Invoke `coord-event-log.ps1` interactive mode 1× (logs past-week events) — ~10min
+2. Update `logs/escalation-gates-2026-05.md` week-row counter — ~5min
+3. T8 plugin observation (see SPRINT_02.md T8.1/T8.2/T8.3 sub-tasks) — opportunistic ~10-20min if active week
+4. T9 cite count refresh (vedi sub-task sotto W1.cite_count step) — ~5min
+5. T5 cost tracking light snapshot (NOT replacing SPRINT_02.md T5 end-of-month) — ~5min
 
-- [ ] **Step T8.W1.1: claude-mem cross-session resumption test**
+**Realistic time/wk Eduardo direct: ~1-2h cumulative active weeks** (P1.1 fix).
 
-Run: avvia nuova Claude Code session, verify auto-injection di memory cross-session. Open `~/.claude-mem/` directory + check SQLite + Chroma vector DB populating.
+### Week 1 (5/20 → 5/26) — Baseline establishment
 
-Expected: nuova session opens con context preserved (no `claude-mem status` shows uninitialized).
-
-- [ ] **Step T8.W1.2: superpowers skill auto-trigger observation**
-
-During normale workflow week 1, observe which skill auto-triggers (brainstorming / writing-plans / using-superpowers / etc.). Log osservazione in `logs/sprint-02-plugin-observations.md`:
-
-```markdown
-| Skill | Auto-trigger event | Worked as expected? | Notes |
-|-------|-------------------|---------------------|-------|
-```
-
-Target: ≥3 distinct skill invocations Week 1 to validate auto-trigger working.
-
-- [ ] **Step T8.W1.3: compass project-direction tracking**
-
-Run: `compass:compass-check` (project initialized 2026-05-10).
-Expected: Direction Index 0-100 + drift signals. Log result in JOURNAL week 1.
-
-### T9.W1: Methodology framework cite count baseline
-
-**Goal**: empirical baseline cite count P1-P6 nei JOURNAL entries pre-Max vs post-Max (comparison T9 finale).
-
-- [ ] **Step T9.W1.1: Baseline cite count pre-Max snapshot**
-
-Run pre-Max (idealmente 5/19 sera tardi):
+T9.1 sub-task NEW: **Baseline cite count pre-Max snapshot** (one-shot W1 init)
 ```bash
-grep -c "Protocol 1\|Protocol 2\|Protocol 3\|Protocol 4\|Protocol 5\|Protocol 6" C:/dev/codemasterdd-ai-station/JOURNAL.md
-```
-Save in `logs/sprint-02-methodology-cite-count-baseline-2026-05-19.txt`.
-
-Per-protocol breakdown:
-```bash
-for p in "Protocol 1" "Protocol 2" "Protocol 3" "Protocol 4" "Protocol 5" "Protocol 6"; do echo "$p: $(grep -c "$p" C:/dev/codemasterdd-ai-station/JOURNAL.md)"; done
+for p in "Protocol 1" "Protocol 2" "Protocol 3" "Protocol 4" "Protocol 5" "Protocol 6"; do echo "$p: $(grep -c "$p" C:/dev/codemasterdd-ai-station/JOURNAL.md)"; done > logs/sprint-02-methodology-baseline-pre-max.txt
 ```
 
-- [ ] **Step T9.W1.2: Update tracking template**
-
-Create `logs/methodology-cite-count-tracking-2026-MM.md` con week-by-week counter table:
-
+Create tracking table `logs/methodology-cite-count-tracking-2026-MM.md`:
 ```markdown
 | Week | P1 | P2 | P3 | P4 | P5 | P6 | Total | Notes |
 |------|----|----|----|----|----|----|-------|-------|
@@ -101,295 +80,159 @@ Create `logs/methodology-cite-count-tracking-2026-MM.md` con week-by-week counte
 | W1 (5/26) | | | | | | | | |
 ```
 
-### Gate E.W1: Logging discipline kickoff
+Gate E.W1: first weekly logging session 5/24 Sun. Verify schtask reminder file marker created `logs/gate-e-reminder-due-2026-W21.md` (Week 21 = 5/18-5/24).
 
-**Goal**: anti-L-016 weekly cadence start.
+If marker NOT created → **P0 regression** (P0.2 PR #87 fix broken). Re-run install schtask + smoke test.
 
-- [ ] **Step Gate-E.W1.1: First weekly logging session**
+### Week 2 (5/27 → 6/2)
 
-Domenica 5/24: invoke `coord-event-log.ps1` interactive mode 1 volta + log eventi past week (es. 0 events legit if no missed-coordination occurred).
-
-Update `logs/escalation-gates-2026-05.md` Week 1 row.
-
-- [ ] **Step Gate-E.W1.2: Reminder schtask verify firing**
-
-Domenica 5/24 09:00: verify schtask trigger + reminder file marker `logs/gate-e-reminder-due-2026-W21.md` (week 21 = 5/18-5/24) created.
-
-If marker NOT created → P0 escalation: schtask broken empirical (P0.2 fix regression).
-
-### Cost tracking T5.W1
-
-- [ ] **Step T5.W1.1: First sovereign week ccusage snapshot**
-
-End-of-week 5/26: run `ccusage` (Claude Code usage tracker) + cumulative cloud LLM spend log.
-
-Save snapshot `logs/sprint-02-cost-2026-05-W1.md`:
+T8.W2: claude-mem search effectiveness — see SPRINT_02.md T8.1 sub-task. Plus weekly observation log:
 ```markdown
-- Date: 2026-05-26
-- Claude API spend cumulative: $X (target <$10 week)
-- Cloud free tier usage: Groq X% / Cerebras X% / Gemini X%
-- OpenAI emergency: $X (target $0 week 1)
-- Total: $X (target <$5 week 1)
+| Date | Query | Result quality (1-5) | Time saved | Notes |
 ```
+Target: ≥3 queries quality≥3 = operational.
 
----
+Gate E.W2: Sunday 5/31 logging session + counter update.
 
-## Week 2 (5/27 → 6/2) — Plugin dogfood depth + Gate E mid-pulse
+### Week 3 (6/3 → 6/9) — Three Strikes Quality Gate audit
 
-### T8.W2: Plugin ecosystem deeper dogfood
+T10.W3: assess Three Strikes per **ADR-0028 verbatim wording** (P0.3 fix):
 
-- [ ] **Step T8.W2.1: claude-mem search effectiveness**
+- Strike 1: **1 regress reale tier promotion ad-hoc** (es. promosso modello in routing senza Quality Gate review, regresso operativo emerso)
+- Strike 2: **1 successful manual Quality Gate application** (3-step seguito su tier candidate + outcome positive empirico). NOTA: 3-step = Smoke + Research + Tuning fixture run.
+- Strike 3: **1 emergent tier promote request** (new model rotation OR wrapper variant request from agent during normale use)
 
-Use `claude-mem:mem-search` skill ≥3 volte during week 2 lookup pattern (es. "ho già risolto X?", "come faccio Y?"). Log effectiveness in `logs/sprint-02-plugin-observations.md`:
-
-```markdown
-| Date | Query | Result quality (1-5) | Time saved vs manual | Notes |
-|------|-------|----------------------|----------------------|-------|
-```
-
-Target: ≥3 queries with quality ≥3 = claude-mem operational
-
-- [ ] **Step T8.W2.2: superpowers skill harsh-reviewer real-use**
-
-If ≥1 PR opened during week 2, invoke harsh-reviewer subagent post-Draft (Protocol 5 cite increment). Cost cap awareness: <$2 week 2.
-
-Validates P5 empirical use beyond aspirational. Cite in JOURNAL.
-
-### T9.W2: Methodology adaptation observation
-
-- [ ] **Step T9.W2.1: Mid-sprint cite count**
-
-End-of-week 6/2: re-run cite count + delta calc:
+Audit step:
 ```bash
-for p in "Protocol 1" "Protocol 2" "Protocol 3" "Protocol 4" "Protocol 5" "Protocol 6"; do echo "$p: $(grep -c "$p" C:/dev/codemasterdd-ai-station/JOURNAL.md)"; done
+# Strike 2 source-of-truth: scan docs/research/ for 3-step Quality Gate fixture
+grep -l "Smoke\|Research\|Tuning" C:/dev/codemasterdd-ai-station/docs/research/*.md | xargs grep -l "tier candidate\|tier promotion"
+
+# Strike 1 source-of-truth: scan SPRINT_02 dogfood log + JOURNAL for "regress" + "ad-hoc tier"
+grep "regress\|ad-hoc" C:/dev/codemasterdd-ai-station/logs/aider-delegation-2026-05.md C:/dev/codemasterdd-ai-station/logs/aider-delegation-2026-06.md C:/dev/codemasterdd-ai-station/JOURNAL.md 2>&1
 ```
 
-Update tracking table W2 row.
-
-**Honesty discipline**: if P6 brainstorming OR P5 harsh-reviewer NOT invoked during week 2, that's data not failure — log "0 invocations" honestly.
-
-### Gate E.W2: Logging continues
-
-- [ ] **Step Gate-E.W2.1: Sunday 5/31 logging session**
-
-Invoke `coord-event-log.ps1` interactive past week events. Update `logs/escalation-gates-2026-05.md` Week 2.
-
-Mid-point sanity check: if Week 1 + Week 2 cumulative <2 events → trend toward Gate E falsification (consistent <2/wk).
-
-### Cost tracking T5.W2
-
-- [ ] **Step T5.W2.1: ccusage Week 2 snapshot**
-
-Same pattern. Cumulative target: <$10 first 2 weeks.
-
----
-
-## Week 3 (6/3 → 6/9) — Three Strikes evaluation + Gate E mid-late
-
-### T10.W3: Three Strikes Quality Gate trigger check
-
-**Goal**: assess if Three Strikes condition (1 regress + 1 manual application + 1 emergent tier promote request) for vault MODEL_ROUTING Quality Gate pattern has fired.
-
-Reference: ADR-0028 Quality Gate vault adoption Three Strikes trigger.
-
-- [ ] **Step T10.W3.1: Audit Three Strikes condition counter**
-
-Read `~/aa01/learnings/L-2026-05-012-vault-sibling-peer-write-under-explicit-authorization.md` + `~/aa01/learnings/L-2026-05-013-re-eval-calendarizzati-pattern.md` for Quality Gate pattern emergent instances.
-
-Check `logs/aider-delegation-2026-MM.md` Week 1-3 entries for:
-- Regression mentions (1 strike if found)
-- Manual Quality Gate application (1 strike if found)
-- Emergent tier promote request from agent (1 strike if found)
-
-- [ ] **Step T10.W3.2: Document Three Strikes status**
-
-Create `logs/sprint-02-three-strikes-audit-W3.md`:
+Document audit result `logs/sprint-02-three-strikes-audit-W3.md`:
 ```markdown
-- Strike 1 (regression): YES/NO + reference
-- Strike 2 (manual application): YES/NO + reference
-- Strike 3 (emergent request): YES/NO + reference
-- Status: <FIRE / 1-2 strikes / 0 strikes>
+- Strike 1 (regress tier promotion ad-hoc): YES/NO + cita evidence file:line
+- Strike 2 (successful manual Quality Gate 3-step application): YES/NO + cita evidence
+- Strike 3 (emergent tier promote request): YES/NO + cita evidence
+- Status: <FIRE all 3 / partial 1-2 / 0 strikes>
 ```
 
 If FIRE → activate ADR-0028 Accepted ratification + MODEL_ROUTING.md section formal write per V3 REC 2.
 
-### T8.W3 + T9.W3 + Gate E.W3 + T5.W3
+### Week 4 (6/10 → 6/16) — Gate E decision + harsh-reviewer audit
 
-Same pattern weekly. Update all tracking files.
+#### Gate E.W4 prep (Sun 6/14)
 
----
-
-## Week 4 (6/10 → 6/16) — Gate E threshold evaluation + harsh-reviewer audit + decisions
-
-### Gate E.W4: Threshold evaluation prep
-
-- [ ] **Step Gate-E.W4.1: Final week logging session 6/14 Sunday**
-
-Last weekly invocation `coord-event-log.ps1` interactive past week.
-
-- [ ] **Step Gate-E.W4.2: Aggregate 4-week count**
-
-Run:
+Final week logging session. Aggregate 4-week count:
 ```bash
-grep -c "^| 2026-05-[2-3]\|^| 2026-06-0\|^| 2026-06-1[0-6]" C:/dev/codemasterdd-ai-station/logs/coord-events-2026-05.md C:/dev/codemasterdd-ai-station/logs/coord-events-2026-06.md
+grep "^| 2026-0[5-6]" C:/dev/codemasterdd-ai-station/logs/coord-events-2026-05.md C:/dev/codemasterdd-ai-station/logs/coord-events-2026-06.md 2>/dev/null | wc -l
 ```
 
 Calculate avg events/week. Update `logs/escalation-gates-2026-05.md` cumulative summary.
 
-### Week 4 audit (harsh-reviewer subagent invocato)
+#### Week 4 harsh-reviewer audit (Protocol 5 ADR-0026)
 
-**Critical: P5 cite increment WITH empirical value (anti-aspirational).**
+**Critical instruction**: when invoking harsh-reviewer, **explicitly exclude** `docs/research/component-1-design-options-archived-2026-05-13.md` from reading list. That file is intentionally archived as bias-mitigation per L-2026-05-018.
 
-- [ ] **Step Audit.1: Invoke harsh-reviewer Gate E logging audit**
-
-Dispatch harsh-reviewer subagent (Protocol 5 ADR-0026 addendum) with prompt:
+Dispatch prompt template:
 
 ```
 Harsh review boundary read-only on Gate E logging discipline 4-week empirical (SPRINT_02 W1-W4).
 
 Files to read:
 - C:/dev/codemasterdd-ai-station/logs/coord-events-2026-05.md
-- C:/dev/codemasterdd-ai-station/logs/coord-events-2026-06.md (if exists)
+- C:/dev/codemasterdd-ai-station/logs/coord-events-2026-06.md
 - C:/dev/codemasterdd-ai-station/logs/escalation-gates-2026-05.md
+- C:/dev/codemasterdd-ai-station/JOURNAL.md (entries dated 2026-05-20 to 2026-06-16)
+
+EXPLICITLY DO NOT READ:
+- C:/dev/codemasterdd-ai-station/docs/research/component-1-design-options-archived-*.md
+  (Pre-design archived per L-2026-05-018 anti-pattern bias mitigation)
 
 Check for:
-1. Logging discipline consistency: no gap weeks (4/4 weekly sessions present)?
-2. Severity tag distribution sanity: NOT all = 1 (under-reporting) OR all = 5 (panic logging)?
+1. Logging discipline consistency: 4/4 weekly sessions present, no gap weeks?
+2. Severity tag distribution sanity: NOT all =1 (under-reporting) OR all =5 (panic)?
 3. Cost minutes documentation present: NOT all = 0?
-4. Aggregate count plausibility: cross-check with JOURNAL entries same week
-5. Anti-pattern L-016 application: did Eduardo skip logging weeks claiming "intent to log later"?
+4. Aggregate count plausibility: cross-check JOURNAL entries same week
+5. Anti-pattern L-016 detection: did Eduardo skip logging weeks claiming "log later"?
+6. **Contamination check**: any evidence Eduardo consulted archived pre-design during 4-week window? Search `git log` or JOURNAL entries.
 
-Output P0/P1/P2 findings + Gate E threshold decision recommendation.
+Output P0/P1/P2 findings + Gate E threshold decision recommendation BASED ON LOGGED DATA ONLY (not on archived pre-design content).
 
 Boundary: read-only, no Write/Edit, only Read/Grep/Glob.
 Cost target: ~$0.30 (~85K tokens), under ADR-0023 cap.
+HARD STOP if cost >$1, abort and summarize manually.
 ```
 
-- [ ] **Step Audit.2: Review harsh-reviewer findings**
+#### Gate E decision finalize
 
-Read subagent output. Integrate P0 findings (must fix pre-decision) + P1/P2 findings (acknowledge).
-
-- [ ] **Step Audit.3: Gate E decision finalize**
-
-Based on:
-- Aggregate avg events/week
-- harsh-reviewer audit findings
-- Honest Eduardo self-assessment
-
-Decision matrix:
+Decision matrix per spec V3 ESCALATION_GATES.md (mutual exclusive post Codex P2 fix):
 
 | Avg events/wk × 4 wk | Threshold | Component 1 decision |
 |----------------------|-----------|---------------------|
-| ≥5 | PASS | Build Component 1 full scope (Alternative A vs B Eduardo decides) |
-| 2-<5 | PARTIAL | Build Component 1 MINIMAL scope (Alternative A extension only) |
-| <2 | FALSIFIED | DEFER indefinitely. Archive pre-design `docs/superpowers/specs/2026-05-13-component-1-dashboard-design.md` → `docs/research/component-1-pre-design-archived-2026-06-15.md`. Update STATUS_MULTI_REPO trigger #1 empirically falsified. |
+| ≥5 | PASS | Build Component 1 full scope. **Then** (NOT before) consult `docs/research/component-1-design-options-archived-2026-05-13.md` for Alt A vs B matrix input. Eduardo decides Alt A vs B. Note: Alt A revised cost 3.5-4w (P1.5 fix incl. dogfood-ui promotion prereq); Alt B 2.5w. |
+| 2-<5 | PARTIAL | Build Component 1 MINIMAL scope. Alt A reduced OR Alt B minimal. |
+| <2 | FALSIFIED | DEFER indefinitely. Archive Alt A vs B research (already archived). Update STATUS_MULTI_REPO trigger #1 empirically falsified. Close spec V3 follow-up. |
 
-Document decision in `logs/sprint-02-gate-e-decision-2026-06-15.md`.
+Document decision `logs/sprint-02-gate-e-decision-2026-06-15.md`.
 
-### T9.W4: Final methodology cite count + comparison
+#### T9 final methodology cite count + ADR-0026 n≥3 threshold check
 
-- [ ] **Step T9.W4.1: Post-Max cumulative cite count**
-
-End-of-sprint 6/14 (or 6/16):
 ```bash
-for p in "Protocol 1" "Protocol 2" "Protocol 3" "Protocol 4" "Protocol 5" "Protocol 6"; do echo "$p: $(grep -c "$p" C:/dev/codemasterdd-ai-station/JOURNAL.md)"; done
+for p in "Protocol 1" "Protocol 2" "Protocol 3" "Protocol 4" "Protocol 5" "Protocol 6"; do echo "$p: $(grep -c "$p" C:/dev/codemasterdd-ai-station/JOURNAL.md)"; done > logs/sprint-02-methodology-final-2026-06-15.txt
 ```
 
-- [ ] **Step T9.W4.2: Delta vs baseline + analysis**
-
-Compute delta per Protocol. Document in `logs/sprint-02-methodology-effectiveness-2026-06-15.md`:
-
+Compare baseline vs final:
 ```markdown
-## Methodology effectiveness post-Max vs pre-Max baseline
-
-| Protocol | Pre-Max baseline | Post-Max 4 weeks | Delta | Interpretation |
-|----------|------------------|-------------------|-------|----------------|
-| P1 Refresh-verify | X | X | +X | <interpretation> |
-| P2 Autoresearch | X | X | +X | <interpretation> |
-| P3 Archon 7-step | X | X | +X | <interpretation> |
-| P4 AA01 workspace | X | X | +X | <interpretation> |
-| P5 harsh-reviewer | X | X | +X | (already validated 3+ instances this preparation session) |
-| P6 brainstorming | X | X | +X | (already validated 2+ instances this preparation session) |
-
-## Empirical n=3 threshold check (P5/P6 ADR-0026 amendment B/C trigger)
-
-- P5 invocations cumulative: X (threshold: ≥3 to remain Protocol)
-- P6 invocations cumulative: X (threshold: ≥3 to remain Protocol)
-- Decision: <maintain Protocol / downgrade to optional / formalize Accepted>
+| Protocol | Baseline pre-Max | Post-Max W4 | Delta | n≥3 instances reached? | Decision |
+|----------|-------------------|--------------|-------|------------------------|----------|
+| P5 harsh-reviewer | ? | ? | ? | ? | maintain / formalize / downgrade |
+| P6 brainstorming | ? | ? | ? | ? | maintain / formalize / downgrade |
 ```
 
-### Sprint-end retrospect T7.W4
-
-- [ ] **Step T7.W4.1: 4-week retrospective write**
-
-Create `logs/sprint-02-retrospective-2026-06-15.md`:
-
-```markdown
-## SPRINT_02 retrospective (2026-05-20 -> 2026-06-15)
-
-### Empirical outcomes
-- Gate E decision: <FALSIFIED / PARTIAL / PASS>
-- Methodology framework cite delta: <summary>
-- Three Strikes Quality Gate: <fired / not fired>
-- Plugin ecosystem operational: <claude-mem ok / superpowers ok / compass ok>
-- Cost cumulative: $<total> (target <$20)
-- Dogfood organic count: <n cumulative>
-
-### Continuita / mid-correction / SPRINT_03 scope
-
-1. **Continuita**: <items continuing into SPRINT_03>
-2. **Mid-correction**: <pattern changes mid-sprint>
-3. **SPRINT_03 scope**: <new scope based on empirical findings>
-
-### Lessons cumulative
-
-- L-2026-05-XXX: <pattern observed>
-- L-2026-06-XXX: <pattern observed>
-```
-
-- [ ] **Step T7.W4.2: BACKLOG + JOURNAL update**
-
-- BACKLOG: mark SPRINT_02 tasks complete (X1-X5 + T8 + T9 + T10)
-- JOURNAL: sprint closure entry (parallel ai sera-tardi-ultra-2 entry attuale, ma sprint scale)
-
-### Cost final T5.W4
-
-- [ ] **Step T5.W4.1: Cumulative cost log**
-
-Final ccusage + cloud spend. Target verify <$5 cumulative (sovereign tier success criterion).
+**P2.3 fix awareness**: L-016 concluded P5 = **n=2 LEGITIMATE** (NOT 3 — inflated original claim). Reality check before counting future invocations.
 
 ---
 
-## Self-review checklist
+## Self-review checklist (post P0+P1 fixes)
 
-**Spec coverage** (T8 + T9 + T10 + Gate E + harsh-reviewer audit):
-- T8 plugin dogfood: W1-W3 tasks ✓
-- T9 methodology cite count: W1 baseline + W2/W3/W4 tracking ✓
-- T10 Three Strikes: W3 audit ✓
+**Spec coverage** (delta only):
+- T8 weekly cadence: W1-W4 pattern + observation log ✓ (sub-tasks T8.1/T8.2/T8.3 see SPRINT_02.md)
+- T9 cite count + n≥3 check: W1 baseline + W2/W3 tracking + W4 final ✓
+- T10 Three Strikes: W3 audit per ADR-0028 verbatim ✓ (P0.3 fix)
 - Gate E logging discipline: W1-W4 weekly + W4 audit ✓
-- Harsh-reviewer audit: W4 Audit.1-Audit.3 ✓
-- Sprint retrospect: W4 T7 ✓
+- Harsh-reviewer audit + archive exclusion: W4 prompt template ✓ (P0.1 mitigation)
+- Component 1 decision matrix: W4 post-Gate-E with archived-doc reference deferred ✓
 
-**Placeholder scan**: no TBD / TODO / "fill in details" — all concrete bash commands + files + thresholds ✓
+**SPRINT_02.md duplication eliminated** (P0.2 fix):
+- T1/T2/T5/T7 explicitly NOT covered here ✓
+- T8.1/T8.2/T8.3 ref SPRINT_02.md authoritative, only weekly cadence wrapping ✓
+- T9.1/T9.2/T9.3 ref SPRINT_02.md, only cite count tracking detail added ✓
+- T10 Three Strikes wording verbatim ADR-0028 ✓ (P0.3)
+
+**Placeholder scan**: zero TBD / TODO / "fill in" — all concrete commands + files ✓
 
 **Type consistency**:
-- Log file paths: `logs/sprint-02-*.md` + `logs/coord-events-*.md` + `logs/escalation-gates-*.md` consistent ✓
-- Date format: 2026-MM-DD ISO consistent ✓
-- Threshold ≥5 / 2-<5 / <2 (mutual exclusive post Codex P2 fix) ✓
+- Log file paths: `logs/coord-events-*.md` + `logs/escalation-gates-*.md` + `logs/sprint-02-*.md` consistent
+- Date format ISO 8601 consistent
+- Threshold ≥5 / 2-<5 / <2 mutual exclusive (post Codex P2 PR #87 fix)
+- ADR-0028 Three Strikes wording verbatim ✓
 
-**YAGNI**: no Component 1 BUILD pre-Gate-E (gated). NO speculation post-SPRINT_02.
+**Effort realism** (P1.1 fix): 1-2h/wk Eduardo + 3-5h W4 cumulative = ~7-13h total ✓
 
-**Scope**: 4 weeks elapsed + ~30min/wk Eduardo + ~3-5h cumulative concentrated = realistic.
+**P1.6 schtask handling**: P.3 now install-if-missing (not verify-and-fail) ✓
 
 ---
 
 ## References
 
-- SPRINT_02.md (base task headlines)
-- ADR-0017 stack scaffolding
-- ADR-0023 strategic tier post-Max API on-demand
+- `SPRINT_02.md` (AUTHORITATIVE for T1/T2/T5/T7 + T8/T9/T10 main sub-tasks)
+- `docs/cross-repo/ESCALATION_GATES.md` (Gate E threshold definition AUTHORITATIVE)
+- `docs/research/component-1-design-options-archived-2026-05-13.md` (Alt A vs B research, DO NOT CONSULT pre-Gate-E)
+- `docs/adr/0028-tier-promotion-quality-gate-methodology.md` (Three Strikes wording AUTHORITATIVE)
+- ADR-0023 H7 ANTHROPIC tier 0 strategic (audit cost cap)
 - ADR-0026 cognitive workflow protocols (P1-P6)
-- ADR-0028 Quality Gate vault adoption Three Strikes trigger
-- Spec V3 cross-repo orchestrator Component 3 (Gate E spec)
-- Component 1 pre-design (this PR companion)
-- L-2026-05-016 anti-aspirational measurement
+- L-2026-05-016 anti-aspirational measurement (warning source)
+- L-2026-05-018 (in promotion) META anti-pattern recurrence same-session
