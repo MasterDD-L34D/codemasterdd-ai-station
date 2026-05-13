@@ -1,10 +1,16 @@
-# Design spec — Cross-repo orchestrator evolution (Opt 1.5)
+# Design spec — Cross-repo orchestrator evolution (Opt 1.5 REDUCED)
 
 **Date**: 2026-05-13
-**Status**: Draft REWORK post harsh-review (3 P0 + 6 P1 + 3 P2 findings integrated)
-**Cross-ref**: ADR-0021 (multi-client pattern) + ADR-0026 (cognitive protocols) + L-012 (vault sibling-peer write under explicit auth)
-**Methodology applied**: Protocol 6 brainstorming (superpowers skill) + Protocol 3 Archon 7-step First Principles + Protocol 5 harsh-reviewer subagent (post-draft adversarial)
-**Confidence**: 70% (downgraded from aspirational 75%, post harsh-review P0.3 meta-recursion finding + post 3/3 P0 + 5/6 P1 + 3/3 P2 integration). PENDING P1.1 Eduardo input for final calibration.
+**Status**: Draft V3 post Archon ciclo 2 (Eduardo "Riavvio Archon ciclo 2" → "Vai con Opt 1.5 REDUCED")
+**Cross-ref**: ADR-0021 (multi-client pattern) + ADR-0026 (cognitive protocols P1-P6) + L-012 (vault sibling-peer write under explicit auth) + L-016 (cognitive protocols measurement anti-aspirational, applied retroactively as Gate E discipline)
+**Methodology applied**: Protocol 6 brainstorming + Protocol 3 Archon 7-step ciclo 1 + Protocol 5 harsh-reviewer adversarial + Protocol 3 Archon **ciclo 2 self-falsification post harsh-review**
+**Confidence**: **55%** (downgraded da aspirational 75% ciclo 1 / 70% post-harsh-review v2 / 55% post-Archon ciclo 2 self-falsification)
+
+## Honest reasoning trail (confidence decay)
+
+- 75% ciclo 1 aspirational → biased: methodology self-validating + trigger #1 unverified + 2 cross-ref hallucinated
+- 70% post-harsh-review v2 → improved: 3/3 P0 fixed + 5/6 P1 fixed + 3/3 P2 fixed, MA P1.1 trigger #1 still pending
+- 55% post-Archon ciclo 2 → honest: Eduardo self-falsification (refused to cite incident, chose "Riavvio Archon ciclo 2") confirms trigger #1 = ASSERTED unverified. Counter-balance harsh-reviewer Protocol 5 adversarial integration = +5pp. Net -20pp da inflated 75%.
 
 ## Methodology bias disclosure (post P0.3 fix)
 
@@ -28,15 +34,16 @@ Eduardo richiesta 2026-05-13 sera-tardi: "siamo solidi come hub osservatore, non
 | Coordination overhead percepito | YES | Eduardo single-bottleneck pain concreto. Pattern Eduardo media bidirezionale tutti i cross-repo flow. |
 | Strategic alignment lungo termine | YES | Scaling 4 active monitored → 6-8 repo in 2-3 anni hypotetico. Forward-looking. |
 
-### Empirical trigger evidence (PENDING Eduardo input)
+### Empirical trigger evidence — RESOLVED 2026-05-13 post Archon ciclo 2
 
-**Status**: P1.1 harsh-review flag. Spec come scritto rest su trigger asserted ma non documented.
+**Eduardo response P1.1**: "Riavvio Archon ciclo 2" (refused both Opzione A "cita incident concreti" + Opzione B "rescope preventive only" + Opzione C "as-is with disclosure"). This is itself **self-falsification of trigger #1**: had concrete incident existed, Eduardo would have cited it.
 
-Pre-Accepted status richiede Eduardo:
-- [ ] **Opzione A**: nominare 1-2 incident concrete missed-coordination ultimi 30gg con (data + scope + cost minuti). Cita qui inline.
-- [ ] **Opzione B**: ammettere no concrete incident yet + rescope spec a "preventive instrumentation only" (drop Component 2+3 a gates, mantain Component 1 dashboard solo)
+**Conclusion**: Trigger #1 "visibility gap concreto" = ASSERTED unverified. Net trigger basis: **1.5/3 grounded** (vs ciclo 1 claim 3/3 grounded):
+- Trigger #1 visibility gap: UNVERIFIED (counted ~0.5/1 weight, self-reported but no incident)
+- Trigger #3 coordination overhead: GROUNDED (visible JOURNAL Eduardo media bidirezionale)
+- Trigger #4 strategic alignment: HYPOTHETICAL forward-looking (counted ~0.5/1 weight, unfalsifiable short-term)
 
-Senza una delle due, spec rimane Draft.
+**Scope-reduction consequence**: Component 1 build pre-empirical-evidence = anticipatory intervention with ambiguous ROI. **Gated on Gate E** (30gg post-Max empirical event count ≥5/settimana) before commit to build. See Component 1 + Component 3 sections.
 
 ### Archon 7-step output
 
@@ -67,11 +74,18 @@ Senza una delle due, spec rimane Draft.
 
 Asymmetric cost: Opt 1.5 fallisce con "underpowered + reversible pivot" (cheap). Opt 3/Opt 4 falliscono con "overpowered + Conway's law violation" (expensive).
 
-**CALIBRATE**:
-- Verdetto: **Opt 1.5 baseline con escalation gates espliciti**
-- Confidenza: 75% (ECE-adjusted)
-- Assunti portanti rimasti: (1) governance interna continua funzionare post-Max, (2) Eduardo bandwidth per dashboard build pre-Max sufficiente, (3) sovereign tier sufficient per Read-active + Write-via-PR singoli
-- Falsificatore: 30gg post-Max tracking missed-coordination events
+**CALIBRATE ciclo 1 (superseded da ciclo 2)**:
+- Verdetto ciclo 1: Opt 1.5 baseline con escalation gates espliciti
+- Confidenza ciclo 1: 75% (ECE-adjusted, ASPIRATIONAL inflated 20pp)
+
+**CALIBRATE ciclo 2 post Eduardo self-falsification**:
+- Verdetto ciclo 2 FINAL: **Opt 1.5 REDUCED** (Component 2 workflow + Component 3 gates pre-Max ~2gg total; Component 1 GATED Gate E 30gg post-Max empirical)
+- Confidenza ciclo 2: **55%** (honest -20pp da ciclo 1 inflated)
+- Assunti portanti rimasti:
+  1. Eduardo logger disciplinatamente 30gg coord-event tracking (anti-L-016 risk)
+  2. Trigger #3 coordination overhead real ≥2h/settimana post-Max (asserted, not measured)
+  3. Repo count stable 90gg
+- Falsificatore Gate E: <2 events/settimana × 4 settimane = trigger #1+#4 falsified, Component 1 deferred indefinitely
 
 **CM-1 anti-position bias**: testato ordine Opt3→Opt4 vs Opt4→Opt3, verdetto cambiava con ordine → entrambi unstable in isolamento. Opt 1.5 emerge stabile da primitivi.
 
@@ -179,15 +193,23 @@ Outcome: accepted / rejected / amended / pending.
 
 **Implementation effort**: ~3gg (workflow doc + tracking template + first 3 PR empirici)
 
-### Component 3 — Strategic escalation gates
+### Component 3 — Strategic escalation gates (+ Gate E pre-Component-1 build)
 
-Criteri **pre-definiti** per evoluzione paradigm SE failure trigger empirico emerge.
+Criteri **pre-definiti** per evoluzione paradigm. Gate E aggiunto post Archon ciclo 2 self-falsification trigger #1: serve empirical evidence pre Component 1 build commitment.
 
 | Gate | Trigger condition | Empirical measure | Escalation path |
 |------|-------------------|-------------------|-----------------|
-| A | >2 missed-coordination events / settimana × 4 settimane consecutive | counter `logs/escalation-gates-YYYY-MM.md` field `missed_coord_weekly` | Re-evaluate Opt 3 write-direct via ADR amendment cross-repo |
+| **E (PRE-Component-1)** | ≥5 missed-coordination events / settimana × 4 settimane consecutive POST-MAX 30gg empirical window | counter `logs/coord-events-YYYY-MM.md` Eduardo manual log + harsh-reviewer subagent invocato per audit logging discipline | Component 1 dashboard BUILD justified empirical, procedi SPRINT_02 implementation |
+| **E threshold variants** | 2-5 events/settimana × 4 settimane | counter as above | Component 1 MINIMAL scope (extension dogfood-ui ONLY, drop standalone alternative) |
+| **E falsified** | <2 events/settimana × 4 settimane | counter as above | Component 1 deferred indefinitely, trigger #1 falsified, anticipatory was wrong call |
+| A | >2 missed-coordination events / settimana × 4 settimane consecutive (separately tracked) | same counter, plus subjective severity tag | Re-evaluate Opt 3 write-direct via ADR amendment cross-repo |
 | B | repo count ≥7 OR client production work attivo | STATUS_MULTI_REPO.md count + JOURNAL entries client work | Re-evaluate Opt 4 mesh-bus design (Dafne extension cross-repo) |
 | C | Eduardo bandwidth coordinator <50% available (es. lavoro full-time esterno) | qualitative self-report mensile | Opt 1.5 enhanced via Dafne specialist routing automatic |
+| D (Component 2 reversibility) | ≥5 PR cumulative accepted by external governance WITH cross-reference adoption | `logs/cross-repo-pr-YYYY-MM.md` audit | Pause Component 2 + ADR formale per ritiro coordinato OR continuation explicit |
+
+**Gate E threshold revisable**: 5-event threshold è pilot-calibrated. Dopo 1 settimana empirical pilot, threshold può essere amended se misurazione rivela natura events different (es. events tipicamente cluster in 1 day = revise weekly threshold; vs scattered = mantain).
+
+**Anti-L-016 discipline**: Gate E richiede Eduardo logging DISCIPLINATO. Anti-pattern: claim "intent to log" + abbandon Week 2. Mitigation: weekly checkpoint via reminder (`schtasks /Create /SC WEEKLY ...`) + harsh-reviewer auditing logging consistency at week 4 (single subagent invocation cost ~$0.30).
 
 **Definition "missed-coordination event"**:
 - Eduardo o agent in sessione ha dovuto fare grep manuale cross-repo >3 location per stato
@@ -256,19 +278,27 @@ Refresh policy: cron 5min + manual `Refresh` button. Source con last-update >72h
 | Plugin ecosystem | claude-mem auto cross-session memory. superpowers brainstorming/writing-plans applicato per questo spec (case study Protocol 6 + 3). |
 | MODEL_ROUTING | Component 2 PR drafting tier routing invariato (Aider cosmetic/refactor/cloud + OpenCode multi-step) |
 
-## Effort + timeline (P1.2 fix: decoupled from pre-Max deadline for Component 2)
+## Effort + timeline V3 (post Archon ciclo 2: Opt 1.5 REDUCED)
 
-| Item | Effort revised | Timing | Constraint / Dependency |
-|------|----------------|--------|------------------------|
-| Component 1 dashboard (alternative A: extension dogfood-ui) | ~3 settimane (~1 promote dogfood-ui to always-on + 1 design + 1 build) | SPRINT_02 T1-T2 amended scope, post-Max | dogfood-ui currently DOWN, needs promotion |
-| Component 1 dashboard (alternative B: standalone app) | ~2.5 settimane (~0.5 scaffold + 1 design + 1 build) | SPRINT_02 T1-T2 amended scope, post-Max | NO coupling con dogfood-ui unmaintained |
-| Component 2 PR workflow + tracking template | ~1gg (workflow doc + tracking template + dry-run protocol) | Pre-Max (6gg residui) ✅ | Small scope, doc-only |
-| Component 2 "first 3 PR accepted by external governance" | ~variable | **DEFERRED a SPRINT_02** (external governance approval time NON-controllable) | Gate empirico: ≥1 PR accepted by external governance prima di claim pattern validated |
-| Component 3 escalation gates | ~1gg (criteri + template + smoke test 1 settimana) | Pre-Max ✅ | Small scope |
+| Item | Effort | Timing | Constraint / Dependency |
+|------|--------|--------|------------------------|
+| Component 2 workflow doc + tracking template | ~1gg | **Pre-Max (6gg residui)** ✅ | Doc-only, no external dep |
+| Component 3 escalation gates + Gate E discipline | ~1gg | **Pre-Max** ✅ | Includes weekly reminder cron + tracking template |
+| **GATE E empirical window** | 30gg post-Max (5/20 → 6/19) | Eduardo manual coord-event logging | Anti-L-016 discipline + harsh-reviewer week 4 audit |
+| Component 1 dashboard (alternative A: extension dogfood-ui) | ~3 settimane | **GATED Gate E** ≥5 events/wk | Promote dogfood-ui always-on prerequisite |
+| Component 1 dashboard (alternative B: standalone app) | ~2.5 settimane | **GATED Gate E** ≥5 events/wk | No coupling con dogfood-ui |
+| Component 1 MINIMAL scope | ~1.5 settimane | **GATED Gate E** 2-5 events/wk | Extension dogfood-ui only, drop standalone |
+| Component 1 NOT BUILT | 0gg | **Gate E falsified** <2 events/wk | Trigger #1 empirically falsified, defer indefinitely |
+| Component 2 PR empirical attempts | ~variable | **POST Gate E + writing-plans approval** | Single PR drafting per task, Eduardo authorization each (no auto-mode per cross-repo PR fino pattern proven) |
 
-**Critical path pre-Max revised**: Component 2 workflow-doc-only + Component 3 buildable pre-Max (~2gg). Component 1 + Component 2 empirical PR validation in SPRINT_02 (20/05+).
+**Critical path pre-Max revised V3**: solo Component 2 workflow-doc + Component 3 gates + Gate E discipline setup (~2-3gg total). **Nessun Component 1 commitment pre-empirical-evidence**.
 
-**P1.2 explicit acknowledgement**: "first 3 PR empirici" pre-Max claim originale era aspirational. External governance (Game-Godot-v2 215+ PR auto-gestiti governance interna autosufficiente) ha decision time non-controllable. New gate: pattern validated SOLO post ≥1 PR accepted by external governance in SPRINT_02, NOT pre-Max.
+**Post-Max timeline**:
+- Week 1-4 (20/5 → 17/6): Eduardo manual coord-event logging + weekly checkpoint
+- Week 4 audit: harsh-reviewer subagent invocato per logging discipline verification + Gate E threshold evaluation
+- Week 5+ post Gate E result: Component 1 build / minimal / deferred decision finalized
+
+**Why scope reduction is honest**: trigger #1 unverified per Eduardo self-falsification ciclo 2. Building Component 1 pre-empirical = anticipatory intervention. Gate E IS the falsifier-most-economical Archon protocol required.
 
 ## YAGNI exclusions (cosa NON include) — P2.1 fix: rilevanti, no obvious
 
@@ -317,6 +347,14 @@ Aperte per writing-plans phase. Non bloccano spec approval.
 3. → spec self-review (inline)
 4. → Eduardo reviews spec
 5. → invoke `superpowers:writing-plans` skill per implementation plan dettagliato
+
+## Archon ciclo 2 self-falsification (post harsh-review + Eduardo "Riavvio")
+
+Post harsh-reviewer 3 P0 + 6 P1 + 3 P2 findings integrated (v2), Eduardo P1.1 question response = "Riavvio Archon ciclo 2" (refused all 3 incident-citation options). Self-falsification trigger #1 → ciclo 2 ran post-correction.
+
+**Ciclo 2 verdict**: Opt 1.5 REDUCED (Component 2 workflow + Component 3 gates pre-Max ONLY; Component 1 GATED Gate E 30gg empirical). Confidence 70% → 55%.
+
+**Lesson candidate L-2026-05-017** (in promotion): Archon ciclo 2 self-falsification pattern — quando user refuses both citation + rescope + as-is options + chooses "riavvia ciclo", quello stesso refusal IS strongest signal trigger was unverified. Future: pre-Archon ciclo 1, mark trigger empirical status upfront (asserted / verified / unverifiable).
 
 ## Harsh review findings integrated (Protocol 5 ADR-0026 addendum)
 
