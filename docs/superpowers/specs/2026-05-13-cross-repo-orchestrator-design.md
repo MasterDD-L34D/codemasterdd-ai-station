@@ -1,10 +1,19 @@
 # Design spec — Cross-repo orchestrator evolution (Opt 1.5)
 
 **Date**: 2026-05-13
-**Status**: Draft (post brainstorming skill + Archon 7-step)
-**Cross-ref**: ADR-0021 (multi-client) + ADR-0024 (cross-repo dependency) + ADR-0026 (cognitive protocols) + L-012 (vault sibling-peer write under explicit auth)
-**Methodology applied**: Protocol 6 brainstorming (superpowers skill) + Protocol 3 Archon 7-step First Principles (high-stakes architectural)
-**Confidence**: 75% (post trigger acquisition, ECE-adjusted)
+**Status**: Draft REWORK post harsh-review (3 P0 + 6 P1 + 3 P2 findings integrated)
+**Cross-ref**: ADR-0021 (multi-client pattern) + ADR-0026 (cognitive protocols) + L-012 (vault sibling-peer write under explicit auth)
+**Methodology applied**: Protocol 6 brainstorming (superpowers skill) + Protocol 3 Archon 7-step First Principles + Protocol 5 harsh-reviewer subagent (post-draft adversarial)
+**Confidence**: 70% (downgraded from aspirational 75%, post harsh-review P0.3 meta-recursion finding + post 3/3 P0 + 5/6 P1 + 3/3 P2 integration). PENDING P1.1 Eduardo input for final calibration.
+
+## Methodology bias disclosure (post P0.3 fix)
+
+**This spec applies the methodology it preserves** (Protocol 6 brainstorming + Protocol 3 Archon for designing a system that itself preserves Protocol 6 + 3 + adds Protocol 1 dashboard reinforcement). L-2026-05-016 explicitly warned against same-PR self-application as cherry-picking inflato. The 75% confidence claim was methodology-laundered.
+
+Mitigations applied:
+- Protocol 5 harsh-reviewer adversarial read invoked (output in commit history + spec body P0-P2 findings integrated). Counter-balance to meta-recursive self-validation.
+- This spec does NOT count toward Protocol 6 n>=2 instance counter (anti-pattern L-016 caught).
+- Falsifier: 30gg post-Max missed-coordination empirical tracking (Component 3) — independent of methodology preserved.
 
 ## Context
 
@@ -14,10 +23,20 @@ Eduardo richiesta 2026-05-13 sera-tardi: "siamo solidi come hub osservatore, non
 
 | Trigger | Selected | Implicazione |
 |---------|----------|--------------|
-| Visibility gap concreto | YES | Failure incident reale ultimi 30gg (grep manuale cross-repo). Action-required. |
+| Visibility gap concreto | YES | **CLAIM ASSERTED ma NON-VERIFIED**: Eduardo ha selezionato l'opzione MA spec non documenta incident specifico (P1.1 harsh-review finding). Trigger rest su unverified self-report. See "Empirical trigger evidence" section sotto. |
 | Post-Max anxiety | NO | NON è capability-anticipating fear. Esclude solution-looking-for-problem framing. |
 | Coordination overhead percepito | YES | Eduardo single-bottleneck pain concreto. Pattern Eduardo media bidirezionale tutti i cross-repo flow. |
-| Strategic alignment lungo termine | YES | Scaling 5→7-10 repo in 2-3 anni hypotetico. Forward-looking. |
+| Strategic alignment lungo termine | YES | Scaling 4 active monitored → 6-8 repo in 2-3 anni hypotetico. Forward-looking. |
+
+### Empirical trigger evidence (PENDING Eduardo input)
+
+**Status**: P1.1 harsh-review flag. Spec come scritto rest su trigger asserted ma non documented.
+
+Pre-Accepted status richiede Eduardo:
+- [ ] **Opzione A**: nominare 1-2 incident concrete missed-coordination ultimi 30gg con (data + scope + cost minuti). Cita qui inline.
+- [ ] **Opzione B**: ammettere no concrete incident yet + rescope spec a "preventive instrumentation only" (drop Component 2+3 a gates, mantain Component 1 dashboard solo)
+
+Senza una delle due, spec rimane Draft.
 
 ### Archon 7-step output
 
@@ -87,10 +106,11 @@ Cambio è del **ruolo codemasterdd**, NON dei repo monitored. Nessun ADR amendme
     └───────────────────┘    └───────────────────┘    └──────────────────┘
                 │                        │                        │
                 ▼                        ▼                        ▼
-        [6 repos read]           [4 repos PR + 1 L-012] [tracking logs]
-        Game / Godot / Dafne     Game / Godot /         logs/escalation-
-        AA01 / vault / synes     Dafne / AA01           gates-YYYY-MM.md
-        (read-only all)          + vault via L-012
+        [6 sources read]         [3 repos PR + 1 L-012] [tracking logs]
+        Game / Godot / Dafne     Game / Godot / Dafne   logs/escalation-
+        AA01 / vault / synes     + vault via L-012      gates-YYYY-MM.md
+        (read-only all)          (AA01 = filesystem-
+                                  direct NON-git)
                                  (Synesthesia skipped)
 ```
 
@@ -98,20 +118,29 @@ Cambio è del **ruolo codemasterdd**, NON dei repo monitored. Nessun ADR amendme
 
 ### Component 1 — Dashboard live aggregator
 
-**Scope**: Flask extension di `apps/dogfood-ui/` (riuso ADR-0017 Accepted infrastructure, NO new container).
+**Scope**: Flask extension di `apps/dogfood-ui/` (riuso ADR-0017 Accepted infrastructure).
+
+**P1.5 prerequisite acknowledged**: dogfood-ui è **scaffold opt-in (DOWN)** in STATUS_MULTI_REPO.md current state. Pre-Component 1 build serve **promote dogfood-ui da scaffold opt-in a always-on** (system service / scheduled task), ALTRIMENTI alternative path: **build Component 1 come standalone Flask app `apps/cross-repo-dashboard/`** per evitare coupling con app unmaintained. Decisione (alternative A vs B) in writing-plans phase. Effort estimate aggiornato sotto.
 
 **Source pull** (5min cron + manual trigger):
-- gh API: PR open / issue / commit recent per **6 repo** (Game / Godot-v2 / Dafne / AA01 / vault / Synesthesia — all read-only)
-- Healthcheck endpoints: Flask dogfood-ui `/api/health` + Dafne `:5000/health` + Ollama `:11434/api/tags`
-- Git log local: HEAD + divergence vs origin/main per 6 repo
-- Memory indexes: MEMORY.md cross-session + AA01 archive INDEX.md
+- gh API: PR open / issue / commit recent per **5 git repo** (Game / Godot-v2 / Dafne / vault / Synesthesia — read-only). AA01 NON-git: lettura via filesystem `inbox/` + `workspace/` + `archive/INDEX.md` + `learnings/` direct.
+- Healthcheck endpoints: Flask dogfood-ui `:8080/api/health` (port verified app.py:9) + Dafne `:5000/health` + Ollama `:11434/api/tags`
+- Git log local: HEAD + divergence vs origin/main per 5 git repo (AA01 excluded)
+- Memory indexes: codemasterdd-only MEMORY.md auto-memory (`C:\Users\edusc\.claude\projects\C--dev-codemasterdd-ai-station\memory\` — NO altro repo ha auto-memory equivalente) + AA01 `archive/INDEX.md`
 - Doc snapshots: STATUS_MULTI_REPO.md + COMPACT_CONTEXT.md last update timestamp
+
+**gh API rate budget** (P1.3 fix, 6 sources × cron 5min):
+- Authenticated quota: 5000 req/hr
+- Naive estimate: 5 repos × 4 endpoints (PR list / issue list / commit recent / healthcheck) × 12 cron/hr = 240 req/hr baseline (~5% quota)
+- Pagination policy: **max-1-page deep** (per-page=30 default, no full-history walk). Game-Godot-v2 ha 249+ PR mergeati ma solo `state=open` interrogato, NON history walk.
+- Cache key strategy: `<repo>:<endpoint>:<page>` SQLite key, TTL 5min gh API + 1min local healthcheck
+- Degraded mode: se quota >70% consumed → drop source priority: (1) Synesthesia (dormant), (2) full commit history detail, (3) issue list. PR list + HEAD divergence sempre top-priority.
 
 **Cache layer**: SQLite-backed (riuso `dogfood.sqlite` file), nuova tabella `cross_repo_state` (key, value JSON, fetched_at, ttl_sec). TTL 5min per gh API + 1min per local git/healthcheck.
 
 **View**:
-- Summary page `/cross-repo`: 6 repo card layout (Game / Godot-v2 / Dafne / AA01 / vault / Synesthesia) con (PR open count / HEAD short / divergence ↑↓ / last commit author + date / hook chain status / privacy class / dormant flag se applicable)
-- Drill-down `/cross-repo/<repo>`: detail per-repo (last 10 commit / PR list / open decisions / health endpoints status)
+- Summary page `/cross-repo`: 6 source card layout (5 git repo: Game / Godot-v2 / Dafne / vault / Synesthesia + 1 NON-git: AA01) con (PR open count [N/A AA01] / HEAD short [N/A AA01] / divergence ↑↓ [N/A AA01] / last activity timestamp / hook chain status / privacy class / dormant flag se applicable / non-git flag AA01)
+- Drill-down `/cross-repo/<source>`: detail per source — git repo: last 10 commit / PR list / open decisions / health endpoints status. AA01: archive INDEX summary / inbox count / workspace active count / lessons cumulative count.
 - Stale flag visivo se source last-update >72h
 
 **Endpoint API**: `/api/cross-repo/state` returns JSON dump (per integration futura es. claude-mem worker).
@@ -120,7 +149,7 @@ Cambio è del **ruolo codemasterdd**, NON dei repo monitored. Nessun ADR amendme
 
 ### Component 2 — Proactive contributor channel
 
-**Scope**: write-via-PR pattern L-012 (vault sibling-peer auth) **esteso** a 4 repo (Game / Godot-v2 / Dafne / AA01).
+**Scope**: write-via-PR pattern L-012 (vault sibling-peer auth) **esteso** a **3 git repo** (Game / Godot-v2 / Dafne) + 1 sibling-peer (vault via L-012 per-task auth). **AA01 ESCLUSO** (P0.2 harsh-review): NON-git workspace (`C:/Users/edusc/aa01/` senza `.git`), PR pattern fundamentally inapplicable. Alternative contribution channel AA01 = **filesystem-direct via lesson promotion + inbox capture lifecycle** (workflow esistente AA01 mantained, codemasterdd NON scrive direct su AA01 — Eduardo media via personal workflow).
 
 **Workflow**:
 1. codemasterdd identifica cross-repo issue durante uso normale (vedi tipi sotto)
@@ -130,8 +159,8 @@ Cambio è del **ruolo codemasterdd**, NON dei repo monitored. Nessun ADR amendme
 
 **Tipi PR cross-repo** (definizioni esplicite):
 - **policy-alignment**: codemasterdd ADR Accepted / convention CLAUDE.md changes che impatta repo target (es. encoding policy ADR-0021 propagation, hook chain pattern update)
-- **ADR-cross-ref**: nuovo ADR codemasterdd cita repo target ma quel repo ha CLAUDE.md/AGENTS.md proprio non aggiornato (es. ADR-0024 cross-repo dependency)
-- **drift-fix**: discovery state diverge tra codemasterdd memory / STATUS / doc e reality del repo target (es. claim "Ryzen AHEAD" PR #69 narrative drift case study)
+- **ADR-cross-ref**: nuovo ADR codemasterdd cita repo target ma quel repo ha CLAUDE.md/AGENTS.md proprio non aggiornato (es. addendum ADR-0024 Vue3 archive timeline propagation a Game)
+- **drift-fix**: discovery state diverge tra codemasterdd memory / STATUS / doc e reality del repo target (es. hypothetical: vault `Extras/config/llm-routing.json` hardcoded IP `.121` mentre reality post-DHCP reservation è `.10` → drift-fix PR a vault. Esempio reale già eseguito via L-012 pattern 2026-05-13 notte). **NOTA**: il caso ADR-0027 / Ryzen PR #69 narrative drift era correzione INTERNA codemasterdd memory, NON cross-repo PR — escluso da questa categoria (P2.3 fix).
 - **docs**: typo / link fix / cross-reference broken
 - **governance-suggestion**: pattern noto codemasterdd applicable ma non yet adopted da repo target (es. cognitive protocol P1 Refresh-verify proposal). **Soft-suggestion only**, governance interna repo decide.
 
@@ -176,18 +205,19 @@ Criteri **pre-definiti** per evoluzione paradigm SE failure trigger empirico eme
 ## Data flow
 
 ```
-[gh API 6 repo]──────────────────────────────┐
-[healthcheck Flask:5050]                     │
-[healthcheck Dafne:5000]                     │
-[healthcheck Ollama:11434] ──────────────────┼──> [Flask aggregator] ──> [SQLite cache] ──> [HTML /cross-repo view]
-[git log local 6 repo]                       │     (apps/dogfood-ui)     (dogfood.sqlite)         │
-[MEMORY.md indexes codemasterdd]             │                                                    │
-[AA01 archive/INDEX.md]                      │                                                    └──> [JSON API /api/cross-repo/state]
+[gh API 5 git repo]──────────────────────────┐
+[healthcheck Flask:8080/api/health]          │
+[healthcheck Dafne:5000/health]              │
+[healthcheck Ollama:11434/api/tags] ─────────┼──> [Flask aggregator] ──> [SQLite cache] ──> [HTML /cross-repo view]
+[git log local 5 git repo]                   │     (apps/dogfood-ui      (dogfood.sqlite          │
+[codemasterdd MEMORY.md auto-memory]         │      OR new app)           cross_repo_state)       │
+[AA01 filesystem direct: inbox+workspace+    │                                                    │
+       archive/INDEX.md+learnings/]          │                                                    └──> [JSON API /api/cross-repo/state]
 [STATUS_MULTI_REPO.md timestamp]             │
 [COMPACT_CONTEXT.md timestamp] ──────────────┘
 ```
 
-Nota: MEMORY.md è specifico di codemasterdd (user-local `C:\Users\edusc\.claude\projects\C--dev-codemasterdd-ai-station\memory\`). Altri repo non hanno MEMORY.md auto-memory. Source "MEMORY.md indexes" si riferisce solo a codemasterdd.
+Nota: MEMORY.md è user-local codemasterdd-only (`C:\Users\edusc\.claude\projects\C--dev-codemasterdd-ai-station\memory\`). Altri repo non hanno equivalente. AA01 = filesystem-direct read (non gh API, è NON-git).
 
 Refresh policy: cron 5min + manual `Refresh` button. Source con last-update >72h flagged visually.
 
@@ -219,42 +249,58 @@ Refresh policy: cron 5min + manual `Refresh` button. Source con last-update >72h
 | Sub-system | Integration |
 |------------|-------------|
 | 6 cognitive protocols | P1 Refresh-verify **rinforzato** (dashboard pre-action invece di grep cross-repo). P4 AA01 workspace invariato. P5/P6 invariati. |
-| 18 sub-agent | `repo-health-auditor` agent definition esistente diventa **backend** per dashboard view aggregation. `dogfood-analyst` invariato. |
+| 18 sub-agent | `repo-health-auditor` sub-agent (markdown prompt, NON callable backend service) genera STATUS_MULTI_REPO.md **on-demand** quando Eduardo invoca; dashboard legge file timestamp + parsa sezioni. NO live coupling Flask -> sub-agent. (P2.2 fix) |
 | ADR-0017 stack | Dashboard è **extension** di `apps/dogfood-ui/` (Flask+SQLite). NO new container. Langfuse trace opzionale per observability JSON API. |
 | Privacy guard rail H8 ADR-0023 | 4 wrapper cloud invariati. Component 2 PR drafting rispetta whitelist runtime check. |
 | Hook chain 5-layer | Invariata. Component 2 PR passa attraverso commit-msg + pre-commit + commit-guard standard. |
 | Plugin ecosystem | claude-mem auto cross-session memory. superpowers brainstorming/writing-plans applicato per questo spec (case study Protocol 6 + 3). |
 | MODEL_ROUTING | Component 2 PR drafting tier routing invariato (Aider cosmetic/refactor/cloud + OpenCode multi-step) |
 
-## Effort + timeline
+## Effort + timeline (P1.2 fix: decoupled from pre-Max deadline for Component 2)
 
-| Item | Effort | Timing | Constraint |
-|------|--------|--------|------------|
-| Component 1 dashboard | ~2 settimane (1 design + 1 build) | SPRINT_02 T1-T2 amended scope, post-Max | NO blocker, sovereign tier sufficient |
-| Component 2 PR pattern | ~3gg (workflow + tracking + first 3 PR) | Pre-Max (6gg residui) ✅ | Small scope, doable now |
-| Component 3 escalation gates | ~1gg (criteri + template) | Pre-Max ✅ | Small scope |
+| Item | Effort revised | Timing | Constraint / Dependency |
+|------|----------------|--------|------------------------|
+| Component 1 dashboard (alternative A: extension dogfood-ui) | ~3 settimane (~1 promote dogfood-ui to always-on + 1 design + 1 build) | SPRINT_02 T1-T2 amended scope, post-Max | dogfood-ui currently DOWN, needs promotion |
+| Component 1 dashboard (alternative B: standalone app) | ~2.5 settimane (~0.5 scaffold + 1 design + 1 build) | SPRINT_02 T1-T2 amended scope, post-Max | NO coupling con dogfood-ui unmaintained |
+| Component 2 PR workflow + tracking template | ~1gg (workflow doc + tracking template + dry-run protocol) | Pre-Max (6gg residui) ✅ | Small scope, doc-only |
+| Component 2 "first 3 PR accepted by external governance" | ~variable | **DEFERRED a SPRINT_02** (external governance approval time NON-controllable) | Gate empirico: ≥1 PR accepted by external governance prima di claim pattern validated |
+| Component 3 escalation gates | ~1gg (criteri + template + smoke test 1 settimana) | Pre-Max ✅ | Small scope |
 
-**Critical path pre-Max**: Component 2 + 3 buildable nei 6gg residui. Component 1 in SPRINT_02 (20/05+).
+**Critical path pre-Max revised**: Component 2 workflow-doc-only + Component 3 buildable pre-Max (~2gg). Component 1 + Component 2 empirical PR validation in SPRINT_02 (20/05+).
 
-## YAGNI exclusions (cosa NON include)
+**P1.2 explicit acknowledgement**: "first 3 PR empirici" pre-Max claim originale era aspirational. External governance (Game-Godot-v2 215+ PR auto-gestiti governance interna autosufficiente) ha decision time non-controllable. New gate: pattern validated SOLO post ≥1 PR accepted by external governance in SPRINT_02, NOT pre-Max.
+
+## YAGNI exclusions (cosa NON include) — P2.1 fix: rilevanti, no obvious
 
 - ❌ NO write-direct cross-repo (Opt 3 deferred via Gate A)
 - ❌ NO event/message bus (Opt 4 deferred via Gate B)
 - ❌ NO real-time websocket (cron 5min sufficient per use case attuale)
 - ❌ NO ML / anomaly detection (premature, no failure pattern yet)
-- ❌ NO multi-tenant (single Eduardo user)
-- ❌ NO mobile UI (Eduardo workstation Lenovo + optionally Ryzen)
+- ❌ NO authentication / authorization (single-user trust, sovereign workstation. Out-of-scope reverse proxy auth via Tailscale o equivalent se mai cross-LAN exposed)
+- ❌ NO audit log retention policy (logs/ gitignored cresce unbounded, accettabile per ora — review se >1GB single log)
+- ❌ NO data export/import format stability (SQLite schema = internal, no contract esterno)
+- ❌ NO graceful SQLite schema migration framework (single dev: ALTER TABLE su demand, no migration tool come Alembic. Accettabile sotto 5 schema changes/anno)
 - ❌ NO notification push (cron + manual review sufficient)
 
-## Reversibility analysis
+## Reversibility analysis (P1.4 fix: graduated, no hand-wave)
 
 | Component | Reversibility | Effort to remove |
 |-----------|---------------|------------------|
-| Component 1 dashboard | 100% reversible | ~30min (remove Flask route + drop SQLite table) |
-| Component 2 PR pattern | 100% reversible | ~10min (stop drafting PR, governance interna assorbe pattern naturally) |
+| Component 1 dashboard | 100% reversible | ~30min (remove Flask route + drop SQLite table cross_repo_state) |
+| Component 2 PR pattern (≤2 PR accepted by external governance) | **Full reversibility** | ~10min stop drafting + governance interna doesn't yet cite codemasterdd patterns |
+| Component 2 PR pattern (3-4 PR accepted) | **Graduated reversibility — soft lock-in begin** | ~1-2h: stop drafting + audit target repo CLAUDE.md/AGENTS.md per cross-references created + coordinated cleanup PR su target repo per rimuovere refs |
+| Component 2 PR pattern (≥5 PR accepted with reference adoption) | **Soft lock-in confirmed** | Days+: ADR amendment cross-repo per ritirare codemasterdd pattern adoption from target repo governance. Comparable cost a Opt 3 ADR amendment (NOT 100% reversible) |
 | Component 3 escalation gates | 100% reversible | ~5min (delete tracking files, no decision impact pending) |
 
-**Asymmetric advantage vs Opt 3/Opt 4**: Opt 3 richiederebbe ADR amendment cross-repo (governance internal consent = irreversibile soft). Opt 4 richiederebbe Dafne expansion (mesi di setup, irreversibile mid-term).
+**Gate D — Reversibility threshold** (P1.4 fix):
+- Trigger: ≥5 PR cumulative accepted by external governance WITH cross-reference adoption (target repo CLAUDE.md/AGENTS.md cita codemasterdd pattern)
+- Action: PAUSE Component 2 + audit lock-in scope cross-repo + ADR formale per ritiro coordinato OR continuation explicit
+
+**Asymmetric advantage vs Opt 3/Opt 4 (revised)**:
+- Opt 3 richiederebbe ADR amendment cross-repo upfront (high cost day 1, irreversibile soft after governance internal consent obtained)
+- Opt 4 richiederebbe Dafne expansion (high cost month 1, irreversibile mid-term)
+- Opt 1.5 ha **graduated cost curve**: cheap day 1 (≤2 PR), graduated growth (3-4 PR), eventual Gate D trigger (≥5 PR)
+- **Honest comparison**: Opt 1.5 lock-in cost LAGGED vs Opt 3 UPFRONT, NOT absent. Per ≤2 PR accepted Opt 1.5 wins. Per ≥5 PR accepted converge toward Opt 3 cost.
 
 ## Open questions
 
@@ -272,16 +318,38 @@ Aperte per writing-plans phase. Non bloccano spec approval.
 4. → Eduardo reviews spec
 5. → invoke `superpowers:writing-plans` skill per implementation plan dettagliato
 
+## Harsh review findings integrated (Protocol 5 ADR-0026 addendum)
+
+Harsh-reviewer subagent invoked 2026-05-13 post-Draft. Verdict: **REWORK** (confidence 80%). Findings integrated questa revisione:
+
+| Priority | Finding ID | Status | Where fixed in spec |
+|----------|------------|--------|---------------------|
+| P0 | P0.1 ADR-0024 mis-cite hallucinated | FIXED | Header cross-ref + References section (rimosso ADR-0024 cross-repo dep claim, era hallucinated. ADR-0024 reale = Vue3 archive Godot timeline) |
+| P0 | P0.2 AA01 NOT git, PR pattern inapplicable | FIXED | Component 2 scope ridotto a 3 git repo + vault L-012 + AA01 filesystem-direct alternative channel |
+| P0 | P0.3 Methodology meta-recursion self-validating | FIXED | New "Methodology bias disclosure" section + confidence downgraded 75% -> 65% + falsifier explicit |
+| P1 | P1.1 Visibility gap concreto not documented | PENDING Eduardo | New "Empirical trigger evidence" section richiede Eduardo input pre-Accepted |
+| P1 | P1.2 Effort 6gg pre-Max unrealistic | FIXED | Component 2 decoupled da pre-Max deadline, "first 3 PR" → SPRINT_02 gated |
+| P1 | P1.3 gh API rate budget not computed | FIXED | New "gh API rate budget" table + cache key strategy + max-1-page deep policy |
+| P1 | P1.4 Reversibility 100% Component 2 hand-wave | FIXED | New "graduated reversibility" table + Gate D trigger ≥5 PR threshold |
+| P1 | P1.5 dogfood-ui scaffold opt-in DOWN | FIXED | P1.5 prerequisite acknowledged + alternative A (promote dogfood-ui always-on) vs B (standalone app) decision in writing-plans |
+| P1 | P1.6 Port inconsistency 5050 vs 8080 | FIXED | All port references aggiornati a 8080 (verified app.py:9) |
+| P2 | P2.1 YAGNI list inflated | FIXED | Replaced "NO mobile UI" / "NO multi-tenant" con NO auth / NO audit retention / NO data export / NO schema migration framework |
+| P2 | P2.2 repo-health-auditor "backend" misleading | FIXED | Integration table clarifies sub-agent generates STATUS_MULTI_REPO.md on-demand, NO live coupling |
+| P2 | P2.3 Drift-fix example Ryzen PR #69 internal not cross-repo | FIXED | Replaced example con hypothetical vault llm-routing.json drift-fix |
+
+**Net**: 3/3 P0 fixed + 5/6 P1 fixed (P1.1 PENDING Eduardo input) + 3/3 P2 fixed. Confidence post-rework: 70% (up da 65% post P0+P1+P2 integration MA still below original aspirational 75%).
+
 ## References
 
 - Brainstorming skill: `superpowers:brainstorming` (Protocol 6 ADR-0026 addendum 2026-05-13)
 - Archon protocol: `~/aa01/archon/system/ARCHON_v2_SYSTEM.md` (Protocol 3 ADR-0026)
+- Harsh-reviewer skill: `superpowers:requesting-code-review` (Protocol 5 ADR-0026 addendum 2026-05-13)
 - ADR-0017: stack scaffolding (apps/dogfood-ui foundation)
 - ADR-0021: multi-client pattern (boundary preservation)
 - ADR-0023: privacy guard rail H8 (whitelist runtime check)
-- ADR-0024: cross-repo dependency tracking
+- ADR-0024: Vue3 archive + Godot v2 canonical timeline (CORRECTLY cited post P0.1 fix; NOT cross-repo dependency tracking)
 - ADR-0026: cognitive workflow protocols (P1-P6)
 - ADR-0027: cross-PC clone architecture (Ryzen vs Lenovo lineage)
 - L-002: Hyperspace audit cycle anti-pattern
 - L-012: vault sibling-peer write under explicit auth (Component 2 pattern source)
-- L-016: cognitive protocols measurement anti-aspirational (Component 3 measurement discipline)
+- L-016: cognitive protocols measurement anti-aspirational (Component 3 measurement discipline + P0.3 meta-recursion warning source)
