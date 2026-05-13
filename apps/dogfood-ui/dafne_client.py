@@ -53,18 +53,23 @@ class DafneClient:
             return None
 
     def status(self) -> dict[str, Any] | None:
+        """GET /api/status -- agents list + artifact count + ollama online flag."""
         return self._get("/api/status")
 
     def swarm_status(self) -> dict[str, Any] | None:
+        """GET /api/swarm/status -- cycle count + current agent + error state."""
         return self._get("/api/swarm/status")
 
     def stats(self) -> dict[str, Any] | None:
+        """GET /api/stats -- per-agent rolling window + levels."""
         return self._get("/api/stats")
 
     def dafne_status(self) -> dict[str, Any] | None:
+        """GET /api/dafne/status -- intervention history + drift state."""
         return self._get("/api/dafne/status")
 
     def proposals(self) -> dict[str, Any] | None:
+        """GET /api/dafne/proposals -- pending + approved + rejected list."""
         return self._get("/api/dafne/proposals")
 
     # -----------------------------------------------------------------------
