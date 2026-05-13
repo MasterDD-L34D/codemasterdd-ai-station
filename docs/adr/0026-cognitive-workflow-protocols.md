@@ -224,11 +224,15 @@ Empirical trial breve è cross-cutting (NOT a separate protocol but enabler per 
 - Narrative claim "X/Y VIABLE/PASS" senza empirical decomposition default vs mitigation
 - Pre-merge ADR-class decision con narrative implication
 
-**Anti-pattern**: skip per cluster solo doc-only OR <2 PR (over-engineered overhead). Skip se task lean <30min (cost 85K tokens + 193s sproporzionato).
+**Hard cap (ratified 2026-05-13 post harsh-reviewer #2 P1 #5 finding)**: **max 2 invocazioni harsh-reviewer per session**. ECCEZIONE solo per threshold counter Protocol 5 explicit (1st invocation legitimate + 2nd invocation legitimate validate threshold). 3rd invocation same-session = anti-pattern escalation paranoia, defer next session.
 
-**Cost**: ~$0.30-0.50 per invocazione (~85K tokens). Sotto budget cap $20/mese ADR-0023 anche con 1-2 cluster significativi/mese = $1/mese.
+**Anti-pattern**: skip per cluster solo doc-only OR <2 PR (over-engineered overhead). Skip se task lean <30min (cost 85K tokens + 193s sproporzionato). **Anti-pattern: cluster-of-clusters infinity loop** (3rd+ invocation same-session = escalation, NOT quality gate).
 
-**Caso studio empirico**: PR #80+#81 cluster review 2026-05-13 consegnato 8 finding actionable (3 P0 incluso CWE-214 catch real, 3 P1, 2 P2). Eduardo decisioni 4/4 trigger fix → PR #82 mergeato.
+**Cost**: ~$0.30-0.50 per invocazione (~85K tokens). Sotto budget cap $20/mese ADR-0023 anche con 1-2 cluster significativi/mese = $1/mese. Cumulative session cap = $1 (hard cap 2 invocations).
+
+**Caso studio empirico (n=2 instances LEGITIMATE post hard cap)**:
+- 1st invocation: PR #80+#81 cluster review 2026-05-13 pomeriggio consegnato 8 finding actionable (3 P0 incluso CWE-214 catch real, 3 P1, 2 P2). Eduardo decisioni 4/4 trigger fix → PR #82 mergeato.
+- 2nd invocation: cluster ULTRA-FINAL 8 PR review 2026-05-13 sera consegnato 7 finding META-LEVEL (3 P0 incluso reflexive cherry-picking + scope drift, 2 P1, 2 P2). Eduardo decisioni 4/4 trigger fix → PR consolidamento + STOP next 24h consigliato.
 
 **Reference**: agent definition `~/.claude/agents/harsh-reviewer.md` (codemasterdd .claude/agents/) + ADR-0018 agent readiness protocol.
 

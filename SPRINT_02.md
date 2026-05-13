@@ -15,6 +15,20 @@
 > - **Empirical evidence Claude Code usage intensivo**: 49 PR/6gg pre-Max = empirical justify tier 0 strategic post-Max via Claude API on-demand (ADR-0023 H7 confirmed).
 >
 > **Sprint objective AMENDED**: validare empiricamente scenario A (full-sovereign $0-50/anno) in uso normale + cleanup PR esterni opportunistico + cost tracking primo mese reale + raccolta dogfood organici post-closure (target soft n>=20 cumulative) + **NEW: dogfood plugin ecosystem real-use** (claude-mem hook lifecycle + superpowers skill auto-trigger + compass project-direction tracking) + **NEW: validate methodology framework effectiveness** post-Max sovereign (Protocol 1/2/3/4 application pattern via Aider/OpenCode vs Claude Code). Zero silent-corruption deve rimanere invariato.
+>
+> **Re-baseline 2026-05-13 pomeriggio (post harsh-reviewer #2 P0 #2 esplicit)** -- Eduardo decision "in scope":
+> - **T1 Smoke wrapper sovereign**: ✅ **DONE expanded** -- 9 entries log #27-#36 + 1 retry success (entry #34 cosmetic-diff fix) + 1 bypass (entry #36 Groq autoresearch). 6/6 effective wrapper VIABLE (5 + bypass). PR cluster #78-#84 cumulative.
+> - **T2 Dogfood organico continuativo**: 🟢 **IN-SCOPE residuo 6gg pre-Max** -- target soft n>=20 cumulative (current n=36 GIA' superato). Continue passive observation durante workflow normale.
+> - **T3 Stack ADR-0017 hot-restart**: ✅ DONE 2026-05-10 (entry SPRINT_02 update).
+> - **T4 Cleanup PR esterni**: ✅ DONE 2026-05-07 (4 PR triagati).
+> - **T5 Cost tracking primo mese**: 🟢 **IN-SCOPE residuo 6gg pre-Max** -- snapshot ccusage pre-Max (~2026-05-19) + cumulative cloud spend log entry. Cumulative cluster 13/5: $0.00818 + €10 OpenAI + ~$1 harsh-reviewer (~$10.85 totale).
+> - **T6 Privacy validation Synesthesia preview**: 🟡 OPPORTUNISTIC (dormant fino ago 2026, default skip).
+> - **T7 Review fine sprint**: 🟢 **IN-SCOPE residuo 6gg pre-Max** -- session retrospect ~2026-05-19 mid (3 decisioni continuita / mid-correction / SPRINT_03 scope).
+> - **T8 Plugin ecosystem dogfood**: 🟢 IN-SCOPE residuo 6gg pre-Max -- passive observation continua.
+> - **T9 Methodology framework effectiveness**: 🟢 IN-SCOPE residuo 6gg pre-Max -- cite count Protocol 1-6 (P5+P6 NEW addendum) JOURNAL post-Max comparison.
+> - **T10 Three Strikes Quality Gate**: 🟡 DEFERRED-TRIGGER (default skip, NON ratificato n=3 condition).
+> - **NEW T11 Governance saturation review** (capturarsi questa session 13/5 pomeriggio): 🟡 OPPORTUNISTIC -- post-cluster cumulative 8 PR + 4 ADR review per consolidamento o trim. Lesson L-016 candidate.
+> - **Governance work 13/5** (8 PR + 4 ADR + harsh-reviewer 2x + addendum P5+P6): **ACCEPTED scope-add** capturarsi come T11 + lesson L-016. NOT scope-creep silent (ora explicit re-baseline).
 
 ---
 

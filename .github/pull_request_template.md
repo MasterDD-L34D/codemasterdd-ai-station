@@ -2,6 +2,12 @@
 PR template codemasterdd-ai-station -- introdotto 2026-05-13 PR #84 (P1 #5 harsh-reviewer fix).
 Sezione "Cognitive protocols applied" anti-aspirational measurement (ADR-0026 addendum 2026-05-13).
 Threshold review 2026-08-13: se <30% adoption rate Protocol 5+6 su qualifying tasks -> amendment.
+
+SKIP RULE micro PR (ratified 2026-05-13 post harsh-reviewer #2 P1 #4 finding):
+- Doc-only PR <5 lines change OR cosmetic refresh (date / count / typo): COMPILA solo Summary + Files changed. SKIP "Cognitive protocols applied" + "Test plan" + "Trigger ADR".
+- Single-commit cherry-pick OR revert: COMPILA solo Summary + Cross-references.
+- Auto-merge automation PR (skiv-monitor / gh-bot equivalent): SKIP completamente template.
+- Default: PR comportamento-critical OR ADR-class OR security/governance-critical => COMPILA template completo.
 -->
 
 ## Summary
@@ -11,6 +17,10 @@ Threshold review 2026-08-13: se <30% adoption rate Protocol 5+6 su qualifying ta
 ## Files changed
 
 <!-- Bullet list file modificati + perche brevemente. -->
+
+<!-- ============================================================ -->
+<!-- BELOW SECTIONS: SKIP if doc-only <5 lines OR cosmetic refresh -->
+<!-- ============================================================ -->
 
 ## Test plan
 
