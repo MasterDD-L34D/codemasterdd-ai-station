@@ -24,6 +24,73 @@
 - API keys cloud free tier (Groq + Cerebras + Gemini) attive in `~/.config/api-keys/keys.env`.
 - Privacy policy per-repo invariata (Synesthesia mixed dormant, codemasterdd cloud OK).
 
+## Pre-flight checklist 2026-05-13 notte (status pre-trigger 20/05+, 6gg residui pre-Max)
+
+Refresh-verify pre-trigger SPRINT_02 attivo. Cluster 12-13/5 (8 PR cumulative) ha completato base operative: H7 + cross-PC ecosystem doc + drift class IPs killed + R1-R5 BACKLOG resolved.
+
+### Pre-req status verified
+
+| Item | Status | Note |
+|------|--------|------|
+| Fase 6 + Fase 7 CLOSED | ✅ | ADR-0015 + ADR-0017 Accepted (PR #4 7/5) |
+| Stack ADR-0017 hot-restart | ✅ | T3 PASS 12s up + 38 traces preserved (2026-05-10) |
+| Wrapper aider-* operativi | ✅ | 4 cloud + 2 local + OpenCode v1.14.41 attivo |
+| API keys cloud (Groq + Cerebras + Gemini) | ✅ | + **ANTHROPIC tier-0 added 12/5 H7 DONE** |
+| Privacy policy per-repo | ✅ | + Ryzen whitelist propagation R4 DONE 13/5 |
+| **NEW DHCP reservation locked** | ✅ | Lenovo `.10` Wi-Fi + Ryzen `.11` Ethernet (TIM HUB AGTHP, drift class permanent kill) |
+| **NEW SSH key-based auth Lenovo->Ryzen** | ✅ | ed25519 passwordless + admin keys file |
+| **NEW Vault sync 3-way** | ✅ | HEAD `1abaa743` Ryzen+Lenovo+origin (R5 DONE) |
+| **NEW BACKLOG R1-R5 cleanup** | ✅ | TUTTI RESOLVED (R1 via ADR-0027 narrative drift) |
+
+### T1-T10 readiness check pre-trigger 20/05+
+
+| Task | Readiness | Pre-flight note |
+|------|-----------|------------------|
+| T1 Smoke test sovereign 3 wrapper | 🟢 READY | Candidates files identified, wrapper paths verified |
+| T2 Dogfood organic continuativo | 🟢 READY | Log file `logs/aider-delegation-2026-05.md` exists, target n>=20 cumulative dataset |
+| T3 Stack ADR-0017 hot-restart | ✅ **ALREADY DONE 2026-05-10** | T3 PASS anticipated, regression-checked |
+| T4 Cleanup PR esterni opportunistico | ✅ **ALREADY DONE 2026-05-07** | 4/4 PR triagati (Game-Database #97/#105, compass #10, evo-swarm #61) |
+| T5 Cost tracking primo mese | 🟡 GATED ~2026-06-15 | Aspetta full month post-Max data |
+| T6 Synesthesia privacy preview | 🟡 OPPORTUNISTIC | Dormant fino ago 2026 (default skip) |
+| T7 Review fine sprint | 🟡 GATED ~2026-06-19 | End-of-sprint scheduled |
+| T8 Plugin ecosystem dogfood | 🟢 READY | 3 plugin installed 12/5 (compass + superpowers + claude-mem), observation organic durante sessioni normali |
+| T9 Methodology framework effectiveness | 🟢 READY | 4 protocols ADR-0026 documented + L-001..L-014 catalog disponibile |
+| T10 Three Strikes cross-pattern adoption | 🟡 DEFERRED-TRIGGER | Default expectation: NON meet entro sprint (skip OK) |
+
+### Cumulative cluster 12-13/5 impact su SPRINT_02
+
+**Positive multipliers** (rinforzano scenario A):
+- 8 PR efficient cluster pre-Max = pattern auto-mode disciplinato + ADR-0026 protocols validato empirical
+- L-014 autoresearch first pattern = available tool per future technical issues SPRINT_02
+- DHCP reservation killed drift class = network stability invariata mid-sprint
+- SSH cross-PC accessible = capability fleet Ryzen via wrapper se serve (es. delegation Ryzen-side experiment T8/T9)
+- Vault llm-routing IP fix synced 3-way = Ollama daemon reachable senza drift Ryzen-side
+
+**Trigger updates pre-sprint** (post v22 sprint amend):
+- T8.2 superpowers skill auto-trigger pattern: ora ha `superpowers:requesting-code-review` validato primo uso reale 12/5 sera (PR #69 harsh-review) + `superpowers:consolidate-memory` invoked 13/5 notte. Observation pool partito.
+- T9 protocols cite count baseline: cumulative 14/21/27/73 cite count al 2026-05-12 -> da aggiornare con cluster 13/5 cite count (P1+P2+P3+P4 applicati transparency PR #69 + #73 + #74 commit messages).
+- L-014 promotion adds new methodology counter-example pool per T9 protocols validation (P2 Autoresearch reinforcement caso TIM AGTHP DHCP).
+
+### Risk register pre-flight
+
+| Risk | Probabilità | Mitigation |
+|------|-------------|------------|
+| Silent-corruption emerge T1 | LOW (zero precedent post-ADR-0008 + ADR-0011 hook globali) | T1 stop + ADR addendum reactive |
+| Privacy violation Synesthesia | LOW (dormant + whitelist enforcement Lenovo+Ryzen) | Wrapper abort + log entry |
+| Fail rate >15% | LOW (cumulative 26 entries 0 silent-corruption pre-sprint) | Soft monitor in JOURNAL |
+| ANTHROPIC budget overrun >$20/mese | LOW (smoke test cost $0.000044, conservative use) | Auto-monitor via `logs/claude-api-spend-2026-MM.md` |
+| Eduardo-direct burnout | MEDIUM (sessione 12-13/5 cumulative ~12h+ effort) | Stop-pattern L-002 attivo, no forced sprints |
+
+### Baseline metrics snapshot pre-trigger
+
+- Dogfood dataset cumulative: **n=26** (15 Aider + 11 OpenCode)
+- Silent-corruption count: **0** (zero precedent)
+- ADR Accepted: **14** (post-0027)
+- Lessons promoted: **14** (L-001..L-014)
+- Plugin ecosystem: 3 plugins (compass + superpowers + claude-mem)
+- HEAD codemasterdd: `51d135a` (will further bump pre-trigger 20/05+)
+- BACKLOG state: R1-R5 RESOLVED, C1+C2+Q3-update low-priority, H2/H3/M3/M5 trigger-conditional
+
 ## Task
 
 ### T1. Smoke test sovereign empirico [primo task post-Max]
