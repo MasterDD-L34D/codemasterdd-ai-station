@@ -1,25 +1,30 @@
 REM ===========================================================
-REM Aider wrapper privacy guard block template (H8 ADR-0023)
-REM Inserisci queste righe DOPO `chcp 65001` + `set PYTHONIOENCODING`
-REM PRIMA della chiamata `aider --model ...` nei wrapper:
-REM - aider-groq.cmd
+REM Aider wrapper privacy guard block template H8 ADR-0023
+REM Inserisci queste righe DOPO chcp 65001 + set PYTHONIOENCODING
+REM PRIMA della chiamata aider --model ... nei wrapper:
+REM - aider-groq-bypass.cmd  -- post-2026-05-13 entry #36 OpenAI-compat bypass
 REM - aider-cerebras.cmd
 REM - aider-gemini.cmd
 REM - aider-openai.cmd
+REM ===========================================================
+REM IMPORTANT update 2026-05-13:
+REM - REMOVED aider-groq.cmd from list -- DELETED user-side post LiteLLM Groq adapter buggy GitHub Issues #9296+
+REM - All wrapper now in scripts/wrappers/ canonical repo-tracked, install via scripts/setup/install-wrappers.ps1
+REM - L-2026-05-015 mitigation Option B: REM lines NO parens to avoid PowerShell & invocation empty-file pollution
 REM ===========================================================
 
 REM Privacy guard rail check
 set "REPO_ROOT="
 for /f "delims=" %%i in ('git rev-parse --show-toplevel 2^>nul') do set "REPO_ROOT=%%i"
 if "%REPO_ROOT%"=="" (
-    echo ERROR: not in a git repo. aider-WRAPPERNAME aborted ^(privacy guard rail H8^).
+    echo ERROR: not in a git repo. aider-WRAPPERNAME aborted -- privacy guard rail H8.
     exit /b 1
 )
 set "REPO_ROOT_WIN=%REPO_ROOT:/=\%"
 set "WHITELIST=%USERPROFILE%\.config\aider-privacy-whitelist.txt"
 if not exist "%WHITELIST%" (
     echo ERROR: privacy whitelist not found at %WHITELIST%
-    echo aider-WRAPPERNAME aborted ^(privacy guard rail H8^).
+    echo aider-WRAPPERNAME aborted -- privacy guard rail H8.
     exit /b 1
 )
 findstr /B /I /C:"%REPO_ROOT_WIN%" "%WHITELIST%" >nul 2>&1
@@ -27,9 +32,11 @@ if errorlevel 1 (
     echo ERROR: repo NOT in cloud-OK whitelist:
     echo   repo: %REPO_ROOT_WIN%
     echo   whitelist: %WHITELIST%
-    echo aider-WRAPPERNAME aborted ^(privacy guard rail H8 ADR-0023^).
+    echo aider-WRAPPERNAME aborted -- privacy guard rail H8 ADR-0023.
     echo If repo should be cloud-OK, add path to whitelist and retry.
     exit /b 1
 )
 
-REM (rest of wrapper: aider --model ... %*)
+REM REMINDER: per cloud wrapper sensitive (es. aider-groq-bypass) usare temp env-file pattern P0 hardened invece di --openai-api-key argv -- vedi aider-groq-bypass.cmd canonical in scripts/wrappers/
+
+REM Rest of wrapper: aider --model ... %*

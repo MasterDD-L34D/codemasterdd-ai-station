@@ -337,7 +337,7 @@ codemasterdd-ai-station/
     4. Claude Code PreToolUse `scripts/hooks/commit-guard.js` — fail-fast in sessione Claude Code (duplicato di 1 per feedback veloce).
   - Bypass guard rail con `git commit --no-verify`, non raccomandato
 
-- **Wrapper CLI per delegazione** (in `C:\Users\edusc\.local\bin\`, eseguibili da cmd.exe):
+- **Wrapper CLI per delegazione** (canonical repo `scripts/wrappers/`, installed user-side `C:\Users\edusc\.local\bin\` via `scripts/setup/install-wrappers.ps1` idempotente -- harsh-reviewer P1 #4 fix 2026-05-13):
   - **Aider locali (tier 1-2 sovereign)**:
     - `aider-cosmetic <file>` → 7B + **diff** + no-auto-commits (JSDoc, docstrings, rename, lint-fix) — **updated 2026-05-13 T1 SPRINT_02 entry #34**: switched whole→diff per position-precision PASS, added --no-auto-commits parity con aider-refactor
     - `aider-refactor <file>` → 14B Q2 + diff + no-auto-commits (refactor, bug fix, logic change) — 25 tok/s

@@ -1,0 +1,12 @@
+@echo off
+REM Aider wrapper for cosmetic edits JSDoc docstrings rename lint-fix
+REM Model: Qwen 7B + diff format + no-auto-commits
+REM Updated 2026-05-13: switched whole -> diff per T1 SPRINT_02 entry #34 -- whole was position-precision LIMITED
+REM Updated 2026-05-13: added --no-auto-commits for parity with aider-refactor safety
+REM --commit-prompt: enforce English + Conventional Commits ADR-0011 Gap 2C
+REM --git-commit-verify: respect git hooks ADR-0011 Gap 3 Aider default False
+REM cp1252 fix 2026-04-23: force console + Python UTF-8 to avoid Rich UnicodeEncodeError on retry loop dogfood #3 bug
+REM Note: REM lines with parens removed -- L-2026-05-015 PowerShell pollution mitigation Option B
+chcp 65001 >nul 2>&1
+set PYTHONIOENCODING=utf-8
+aider --model ollama/qwen2.5-coder:7b --edit-format diff --no-auto-commits --git-commit-verify --commit-prompt "Commit message MUST be in English, Conventional Commits format (type: short description), subject line <=72 chars total, lowercase description, no trailing period. Example: docs: add JSDoc to hook validation blocks." %*
