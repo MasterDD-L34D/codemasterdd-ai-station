@@ -5,7 +5,7 @@
 .DESCRIPTION
   Validates pre-PR conditions WITHOUT calling gh pr create:
     1. Repo target is in whitelist allow-list (Game / Godot-v2 / Dafne / vault)
-    2. Privacy whitelist check passes (~/.config/aider-privacy-whitelist.txt)
+    2. Cross-repo PR whitelist check passes (~/.config/cross-repo-pr-whitelist.txt)
     3. Local repo path exists + is git repo
     4. PR type is valid taxonomy
     5. Preview files exist + are readable
@@ -75,25 +75,51 @@ if (-not (Test-Path "$repoPath\.git")) {
 }
 Write-Host "PASS [2] is git repo" -ForegroundColor Green
 
-# Check 3: privacy whitelist
-$whitelistPath = "$env:USERPROFILE\.config\aider-privacy-whitelist.txt"
+# Check 3: cross-repo PR whitelist
+# Separate from aider-privacy-whitelist.txt (cloud LLM delegation semantics).
+# Format per line: <name> <absolute-path> (whitespace-separated). Comments # ignored.
+$whitelistPath = "$env:USERPROFILE\.config\cross-repo-pr-whitelist.txt"
 if (-not (Test-Path $whitelistPath)) {
-  Write-Host "FAIL [3]: privacy whitelist not found: $whitelistPath" -ForegroundColor Red
+  Write-Host "FAIL [3]: cross-repo PR whitelist not found: $whitelistPath" -ForegroundColor Red
   exit 1
 }
-$whitelist = Get-Content $whitelistPath
+
+# Canonicalize local repo path (handles trailing slashes, case normalization)
+try {
+  $canonicalRepoPath = (Resolve-Path $repoPath).Path
+} catch {
+  $canonicalRepoPath = $repoPath
+}
+
+$whitelistLines = Get-Content $whitelistPath |
+  Where-Object { $_ -notlike "#*" -and $_.Trim() -ne "" }
+
 $repoMatchesWhitelist = $false
-foreach ($line in $whitelist) {
-  if ($line -like "*$RepoTarget*" -or $line -like "$repoPath*") {
+foreach ($line in $whitelistLines) {
+  $parts = $line.Trim() -split '\s+', 2
+  if ($parts.Count -lt 2) { continue }
+  $wlName = $parts[0]
+  $wlPath = $parts[1].Trim()
+
+  # Canonicalize whitelist path for comparison
+  try {
+    $canonicalWlPath = (Resolve-Path $wlPath).Path
+  } catch {
+    $canonicalWlPath = $wlPath
+  }
+
+  # Match on name column OR canonical path (case-insensitive, Windows)
+  if ($wlName -ieq $RepoTarget -or $canonicalWlPath -ieq $canonicalRepoPath) {
     $repoMatchesWhitelist = $true
     break
   }
 }
+
 if (-not $repoMatchesWhitelist) {
-  Write-Host "FAIL [3]: repo $RepoTarget NOT in privacy whitelist" -ForegroundColor Red
+  Write-Host "FAIL [3]: repo $RepoTarget NOT in cross-repo PR whitelist ($whitelistPath)" -ForegroundColor Red
   exit 1
 }
-Write-Host "PASS [3] privacy whitelist" -ForegroundColor Green
+Write-Host "PASS [3] cross-repo PR whitelist" -ForegroundColor Green
 
 # Check 4: preview files exist
 $files = $PreviewFiles -split ','
