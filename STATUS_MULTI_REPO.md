@@ -33,6 +33,7 @@ Stack `Accepted` con **T3 SPRINT_02 hot-restart 2nd pass 10/5 mattina PASS**: `d
 | Postgres | 5432 | Accepted | scaffold opt-in (DOWN) | Persistence preservata cross-restart |
 | dogfood-ui Flask | 8080 | Accepted | scaffold opt-in (DOWN) | v0.2.0, 11 route, side-effect SQLite path worktree noto |
 | promptfoo CLI | -- | Accepted | installed v0.121.7 | Smoke 4/4 pass commit `327d078`. Eval on-demand via CLI |
+| Cross-repo coordination (Component 2+3) | -- | Accepted | DOC + scripts pre-Max | Gate E empirical 30gg post-Max pending |
 | Dafne swarm (esterna) | 5000 | -- | gestito da repo Dafne separato | Vedi sezione Dafne sotto |
 
 ---
