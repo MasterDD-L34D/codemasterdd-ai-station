@@ -4,6 +4,8 @@
 >
 > **Status 2026-05-07**: **Planning** (sprint inizia 20/05 dopo Claude Max expiration 19/05). Abbozzo preparatorio per primo onboarding sovereign.
 >
+> **Status update 2026-05-13 notte tarda — ACTIVE (Eduardo override)**: scope shift PLANNING -> ACTIVE per Eduardo decision "fai SPRINT_02 basta attendere è inutile". Methodological trade-off documentato: alcuni T tasks (T1 smoke + T2 dogfood + T8 plugin observation + T10 monitoring) eseguibili sotto Max con caveat di contamination metodologica (validation non e' "in assenza Max" come scope originale). T9 methodology framework effectiveness post-Max RIMANE post-Max only (cite count comparison wrapper vs Claude Code Session). T5+T7 GATED time-based.
+>
 > **Update 2026-05-10**: pre-validation in autonomy: **T3 hot-restart PASS** (stack ready ~12s, 38 traces preserved post 13gg+ down, regression `dogfood-ui` VALID_STACKS desync trovata e fixata, entry POST 12->13). **T4 cleanup PR esterni gia' COMPLETO** (i 4 PR target gia' triagati 7/5: #97 Game-Database closed-as-stale post-rebase abort, #105/#10/#61 mergeati). Restano per 20/05+: T1 smoke sovereign, T2 dogfood organico, T5 cost tracking, T7 review.
 >
 > **Update 2026-05-12 sera (post cluster Bundle 1+2+3+residual+vault handoff)**: scope amend critico necessario pre-start 20/05+. Cluster questa sessione ha introdotto NEW dimensions empirical NON considerate in original scope 2026-05-07:
@@ -93,7 +95,18 @@ Refresh-verify pre-trigger SPRINT_02 attivo. Cluster 12-13/5 (8 PR cumulative) h
 
 ## Task
 
-### T1. Smoke test sovereign empirico [primo task post-Max]
+### T1. Smoke test sovereign empirico [originally post-Max, IN PROGRESS 2026-05-13 notte tarda]
+
+**T1 #1 PROGRESS 2026-05-13 notte tarda** (aider-cosmetic Qwen 7B Q4 whole on `README.md` top-level):
+
+- Wrapper executed: ✅ no crash, edit applied "Applied edit to README.md" (6.0k tok sent / 1.3k recv)
+- Outcome content: ⚠️ NON_COMPLIANT position (Qwen 7B inserito linea al FONDO file vs requested DOPO riga 3) — known 7B model limitation NON silent-corruption
+- Outcome technical: ✅ no silent-corruption working tree (git diff verified 2 line addition only, no encoding corruption, em-dashes intact)
+- Decision: REVERTED via `git restore README.md` (smoke output non-persistent — file pristine, modifica solo in log)
+- Lesson reinforced: aider-cosmetic + Qwen 7B per file TOP-LEVEL semplici = wrapper FUNCTIONS but position-precision LIMITED. Mitigation per task content-sensitive: usare aider-refactor (14B Q2 + diff) anche per cosmetic non-trivial position requirements.
+
+**T1 #2 + T1 #3 pending** (aider-refactor 14B Q2 + aider-groq cloud llama-3.3-70b). Trigger natural durante next workflow session organic (post fatigue recovery + interactive shell preferable per Aider --yes-always anti-pattern avoidance).
+
 - **Cosa**: 3 wrapper aider-* eseguiti su task piccoli reali, validation tecnica end-to-end senza Claude Max.
   - `aider-cosmetic <file>` (Qwen 7B): JSDoc/docstring/rename su 1 file -- es. `apps/dogfood-ui/db.py` o `scripts/quality-bench/run-bench.ps1`
   - `aider-refactor <file>` (Qwen 14B Q2 + diff): bug fix piccolo o cleanup logic su 1 file -- candidati: error handling helper `apps/dogfood-ui/dafne_client.py`, retry logic gia' robusto bench scripts
