@@ -200,7 +200,7 @@ Criteri **pre-definiti** per evoluzione paradigm. Gate E aggiunto post Archon ci
 | Gate | Trigger condition | Empirical measure | Escalation path |
 |------|-------------------|-------------------|-----------------|
 | **E (PRE-Component-1)** | ≥5 missed-coordination events / settimana × 4 settimane consecutive POST-MAX 30gg empirical window | counter `logs/coord-events-YYYY-MM.md` Eduardo manual log + harsh-reviewer subagent invocato per audit logging discipline | Component 1 dashboard BUILD justified empirical, procedi SPRINT_02 implementation |
-| **E threshold variants** | 2-5 events/settimana × 4 settimane | counter as above | Component 1 MINIMAL scope (extension dogfood-ui ONLY, drop standalone alternative) |
+| **E threshold variants** | 2 to <5 events/settimana × 4 settimane (mutual exclusive vs E full ≥5) | counter as above | Component 1 MINIMAL scope (extension dogfood-ui ONLY, drop standalone alternative) |
 | **E falsified** | <2 events/settimana × 4 settimane | counter as above | Component 1 deferred indefinitely, trigger #1 falsified, anticipatory was wrong call |
 | A | >2 missed-coordination events / settimana × 4 settimane consecutive (separately tracked) | same counter, plus subjective severity tag | Re-evaluate Opt 3 write-direct via ADR amendment cross-repo |
 | B | repo count ≥7 OR client production work attivo | STATUS_MULTI_REPO.md count + JOURNAL entries client work | Re-evaluate Opt 4 mesh-bus design (Dafne extension cross-repo) |
@@ -259,7 +259,7 @@ Refresh policy: cron 5min + manual `Refresh` button. Source con last-update >72h
 - Manual smoke per source × 2 settimane → automated weekly post-stabilization
 
 **Component 2 PR pattern**:
-- Pre-deploy: dry-run draft PR su 1 repo (Game o AA01) con explicit `--dry-run` flag
+- Pre-deploy: dry-run draft PR su 1 repo target valid (Game o Dafne — entrambi git repo. AA01 ESCLUSO perché NON-git, alternative channel filesystem-direct) con explicit `--dry-run` flag
 - First 3 PR reali: explicit Eduardo confirmation each (CLASSE D scelta-valore esterno repo)
 - Post-3rd PR: outcome tracking automatico, pattern audit cumulative monthly
 
