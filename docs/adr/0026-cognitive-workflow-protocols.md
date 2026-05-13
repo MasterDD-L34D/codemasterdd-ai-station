@@ -188,8 +188,132 @@ Ordine application (NOT necessariamente strict sequence):
 2. **Protocol 4 if effort >=30min** (AA01 workspace)
 3. **Protocol 2 if external research needed** (autoresearch multi-source)
 4. **Protocol 3 if high-stakes irreversibile** (Archon 7-step)
+5. **Protocol 5 if cluster >=3 PR same day OR security/governance files modified** (harsh-reviewer external critic) -- addendum 2026-05-13
+6. **Protocol 6 if ADR-class architectural decision generative** (brainstorming structured exploration) -- addendum 2026-05-13
 
-Empirical trial breve è cross-cutting (NOT a separate protocol but enabler per Protocol 2+3 validation).
+Empirical trial breve è cross-cutting (NOT a separate protocol but enabler per Protocol 2+3+5 validation).
+
+## Addendum 2026-05-13 -- Protocol 5 + Protocol 6 superpowers integration (Option C)
+
+**Trigger session**: 2026-05-13 pomeriggio harsh-reviewer subagent invoked su PR #80+#81 cluster review consegnato 8 finding (3 P0 inclusa CWE-214 process arg list exposure NON identified by main agent) + brainstorming skill loaded per OpenRouter eval architectural decision.
+
+**Empirical evidence valore consegnato (1 sessione, n=1 data point ma rivelatore)**:
+- harsh-reviewer P0 #1 catch real security regression che main agent NON aveva identificato → security blocker prevented
+- harsh-reviewer narrative correction "VIABLE 6/6" → reality "3/7 PASS default 43%" → onestà intellettuale recuperata
+- brainstorming HARD-GATE 3-approaches structure ha forzato decision rigor (A/B/C tradeoff con recommendation) vs ad-hoc proposal
+- Cost: ~85K tokens + 21 tool uses + 193s duration per harsh-reviewer invocation = ~$0.30-0.50 (acceptable per high-impact cluster)
+
+**Decision Eduardo 2026-05-13 pomeriggio (4 options A/B/C/D presented)**: **Option C -- toolkit optional con trigger guidance documented**, NON mandatory enforcement. Rispetta principio lean honest execution + framework reference quando trigger emergono.
+
+**Anti-aspirational risk acknowledged**: stesso pattern P2 autoresearch FIRST = aspirational n=2 reactive (L-014+L-015). MITIGATION: aggiungere log field "harsh-reviewer invoked? Y/N" + "brainstorming skill applied? Y/N" parallelo a autoresearch field per measurement empirical post-formalization.
+
+#### Protocol 5 -- External-perspective harsh review via subagent (cluster scrutiny)
+
+**Source**: superpowers harsh-reviewer subagent + AA01 sub-agent ecosystem ADR-0018.
+
+**Rule**: per cluster PR >=3 same day touching shared scope OR file security/governance-critical (wrappers, keys, hooks, ACL, CLAUDE.md authoritative), spawn harsh-reviewer subagent PRE-merge per external-perspective scrutiny:
+1. Spawn agent con scope esplicito: file paths + claim narrativa da verify + finding focus areas (security/architecture/methodology/operational)
+2. Boundary read-only: agent NO write/edit/commit, solo report markdown
+3. Finding format: priority P0/P1/P2 + descrizione + impact + recommendation + file references
+4. Integrate findings PRE-merge: P0 obbligatorio fix prima merge, P1 either fix OR documented defer, P2 acknowledge
+5. Log entry "harsh-reviewer invoked? Y/N" in cluster commit message OR PR body per measurement empirical
+
+**Trigger STRONGLY recommended** (NON mandatory enforcement Option C):
+- Cluster >=3 PR same day con scope overlap OR consecutive
+- File security/governance-critical modified (wrappers, keys, hooks, ACL, CLAUDE.md authoritative)
+- Narrative claim "X/Y VIABLE/PASS" senza empirical decomposition default vs mitigation
+- Pre-merge ADR-class decision con narrative implication
+
+**Anti-pattern**: skip per cluster solo doc-only OR <2 PR (over-engineered overhead). Skip se task lean <30min (cost 85K tokens + 193s sproporzionato).
+
+**Cost**: ~$0.30-0.50 per invocazione (~85K tokens). Sotto budget cap $20/mese ADR-0023 anche con 1-2 cluster significativi/mese = $1/mese.
+
+**Caso studio empirico**: PR #80+#81 cluster review 2026-05-13 consegnato 8 finding actionable (3 P0 incluso CWE-214 catch real, 3 P1, 2 P2). Eduardo decisioni 4/4 trigger fix → PR #82 mergeato.
+
+**Reference**: agent definition `~/.claude/agents/harsh-reviewer.md` (codemasterdd .claude/agents/) + ADR-0018 agent readiness protocol.
+
+#### Protocol 6 -- Brainstorming structured exploration via skill (architectural design)
+
+**Source**: superpowers `brainstorming` skill (`~/.claude/plugins/cache/claude-plugins-official/superpowers/5.1.0/skills/brainstorming/`).
+
+**Rule**: per ADR-class architectural decision generative (new sub-system / replace existing component / strategic platform choice / governance protocol introduction), invoke brainstorming skill flow:
+1. Explore project context (files, recent commits, ADR existing)
+2. Skip "visual companion" se NON visual question
+3. Clarifying questions one-at-a-time (skip se auto-mode + Eduardo authorization explicit)
+4. Propose 2-3 approaches con tradeoff esplicito + recommendation + reasoning
+5. Present design sections scaled to complexity (ask approval per section)
+6. Write spec doc OR direct ADR scaffold se decision è formal
+7. Only AFTER approval: invoke implementation skill chain
+
+**Trigger STRONGLY recommended** (NON mandatory enforcement Option C):
+- ADR-class decision architectural irreversibile o significativamente costoso reverse
+- Replace existing component / pattern / wrapper / tooling
+- Strategic platform choice (es. OpenRouter eval, framework adoption)
+- Governance protocol introduction o major modification
+
+**Anti-pattern**:
+- Apply HARD-GATE per task advisory/review (Eduardo "voglio vedere che ci dicono" NON è new feature)
+- Apply per task lean <30min implementation (overhead sproporzionato)
+- Sequential clarifying questions in auto-mode (confligge con no-questions instruction)
+
+**Cost**: token consumption marginale (skill è locally loaded, inferenza standard). Process overhead ~5-10min strutturazione 3-approach + design sections.
+
+**Caso studio empirico**: brainstorming skill loaded 2026-05-13 pomeriggio per OpenRouter eval architectural decision. HARD-GATE adattato per advisory context (Eduardo decisione invece di formal spec → user-direct). Output: 4 options A/B/C/D considered + Option C chosen + ADR-0029 scaffold.
+
+**Complementarity con Protocol 3 Archon**:
+- P3 Archon = analytic decompose (RESTATE + ENUMERATE + DECOMPOSE + CHALLENGE + RECONSTRUCT + RED-TEAM + CALIBRATE) per high-stakes verifica empirical
+- P6 brainstorming = generative design (explore → questions → 3 approaches → design → spec) per design-thinking phase pre-Archon
+- Use case combined: brainstorming PRIMA per generate options + Archon DOPO per stress-test + falsifying experiment
+
+**Reference**: superpowers skill definition path sopra + `feedback_external_material_triage` selective adoption pattern.
+
+### Combined methodology UPDATED 2026-05-13 (post Protocol 5 + 6 addendum)
+
+```
+[Trigger: audit / eval / decision significativa]
+        ↓
+Protocol 1: Refresh-verify state interno (OBBLIGATORIO)
+        ↓
+[Architectural design generative? new sub-system / replace component / strategic choice]
+        ├── SI → Protocol 6: brainstorming skill (3 approaches con tradeoff)
+        |
+[Cluster >=3 PR same day OR file security/governance-critical?]
+        ├── SI → Protocol 5: harsh-reviewer subagent PRE-merge
+        |          ↓
+        |       Findings P0/P1/P2 → integrate pre-commit
+        ↓
+Protocol 4: AA01 workspace audit trail (start, se >=30min effort)
+        ↓
+Protocol 2: Autoresearch multi-source (NECESSARY ma INSUFFICIENT)
+        ↓
+[Decision high-stakes irreversibile?]
+        ├── SI → Protocol 3: Archon 7-step First Principles
+        |          ↓
+        |       CALIBRATE → falsifying experiment ~30s-5min
+        |          ↓
+        |       [Confidence >70% post-empirical?]
+        |          ├── SI → formalize decision (ADR / commit / PR)
+        |          └── NO → iterate Archon o defer
+        ↓
+[Decision low-medium stakes]
+        ↓
+Empirical trial breve per architectural validation
+        ↓
+Synthesis weighted (internal > external, empirical > documentation, recent > old)
+        ↓
+Output: ADR Proposed / research doc / lesson / archive AA01 SHIP
+```
+
+### Measurement empirical post-formalization (anti-aspirational mitigation)
+
+Per evitare protocols 5+6 diventino aspirational reactive (stesso pattern P2 autoresearch FIRST n=2 reactive caso L-014+L-015):
+
+- **Log field aggiunto** `harsh-reviewer invoked? Y/N` (Protocol 5 application)
+- **Log field aggiunto** `brainstorming skill applied? Y/N` (Protocol 6 application)
+- **Field tracking location**: PR body section "Cognitive protocols applied" OR commit message footer
+- **Threshold review**: ogni 3 mesi (~SPRINT_03/04 boundary) → check field empirical adoption rate. Se <30% trigger application su qualifying tasks → ADR-0026 amendment B (declassify mandatory) o C (re-evaluate trigger conditions).
+
+**Trigger Accepted Protocol 5+6**: n>=2 instances application su qualifying trigger conditions con valore empirical documented (es. P0 catch / narrative correction / 3-approach decision rigor).
 
 ## Options considered
 

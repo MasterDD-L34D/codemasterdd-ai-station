@@ -374,9 +374,9 @@ codemasterdd-ai-station/
   - **Tracking**: ogni delega effettuata → entry in `logs/aider-delegation-YYYY-MM.md`. Task strategici eseguiti direttamente → tracciati solo se rilevanti per ratio statistica
   - **Anti-pattern**: default inerziale "faccio io direct" senza classification è un miss; ogni Edit/Write senza step di classification contraddice hub pattern ADR-0008
 
-## Cognitive workflow protocols (ADR-0026)
+## Cognitive workflow protocols (ADR-0026 + addendum 2026-05-13)
 
-Per audit / eval / decision / pivot significativo, applicare 4 cognitive workflow protocols (triple anchor: ADR-0026 + memory + questa sezione). Vedi `docs/adr/0026-cognitive-workflow-protocols.md` per dettaglio + caso studio + anti-pattern.
+Per audit / eval / decision / pivot significativo, applicare 6 cognitive workflow protocols (triple anchor: ADR-0026 + memory + questa sezione). Vedi `docs/adr/0026-cognitive-workflow-protocols.md` per dettaglio + caso studio + anti-pattern + Protocol 5 + 6 addendum 2026-05-13.
 
 ### Protocol 1 -- Refresh-verify state interno (PRE-action OBBLIGATORIO)
 
@@ -422,12 +422,53 @@ Per audit / eval / research / pivot >=30min effort + cross-session value, usare 
 **Path AA01**: `C:/Users/edusc/aa01/` (separato codemasterdd, NON-git, disciplina personale).
 **Reference**: memory `project_aa01_studio`.
 
-### Combined methodology (lesson L-2026-05-002 + L-2026-05-003)
+### Protocol 5 -- External-perspective harsh review via subagent (cluster scrutiny) -- addendum 2026-05-13
+
+Per cluster PR >=3 same day touching shared scope OR file security/governance-critical, spawn `harsh-reviewer` subagent PRE-merge:
+- Boundary read-only (NO write/edit/commit, solo report markdown)
+- Finding format: P0/P1/P2 + descrizione + impact + recommendation + file refs
+- Integrate findings PRE-merge: P0 obbligatorio fix, P1 either fix OR documented defer, P2 acknowledge
+
+**Trigger STRONGLY recommended** (Option C non-mandatory):
+- Cluster >=3 PR same day con scope overlap OR consecutive
+- File security/governance-critical (wrappers, keys, hooks, ACL, CLAUDE.md authoritative)
+- Narrative claim "X/Y VIABLE/PASS" senza decomposition default vs mitigation
+- Pre-merge ADR-class decision
+
+**Cost**: ~$0.30-0.50/invocazione (~85K tokens). Sotto cap $20/mese ADR-0023.
+**Anti-pattern**: skip per cluster doc-only o <2 PR (over-engineered overhead).
+**Caso studio**: PR #80+#81 cluster review 2026-05-13 → 8 finding (3 P0 catch CWE-214 real) → PR #82 fix.
+**Reference**: agent definition `~/.claude/agents/harsh-reviewer.md` + ADR-0018.
+
+### Protocol 6 -- Brainstorming structured exploration via skill (architectural design) -- addendum 2026-05-13
+
+Per ADR-class architectural decision generative (new sub-system / replace component / strategic platform choice), invoke superpowers `brainstorming` skill flow:
+- Explore project context → 2-3 approaches con tradeoff esplicito + recommendation → present design → spec doc → only AFTER approval implementation
+
+**Trigger STRONGLY recommended** (Option C non-mandatory):
+- ADR-class decision architectural irreversibile/costoso reverse
+- Replace existing component / pattern / wrapper / tooling
+- Strategic platform choice (es. OpenRouter eval, framework adoption)
+
+**Anti-pattern**:
+- Apply HARD-GATE per task advisory/review (Eduardo "voglio vedere che ci dicono" NON è new feature)
+- Apply per task lean <30min implementation (overhead sproporzionato)
+- Sequential clarifying questions in auto-mode (confligge con no-questions instruction)
+
+**Complementarity con P3 Archon**: P3 = analytic decompose post-decision. P6 = generative design pre-decision. Combined optimal: brainstorming PRIMA per options + Archon DOPO per stress-test.
+
+**Caso studio**: brainstorming loaded 2026-05-13 pomeriggio per OpenRouter eval → 4 options A/B/C/D → Option C → ADR-0029 scaffold.
+
+### Combined methodology UPDATED 2026-05-13 (post Protocol 5+6 addendum)
 
 ```
 [Trigger: audit / eval / decision significativa]
   → Protocol 1 Refresh-verify state interno (OBBLIGATORIO)
-  → Protocol 4 AA01 workspace audit trail (start)
+  → [Architectural design generative? new sub-system / replace component]
+        ├── SI → Protocol 6 brainstorming (3 approaches + tradeoff)
+  → [Cluster >=3 PR same day OR file security/governance-critical?]
+        ├── SI → Protocol 5 harsh-reviewer subagent PRE-merge (findings P0/P1/P2)
+  → Protocol 4 AA01 workspace audit trail (start, se >=30min)
   → Protocol 2 Autoresearch multi-source (NECESSARY ma INSUFFICIENT)
   → [Decision high-stakes irreversibile?]
         ├── SI → Protocol 3 Archon 7-step + CALIBRATE falsifying experiment
@@ -435,7 +476,14 @@ Per audit / eval / research / pivot >=30min effort + cross-session value, usare 
   → Output: ADR Proposed / research doc / lesson / archive AA01 SHIP
 ```
 
-**Reference completo**: ADR-0026 + lesson L-2026-05-002 (Hyperspace audit cycle 3 anti-pattern + 4 pattern positive) + lesson L-2026-05-003 (cross-repo pattern adoption cross-check governance interna).
+### Measurement empirical post-formalization Protocol 5+6 (anti-aspirational mitigation)
+
+Per evitare protocols 5+6 diventino aspirational reactive (stesso pattern P2 autoresearch FIRST n=2 reactive caso L-014+L-015):
+- **PR body section "Cognitive protocols applied"** OR commit message footer: campi "harsh-reviewer invoked? Y/N" + "brainstorming skill applied? Y/N"
+- **Threshold review ogni 3 mesi** (~SPRINT_03/04 boundary): check field adoption rate. Se <30% trigger application su qualifying tasks → ADR-0026 amendment B (declassify) o C (re-evaluate trigger).
+- **Trigger Accepted Protocol 5+6**: n>=2 instances application con valore empirical documented.
+
+**Reference completo**: ADR-0026 + lesson L-2026-05-002 (Hyperspace audit cycle 3 anti-pattern + 4 pattern positive) + lesson L-2026-05-003 (cross-repo pattern adoption cross-check governance interna) + L-2026-05-014 + L-2026-05-015 (autoresearch FIRST + PowerShell wrapper REM pollution).
 
 ## Aggiornamento JOURNAL
 A fine sessione significativa, aggiungere entry in JOURNAL.md:
