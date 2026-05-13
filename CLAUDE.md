@@ -339,13 +339,14 @@ codemasterdd-ai-station/
 
 - **Wrapper CLI per delegazione** (in `C:\Users\edusc\.local\bin\`, eseguibili da cmd.exe):
   - **Aider locali (tier 1-2 sovereign)**:
-    - `aider-cosmetic <file>` → 7B + whole (JSDoc, docstrings, rename, lint-fix) — 114 tok/s
+    - `aider-cosmetic <file>` → 7B + **diff** + no-auto-commits (JSDoc, docstrings, rename, lint-fix) — **updated 2026-05-13 T1 SPRINT_02 entry #34**: switched whole→diff per position-precision PASS, added --no-auto-commits parity con aider-refactor
     - `aider-refactor <file>` → 14B Q2 + diff + no-auto-commits (refactor, bug fix, logic change) — 25 tok/s
   - **Aider cloud (tier 3-4, aggiunti 2026-04-23 combo F+D, vedi ADR-0013)**:
-    - `aider-groq <file>` → groq/llama-3.3-70b-versatile + diff + no-auto-commits — 630 tok/s free tier
-    - `aider-cerebras <file>` → cerebras/llama3.1-8b + diff + no-auto-commits — 733 tok/s free tier
-    - `aider-gemini <file>` → gemini/gemini-2.5-flash + diff + no-auto-commits (attenzione thinking budget)
-    - `aider-openai <file>` → openai/gpt-4o-mini + diff + no-auto-commits — **paid, monitorare ccusage**
+    - `aider-groq <file>` → groq/llama-3.3-70b-versatile + diff + no-auto-commits — 630 tok/s free tier — **BROKEN-INTERMITTENT 2026-05-13 T1 #29+#35**: TPM 12k bottleneck su Aider context ~10k req. Mitigation `--map-tokens 0` insufficiente (n=2 stuck post-Added file). Defer Cerebras/Gemini fallback OR ANTHROPIC tier-0 strategic per cloud needs
+    - `aider-cerebras <file>` → cerebras/llama3.1-8b + diff + no-auto-commits — 733 tok/s free tier — **VIABLE con `--map-tokens 0`** (T1 #31 PASS $0.0004/task)
+    - `aider-gemini <file>` → gemini/gemini-2.5-flash + diff + no-auto-commits (attenzione thinking budget) — **VIABLE con `--map-tokens 0`** (T1 #32 PASS $0.008/task ~6min slow)
+    - `aider-openai <file>` → openai/gpt-4o-mini + diff + no-auto-commits — **VIABLE post 10 EUR funding 2026-05-13** + Sharing data toggle ON = pool free 2.5M tok per day eligible (gpt-4o-mini in elenco). Hard limit consigliato $5/mese
+  - **L-2026-05-015 fix Option B applicato 2026-05-13**: tutti i 6 wrapper hanno REM lines con parens rimosse per killare PowerShell `&` invocation pollution pattern. Vedi `~/aa01/learnings/L-2026-05-015-powershell-wrapper-rem-pollution.md` per dettaglio
   - **OpenCode (tier multi-step agentic, ADR-0022 Accepted 2026-05-09)**: in `C:\Users\edusc\AppData\Roaming\npm\opencode.ps1` (npm global v1.14.41):
     - `opencode run --model "ollama/qwen3-coder:30b" "<task>"` → tier 1 sovereign default (MoE A3B tool-use native)
     - Config: `~/.config/opencode/opencode.json` (5 provider mappati, env vars from `~/.config/api-keys/keys.env`)
