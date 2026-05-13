@@ -36,7 +36,7 @@ Copy questo template come body quando apri PR cross-repo via Component 2 workflo
 ## Reversibility
 
 - Reverting cost stimato: <minutes/hours/days>
-- Cross-reference creates in this repo: <yes/no — if yes, list refs>
+- Cross-reference creates in this repo: <yes/no -- if yes, list refs>
 
 ## Governance interna repo target
 
