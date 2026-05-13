@@ -55,7 +55,7 @@
 - [x] ~~**B7** — Sub-agent ecosystem effectiveness review.~~ **DONE 2026-05-12 sera Bundle 3 PR #65**. 18 sub-agent (12 ready + 6 draft) + 9/12 smoke + 6 dormant workflow-driven. Research doc + 4 REC.
 - [x] ~~**B8** — Hook chain effectiveness empirical smoke.~~ **DONE 2026-05-12 sera Bundle 3 PR #65**. 5 layer 5/5 PASS + 10/10 component checks cumulative cross-bundle. Research doc + 4 REC.
 - [x] ~~**V1** — Vault handoff doc Eduardo-direct (sibling-peer boundary respected).~~ **DONE 2026-05-12 sera Bundle 1 PR #63**. Doc `docs/aa01-handoff/2026-05-12-vault-frontmatter-drift-handoff.md` (frontmatter drift 7/7 + CLAUDE.md drift 5-claim + README discoverability). Eduardo-direct action 30-45min one-shot.
-- [x] ~~**V3** — MODEL_ROUTING Quality Gate cross-pattern adoption research.~~ **DONE 2026-05-12 sera Bundle 2 PR #64**. Research doc + 4 REC. ADR-NEW Tier promotion methodology candidate **DEFER fino SPRINT_02+** (Three Strikes trigger condition).
+- [x] ~~**V3** — MODEL_ROUTING Quality Gate cross-pattern adoption research.~~ **DONE 2026-05-12 sera Bundle 2 PR #64**. Research doc + 4 REC. **ADR-0028 Tier promotion methodology Quality Gate Step 2 DRAFTED Proposed 2026-05-13 notte tarda** (Eduardo override defer SPRINT_02+ Three Strikes trigger, V3 REC 4 originally DEFER). Trigger Accepted: 3-condition Three Strikes in ADR-0028 (1 regress + 1 successful manual application + 1 emergent tier promote request). MODEL_ROUTING.md section formal write deferred post-Accepted (REC 2).
 
 ### ADR ratification 2026-05-12 sera auto (residual cluster)
 
