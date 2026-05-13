@@ -19,6 +19,32 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-05-14 (W0 pre-flight SPRINT_02 + PR #88 rework merge)
+
+### Completato
+
+- PR #88 harsh-reviewer pass 1 = REWORK verdict (3 P0 + 6 P1 + 6 P2)
+- Rework applied: P0.1 archive Component 1 spec to `docs/research/` + triple-warning DO NOT CONSULT header (bias mitigation L-016); P0.2 plan restructured as DELTA over SPRINT_02.md (-46% lines); P0.3 Three Strikes wording verbatim ADR-0028; P1.1+P1.4+P1.5+P1.6 fixed
+- PR #88 squash-merged commit `60aef89` on main
+- SPRINT_02 W0 pre-flight: P.1 (deployment verified) + P.2 (whitelist 4 entries) + P.3 (schtask Pronta 17/05) + P.4 (STATUS_MULTI_REPO updated SPRINT_02 ACTIVE) + P.5 (coord-events log clean)
+- T9.1 baseline cite count pre-Max snapshot: P1=19, P2=13, P3=12, P4=8, P5=5, P6=2 (40 unique lines, 59 sum). P5 threshold met. P6 still <3 cite (1 more needed)
+- T8.W1.1 claude-mem verified operational (port 37777 LISTENING + DB + corpora)
+- T8.W1.2 superpowers verified cached v5.1.0
+- T8.W1.3 compass DEFER - no `.compass.toml` in codemasterdd (init needed W1 if Eduardo)
+
+### Da fare
+
+- 5/19 Claude Max expiration (5gg residui)
+- 5/20+ SPRINT_02 W1 start: first weekly logging session 5/24 Sun via schtask reminder
+- 6/14 W4 harsh-reviewer audit + Gate E decision
+
+### Note
+
+- Lesson L-2026-05-018 in promotion: META anti-pattern recurrence same-session (L-016 violated PR #88 v1 → recovery archive in v2)
+- Methodology cumulative: 3 P5 + 1 P6 invocations this session block
+
+---
+
 ## 2026-05-13 (sera-tardi-ultra-2: cross-repo orchestrator design + impl pre-Max)
 
 ### Completato
