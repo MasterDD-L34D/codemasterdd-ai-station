@@ -105,15 +105,15 @@ Refresh-verify pre-trigger SPRINT_02 attivo. Cluster 12-13/5 (8 PR cumulative) h
 - Decision: REVERTED via `git restore README.md` (smoke output non-persistent — file pristine, modifica solo in log)
 - Lesson reinforced: aider-cosmetic + Qwen 7B per file TOP-LEVEL semplici = wrapper FUNCTIONS but position-precision LIMITED. Mitigation per task content-sensitive: usare aider-refactor (14B Q2 + diff) anche per cosmetic non-trivial position requirements.
 
-**T1 #2 + T1 #3 EXECUTED 2026-05-13 mattina (Eduardo "tutto" override)** -- entries #27 + #28 in `logs/aider-delegation-2026-05.md`:
+**T1 #2 + T1 #3 EXECUTED 2026-05-13 mattina (Eduardo "tutto" override)** -- entries #28 + #29 in `logs/aider-delegation-2026-05.md` (T1 #1 retro-log = #27; entries #25-#26 already used by OpenCode dogfood `empty_stats()` PR #17 + `_auth_header()` PR #18 -- cumulative dataset n=26 pre-T1 SPRINT_02):
 
 - **T1 #2 (aider-refactor Qwen 14B Q2 + diff on `apps/dogfood-ui/dafne_client.py`)**: 🟡 PARTIAL_FAIL safe. 1/3 SEARCH block applied (init `self.last_error = None` + docstring Attributes section). 2/3 fail SearchReplaceNoExactMatch (modello generato 4-space indent SEARCH vs reale 8-space dentro def). 3 reflections exhausted + summarizer cleanup error trailing (LiteLLM `cannot schedule new futures after shutdown`). Action: REVERTED via `git restore` (partial dangling = inutile half-state). Pattern conferma ADR-0008 (safe failure NO silent-corruption) + ADR-0016 (constraint=3 + indentation precision = 14B Q2 borderline).
 - **T1 #3 (aider-groq cloud llama-3.3-70b on `README.md`)**: 🔴 FAIL TPM 12000 rate-limit. 5 retry exponential backoff 2s/4s/8s/16s/32s, mai successo. ~12 minuti running prima di kill manual. Pattern: Aider context-pack (~10-11k tok/req) borderline TPM 12k Groq free tier 70B. Contraddizione apparente vs Entry #15 (smoke 7/5 PASS): hypothesis rolling TPM bucket caricato da concurrent probe debug. Cost: $0 (no token consumed billed).
 - **Side-finding (NON Aider)**: PowerShell `&` invocation `aider-groq.cmd` con REM line `(free tier 6000 tok/min)` ha creato 11 file VUOTI working tree (parsing artifact). Cleanup eseguito. Trigger lesson candidate L-2026-05-015 (PowerShell wrapper invocation pattern) -- NOT silent-corruption Aider.
 
-**T1 SPRINT_02 cumulative pass rate**: 0/3 PASS, 1/3 NON_COMPLIANT (#26 7B position), 1/3 PARTIAL_FAIL safe (#27 14B Q2 multi-block), 1/3 FAIL rate-limit (#28 Groq).
+**T1 SPRINT_02 cumulative pass rate**: 0/3 PASS, 1/3 NON_COMPLIANT (#27 7B position), 1/3 PARTIAL_FAIL safe (#28 14B Q2 multi-block), 1/3 FAIL rate-limit (#29 Groq).
 
-**ADR-0015 trigger check post T1 #1+#2+#3**: silent-corruption=0, fail rate=4/16=25% (in linea pattern smoke pre-existing), privacy=0. **Trigger NON attivati**. Empirical confirm pattern noti (no surprise).
+**ADR-0015 trigger check post T1 #1+#2+#3**: silent-corruption=0, fail rate=4/29=14% (cumulative dataset n=29 post T1, in linea pattern smoke pre-existing), privacy=0. **Trigger NON attivati**. Empirical confirm pattern noti (no surprise).
 
 **Methodological caveat invariato**: T1 SPRINT_02 sotto Claude Max ACTIVE (6gg pre-Max). Validation NON "in assenza Max" come scope originale -- contamination documentata.
 
