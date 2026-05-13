@@ -20,7 +20,7 @@ Questa è la workstation **primaria e autosufficiente** di Eduardo Scarpelli: tu
 - **Storage**: SSD 1TB Micron NVMe
 - **OS**: Windows 11 Home 25H2 (build 26200)
 
-## Stack attivo (aggiornato 2026-04-23)
+## Stack attivo (aggiornato 2026-05-13)
 - **Claude Code 2.1.116** — agente CLI di sviluppo (OAuth Claude Max fino 2026-05-19)
 - **Git 2.53.0.windows.3** + **GitHub CLI 2.90.0**
 - **NVIDIA Driver 595.79 + CUDA 13.2**

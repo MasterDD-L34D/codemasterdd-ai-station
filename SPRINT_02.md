@@ -131,6 +131,27 @@ Refresh-verify pre-trigger SPRINT_02 attivo. Cluster 12-13/5 (8 PR cumulative) h
 
 **T1 SPRINT_02 cumulative pass rate post retry (n=4)**: 1/4 PASS (#30 retry), 1/4 NON_COMPLIANT (#27), 1/4 PARTIAL_FAIL safe (#28), 1/4 FAIL rate-limit (#29).
 
+**T1 #4 EXECUTED 2026-05-13 mezzogiorno (alternative stack a Groq fail)** -- entry #31:
+
+- **Task**: README.md `Stack attivo (aggiornato 2026-04-23)` -> `(aggiornato 2026-05-13)` (date refresh post 12-13/5 plugin ecosystem expansion). Constraint=1.
+- **Wrapper**: `aider-cerebras.cmd` (Cerebras llama3.1-8b free tier + diff)
+- **Mitigation**: `--map-tokens 0 --no-stream` per evitare context overflow noto Cerebras 8k limit (entry #22)
+- **Outcome**: ✅ **PASS 1st-try**. Tokens 3.7k sent / 104 recv. Cost $0.00038 (free tier ma billed). Latency ~3.5min.
+- **Action**: KEPT change.
+- **Empirical conferma**: `aider-cerebras` viable per cosmetic doc piccoli con context mitigation. Validato 1/1 alternative stack a Groq 70B (T1 #3 FAIL TPM-rate-limit).
+- **Side-finding RICORRENTE**: PowerShell `&` invocation `aider-cerebras.cmd` REM line `(free tier limited a llama3.1-8b)` ha creato 12 file VUOTI working tree (stesso pattern T1 #3). Pattern PERSISTENT cross-wrapper. **L-2026-05-015 PROMOTION rinforzato**.
+
+**T1 SPRINT_02 cumulative pass rate FINAL (n=5)**: 2/5 PASS (#30 + #31), 1/5 NON_COMPLIANT (#27), 1/5 PARTIAL_FAIL safe (#28), 1/5 FAIL rate-limit (#29). Total cost $0.00038 (sotto $0.001 = 0.0019% $20 budget mensile).
+
+**Wrapper validation matrix**:
+- ✅ aider-refactor (14B Q2 local diff) constraint=1 PASS
+- ✅ aider-cerebras (Cerebras 8B + `--map-tokens 0`) constraint=1 PASS
+- 🟡 aider-cosmetic (7B local whole) constraint=1 NON_COMPLIANT position
+- 🔴 aider-groq (Groq 70B free tier) constraint=1 FAIL TPM 12k
+- 🟡 aider-refactor constraint=3+indent PARTIAL_FAIL safe (mitigation: decompose)
+
+**ADR-0015 Accepted scenario A SOVEREIGN VIABLE confermato empirical** (n=31 cumulative cross-wrapper post T1 SPRINT_02, 0 silent-corruption).
+
 - **Cosa**: 3 wrapper aider-* eseguiti su task piccoli reali, validation tecnica end-to-end senza Claude Max.
   - `aider-cosmetic <file>` (Qwen 7B): JSDoc/docstring/rename su 1 file -- es. `apps/dogfood-ui/db.py` o `scripts/quality-bench/run-bench.ps1`
   - `aider-refactor <file>` (Qwen 14B Q2 + diff): bug fix piccolo o cleanup logic su 1 file -- candidati: error handling helper `apps/dogfood-ui/dafne_client.py`, retry logic gia' robusto bench scripts
