@@ -63,3 +63,5 @@ Eduardo Scarpelli · `eduscarpelli@gmail.com` · GitHub: [@MasterDD-L34D](https:
 
 ## Data creazione
 19 aprile 2026
+
+Ultimo refresh stack: 2026-05-13.
