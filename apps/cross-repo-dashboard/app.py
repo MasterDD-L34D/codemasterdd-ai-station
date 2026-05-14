@@ -355,19 +355,33 @@ def fetch_gate_e_counter() -> dict[str, Any]:
 
 
 def fetch_adr_countdown() -> list[dict[str, Any]]:
-    """D3: scan docs/adr/*.md for ratification check dates (status Proposed)."""
+    """D3: scan docs/adr/*.md for ratification check dates (status Proposed).
+
+    ADR format esempio (ADR-0023):
+    - Line 5: `**Status**: Proposed (...)` (with optional addendum after)
+    - Line 47: `**Ratification check date**: ADR-NNNN entro 2026-MM-DD (...)`
+    Or: `ratification` keyword inside narrative + ISO date within 200 chars.
+    """
     items = []
     if not ADR_DIR.exists():
         return items
     try:
         for f in sorted(ADR_DIR.glob("*.md")):
             try:
-                content = f.read_text(encoding="utf-8", errors="replace")[:2000]
-                # Look for Status: Proposed + ratification date
-                if not re.search(r"Status\*?\*?:\s*Proposed", content, re.IGNORECASE):
+                # Read full file (ratification date may be deep, not in first 2000 chars)
+                content = f.read_text(encoding="utf-8", errors="replace")
+                # Look for Status: Proposed (with optional ** markdown bold)
+                if not re.search(r"\*{0,2}Status\*{0,2}\s*:\s*Proposed", content, re.IGNORECASE):
                     continue
-                # Look for ratification date pattern YYYY-MM-DD
-                date_match = re.search(r"ratification.{0,80}?(20\d{2}-\d{2}-\d{2})", content, re.IGNORECASE | re.DOTALL)
+                # Look for ratification date — broader pattern, multiple candidates
+                # Pattern 1: "Ratification check date: ... 2026-MM-DD"
+                # Pattern 2: "ratification ... 2026-MM-DD" within 200 chars
+                # Pattern 3: "entro 2026-MM-DD" (Italian common pattern)
+                date_match = (
+                    re.search(r"\*{0,2}Ratification[^:\n]{0,80}date\*{0,2}\s*:.{0,200}?(20\d{2}-\d{2}-\d{2})", content, re.IGNORECASE | re.DOTALL)
+                    or re.search(r"ratification[^.\n]{0,200}?(20\d{2}-\d{2}-\d{2})", content, re.IGNORECASE | re.DOTALL)
+                    or re.search(r"\bentro\s+(20\d{2}-\d{2}-\d{2})", content, re.IGNORECASE)
+                )
                 if not date_match:
                     continue
                 ratify_date_str = date_match.group(1)
