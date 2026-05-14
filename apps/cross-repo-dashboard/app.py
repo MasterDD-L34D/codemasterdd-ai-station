@@ -54,10 +54,21 @@ LOGS_DIR = CODEMASTERDD_ROOT / "logs"
 ADR_DIR = CODEMASTERDD_ROOT / "docs" / "adr"
 
 # Healthcheck endpoints
+# HTTP-based (require service exposing /health or similar)
 HEALTHCHECKS = [
-    {"name": "Flask dogfood-ui", "url": "http://127.0.0.1:8080/api/health", "timeout": 3},
-    {"name": "Dafne swarm", "url": "http://127.0.0.1:5000/health", "timeout": 3},
-    {"name": "Ollama", "url": "http://127.0.0.1:11434/api/tags", "timeout": 3},
+    # Local AI inference (always-on)
+    {"name": "Ollama", "url": "http://127.0.0.1:11434/api/tags", "timeout": 3, "category": "ai-inference"},
+    # Stack ADR-0017 observability (Docker compose, scaffold opt-in DOWN by default)
+    {"name": "LiteLLM proxy", "url": "http://127.0.0.1:4000/health/readiness", "timeout": 3, "category": "stack-adr-0017"},
+    {"name": "Langfuse", "url": "http://127.0.0.1:3000/api/public/health", "timeout": 3, "category": "stack-adr-0017"},
+    {"name": "dogfood-ui Flask", "url": "http://127.0.0.1:8080/api/health", "timeout": 3, "category": "stack-adr-0017"},
+    # Dafne swarm (run manually via START-SWARM.ps1)
+    {"name": "Dafne swarm", "url": "http://127.0.0.1:5000/health", "timeout": 3, "category": "dafne"},
+]
+
+# TCP-only services (no HTTP endpoint, port-open check)
+HEALTHCHECKS_TCP = [
+    {"name": "Postgres (ADR-0017)", "host": "127.0.0.1", "port": 5432, "timeout": 2, "category": "stack-adr-0017"},
 ]
 
 # Repo config: name -> (owner/repo string, is_dormant flag)
@@ -240,29 +251,71 @@ def fetch_all_state(force_refresh: bool = False) -> dict[str, Any]:
 # ====================================================================== #
 
 def fetch_healthchecks(force_refresh: bool = False) -> list[dict[str, Any]]:
-    """C1: ping 3 endpoints + cache."""
+    """C1: ping HTTP endpoints + TCP port check + cache.
+
+    Distinguishes:
+    - 'up'      service responding 200 OK
+    - 'down'    ConnectionError (not running)
+    - 'timeout' slow but reachable
+    - 'error'   non-200 response
+
+    Categories grouped: ai-inference / stack-adr-0017 / dafne.
+    """
+    import socket
     cache_key = "healthchecks"
     if not force_refresh:
         cached = cache_get(cache_key)
         if cached and not cached["stale"]:
             return cached["payload"]
     results = []
+    # HTTP healthchecks
     for hc in HEALTHCHECKS:
         try:
             r = requests.get(hc["url"], timeout=hc["timeout"])
             results.append({
                 "name": hc["name"],
                 "url": hc["url"],
+                "category": hc.get("category", "other"),
                 "status": "up" if r.status_code == 200 else "error",
                 "http": r.status_code,
                 "latency_ms": int(r.elapsed.total_seconds() * 1000),
             })
         except requests.ConnectionError:
-            results.append({"name": hc["name"], "url": hc["url"], "status": "down", "http": None, "latency_ms": None})
+            results.append({"name": hc["name"], "url": hc["url"], "category": hc.get("category", "other"),
+                          "status": "down", "http": None, "latency_ms": None})
         except requests.Timeout:
-            results.append({"name": hc["name"], "url": hc["url"], "status": "timeout", "http": None, "latency_ms": None})
+            results.append({"name": hc["name"], "url": hc["url"], "category": hc.get("category", "other"),
+                          "status": "timeout", "http": None, "latency_ms": None})
         except Exception as e:  # noqa: BLE001
-            results.append({"name": hc["name"], "url": hc["url"], "status": "error", "http": None, "error": str(e)[:100]})
+            results.append({"name": hc["name"], "url": hc["url"], "category": hc.get("category", "other"),
+                          "status": "error", "http": None, "error": str(e)[:100]})
+    # TCP socket healthchecks (es. Postgres no HTTP)
+    for hc in HEALTHCHECKS_TCP:
+        sock = None
+        try:
+            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            sock.settimeout(hc["timeout"])
+            start = datetime.now(timezone.utc)
+            result = sock.connect_ex((hc["host"], hc["port"]))
+            elapsed_ms = int((datetime.now(timezone.utc) - start).total_seconds() * 1000)
+            if result == 0:
+                results.append({"name": hc["name"], "url": f"tcp://{hc['host']}:{hc['port']}",
+                              "category": hc.get("category", "other"), "status": "up",
+                              "http": None, "latency_ms": elapsed_ms})
+            else:
+                results.append({"name": hc["name"], "url": f"tcp://{hc['host']}:{hc['port']}",
+                              "category": hc.get("category", "other"), "status": "down",
+                              "http": None, "latency_ms": None})
+        except Exception:  # noqa: BLE001
+            results.append({"name": hc["name"], "url": f"tcp://{hc['host']}:{hc['port']}",
+                          "category": hc.get("category", "other"), "status": "down",
+                          "http": None, "latency_ms": None})
+        finally:
+            if sock:
+                try:
+                    sock.close()
+                except Exception:  # noqa: BLE001
+                    pass
     cache_set(cache_key, results)
     return results
 

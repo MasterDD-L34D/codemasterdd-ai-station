@@ -19,18 +19,28 @@
 
 <main>
 
-<!-- C1 Healthchecks -->
+<!-- C1 Healthchecks (grouped by category) -->
 <section class="row-section">
-<h3>Service health</h3>
-<div class="healthcheck-row">
+<h3>Service health <span class="subtitle">({{ state.healthchecks | selectattr('status', 'equalto', 'up') | list | length }}/{{ state.healthchecks | length }} UP)</span></h3>
+{% set categories = {} %}
 {% for hc in state.healthchecks %}
-<div class="hc-badge hc-{{ hc.status }}">
-  <span class="hc-name">{{ hc.name }}</span>
-  <span class="hc-status">{{ hc.status }}</span>
-  {% if hc.latency_ms is not none %}<span class="hc-latency">{{ hc.latency_ms }}ms</span>{% endif %}
+  {% if categories.update({hc.category: categories.get(hc.category, []) + [hc]}) %}{% endif %}
+{% endfor %}
+{% for category, hcs in categories.items() %}
+<div class="hc-category">
+  <span class="hc-category-label">{{ category|replace('-', ' ') }}</span>
+  <div class="healthcheck-row">
+  {% for hc in hcs %}
+  <div class="hc-badge hc-{{ hc.status }}" title="{{ hc.url }}">
+    <span class="hc-name">{{ hc.name }}</span>
+    <span class="hc-status">{{ hc.status }}</span>
+    {% if hc.latency_ms is not none %}<span class="hc-latency">{{ hc.latency_ms }}ms</span>{% endif %}
+  </div>
+  {% endfor %}
+  </div>
 </div>
 {% endfor %}
-</div>
+<p class="hc-hint"><small>Stack ADR-0017 (LiteLLM + Langfuse + Postgres + dogfood-ui) is scaffold opt-in: <code>cd infra && docker compose up -d</code> per attivare.</small></p>
 </section>
 
 <!-- C3 Gate E counter -->
