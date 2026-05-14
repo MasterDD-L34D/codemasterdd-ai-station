@@ -30,12 +30,20 @@ from flask import Flask, jsonify, render_template, request
 
 app = Flask(__name__)
 
+# P0 console-flash fix 2026-05-14 sera-tardi-ultra-2: every subprocess on Windows
+# flashes brief console window unless CREATE_NO_WINDOW flag (0x08000000) is set.
+# Eduardo "vedo finestre cmd aprirsi e richiudersi" reported recurring flicker.
+# Dashboard auto-refresh 5min × 15+ git subprocess per cycle = visible flicker.
+_NO_WINDOW_FLAG = 0x08000000 if sys.platform == "win32" else 0
+
+
 # Acquire gh token once at startup (clean subprocess from main thread)
 def _get_gh_token() -> str:
     try:
         result = subprocess.run(
             ["gh", "auth", "token"],
-            capture_output=True, text=False, timeout=10, check=False, shell=False
+            capture_output=True, text=False, timeout=10, check=False, shell=False,
+            creationflags=_NO_WINDOW_FLAG,
         )
         if result.returncode == 0 and result.stdout:
             return result.stdout.decode("utf-8", errors="replace").strip()
@@ -328,6 +336,7 @@ def fetch_git_local(local_path: str) -> dict[str, Any]:
         head = subprocess.run(
             ["git", "-C", local_path, "rev-parse", "--short", "HEAD"],
             capture_output=True, text=False, timeout=5, check=False,
+            creationflags=_NO_WINDOW_FLAG,
         )
         if head.returncode != 0:
             return {"available": False, "reason": "git rev-parse failed"}
@@ -336,6 +345,7 @@ def fetch_git_local(local_path: str) -> dict[str, Any]:
         branch = subprocess.run(
             ["git", "-C", local_path, "rev-parse", "--abbrev-ref", "HEAD"],
             capture_output=True, text=False, timeout=5, check=False,
+            creationflags=_NO_WINDOW_FLAG,
         )
         branch_name = branch.stdout.decode("utf-8", errors="replace").strip() if branch.returncode == 0 else "?"
         # Divergence vs origin/main
@@ -532,6 +542,7 @@ def coord_event_log() -> Any:
         result = subprocess.run(
             ["powershell", "-ExecutionPolicy", "Bypass", "-File", str(script_path), "-Quiet", "-NotesQuick", notes],
             capture_output=True, text=False, timeout=15, check=False, shell=False,
+            creationflags=_NO_WINDOW_FLAG,
         )
         out = result.stdout.decode("utf-8", errors="replace")[-500:]
         err = result.stderr.decode("utf-8", errors="replace")[-500:]
@@ -565,6 +576,7 @@ def draft_pr() -> Any:
              "-RepoTarget", repo_target, "-Type", pr_type,
              "-PreviewFiles", preview_files, "-Summary", summary],
             capture_output=True, text=False, timeout=20, check=False, shell=False,
+            creationflags=_NO_WINDOW_FLAG,
         )
         out = result.stdout.decode("utf-8", errors="replace")
         err = result.stderr.decode("utf-8", errors="replace")[-500:]
@@ -591,7 +603,7 @@ def open_vscode() -> Any:
         # Find 'code' CLI executable to avoid shell=True
         code_cmd = "code.cmd" if sys.platform == "win32" else "code"
         creationflags = 0x00000008 if sys.platform == "win32" else 0  # DETACHED_PROCESS
-        subprocess.Popen([code_cmd, norm_path], shell=False, creationflags=creationflags)
+        subprocess.Popen([code_cmd, norm_path], shell=False, creationflags=creationflags | _NO_WINDOW_FLAG)
         return jsonify({"ok": True, "opened": norm_path})
     except FileNotFoundError:
         return jsonify({"ok": False, "error": "code CLI not in PATH"}), 500
