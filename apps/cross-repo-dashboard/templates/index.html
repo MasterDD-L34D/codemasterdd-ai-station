@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<title>Cross-repo Dashboard MVP</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<header>
+<h1>Cross-repo Dashboard <span class="version">MVP v0.1.0</span></h1>
+<div class="meta">
+  <span>Last refresh: <code>{{ state.timestamp }}</code></span>
+  <span>Cache TTL: {{ state.cache_ttl_sec }}s</span>
+  <a class="btn" href="/?refresh=1">Force refresh</a>
+  <a class="btn-secondary" href="/api/state">JSON API</a>
+</div>
+</header>
+
+<main>
+<div class="cards">
+{% for name, repo in state.repos.items() %}
+<div class="card {% if repo.dormant %}dormant{% endif %} {% if repo.error %}error{% endif %} {% if repo.stale %}stale{% endif %}">
+  <div class="card-header">
+    <h2>{{ repo.name }}</h2>
+    <div class="badges">
+      <span class="badge badge-{{ repo.privacy|replace(' ', '-')|replace('OK', 'ok') }}">{{ repo.privacy }}</span>
+      {% if repo.dormant %}<span class="badge badge-dormant">dormant</span>{% endif %}
+      {% if repo.stale %}<span class="badge badge-stale">stale</span>{% endif %}
+      {% if repo.error %}<span class="badge badge-error">error</span>{% endif %}
+    </div>
+  </div>
+
+  <div class="card-body">
+    <div class="metric">
+      <span class="metric-label">PR open</span>
+      <span class="metric-value">{{ repo.pr_count }}</span>
+    </div>
+
+    {% if repo.last_commit %}
+    <div class="commit">
+      <div class="commit-line">
+        <code>{{ repo.last_commit.sha_short }}</code>
+        <span class="commit-author">{{ repo.last_commit.author }}</span>
+        <span class="commit-date">{{ repo.last_commit.date }}</span>
+      </div>
+      <div class="commit-message">{{ repo.last_commit.message_short }}</div>
+    </div>
+    {% endif %}
+
+    {% if repo.prs %}
+    <details class="pr-list">
+      <summary>{{ repo.pr_count }} PR open</summary>
+      <ul>
+        {% for pr in repo.prs %}
+        <li>
+          <a href="https://github.com/{{ repo.slug }}/pull/{{ pr.number }}" target="_blank">#{{ pr.number }}</a>
+          <span class="pr-title">{{ pr.title }}</span>
+          <span class="pr-author">{{ pr.author.login if pr.author else '?' }}</span>
+        </li>
+        {% endfor %}
+      </ul>
+    </details>
+    {% endif %}
+
+    <div class="repo-meta">
+      <code>{{ repo.slug }}</code>
+      <span class="path">{{ repo.local_path }}</span>
+    </div>
+
+    {% if repo.error %}
+    <div class="error-text">⚠️ {{ repo.error }}</div>
+    {% endif %}
+  </div>
+
+  <div class="card-footer">
+    <small>Fetched: <code>{{ repo.fetched_at }}</code></small>
+  </div>
+</div>
+{% endfor %}
+</div>
+</main>
+
+<footer>
+<small>Component 1 MVP per spec V4 2026-05-14. Source: gh CLI + in-memory cache. <a href="/health">/health</a></small>
+</footer>
+</body>
+</html>
