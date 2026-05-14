@@ -49,7 +49,8 @@ Write-Host "[Pre-flight] Verify OpenCode installed..." -ForegroundColor Cyan
 $opencodeBin = "C:\Users\edusc\AppData\Roaming\npm\opencode.cmd"
 if (-not (Test-Path $opencodeBin)) {
   Write-Host "FAIL: OpenCode not found at $opencodeBin" -ForegroundColor Red
-  Write-Host "Install: npm install -g opencode" -ForegroundColor Yellow
+  Write-Host "Install: npm install -g opencode-ai" -ForegroundColor Yellow
+  Write-Host "  (npm package name is 'opencode-ai' NOT 'opencode')" -ForegroundColor Yellow
   exit 1
 }
 Write-Host "  PASS OpenCode binary exists" -ForegroundColor Green
@@ -66,12 +67,65 @@ Write-Host ""
 # 1. opencode-with-claude plugin (Meridian bridge)
 # ---------------------------------------------------------------------------
 if (-not $SkipPlugin) {
-  Write-Host "[1/3] opencode-with-claude plugin install..." -ForegroundColor Cyan
+  Write-Host "[1/3] opencode-with-claude plugin install + opencode.json registration..." -ForegroundColor Cyan
   if ($DryRun) {
     Write-Host "  DRY-RUN: npm install -g opencode-with-claude"
+    Write-Host "  DRY-RUN: update opencode.json -> plugin[]=opencode-with-claude + anthropic provider via 127.0.0.1:3456"
   } else {
+    # Step 1a: install npm package
     npm install -g opencode-with-claude 2>&1 | Out-String | Write-Host
-    Write-Host "  Plugin installed. Meridian bridge auto-managed on OpenCode session start." -ForegroundColor Green
+    Write-Host "  Plugin npm package installed." -ForegroundColor Green
+
+    # Step 1b: register plugin in opencode.json (REQUIRED per plugin README, P2.1 Codex fix)
+    # Without this step, OpenCode won't load the plugin -> Meridian bridge inactive
+    $opencodeJsonPath = "$env:USERPROFILE\.config\opencode\opencode.json"
+    if (-not (Test-Path $opencodeJsonPath)) {
+      Write-Host "  WARN: opencode.json not found at $opencodeJsonPath" -ForegroundColor Yellow
+      Write-Host "  Skipping registration. Run after opencode session creates config." -ForegroundColor Yellow
+    } else {
+      Write-Host "  Updating opencode.json plugin + anthropic provider..."
+      try {
+        $cfg = Get-Content $opencodeJsonPath -Raw | ConvertFrom-Json
+        # Backup
+        Copy-Item $opencodeJsonPath "$opencodeJsonPath.bak-$(Get-Date -Format yyyyMMddHHmmss)" -Force
+        Write-Host "  Backup: $opencodeJsonPath.bak-*" -ForegroundColor Green
+
+        # Add plugin array (idempotent)
+        $pluginName = "opencode-with-claude"
+        if ($cfg.PSObject.Properties.Name -contains "plugin") {
+          if ($cfg.plugin -notcontains $pluginName) {
+            $cfg.plugin = @($cfg.plugin) + $pluginName
+          }
+        } else {
+          $cfg | Add-Member -MemberType NoteProperty -Name "plugin" -Value @($pluginName) -Force
+        }
+
+        # Add anthropic provider via Meridian local proxy (port 3456 default)
+        if (-not $cfg.provider) {
+          $cfg | Add-Member -MemberType NoteProperty -Name "provider" -Value (New-Object PSObject) -Force
+        }
+        $anthropicCfg = @{
+          options = @{
+            baseURL = "http://127.0.0.1:3456"
+            apiKey = "dummy"
+          }
+        } | ConvertTo-Json -Depth 10 | ConvertFrom-Json
+        $cfg.provider | Add-Member -MemberType NoteProperty -Name "anthropic" -Value $anthropicCfg -Force
+
+        # Write
+        $cfg | ConvertTo-Json -Depth 20 | Set-Content $opencodeJsonPath -Encoding UTF8
+        Write-Host "  opencode.json updated:" -ForegroundColor Green
+        Write-Host "    plugin: [...opencode-with-claude...]"
+        Write-Host "    provider.anthropic: { baseURL: http://127.0.0.1:3456, apiKey: 'dummy' }"
+        Write-Host "  Meridian bridge will auto-start on next 'opencode' session." -ForegroundColor Green
+      } catch {
+        $msg = $_.Exception.Message
+        Write-Host "  FAIL JSON update: $msg" -ForegroundColor Red
+        Write-Host "  Eduardo manual: edit $opencodeJsonPath and add:" -ForegroundColor Yellow
+        Write-Host '    "plugin": ["opencode-with-claude"],' -ForegroundColor Yellow
+        Write-Host '    "provider": { "anthropic": { "options": { "baseURL": "http://127.0.0.1:3456", "apiKey": "dummy" } } }' -ForegroundColor Yellow
+      }
+    }
   }
 }
 
@@ -122,17 +176,17 @@ if (-not $SkipOpenRouter) {
 Write-Host ""
 Write-Host "=== Setup completed ===" -ForegroundColor Green
 Write-Host ""
-Write-Host "Next steps Eduardo manual:"
-Write-Host "  1. Subscribe Claude Pro `$20/mo: https://www.anthropic.com/claude/upgrade"
-Write-Host "  2. Test OpenCode + Meridian + Pro: `opencode` -> select Claude Opus/Sonnet"
-Write-Host "  3. Auth Gemini CLI: `gemini auth login`"
-Write-Host "  4. (Optional) OpenRouter signup if want overflow"
-Write-Host ""
-Write-Host "Validation criteria (1 mese post-Max 19/5 -> 19/6):"
-Write-Host "  - Cost actual <= `$50/mo"
-Write-Host "  - Daily orchestration feasibility empirical pass"
-Write-Host "  - Methodology cite count >= 80% baseline"
-Write-Host "  - Sub-agent dispatch viability n>=2 invocations"
-Write-Host ""
-Write-Host "Reference: docs/adr/0030-post-max-orchestration-hybrid-a1.md"
+Write-Host 'Next steps Eduardo manual:'
+Write-Host '  1. Subscribe Claude Pro $20/mo: https://www.anthropic.com/claude/upgrade'
+Write-Host '  2. Test OpenCode + Meridian + Pro: opencode --> select Claude Opus/Sonnet'
+Write-Host '  3. Auth Gemini CLI: gemini auth login'
+Write-Host '  4. (Optional) OpenRouter signup if want overflow'
+Write-Host ''
+Write-Host 'Validation criteria (1 mese post-Max 19/5 to 19/6):'
+Write-Host '  - Cost actual le $50/mo'
+Write-Host '  - Daily orchestration feasibility empirical pass'
+Write-Host '  - Methodology cite count ge 80% baseline'
+Write-Host '  - Sub-agent dispatch viability n ge 2 invocations'
+Write-Host ''
+Write-Host 'Reference: docs/adr/0030-post-max-orchestration-hybrid-a1.md'
 exit 0
