@@ -504,14 +504,27 @@ def health() -> Any:
     return jsonify({"status": "ok", "version": "0.2.0-full-integration", "timestamp": now_iso()})
 
 
+_NOTES_SAFE_REGEX = re.compile(r"^[A-Za-z0-9 .,_/:#\-+()=]{1,200}$")
+
+
 @app.route("/api/coord-event", methods=["POST"])
 def coord_event_log() -> Any:
-    """B1: Invoca scripts/cross-repo/coord-event-log.ps1 -Quiet -NotesQuick <notes>."""
+    """B1: Invoca scripts/cross-repo/coord-event-log.ps1 -Quiet -NotesQuick <notes>.
+
+    Security (P0.2 harsh-reviewer 2026-05-14 fix):
+    notes input regex-sanitized to prevent PowerShell command injection (CWE-77/78).
+    Blocked chars: backtick (`), dollar ($), parens (), pipe (|), semicolon (;),
+    redirect (<>), ampersand (&), quotes ('"), CR/LF, backslash escape sequences.
+    Allowed: alphanumeric + space + common punctuation [.,_/:#-+()=].
+    """
     notes = (request.json or {}).get("notes", "").strip()
     if not notes:
         return jsonify({"ok": False, "error": "notes required"}), 400
-    if len(notes) > 200:
-        return jsonify({"ok": False, "error": "notes max 200 chars"}), 400
+    if not _NOTES_SAFE_REGEX.match(notes):
+        return jsonify({
+            "ok": False,
+            "error": "notes contains disallowed chars (only alphanumeric + space + .,_/:#-+()= allowed, max 200 chars)",
+        }), 400
     script_path = CODEMASTERDD_ROOT / "scripts" / "cross-repo" / "coord-event-log.ps1"
     if not script_path.exists():
         return jsonify({"ok": False, "error": "script not found"}), 500
@@ -562,17 +575,26 @@ def draft_pr() -> Any:
 
 @app.route("/api/open-vscode")
 def open_vscode() -> Any:
-    """B3: Launch VS Code at given path (validated whitelist)."""
+    """B3: Launch VS Code at given path (validated whitelist).
+
+    Security (P0.3 harsh-reviewer 2026-05-14 fix):
+    shell=False (was True, removed -- shell=True with list-args useless on Windows + dangerous
+    pattern smell if allowed_paths ever extends with user input).
+    Path strictly whitelisted from REPOS local_path + CODEMASTERDD_ROOT.
+    """
     path_str = request.args.get("path", "").strip()
     allowed_paths = {str(Path(r["local_path"])) for r in REPOS.values()} | {str(CODEMASTERDD_ROOT)}
     norm_path = str(Path(path_str))
     if norm_path not in allowed_paths:
         return jsonify({"ok": False, "error": "path not whitelisted"}), 400
     try:
-        # Use 'code' CLI launcher (non-blocking detach via DETACHED_PROCESS on Windows)
+        # Find 'code' CLI executable to avoid shell=True
+        code_cmd = "code.cmd" if sys.platform == "win32" else "code"
         creationflags = 0x00000008 if sys.platform == "win32" else 0  # DETACHED_PROCESS
-        subprocess.Popen(["code", norm_path], shell=True, creationflags=creationflags)
+        subprocess.Popen([code_cmd, norm_path], shell=False, creationflags=creationflags)
         return jsonify({"ok": True, "opened": norm_path})
+    except FileNotFoundError:
+        return jsonify({"ok": False, "error": "code CLI not in PATH"}), 500
     except Exception as e:  # noqa: BLE001
         return jsonify({"ok": False, "error": f"{type(e).__name__}: {str(e)[:200]}"}), 500
 

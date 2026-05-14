@@ -19,6 +19,43 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-05-14 (sera-tardi-ultra: Dashboard v0.2 ship + Docker stack recovery + P0 security fixes)
+
+### Completato
+
+- **Component 1 cross-repo Dashboard MVP v0.2 BUILD** (vs originale "archived pre-design"). Eduardo "userei ogni giorno anche ora" fresh-state articulation invalida ipotesi PR #88 v1 trigger #1 unverified -> spec V4 honest re-evaluation
+- PR #91 squash-merged commit `c2cb816`: 5 data sources + 3 workflow buttons + waitress production + desktop shortcut + system tray. 600 righe app.py
+- 6 commits today su main: c2cb816 (v0.2) + 74cb083 (#89 W0) + 1e34544 (em-dash) + 18c93e4 (ADR regex) + e725a56 (healthcheck full stack) + 069158f (postgres + dogfood timeout)
+- **Docker stack ADR-0017 LIVE** (3/3 UP): LiteLLM 5ms + Langfuse 3ms + dogfood-ui ~4s. Postgres internal-only correct. Stack accessible http://localhost:3000 + :4000 + :8080.
+- **Docker bug fix complete** (post crash recovery): orphan unix-socket files in 3 Windows dirs (`Docker/run/` + `docker-secrets-engine/`) → rename `.broken-<timestamp>` + fresh empty + relaunch = daemon UP 4s. Lesson L-020 capturing exact sequence.
+- **Lessons promoted** (post harsh-reviewer P0.1 finding):
+  - L-2026-05-018 META anti-pattern recurrence (same-session L-016 violation by PR introducing it)
+  - L-2026-05-019 trigger validation window > single-session decision fatigue
+  - L-2026-05-020 Docker Desktop Windows orphan unix-socket cleanup pattern
+- **P0 security fixes** (post harsh-reviewer verifica-con-metodo):
+  - P0.2 `/api/coord-event` notes regex sanitize (block PS injection CWE-77/78)
+  - P0.3 `/api/open-vscode` shell=False (remove shell=True useless+dangerous pattern)
+- **Harsh-reviewer invoked 2x** (sessione marathon): pre-merge PR #88 (3 P0 + 6 P1 + 6 P2) + post-build verification (4 P0 + 5 P1 + 12 acknowledge). Protocol 5 cumulative this session.
+
+### Da fare
+
+- Pre-Max 5gg residui (Max expira 19/5)
+- Dashboard daily-use feedback Eduardo (informa v0.3)
+- 2026-05-19 Claude Max expiration
+- 2026-05-20+ SPRINT_02 W1 start con Gate E logging
+- 2026-05-24 Sun first schtask reminder fire
+- 2026-06-14 W4 harsh-reviewer audit + Gate E decision (Component 1 build full/minimal/defer)
+- Docker stack: tieni UP se serve Langfuse traces / promptfoo eval / LiteLLM routing. `docker compose down` quando finito.
+
+### Note
+
+- **Methodology meta-lesson**: PR #88 v1 was anti-pattern L-016 case study (pre-design pre-empirical trigger). Eduardo 14/5 mattina articulation invalida self-falsification ciclo 2 conclusion (L-019 captures this pattern: window > single-session decision fatigue).
+- **Cumulative protocols applied this session**: P1 Refresh-verify 3x + P3 Archon 7-step (skip per L-019 invalidation) + P5 harsh-reviewer 3x + P6 brainstorming 1x.
+- **Confidence trail honest** Component 1: 75% aspirational ciclo 1 → 55% post Archon ciclo 2 → 70% post fresh-state articulation V4 MVP → empirically validated post-build smoke 5/5.
+- **Coord-events probe rows**: 2 testing rows visible in `logs/coord-events-2026-05.md` (harsh-reviewer adversarial probe). Eduardo intentionally kept as testimony. Pre-Gate-E window 5/20 start, no contamination Gate E metrics.
+
+---
+
 ## 2026-05-14 (W0 pre-flight SPRINT_02 + PR #88 rework merge)
 
 ### Completato
