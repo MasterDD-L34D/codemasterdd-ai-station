@@ -86,7 +86,7 @@ if ($Desktop) {
   New-Shortcut -Path $desktopShortcut `
     -Target $batLauncher `
     -WorkingDir $dashboardDir `
-    -Description "Cross-repo Dashboard v0.2 — Component 1 codemasterdd" `
+    -Description "Cross-repo Dashboard v0.2 -- Component 1 codemasterdd" `
     -Icon $iconPath
 }
 
