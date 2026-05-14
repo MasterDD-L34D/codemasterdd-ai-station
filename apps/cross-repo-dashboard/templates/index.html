@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<title>Cross-repo Dashboard v0.2</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<header>
+<h1>Cross-repo Dashboard <span class="version">v0.2 Full Integration</span></h1>
+<div class="meta">
+  <span>Last refresh: <code>{{ state.timestamp }}</code></span>
+  <a class="btn" href="/?refresh=1">Force refresh</a>
+  <a class="btn-secondary" href="/api/state">JSON API</a>
+  <button class="btn-action" onclick="openCoordModal()">Log coord event (Gate E)</button>
+  <button class="btn-action" onclick="openPrModal()">Draft cross-repo PR</button>
+</div>
+</header>
+
+<main>
+
+<!-- C1 Healthchecks -->
+<section class="row-section">
+<h3>Service health</h3>
+<div class="healthcheck-row">
+{% for hc in state.healthchecks %}
+<div class="hc-badge hc-{{ hc.status }}">
+  <span class="hc-name">{{ hc.name }}</span>
+  <span class="hc-status">{{ hc.status }}</span>
+  {% if hc.latency_ms is not none %}<span class="hc-latency">{{ hc.latency_ms }}ms</span>{% endif %}
+</div>
+{% endfor %}
+</div>
+</section>
+
+<!-- C3 Gate E counter -->
+<section class="row-section">
+<h3>Gate E (Component 1 build trigger)</h3>
+<div class="gate-e-card gate-e-{{ state.gate_e.window_status }}">
+  <div class="gate-e-stat"><span class="num">{{ state.gate_e.total_events }}</span><span class="label">total events</span></div>
+  <div class="gate-e-stat"><span class="num">{{ state.gate_e.current_month_events }}</span><span class="label">current month</span></div>
+  <div class="gate-e-window">
+    <strong>Window {{ state.gate_e.window_status }}</strong>
+    ({{ state.gate_e.window_start }} → {{ state.gate_e.window_end }})
+    {% if state.gate_e.window_status == "not_started" %}
+      | starts in {{ state.gate_e.days_to_window_start }} days
+    {% endif %}
+  </div>
+  <div class="gate-e-threshold">
+    Threshold: ≥{{ state.gate_e.threshold_pass_per_week }}/wk = BUILD full
+    | {{ state.gate_e.threshold_minimal_min }}-&lt;{{ state.gate_e.threshold_pass_per_week }}/wk = MINIMAL
+    | &lt;{{ state.gate_e.threshold_minimal_min }}/wk = FALSIFIED
+  </div>
+</div>
+</section>
+
+<!-- D1 OPEN_DECISIONS + D3 ADR countdown -->
+<section class="row-section split">
+<div class="split-half">
+<h3>OPEN_DECISIONS active ({{ state.open_decisions.count_active }})</h3>
+<ul class="od-list">
+{% for od in state.open_decisions.entries %}
+<li><strong>{{ od.id }}</strong> {{ od.title }}</li>
+{% else %}
+<li class="empty">No active decisions</li>
+{% endfor %}
+</ul>
+</div>
+
+<div class="split-half">
+<h3>ADR ratification countdown</h3>
+<ul class="adr-list">
+{% for adr in state.adr_countdown[:5] %}
+<li>
+  <strong>ADR-{{ adr.adr }}</strong>
+  ratify <code>{{ adr.ratify_date }}</code>
+  {% if adr.days_remaining is not none %}
+    <span class="days {% if adr.days_remaining < 0 %}overdue{% elif adr.days_remaining < 7 %}urgent{% endif %}">
+      {% if adr.days_remaining < 0 %}{{ -adr.days_remaining }}d OVERDUE
+      {% else %}{{ adr.days_remaining }}d{% endif %}
+    </span>
+  {% endif %}
+</li>
+{% else %}
+<li class="empty">No ADR pending ratification</li>
+{% endfor %}
+</ul>
+</div>
+</section>
+
+<!-- Repos cards -->
+<section class="row-section">
+<h3>Repositories ({{ state.repos.items() | length }})</h3>
+<div class="cards">
+{% for name, repo in state.repos.items() %}
+<div class="card {% if repo.dormant %}dormant{% endif %} {% if repo.error %}error{% endif %} {% if repo.stale %}stale{% endif %}">
+  <div class="card-header">
+    <h2>{{ repo.name }}</h2>
+    <div class="badges">
+      <span class="badge badge-{{ repo.privacy|replace(' ', '-')|replace('OK', 'ok') }}">{{ repo.privacy }}</span>
+      {% if repo.dormant %}<span class="badge badge-dormant">dormant</span>{% endif %}
+      {% if repo.stale %}<span class="badge badge-stale">stale</span>{% endif %}
+      {% if repo.error %}<span class="badge badge-error">error</span>{% endif %}
+    </div>
+  </div>
+
+  <div class="card-body">
+    <div class="metrics-row">
+      <div class="metric">
+        <span class="metric-label">PR open</span>
+        <span class="metric-value">{{ repo.pr_count }}</span>
+      </div>
+      {% if repo.git_local and repo.git_local.available %}
+      <div class="metric">
+        <span class="metric-label">vs {{ repo.git_local.base }}</span>
+        <span class="metric-value sync">
+          {% if repo.git_local.ahead %}↑{{ repo.git_local.ahead }}{% endif %}
+          {% if repo.git_local.behind %}↓{{ repo.git_local.behind }}{% endif %}
+          {% if not repo.git_local.ahead and not repo.git_local.behind %}=={% endif %}
+        </span>
+      </div>
+      {% endif %}
+    </div>
+
+    {% if repo.git_local and repo.git_local.available %}
+    <div class="git-info">
+      Local: <code>{{ repo.git_local.head_short }}</code> on <code>{{ repo.git_local.branch }}</code>
+    </div>
+    {% endif %}
+
+    {% if repo.last_commit %}
+    <div class="commit">
+      <div class="commit-line">
+        <code>{{ repo.last_commit.sha_short }}</code>
+        <span class="commit-author">{{ repo.last_commit.author }}</span>
+        <span class="commit-date">{{ repo.last_commit.date }}</span>
+      </div>
+      <div class="commit-message">{{ repo.last_commit.message_short }}</div>
+    </div>
+    {% endif %}
+
+    {% if repo.prs %}
+    <details class="pr-list">
+      <summary>{{ repo.pr_count }} PR open</summary>
+      <ul>
+        {% for pr in repo.prs %}
+        <li>
+          <a href="https://github.com/{{ repo.slug }}/pull/{{ pr.number }}" target="_blank">#{{ pr.number }}</a>
+          <span class="pr-title">{{ pr.title }}</span>
+          <span class="pr-author">{{ pr.author.login if pr.author else '?' }}</span>
+        </li>
+        {% endfor %}
+      </ul>
+    </details>
+    {% endif %}
+
+    <div class="repo-meta">
+      <div class="repo-links">
+        <a href="https://github.com/{{ repo.slug }}" target="_blank">GitHub</a>
+        <a href="javascript:void(0)" onclick="openVSCode('{{ repo.local_path|replace('\\', '\\\\') }}')">VS Code</a>
+        <code class="path">{{ repo.local_path }}</code>
+      </div>
+    </div>
+
+    {% if repo.error %}
+    <div class="error-text">⚠️ {{ repo.error }}</div>
+    {% endif %}
+  </div>
+</div>
+{% endfor %}
+</div>
+</section>
+
+</main>
+
+<!-- Modal Coord event -->
+<div class="modal-overlay" id="coord-modal" style="display:none">
+<div class="modal">
+<h3>Log coord event (Gate E)</h3>
+<p>Quick log via <code>coord-event-log.ps1 -Quiet -NotesQuick</code></p>
+<textarea id="coord-notes" placeholder="es. Grep cross-repo for PR status 15min cost" maxlength="200"></textarea>
+<div class="modal-actions">
+  <button class="btn-action" onclick="submitCoord()">Log</button>
+  <button class="btn-secondary" onclick="closeCoordModal()">Cancel</button>
+</div>
+<div id="coord-result"></div>
+</div>
+</div>
+
+<!-- Modal PR draft -->
+<div class="modal-overlay" id="pr-modal" style="display:none">
+<div class="modal pr-modal">
+<h3>Draft cross-repo PR</h3>
+<label>Repo target:
+  <select id="pr-target">
+    <option value="Game">Game (Vue3)</option>
+    <option value="Godot-v2">Game-Godot-v2</option>
+    <option value="Dafne">Dafne (evo-swarm)</option>
+    <option value="vault">vault</option>
+  </select>
+</label>
+<label>PR type:
+  <select id="pr-type">
+    <option value="policy-alignment">policy-alignment</option>
+    <option value="ADR-cross-ref">ADR-cross-ref</option>
+    <option value="drift-fix">drift-fix</option>
+    <option value="docs">docs</option>
+    <option value="governance-suggestion">governance-suggestion</option>
+  </select>
+</label>
+<label>Files preview (comma-sep):
+  <input type="text" id="pr-files" placeholder="README.md,docs/index.md">
+</label>
+<label>Summary (1-2 lines):
+  <input type="text" id="pr-summary" placeholder="Fix broken link section X">
+</label>
+<div class="modal-actions">
+  <button class="btn-action" onclick="submitPr()">Dry-run draft</button>
+  <button class="btn-secondary" onclick="closePrModal()">Cancel</button>
+</div>
+<pre id="pr-result"></pre>
+</div>
+</div>
+
+<footer>
+<small>v0.2 Full Integration | spec V4 2026-05-14 | <a href="/health">/health</a></small>
+</footer>
+
+<script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
