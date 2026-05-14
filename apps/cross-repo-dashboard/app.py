@@ -61,15 +61,16 @@ HEALTHCHECKS = [
     # Stack ADR-0017 observability (Docker compose, scaffold opt-in DOWN by default)
     {"name": "LiteLLM proxy", "url": "http://127.0.0.1:4000/health/readiness", "timeout": 3, "category": "stack-adr-0017"},
     {"name": "Langfuse", "url": "http://127.0.0.1:3000/api/public/health", "timeout": 3, "category": "stack-adr-0017"},
-    {"name": "dogfood-ui Flask", "url": "http://127.0.0.1:8080/api/health", "timeout": 3, "category": "stack-adr-0017"},
+    {"name": "dogfood-ui Flask", "url": "http://127.0.0.1:8080/api/health", "timeout": 6, "category": "stack-adr-0017"},
     # Dafne swarm (run manually via START-SWARM.ps1)
     {"name": "Dafne swarm", "url": "http://127.0.0.1:5000/health", "timeout": 3, "category": "dafne"},
 ]
 
 # TCP-only services (no HTTP endpoint, port-open check)
-HEALTHCHECKS_TCP = [
-    {"name": "Postgres (ADR-0017)", "host": "127.0.0.1", "port": 5432, "timeout": 2, "category": "stack-adr-0017"},
-]
+# NOTE: Postgres NOT exposed to host by design (compose internal network only).
+# Verified UP empirically via LiteLLM/Langfuse DB connection (they depends_on:postgres healthy).
+# Removed from healthcheck list to avoid false-DOWN signal.
+HEALTHCHECKS_TCP: list[dict[str, Any]] = []
 
 # Repo config: name -> (owner/repo string, is_dormant flag)
 REPOS: dict[str, dict[str, Any]] = {
