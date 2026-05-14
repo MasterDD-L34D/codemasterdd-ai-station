@@ -2,10 +2,13 @@
 
 > *TL;DR: Fase 6 ha chiuso 3/4 criteri ADR-0014 PASS (quality 75 test / cost 0.074% budget / reliability on-track verso n=20). Criterio #3 (privacy Synesthesia n≥3) **de-facto non chiudibile** entro 2026-05-19: Synesthesia è progetto dormant fino esame UniUPO agosto 2026, dataset reale acquisibile solo post-agosto. Decisione: adottare **scenario A (full-sovereign $0-50/anno)** post-Max con deroga esplicita su criterio #3, completamento privacy validation rinviata a riattivazione Synesthesia. Trigger ADR-0008 "FULL-SOVEREIGN VIABLE" già confermato empirically mid-sprint (cosmetic 93% / behavior 70-80% / corruption 0 / mix success 83%). Claude Pro declassato definitivamente a opzione emergency-only.*
 
-- **Status**: **Accepted** (2026-05-07 -- closure anticipata vs review sett.4 originale ~2026-05-17, vedi sezione "Closure verdict 2026-05-07" sotto)
-- **Data**: 2026-04-24 (Proposed) -- 2026-05-07 (Accepted)
+> **⚠️ AMENDMENT 2026-05-15 sera-tardi-ultra-3 (ADR-0030)**: Target $0-50/anno **VIOLATED by realism**. Eduardo realization mattina 15/5: scenario A copre code-editing tier MA NON copre orchestration + reasoning + methodology + sub-agents + skills (CC desktop unique value). Eduardo usage 75% Max settimanale = high-volume incompatibile free-tier-only. Decisione amendment: **scope rescoped da "$0-50/anno absolute"** → **"no Claude Max premium (~$1200/anno) + multi-provider flexibility + methodology preservation"**. Nuovo target realistico **$240-600/anno** via Hybrid A1 (CC Pro $20/mo + Meridian + OpenCode + Gemini CLI free + OpenRouter overflow). ADR-0030 supersedes scenario A absolute target. Vedi ADR-0030 per architectural detail + Implementation Plan + Validation criteria.
+
+- **Status**: **Accepted con amendment 2026-05-15** (target $0-50/anno violated, scope rescoped per ADR-0030)
+- **Data**: 2026-04-24 (Proposed) -- 2026-05-07 (Accepted) -- 2026-05-15 (Amendment ADR-0030 supersedes scenario target)
 - **Decisore**: Eduardo Scarpelli
 - **Deciders**: solo-dev (single-user workstation)
+- **Amendment trigger**: Eduardo statement 2026-05-15 mattina "non ho un modo effettivo per affrontare il tutto senza claude code desktop" + autoresearch Meridian/OpenCode plugin discovery
 
 ## Context and Problem Statement
 
