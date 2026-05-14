@@ -74,13 +74,36 @@ async function openVSCode(path) {
   }
 }
 
+// v0.3 NEW: Filter / search repos by name + tags
+function setupRepoFilter() {
+  const input = document.getElementById('repo-filter');
+  if (!input) return;
+  input.addEventListener('input', (e) => {
+    const q = e.target.value.toLowerCase().trim();
+    const cards = document.querySelectorAll('#repo-cards .card');
+    let visible = 0;
+    cards.forEach(card => {
+      const tags = (card.dataset.repoTags || '').toLowerCase();
+      const name = (card.dataset.repoName || '').toLowerCase();
+      if (!q || tags.includes(q) || name.includes(q)) {
+        card.style.display = '';
+        visible++;
+      } else {
+        card.style.display = 'none';
+      }
+    });
+  });
+}
+
+document.addEventListener('DOMContentLoaded', setupRepoFilter);
+
 // Auto-refresh every 5 minutes (matches cache TTL)
 setTimeout(() => location.reload(), 5 * 60 * 1000);
 
 // Close modals on Escape
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') {
-    closeCoordModal();
-    closePrModal();
+    if (typeof closeCoordModal === 'function') closeCoordModal();
+    if (typeof closePrModal === 'function') closePrModal();
   }
 });
