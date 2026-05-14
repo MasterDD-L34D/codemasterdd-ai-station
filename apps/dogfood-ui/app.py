@@ -200,12 +200,25 @@ def create_app() -> Flask:
     def api_stats():
         return jsonify(aggregate_stats(db.list_entries()))
 
+    # Health cache TTL 30s -- root cause fix /api/health 4s latency
+    # (dafne.ping + lf.ping each ~2s timeout when services DOWN)
+    # 2026-05-14 sera-tardi-ultra-2 per Eduardo "dogfood-ui slow latency"
+    _health_cache: dict[str, Any] = {"data": None, "ts": 0.0}
+    _HEALTH_TTL_SEC = 30.0
+
     @app.route("/api/health")
     def api_health():
-        return jsonify({
+        import time
+        now = time.time()
+        cached = _health_cache.get("data")
+        if cached and (now - _health_cache["ts"]) < _HEALTH_TTL_SEC:
+            cached_with_meta = dict(cached)
+            cached_with_meta["cache_age_sec"] = round(now - _health_cache["ts"], 1)
+            return jsonify(cached_with_meta)
+        data = {
             "status": "ok",
             "app": "dogfood-ui",
-            "version": "0.2.0",
+            "version": "0.2.1",
             "db": db.health(),
             "langfuse": {
                 "configured": bool(LANGFUSE_PUBLIC_KEY),
@@ -217,7 +230,11 @@ def create_app() -> Flask:
                 "reachable": dafne.ping(),
             },
             "promptfoo_results_available": PROMPTFOO_LATEST.exists(),
-        })
+            "cache_age_sec": 0,
+        }
+        _health_cache["data"] = data
+        _health_cache["ts"] = now
+        return jsonify(data)
 
     @app.route("/api/dafne/snapshot")
     def api_dafne_snapshot():

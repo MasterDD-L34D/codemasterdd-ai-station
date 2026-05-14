@@ -19,6 +19,46 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-05-14 (sera-tardi-ultra-2: Max parallel strategy + console flash + dogfood-ui cache + claude-mem disable)
+
+### Completato
+
+- **Strategy doc Max parallel execution 5gg residui** (commit `80fcd4b`): honest reframe methodology over-conservative bias. PR #87/#88/SPRINT_02 plan applied L-016 + Gate E + sovereign-first TROPPO restrittivamente. Eduardo Max usage screenshot 75% settimanale + 93% 5h + 2gg reset = capacity sostanziale, NOT scarce-preserve.
+- **T9 methodology empirical research** (commit `58addd1`, doc `docs/research/methodology-effectiveness-2026-05-14.md`): cite count P1=19 dominant + P5=6 over threshold + P6=2 under. **ADR-0028 Three Strikes scan 0/3 fired empirical** -> stays Proposed.
+- **ADR-0026 amendment Protocol 5 harsh-reviewer ACCEPTED** ratified empirical (n=5+ cross-PR cross-session legitimate per L-016 anti-cherry-picking criteria).
+- **ESCALATION_GATES.md Gate E reframe**: pre-build trigger -> FEEDBACK METRIC (Component 1 MVP shipped, no longer gated).
+- **Console flash investigation + fix attempts**:
+  - Initial hypothesis: dashboard subprocess calls -> fix commit `6dc0bed` CREATE_NO_WINDOW flag su tutti subprocess. RESULT: flashes PERSISTED.
+  - Deep investigation: **root cause = claude-mem plugin hooks**. 5 hooks registered (Setup + SessionStart + UserPromptSubmit + PreToolUse + PostToolUse `*` matcher + Stop). PostToolUse `*` fires su ogni tool call. Bash hook on Windows = mintty.exe flash. **20-100 flashes/messaggio**.
+  - Upstream investigation: [GitHub issue #19012](https://github.com/anthropics/claude-code/issues/19012) "Hook commands cause brief console window flash" **CLOSED as not planned**. NO CC config option exists (only `suppressOutput` documented, hides stdout not spawn).
+- **Eduardo decision**: disable claude-mem temporaneamente (set `false` in `~/.claude/settings.json`) + plan upstream contribution. Lose memory injection cross-session, keep flicker-free UX. Reversible.
+- **dogfood-ui /api/health cache 30s TTL** (commit `9040dd9`): root cause = dafne.ping + lf.ping 2s timeout each = 4s combined. Cache fix: **4s cold -> 1.94ms cached** (99.95% speedup). Version 0.2.0 -> 0.2.1.
+- **Lessons promoted today cumulative**:
+  - L-2026-05-018 META anti-pattern recurrence
+  - L-2026-05-019 trigger validation window > single-session decision fatigue
+  - L-2026-05-020 Docker Desktop orphan socket cleanup pattern
+  - L-2026-05-021 Plugin hooks console flash Windows (NEW this entry)
+- **PR #92 open** (`claude/max-parallel-execution-2026-05-14`): 4 commits cumulative (strategy + T9 research + ADR amendments + dogfood-ui cache).
+- **Cumulative commits today on main**: 7 (c2cb816 v0.2 + 74cb083 W0 + 1e34544 em-dash + 18c93e4 ADR regex + e725a56 healthcheck full + 069158f postgres+timeout + 1b34055 P0 security + 6dc0bed console flash). PR #92 stacked +4 (80fcd4b + 58addd1 + 9040dd9, this entry not yet committed).
+
+### Da fare
+
+- **Eduardo manual** (~1min): close current CC session + reopen new → claude-mem hooks unregistered + verify zero flashes
+- **Eduardo optional** (~5min): +1 GitHub issue #19012 + comment con reproduce case Windows 11 + claude-mem
+- **Eduardo decide PR #92**: review + merge (cumulative Max-tier work day 14/5) o leave open per altro work
+- Re-enable claude-mem trigger conditions: CC team merges windowsHide fix upstream OR Eduardo subjective tolerance change
+- Cross-repo PR opportunistic (Eduardo flag candidates during normal use)
+- Component 1 v0.3 features post Eduardo 1-day daily-use feedback
+
+### Note
+
+- **Methodology reframe successful**: Eduardo "i piani fino ora sono tutti troppo conservativi" challenge → strategy doc + amendments shipped 14/5 sera. Max NON è scarce-preserve, è risorsa da sfruttare massivamente fintanto disponibile. 5gg residui pre 19/5 Max expiration.
+- **L-016 scope clarification post L-019**: anti-aspirational DOES NOT apply when (a) user articulates concrete daily-use case (b) capability has expiration deadline (c) multi-source synthesis benefits higher-tier model (d) Eduardo CLASSE D scelta-valore explicit override.
+- **Memory cross-session** post claude-mem disable: use `/learn-codebase` + AA01 lessons + JOURNAL entries (manual continuity). Trade-off accepted by Eduardo.
+- **Methodology framework empirical state**: 5/6 protocols (P1-P5) well-integrated cite >= threshold + organic invocations. P6 brainstorming under-tested. ADR-0028 Three Strikes stays Proposed.
+
+---
+
 ## 2026-05-14 (sera-tardi-ultra: Dashboard v0.2 ship + Docker stack recovery + P0 security fixes)
 
 ### Completato

@@ -166,3 +166,62 @@ footer a { color: #58a6ff; }
 }
 .pr-modal { min-width: 600px; }
 
+/* ============ v0.3 Daily-use features ============ */
+
+/* JOURNAL preview */
+.journal-preview details { background: #161b22; padding: 12px 16px; border-radius: 8px; border: 1px solid #30363d; }
+.journal-preview summary { cursor: pointer; font-size: 0.95rem; }
+.journal-preview .journal-header-link { color: #58a6ff; margin-left: 6px; }
+.journal-preview .journal-text {
+  margin-top: 10px; padding: 10px; background: #0d1117; border-radius: 4px;
+  font-size: 0.78rem; color: #c9d1d9; max-height: 250px; overflow-y: auto;
+  white-space: pre-wrap; word-break: break-word; font-family: "Consolas", monospace;
+}
+
+/* Recent activity feed */
+.activity-feed { list-style: none; padding: 0; margin: 0; background: #161b22; border-radius: 8px; border: 1px solid #30363d; overflow: hidden; }
+.activity-item {
+  display: flex; align-items: center; gap: 10px; padding: 8px 14px;
+  border-bottom: 1px solid #21262d; font-size: 0.85rem;
+}
+.activity-item:last-child { border-bottom: none; }
+.activity-item:hover { background: #1c2128; }
+.activity-repo { flex-shrink: 0; min-width: 90px; text-align: center; }
+.activity-sha { flex-shrink: 0; color: #7d8590; font-size: 0.75rem; }
+.activity-msg { flex: 1; color: #c9d1d9; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.activity-meta { flex-shrink: 0; color: #7d8590; font-size: 0.75rem; }
+
+/* Filter input */
+.filter-input {
+  width: 100%; padding: 10px 14px; background: #161b22; border: 1px solid #30363d;
+  color: #e6edf3; border-radius: 6px; font-size: 0.9rem; box-sizing: border-box;
+}
+.filter-input:focus { outline: none; border-color: #58a6ff; }
+
+/* Velocity sparkline */
+.velocity { display: flex; align-items: center; gap: 10px; padding: 6px 0; font-size: 0.78rem; color: #7d8590; }
+.velocity-label { flex-shrink: 0; }
+.velocity-sparkline { flex-shrink: 0; }
+.velocity-sparkline rect { transition: opacity 0.2s; }
+.velocity-sparkline:hover rect { opacity: 1; }
+.velocity-total { color: #c9d1d9; }
+
+/* Drill-down page */
+.back-link { color: #58a6ff; text-decoration: none; font-size: 1rem; margin-right: 12px; }
+.back-link:hover { text-decoration: underline; }
+.detail-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+.detail-table td, .detail-table th { padding: 6px 12px; border-bottom: 1px solid #21262d; text-align: left; }
+.detail-table th { color: #7d8590; font-weight: normal; font-size: 0.75rem; text-transform: uppercase; }
+.velocity-detail p { color: #c9d1d9; }
+.velocity-bar { background: #1f6feb; color: white; padding: 2px 6px; border-radius: 3px; font-size: 0.8rem; min-width: 20px; }
+.pr-detail-list { list-style: none; padding: 0; }
+.pr-detail-item {
+  display: flex; gap: 12px; padding: 8px 12px; background: #161b22;
+  border: 1px solid #30363d; border-radius: 6px; margin-bottom: 6px;
+}
+.pr-detail-item .pr-number { color: #58a6ff; min-width: 50px; }
+.pr-detail-title { flex: 1; color: #c9d1d9; }
+.pr-detail-meta { color: #7d8590; font-size: 0.8rem; }
+.commit-detail { background: #161b22; padding: 14px; border-radius: 8px; border: 1px solid #30363d; }
+.commit-message-full { margin-top: 8px; color: #c9d1d9; white-space: pre-wrap; }
+

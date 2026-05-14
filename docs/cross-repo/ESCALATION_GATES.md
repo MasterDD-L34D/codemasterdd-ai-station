@@ -10,11 +10,20 @@ Criteri **pre-definiti** per evoluzione paradigm cross-repo SE failure trigger e
 
 ## Gates definizione
 
-### Gate E (PRE-Component-1 build)
+### Gate E (Component 1 FEEDBACK METRIC -- reframe 2026-05-14)
 
-**Purpose**: validate trigger #1 visibility gap empirically post-Max prima di commit Component 1 build effort.
+> **REFRAME 2026-05-14 sera-tardi-ultra-2**: Gate E originally framed as "PRE-Component-1 build trigger" (gate before build). Component 1 dashboard MVP shipped 2026-05-14 commit `c2cb816` post Eduardo "userei ogni giorno anche ora" (L-019 trigger validation). Gate E counter is **NO LONGER A BUILD-BLOCKER** since Component 1 already exists.
+>
+> **NEW framing**: Gate E counter = **FEEDBACK METRIC** measuring how much pain Eduardo feels in coordination events. Informs:
+> - Whether v0.3+ iteration priorities are right (high events / specific event type -> feature gap)
+> - Whether dashboard adoption succeeds (low events post-build = success signal)
+> - Whether Opt 3 (write-direct) or Opt 4 (mesh-bus) escalation is justified (Gate A / Gate B trigger)
+>
+> Reference: `docs/research/methodology-effectiveness-2026-05-14.md` Gate E reframe section.
 
-**Empirical window**: 30 giorni post-Claude Max expiration (5/20 -> 6/19).
+**Purpose**: feedback metric for Component 1 adoption + Opt 3/Opt 4 escalation trigger.
+
+**Empirical window**: 30 giorni post-Claude Max expiration (5/20 -> 6/19). Window unchanged.
 
 **Measurement**:
 - Eduardo logs coord-event ogni volta che ha "missed-coordination event":
@@ -25,13 +34,13 @@ Criteri **pre-definiti** per evoluzione paradigm cross-repo SE failure trigger e
 - Helper script: `scripts/cross-repo/coord-event-log.ps1` (interactive prompts)
 - Weekly reminder: schtasks Sunday 09:00 (installed via `install-gate-e-reminder.ps1`)
 
-**Thresholds** (after 4 weeks consecutive measurement):
+**Thresholds REFRAMED** (post Component 1 MVP shipped 2026-05-14):
 
-| Avg events/week | Decision | Component 1 scope |
-|-----------------|----------|-------------------|
-| >=5/wk | BUILD justified empirical | Full scope (extension dogfood-ui OR standalone, alternative A vs B decision) |
-| 2-4.99/wk | BUILD MINIMAL | Extension dogfood-ui ONLY (drop standalone alternative + reduce SPRINT_02 T1-T2 scope) |
-| <2/wk | NOT BUILT | Trigger #1 falsified empirical, defer indefinitely. Update STATUS_MULTI_REPO + close spec V3 |
+| Avg events/week | NEW interpretation | Action |
+|-----------------|---------------------|--------|
+| >=5/wk | **HIGH pain signal** -- Component 1 v0.2 insufficient OR specific feature gap | Iterate v0.3+ urgent based on event type breakdown; Gate A re-evaluate Opt 3 |
+| 2-4.99/wk | **MODERATE pain** -- Component 1 v0.2 mostly OK, minor gaps | Iterate v0.3+ on identified gaps opportunistic |
+| <2/wk | **LOW pain** -- Component 1 v0.2 adoption successful | Continue v0.2 stable, defer v0.3 iteration unless other trigger emerges |
 
 **Threshold revisability**: post 1-week pilot, threshold revisable se events tipicamente cluster (1 day = revise weekly threshold) vs scattered (mantain). Document revision in `docs/cross-repo/ESCALATION_GATES.md` amendment + JOURNAL entry.
 

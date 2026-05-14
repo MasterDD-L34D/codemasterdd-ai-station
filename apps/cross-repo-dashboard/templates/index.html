@@ -7,7 +7,7 @@
 </head>
 <body>
 <header>
-<h1>Cross-repo Dashboard <span class="version">v0.2 Full Integration</span></h1>
+<h1>Cross-repo Dashboard <span class="version">v0.3 Daily-use</span></h1>
 <div class="meta">
   <span>Last refresh: <code>{{ state.timestamp }}</code></span>
   <a class="btn" href="/?refresh=1">Force refresh</a>
@@ -18,6 +18,42 @@
 </header>
 
 <main>
+
+<!-- v0.3 NEW: JOURNAL preview header -->
+{% if state.journal_preview.available %}
+<section class="row-section journal-preview">
+<details>
+  <summary>
+    <strong>📓 JOURNAL latest:</strong>
+    <span class="journal-header-link">{{ state.journal_preview.header }}</span>
+    <span class="subtitle">({{ state.journal_preview.total_entries_count }} entries cumulative)</span>
+  </summary>
+  <pre class="journal-text">{{ state.journal_preview.preview }}</pre>
+</details>
+</section>
+{% endif %}
+
+<!-- v0.3 NEW: Recent activity feed cross-repo -->
+{% if state.activity_feed %}
+<section class="row-section">
+<h3>Recent activity cross-repo <span class="subtitle">({{ state.activity_feed | length }} most recent)</span></h3>
+<ul class="activity-feed">
+{% for activity in state.activity_feed %}
+<li class="activity-item">
+  <span class="activity-repo badge badge-{{ activity.privacy|replace(' ', '-')|replace('OK', 'ok') }}">{{ activity.repo }}</span>
+  <code class="activity-sha">{{ activity.sha_short }}</code>
+  <span class="activity-msg">{{ activity.message_short }}</span>
+  <span class="activity-meta">{{ activity.author }} · {{ activity.date[:10] if activity.date else '?' }}</span>
+</li>
+{% endfor %}
+</ul>
+</section>
+{% endif %}
+
+<!-- v0.3 NEW: Filter/search box -->
+<section class="row-section">
+<input type="text" id="repo-filter" placeholder="🔍 Filter repos by name / state (es. 'Game' / 'dormant' / 'sovereign')" class="filter-input">
+</section>
 
 <!-- C1 Healthchecks (grouped by category) -->
 <section class="row-section">
@@ -101,9 +137,9 @@
 <!-- Repos cards -->
 <section class="row-section">
 <h3>Repositories ({{ state.repos.items() | length }})</h3>
-<div class="cards">
+<div class="cards" id="repo-cards">
 {% for name, repo in state.repos.items() %}
-<div class="card {% if repo.dormant %}dormant{% endif %} {% if repo.error %}error{% endif %} {% if repo.stale %}stale{% endif %}">
+<div class="card {% if repo.dormant %}dormant{% endif %} {% if repo.error %}error{% endif %} {% if repo.stale %}stale{% endif %}" data-repo-name="{{ name }}" data-repo-tags="{{ name|lower }} {{ repo.privacy }} {% if repo.dormant %}dormant{% endif %} {% if repo.stale %}stale{% endif %} {% if repo.error %}error{% endif %}">
   <div class="card-header">
     <h2>{{ repo.name }}</h2>
     <div class="badges">
@@ -138,6 +174,22 @@
     </div>
     {% endif %}
 
+    {% if repo.velocity and repo.velocity.available %}
+    <div class="velocity">
+      <span class="velocity-label">Velocity 4w:</span>
+      <svg class="velocity-sparkline" width="80" height="20" viewBox="0 0 80 20">
+        {% set max_v = repo.velocity.max_week if repo.velocity.max_week > 0 else 1 %}
+        {% for w in repo.velocity.weeks %}
+          {% set height = (w / max_v * 18) if max_v > 0 else 1 %}
+          {% set x = loop.index0 * 20 %}
+          <rect x="{{ x + 2 }}" y="{{ 20 - height }}" width="16" height="{{ height if height > 1 else 1 }}" fill="#58a6ff" opacity="0.7"/>
+          <text x="{{ x + 10 }}" y="14" font-size="9" text-anchor="middle" fill="#0d1117">{{ w }}</text>
+        {% endfor %}
+      </svg>
+      <span class="velocity-total">{{ repo.velocity.total_4w }} commits · avg {{ repo.velocity.avg_per_week }}/wk</span>
+    </div>
+    {% endif %}
+
     {% if repo.last_commit %}
     <div class="commit">
       <div class="commit-line">
@@ -166,6 +218,7 @@
 
     <div class="repo-meta">
       <div class="repo-links">
+        <a href="/cross-repo/{{ name }}">📊 Details</a>
         <a href="https://github.com/{{ repo.slug }}" target="_blank">GitHub</a>
         <a href="javascript:void(0)" onclick="openVSCode('{{ repo.local_path|replace('\\', '\\\\') }}')">VS Code</a>
         <code class="path">{{ repo.local_path }}</code>

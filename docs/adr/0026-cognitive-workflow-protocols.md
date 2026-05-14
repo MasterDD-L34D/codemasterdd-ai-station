@@ -230,11 +230,33 @@ Empirical trial breve è cross-cutting (NOT a separate protocol but enabler per 
 
 **Cost**: ~$0.30-0.50 per invocazione (~85K tokens). Sotto budget cap $20/mese ADR-0023 anche con 1-2 cluster significativi/mese = $1/mese. Cumulative session cap = $1 (hard cap 2 invocations).
 
-**Caso studio empirico (n=2 instances LEGITIMATE post hard cap)**:
+**Caso studio empirico (n=5+ instances LEGITIMATE cross-PR cross-session)**:
 - 1st invocation: PR #80+#81 cluster review 2026-05-13 pomeriggio consegnato 8 finding actionable (3 P0 incluso CWE-214 catch real, 3 P1, 2 P2). Eduardo decisioni 4/4 trigger fix → PR #82 mergeato.
 - 2nd invocation: cluster ULTRA-FINAL 8 PR review 2026-05-13 sera consegnato 7 finding META-LEVEL (3 P0 incluso reflexive cherry-picking + scope drift, 2 P1, 2 P2). Eduardo decisioni 4/4 trigger fix → PR consolidamento + STOP next 24h consigliato.
+- 3rd invocation: PR #87 spec V3 ciclo 2 harsh-review post-Draft 2026-05-13 sera-tardi-ultra-3 consegnato 12 finding (3 P0 + 5/6 P1 + 3 P2). REWORK verdict triggered v1→v2 archive Component 1 (META anti-pattern L-016 mitigation).
+- 4th invocation: PR #91 v0.2 post-build verification 2026-05-14 sera consegnato 18 finding (3 P0 security + 6 P1 + 3 P2). Triggered P0 security fixes 1b34055 + bias mitigation.
+- 5th invocation: end-to-end verifica-con-metodo 2026-05-14 sera-tardi-ultra consegnato 4 P0 + 5 P1 + 12 acknowledge. Triggered lessons L-018/019/020 promotion + JOURNAL update + P0 security fixes commit 1b34055.
 
-**Reference**: agent definition `~/.claude/agents/harsh-reviewer.md` (codemasterdd .claude/agents/) + ADR-0018 agent readiness protocol.
+### STATUS AMENDMENT 2026-05-14 sera-tardi-ultra-2
+
+**Pre-amendment status**: Option C non-mandatory (PR #82 + #84 introduced).
+**Post-amendment status**: **ACCEPTED ratified empirical** post-5-invocations cross-PR cross-session 12-14/5.
+
+Threshold n>=3 LEGITIMATE met (per L-016 anti-cherry-picking criteria):
+- Cross-session instances: YES (13/5 + 14/5 distinct sessions)
+- Cross-scope different real use case: YES (PR cluster review, post-build security verify, end-to-end methodology audit, ADR-class spec review)
+- Variability test PASS: trigger varies (cluster size, security scope, governance class), scope varies (PR #80+81 wrappers, PR #82 governance, PR #87 spec, PR #91 dashboard, end-to-end verify), outcome varies (8/7/12/18/21 findings)
+
+**Action concrete**:
+- P5 status formally **Accepted**
+- Hard cap revised: 2x per session retained (anti-paranoia escalation), but session count not capped (1-2 per session × multiple sessions/week OK)
+- Trigger criteria unchanged (cluster >=3 PR OR governance-critical files OR ADR-class decision)
+
+### Reference
+
+Agent definition `~/.claude/agents/harsh-reviewer.md` (codemasterdd .claude/agents/) + ADR-0018 agent readiness protocol.
+
+Effectiveness research doc: `docs/research/methodology-effectiveness-2026-05-14.md`.
 
 #### Protocol 6 -- Brainstorming structured exploration via skill (architectural design)
 

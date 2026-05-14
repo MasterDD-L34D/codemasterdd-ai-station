@@ -236,13 +236,15 @@ def fetch_repo_state(name: str, force_refresh: bool = False) -> dict[str, Any]:
 
 def fetch_all_state(force_refresh: bool = False) -> dict[str, Any]:
     repos_state = {name: fetch_repo_state(name, force_refresh) for name in REPOS}
-    # Enrich each repo with local git divergence
+    # Enrich each repo with local git divergence + velocity
     for name, repo in repos_state.items():
         local_path = repo.get("local_path")
         if local_path and Path(local_path).exists():
             repo["git_local"] = fetch_git_local(local_path)
+            repo["velocity"] = fetch_velocity(local_path)
         else:
             repo["git_local"] = {"available": False, "reason": "path not found"}
+            repo["velocity"] = {"available": False}
     return {
         "timestamp": now_iso(),
         "force_refresh": force_refresh,
@@ -252,6 +254,8 @@ def fetch_all_state(force_refresh: bool = False) -> dict[str, Any]:
         "gate_e": fetch_gate_e_counter(),
         "adr_countdown": fetch_adr_countdown(),
         "open_decisions": fetch_open_decisions(),
+        "journal_preview": fetch_journal_preview(),
+        "activity_feed": fetch_activity_feed(repos_state),
     }
 
 
@@ -493,6 +497,109 @@ def fetch_open_decisions() -> dict[str, Any]:
 
 
 # ====================================================================== #
+# Phase 3 v0.3 NEW features 2026-05-14 sera-tardi-ultra-3
+# ====================================================================== #
+
+JOURNAL_PATH = CODEMASTERDD_ROOT / "JOURNAL.md"
+
+
+def fetch_journal_preview(max_chars: int = 600) -> dict[str, Any]:
+    """v0.3 NEW: read first 1-2 dated entries from JOURNAL.md."""
+    if not JOURNAL_PATH.exists():
+        return {"available": False, "reason": "JOURNAL.md not found"}
+    try:
+        content = JOURNAL_PATH.read_text(encoding="utf-8", errors="replace")
+        # Find first dated entry (## YYYY-MM-DD pattern, NOT template)
+        lines = content.split("\n")
+        entries = []
+        current_entry: list[str] | None = None
+        for line in lines:
+            if re.match(r"^## 20\d{2}-\d{2}-\d{2}", line):
+                if current_entry is not None:
+                    entries.append("\n".join(current_entry))
+                    if len(entries) >= 2:
+                        break
+                current_entry = [line]
+            elif current_entry is not None and line.startswith("---"):
+                entries.append("\n".join(current_entry))
+                current_entry = None
+                if len(entries) >= 2:
+                    break
+            elif current_entry is not None:
+                current_entry.append(line)
+        if current_entry and len(entries) < 2:
+            entries.append("\n".join(current_entry))
+        if not entries:
+            return {"available": False, "reason": "no dated entries found"}
+        latest = entries[0]
+        # Extract header + first ~max_chars
+        header_match = re.match(r"^## (.+)$", latest.split("\n")[0])
+        header = header_match.group(1) if header_match else "?"
+        preview_text = latest[:max_chars]
+        if len(latest) > max_chars:
+            preview_text += "..."
+        return {
+            "available": True,
+            "header": header,
+            "preview": preview_text,
+            "total_entries_count": len([1 for line in lines if re.match(r"^## 20\d{2}-\d{2}-\d{2}", line)]),
+        }
+    except Exception as e:  # noqa: BLE001
+        return {"available": False, "reason": f"{type(e).__name__}: {str(e)[:100]}"}
+
+
+def fetch_velocity(local_path: str) -> dict[str, Any]:
+    """v0.3 NEW: commits per week last 4 weeks via git log --since."""
+    try:
+        weeks_count = []
+        for week_offset in range(4, 0, -1):  # 4 weeks ago, 3, 2, 1
+            since = f"{week_offset} weeks ago"
+            until = f"{week_offset - 1} weeks ago" if week_offset > 1 else None
+            cmd = ["git", "-C", local_path, "log", "--oneline", f"--since={since}"]
+            if until:
+                cmd.append(f"--until={until}")
+            result = subprocess.run(
+                cmd, capture_output=True, text=False, timeout=5, check=False,
+                creationflags=_NO_WINDOW_FLAG,
+            )
+            if result.returncode != 0:
+                return {"available": False, "reason": "git log failed"}
+            count = len([line for line in result.stdout.decode("utf-8", errors="replace").split("\n") if line.strip()])
+            weeks_count.append(count)
+        total = sum(weeks_count)
+        max_count = max(weeks_count) if weeks_count else 1
+        return {
+            "available": True,
+            "weeks": weeks_count,  # oldest first [w-4, w-3, w-2, w-1]
+            "total_4w": total,
+            "max_week": max_count,
+            "avg_per_week": round(total / 4, 1),
+        }
+    except Exception as e:  # noqa: BLE001
+        return {"available": False, "reason": f"{type(e).__name__}: {str(e)[:100]}"}
+
+
+def fetch_activity_feed(repos_state: dict[str, Any], limit: int = 10) -> list[dict[str, Any]]:
+    """v0.3 NEW: aggregate last commits across all repos sorted by date desc."""
+    activities = []
+    for name, repo in repos_state.items():
+        commit = repo.get("last_commit")
+        if not commit:
+            continue
+        activities.append({
+            "repo": name,
+            "sha_short": commit.get("sha_short", "?"),
+            "author": commit.get("author", "?"),
+            "date": commit.get("date", "?"),
+            "message_short": commit.get("message_short", "?"),
+            "privacy": repo.get("privacy", "?"),
+        })
+    # Sort by date desc (ISO 8601 strings comparable as strings)
+    activities.sort(key=lambda x: x.get("date", ""), reverse=True)
+    return activities[:limit]
+
+
+# ====================================================================== #
 # Routes
 # ====================================================================== #
 
@@ -509,9 +616,22 @@ def api_state() -> Any:
     return jsonify(fetch_all_state(force_refresh=force))
 
 
+@app.route("/cross-repo/<repo>")
+def drill_down(repo: str) -> Any:
+    """v0.3 NEW: per-repo detail view."""
+    if repo not in REPOS:
+        return jsonify({"error": f"unknown repo: {repo}"}), 404
+    force = request.args.get("refresh") == "1"
+    state = fetch_all_state(force_refresh=force)
+    repo_state = state["repos"].get(repo)
+    if not repo_state:
+        return jsonify({"error": f"no state for repo: {repo}"}), 500
+    return render_template("drill_down.html", repo=repo_state, all_state=state)
+
+
 @app.route("/health")
 def health() -> Any:
-    return jsonify({"status": "ok", "version": "0.2.0-full-integration", "timestamp": now_iso()})
+    return jsonify({"status": "ok", "version": "0.3.0-daily-use-features", "timestamp": now_iso()})
 
 
 _NOTES_SAFE_REGEX = re.compile(r"^[A-Za-z0-9 .,_/:#\-+()=]{1,200}$")
