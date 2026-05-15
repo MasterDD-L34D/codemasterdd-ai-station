@@ -269,17 +269,32 @@ Operazioni che la CLI/MCP espongono OLTRE web UI:
 
 #### Setup auth (Eduardo manual, ~2 minuti)
 
+**Default path (Chromium bundled Playwright)**:
 ```powershell
-# 1. Browser OAuth login (apre Chromium, capture session in ~/.notebooklm/profiles/default/storage_state.json)
 notebooklm login
+```
 
-# 2. Verify auth
-notebooklm auth check --test --json
+**KNOWN ISSUE 2026-05-15**: Playwright bundled chromium-1217/1223 fallisce con `BrowserType.launch_persistent_context: spawn UNKNOWN` + Win32 SxS error "Impossibile avviare l'applicazione: configurazione modalità affiancata non corretta". VC++ Redistributable 2015-2022 GIÀ INSTALLATO (msvcp140.dll + vcruntime140_1.dll presenti) — root cause SxS diverso, deeper Windows-specific. Skip default chromium path.
 
-# 3. List existing notebooks
+**Workaround msedge (RACCOMANDATO)**:
+```powershell
+notebooklm login --browser msedge
+# Si apre Edge - fai login Google personale - autorizza
+# Torna in PowerShell - premi ENTER
+notebooklm auth check --test
 notebooklm list
+```
 
-# 4. Smoke test ask
+**Failed workaround Chrome cookies** (rookiepy):
+```powershell
+pip install --user "notebooklm-py[cookies]"
+notebooklm login --browser-cookies chrome
+# FAIL 2026-05-15: "Could not decrypt chrome cookies"
+# DPAPI Windows encryption blocca rookiepy
+```
+
+**Smoke post-auth**:
+```powershell
 notebooklm use <notebook-id-partial>
 notebooklm ask "Riassumi in 3 punti"
 ```
