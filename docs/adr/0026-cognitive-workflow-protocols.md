@@ -71,7 +71,7 @@ Mio audit web-only ha:
 
 #### Protocol 1 -- Refresh-verify state interno (PRE-action)
 
-**Source**: memory `feedback_governance_refresh_verify` (caso studio PR #11 8/5 + ADR-0025 amend 12/5).
+**Source**: memory `feedback_governance_refresh_verify` (caso studio PR #11 8/5 + ADR-0025 amend 12/5) + amendment 2026-05-15 sera (re-verify-right-before-action from L-2026-05-029).
 
 **Rule**: PRIMA di azione significativa (audit / eval / decision / commit governance), verifica state interno:
 1. **AA01 workspace** (`bash scripts/status.sh`) -- task attivi + recent archive
@@ -80,10 +80,13 @@ Mio audit web-only ha:
 4. **Codemasterdd ADR** existing che già coprono lo scope
 5. **Git state** repo monitored se rilevante (`git log -1` + `gh pr list`)
 6. **Filesystem check** per file promessi/cited da governance (es. template promessi ADR-0018)
+7. **PR-specific state re-verify right-before-action** (NEW per L-2026-05-029): per ogni azione che modifica state esterno (review comment / merge / close / push commit / @mention) PRIMA di lanciare il comando, ESEGUIRE: `gh pr view <num> --json state,mergedAt,closedAt,headRefOid` -- verify `state == "OPEN"` + `headRefOid` matcha last-known SHA. Re-execute step 7 se gap >60s tra check e action. Anti-pattern: ereditare PR state da earlier audit cycle (case study #2277 2026-05-15: PR merged 14:47, agente acted 17:45 assuming open = 30min wasted on stale state).
 
-**Trigger**: ogni audit / eval / new ADR / strategic decision.
+**Trigger**: ogni audit / eval / new ADR / strategic decision. **Step 7 trigger HIGH**: ogni PR-affecting operation (review / merge / push / mention).
 
-**Anti-pattern**: ereditare narrative da COMPACT/JOURNAL precedente senza re-verify source-of-truth.
+**Anti-pattern**: ereditare narrative da COMPACT/JOURNAL precedente senza re-verify source-of-truth. **NEW anti-pattern (L-029)**: applicare action su PR usando state cached >60s pre-action -- specifically affected actions: `gh pr review`, `gh pr merge`, `gh api -X PUT /pulls/{pr}/comments`, `git push origin <pr-branch>`, `@jules`/`@codex` mention triggers.
+
+**Self-application empirical 2026-05-15 sera**: lesson L-029 applicata immediatamente su PR #2278 monitoring (state changed BLOCKED -> CLEAN in ~5 min between earlier audit and re-verify, validating the 60s refresh rule -- amendment self-validated same-session as promotion).
 
 #### Protocol 2 -- Autoresearch multi-source synthesis
 
