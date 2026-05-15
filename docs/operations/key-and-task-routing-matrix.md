@@ -333,7 +333,90 @@ Add to `~/.config/opencode/opencode.json` mcp field:
 
 **Verdict**: integration concreta + reversibile. Se Google rompe l'API: `pip uninstall notebooklm-py` + ritorno a web UI. Costo adozione minimo.
 
-### 6.3 OpenRouter (Hybrid A1 emergency overflow)
+### 6.3 GitHub Models — **PROPOSED 2026-05-15** (Eduardo decide trigger)
+
+**Cosa è**: servizio nativo GitHub che espone OpenAI/Anthropic/Mistral/Cohere/Llama/Phi models via REST + Azure OpenAI SDK. Auth via personal access token GitHub (Eduardo già `gh auth` come `MasterDD-L34D`).
+
+**Free tier 2026**: ~150 req/giorno GPT-4o + GPT-4o-mini + Llama 3.3 70B + Mistral Large + Phi. Rate-limit giornaliero, no credit card.
+
+**Gap che riempie**: nessun altro free tier attualmente integrato include **gpt-4o reale** (HF ha gpt-oss-120b open weights, NON gpt-4o proprietary). 150 req/giorno = utile per task strategic-light dove vuoi quality OpenAI senza pagare `OPENAI_API_KEY`.
+
+**Setup quando Eduardo decide go**:
+```powershell
+# 1. https://github.com/settings/tokens?type=beta
+#    Fine-grained PAT, owner: MasterDD-L34D, permission: Models read-only
+# 2. Append a keys.env:
+Add-Content "$env:USERPROFILE\.config\api-keys\keys.env" -Value "GITHUB_MODELS_API_KEY=github_pat_..."
+# 3. Smoke test OpenAI-compat:
+curl https://models.inference.ai.azure.com/chat/completions `
+  -H "Authorization: Bearer github_pat_..." `
+  -H "Content-Type: application/json" `
+  -d '{"model":"gpt-4o","messages":[{"role":"user","content":"3+3?"}]}'
+```
+
+**Verdict 2026-05-15**: legittimo, low cost, real gap-fill. Adottare come **PROPOSED** pendente decisione Eduardo. Trigger setup: quando Eduardo vuole GPT-4o quality senza pay-per-use, oppure quando Anthropic API budget cap raggiunto in mese.
+
+### 6.4 LiteLLM hub — **AUDIT existing config dormant**
+
+**Stato attuale**: `infra/litellm-config.yaml` referenziato in ADR-0017 (Proposed 2026-04-24). Configurato per Docker stack con Langfuse + Postgres + dogfood-ui.
+
+**Potenziale**: LiteLLM proxy come **single OpenAI endpoint** che routes verso TUTTI i provider (Ollama + Groq + Cerebras + Gemini + HF + Anthropic + GitHub Models). Tools downstream (Aider/OpenCode/scripts) si configurano UNA volta verso LiteLLM, poi switching modello = solo cambio nome.
+
+**Cosa va verificato**:
+1. Stack Docker UP/DOWN attualmente?
+2. Config current con i 7 keys + nuovi (HF, GitHub Models)?
+3. Vale revivere vs abandon?
+
+**Trade-off**:
+- **PRO**: single endpoint = simplification dispatcher, cost tracking centralizzato, fallback automatico cross-provider
+- **CON**: latency overhead (~10-50ms), single point of failure, complessità Docker
+
+**Verdict 2026-05-15**: audit task SPRINT_02 day 1 — verificare stato + decidere revive vs abandon. Eduardo conferma o no scope SPRINT_02.
+
+### 6.5 Free LLM API reference lists (bookmark only, periodic scan)
+
+Curated lists per scoprire nuovi free tier emergenti senza investigation overhead per provider:
+
+- [cheahjs/free-llm-api-resources](https://github.com/cheahjs/free-llm-api-resources) — community-driven, mirror SourceForge
+- [amardeeplakshkar/awesome-free-llm-apis](https://github.com/amardeeplakshkar/awesome-free-llm-apis) — verified March 2026, OpenAI SDK compat, rate limits documented
+- [mnfst/awesome-free-llm-apis](https://github.com/mnfst/awesome-free-llm-apis) — "Permanent free" filter strict
+- [nherx/free-llm-api-resources](https://github.com/nherx/free-llm-api-resources)
+- [O-LLM/Free-LLM](https://github.com/O-LLM/Free-LLM)
+- [free-llm.com](https://free-llm.com/) — 45+ providers directory web
+
+**Usage pattern**: scan trimestrale (Eduardo Q-review SPRINT boundary) per identificare provider mainstream emergenti. Quando un provider passa da "list" a "stable" (>=6 mesi uptime + segnali positivi r/LocalLLaMA), valutare integration come tier 3 add-on.
+
+**Esempi candidati DEFER da queste liste 2026-05-15** (non adottati ora, monitorare):
+- Cloudflare Workers AI (10K req/giorno free, Llama family) — overlap Groq
+- NVIDIA NIM (free credit tier) — niche
+- SambaNova (294 TPS) — già copertura Cerebras
+- SiliconFlow, Inference.net, Together (via HF) — coverage già HF Inference Providers
+- Mistral AI Le Chat (5 req/min) — niche specialty
+- Pollinations AI, LLM7.io, Kluster — emerging
+
+### 6.6 Researched + REJECTED 2026-05-15 (ToS/sustainability risk)
+
+Decision applicata via Archon-style enumerate + challenge + falsifying experiment:
+
+| Candidato | Reject rationale | Pattern anti-adoption |
+|---|---|---|
+| **Puter** ([developer.puter.com](https://developer.puter.com)) | Claim "400+ models GPT/Claude/Gemini, no API keys, no limits" — sustainability red flag. Free unlimited GPT-4/Claude proxy non è economicamente sostenibile → expect breakage o pivot paywall entro 6-12 mesi. Privacy: tutto passa through Puter intermediario sconosciuto. | "Too good to be true" sustainability |
+| **CLIProxyAPI** ([router-for-me/CLIProxyAPI](https://github.com/router-for-me/CLIProxyAPI)) | Wrap Gemini CLI / ChatGPT Codex / Claude Code in REST API multi-tenant. **Viola ToS** di ogni CLI (auth scoped a personal use, NON multi-tenant exposure). | ToS violation cascade |
+| **GeminiHydra** | "Unlimited free-tier via multi-key rotation Gemini" richiede multipli account Google = **viola Google ToS** anti-abuse | Multi-account ToS violation |
+| **alistaitsacle/free-llm-api-keys** | Repository aggregator di leaked API keys aggiornato 3-5×/giorno. Violation upstream provider ToS + ethical/legal exposure. | Stolen credentials redistribution |
+| **fuergaosi233/claude-code-proxy** | Claude Code → OpenAI API proxy: tecnicamente interessante ma use case sovrapposto a Meridian (opencode-with-claude plugin) per Hybrid A1 nostro. Non gap-fill. | Overlap existing solution |
+
+**Pattern comune anti-adoption**: tool che danno "value gratuito non sostenibile" via shortcut tecnico violando ToS upstream. Adoption = breakage rischio alto + ethical issue + legal exposure quando provider giro vite.
+
+**Lesson learned 2026-05-15** (candidate L-2026-05-NNN promo dopo verifica n>=2 pattern): il free tier **sostenibile** è quello dove il provider HA business model che giustifica il free tier:
+- Groq vende enterprise capacity → free tier acquisition funnel
+- HuggingFace vende premium subscriptions + enterprise → free tier community building
+- Google vende GCP/Workspace → free tier developer onboarding
+- GitHub vende Enterprise + Copilot → free tier developer engagement
+
+I "gateway che danno gratis senza upstream economics" sono trap. Apply criterio "where does provider's money come from?" PRE-adoption.
+
+### 6.7 OpenRouter (Hybrid A1 emergency overflow)
 
 **Cosa offre**: BYOK pay-per-use con 300+ models, fallback automatico, Claude Sonnet/Haiku/Opus 4 + DeepSeek + Llama + Qwen.
 
@@ -343,7 +426,7 @@ Add to `~/.config/opencode/opencode.json` mcp field:
 
 **Verdict 2026-05-15**: deferred trigger empirical Pro saturation.
 
-### 6.4 Autoresearch tooling (Karpathy + ecosystem)
+### 6.8 Autoresearch tooling (Karpathy + ecosystem)
 
 **Cosa offre**: Karpathy autoresearch (March 2026, 72k stars) — experiment loop tool per ML training optimization. Pi-Autoresearch, Thoth, AutoResearchClaw spawn dall'ecosystem.
 
