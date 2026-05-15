@@ -380,7 +380,7 @@ Vault-shared workflow richiede Eduardo per ogni promote/tune/quality-gate -- int
 |------|-------------|--------|------|
 | **claude-supermemory-local** | main `a72152b` | Active dev | Local SDK replacement Supermemory cloud; Eduardo lavoro recente |
 | **compass-marketplace** | `fix/marketplace-schema-source-string` `5943ffa` | Active dev | v0.4.3 fix in flight (compass plugin marketplace) |
-| **Game-Database** | main `91f5468` PR #105 | Active dev | DB layer cross-repo Game-side |
+| **Game-Database** | main `91f5468` PR #105 | **Active multi-AI** | **Taxonomy CMS Evo-Tactics** (Prisma + PG + Express + React MUI + Vite). Sibling Game (HTTP API integration ADR-2026-04-14). 7 PR Jules OPEN 2026-05-15 + 7 sessioni Jules cumulative cross-day. Has own CLAUDE.md (multi-client pattern ADR-0021). PUBLIC, no LICENSE. Audit 2026-05-15 sera codemasterdd-side (vedi paragrafo dedicato sotto + L-025 case study). |
 | **Master-DD-Pathfinder-GPT** | `codex-fix-pr-542-follow-up-regressions-clean` `5bd2ccb` | Active Codex | Pathfinder GPT campaign tooling (Codex branch flight) |
 | **torneo-cremesi-site** | main `43eda85` PR #18 | Active dev | Static site Pathfinder Torneo |
 
@@ -389,6 +389,52 @@ Vault-shared workflow richiede Eduardo per ogni promote/tune/quality-gate -- int
 **Dormant repos** (silent-driver autonomous, no monitoring): Gpt, Item-generator, LeaD, pathfinder-1e-homebrew.
 
 **Cross-repo handoff** verso codemasterdd: nessuno attuale. compass-marketplace e claude-supermemory-local potrebbero trigger plugin ecosystem dogfood (SPRINT_02 T8) se Eduardo decide installation.
+
+### Game-Database audit dettagliato (2026-05-15 sera, post Jules API ground truth discovery L-025)
+
+Game-Database e' emerso da audit Jules REST API come repo **attivamente lavorato** dal pipeline multi-AI (Jules + Codex + Claude Code), NON minimal monitoring come precedente classificazione. Promozione scope giustificata:
+
+**Identita repo**:
+- Path Ryzen: `C:\Users\VGit\Documents\GitHub\Game-Database\`
+- Path Lenovo: nessun clone (Ryzen-only checkout, ma scope-monitorable da remote)
+- Remote: `github.com/MasterDD-L34D/Game-Database` (PUBLIC, no LICENSE -- de-facto copyright strict, candidate per MIT/Apache se Eduardo planning open-source)
+- Created 2025-11-07, default branch main, attivo May 2026
+- Stack: Express 4 + Prisma 5 + PostgreSQL 16 + React (MUI + TanStack Table + i18n + Vite)
+- Has own `CLAUDE.md` (multi-client governance autosufficiente, ADR-0021 ratificato)
+- Has `WORKSPACE_MAP.md` (cross-stack referenza Game)
+
+**Ruolo ecosystem**:
+- **Taxonomy CMS** canonical per Evo-Tactics (trait + species + biome + ecosystem)
+- Upstream content provider per **Game** (Vue3) via:
+  - Build-time import: `npm run evo:import -- --repo C:/Users/VGit/Documents/GitHub/Game` (idempotent upsert by slug)
+  - Runtime HTTP: opt-in `GAME_DATABASE_ENABLED=true` flag su Game backend (HTTP Alt B di ADR-2026-04-14 game-side)
+- Frontend dashboard standalone: React CRUD su localhost:5174 + API server localhost:3333 + Postgres localhost:5433 (port distinct da Game 5432 evita conflict)
+
+**Attivita multi-AI 2026-05-15** (via Jules REST API `GET /sessions`):
+- 7 sessioni cumulative cross-day (Game-Database e' il repo con piu' sessioni Jules dell'ecosystem)
+- 7 PR OPEN today con pattern Jules-signature `*-{14-22 digit}`:
+  - #107 [security] basicAuth timing attack fix
+  - #108 optimize DELETE response
+  - #109 tests DELETE species
+  - #110 biome import taxonomy slug pre-fetch
+  - #111 ecosystem update pagination refetch optimize
+  - #112 refactor normalizeId to shared utility (COMPLETED Jules session)
+  - #113 PUT tests ecosystems API
+- Pattern emerge: Jules sta sistematicamente migliorando coverage test (3 PR test) + perf (2 PR optimize) + security (1 PR) + code health (1 PR refactor) -- multi-stream improvement automatic.
+
+**Cross-PC sync status**:
+- HEAD main `91f5468` PR #105 (snapshot 2026-05-15 sera): ancora pre-cluster Jules-PR-questa-mattina. 7 PR open in attesa merge -> main ahead of HEAD via 7+ commits potenziale.
+- Push frequency aggressive (last push 2026-05-15 12:39 UTC = same day).
+
+**Cosa cambia per codemasterdd-side monitoring**:
+- Da "Ryzen-only sibling, minimal monitoring" -> **attivo monitored ecosystem**, scope simile a Game (Vue3): cross-repo content dependency + Eduardo lavoro ricorrente.
+- Quando le 7 PR Jules vengono mergiate (pattern: stessa-giornata generalmente per Jules) -> codemasterdd review opportunistico via classifier auth boundary (Game-Database NOT in monitored repos list CLAUDE.md, quindi external write boundary applies -- auth esplicita Eduardo per review/merge codemasterdd-side).
+- Privacy: PUBLIC, cloud-OK come Game/Game-Godot-v2. Future clone locale opzionale -> aggiungere a `~/.config/aider-privacy-whitelist.txt`. Pending fino actual clone.
+
+**Decisioni differite**:
+- Aggiunta formale a CLAUDE.md "Progetti monitorati" sezione: DONE in stesso commit (vedi paragrafo Game-Database).
+- LICENSE add (no LICENSE current): defer Eduardo decisione strategica (MIT vs Apache vs proprietary).
+- Clone locale codemasterdd: defer, scope expansion Ryzen-led OK.
 
 ---
 
