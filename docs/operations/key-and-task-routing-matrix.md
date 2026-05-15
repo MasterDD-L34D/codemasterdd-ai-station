@@ -22,6 +22,7 @@ ACL hardened: `CODEMASTERDD\edusc:(F) + NT AUTHORITY\SYSTEM:(F)`, inheritance di
 | `ANTHROPIC_API_KEY` | Anthropic | 0 strategic | $10-20/mese cap (ADR-0023) | Pay-per-use post-Max on-demand | Dormant durante Max |
 | `TAVILY_API_KEY` | Tavily (search) | utility | $0 free tier | **Dafne swarm only** (Flask backend) | Isolato dal dispatcher codemasterdd |
 | `HUGGINGFACE_API_KEY` | HuggingFace Inference Providers | 3 free | $0 (100K credit/mese) | `aider-hf` wrapper + OpenCode `huggingface` provider | **Setup pending Eduardo signup** (vedi sezione 6.4) |
+| `JULES_API_KEY` | Google Jules (autonomous coding agent) | cloud free alpha | $0 (no rate limit/cost documented) | Jules CLI (`@google/jules`) + REST `jules.googleapis.com/v1alpha/` | Attivo (added 2026-05-15, audit empirical 15 repo installed) |
 
 **Gap fixati 2026-05-15**:
 - ✅ Added `GOOGLE_GENERATIVE_AI_API_KEY` (dual-name OpenCode native google provider auth)
@@ -53,6 +54,9 @@ ACL hardened: `CODEMASTERDD\edusc:(F) + NT AUTHORITY\SYSTEM:(F)`, inheritance di
 | **Gemini CLI** | `~/AppData/Roaming/npm/gemini.ps1` | `GEMINI_API_KEY` env var | Long-context analysis (1M ctx) |
 | **Ollama API** | localhost:11434 | none (sovereign local) | Tier 1-2 local |
 | **Claude API direct** | curl/requests | `ANTHROPIC_API_KEY` env var | Tier 0 strategic post-Max (dormant) |
+| **Jules (Google)** | `~/AppData/Roaming/npm/jules` (CLI v0.1.42) + REST `jules.googleapis.com/v1alpha/` | `JULES_API_KEY` (X-Goog-Api-Key header) OR `jules login` OAuth | Cloud autonomous agent (GitHub App, alpha free tier 2026-05) -- propone PR autonome, watcher cheap |
+
+**Jules note**: e' un Google AI autonomous coding agent diverso da Aider/OpenCode (agenti local-driven). Jules e' GitHub App-installed sui repo, riceve task via REST API o CLI, esegue autonomous in cloud, apre PR. Audit empirical 2026-05-15: installato su 15 repo Eduardo (NON solo whitelisted). Sessions sovereign 0 -> no leak finora. Pattern multi-AI parallel review emerge: Jules propone -> Codex auto-review -> Claude Code review -> Eduardo merge. Vedi JOURNAL `2026-05-15 (pomeriggio)` per audit completo + findings sistemici (own-PR review limitation, monitoring session pattern).
 
 ### 2.2 Interactive web UIs (auth via browser, dispatching manual)
 
