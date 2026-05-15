@@ -261,11 +261,13 @@ Operazioni che la CLI/MCP espongono OLTRE web UI:
 - `notebooklm profile list` — multi-account switching
 - `notebooklm share status` — share state programmatico
 
-#### Pre-built integration (already installed 2026-05-15)
+#### Pre-built integration (status verified 2026-05-15)
 
-- `notebooklm.exe` 0.4.1 → `C:\Users\edusc\AppData\Roaming\Python\Python312\Scripts\notebooklm.exe` (PATH user updated)
-- `nlm.exe` + `notebooklm-mcp.exe` 0.6.9 → `~/.local/bin/` (via `uv tool install`)
-- Playwright chromium 1217 → `C:\Users\edusc\AppData\Local\ms-playwright\chromium-1217`
+- **`nlm.exe` + `notebooklm-mcp.exe` 0.6.9** → `~/.local/bin/` (via `uv tool install`) — **REAL su host**, persistent
+- ~~`notebooklm.exe` 0.4.1 via pip --user~~ — **PHANTOM**: Claude Code Bash overlay filesystem ha installato in `AppData/Roaming/Python/` ma path non visibile a host. Re-install richiesto da Eduardo terminal se vuoi CLI: `pip install --user notebooklm-py[browser]`
+- ~~Playwright chromium 1217/1223 in `AppData/Local/ms-playwright/`~~ — **PHANTOM**, stesso pattern. Re-install richiesto da Eduardo terminal: `playwright install chromium`
+
+**Raccomandazione pragmatica**: usare `nlm` MCP server (real) + NotebookLM web UI per browsing manuale. Skip notebooklm-py CLI install fino a quando emergono use case che richiedano programmatic generate/download artifacts.
 
 #### Setup auth (Eduardo manual, ~2 minuti)
 
