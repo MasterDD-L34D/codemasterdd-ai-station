@@ -692,7 +692,17 @@ def coord_event_log() -> Any:
 
 @app.route("/api/draft-pr", methods=["POST"])
 def draft_pr() -> Any:
-    """B2: Invoca scripts/cross-repo/dry-run-pr.ps1 con parametri form."""
+    """B2: Invoca scripts/cross-repo/dry-run-pr.ps1 con parametri form.
+
+    Security: includes authentication (via API_SECRET if configured) and regex
+    sanitization to prevent PowerShell command injection (CWE-77/78).
+    """
+    api_secret = os.environ.get("API_SECRET")
+    if api_secret:
+        auth_header = request.headers.get("Authorization", "")
+        if auth_header != f"Bearer {api_secret}":
+            return jsonify({"ok": False, "error": "unauthorized"}), 401
+
     data = request.json or {}
     repo_target = data.get("repo_target", "").strip()
     pr_type = data.get("type", "").strip()
@@ -700,6 +710,11 @@ def draft_pr() -> Any:
     summary = data.get("summary", "").strip()
     if not all([repo_target, pr_type, preview_files, summary]):
         return jsonify({"ok": False, "error": "all 4 fields required"}), 400
+    if not _NOTES_SAFE_REGEX.match(preview_files) or not _NOTES_SAFE_REGEX.match(summary):
+        return jsonify({
+            "ok": False,
+            "error": "inputs contain disallowed chars (only alphanumeric + space + .,_/:#-+()= allowed)",
+        }), 400
     valid_targets = {"Game", "Godot-v2", "Dafne", "vault"}
     valid_types = {"policy-alignment", "ADR-cross-ref", "drift-fix", "docs", "governance-suggestion"}
     if repo_target not in valid_targets:
