@@ -86,7 +86,7 @@ Cost: ~$0.30-0.50 (~85K tokens). Sotto cap ADR-0023 $20/mese.
 
 ## Gates interaction
 
-- Gate E precedes ALL altri (until Gate E resolved, Component 1 NOT built)
+- Gate E continuous post-Component-1-MVP (feedback metric, NOT a build-blocker; informs v0.3+ iteration priority + Gate A re-evaluation input)
 - Gate A + Gate B mutually exclusive (Opt 3 OR Opt 4 escalation, NOT both)
 - Gate C independent (bandwidth event, doesn't trigger Opt 3/4)
 - Gate D Component-2-specific (independent of Component 1 build)

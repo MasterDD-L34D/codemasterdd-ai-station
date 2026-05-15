@@ -147,7 +147,7 @@ Total: 18 files (gap L-017 = intentional skip — was claimed pre-promotion but 
 |--------|------|--------|
 | ADR-0026 amendment P5 Accepted | `docs/adr/0026-cognitive-workflow-protocols.md` (add amendment section) | TODO ship |
 | L-016 scope clarification | `~/aa01/learnings/L-2026-05-016-*.md` (inline amend) | TODO ship |
-| ESCALATION_GATES.md Gate E reframe | `docs/cross-repo/ESCALATION_GATES.md` (amend) | TODO ship |
+| ESCALATION_GATES.md Gate E reframe | `docs/cross-repo/ESCALATION_GATES.md` (amend) | DONE |
 | Strategy doc reference | `docs/strategy/2026-05-14-max-parallel-execution-strategy.md` | DONE |
 
 ## Net assessment
