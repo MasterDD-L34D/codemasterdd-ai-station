@@ -17,6 +17,8 @@ Run prod: python app.py --prod  (uses waitress, default localhost:8081)
 
 from __future__ import annotations
 
+import hmac
+import os
 import re
 import subprocess
 import sys
@@ -626,7 +628,12 @@ def fetch_activity_feed(repos_state: dict[str, Any], limit: int = 10) -> list[di
 def index() -> Any:
     force = request.args.get("refresh") == "1"
     state = fetch_all_state(force_refresh=force)
-    return render_template("index.html", state=state)
+    # Inject API_SECRET (if set) so same-origin dashboard JS can authenticate
+    # to /api/draft-pr. Localhost-only single-user tool: same-origin JS holding
+    # the token is acceptable (Codex P2 #111 fix -- supported credential path).
+    return render_template(
+        "index.html", state=state, api_secret=os.environ.get("API_SECRET", "")
+    )
 
 
 @app.route("/api/state")
@@ -700,7 +707,8 @@ def draft_pr() -> Any:
     api_secret = os.environ.get("API_SECRET")
     if api_secret:
         auth_header = request.headers.get("Authorization", "")
-        if auth_header != f"Bearer {api_secret}":
+        # Constant-time compare to avoid timing side-channel (cf. Game-Database #107).
+        if not hmac.compare_digest(auth_header, f"Bearer {api_secret}"):
             return jsonify({"ok": False, "error": "unauthorized"}), 401
 
     data = request.json or {}
