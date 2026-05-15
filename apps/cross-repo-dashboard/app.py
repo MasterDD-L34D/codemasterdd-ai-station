@@ -17,11 +17,10 @@ Run prod: python app.py --prod  (uses waitress, default localhost:8081)
 
 from __future__ import annotations
 
-import os
 import re
 import subprocess
 import sys
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -515,7 +514,11 @@ JOURNAL_PATH = CODEMASTERDD_ROOT / "JOURNAL.md"
 
 
 def fetch_journal_preview(max_chars: int = 600) -> dict[str, Any]:
-    """v0.3 NEW: read first 1-2 dated entries from JOURNAL.md."""
+    """v0.3 NEW: read first 1-2 dated entries from JOURNAL.md.
+
+    Note: This function is called by `fetch_all_state` to populate the
+    `journal_preview` data used by `index.html`. It should not be removed.
+    """
     if not JOURNAL_PATH.exists():
         return {"available": False, "reason": "JOURNAL.md not found"}
     try:
@@ -553,7 +556,7 @@ def fetch_journal_preview(max_chars: int = 600) -> dict[str, Any]:
             "available": True,
             "header": header,
             "preview": preview_text,
-            "total_entries_count": len([1 for line in lines if _JOURNAL_DATE_RE.match(line)]),
+            "total_entries_count": sum(1 for line in lines if _JOURNAL_DATE_RE.match(line)),
         }
     except Exception as e:  # noqa: BLE001
         return {"available": False, "reason": f"{type(e).__name__}: {str(e)[:100]}"}
