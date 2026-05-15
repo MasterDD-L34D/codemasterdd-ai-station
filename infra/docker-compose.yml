@@ -29,6 +29,10 @@ services:
       CEREBRAS_API_KEY: ${CEREBRAS_API_KEY:-}
       GEMINI_API_KEY: ${GEMINI_API_KEY:-}
       OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      # Added 2026-05-15 free LLM ecosystem audit + Hybrid A1 prep
+      HUGGINGFACE_API_KEY: ${HUGGINGFACE_API_KEY:-}
+      GITHUB_MODELS_API_KEY: ${GITHUB_MODELS_API_KEY:-}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
     volumes:
       - ./litellm/config.yaml:/app/config.yaml:ro
     command:

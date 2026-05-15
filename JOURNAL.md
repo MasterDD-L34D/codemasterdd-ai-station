@@ -19,6 +19,43 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-05-15 (post-Max prep marathon: Hybrid A1 setup + free LLM ecosystem audit + 8 wrapper canonical + LiteLLM hub update)
+
+### Completato
+
+- **ADR-0030 Hybrid A1 post-Max orchestration shipped** (PR #93 cce9bb5): CC Pro $20/mo + Meridian bridge + OpenCode + Gemini CLI + OpenRouter optional. Cost realistic $240-600/anno vs ADR-0015 originale $50/anno target violated. ADR-0015 amendment scope rescoped "no Max premium + flexibility + methodology preservation".
+- **Setup script `install-hybrid-a1-post-max.ps1` shipped** + Codex P2 fix commit `8eee912` (package name + plugin registration).
+- **Setup auto-executed**: opencode-with-claude plugin v1.6.11 installed + opencode.json `plugin` + `anthropic` provider entries (baseURL Meridian local 127.0.0.1:3456). Gemini CLI 0.42.0 installed (API key path, no OAuth needed). Smoke PASS via `GEMINI_API_KEY` env var. `GEMINI_CLI_TRUST_WORKSPACE=true` user-scope persistent.
+- **Gap fix A**: `GOOGLE_GENERATIVE_AI_API_KEY` aggiunto a keys.env (dual-name alias `GEMINI_API_KEY`, sblocca OpenCode native google provider auth).
+- **Gap fix B**: opencode.json google models `gemini-2.0-flash-exp` (deprecato 404 v1beta) sostituito con `gemini-2.5-flash` + `gemini-2.5-pro`. Smoke C OpenCode google provider PASS (output "6" risposta "3+3").
+- **NotebookLM integration concreta**: `notebooklm-py` 0.4.1 CLI installato user-scope + `notebooklm-mcp-cli` 0.6.9 via `uv tool install` + Playwright chromium 1217 cached. Auth pending Eduardo `notebooklm login` interattivo (browser OAuth personal Google).
+- **HuggingFace Inference Providers integration**: wrapper `aider-hf.cmd` (default DeepSeek-R1, security-hardened temp env-file CWE-214 mitigation) + OpenCode `huggingface` provider entry (3 models pre-mapped: DeepSeek-R1 + GPT-OSS 120B + Qwen 2.5 Coder 32B). Pending Eduardo signup hf.co + token generation.
+- **GitHub Models PROPOSED**: wrapper `aider-github-models.cmd` (default gpt-4o, 150 req/giorno free) + LiteLLM 2 model entries (gpt-4o + gpt-4o-mini). Pending Eduardo PAT generation con permission "Models read-only".
+- **8 Aider wrapper canonical** (vs 6 originali): aider-hf + aider-github-models aggiunti a `scripts/wrappers/`. install-wrappers.ps1 auto-discovery sincronizza user-side via hash-verify. Tutti i wrapper enforce privacy guard rail H8 + security hardened temp env-file pattern.
+- **LiteLLM hub audit + update**: stack Docker UP da 5h (NOT dormant come ipotizzato originale ADR-0017 follow-up). Config aggiornato con 7 nuovi model_list entries: hf-deepseek-r1 + hf-gpt-oss-120b + hf-qwen-coder-32b + github-gpt4o + github-gpt4o-mini + anthropic-sonnet-strategic + anthropic-haiku-strategic. docker-compose.yml env vars aggiunte HUGGINGFACE_API_KEY + GITHUB_MODELS_API_KEY + ANTHROPIC_API_KEY.
+- **Doc consolidata `docs/operations/key-and-task-routing-matrix.md`** (commit d255927 + 73477aa): 9 sezioni inventario chiavi + 3-tier tool ecosystem + 3-layer dispatch matrix + Hybrid A1 + integrations + REJECT list ToS-bomb + reference bookmarks + autoresearch deferred.
+- **P2 autoresearch deep dive free LLM ecosystem** (5 parallel WebSearch queries): 18 candidati analizzati. ADOPTED: HF + GitHub Models PROPOSED + reference bookmarks 5 lists. REJECTED 5 (Puter, CLIProxyAPI, GeminiHydra, alistaitsacle/free-llm-api-keys, claude-code-proxy) per ToS bomb / sustainability red flag pattern. DEFERRED: Cloudflare AI Gateway + NVIDIA NIM + SambaNova + SiliconFlow + Mistral + Pollinations + LLM7 + Kluster.
+- **Memory + lesson promotion**: `reference_api_keys.md` rewritten (8 keys + 8 wrappers + LiteLLM 15 model_list + privacy guard). New memory `reference_free_llm_ecosystem_audit.md`. MEMORY.md index updated. **Lesson L-2026-05-022 promoted**: "Free Tier Sustainability Pattern" - pre-adoption criterion "where does provider money come from?" 30s mental check.
+
+### Da fare (Eduardo manual)
+
+- **Sottoscrizione decision Max-vs-Pro entro 18/05**: Pro $20/mo on anthropic.com/claude/upgrade per attivare Hybrid A1 OR keep Max renewal $200 1 mese ulteriore (defer scoperta empirica)
+- **HF signup** https://huggingface.co/join + token https://huggingface.co/settings/tokens/new?ownUserPermissions=inference.serverless.write&tokenType=fineGrained -> append `HUGGINGFACE_API_KEY=hf_...` a keys.env
+- **GitHub Models PAT** https://github.com/settings/tokens?type=beta (resource owner MasterDD-L34D, permission Models read-only) -> append `GITHUB_MODELS_API_KEY=github_pat_...` a keys.env
+- **NotebookLM browser OAuth**: `notebooklm login` + `notebooklm auth check`
+- **LiteLLM container restart** per caricare nuova config: `cd infra; docker compose restart litellm` (post Eduardo append keys HF + GitHub Models)
+- **MCP server config CC** (opzionale, requires CC restart - tu hai sessioni attive): add `notebooklm` to `~/.claude.json` projects mcpServers
+- **Merge PR #93** quando review fatta (3 commits ora: cce9bb5 + 8eee912 + d255927 + 73477aa + nuovo final)
+
+### Note
+
+- Documenti coinvolti: ADR-0030 + ADR-0015 amendment + matrix doc + memorie + lesson L-2026-05-022
+- Sources sintetizzate: 9 WebSearch queries cumulative + 3 WebFetch repo deep dive (teng-lin/notebooklm-py + K-dash/nblm-rs + jacob-bd/notebooklm-mcp-cli)
+- Cognitive protocols applied: P1 Refresh-verify + P2 Autoresearch parallel + P3 Archon-style decision tree free LLM (RESTATE + ENUMERATE 18 + DECOMPOSE + CHALLENGE + RECONSTRUCT + CALIBRATE)
+- Reversibilita: tutto reversibile (`pip uninstall notebooklm-py`, `uv tool uninstall notebooklm-mcp-cli`, opencode.json backup pre-modifica, LiteLLM config in repo, wrapper canonical scripts/wrappers/)
+
+---
+
 ## 2026-05-14 (sera-tardi-ultra-2: Max parallel strategy + console flash + dogfood-ui cache + claude-mem disable)
 
 ### Completato
