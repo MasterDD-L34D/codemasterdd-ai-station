@@ -158,6 +158,17 @@ _(completato il 2026-04-19 — vedi "Stack installato")_
   - **Hook globali codemasterdd**: applicati automaticamente via `core.hooksPath` user-level. Conventional Commits + silent-fail Layer 2 ADR-0020 attivi su Game-Godot-v2 senza setup repo-specific.
   - **Relazione con Game (Vue3)**: parallel-run during port phase. Vue3 mantiene Sprint Impronta gameplay (logica + telemetria + onboarding CAP-11..15); Godot v2 ricostruisce shell visuale + UX + canonical engine. Long-term: Godot v2 frontend canonical, Vue3 archive (decisione futura, NON ancora ADR).
 
+- **Game-Database** — Taxonomy CMS per Evo-Tactics (promoted da Ryzen-only minimal monitoring 2026-05-15 sera, post Jules audit L-025)
+  - GitHub: `github.com/MasterDD-L34D/Game-Database` (PUBLIC, no LICENSE)
+  - Path Ryzen: `C:/Users/VGit/Documents/GitHub/Game-Database/` (no clone Lenovo current, scope monitor remote)
+  - Stack: Express 4 + Prisma 5 + PostgreSQL 16 + React (MUI + TanStack Table + i18n + Vite)
+  - **Ruolo**: glossary canonical trait/biome/specie/ecosistemi per Evo-Tactics. Upstream content provider per Game (Vue3) via `npm run evo:import` + HTTP runtime API (`GAME_DATABASE_ENABLED=true` flag su Game backend, ADR-2026-04-14 game-side)
+  - **Status 2026-05-15 sera**: HEAD main `91f5468` PR #105 + 7 PR Jules OPEN today (#107..#113: 1 security basicAuth + 2 perf optimize + 3 tests coverage + 1 refactor code health) -> Jules e' aggressive maintenance/improvement source su questo repo (7 sessioni cumulative cross-day, il repo con piu' attivita Jules nell'ecosystem)
+  - **Governance interna autosufficiente**: ha `CLAUDE.md` proprio (multi-client ADR-0021) + `WORKSPACE_MAP.md`. Codemasterdd NON sovrascrive, monitora soltanto.
+  - **Hook globali**: applicati via `core.hooksPath` user-level (Conventional Commits + ADR-0020 silent-fail check) se Eduardo clone locale Lenovo
+  - **Privacy**: PUBLIC + cloud-OK come Game / Game-Godot-v2. NON in `~/.config/aider-privacy-whitelist.txt` perche' no clone locale current; aggiungere se cloning futuro
+  - **Stack ADR-0021 multi-client pattern**: Jules + Codex Cloud + Claude Code (multi-AI pipeline empirico, L-024 case study)
+
 - **Synesthesia** — web app esame UniUPO
   - GitHub: `github.com/MasterDD-L34D/synesthesia`
   - Path Lenovo: `C:\dev\synesthesia` (dormant per Sprint plan UniUPO esame ~ago 2026)
