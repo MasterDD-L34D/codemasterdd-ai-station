@@ -48,7 +48,11 @@ DAFNE_HOST = os.environ.get("DAFNE_HOST", "http://localhost:5000")
 
 def create_app() -> Flask:
     app = Flask(__name__, static_folder="static", template_folder="templates")
-    app.secret_key = os.environ.get("FLASK_SECRET", "dev-only-not-for-prod-codemasterdd")
+
+    flask_secret = os.environ.get("FLASK_SECRET")
+    if not flask_secret:
+        raise RuntimeError("FLASK_SECRET environment variable is not set")
+    app.secret_key = flask_secret
 
     db = Database(DB_PATH)
     db.init_schema()
