@@ -1,0 +1,6 @@
+[tool.pytest.ini_options]
+# Monorepo: multiple apps/*/tests/ con stesso modulo path `tests.conftest`.
+# `importlib` mode evita ImportPathMismatchError / plugin re-registration
+# senza forzare unique package name su ogni conftest.
+# Vedi: https://docs.pytest.org/en/stable/explanation/pythonpath.html#import-modes
+addopts = "--import-mode=importlib"

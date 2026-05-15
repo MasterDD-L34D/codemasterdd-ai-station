@@ -72,7 +72,7 @@ Default porta: 8080. Cambia con `PORT=9090 python app.py`.
 |-----|---------|-------|
 | `PORT` | 8080 | Porta HTTP |
 | `FLASK_DEBUG` | (unset) | Mode debug + auto-reload |
-| `FLASK_SECRET` | dev-only | Session secret (cambia in produzione) |
+| `FLASK_SECRET` | _required_ | Session secret -- app fa fail-fast se non settata (vedi `.env.example`) |
 | `LITELLM_ENDPOINT` | http://localhost:4000 | LiteLLM Proxy URL |
 | `LANGFUSE_HOST` | http://localhost:3000 | Langfuse URL |
 | `LANGFUSE_PUBLIC_KEY` | — | Per ping + trace lookup (opzionale) |
