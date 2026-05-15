@@ -3462,3 +3462,32 @@ Eduardo decisione finale: **lean closure JOURNAL + stop session**. Allinea Proto
 ### Stop session 2026-05-13 sera tardi
 
 Mitigation L-002 attiva. Restoration cognitive prioritized vs compound execution continuation. Defer next work natural emergence prossima sessione.
+
+## 2026-05-15 (mezzogiorno -- post-reboot smoke triade + Hybrid A1 live verification pre-19/05)
+
+### Completato
+
+- Protocol 1 Refresh-verify state interno post-reboot: HEAD `5607182` ok, MCP notebooklm Connected, Docker daemon down -> Eduardo rilanciato containers
+- Task 1 Pre-flight Hybrid A1: LiteLLM hub healthy port 4000, 17 model alias (drift +2 vs memory 15 = aggiunte `anthropic-sonnet-strategic` + `anthropic-haiku-strategic`), 3 route smoke PASS (gemini-flash, github-gpt4o-mini, hf-deepseek-r1)
+- Task 2 NotebookLM setup_auth: authenticated 495s, cookies persisted, library vuota (0 notebook); fix `browser_options.headless: false` necessario per override server default headless
+- Task 3 Gemini OAuth login: settings.json + oauth_creds.json (1824B) persistiti, smoke `gemini -p "ping"` PASS con `GEMINI_API_KEY` unset; quota path 60 req/min API key -> 1000 req/day OAuth Gemini 2.5 Pro 1M ctx
+- Hybrid A1 LIVE smoke pre-19/05 (Max ancora attivo): `opencode run -m anthropic/claude-haiku-4-5` -> PASS, `opencode run -m anthropic/claude-sonnet-4-6` -> PASS (2+2=4 prompt), bridge Meridian proxy spawn on-demand validato
+- `opencode stats`: $0.14 cumulative 7gg / 21 session (bridge Max = $0 subscription-included, $0.14 da cloud paid altrove)
+- Parallel stress test: 3 `opencode run` concurrent -> output corretti (1, 2, 3) no cross-contamination, port auto-assignment validato (3 localhost port distinct durante netstat snapshot)
+- TUI multi-turn smoke in spawned PowerShell window (Eduardo direct interactivity)
+- Documentazione: sezione `5.1 Day-in-the-life pratica` aggiunta a `docs/operations/key-and-task-routing-matrix.md` (cmd reference + decision tree + anti-pattern smoke documentati)
+
+### Da fare (post-19/05 transition)
+
+- 18/05 lun: Eduardo subscribe Pro $20/mo on anthropic.com/claude/upgrade (1gg overlap pre-Max expiration)
+- 19/05 mar: Max expiration -- re-run smoke `opencode run -m anthropic/claude-haiku-4-5` per validare credenziali Pro continuano (stesso OAuth path)
+- 20/05+ SPRINT_02 wake: T2/T5/T7/T8/T9 in-scope
+- Drift fix low-pri: memory `project_session_resumption.md` linea 25 "15 model_list entries" -> aggiornare a 17
+
+### Note
+
+- Bridge Meridian funziona OGGI con Max OAuth, conferma empirica che path tecnico Hybrid A1 e' production-ready pre-19/05 -- risolve incertezza ADR-0030 "validation criteria 1 mese 19/5 -> 19/6" che ora puo' partire baseline da empirical evidence
+- Sonnet 4.6 declina prompt "reply with exactly STRING_TOKEN" sospettando injection (giusto): usare prompt naturali per smoke test
+- Cognitive protocols applied: P1 Refresh-verify pre-action (sempre), P4 AA01 trail NO (sessione lean operativa <30min audit-class)
+- Stato fine sessione: 3 task user-requested completati end-to-end + 3 test follow-up multi-turn / stats / parallel completati + guida d'uso pratica file-first
+
