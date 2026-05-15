@@ -125,6 +125,114 @@ model_list:
         task_types: "emergency-fallback-only"
         cost_warning: "monitor ccusage, pay-per-use"
 
+  # ===== TIER 3 specialty: HuggingFace Inference Providers (added 2026-05-15) =====
+  # Unified proxy a 300+ models across 18+ provider (Cerebras, Groq, Together, ecc.)
+  # OpenAI-compatible drop-in via router.huggingface.co/v1
+  - model_name: hf-deepseek-r1
+    litellm_params:
+      model: openai/deepseek-ai/DeepSeek-R1:fastest
+      api_base: https://router.huggingface.co/v1
+      api_key: "os.environ/HUGGINGFACE_API_KEY"
+      temperature: 0.0
+    model_info:
+      metadata:
+        tier: "3-cloud-free-specialty"
+        task_types: "reasoning,deepseek-r1-class,math-heavy"
+        free_tier: "100K credits/month"
+
+  - model_name: hf-gpt-oss-120b
+    litellm_params:
+      model: openai/openai/gpt-oss-120b:fastest
+      api_base: https://router.huggingface.co/v1
+      api_key: "os.environ/HUGGINGFACE_API_KEY"
+      temperature: 0.0
+    model_info:
+      metadata:
+        tier: "3-cloud-free-specialty"
+        task_types: "general-purpose-open-weights-120b"
+
+  - model_name: hf-qwen-coder-32b
+    litellm_params:
+      model: openai/Qwen/Qwen2.5-Coder-32B-Instruct:fastest
+      api_base: https://router.huggingface.co/v1
+      api_key: "os.environ/HUGGINGFACE_API_KEY"
+      temperature: 0.0
+    model_info:
+      metadata:
+        tier: "3-cloud-free-specialty"
+        task_types: "coder-specialty-cloud,refactor-complex"
+
+  # ===== TIER 3 specialty: GitHub Models (added 2026-05-15, endpoint corrected) =====
+  # Endpoint: https://models.github.ai/inference (NEW 2026, era models.inference.ai.azure.com deprecato)
+  # Permission required: Models read-only on fine-grained PAT
+  # Headers extra: Accept application/vnd.github+json + X-GitHub-Api-Version 2022-11-28
+  - model_name: github-gpt4o-mini
+    litellm_params:
+      model: openai/openai/gpt-4o-mini
+      api_base: https://models.github.ai/inference
+      api_key: "os.environ/GITHUB_MODELS_API_KEY"
+      temperature: 0.0
+      extra_headers:
+        Accept: "application/vnd.github+json"
+        X-GitHub-Api-Version: "2022-11-28"
+    model_info:
+      metadata:
+        tier: "3-cloud-free-specialty"
+        task_types: "gpt4o-mini-quality-without-paid"
+        free_tier_note: "rate limits per docs.github.com/github-models/quickstart"
+
+  - model_name: github-gpt41-mini
+    litellm_params:
+      model: openai/openai/gpt-4.1-mini
+      api_base: https://models.github.ai/inference
+      api_key: "os.environ/GITHUB_MODELS_API_KEY"
+      temperature: 0.0
+      extra_headers:
+        Accept: "application/vnd.github+json"
+        X-GitHub-Api-Version: "2022-11-28"
+    model_info:
+      metadata:
+        tier: "3-cloud-free-specialty"
+        task_types: "gpt4.1-mini-2026-newer-iteration"
+
+  - model_name: github-llama-3.3-70b
+    litellm_params:
+      model: openai/meta/Llama-3.3-70B-Instruct
+      api_base: https://models.github.ai/inference
+      api_key: "os.environ/GITHUB_MODELS_API_KEY"
+      temperature: 0.0
+      extra_headers:
+        Accept: "application/vnd.github+json"
+        X-GitHub-Api-Version: "2022-11-28"
+    model_info:
+      metadata:
+        tier: "3-cloud-free-specialty"
+        task_types: "llama-3.3-70b-alternative-via-github"
+
+  # ===== TIER 0 strategic: Anthropic on-demand (added 2026-05-15, ADR-0023) =====
+  # Pay-per-use post-Max, budget cap $10-20/mese tracciato in logs/claude-api-spend-2026-MM.md
+  - model_name: anthropic-sonnet-strategic
+    litellm_params:
+      model: anthropic/claude-sonnet-4-6
+      api_key: "os.environ/ANTHROPIC_API_KEY"
+      temperature: 0.0
+    model_info:
+      metadata:
+        tier: "0-strategic-paid-on-demand"
+        task_types: "multi-file-refactor,architectural-debug,adr-draft,synthesis"
+        cost_warning: "ADR-0023 cap $10-20/mese, track logs/claude-api-spend-YYYY-MM.md"
+
+  - model_name: anthropic-haiku-strategic
+    litellm_params:
+      model: anthropic/claude-haiku-4-5-20251001
+      api_key: "os.environ/ANTHROPIC_API_KEY"
+      temperature: 0.0
+    model_info:
+      metadata:
+        tier: "0-strategic-paid-on-demand-light"
+        task_types: "strategic-light,classification,short-synthesis"
+        cost_warning: "cheaper Haiku, ADR-0023 budget tracked"
+
 litellm_settings:
   # Osservabilità — shippa traces a Langfuse
   success_callback: ["langfuse"]

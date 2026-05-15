@@ -34,13 +34,15 @@
     Source: scripts/wrappers/*.cmd (canonical, repo-tracked).
     Target: ~/.local/bin/*.cmd (user-level, PATH).
 
-    Wrapper ecosystem 6 active post-cluster T1 SPRINT_02 + post-harsh-review:
+    Wrapper ecosystem 8 active post-cluster T1 SPRINT_02 + post-harsh-review + 2026-05-15 free LLM audit:
     - aider-cosmetic.cmd (Qwen 7B + diff format, post-fix entry #34)
     - aider-refactor.cmd (Qwen 14B Q2 + diff)
     - aider-cerebras.cmd (Cerebras 8B + --map-tokens 0 mitigation)
     - aider-gemini.cmd (Gemini 2.5 Flash + --map-tokens 0)
     - aider-openai.cmd (gpt-4o-mini, post 10 EUR funding)
     - aider-groq-bypass.cmd (Groq 70B via openai/ + temp env-file P0 hardened)
+    - aider-hf.cmd (HuggingFace Inference Providers, default DeepSeek-R1, added 2026-05-15)
+    - aider-github-models.cmd (GitHub Models GPT-4o 150 req/day free, added 2026-05-15, PROPOSED)
 
     DEPRECATED removed:
     - aider-groq.cmd (LiteLLM Groq adapter buggy, use aider-groq-bypass)
