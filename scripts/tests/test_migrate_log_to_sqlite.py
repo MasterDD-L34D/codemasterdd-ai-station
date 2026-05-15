@@ -1,20 +1,37 @@
-import pytest
-import sys
+"""Tests for migrate-log-to-sqlite.py extract_cumulative_table.
+
+The script filename has hyphens so it cannot be imported via normal `import`.
+We load it via importlib spec INSIDE a module-scoped fixture -- NOT at module
+level with `sys.path.append` + `sys.modules[...] =` global mutation (that
+pattern causes cross-test contamination; cf. L-2026-05-028 / L-2026-05-029
+family + conftest fix on PR #102).
+"""
+
+from __future__ import annotations
+
+from importlib.util import module_from_spec, spec_from_file_location
 from pathlib import Path
 
-# Add scripts directory to sys.path to import migrate_log_to_sqlite
-scripts_dir = Path(__file__).parent.parent
-sys.path.append(str(scripts_dir))
+import pytest
 
-from importlib.util import spec_from_file_location, module_from_spec
 
-spec = spec_from_file_location("migrate_log_to_sqlite", str(scripts_dir / "migrate-log-to-sqlite.py"))
-migrate_log_to_sqlite = module_from_spec(spec)
-sys.modules["migrate_log_to_sqlite"] = migrate_log_to_sqlite
-spec.loader.exec_module(migrate_log_to_sqlite)
+@pytest.fixture(scope="module")
+def migrate_module():
+    """Load hyphenated script via importlib spec, scoped (no global pollution).
 
-def test_extract_cumulative_table_invalid_id():
-    from migrate_log_to_sqlite import extract_cumulative_table
+    Module loaded once per test module, returned to tests, NEVER registered in
+    global sys.modules -- avoids the contamination anti-pattern.
+    """
+    script_path = Path(__file__).parent.parent / "migrate-log-to-sqlite.py"
+    spec = spec_from_file_location("migrate_log_to_sqlite", str(script_path))
+    module = module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def test_extract_cumulative_table_invalid_id(migrate_module):
+    """Rows with non-numeric id are skipped, valid numeric-id rows kept."""
+    extract_cumulative_table = migrate_module.extract_cumulative_table
 
     md_text = """### Cumulative Fase 6 dataset
 
