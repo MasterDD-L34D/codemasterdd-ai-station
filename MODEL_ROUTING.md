@@ -97,7 +97,7 @@ Applicata in concreto:
 
 ### Se devo scrivere documenti, backlog, ADR
 - **Strumento preferito**: Claude Code Opus (fino 19/05)
-- **Post-Max**: Claude Code API pay-per-use (ADR strategico) OR Groq 70B via `aider-groq` (ADR operativo semplice)
+- **Post-Max**: Claude Code API pay-per-use (ADR strategico) OR Groq 70B via `aider-groq-bypass` (ADR operativo semplice)
 - **Motivo**: reasoning strategico + consistency di stile
 
 ### Se devo lavorare in locale per privacy o costo
@@ -107,7 +107,7 @@ Applicata in concreto:
 - **Quando passare al cloud**: emerge task oltre capability 14B locale (safe-fail dopo 2 retry)
 
 ### Se devo usare il cloud
-- **Strumento preferito**: Aider + wrapper (`aider-groq`, `aider-cerebras`, `aider-gemini`, `aider-openai`)
+- **Strumento preferito**: Aider + wrapper (`aider-groq-bypass`, `aider-cerebras`, `aider-gemini`, `aider-openai`)
 - **Modello cloud primario**: `groq/llama-3.3-70b-versatile` (free, 630 tok/s)
 - **Perché proprio lui**: free tier 6000 tok/min + LPU speed + capability 70B dense
 - **OpenCode + cloud free NON viable** (ADR-0022): TPM 6-12k Groq + context 8k Cerebras 8B << OpenCode default request ~50k token. OpenCode resta sovereign-only (Ollama 30B MoE).
@@ -265,7 +265,7 @@ Dogfood Fase 6 n=8 rivela **pattern nuovo non previsto nella matrice originale**
 
 **Stack operativo Fase 8**:
 - **Claude Code**: dismesso daily-driver. NON acquisito Claude Pro $240/anno (scenario B declassato per quality parity 70B cloud + 14B Q2 locale).
-- **Tier 0 strategic** -> Groq 70B via `aider-groq` per ADR/planning leggero quando privacy permitting. Per repo sensibili: Qwen 14B Q2 + diff locale.
+- **Tier 0 strategic** -> Groq 70B via `aider-groq-bypass` per ADR/planning leggero quando privacy permitting. Per repo sensibili: Qwen 14B Q2 + diff locale.
 - **Tier 1 sovereign default Aider**: Qwen 7B (cosmetic) + 14B Q2 (behavior) locali, ADR-0007/0008
 - **Tier 1 sovereign default OpenCode** (NEW da ADR-0022): qwen3-coder:30b MoE A3B per multi-step agentic con tool calls
 - **Tier 2 escalation Aider**: qwen3-coder:30b quando 14B Q2 safe-fails
