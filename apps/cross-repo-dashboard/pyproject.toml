@@ -1,0 +1,6 @@
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+# importlib mode evita ImportPathMismatch quando il monorepo ha piu' tests/
+# directory con stesso nome (es. apps/dogfood-ui/tests + apps/cross-repo-dashboard/tests).
+# Vedi: https://docs.pytest.org/en/stable/explanation/pythonpath.html#import-modes
+addopts = "--import-mode=importlib"
