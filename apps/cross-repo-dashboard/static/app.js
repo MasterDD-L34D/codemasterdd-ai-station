@@ -48,9 +48,15 @@ async function submitPr() {
   const r = document.getElementById('pr-result');
   r.textContent = 'Running dry-run...';
   try {
+    const headers = {'Content-Type': 'application/json'};
+    // Send Bearer token when API_SECRET configured (Codex P2 #111: preserve
+    // dashboard modal in secure config -- token injected server-side same-origin).
+    if (window.__API_SECRET__) {
+      headers['Authorization'] = `Bearer ${window.__API_SECRET__}`;
+    }
     const res = await fetch('/api/draft-pr', {
       method: 'POST',
-      headers: {'Content-Type': 'application/json'},
+      headers,
       body: JSON.stringify({repo_target, type, preview_files, summary}),
     });
     const data = await res.json();

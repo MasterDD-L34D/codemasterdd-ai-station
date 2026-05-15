@@ -17,6 +17,8 @@ Run prod: python app.py --prod  (uses waitress, default localhost:8081)
 
 from __future__ import annotations
 
+import hmac
+import os
 import re
 import subprocess
 import sys
@@ -626,7 +628,12 @@ def fetch_activity_feed(repos_state: dict[str, Any], limit: int = 10) -> list[di
 def index() -> Any:
     force = request.args.get("refresh") == "1"
     state = fetch_all_state(force_refresh=force)
-    return render_template("index.html", state=state)
+    # Inject API_SECRET (if set) so same-origin dashboard JS can authenticate
+    # to /api/draft-pr. Localhost-only single-user tool: same-origin JS holding
+    # the token is acceptable (Codex P2 #111 fix -- supported credential path).
+    return render_template(
+        "index.html", state=state, api_secret=os.environ.get("API_SECRET", "")
+    )
 
 
 @app.route("/api/state")
@@ -692,7 +699,18 @@ def coord_event_log() -> Any:
 
 @app.route("/api/draft-pr", methods=["POST"])
 def draft_pr() -> Any:
-    """B2: Invoca scripts/cross-repo/dry-run-pr.ps1 con parametri form."""
+    """B2: Invoca scripts/cross-repo/dry-run-pr.ps1 con parametri form.
+
+    Security: includes authentication (via API_SECRET if configured) and regex
+    sanitization to prevent PowerShell command injection (CWE-77/78).
+    """
+    api_secret = os.environ.get("API_SECRET")
+    if api_secret:
+        auth_header = request.headers.get("Authorization", "")
+        # Constant-time compare to avoid timing side-channel (cf. Game-Database #107).
+        if not hmac.compare_digest(auth_header, f"Bearer {api_secret}"):
+            return jsonify({"ok": False, "error": "unauthorized"}), 401
+
     data = request.json or {}
     repo_target = data.get("repo_target", "").strip()
     pr_type = data.get("type", "").strip()
@@ -700,6 +718,11 @@ def draft_pr() -> Any:
     summary = data.get("summary", "").strip()
     if not all([repo_target, pr_type, preview_files, summary]):
         return jsonify({"ok": False, "error": "all 4 fields required"}), 400
+    if not _NOTES_SAFE_REGEX.match(preview_files) or not _NOTES_SAFE_REGEX.match(summary):
+        return jsonify({
+            "ok": False,
+            "error": "inputs contain disallowed chars (only alphanumeric + space + .,_/:#-+()= allowed)",
+        }), 400
     valid_targets = {"Game", "Godot-v2", "Dafne", "vault"}
     valid_types = {"policy-alignment", "ADR-cross-ref", "drift-fix", "docs", "governance-suggestion"}
     if repo_target not in valid_targets:
