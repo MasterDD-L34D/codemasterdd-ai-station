@@ -8,6 +8,55 @@ from pathlib import Path
 from typing import Any
 
 
+def _compute_class_breakdown(entries: list[sqlite3.Row], classes: Counter[str]) -> dict[str, dict[str, Any]]:
+    class_breakdown: dict[str, dict[str, Any]] = {}
+    for cls in classes:
+        subset = [e for e in entries if e["classe"] == cls]
+        n = len(subset)
+        s = sum(1 for e in subset if e["outcome"] == "success")
+        p = sum(1 for e in subset if e["outcome"] == "partial")
+        r = sum(1 for e in subset if e["outcome"] == "reject")
+        class_breakdown[cls] = {
+            "n": n,
+            "full_success": s,
+            "partial": p,
+            "reject": r,
+            "success_rate": s / n if n else 0.0,
+        }
+    return class_breakdown
+
+
+def _compute_stack_breakdown(entries: list[sqlite3.Row], stacks: Counter[str]) -> dict[str, dict[str, Any]]:
+    stack_breakdown: dict[str, dict[str, Any]] = {}
+    for stk in stacks:
+        subset = [e for e in entries if e["stack"] == stk]
+        n = len(subset)
+        s = sum(1 for e in subset if e["outcome"] == "success")
+        stack_breakdown[stk] = {
+            "n": n,
+            "full_success": s,
+            "success_rate": s / n if n else 0.0,
+        }
+    return stack_breakdown
+
+
+def _compute_phase6_status(total: int, fail_rate_strict: float, total_cost: float) -> dict[str, Any]:
+    target_n = 20
+    target_fail_rate_max = 0.30
+    cost_budget_monthly = 20.0
+
+    return {
+        "target_n": target_n,
+        "progress_pct": round((total / target_n) * 100, 1),
+        "fail_rate_limit": target_fail_rate_max,
+        # ADR-0014 criterio 2: "fail rate <30%" → threshold strict (30% esatto = FAIL)
+        "fail_rate_status": "PASS" if fail_rate_strict < target_fail_rate_max else "FAIL",
+        "cost_budget_monthly": cost_budget_monthly,
+        # Budget $20/mo è hard cap (esatto 20 = FAIL)
+        "cost_status": "PASS" if total_cost < cost_budget_monthly else "FAIL",
+    }
+
+
 def aggregate_stats(entries: list[sqlite3.Row]) -> dict[str, Any]:
     """Compute Fase 6 metrics: success rate, fail rate, breakdown per class/stack."""
     total = len(entries)
@@ -26,43 +75,13 @@ def aggregate_stats(entries: list[sqlite3.Row]) -> dict[str, Any]:
     fail_rate_strict = reject / total if total else 0.0
     fail_rate_broad = (partial + reject + errors) / total if total else 0.0
 
-    # Per class breakdown
-    class_breakdown: dict[str, dict[str, Any]] = {}
-    for cls in classes:
-        subset = [e for e in entries if e["classe"] == cls]
-        n = len(subset)
-        s = sum(1 for e in subset if e["outcome"] == "success")
-        p = sum(1 for e in subset if e["outcome"] == "partial")
-        r = sum(1 for e in subset if e["outcome"] == "reject")
-        class_breakdown[cls] = {
-            "n": n,
-            "full_success": s,
-            "partial": p,
-            "reject": r,
-            "success_rate": s / n if n else 0.0,
-        }
-
-    # Per stack breakdown
-    stack_breakdown: dict[str, dict[str, Any]] = {}
-    for stk in stacks:
-        subset = [e for e in entries if e["stack"] == stk]
-        n = len(subset)
-        s = sum(1 for e in subset if e["outcome"] == "success")
-        stack_breakdown[stk] = {
-            "n": n,
-            "full_success": s,
-            "success_rate": s / n if n else 0.0,
-        }
+    class_breakdown = _compute_class_breakdown(entries, classes)
+    stack_breakdown = _compute_stack_breakdown(entries, stacks)
 
     # Cost cumulative
     total_cost = sum(float(e["cost_usd"] or 0) for e in entries)
     total_tokens_sent = sum(int(e["tokens_sent"] or 0) for e in entries)
     total_tokens_recv = sum(int(e["tokens_received"] or 0) for e in entries)
-
-    # Fase 6 ADR-0014 criteria
-    target_n = 20
-    target_fail_rate_max = 0.30
-    cost_budget_monthly = 20.0
 
     return {
         "total": total,
@@ -79,16 +98,7 @@ def aggregate_stats(entries: list[sqlite3.Row]) -> dict[str, Any]:
         "total_cost_usd": round(total_cost, 4),
         "total_tokens_sent": total_tokens_sent,
         "total_tokens_received": total_tokens_recv,
-        "phase6": {
-            "target_n": target_n,
-            "progress_pct": round((total / target_n) * 100, 1),
-            "fail_rate_limit": target_fail_rate_max,
-            # ADR-0014 criterio 2: "fail rate <30%" → threshold strict (30% esatto = FAIL)
-            "fail_rate_status": "PASS" if fail_rate_strict < target_fail_rate_max else "FAIL",
-            "cost_budget_monthly": cost_budget_monthly,
-            # Budget $20/mo è hard cap (esatto 20 = FAIL)
-            "cost_status": "PASS" if total_cost < cost_budget_monthly else "FAIL",
-        },
+        "phase6": _compute_phase6_status(total, fail_rate_strict, total_cost),
     }
 
 
