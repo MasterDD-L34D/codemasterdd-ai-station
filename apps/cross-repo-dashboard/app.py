@@ -36,6 +36,17 @@ app = Flask(__name__)
 # Dashboard auto-refresh 5min × 15+ git subprocess per cycle = visible flicker.
 _NO_WINDOW_FLAG = 0x08000000 if sys.platform == "win32" else 0
 
+# Pre-compiled regexes for performance (hoisted from loops/frequent functions)
+_GATE_E_ROW_RE = re.compile(r"^\|\s*2026-\d{2}-\d{2}")
+_ADR_STATUS_PROPOSED_RE = re.compile(r"\*{0,2}Status\*{0,2}\s*:\s*Proposed", re.IGNORECASE)
+_ADR_RATIFY_DATE_RE1 = re.compile(r"\*{0,2}Ratification[^:\n]{0,80}date\*{0,2}\s*:.{0,200}?(20\d{2}-\d{2}-\d{2})", re.IGNORECASE | re.DOTALL)
+_ADR_RATIFY_DATE_RE2 = re.compile(r"ratification[^.\n]{0,200}?(20\d{2}-\d{2}-\d{2})", re.IGNORECASE | re.DOTALL)
+_ADR_RATIFY_DATE_RE3 = re.compile(r"\bentro\s+(20\d{2}-\d{2}-\d{2})", re.IGNORECASE)
+_ADR_NUM_RE = re.compile(r"(\d{4})")
+_OD_ENTRY_RE = re.compile(r"###\s+\[?(OD-\d+)\]?\s+([^\n]+)")
+_JOURNAL_DATE_RE = re.compile(r"^## 20\d{2}-\d{2}-\d{2}")
+_JOURNAL_HEADER_RE = re.compile(r"^## (.+)$")
+
 
 # Acquire gh token once at startup (clean subprocess from main thread)
 def _get_gh_token() -> str:
@@ -387,7 +398,7 @@ def fetch_gate_e_counter() -> dict[str, Any]:
             try:
                 content = f.read_text(encoding="utf-8", errors="replace")
                 # Count rows: lines starting with "| 2026-" (date-prefixed table rows)
-                events = len([line for line in content.split("\n") if re.match(r"^\|\s*2026-\d{2}-\d{2}", line)])
+                events = len([line for line in content.split("\n") if _GATE_E_ROW_RE.match(line)])
                 total += events
                 files_scanned.append({"file": f.name, "events": events})
                 if cur_month in f.name:
@@ -439,16 +450,16 @@ def fetch_adr_countdown() -> list[dict[str, Any]]:
                 # Read full file (ratification date may be deep, not in first 2000 chars)
                 content = f.read_text(encoding="utf-8", errors="replace")
                 # Look for Status: Proposed (with optional ** markdown bold)
-                if not re.search(r"\*{0,2}Status\*{0,2}\s*:\s*Proposed", content, re.IGNORECASE):
+                if not _ADR_STATUS_PROPOSED_RE.search(content):
                     continue
                 # Look for ratification date — broader pattern, multiple candidates
                 # Pattern 1: "Ratification check date: ... 2026-MM-DD"
                 # Pattern 2: "ratification ... 2026-MM-DD" within 200 chars
                 # Pattern 3: "entro 2026-MM-DD" (Italian common pattern)
                 date_match = (
-                    re.search(r"\*{0,2}Ratification[^:\n]{0,80}date\*{0,2}\s*:.{0,200}?(20\d{2}-\d{2}-\d{2})", content, re.IGNORECASE | re.DOTALL)
-                    or re.search(r"ratification[^.\n]{0,200}?(20\d{2}-\d{2}-\d{2})", content, re.IGNORECASE | re.DOTALL)
-                    or re.search(r"\bentro\s+(20\d{2}-\d{2}-\d{2})", content, re.IGNORECASE)
+                    _ADR_RATIFY_DATE_RE1.search(content)
+                    or _ADR_RATIFY_DATE_RE2.search(content)
+                    or _ADR_RATIFY_DATE_RE3.search(content)
                 )
                 if not date_match:
                     continue
@@ -459,7 +470,7 @@ def fetch_adr_countdown() -> list[dict[str, Any]]:
                 except ValueError:
                     days_remaining = None
                 # Extract ADR number from filename
-                num_match = re.match(r"(\d{4})", f.name)
+                num_match = _ADR_NUM_RE.match(f.name)
                 items.append({
                     "adr": num_match.group(1) if num_match else "?",
                     "file": f.name,
@@ -484,7 +495,7 @@ def fetch_open_decisions() -> dict[str, Any]:
         content = od_file.read_text(encoding="utf-8", errors="replace")
         # Match headings like "### [OD-NNN] title"
         # Active = NOT prefixed with ~~strikethrough~~ AND NOT containing "CLOSED"
-        all_entries = re.findall(r"###\s+\[?(OD-\d+)\]?\s+([^\n]+)", content)
+        all_entries = _OD_ENTRY_RE.findall(content)
         active = []
         for od_id, title in all_entries:
             # Check if title has strikethrough or CLOSED
@@ -514,7 +525,7 @@ def fetch_journal_preview(max_chars: int = 600) -> dict[str, Any]:
         entries = []
         current_entry: list[str] | None = None
         for line in lines:
-            if re.match(r"^## 20\d{2}-\d{2}-\d{2}", line):
+            if _JOURNAL_DATE_RE.match(line):
                 if current_entry is not None:
                     entries.append("\n".join(current_entry))
                     if len(entries) >= 2:
@@ -533,7 +544,7 @@ def fetch_journal_preview(max_chars: int = 600) -> dict[str, Any]:
             return {"available": False, "reason": "no dated entries found"}
         latest = entries[0]
         # Extract header + first ~max_chars
-        header_match = re.match(r"^## (.+)$", latest.split("\n")[0])
+        header_match = _JOURNAL_HEADER_RE.match(latest.split("\n")[0])
         header = header_match.group(1) if header_match else "?"
         preview_text = latest[:max_chars]
         if len(latest) > max_chars:
@@ -542,7 +553,7 @@ def fetch_journal_preview(max_chars: int = 600) -> dict[str, Any]:
             "available": True,
             "header": header,
             "preview": preview_text,
-            "total_entries_count": len([1 for line in lines if re.match(r"^## 20\d{2}-\d{2}-\d{2}", line)]),
+            "total_entries_count": len([1 for line in lines if _JOURNAL_DATE_RE.match(line)]),
         }
     except Exception as e:  # noqa: BLE001
         return {"available": False, "reason": f"{type(e).__name__}: {str(e)[:100]}"}
