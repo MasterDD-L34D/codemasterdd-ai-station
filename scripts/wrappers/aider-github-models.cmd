@@ -68,8 +68,10 @@ set "TEMP_ENV=%TEMP%\aider-github-models-%RANDOM%-%RANDOM%.env"
 > "%TEMP_ENV%" echo OPENAI_API_KEY=%GITHUB_MODELS_KEY%
 
 REM Invoke Aider with temp env-file -- key NOT in argv -- safe vs tasklist /v
-REM Default model: gpt-4o -- proprietary GPT-4o via GitHub free tier 150 req per day
-aider --env-file "%TEMP_ENV%" --openai-api-base https://models.inference.ai.azure.com --model openai/gpt-4o --edit-format diff --no-auto-commits --map-tokens 0 --no-stream --no-show-model-warnings --git-commit-verify --commit-prompt "Commit message MUST be in English, Conventional Commits format type colon short description, subject line less than 72 chars total, lowercase description, no trailing period. Example: fix: handle null input in parser." %*
+REM Default model: gpt-4o-mini via GitHub Models free tier (corretto 2026-05-15 endpoint + model namespace)
+REM Endpoint NEW 2026: https://models.github.ai/inference (era models.inference.ai.azure.com deprecato)
+REM Model namespace: openai/openai/gpt-4o-mini (Aider strips first openai/, GitHub Models receives openai/gpt-4o-mini)
+aider --env-file "%TEMP_ENV%" --openai-api-base https://models.github.ai/inference --model openai/openai/gpt-4o-mini --edit-format diff --no-auto-commits --map-tokens 0 --no-stream --no-show-model-warnings --git-commit-verify --commit-prompt "Commit message MUST be in English, Conventional Commits format type colon short description, subject line less than 72 chars total, lowercase description, no trailing period. Example: fix: handle null input in parser." %*
 
 REM Cleanup temp file -- key removed from disk
 del /q "%TEMP_ENV%" 2>nul

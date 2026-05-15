@@ -365,13 +365,21 @@ Add to `~/.config/opencode/opencode.json` mcp field:
 # 2. Append a keys.env:
 Add-Content "$env:USERPROFILE\.config\api-keys\keys.env" -Value "GITHUB_MODELS_API_KEY=github_pat_..."
 # 3. Smoke test OpenAI-compat:
-curl https://models.inference.ai.azure.com/chat/completions `
+curl https://models.github.ai/inference/chat/completions `
   -H "Authorization: Bearer github_pat_..." `
+  -H "Accept: application/vnd.github+json" `
+  -H "X-GitHub-Api-Version: 2022-11-28" `
   -H "Content-Type: application/json" `
-  -d '{"model":"gpt-4o","messages":[{"role":"user","content":"3+3?"}]}'
+  -d '{"model":"openai/gpt-4o-mini","messages":[{"role":"user","content":"3+3?"}]}'
 ```
 
-**Verdict 2026-05-15**: legittimo, low cost, real gap-fill. Adottare come **PROPOSED** pendente decisione Eduardo. Trigger setup: quando Eduardo vuole GPT-4o quality senza pay-per-use, oppure quando Anthropic API budget cap raggiunto in mese.
+**IMPORTANT verified empirical 2026-05-15**:
+- Endpoint NEW 2026: `https://models.github.ai/inference` (era `models.inference.ai.azure.com` deprecato)
+- Headers obbligatori: `Accept: application/vnd.github+json` + `X-GitHub-Api-Version: 2022-11-28`
+- Model namespace: `openai/gpt-4o-mini` (con prefisso provider, era `gpt-4o-mini` solo)
+- PAT path corretto: https://github.com/marketplace/models -> Use this model -> "Create Personal Access Token" auto-configura `Models: Read-only` permission corretto. Manual `?type=beta` path facile sbagliare permission scope (caso studio 2026-05-15 primo PAT no_access su tutti modelli)
+
+**Verdict 2026-05-15 (ACCEPTED post smoke end-to-end PASS)**: working tier 3 cloud free, integrato via wrapper aider-github-models + LiteLLM hub. Test PASS: gpt-4o-mini-2024-07-18 risponde via LiteLLM endpoint port 4000 alias `github-gpt4o-mini`.
 
 ### 6.4 LiteLLM hub — **AUDIT existing config dormant**
 
