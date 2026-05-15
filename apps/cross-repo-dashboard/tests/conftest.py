@@ -1,20 +1,25 @@
 """Pytest fixtures + hermetic mocks for cross-repo-dashboard tests.
 
-Design notes:
-- External deps (requests, flask, waitress, pystray, PIL) sono mockati a livello
-  conftest perche' l'app li importa al top-level e non sono installati nel test env.
-- Mocks su sys.modules registrati con cleanup hook `pytest_unconfigure` per
-  evitare cross-test contamination se la pytest session include altri test dir.
-- Test isolation per CACHE garantita da fixture autouse `clear_cache`.
+Design notes (post Codex P2 fix on PR #99):
+- External deps (requests, flask, waitress, pystray, PIL) NOT installed in test env.
+- Mocks applied at **function scope** via monkeypatch.setitem, so cleanup happens
+  automatically post-test (NOT at session end). This prevents the cross-test
+  contamination pattern flagged in PR #97 review (Jules) and re-applied incorrectly
+  in PR #99 (my own first fix attempt -- meta anti-pattern documented in L-2026-05-025).
+- Test files MUST import app symbols inside test functions (NOT at module top-level)
+  so the autouse fixture runs first and sets up the mocks before import resolution.
+- Test isolation per CACHE garantita da fixture autouse `clear_cache` (depends on
+  `mock_external_deps` so it transitively activates mocks before app import).
 
 How to run:
-    # Scoped per-app (richiesto -- vedi caveat sotto):
     python -m pytest apps/cross-repo-dashboard/
 
-Caveat -- combined-run con altri apps NOT supported:
-- Il monorepo ha `apps/dogfood-ui/app.py` E `apps/cross-repo-dashboard/app.py` (sibling).
-- Entrambi i `tests/conftest.py` iniettano la dir parent in sys.path -> import collision su `app`.
-- Per evitare: invocare pytest scoped a un singolo app alla volta (mai `pytest apps/`).
+Combined-run con altri apps:
+- pyproject.toml in this directory sets `--import-mode=importlib`, but combining
+  `pytest apps/dogfood-ui apps/cross-repo-dashboard` still risks plugin
+  re-registration because both have `tests/` packages. Function-scope mocks
+  here mitigate the deeper contamination concern (sys.modules mutation).
+- Best practice: invoke pytest scoped to a single app.
 """
 
 from __future__ import annotations
@@ -26,33 +31,32 @@ from unittest.mock import MagicMock
 import pytest
 
 _DEPS_TO_MOCK = ("requests", "flask", "waitress", "pystray", "PIL")
-_MOCK_INSTANCES = {dep: MagicMock() for dep in _DEPS_TO_MOCK}
-_ORIGINAL_MODULES: dict[str, object | None] = {}
 
-# Apply mocks at conftest import time, BEFORE test modules are collected
-# (test_cache.py imports `from app import ...` at top-level).
-for _dep, _mock in _MOCK_INSTANCES.items():
-    _ORIGINAL_MODULES[_dep] = sys.modules.get(_dep)
-    sys.modules[_dep] = _mock
-
-# Inject app dir into sys.path so `from app import ...` resolves.
+# Inject app dir into sys.path so `from app import ...` (inside test functions)
+# resolves. This is safe at module level since it only adds a path entry.
 _APP_DIR = Path(__file__).resolve().parent.parent
 if str(_APP_DIR) not in sys.path:
     sys.path.insert(0, str(_APP_DIR))
 
 
-def pytest_unconfigure(config):
-    """Restore sys.modules at session end (prevent contamination across test dirs)."""
-    for dep, original in _ORIGINAL_MODULES.items():
-        if original is None:
-            sys.modules.pop(dep, None)
-        else:
-            sys.modules[dep] = original
+@pytest.fixture
+def mock_external_deps(monkeypatch):
+    """Function-scope mocks for external deps NOT installed in test env.
+
+    Uses `monkeypatch.setitem` which auto-restores sys.modules post-test,
+    eliminating cross-test contamination (the bug Codex flagged on PR #99).
+    """
+    for dep in _DEPS_TO_MOCK:
+        monkeypatch.setitem(sys.modules, dep, MagicMock())
 
 
 @pytest.fixture(autouse=True)
-def clear_cache():
-    """Ensure CACHE is empty before and after each test for isolation."""
+def clear_cache(mock_external_deps):
+    """Ensure CACHE is empty before/after each test for isolation.
+
+    Depends on `mock_external_deps` so external mocks are active before
+    `from app import CACHE` resolves.
+    """
     from app import CACHE
     CACHE.clear()
     yield
