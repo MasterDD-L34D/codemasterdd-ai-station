@@ -387,7 +387,12 @@ def fetch_git_local(local_path: str) -> dict[str, Any]:
 
 
 def fetch_gate_e_counter() -> dict[str, Any]:
-    """C3: Count Gate E events from logs/coord-events-*.md aggregated."""
+    """C3: Count Gate E events from logs/coord-events-*.md aggregated.
+
+    This function parses markdown logs to count Gate E events.
+    It is actively called by fetch_all_state() to populate the 'gate_e' dictionary
+    which is then rendered in the index.html template.
+    """
     total = 0
     files_scanned = []
     current_month_events = 0
