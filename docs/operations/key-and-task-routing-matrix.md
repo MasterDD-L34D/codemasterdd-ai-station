@@ -235,11 +235,27 @@ opencode stats          → cumulative cost + token usage + tool usage breakdown
 
 **Parallel execution (multi-task indipendenti, port auto-assignment validato)**:
 
-```
+Git Bash / WSL:
+```bash
 opencode run -m "anthropic/claude-haiku-4-5" "task A" &
 opencode run -m "anthropic/claude-haiku-4-5" "task B" &
 opencode run -m "anthropic/claude-haiku-4-5" "task C" &
 # 3 proxy paralleli su port distinct, no port collision, no session cross-contamination
+```
+
+PowerShell (CodeMasterDD default shell -- `&` qui e' call operator, NON background):
+```powershell
+Start-Job -Name pA -ScriptBlock { opencode run -m "anthropic/claude-haiku-4-5" "task A" }
+Start-Job -Name pB -ScriptBlock { opencode run -m "anthropic/claude-haiku-4-5" "task B" }
+Start-Job -Name pC -ScriptBlock { opencode run -m "anthropic/claude-haiku-4-5" "task C" }
+# Verifica + wait
+Get-Job | Wait-Job | Receive-Job
+Get-Job | Remove-Job
+```
+
+Alternativa PowerShell (3 finestre interattive separate, validato 2026-05-15):
+```powershell
+1..3 | ForEach-Object { Start-Process powershell -ArgumentList "-Command", "opencode run -m 'anthropic/claude-haiku-4-5' 'task $_'" }
 ```
 
 **Quando usare cosa (decision tree giornaliero)**:

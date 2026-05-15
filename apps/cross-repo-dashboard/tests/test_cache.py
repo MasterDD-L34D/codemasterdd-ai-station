@@ -2,16 +2,19 @@
 
 Coverage: happy path + missing key + stale entry (via public API + timestamp
 monkey-patch, NOT raw CACHE schema mutation) + error storage + fresh entry.
+
+Note: app imports moved INSIDE test functions (post Codex P2 fix on PR #99)
+so the `mock_external_deps` autouse fixture runs first and stubs unavailable
+external deps before `from app import ...` resolves.
 """
 
 from __future__ import annotations
 
 from datetime import datetime, timedelta, timezone
 
-from app import CACHE, CACHE_TTL_SEC, cache_get, cache_set
-
 
 def test_cache_set_stores_payload():
+    from app import CACHE, cache_set
     cache_set("test_key", {"data": "value"})
     entry = CACHE["test_key"]
     assert entry["payload"] == {"data": "value"}
@@ -21,6 +24,7 @@ def test_cache_set_stores_payload():
 
 
 def test_cache_get_retrieves_payload():
+    from app import cache_get, cache_set
     cache_set("test_key", "some_data")
     result = cache_get("test_key")
     assert result is not None
@@ -29,6 +33,7 @@ def test_cache_get_retrieves_payload():
 
 
 def test_cache_get_returns_none_for_missing_key():
+    from app import cache_get
     assert cache_get("non_existent") is None
 
 
@@ -39,6 +44,7 @@ def test_cache_get_marks_stale_entry():
     public API, NOT the whole entry. If the CACHE schema evolves (extra
     fields), this test still works.
     """
+    from app import CACHE, CACHE_TTL_SEC, cache_get, cache_set
     cache_set("stale_key", "old_data")
     old_iso = (
         datetime.now(timezone.utc) - timedelta(seconds=CACHE_TTL_SEC + 10)
@@ -52,6 +58,7 @@ def test_cache_get_marks_stale_entry():
 
 
 def test_cache_set_stores_error():
+    from app import cache_get, cache_set
     cache_set("error_key", None, error="Something went wrong")
     result = cache_get("error_key")
     assert result is not None
@@ -60,6 +67,7 @@ def test_cache_set_stores_error():
 
 
 def test_cache_get_fresh_entry_remains_not_stale():
+    from app import cache_get, cache_set
     cache_set("fresh_key", "fresh_data")
     result = cache_get("fresh_key")
     assert result is not None

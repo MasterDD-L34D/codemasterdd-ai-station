@@ -101,7 +101,11 @@ curl -sf http://127.0.0.1:4000/health/readiness  # LiteLLM 200 OK
 curl -sf http://127.0.0.1:3000/api/public/health  # Langfuse 200 OK
 
 # dogfood-ui (Python venv esterno):
-cd ../apps/dogfood-ui && python app.py  # :8080
+# Post PR #96 (security): FLASK_SECRET required (app fail-fast se unset).
+# Setup .env (vedi apps/dogfood-ui/.env.example) o exportare inline:
+cd ../apps/dogfood-ui
+$env:FLASK_SECRET = "dev-only-replace-in-prod-$(Get-Random)"
+python app.py  # :8080
 ```
 
 Tutti i config + image gia' pulled. No re-setup necessario salvo upgrade pianificato. Edge cases documentati nel runbook (PowerShell IPv6, internal Docker bridge health-check 172.18.0.1, trace count preservation, dogfood-ui regression history).
@@ -428,7 +432,7 @@ Game-Database e' emerso da audit Jules REST API come repo **attivamente lavorato
 
 **Cosa cambia per codemasterdd-side monitoring**:
 - Da "Ryzen-only sibling, minimal monitoring" -> **attivo monitored ecosystem**, scope simile a Game (Vue3): cross-repo content dependency + Eduardo lavoro ricorrente.
-- Quando le 7 PR Jules vengono mergiate (pattern: stessa-giornata generalmente per Jules) -> codemasterdd review opportunistico via classifier auth boundary (Game-Database NOT in monitored repos list CLAUDE.md, quindi external write boundary applies -- auth esplicita Eduardo per review/merge codemasterdd-side).
+- Quando PR Jules vengono mergiate -> codemasterdd review opportunistico. **Boundary update post PR #100 merge**: Game-Database e' ORA in CLAUDE.md "Progetti monitorati" sezione, MA `feedback_external_repo_action_boundary` memory rule persiste (sibling Evo-Tactics family). Auth esplicita Eduardo per review/merge/close mantenuta per coerenza con Game / Game-Godot-v2. "Monitored" (scope-tracked) e "external boundary" (action-level safety) sono ortogonali.
 - Privacy: PUBLIC, cloud-OK come Game/Game-Godot-v2. Future clone locale opzionale -> aggiungere a `~/.config/aider-privacy-whitelist.txt`. Pending fino actual clone.
 
 **Decisioni differite**:
