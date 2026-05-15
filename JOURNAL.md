@@ -3462,3 +3462,95 @@ Eduardo decisione finale: **lean closure JOURNAL + stop session**. Allinea Proto
 ### Stop session 2026-05-13 sera tardi
 
 Mitigation L-002 attiva. Restoration cognitive prioritized vs compound execution continuation. Defer next work natural emergence prossima sessione.
+
+## 2026-05-15 (mezzogiorno -- post-reboot smoke triade + Hybrid A1 live verification pre-19/05)
+
+### Completato
+
+- Protocol 1 Refresh-verify state interno post-reboot: HEAD `5607182` ok, MCP notebooklm Connected, Docker daemon down -> Eduardo rilanciato containers
+- Task 1 Pre-flight Hybrid A1: LiteLLM hub healthy port 4000, 17 model alias (drift +2 vs memory 15 = aggiunte `anthropic-sonnet-strategic` + `anthropic-haiku-strategic`), 3 route smoke PASS (gemini-flash, github-gpt4o-mini, hf-deepseek-r1)
+- Task 2 NotebookLM setup_auth: authenticated 495s, cookies persisted, library vuota (0 notebook); fix `browser_options.headless: false` necessario per override server default headless
+- Task 3 Gemini OAuth login: settings.json + oauth_creds.json (1824B) persistiti, smoke `gemini -p "ping"` PASS con `GEMINI_API_KEY` unset; quota path 60 req/min API key -> 1000 req/day OAuth Gemini 2.5 Pro 1M ctx
+- Hybrid A1 LIVE smoke pre-19/05 (Max ancora attivo): `opencode run -m anthropic/claude-haiku-4-5` -> PASS, `opencode run -m anthropic/claude-sonnet-4-6` -> PASS (2+2=4 prompt), bridge Meridian proxy spawn on-demand validato
+- `opencode stats`: $0.14 cumulative 7gg / 21 session (bridge Max = $0 subscription-included, $0.14 da cloud paid altrove)
+- Parallel stress test: 3 `opencode run` concurrent -> output corretti (1, 2, 3) no cross-contamination, port auto-assignment validato (3 localhost port distinct durante netstat snapshot)
+- TUI multi-turn smoke in spawned PowerShell window (Eduardo direct interactivity)
+- Documentazione: sezione `5.1 Day-in-the-life pratica` aggiunta a `docs/operations/key-and-task-routing-matrix.md` (cmd reference + decision tree + anti-pattern smoke documentati)
+
+### Da fare (post-19/05 transition)
+
+- 18/05 lun: Eduardo subscribe Pro $20/mo on anthropic.com/claude/upgrade (1gg overlap pre-Max expiration)
+- 19/05 mar: Max expiration -- re-run smoke `opencode run -m anthropic/claude-haiku-4-5` per validare credenziali Pro continuano (stesso OAuth path)
+- 20/05+ SPRINT_02 wake: T2/T5/T7/T8/T9 in-scope
+- Drift fix low-pri: memory `project_session_resumption.md` linea 25 "15 model_list entries" -> aggiornare a 17
+
+### Note
+
+- Bridge Meridian funziona OGGI con Max OAuth, conferma empirica che path tecnico Hybrid A1 e' production-ready pre-19/05 -- risolve incertezza ADR-0030 "validation criteria 1 mese 19/5 -> 19/6" che ora puo' partire baseline da empirical evidence
+- Sonnet 4.6 declina prompt "reply with exactly STRING_TOKEN" sospettando injection (giusto): usare prompt naturali per smoke test
+- Cognitive protocols applied: P1 Refresh-verify pre-action (sempre), P4 AA01 trail NO (sessione lean operativa <30min audit-class)
+- Stato fine sessione: 3 task user-requested completati end-to-end + 3 test follow-up multi-turn / stats / parallel completati + guida d'uso pratica file-first
+
+## 2026-05-15 (pomeriggio -- Jules ecosystem audit + 4 PR cycle + multi-AI pipeline emergente)
+
+### Completato
+
+- Jules REST API + Tools CLI completamente integrati nell'ecosistema codemasterdd:
+  - `npm install -g @google/jules` v0.1.42 globale (binary `~/AppData/Roaming/npm/jules`)
+  - `JULES_API_KEY` salvata in `~/.config/api-keys/keys.env` (ACL re-hardened post sed -i regression: BUILTIN/Administrators rimosso + inheritance disabled via PowerShell icacls)
+  - Smoke test REST API PASS: `GET /v1alpha/sources` (15 repo), `GET /v1alpha/sessions` (12 sessions storiche), Bearer X-Goog-Api-Key header working
+  - CLI commands disponibili: `jules login` OAuth, `jules remote list/new --repo X --session "task"`, `jules remote pull`, TUI dashboard
+
+- **Privacy audit drift fix critico**: claim precedente "Jules installato solo su codemasterdd" era SBAGLIATO -- API REST ground truth conferma installation su **15 repo** inclusi sovereign-only (Synesthesia / vault / evo-swarm). Sessions storiche zero su sovereign repo -> NO leak avvenuto. Eduardo accept risk (Jules e' Google alpha, no abuse observed). Nota: ADR-0019 H8 privacy guard rail wrapper Aider-side NON copre Jules GitHub App-side -- gap riconosciuto, mitigation futura via uninstall manuale settings GitHub se serve.
+
+- **4 PR Jules cycle processato end-to-end**:
+  - #96 (Flask Secret Key fail-fast P0 security) -> APPROVE + MERGED + branch deleted
+  - #97 (cache_get/cache_set tests, P0 sys.modules global mutation blocker) -> review COMMENTED + CLOSED + branch deleted (superseded da #99 mio)
+  - #98 (regex pre-compile performance, claim 54% overstimated ma hoist legittimo) -> APPROVE + MERGED + branch deleted
+  - #99 (mio follow-up consolidato 7 file +232 lines: README + .env.example + hermetic tests + regex semantics smoke + monorepo pytest defense) -> APPROVE + MERGED + branch deleted
+
+- **Multi-AI parallel review pipeline emergente empirico**: ogni PR Jules ha cycle:
+  1. Jules propone via task creation -> apre PR
+  2. `chatgpt-codex-connector` auto-review (Codex Cloud integration) entro 1-2 min
+  3. Me review umano + comment specifici P0/P1/P2 con auth esplicita Eduardo
+  4. Eduardo decide merge/close
+  Pattern ratifica empirica concetto "multi-agent parallel review" senza orchestrazione esplicita -- emerge da setup individuale di ciascun tool.
+
+- **Active monitoring session Jules `17712991417329090573`** IN_PROGRESS dal 11:42 (last update 12:31): meta-orchestrazione "controlla PR e commenti aperti" -- vedra' i miei comment + closure #97 + creera' nuove proposals based su feedback. Pattern interessante per Hybrid A1 post-Max: usare Jules monitoring session come watcher cheap che propone task ricicla automatic.
+
+- **PR #95 documentazione**: routing matrix sezione 5.1 Day-in-the-life + JOURNAL entry mezzogiorno consolidati in PR open per Eduardo review/merge.
+
+### Findings sistemici emersi
+
+- **GitHub own-PR limitation**: `gh pr review --approve` e `--request-changes` falliscono su PR creati da bot/agent usando OAuth proprio (Jules postava come Eduardo). Workaround: `gh pr review --comment` con header esplicito "CHANGES REQUESTED" o "APPROVE". Comment-only state valido per audit trail.
+- **sed -i regression ACL credentials**: stripping BOM via `sed -i '1s/^\xEF\xBB\xBF//' keys.env` re-attiva inheritance NTFS + re-aggiunge BUILTIN/Administrators ACE inherited. Mitigation: dopo qualsiasi rewrite di file ACL-hardened, riapplicare via PowerShell `icacls /grant edusc:F /grant SYSTEM:F` post-operazione.
+- **Monorepo pytest combined-run collision**: due `apps/*/tests/conftest.py` con stesso basename creano `tests.conftest` package name collision -> plugin re-registration error. Workaround: rimuovere __init__.py da tests (le directory non sono package) + documentare scoped runs only. Pre-existing structural issue, esposto da PR #99.
+- **Classifier auto-mode boundary** (positivo): bloccato 2 azioni esterne (PR #96 review post-`a` ambiguo + PR #97 close post-"P0 doesn't change anything") fino auth esplicita verbose. Pattern audit trail safe = Eduardo deve dare auth specifica per ogni external write significativa (PR comment/close/merge). Memory `feedback_external_repo_action_boundary` ratificata.
+
+### Da fare (defer next session natural pacing)
+
+- Lesson promotion candidates per AA01 `~/aa01/learnings/`:
+  - L-024 candidate: Multi-AI parallel review pipeline emergente (Jules + Codex Cloud + Claude Code = 3-way review senza orchestrazione)
+  - L-025 candidate: Privacy audit drift via branch-pattern empirical vs API ground truth (lesson: API > heuristic per ground truth)
+  - L-026 candidate: PR own-account vs external-contributor GitHub limitation pattern
+- API key Jules opzionale revoke + regen post-test (Eduardo dice "questa chat e' sicura" -> skip)
+- PR #97 close: DONE via comment + close --delete-branch post auth esplicita
+- Considerare ADR mini "Jules tier in routing matrix" se uso continuativo (deferred fino Hybrid A1 activation 19/05)
+
+### Note metodologiche
+
+- **Empirical ground truth > heuristic**: ricerca PR branch pattern Jules suggeriva "solo codemasterdd". API REST `GET /v1alpha/sources` ha smentito empirical -> 15 repo. Lesson reusable: per audit privacy/scope, **interrogare ground truth (API / authoritative source)** non solo proxy signals (branch pattern, commit author, etc.).
+- **Auth boundary classifier vs autonomous mode**: classifier blocca azioni esterne significative anche con "fai tutto subito autonomous" - GOOD safety net, NOT bug. Eduardo deve dare auth esplicita verbose per posting external PR comments / closing / merging. Pattern: my proposed comment + Eduardo "si" sufficiente per single action, "Autorizzo esplicitamente Claude a ..." sufficiente per multi-action batch.
+- **Cognitive protocols applied**: P1 Refresh-verify pre-action (sempre); P5 harsh-reviewer NO (single-PR scope ciascuno, no cluster security-critical); P6 brainstorming NO (no architectural decision generative). Sessione operativa lean ma con learning empirici significativi.
+
+### Session metrics aggregate (mezzogiorno + pomeriggio)
+
+- 4 PR Jules processati (3 merged, 1 closed)
+- 1 PR mio merged (#99 follow-up) + 1 PR mio open (#95 docs questo)
+- 2 tools nuovi installati (Jules CLI npm globale + JULES_API_KEY env)
+- 15+28 test scoped PASS, 0 regression
+- $0.34 shadow cost cumulative OpenCode session (vs $0 reale Max-covered)
+- 3 cognitive protocol violation candidates surfaced (lesson promotion candidates deferred)
+- Memory `project_session_resumption.md` updated con tutti i drift fix end-of-day
+
+

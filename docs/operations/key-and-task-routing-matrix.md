@@ -22,6 +22,7 @@ ACL hardened: `CODEMASTERDD\edusc:(F) + NT AUTHORITY\SYSTEM:(F)`, inheritance di
 | `ANTHROPIC_API_KEY` | Anthropic | 0 strategic | $10-20/mese cap (ADR-0023) | Pay-per-use post-Max on-demand | Dormant durante Max |
 | `TAVILY_API_KEY` | Tavily (search) | utility | $0 free tier | **Dafne swarm only** (Flask backend) | Isolato dal dispatcher codemasterdd |
 | `HUGGINGFACE_API_KEY` | HuggingFace Inference Providers | 3 free | $0 (100K credit/mese) | `aider-hf` wrapper + OpenCode `huggingface` provider | **Setup pending Eduardo signup** (vedi sezione 6.4) |
+| `JULES_API_KEY` | Google Jules (autonomous coding agent) | cloud free alpha | $0 (no rate limit/cost documented) | Jules CLI (`@google/jules`) + REST `jules.googleapis.com/v1alpha/` | Attivo (added 2026-05-15, audit empirical 15 repo installed) |
 
 **Gap fixati 2026-05-15**:
 - ✅ Added `GOOGLE_GENERATIVE_AI_API_KEY` (dual-name OpenCode native google provider auth)
@@ -53,6 +54,9 @@ ACL hardened: `CODEMASTERDD\edusc:(F) + NT AUTHORITY\SYSTEM:(F)`, inheritance di
 | **Gemini CLI** | `~/AppData/Roaming/npm/gemini.ps1` | `GEMINI_API_KEY` env var | Long-context analysis (1M ctx) |
 | **Ollama API** | localhost:11434 | none (sovereign local) | Tier 1-2 local |
 | **Claude API direct** | curl/requests | `ANTHROPIC_API_KEY` env var | Tier 0 strategic post-Max (dormant) |
+| **Jules (Google)** | `~/AppData/Roaming/npm/jules` (CLI v0.1.42) + REST `jules.googleapis.com/v1alpha/` | `JULES_API_KEY` (X-Goog-Api-Key header) OR `jules login` OAuth | Cloud autonomous agent (GitHub App, alpha free tier 2026-05) -- propone PR autonome, watcher cheap |
+
+**Jules note**: e' un Google AI autonomous coding agent diverso da Aider/OpenCode (agenti local-driven). Jules e' GitHub App-installed sui repo, riceve task via REST API o CLI, esegue autonomous in cloud, apre PR. Audit empirical 2026-05-15: installato su 15 repo Eduardo (NON solo whitelisted). Sessions sovereign 0 -> no leak finora. Pattern multi-AI parallel review emerge: Jules propone -> Codex auto-review -> Claude Code review -> Eduardo merge. Vedi JOURNAL `2026-05-15 (pomeriggio)` per audit completo + findings sistemici (own-PR review limitation, monitoring session pattern).
 
 ### 2.2 Interactive web UIs (auth via browser, dispatching manual)
 
@@ -193,6 +197,71 @@ Validation criteria 1 mese empirical (19/5 → 19/6):
 - Daily orchestration feasibility PASS
 - Methodology cite count ≥80% baseline (vs Claude Code Max attuale)
 - Sub-agent dispatch viability ≥2 invocazioni per session significativa
+
+### 5.1 Day-in-the-life pratica (live smoke 2026-05-15, Max ancora attivo)
+
+Bridge Meridian validato end-to-end pre-19/05 con OAuth Claude Max corrente. Stesso path persiste post-19/05 con Pro signup 18/05 (subscription credits via Claude Code OAuth invariati).
+
+**Avvio sessione orchestratore (TUI interactive multi-turn)**:
+
+```
+opencode
+# nel TUI:
+#   /models             → seleziona anthropic/claude-sonnet-4-6 (strategic)
+#                       → oppure anthropic/claude-haiku-4-5 (sub-strategic veloce/economico)
+#                       → oppure ollama/qwen3-coder:30b (sovereign default)
+#   <prompt>            → task
+#   /agent              → dispatch sub-agent (post Pro signup, vedi ADR-0030 sub-agent path)
+#   /exit               → chiude TUI + ferma proxy automatic
+```
+
+**One-shot non-interactive (script / quick query)**:
+
+```
+opencode run -m "anthropic/claude-sonnet-4-6" "<prompt>"
+opencode run -m "anthropic/claude-haiku-4-5" "<prompt>"
+opencode run -m "ollama/qwen3-coder:30b" "<prompt>"          # sovereign default
+opencode run -m "google/gemini-2.5-pro" "<prompt>"           # 1M ctx OAuth path
+```
+
+**Cost monitoring routine**:
+
+```
+opencode stats          → cumulative cost + token usage + tool usage breakdown
+# Frutta Pro subscription = $0 bridge call (incluse nei credit subscription).
+# Costo pay-per-use compare solo se chiami provider non-subscription
+# (OpenAI Tier 4 emergency, OpenRouter overflow).
+```
+
+**Parallel execution (multi-task indipendenti, port auto-assignment validato)**:
+
+```
+opencode run -m "anthropic/claude-haiku-4-5" "task A" &
+opencode run -m "anthropic/claude-haiku-4-5" "task B" &
+opencode run -m "anthropic/claude-haiku-4-5" "task C" &
+# 3 proxy paralleli su port distinct, no port collision, no session cross-contamination
+```
+
+**Quando usare cosa (decision tree giornaliero)**:
+
+| Scenario | Tool |
+|----------|------|
+| Single-file edit con vincoli espliciti | `aider-cosmetic <f>` o `aider-refactor <f>` (sovereign-first, ADR-0008) |
+| Multi-step agentic Read+Edit+Bash su 1 repo | `opencode run -m "ollama/qwen3-coder:30b"` (sovereign default, ADR-0022) |
+| Multi-file strategic / synthesis / debug architetturale | `opencode` TUI + `anthropic/claude-sonnet-4-6` (tier strategic) |
+| Quick question / explain | `opencode run -m "anthropic/claude-haiku-4-5"` (sub-strategic veloce) |
+| 1M-context research / paper synthesis | `opencode run -m "google/gemini-2.5-pro"` (OAuth 1000 req/day) |
+| Reasoning chain-of-thought esteso | `aider-hf` con `deepseek-ai/DeepSeek-R1` (HF free) o `ollama/deepseek-r1:8b` |
+
+**Trigger fallback / overflow** (post-19/05 Pro):
+- Cumulative spend >$15/mo metà mese → switch task non-strategic verso wrappers Aider sovereign + Gemini CLI free
+- 5h-window Pro hit → wait or downgrade Haiku 4.5
+- Sonnet 4.6 non-disponibile (rate) → fallback `groq/llama-3.3-70b-versatile` (LiteLLM hub `groq-70b`)
+
+**Anti-pattern smoke documentati**:
+- Sonnet 4.6 declina prompt "reply with exactly STRING_TOKEN" (sospetto injection) -- usare prompt naturali non-stringificati
+- `opencode run` con flag `-p` (password) NOT necessario per local proxy: lasciare default
+- PowerShell `Tee-Object` (default PS 5.1) scrive log in **UTF-16 LE BOM**: cat / grep / ripgrep mostrano output spaziato `c a t` (character interlace). Per log grep-friendly multi-window concurrent test usare `| Out-File -Encoding utf8` invece di `| Tee-Object -FilePath`
 
 ---
 
