@@ -87,11 +87,13 @@ Mio audit web-only ha:
 
 #### Protocol 2 -- Autoresearch multi-source synthesis
 
-**Source**: memory `feedback_autoresearch_default` (8-step checklist).
+**Source**: memory `feedback_autoresearch_default` (8-step checklist) + amendment 2026-05-15 sera (Step 0 API ground truth check from L-2026-05-025).
 
-**Rule**: per audit / eval / research, multi-source parallel investigation con synthesis weighted (NON one-shot README).
+**Rule**: per audit / eval / research, multi-source parallel investigation con synthesis weighted (NON one-shot README). Per audit di scope / privacy / installation / deployment ("where/which/how-many"), Step 0 obbligatorio: verify API authoritative presence prima di heuristic proxy.
 
-**8-step checklist**:
+**9-step checklist (post 2026-05-15 amendment)**:
+
+0. **Authoritative API check** (NEW -- L-2026-05-025 lesson). Per audit "where/which/how-many" (scope / privacy / installation / deployment), interrogare API REST/SDK del tool come ground truth primario. Heuristic proxy (branch pattern, log scraping, commit author) usato solo come cross-check o fallback. Documentare in audit body se API NON consultato e perche'. Case study trigger: 2026-05-15 Jules privacy audit (heuristic branch-pattern -> 1 repo, API REST `/v1alpha/sources` -> 15 repos = 93% underestimate).
 1. README empirical (starting point, NON authoritative)
 2. Release tag history + changelog dedicato (verify version drift)
 3. Recent announcement (Twitter/blog/X feed)
@@ -101,9 +103,11 @@ Mio audit web-only ha:
 7. License + LICENSE file empirical (404 check)
 8. Synthesis multi-source con weighting (recent > old, multiple corroborate > single signal, **internal > external**, **empirical > documentation**)
 
-**Trigger**: ogni audit / eval / research significativa.
+**Trigger**: ogni audit / eval / research significativa. **Step 0 trigger HIGH**: ogni audit di scope/privacy/installation scope (GitHub Apps, MCP servers, OAuth grants, multi-AI deployment).
 
-**Anti-pattern**: one-shot README fetch + verdict confidente.
+**Anti-pattern**: one-shot README fetch + verdict confidente. **NEW anti-pattern**: heuristic-only audit di installation scope quando API exists + accessibile (es. `gh pr list --branch-pattern X` per audit "where is Jules installed?" senza chiamare `GET /v1alpha/sources`).
+
+**Self-application validated 2026-05-15 sera**: lesson L-025 applicata 3 volte same-day (Jules privacy audit + frontend breaking-change audit + T2 dogfood-ui field desync audit). Pattern is recursive guard rail: when applying Protocol 2, verify if API ground truth exists for THE audit you're conducting (not just for the original lesson).
 
 #### Protocol 3 -- Archon v2 7-step First Principles (high-stakes)
 

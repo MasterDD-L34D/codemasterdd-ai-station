@@ -428,7 +428,7 @@ P1, P2 chiusi tramite ADR-0015 closure (P1 behavior-critical n>=5 superato; P2 c
    - 2026-06-07 ratification check ADR-0021
    - 2026-06-09 ratification check ADR-0022
 4. **Deferred SPRINT_02 / opportunistic**:
-   - **T2 dogfood-ui field name desync** residuo (`retries`/`retry_count` + `tokens_in`/`tokens_sent`) -- candidato aider-refactor smoke post-Max
+   - ~~**T2 dogfood-ui field name desync** residuo (`retries`/`retry_count` + `tokens_in`/`tokens_sent`)~~ **RESOLVED organically pre-this-claim 2026-05-15 sera audit**: `retry_count` canonical 100% (no `retries` field anywhere); `tokens_sent` canonical schema, `tokens_in` is only local adapter variable in `langfuse_client.py` bridging Langfuse external naming (`input`/`promptTokens`) to internal canonical. Good adapter pattern, NOT desync. L-025 self-applied 3rd-time case study.
    - **L6** OpenCode plugin custom / tool-set trim -- solo se gpt-4o-mini emergency budget eccessivo
    - Trigger-gated: 6 agent draft `.claude/agents/` (ADR-0018 3-gate readiness)
    - OD-007 capability registry **Three Strikes monitor** durante aa01-003 (counter 2/3: 1 SHIP aa01-001 + 1 in progress aa01-002, Hyperspace audit aa01-003 REJECTED counted come non-frizione)
