@@ -151,17 +151,17 @@ Distinction esplicita Aider vs OpenCode:
 
 ### Aider routing invariato
 
-ADR-0007/0008 restano validi per Aider. Wrapper `aider-cosmetic` / `aider-refactor` / `aider-groq` / `aider-cerebras` / `aider-gemini` / `aider-openai` continuano a usare tier Aider documentato.
+ADR-0007/0008 restano validi per Aider. Wrapper `aider-cosmetic` / `aider-refactor` / `aider-groq-bypass` / `aider-cerebras` / `aider-gemini` / `aider-openai` continuano a usare tier Aider documentato. (Update 2026-05-13: `aider-groq` rimosso, sostituito da `aider-groq-bypass` per LiteLLM-Groq adapter bug -- vedi CLAUDE.md.)
 
 ### Routing decision tree (Aider vs OpenCode)
 
 ```
 Task type?
 +- Single-file edit (cosmetic/behavior) ............... Aider
-|  +- cosmetic JSDoc/docstring/rename ................. aider-cosmetic (7B + whole)
+|  +- cosmetic JSDoc/docstring/rename ................. aider-cosmetic (7B + diff + no-auto-commits)
 |  +- behavior refactor/bug fix ....................... aider-refactor (14B Q2 + diff)
 |  +- behavior escalation safe-fail ................... aider + qwen3-coder:30b + diff
-|  +- cloud delegation (privacy permitting) ........... aider-groq / aider-cerebras (70B + diff)
+|  +- cloud delegation (privacy permitting) ........... aider-groq-bypass / aider-cerebras (70B + diff)
 |
 +- Multi-step agentic (tool calls, MCP, coord) ....... OpenCode
 |  +- default sovereign ............................... opencode + ollama/qwen3-coder:30b

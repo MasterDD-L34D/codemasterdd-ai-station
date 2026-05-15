@@ -352,7 +352,7 @@ Status flip da **Validated live + Proposed** a **Accepted**. Closure anticipata 
 ### Note operative post-Accepted
 
 1. **Stack opt-in**: Docker Desktop non parte automaticamente al boot Windows (decisione operativa per non consumare RAM/CPU costante). Avvio manuale quando si vogliono usare le feature dashboard/tracing/eval. `cd infra && docker compose up -d` (~30s).
-2. **Aider workflow**: indipendente dal proxy. Wrapper `aider-cosmetic`/`aider-refactor`/`aider-groq`/`aider-cerebras`/`aider-gemini`/`aider-openai` continuano a usare `~/.aider.conf.yml` con env-file -> direct provider call. LiteLLM e' opzionale per cost tracking centralizzato.
+2. **Aider workflow**: indipendente dal proxy. Wrapper `aider-cosmetic`/`aider-refactor`/`aider-groq-bypass`/`aider-cerebras`/`aider-gemini`/`aider-openai` continuano a usare `~/.aider.conf.yml` con env-file -> direct provider call. LiteLLM e' opzionale per cost tracking centralizzato. (Update 2026-05-13: `aider-groq` rimosso, sostituito da `aider-groq-bypass` per LiteLLM-Groq adapter bug streaming hang -- vedi CLAUDE.md.)
 3. **dogfood-ui** restera' utility tool per dogfood entries futuri. SQLite path locked a `apps/dogfood-ui/data/dogfood.sqlite` (worktree-side-effect noto in COMPACT v10).
 4. **Bench viewer**: promptfoo run-on-demand via CLI o web (`promptfoo view`). Eval futuri tracked in `scripts/quality-bench/results/`.
 
