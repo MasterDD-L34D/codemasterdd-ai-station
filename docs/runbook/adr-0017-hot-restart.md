@@ -80,11 +80,20 @@ curl -sf http://127.0.0.1:4000/health/readiness
 
 **Lesson**: validazione duplicata su layer multipli (Flask app-layer + DB layer) e' fragile -> single source-of-truth raccomandato. Out of scope SPRINT_02 T2 organic: factor `VALID_STACKS` in modulo separato + import in entrambi.
 
-### 5. Field name desync residuo dogfood-ui (KNOWN, deferred)
+### 5. Field name desync residuo dogfood-ui (~~KNOWN, deferred~~ **RESOLVED 2026-05-15 sera audit**)
 
-**Sintomo**: payload API uses `retries`/`tokens_in`/`tokens_out`, db.py uses `retry_count`/`tokens_sent`/`tokens_received`. Functional silent default 0.
+**Sintomo storico**: claim era payload API uses `retries`/`tokens_in`/`tokens_out`, db.py uses `retry_count`/`tokens_sent`/`tokens_received`.
 
-**Status**: tracked in PR #35 out-of-scope, deferred a SPRINT_02 T2 organic fix.
+**Empirical re-audit 2026-05-15 sera** (grep all dogfood-ui files):
+- `retries` field: **0 occurrences anywhere** (no desync exists)
+- `retry_count`: **canonical 100%** (db schema + app.py + templates + tests)
+- `tokens_sent`: canonical 100% schema/API
+- `tokens_in`: only as **local variable** in `langfuse_client.py` lines 78-91, bridging Langfuse external naming (`input`/`promptTokens`) to internal `tokens_sent` via `out["tokens_sent"] = int(tokens_in)`. Good adapter pattern, NOT a desync.
+- `tokens_out`: **0 occurrences anywhere**.
+
+**Status**: ~~deferred a SPRINT_02 T2 organic fix~~ -> **resolved organically pre-this-claim** (likely fixed in earlier PR #35 sync work or similar; claim was runbook memory drift).
+
+**Cross-reference**: `COMPACT_CONTEXT.md` linea 431 T2 entry + ADR-0026 Protocol 2 Step 0 lesson L-2026-05-025 (audit methodology empirical).
 
 ## Pattern operativi
 
