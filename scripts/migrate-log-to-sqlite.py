@@ -204,14 +204,6 @@ def init_db(conn: sqlite3.Connection) -> None:
     conn.executescript(SCHEMA)
 
 
-def already_exists(conn: sqlite3.Connection, task: str, classe: str, stack: str) -> bool:
-    cur = conn.execute(
-        "SELECT 1 FROM entries WHERE task_description = ? AND classe = ? AND stack = ? LIMIT 1",
-        (task, classe, stack),
-    )
-    return cur.fetchone() is not None
-
-
 def insert_entry(conn: sqlite3.Connection, e: dict[str, Any]) -> int:
     cur = conn.execute(
         """
@@ -267,13 +259,24 @@ def main(argv: list[str]) -> int:
         conn.row_factory = sqlite3.Row
         conn.execute("PRAGMA journal_mode = WAL")
         init_db(conn)
+
+        existing_entries = set()
+        if not args.force:
+            cur = conn.execute("SELECT task_description, classe, stack FROM entries")
+            for row in cur:
+                existing_entries.add((row["task_description"], row["classe"], row["stack"]))
+
         inserted = 0
         skipped = 0
         for e in entries:
-            if not args.force and already_exists(conn, e["task_description"], e["classe"], e["stack"]):
+            entry_key = (e["task_description"], e["classe"], e["stack"])
+            if not args.force and entry_key in existing_entries:
                 skipped += 1
                 continue
+
             insert_entry(conn, e)
+            if not args.force:
+                existing_entries.add(entry_key)
             inserted += 1
         print(f"\nDB: {args.db}")
         print(f"Inserted: {inserted}  Skipped (duplicates): {skipped}")
