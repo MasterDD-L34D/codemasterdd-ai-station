@@ -218,7 +218,7 @@ Empirical trial breve è cross-cutting (NOT a separate protocol but enabler per 
 4. Integrate findings PRE-merge: P0 obbligatorio fix prima merge, P1 either fix OR documented defer, P2 acknowledge
 5. Log entry "harsh-reviewer invoked? Y/N" in cluster commit message OR PR body per measurement empirical
 
-**Trigger STRONGLY recommended** (NON mandatory enforcement Option C):
+**Trigger STRONGLY recommended** (formally Accepted post 2026-05-14 amendment, see STATUS AMENDMENT below):
 - Cluster >=3 PR same day con scope overlap OR consecutive
 - File security/governance-critical modified (wrappers, keys, hooks, ACL, CLAUDE.md authoritative)
 - Narrative claim "X/Y VIABLE/PASS" senza empirical decomposition default vs mitigation

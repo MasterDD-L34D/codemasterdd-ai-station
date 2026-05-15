@@ -28,7 +28,7 @@ Questa è la workstation **primaria e autosufficiente** di Eduardo Scarpelli: tu
 - **Python 3.12.10**
 - **VS Code 1.116.0**
 - **Ollama 0.21.0** con modelli locali tier-based (cosmetic 7B / behavior 14B Q2 / escalation qwen3:30b MoE / reasoning deepseek-r1 / multimodal gemma4)
-- **Aider 0.86.2** con wrapper CLI (`aider-cosmetic`, `aider-refactor`, `aider-groq`, `aider-cerebras`, `aider-gemini`, `aider-openai`)
+- **Aider 0.86.2** con wrapper CLI (`aider-cosmetic`, `aider-refactor`, `aider-groq-bypass`, `aider-cerebras`, `aider-gemini`, `aider-openai`)
 - **Cloud tier 3** (free tier): Groq llama-3.3-70b (630 tok/s) + Cerebras llama-3.1-8b (733 tok/s) + Gemini 2.5 Flash + OpenAI gpt-4o-mini
 
 ## Roadmap sintetica (aggiornata post ADR-0014)

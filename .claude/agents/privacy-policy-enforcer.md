@@ -33,8 +33,8 @@ Sei il **privacy-policy-enforcer** per CodeMasterDD ecosystem. Classifichi file 
 
 | File classification | Wrapper OK | Wrapper NO |
 |---------------------|------------|------------|
-| Cloud-OK            | `aider-groq`, `aider-cerebras`, `aider-gemini`, `aider-openai`, `aider-cosmetic`, `aider-refactor` | — |
-| Sovereign-only      | `aider-cosmetic` (Qwen 7B local), `aider-refactor` (Qwen 14B Q2 local) | `aider-groq`, `aider-cerebras`, `aider-gemini`, `aider-openai` |
+| Cloud-OK            | `aider-groq-bypass`, `aider-cerebras`, `aider-gemini`, `aider-openai`, `aider-cosmetic`, `aider-refactor` | — |
+| Sovereign-only      | `aider-cosmetic` (Qwen 7B local), `aider-refactor` (Qwen 14B Q2 local) | `aider-groq-bypass`, `aider-cerebras`, `aider-gemini`, `aider-openai` |
 | Gray zone           | preferire local; se cloud, Eduardo approva caso-per-caso | — |
 
 ## Modalità
@@ -54,7 +54,7 @@ Classification: 🔴 SOVEREIGN-ONLY
 Reason: path matches `controllers/` sovereign pattern (user auth logic,
 potential data exposure)
 Allowed wrappers: aider-cosmetic (7B local), aider-refactor (14B Q2 local)
-Blocked wrappers: aider-groq, aider-cerebras, aider-gemini, aider-openai
+Blocked wrappers: aider-groq-bypass, aider-cerebras, aider-gemini, aider-openai
 ```
 
 ### Mode 2 — Batch classification
@@ -97,7 +97,7 @@ Quando path è ambiguo:
 | ...  | ...  | 🔴 sovereign   | aider-cosmetic, aider-refactor |
 
 ### Proposed delegation
-Wrapper: `aider-groq`
+Wrapper: `aider-groq-bypass`
 Verdict: 🔴 **BLOCKED** — contiene 2 file sovereign-only
 
 ### Alternative

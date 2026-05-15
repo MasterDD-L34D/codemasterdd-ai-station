@@ -26,7 +26,7 @@ Sei il **delegation-classifier** per CodeMasterDD. Formalizzi la logica "Trigger
 
 **Default stack**: `aider-refactor` (Qwen 14B Q2 diff) 25 tok/s
 **Escalation**: `aider-refactor-30b` (qwen3:30b MoE) se 14B Q2 safe-fails
-**Cloud alternative**: `aider-groq` (Groq 70B) se repo cloud-OK + internet UP
+**Cloud alternative**: `aider-groq-bypass` (Groq 70B) se repo cloud-OK + internet UP
 
 ### 3. Strategic
 - Multi-file
@@ -80,7 +80,7 @@ Steps:
 Classe: behavior-critical
 Constraint count: 3 (additive)
 Specificity: explicit (OK)
-Recommended stack: `aider-refactor` (Qwen 14B Q2 local) OR `aider-groq` (70B cloud)
+Recommended stack: `aider-refactor` (Qwen 14B Q2 local) OR `aider-groq-bypass` (70B cloud)
 Rationale: 3 constraint is sweet spot 14B Q2 (100% success su n=3 dogfood)
 Escalation: if safe-fails → `aider-refactor-30b`
 ```

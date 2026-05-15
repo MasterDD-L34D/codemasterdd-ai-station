@@ -264,7 +264,7 @@ Post acquisizione 4 API keys cloud (ADR-0013) + bench empirico:
 |---------|------|---------------|---------------:|----------|
 | `aider-cosmetic` | 1 locale | `ollama/qwen2.5-coder:7b` | 114 tok/s | cosmetic (JSDoc, rename, docstring) |
 | `aider-refactor` | 2 locale | `ollama/qwen2.5-coder:14b-q2` | 25 tok/s | behavior-critical default |
-| `aider-groq` | 3 cloud | `groq/llama-3.3-70b-versatile` | **630 tok/s** | behavior-critical online preferred |
+| `aider-groq-bypass` | 3 cloud | `groq/llama-3.3-70b-versatile` (OpenAI-compatible endpoint) | **630 tok/s** | behavior-critical online preferred (was `aider-groq`, swapped 2026-05-13 -- LiteLLM-Groq adapter bug) |
 | `aider-cerebras` | 3 cloud | `cerebras/llama3.1-8b` | **733 tok/s** | cosmetic online preferred (8B general) |
 | `aider-gemini` | 4 cloud | `gemini/gemini-2.5-flash` | n/a bench | multimodal/thinking (attenzione thinking budget) |
 | `aider-openai` | 4 cloud | `openai/gpt-4o-mini` | n/a bench | capability-max pay-per-use |
@@ -283,7 +283,7 @@ Prima di classificare cosmetic/behavior/strategic (decision tree originale sopra
 
 3. **Classe task**:
    - **Cosmetic small** (<50 righe, no logica) → `aider-cerebras` (733 tok/s free) OR `aider-cosmetic` locale se preferisci sovereign
-   - **Cosmetic/behavior standard** → `aider-groq` (630 tok/s, 70B capability, free tier)
+   - **Cosmetic/behavior standard** → `aider-groq-bypass` (630 tok/s, 70B capability, free tier)
    - **Reasoning esteso / thinking mode** → `aider-gemini` (2.5 Flash con thinking) OR locale `deepseek-r1:8b` via ollama
    - **Multimodal** (screenshot, vision) → `aider-gemini` OR Gemma 4 locale
    - **Capability-max** (bug oscuro, refactor architetturale) → `aider-openai` (gpt-4o) pay-per-use — ultimo resort

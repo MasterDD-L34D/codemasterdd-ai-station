@@ -117,7 +117,7 @@ Classifica il task secondo docs/patterns/delegation-to-aider.md:
 1. Cosmetic? (JSDoc, docstring, rename, lint-fix, typo, 1-liner)
    → se sì E working tree clean → proponi `aider-cosmetic <file>` con task short-description, attendi OK
 2. Behavior-critical? (refactor singolo file, bug fix, logic change)
-   → proponi `aider-refactor <file>` (local) o `aider-groq <file>` (cloud online), attendi OK
+   → proponi `aider-refactor <file>` (local) o `aider-groq-bypass <file>` (cloud online), attendi OK
 3. Strategic? (multi-file, synthesis da conversazione, design, debug architetturale, ADR writing)
    → esegui direttamente, nessuna delega
 
