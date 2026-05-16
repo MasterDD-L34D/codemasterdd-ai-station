@@ -15,8 +15,11 @@ def test_fetch_healthchecks_all(monkeypatch):
     import app
 
     # We create standard python exception subclasses to simulate requests exceptions
-    class MockConnectionError(Exception): pass
-    class MockTimeout(Exception): pass
+    class MockConnectionError(Exception):
+        pass
+
+    class MockTimeout(Exception):
+        pass
 
     # We must patch app.requests explicitly so the except blocks catch these
     monkeypatch.setattr(app.requests, 'ConnectionError', MockConnectionError, raising=False)

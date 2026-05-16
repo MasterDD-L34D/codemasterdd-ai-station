@@ -1,9 +1,7 @@
 from __future__ import annotations
 
-import subprocess
 from unittest.mock import MagicMock, patch
 
-import pytest
 
 # We import app after mocks are in place (handled by conftest.py's clear_cache fixture)
 # But _get_gh_token is called at module level in app.py when GH_TOKEN is initialized.

@@ -17,6 +17,8 @@ Run prod: python app.py --prod  (uses waitress, default localhost:8081)
 
 from __future__ import annotations
 
+__all__ = ["app", "fetch_healthchecks"]
+
 import hmac
 import os
 import re
