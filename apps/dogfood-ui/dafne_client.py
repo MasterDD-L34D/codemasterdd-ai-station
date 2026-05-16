@@ -76,6 +76,62 @@ class DafneClient:
     # High-level rollup per dashboard
     # -----------------------------------------------------------------------
 
+    def _build_kpis(self, status: dict[str, Any], swarm: dict[str, Any]) -> dict[str, Any]:
+        return {
+            "cycles_total": swarm.get("cycle_count", 0),
+            "cycles_ok": swarm.get("cycles_ok", 0),
+            "cycles_rejected": swarm.get("cycles_rejected", 0),
+            "current_agent": swarm.get("current_agent"),
+            "next_specialist": swarm.get("specialist_next"),
+            "swarm_status": swarm.get("status"),
+            "ollama_online": status.get("ollama_online", False),
+            "artifacts_count": status.get("artifacts_count", 0),
+            "agents_count": len(status.get("agents_available", [])),
+            "last_error": swarm.get("last_error"),
+        }
+
+    def _build_intervention(self, dafne: dict[str, Any]) -> dict[str, Any]:
+        return {
+            "count": dafne.get("intervention_count", 0),
+            "active": dafne.get("intervention_active", False),
+            "last_at": dafne.get("last_intervention_at"),
+            "last_focus": dafne.get("last_focus_directive"),
+            "last_assessment": dafne.get("last_assessment"),
+            "drifting": (dafne.get("flint") or {}).get("is_drifting", False),
+            "gameplay_ratio": (dafne.get("flint") or {}).get("gameplay_ratio"),
+        }
+
+    def _build_stats_levels(self, agents: dict[str, Any]) -> dict[str, list[str]]:
+        by_level: dict[str, list[str]] = {"Maestro": [], "Specialista": [], "Esperto": [], "Apprendista": []}
+        for name, info in agents.items():
+            lvl_name = info.get("level_name", "Apprendista")
+            by_level.setdefault(lvl_name, []).append(name)
+        return by_level
+
+    def _build_stats_agents_detail(self, agents: dict[str, Any]) -> list[dict[str, Any]]:
+        details = [
+            {
+                "name": name,
+                "level": info.get("level_name"),
+                "cycles": info.get("total_cycles", 0),
+                "accept_rate": info.get("accept_rate"),
+                "avg_score": info.get("avg_score"),
+                "rejected": info.get("rejected", 0),
+                "security_alerts": info.get("security_alerts", 0),
+            }
+            for name, info in agents.items()
+        ]
+        details.sort(key=lambda a: a.get("cycles", 0), reverse=True)
+        return details
+
+    def _build_proposals_summary(self, proposals: dict[str, Any]) -> dict[str, Any]:
+        return {
+            "total": len(proposals.get("all", [])) if proposals.get("all") else 0,
+            "pending": sum(1 for p in (proposals.get("all") or []) if p.get("status") == "pending"),
+            "approved": sum(1 for p in (proposals.get("all") or []) if p.get("status") == "approved"),
+            "rejected": sum(1 for p in (proposals.get("all") or []) if p.get("status") == "rejected"),
+        }
+
     def full_snapshot(self) -> dict[str, Any]:
         """Aggrega tutti gli endpoint in un singolo dict dashboard-friendly.
 
@@ -97,58 +153,17 @@ class DafneClient:
 
         # Derive compact KPIs
         if status and swarm:
-            rollup["kpi"] = {
-                "cycles_total": swarm.get("cycle_count", 0),
-                "cycles_ok": swarm.get("cycles_ok", 0),
-                "cycles_rejected": swarm.get("cycles_rejected", 0),
-                "current_agent": swarm.get("current_agent"),
-                "next_specialist": swarm.get("specialist_next"),
-                "swarm_status": swarm.get("status"),
-                "ollama_online": status.get("ollama_online", False),
-                "artifacts_count": status.get("artifacts_count", 0),
-                "agents_count": len(status.get("agents_available", [])),
-                "last_error": swarm.get("last_error"),
-            }
+            rollup["kpi"] = self._build_kpis(status, swarm)
 
         if dafne:
-            rollup["intervention"] = {
-                "count": dafne.get("intervention_count", 0),
-                "active": dafne.get("intervention_active", False),
-                "last_at": dafne.get("last_intervention_at"),
-                "last_focus": dafne.get("last_focus_directive"),
-                "last_assessment": dafne.get("last_assessment"),
-                "drifting": (dafne.get("flint") or {}).get("is_drifting", False),
-                "gameplay_ratio": (dafne.get("flint") or {}).get("gameplay_ratio"),
-            }
+            rollup["intervention"] = self._build_intervention(dafne)
 
         if stats:
             agents = stats.get("agents") or {}
-            # Aggrega per level
-            by_level: dict[str, list[str]] = {"Maestro": [], "Specialista": [], "Esperto": [], "Apprendista": []}
-            for name, info in agents.items():
-                lvl_name = info.get("level_name", "Apprendista")
-                by_level.setdefault(lvl_name, []).append(name)
-            rollup["levels"] = by_level
-            rollup["agents_detail"] = [
-                {
-                    "name": name,
-                    "level": info.get("level_name"),
-                    "cycles": info.get("total_cycles", 0),
-                    "accept_rate": info.get("accept_rate"),
-                    "avg_score": info.get("avg_score"),
-                    "rejected": info.get("rejected", 0),
-                    "security_alerts": info.get("security_alerts", 0),
-                }
-                for name, info in agents.items()
-            ]
-            rollup["agents_detail"].sort(key=lambda a: a.get("cycles", 0), reverse=True)
+            rollup["levels"] = self._build_stats_levels(agents)
+            rollup["agents_detail"] = self._build_stats_agents_detail(agents)
 
         if proposals and isinstance(proposals, dict):
-            rollup["proposals_summary"] = {
-                "total": len(proposals.get("all", [])) if proposals.get("all") else 0,
-                "pending": sum(1 for p in (proposals.get("all") or []) if p.get("status") == "pending"),
-                "approved": sum(1 for p in (proposals.get("all") or []) if p.get("status") == "approved"),
-                "rejected": sum(1 for p in (proposals.get("all") or []) if p.get("status") == "rejected"),
-            }
+            rollup["proposals_summary"] = self._build_proposals_summary(proposals)
 
         return rollup

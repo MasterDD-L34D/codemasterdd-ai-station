@@ -94,6 +94,8 @@ function Invoke-ModelRequest {
       if ($statusCode) {
         if ($statusCode -eq 429 -or ($statusCode -ge 500 -and $statusCode -lt 600)) {
           $isTransient = $true
+        } elseif ($statusCode -ge 400 -and $statusCode -lt 500) {
+          $isTransient = $false
         }
       } elseif ($_.Exception -is [System.Net.WebException] -or $_.Exception.Message -match 'timed out|timeout|connection') {
         $isTransient = $true
@@ -107,7 +109,7 @@ function Invoke-ModelRequest {
     }
   }
   $statusInfo = if ($lastErr.Exception.Response) { " (HTTP $([int]$lastErr.Exception.Response.StatusCode.Value__))" } else { '' }
-  throw "Invoke-ModelRequest failed after $MaxAttempts attempt(s)$($statusInfo): $($lastErr.Exception.Message)"
+  throw "Invoke-ModelRequest failed after $attempt attempt(s)$($statusInfo): $($lastErr.Exception.Message)"
 }
 
 function Invoke-Model {

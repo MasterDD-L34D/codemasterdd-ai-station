@@ -14,7 +14,7 @@
 #   - Stop hook H12 - testato durante uso real-world
 #   - PreToolUse commit-guard.js Claude Code - duplica logica commit-msg, smoke implicito qui
 #
-# Test mode safe: usa $env:TEMP/hook-smoke-XXX scratch repo + git init (eredita core.hooksPath).
+# Test mode safe: usa $env:TEMP/hook-smoke-$PID scratch repo + git init (eredita core.hooksPath).
 # NON tocca repo reale, NON modifica config globale, cleanup garantito via try/finally.
 #
 # Usage:

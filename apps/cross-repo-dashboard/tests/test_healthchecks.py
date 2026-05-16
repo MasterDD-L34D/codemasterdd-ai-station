@@ -17,7 +17,6 @@ def test_fetch_healthchecks_all(monkeypatch):
     # We create standard python exception subclasses to simulate requests exceptions
     class MockConnectionError(Exception):
         pass
-
     class MockTimeout(Exception):
         pass
 
