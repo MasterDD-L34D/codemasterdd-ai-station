@@ -366,7 +366,7 @@ JOURNAL entry +87 righe (questa sessione). COMPACT v11 (questo file). STATUS_MUL
 
 ## Decisioni prese
 
-### ADR strategici (24 totali, indice in DECISIONS_LOG)
+### ADR strategici (30 totali, indice in DECISIONS_LOG)
 - **ADR-0008** Hub pattern tier routing (cosmetic/behavior/escalation)
 - **ADR-0011** Commit governance cross-agent
 - **ADR-0012** RAM 64GB upgrade
@@ -382,6 +382,12 @@ JOURNAL entry +87 righe (questa sessione). COMPACT v11 (questo file). STATUS_MUL
 - **ADR-0022** OpenCode tool-use model routing (tier OpenCode distinto da Aider) -- **Accepted (early, n=3, ratification check 2026-06-09)** (PR #15 Proposed + #19 Accepted + #28 retroactive flag)
 - **ADR-0023** Strategic tier post-Max API on-demand budget cap -- **Proposed 2026-05-09** (Eduardo scelta 1A, $10-20/mese cap + trigger reactivation Pro)
 - **ADR-0024** Vue3 archive + Godot v2 canonical timeline 2026-09-30 -- **Proposed 2026-05-09** (Eduardo scelta 5A+, soft-deadline + AA01 attivazione H11)
+- **ADR-0025** Hyperspace Pods NO-GO empirico -- **Accepted 2026-05-12** (pktmon 120149 pkt/3min, 3 finding arch non-config-fixable)
+- **ADR-0026** Cognitive workflow protocols P1-P6 -- **Accepted 2026-05-13** (6 protocol + combined methodology + anti-aspirational measurement L-016)
+- **ADR-0027** Cross-PC clone architecture Lenovo+Ryzen -- **Accepted (early) 2026-05-13** (fleet 4 PC LAN, DHCP reservation permanent, SSH auth)
+- **ADR-0028** Tier promotion quality gate methodology -- **Accepted 2026-05-13** (3-gate smoke->draft->production, n>=1 empirical PASS)
+- **ADR-0029** OpenRouter eval declined sovereign-first BYOK -- **Proposed 2026-05-13** (6-wrapper direct preserved, trigger reactivation documentato)
+- **ADR-0030** ChatGPT Business workspace recovery + classification pipeline -- **Proposed 2026-05-14** (brianjlacy + BERTopic + nomic + Qwen 14B Q2 sovereign; PR #118 codemasterdd; OD-033 superseded -> OD-038 flow vault-side)
 
 ### Decisioni non-ADR (operative minori, in DECISIONS_LOG)
 - **001** Adozione schema framework archivio

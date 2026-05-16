@@ -1,16 +1,18 @@
 # STATUS_MULTI_REPO — Dashboard operativa cross-repo
 
-> Vista consolidata dei 4 progetti attivi. Aggiornare quando cambia stato significativo o al massimo settimanalmente.
+> Vista consolidata progetti. Aggiornare quando cambia stato significativo o al massimo settimanalmente.
+>
+> ⚠️ **Insight strutturale 2026-05-16 (reconcile 43% stale)**: HEAD/PR puntuali in §Snapshot/§1-7 **NON sono git-truth** — repo daily-ship (Game/Godot) li rendono stale in ~2gg. **Stato verificato = §Ecosystem-audit 15-repo** (git-truth, ri-derivato da audit). §1-7 = contesto operativo narrativo. NON ri-hardcodare HEAD qui (rot garantito); aggiorna §Ecosystem-audit con audit fresco.
 >
 > **Governance ownership**: questo repo (codemasterdd) è policy hub, non esegue codice altri progetti. Le azioni specifiche vivono nei rispettivi repo.
 >
-> Riferimenti deep: CLAUDE.md sezione "Progetti monitorati" (descrittivo), memory `project_multi_repo_overview.md` (architetturale), questo file (operativo).
+> Riferimenti deep: CLAUDE.md sezione "Progetti monitorati" (descrittivo), memory `project_multi_repo_overview.md` (architetturale), questo file (operativo), vault `docs/decisions/ecosystem-state-audit-2026-05-16.md` (audit git fresco 15-repo 2026-05-16: 14/15 sani+synced, evidenza cross-stack esterna — ✅ **RATIFICATO master-dd 2026-05-16, integrato §Ecosystem audit 15-repo sotto**).
 
 **Ultimo refresh**: **2026-05-14 sera-tardi-ultra-3** (post Component 1 cross-repo Dashboard v0.3 daily-use features ship + Docker stack ADR-0017 LIVE + claude-mem disabled + 4 lessons promoted L-018/019/020/021 + Max parallel strategy doc + T9 methodology empirical + Cross-repo PR scan NEGATIVE finding).
 
 **Codemasterdd state**: HEAD main `6dc0bed` (console flash defensive fix) + branch `claude/max-parallel-execution-2026-05-14` commit `dfa7f59` post 5 commits Max-tier (strategy + T9 + dogfood-ui cache + JOURNAL + v0.3 features). Cumulative **57+ PR mergeati 7-14/5** + 5 PR open today (#87 #88 #89 #90 #91 merged #92 open). Plugin ecosystem: 3 plugins, claude-mem disabled 14/5 sera per upstream issue #19012 (console flash bug closed-not-planned). **21 lessons** AA01 cumulative (L-001..L-021, 4 new today). **15+ ADR** (P5 harsh-reviewer ratified Accepted 14/5 amendment).
 
-**Cross-repo state** (post empirical scan 14/5 sera): Game HEAD `36c9822d` post Phase B Day 5/8 OOA audit (200 PR last 14d sprint cumulative); Game-Godot-v2 HEAD `1d9ce3b` su local branch claude/tkt-p2-phase-d-phone-organization-mode (origin/main `a765e4e` ahead↑1↓1); Dafne stable HEAD `9255b4b` post PR #102 6gg inattivita; vault HEAD `1abaa743` post R5 IP fix today.
+**Cross-repo state** ⚠️ *snapshot storico 14/5 — HEAD sotto NON git-truth (reconcile 2026-05-16: Game→`84e8c448`, Godot→`afaa656`, vault→`7285cb74`). Stato verificato → §Ecosystem-audit 15-repo*: (storico) Game HEAD `36c9822d` Phase B Day 5/8; Game-Godot-v2 `1d9ce3b`/origin `a765e4e`; Dafne stable `9255b4b`; vault `1abaa743`.
 
 **Cross-repo PR scan finding 14/5**: ZERO drift candidates emersi. Tutti 4 target repos (Game/Godot/Dafne/vault) governance interna autosufficiente CONFIRMED — 0 CLAUDE.md mentions di codemasterdd patterns. Component 2 first-3-PR validation NON ha organic emergence. Empirical insight: cross-repo PR pattern usable ONLY se drift specific emerge naturalmente, NON scan-driven.
 
@@ -22,11 +24,11 @@
 |------|--------|-------------|------------------|---------|
 | **codemasterdd-ai-station** | **Fase 6+7 CLOSED + SPRINT_02 ATTACK MODE 14/5**. HEAD main `6dc0bed` + branch PR #92 `dfa7f59` Max-tier work. **57+ PR mergeati 7-14/5 cumulative** + 1 PR open #92 (5 commits Max parallel strategy + T9 methodology + dogfood-ui cache + JOURNAL + v0.3 features). **Component 1 Dashboard v0.3 LIVE** (apps/cross-repo-dashboard/, port 8081, daily-use features: filter/JOURNAL preview/drill-down/velocity/activity feed). **Docker stack ADR-0017 LIVE 3/3** (LiteLLM + Langfuse + Postgres + dogfood-ui). **claude-mem DISABLED 14/5** post upstream issue #19012 console flash bug. **21 lessons cumulative** L-001..L-021 (4 new today: L-018/019/020/021). **ADR-0026 P5 ACCEPTED ratified** 14/5 amendment empirical. | SPRINT_02 attack mode parallel Max+sovereign **NOW** (T8/T9/T10 shipped 14/5 NOT 5/20+) | 2026-05-19 (Claude Max expiration, **5gg residui**) | Nessuno bloccante. Eduardo restart CC quando convenient -> verify zero claude-mem flashes |
 | **Synesthesia** | Dormant, HEAD `05f8a92` (invariato) | Riattiva pre-esame UniUPO | ~agosto 2026 | Nessuno (dormant intenzionale) |
-| **Game (Evo-Tactics Vue3)** | **HEAD `36c9822` post PR #2258 11/5** (200 PR last 14d sprint multi-track). Local checkout `C:/dev/Game` reset --hard origin/main 2026-05-12 (Path A confirmed post Protocol 1+2 investigation: 27 commit AA01 CAP-* Sprint Impronta MAI shipped a origin -> safe abandon via 13 backup branches `aa01/cap-*` + stash safety net 295 file WIP refactor). PR open: solo #2257 skiv-monitor (auto-skip pattern). **OD-023 APERTA 2026-05-12** (Phase B execution date verdict, Path C+Path A 34/35). | Continue monitoring (Eduardo-driven). NO codemasterdd action proattiva. **Phase B Day 7 formal closure scheduled 2026-05-14 mattina UTC** (sub-event ADR-0024 codemasterdd addendum PR #55). | **2026-05-14** Phase B closure | Nessuno (governance interna Game autonoma) |
-| **Game-Godot-v2** | **249 PR mergeati cumulative** (+34 PR dal 7/5, +2 questa sessione codemasterdd-authored: #248 Main SeasonalService wire + #249 Phone MODE_ORGANIZATION). HEAD origin/main `a765e4e` PR #249. Local checkout pulled fast-forward post-merge. Path A canonical CHIUSO + Sprint AC bundle closed. Hook globali applicati. Governance interna autosufficiente. **TKT-P2 Brigandine Phase D cross-stack chain COMPLETE 2026-05-12**: backend (Game #2251+2252+2253) -> Godot HTTP client (#245) -> TV season label (#245) -> Main caller wire (#248) -> Phone organization mode (#249). | Continue port (Eduardo-driven). Deferred follow-up GUT integration tests test_main_seasonal_wire.gd + test_phone_composer_organization.gd (~55 LOC totali, NON blocking). | No fixed | Nessuno |
+| **Game (Evo-Tactics Vue3)** | ⚠️ HEAD/PR → **§Ecosystem-audit git-truth** (reconcile 2026-05-16: `84e8c448` #2280 Phase-4D; il claim storico sotto era `36c9822` Phase-B Day5/8, ~22 commit dietro — repo daily-ship). Contesto narrativo (storico, non git-truth): Local checkout `C:/dev/Game` reset --hard origin/main 2026-05-12 (Path A confirmed post Protocol 1+2 investigation: 27 commit AA01 CAP-* Sprint Impronta MAI shipped a origin -> safe abandon via 13 backup branches `aa01/cap-*` + stash safety net 295 file WIP refactor). PR open: solo #2257 skiv-monitor (auto-skip pattern). **OD-023 APERTA 2026-05-12** (Phase B execution date verdict, Path C+Path A 34/35). | Continue monitoring (Eduardo-driven). NO codemasterdd action proattiva. **Phase B Day 7 formal closure scheduled 2026-05-14 mattina UTC** (sub-event ADR-0024 codemasterdd addendum PR #55). | **2026-05-14** Phase B closure | Nessuno (governance interna Game autonoma) |
+| **Game-Godot-v2** | ⚠️ HEAD/PR → **§Ecosystem-audit git-truth** (reconcile 2026-05-16: `afaa656` #282, +33 PR oltre il claim storico `a765e4e` #249 — repo daily-ship). Contesto narrativo (storico): 249 PR cumulative @ #249, #248 Main SeasonalService wire + #249 Phone MODE_ORGANIZATION. Local checkout pulled fast-forward post-merge. Path A canonical CHIUSO + Sprint AC bundle closed. Hook globali applicati. Governance interna autosufficiente. **TKT-P2 Brigandine Phase D cross-stack chain COMPLETE 2026-05-12**: backend (Game #2251+2252+2253) -> Godot HTTP client (#245) -> TV season label (#245) -> Main caller wire (#248) -> Phone organization mode (#249). | Continue port (Eduardo-driven). Deferred follow-up GUT integration tests test_main_seasonal_wire.gd + test_phone_composer_organization.gd (~55 LOC totali, NON blocking). | No fixed | Nessuno |
 | **Dafne swarm (evo-swarm)** | **Stable post-dashboard sprint**, HEAD origin/main `9255b4b` post PR #102 (fase 8 evaluation A/B + PII redaction, 8/5 14:39 UTC). **20 PR cascata 8/5** (PR #83-#102 dashboard fase 0-8 + Tier 4 fix x3 + orchestrator CO-02 + compass anchor fix). **4gg inattivita' post 8/5** (no commit dal 8/5). 0 PR open. Atto 2 status post-sprint indeterminate (probabilmente concluded post dashboard fase 8). | Continue (Eduardo-driven), pull locale se workflow Dafne riprende | No fixed | Nessuno |
 | **AA01 (Archon Atelier 01)** | v1.0.0 silent-driver mode. Counter 12/5 sera post Bundle 1+2+3: **14 archive entries + 11 lessons cumulative**. Bundle 2 SHIP + Bundle 3 SHIP questa sessione (2 task addizionali). 11 lessons cross-session `learnings/`: L-2026-04-001 + L-2026-05-002..L-2026-05-011 (+L-010 reflexive methodology audit + L-011 applicative optimization audit promoted 12/5 sera). Workspace 0 attivi. Inbox cleanup 12/5 pomeriggio. | Continua driver mode + nuovo task quando emerge. OD-007 Three Strikes counter: frizione tool-selection NON osservata. | nessuna | nessuno bloccante |
-| **vault-shared (Vault Knowledge Mgmt)** | **Sibling-peer Eduardo, monitored. 7/7 production agents milestone hit 2026-05-12** (HEAD `2007a8a2` "feat(milestone) 7/7 agents PRODUCTION + bulk ingest 100/100"). **Frontmatter drift 7/7 identificato** spot-check empirical 12/5 sera: production/agents/*.md status: draft non-synced (drift 100%). LLM routing matrix v1.0 path `Extras/config/llm-routing.json`. Stack overlap codemasterdd: Ollama LAN + qwen2.5-coder family + deepseek-r1 + Claude variants. Privacy: sovereign-only (NOT cloud whitelist). Hook globali compat VALIDATED. **Pattern D ADOPT codemasterdd 2026-05-12** (governance-lint.ps1 PR #51, audit-then-replay NO clone). **V3 cross-pattern adoption Quality Gate**: research doc Bundle 2 12/5 sera, DEFER fino SPRINT_02+. | Continue (Eduardo-driven). **Handoff doc Eduardo-direct** `docs/aa01-handoff/2026-05-12-vault-frontmatter-drift-handoff.md` (frontmatter fix + CLAUDE.md drift + README discoverability, 30-45min one-shot). NO write-path codemasterdd-side. | No fixed | Nessuno (sibling-peer disjoint scope) |
+| **vault-shared (Vault Knowledge Mgmt)** | **Sibling-peer Eduardo, monitored. 7/7 production agents milestone hit 2026-05-12** (HEAD `2007a8a2` "feat(milestone) 7/7 agents PRODUCTION + bulk ingest 100/100"). **Frontmatter drift 7/7 identificato** spot-check empirical 12/5 sera: production/agents/*.md status: draft non-synced (drift 100%). LLM routing matrix v1.0 path `Extras/config/llm-routing.json`. Stack overlap codemasterdd: Ollama LAN + qwen2.5-coder family + deepseek-r1 + Claude variants. Privacy: sovereign-only (NOT cloud whitelist). Hook globali compat VALIDATED. **Pattern D ADOPT codemasterdd 2026-05-12** (governance-lint.ps1 PR #51, audit-then-replay NO clone). **V3 cross-pattern adoption Quality Gate**: research doc Bundle 2 12/5 sera, DEFER fino SPRINT_02+. **ChatGPT Business recovery 2026-05-14..16**: 1361 conv + 132 projects + 83 memory + 2.15GB assets recovered (Business workspace, complementary OD-032 personal/deferred). 67 topic / 30,764 cards promossi Spaces `_imported-2026-05-14/` (gitignored bulk). **OD-033 doc superseded -> rappresentazione vault segue flusso OD-038** (Eduardo-mediated; guard rail PII-exfiltration impedisce push vault codemasterdd-side). Tooling/governance codemasterdd-side: **PR #118 MERGEABLE/CLEAN**. | Continue (Eduardo-driven). **Handoff doc Eduardo-direct** `docs/aa01-handoff/2026-05-12-vault-frontmatter-drift-handoff.md` (frontmatter fix + CLAUDE.md drift + README discoverability, 30-45min one-shot). Vault recovery staging: Eduardo-mediated via OD-038. NO write-path codemasterdd-side. | No fixed | Nessuno (sibling-peer disjoint scope) |
 
 ### Stack ADR-0017 runtime (aggiornato 2026-05-13 post Phase 2 cross-PC + T1 SPRINT_02 cluster)
 
@@ -384,9 +386,9 @@ Vault-shared workflow richiede Eduardo per ogni promote/tune/quality-gate -- int
 |------|-------------|--------|------|
 | **claude-supermemory-local** | main `a72152b` | Active dev | Local SDK replacement Supermemory cloud; Eduardo lavoro recente |
 | **compass-marketplace** | `fix/marketplace-schema-source-string` `5943ffa` | Active dev | v0.4.3 fix in flight (compass plugin marketplace) |
-| **Game-Database** | main `91f5468` PR #105 | **Active multi-AI** | **Taxonomy CMS Evo-Tactics** (Prisma + PG + Express + React MUI + Vite). Sibling Game (HTTP API integration ADR-2026-04-14). 7 PR Jules OPEN 2026-05-15 + 7 sessioni Jules cumulative cross-day. Has own CLAUDE.md (multi-client pattern ADR-0021). PUBLIC, no LICENSE. Audit 2026-05-15 sera codemasterdd-side (vedi paragrafo dedicato sotto + L-025 case study). |
+| **Game-Database** | origin/main `3be942c` (#114) | **Active, burst-landed** | **Taxonomy CMS Evo-Tactics** (Prisma + PG + Express + React MUI + Vite). Sibling Game (HTTP API integration ADR-2026-04-14). ~~7 PR Jules OPEN 2026-05-15~~ → **STALE-corretto 2026-05-16: burst #107-114 LANDED (security timing-fix, perf, test, refactor), 0 PR open ora, synced 0/0**. Has own CLAUDE.md (multi-client pattern ADR-0021). PUBLIC, no LICENSE. Reconcile OD-038 2026-05-16 (vault `cross-stack-state-delta-2026-05-16.md` §Game-Database): backlog `docs/operativo/ROADMAP.md` ~50% stale, OPEN-REALE = I1 standard-error-response-backend (Now-pri). |
 | **Master-DD-Pathfinder-GPT** | `codex-fix-pr-542-follow-up-regressions-clean` `5bd2ccb` | Active Codex | Pathfinder GPT campaign tooling (Codex branch flight) |
-| **torneo-cremesi-site** | main `43eda85` PR #18 | Active dev | Static site Pathfinder Torneo |
+| **torneo-cremesi-site** | main `016496e` PR #9 (2025-10-23) | Low-activity | Static site Pathfinder Torneo. *Corretto 2026-05-16: claim precedente "`43eda85` PR#18" era quasi-fabbricato — quella SHA = dangling object MAI su main; PR#18 inesistente. Reconcile OD-038.* |
 
 **Privacy classification**: 9 Ryzen-only repos (4 dormant + 5 above) default SOVEREIGN nel whitelist Aider Ryzen (`~/.config/aider-privacy-whitelist.txt` riga commento Q3-update). Add explicit whitelist quando privacy classification per-repo done (SPRINT_02 opportunistic).
 
@@ -439,6 +441,41 @@ Game-Database e' emerso da audit Jules REST API come repo **attivamente lavorato
 - Aggiunta formale a CLAUDE.md "Progetti monitorati" sezione: DONE in stesso commit (vedi paragrafo Game-Database).
 - LICENSE add (no LICENSE current): defer Eduardo decisione strategica (MIT vs Apache vs proprietary).
 - Clone locale codemasterdd: defer, scope expansion Ryzen-led OK.
+
+---
+
+## Ecosystem audit 15-repo — git-verified (RATIFICATO master-dd 2026-05-16)
+
+Reactivation gate `EXTERNAL_REPOS.md` #6 (intento master-dd) + #7 (evidenza fresca) soddisfatti. Snapshot **git-ground-truth 2026-05-16** (branch/dirty/sync/detached verificati diretti). Supera gli HEAD sparsi/stale nelle sezioni §1-7 come *snapshot verità-git*; le §1-7 restano dettaglio operativo mantenuto (NON riscritte — additive per design, lezione PR #116 no-clobber).
+
+Fonte completa (matrice per-repo + raccomandazioni): vault `docs/decisions/ecosystem-state-audit-2026-05-16.md`.
+
+- **15 repo totali** (5 core + 10 scoperti). **14/15 git-sani + GitHub-synced.**
+- Drift reale al momento audit: `torneo-cremesi-site` (20-behind) → **risolto** (ff-pull 2026-05-16, ora 0/0).
+- `Game` root dir = DETACHED 5d27fc50 (cosmetico; lavoro nei worktree, main-wt synced 0/0 — documentato, lasciare).
+- `Game-Godot-v2` main-wt: ff-pull 2026-05-16 → 0/0. `.uid/.import` tracked (policy commit, PR #282).
+- `codemasterdd` (questo): policy-hub, governance riattivata da questo blocco.
+- Pattern: riconciliazione stale-doc applicabile **solo su drift dimostrato**, non default (provato 5× void blind-pick).
+- Hygiene minori (opzionali, non-blocking): Godot-v2 `*.uid` gitignore-policy (project decision), `.vs/` torneo junk.
+
+Regola: questo blocco = verità-git snapshot puntuale; ri-verificare con audit fresco prima di trattarlo come corrente (no hand-edit da memoria). Le §1-7 = stato operativo ricco continuativo.
+
+### Reconcile dashboard §1-7 (OD-038 5-step, 2026-05-16) — staleness 43%
+
+Falsify di TUTTI i claim §Snapshot/§1-7 vs git reale (vault `cross-stack-state-delta-2026-05-16.md` §Dashboard-reconcile dettaglio). **Staleness 6/14 ≈ 43%**. §1-7 = narrativa mantenuta (NON riscritta — additive-only, #116); questo flag = layer git-truth.
+
+| Repo | Claim §1-7 | Reale 2026-05-16 | Verdetto |
+|---|---|---|---|
+| codemasterdd self | "1 PR open #92", `6dc0bed` | **16 PR open**, `b447b58` (#133) | ⚠️STALE |
+| Game | `36c9822` "Phase B Day5/8" | `84e8c448` #2280 Phase-4D | ❌WRONG (arco Phase-B/4D non-doc) |
+| Game-Godot-v2 | `a765e4e` #249 | `afaa656` #282 (+33 PR) | ❌WRONG |
+| **torneo-cremesi-site (§7)** | "main `43eda85` PR#18" | main `016496e` **PR#9** Ott-2025; `43eda85` = SHA dangling MAI su main | ❌WRONG (claim quasi-fabbricato, non solo stale) |
+| vault-shared | `1abaa743`/`054cad6` | `7285cb74` #31 synced | ⚠️STALE (sano) |
+| compass-marketplace | "v0.4.3 in-flight `5943ffa`" | landed origin `#10 57d4267`; branch locale dietro | ⚠️STALE (no-loss) |
+| Synesthesia/Dafne/supermemory/Master-DD-PF/Item-gen/LeaD/pathfinder-1e/Game-DB | come dichiarato | confermato git | ✅ACCURATE |
+| AA01 / Gpt | tracciati | AA01 no-.git; Gpt repo vuoto | 🔒N-A |
+
+**No loss-risk** ovunque (branch autoritativi synced; Game/Godot root-detached = cosmetico già documentato sopra). Drift = §1-7 ~2gg dietro su repo daily-ship (Game/Godot) + torneo §7 entry mai-vera (PR#18/SHA dangling — da correggere a parte, dominio §7). Raccomandazione: §1-7 HEAD-narrativi non affidabili come git-truth → usare QUESTO blocco §Ecosystem-audit per stato verificato; §1-7 per contesto operativo.
 
 ---
 

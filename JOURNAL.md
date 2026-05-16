@@ -19,6 +19,31 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-05-16 (ChatGPT Business workspace recovery COMPLETE + governance commit)
+
+### Completato
+- Recovery COMPLETE: 1361 conv (100% existing; ~175 deleted-404 irrecoverable) + 83 memory items + custom instructions + 2.15GB file assets. Archivio 2.45GB `C:/dev/backup/chatgpt-full-export-2026-05-14.zip`
+- Classification: BERTopic 72 topic (custom UMAP n_neighbors=5/n_components=10 + HDBSCAN min_samples=1 per IT/EN bimodality) + nomic-embed-text + Qwen 14B Q2 labeling
+- Atomize: 39,220 Cards vault-convention, validation PASS (0 P0/P1/P2)
+- Promote: 67 topic / 30,764 cards a Spaces canonici `_imported-2026-05-14/` (61 auto + 6 HOLD-reviewed incl 3 _personal); 5 topic restano HOLD (junk/outlier/mixed-misc)
+- 7 agent specialist su scope reale (harsh-reviewer x2 -> 7 P0 pipeline scripts fixati, owasp-security-auditor, adr-drafter, privacy-policy-enforcer, Explore, Plan x2)
+- Governance commit codemasterdd: 38 file (16 pipeline + scripts + runbook + README + agent-lessons + cross-ref-map + ADR-0030 + CLAUDE.md sibling-peer boundary amend + DECISIONS_LOG + REFERENCE_INDEX). **PR #118 MERGEABLE/CLEAN** (merge Eduardo-only)
+- .gitignore chatgpt-recovery/ hardened: esclude tutti i fixture real-data (project-preview, gpt-refs, validate-cards-report, partial-*, entities-index) -- catch verifica-prima OD-038, evitato commit 3131 file PII
+- Cleanup: bearer JWT env-file + nightly task rimossi, bearer ruotato (Eduardo)
+
+### Note
+- OD-033 doc **superseded** per decisione Eduardo: rappresentazione recovery nel vault segue flusso vivo OD-038 (Eduardo-mediated; guard rail PII-exfiltration by-design impedisce push vault codemasterdd-side)
+- OD-038 reconcile-if-stale applicato: branch worktree 29 dietro origin/main; file narrativi (JOURNAL/STATUS/COMPACT) ri-applicati su base fresca origin/main per merge pulito invece di committare versioni stale
+- Distinzione OD-032 (personal account, deferred, narrow Evo-Tactics) vs OD-033/recovery (Business workspace, broad, executed) mantenuta
+
+### Riferimenti
+- ADR-0030: `docs/adr/0030-chatgpt-recovery-classification-pipeline.md`
+- PR #118 codemasterdd-ai-station
+- Pipeline workspace: `chatgpt-recovery/` + agent-lessons + vault-cross-reference-map.yaml
+- OD-038 (vault-side): `C:/dev/vault-shared/docs/decisions/OD-038-operating-method-2026-05-16.md`
+
+---
+
 ## 2026-05-15 (post-Max prep marathon: Hybrid A1 setup + free LLM ecosystem audit + 8 wrapper canonical + LiteLLM hub update)
 
 ### Completato

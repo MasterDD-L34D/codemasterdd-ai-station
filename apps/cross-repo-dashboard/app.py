@@ -380,10 +380,12 @@ def fetch_git_local(local_path: str) -> dict[str, Any]:
             ahead = subprocess.run(
                 ["git", "-C", local_path, "rev-list", "--count", f"{base}..HEAD"],
                 capture_output=True, text=False, timeout=5, check=False,
+                creationflags=_NO_WINDOW_FLAG,
             )
             behind = subprocess.run(
                 ["git", "-C", local_path, "rev-list", "--count", f"HEAD..{base}"],
                 capture_output=True, text=False, timeout=5, check=False,
+                creationflags=_NO_WINDOW_FLAG,
             )
             if ahead.returncode == 0 and behind.returncode == 0:
                 return {
@@ -506,8 +508,8 @@ def fetch_adr_countdown() -> list[dict[str, Any]]:
 def fetch_open_decisions() -> dict[str, Any]:
     """D1: count active OD entries per repo (codemasterdd OPEN_DECISIONS.md primary).
 
-    Note: This function is actively called by `fetch_all_state()` to populate the
-    `open_decisions` dictionary key, which is then rendered in `index.html`.
+    Note: This function is called by `fetch_all_state` to populate the
+    `open_decisions` data used by `index.html`. It should not be removed.
     """
     od_file = CODEMASTERDD_ROOT / "OPEN_DECISIONS.md"
     if not od_file.exists():
@@ -619,11 +621,12 @@ def fetch_velocity(local_path: str) -> dict[str, Any]:
         return {"available": False, "reason": f"{type(e).__name__}: {str(e)[:100]}"}
 
 
-def fetch_activity_feed(repos_state: dict[str, Any], limit: int = 10) -> list[dict[str, Any]]:
+def fetch_activity_feed(repos_state: dict[str, Any], limit: int = 10) -> list[dict[str, Any]]:  # noqa
     """v0.3 NEW: aggregate last commits across all repos sorted by date desc.
 
-    Note: This function is actively called by `fetch_all_state()` to populate the
-    `activity_feed` dictionary key, which is then rendered in `index.html`.
+    Note: This function is actively called by fetch_all_state() to populate the
+    'activity_feed' data used by index.html. Do not remove it despite what static
+    analysis tools might suggest.
     """
     activities = []
     for name, repo in repos_state.items():
@@ -691,11 +694,19 @@ def coord_event_log() -> Any:
     """B1: Invoca scripts/cross-repo/coord-event-log.ps1 -Quiet -NotesQuick <notes>.
 
     Security (P0.2 harsh-reviewer 2026-05-14 fix):
-    notes input regex-sanitized to prevent PowerShell command injection (CWE-77/78).
+    includes authentication (via API_SECRET if configured) and notes input
+    regex-sanitized to prevent PowerShell command injection (CWE-77/78).
     Blocked chars: backtick (`), dollar ($), parens (), pipe (|), semicolon (;),
     redirect (<>), ampersand (&), quotes ('"), CR/LF, backslash escape sequences.
     Allowed: alphanumeric + space + common punctuation [.,_/:#-+()=].
     """
+    api_secret = os.environ.get("API_SECRET")
+    if api_secret:
+        auth_header = request.headers.get("Authorization", "")
+        # Constant-time compare to avoid timing side-channel.
+        if not hmac.compare_digest(auth_header, f"Bearer {api_secret}"):
+            return jsonify({"ok": False, "error": "unauthorized"}), 401
+
     notes = (request.json or {}).get("notes", "").strip()
     if not notes:
         return jsonify({"ok": False, "error": "notes required"}), 400

@@ -12,7 +12,7 @@ Copy questo template come body quando apri PR cross-repo via Component 2 workflo
 
 - Type: <policy-alignment | ADR-cross-ref | drift-fix | docs | governance-suggestion>
 - codemasterdd ADR ref: <ADR-NNNN o N/A>
-- L-XXX lesson ref: <L-2026-MM-NNN o N/A>
+- Lesson ref: <L-2026-MM-NNN o N/A>
 
 ## Source codemasterdd
 
