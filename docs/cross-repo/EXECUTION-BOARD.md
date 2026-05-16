@@ -76,7 +76,7 @@ Legenda status: ⬜ TODO · 🟡 WIP · ✅ DONE · 🔒 GATED · ⏸ DEFERRED
 | Item | Stato | Trigger sblocco |
 |---|---|---|
 | Arte biomi Wildermyth-style (OD-026 polish) | ⏸ enhancement opzionale | post-playtest#2 — non-blocker (ColorRect tint funzionale già shipped) |
-| Vault-write `45-VISUAL-IDENTITY-CANONICAL.md` | 🔒 | auth esplicita per-task master-dd (L-2026-05-012) — spec PR#112 = il checkpoint |
+| ~~Vault-write `45-VISUAL-IDENTITY-CANONICAL.md`~~ | ✅ DONE | 45 creato+raffinato (vault PR #43); follow-up 2b (42/43 Ferrospora) catturato; conflitto proiezione RISOLTO ortogonale (vault PR #44, master-dd 2026-05-16). Visual-identity = chiuso |
 | pack-v2 atomize-deep | ⏸ | Phase B trigger |
 | U-14 diegetic Atlas vault doc | ⏸ | post-Playtest #2 + master-dd |
 | vault-roadmap Fase 3 | ⏸ | trigger M2-playtest + repo public |
