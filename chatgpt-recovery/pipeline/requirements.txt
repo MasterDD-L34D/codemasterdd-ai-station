@@ -1,0 +1,37 @@
+# ChatGPT Recovery -- Classification pipeline deps
+# Python 3.12+ recommended
+
+# Topic modeling
+bertopic>=0.16.4
+umap-learn>=0.5.6
+hdbscan>=0.8.40
+
+# Embeddings (alternative to nomic via Ollama)
+sentence-transformers>=3.3.0
+
+# Ollama Python client (per nomic-embed-text + Qwen 14B Q2 labeling)
+ollama>=0.4.4
+
+# Data processing
+numpy>=1.26
+pandas>=2.2
+scipy>=1.13
+
+# JSON path queries (per brianjlacy mapping tree traversal)
+jsonpath-ng>=1.6
+
+# Markdown handling
+markdown-it-py>=3.0
+
+# YAML frontmatter
+python-frontmatter>=1.1
+
+# CLI
+click>=8.1
+
+# Progress bars
+tqdm>=4.66
+
+# Optional: visualization (skipping default to keep light)
+# plotly>=5.24
+# matplotlib>=3.9

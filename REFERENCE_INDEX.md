@@ -318,3 +318,14 @@ Indice completo in `DECISIONS_LOG.md`. Path: `docs/adr/NNNN-topic.md`.
 - **Use case codemasterdd**: REFERENCE only fase 1. Install opportunistic SE/QUANDO Mac mini entra device fleet OR scenario distributed inference emerge post-Max sovereign expansion.
 - **Privacy gate**: P2P inference -- **AUDIT REQUIRED PRIMA install** (user query data flow + Pod trust mesh model + LAN model sharing). NO install pre-audit.
 - **Note**: integrato 2026-05-10 scope extension AA01 task 001. Memory `reference_hyperspace_pods.md` per detail strategico + ADR addendum trigger.
+
+## DATA — Recovery archives (cross-PC LAN-accessible)
+
+### REF-D01 — ChatGPT Business Workspace recovery archive (OD-033, 2026-05-16)
+- **Path**: Lenovo `C:/dev/backup/chatgpt-full-export-2026-05-14.zip` (**2.45 GB**)
+- **Cross-PC**: Lenovo `192.168.1.10` host. Accessibile via LAN da Ryzen `192.168.1.11` (DESKTOP-T77TMKT, OpenSSH attivo) — copy command: `scp Vgit@192.168.1.11:... ` o reverse, fleet on-LAN 192.168.1.0/24
+- **Content**: 1361 conv (1229 regular + 132 across 12 projects) + 83 memory items + Custom Instructions + 2032 file assets (DALL-E webp/png, uploads, audio wav, docx, mp4, pdf). Raw brianjlacy export + _processed (39220 atomized cards + classification-final 72-topic + bertopic-model)
+- **Provenance**: codemasterdd ADR-0030 + JOURNAL 2026-05-14/15 + `chatgpt-recovery/` (18 pipeline scripts + agent-lessons). Vault OD-033 doc + commit `ba115b08` (provenance subset, bulk gitignored)
+- **Complementary to**: vault OD-032 (personal/narrow ChatGPT export, deferred — different account+scope+tool)
+- **Gap**: ~175 conv deleted by Eduardo (HTTP 404, era 6907f2XX/69080eXX, irrecoverable — only OpenAI support within retention, not available Business)
+- **Retention**: keep archive until vault `_imported-2026-05-14/` cards reviewed + HOLD topics dispositioned. Then archive can move cold-storage.
