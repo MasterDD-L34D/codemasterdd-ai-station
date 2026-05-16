@@ -167,6 +167,14 @@ def create_app() -> Flask:
 
     @app.route("/entries/<int:entry_id>/delete", methods=["POST"])
     def delete_entry(entry_id: int):
+        """
+        Deletes a specific entry.
+
+        Security Note (CSRF): This endpoint is protected by session authentication
+        and relies on SESSION_COOKIE_SAMESITE="Strict" for CSRF mitigation. No
+        explicit CSRF token is implemented, accepting the residual risk for this
+        localhost, single-user developer tool.
+        """
         api_secret = os.environ.get("API_SECRET")
         if api_secret:
             is_auth = session.get("authenticated", False)
