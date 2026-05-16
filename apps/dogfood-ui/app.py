@@ -255,7 +255,7 @@ def create_app() -> Flask:
     def api_stats():
         return jsonify(aggregate_stats(db.list_entries()))
 
-    # Health cache TTL 30s -- root cause fix /api/health 4s latency
+    # Health cache TTL 30s -- root cause resolved /api/health 4s latency
     # (dafne.ping + lf.ping each ~2s timeout when services DOWN)
     # 2026-05-14 sera-tardi-ultra-2 per Eduardo "dogfood-ui slow latency"
     _health_cache: dict[str, Any] = {"data": None, "ts": 0.0}
