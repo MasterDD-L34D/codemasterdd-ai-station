@@ -3,7 +3,7 @@
 atomize.py -- Atomize conversations to per-message Cards for Obsidian vault.
 
 Reads brianjlacy JSON export + topic-classified output from classify.py.
-Outputs vault/Cards/{topic_label}/{conv_id_short}_{msg_idx}_{role}.md
+Outputs vault/Cards/{topic_label}/{conv_id12}_msg-{msg_idx:03d}_{role}.md
 each containing a single self-contained message with backlinks.
 
 Strategy:
@@ -174,8 +174,7 @@ def build_card_content(doc, msg, msg_idx, role, total_msgs, conv_title, prev_ato
     # NOTE: ChatGPT conv IDs are timestamp-sequential UUIDs; first 8 chars collide
     # heavily among conv from same time period. Use 12 chars for card_id uniqueness.
     full_conv_id = doc.get('id') or 'unknown'
-    conv_id_short = full_conv_id[:8]  # for display/wikilinks
-    conv_id_uniq = full_conv_id[:12]  # for card_id uniqueness
+    conv_id_uniq = full_conv_id[:12]  # filenames + wikilinks + card_id (collision-safe)
     collection = doc.get('topic_label') or 'unknown'
     card_id = f'chatgpt-{conv_id_uniq}-msg-{msg_idx:03d}-{role}'
     sha256 = hashlib.sha256(text.encode('utf-8')).hexdigest()[:8]
@@ -224,7 +223,7 @@ def build_card_content(doc, msg, msg_idx, role, total_msgs, conv_title, prev_ato
     body_lines = [
         f'# {role.capitalize()} -- msg {msg_idx}/{total_msgs}',
         '',
-        f'> From conversation: [[{doc["id"][:8]}_source|{conv_title}]]',
+        f'> From conversation: [[{doc["id"][:12]}_source|{conv_title}]]',
         f'> Topic: `{doc["topic_label"]}` | Role: `{role}` | msg `{msg_idx}/{total_msgs}`',
         '',
         text,
@@ -316,7 +315,10 @@ def main():
 
         messages = extract_messages_from_mapping(conv_json)
         conv_title = conv_json.get('title') or doc.get('title') or 'Untitled'
-        conv_id_short = (doc.get('id') or 'unknown')[:8]
+        # 12-char prefix matches card_id uniqueness (ChatGPT UUIDs are timestamp-
+        # sequential; 8-char prefixes collide among same-period convs -> filename
+        # overwrite). Keep filenames/wikilinks consistent with card_id.
+        conv_id_uniq = (doc.get('id') or 'unknown')[:12]
 
         # Topic-based folder
         topic_label = doc.get('topic_label') or 'unknown'
@@ -341,7 +343,7 @@ def main():
             if len(text) < args.min_msg_length:
                 continue
 
-            filename_stem = f'{conv_id_short}_msg-{msg_idx:03d}_{role}'
+            filename_stem = f'{conv_id_uniq}_msg-{msg_idx:03d}_{role}'
             candidate_atoms.append({
                 'msg_idx': msg_idx,
                 'role': role,
@@ -366,7 +368,7 @@ def main():
 
         # Companion source card
         if all_atoms:
-            source_card_path = topic_folder / f'{conv_id_short}_source.md'
+            source_card_path = topic_folder / f'{conv_id_uniq}_source.md'
             write_conv_source_card(source_card_path, doc, conv_title, all_atoms)
             stats['convs_processed'] += 1
 

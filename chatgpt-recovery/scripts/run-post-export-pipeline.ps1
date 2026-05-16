@@ -40,7 +40,10 @@ if (-not (Test-Path $progressPath)) {
 }
 
 $progress = Get-Content $progressPath | ConvertFrom-Json
-if (-not $progress.indexingComplete -or -not $progress.projectsIndexingComplete) {
+# Archived gate: recovery uses --include-archived (see stage-to-vault provenance),
+# so a final vault that silently omits archived conversations is incomplete.
+# -Force still overrides for deliberate archived-skip runs.
+if (-not $progress.indexingComplete -or -not $progress.projectsIndexingComplete -or -not $progress.archivedIndexingComplete) {
     Write-Host "  Regular indexing: $($progress.indexingComplete)"
     Write-Host "  Archived indexing: $($progress.archivedIndexingComplete)"
     Write-Host "  Projects indexing: $($progress.projectsIndexingComplete)"

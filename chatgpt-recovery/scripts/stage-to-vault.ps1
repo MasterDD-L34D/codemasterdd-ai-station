@@ -123,3 +123,7 @@ Write-Host "`nProvenance: $dst\_meta\provenance.json" -ForegroundColor Green
 Write-Host "Log: $logFile" -ForegroundColor Green
 Write-Host "`nReady for classification pipeline." -ForegroundColor Cyan
 Write-Host "Next: python pipeline/classify.py --input '$dst' --output '<classification-output-dir>'"
+
+# Normalize exit code: robocopy success codes (0-7) leak into $LASTEXITCODE and
+# would make the orchestrator abort after a successful stage. Explicit success.
+exit 0
