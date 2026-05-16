@@ -12,6 +12,12 @@ related: [docs/cross-repo/EXECUTION-BOARD.md]
 
 # Runbook — fix loop skiv-monitor PR BLOCKED
 
+> ⚠️ **Questo runbook = mitigazione-ponte temporanea.** Fix canonico
+> root-cause = vault `docs/decisions/OD-042-skiv-monitor-distribution-
+> channel-2026-05-16.md` (decisione A: branch dedicato non-PR; risolve
+> ANCHE il bloat feed.jsonl 8MB/4h che il workaround NON risolve). Usa
+> questo solo per sbloccare #2257 prima dell'esecuzione OD-042.
+
 ## Sintomo
 
 `Game/` PR #2257 (`auto/skiv-monitor-update` → `main`, bot
