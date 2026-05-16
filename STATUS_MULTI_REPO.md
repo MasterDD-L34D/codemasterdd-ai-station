@@ -458,6 +458,23 @@ Fonte completa (matrice per-repo + raccomandazioni): vault `docs/decisions/ecosy
 
 Regola: questo blocco = verità-git snapshot puntuale; ri-verificare con audit fresco prima di trattarlo come corrente (no hand-edit da memoria). Le §1-7 = stato operativo ricco continuativo.
 
+### Reconcile dashboard §1-7 (OD-038 5-step, 2026-05-16) — staleness 43%
+
+Falsify di TUTTI i claim §Snapshot/§1-7 vs git reale (vault `cross-stack-state-delta-2026-05-16.md` §Dashboard-reconcile dettaglio). **Staleness 6/14 ≈ 43%**. §1-7 = narrativa mantenuta (NON riscritta — additive-only, #116); questo flag = layer git-truth.
+
+| Repo | Claim §1-7 | Reale 2026-05-16 | Verdetto |
+|---|---|---|---|
+| codemasterdd self | "1 PR open #92", `6dc0bed` | **16 PR open**, `b447b58` (#133) | ⚠️STALE |
+| Game | `36c9822` "Phase B Day5/8" | `84e8c448` #2280 Phase-4D | ❌WRONG (arco Phase-B/4D non-doc) |
+| Game-Godot-v2 | `a765e4e` #249 | `afaa656` #282 (+33 PR) | ❌WRONG |
+| **torneo-cremesi-site (§7)** | "main `43eda85` PR#18" | main `016496e` **PR#9** Ott-2025; `43eda85` = SHA dangling MAI su main | ❌WRONG (claim quasi-fabbricato, non solo stale) |
+| vault-shared | `1abaa743`/`054cad6` | `7285cb74` #31 synced | ⚠️STALE (sano) |
+| compass-marketplace | "v0.4.3 in-flight `5943ffa`" | landed origin `#10 57d4267`; branch locale dietro | ⚠️STALE (no-loss) |
+| Synesthesia/Dafne/supermemory/Master-DD-PF/Item-gen/LeaD/pathfinder-1e/Game-DB | come dichiarato | confermato git | ✅ACCURATE |
+| AA01 / Gpt | tracciati | AA01 no-.git; Gpt repo vuoto | 🔒N-A |
+
+**No loss-risk** ovunque (branch autoritativi synced; Game/Godot root-detached = cosmetico già documentato sopra). Drift = §1-7 ~2gg dietro su repo daily-ship (Game/Godot) + torneo §7 entry mai-vera (PR#18/SHA dangling — da correggere a parte, dominio §7). Raccomandazione: §1-7 HEAD-narrativi non affidabili come git-truth → usare QUESTO blocco §Ecosystem-audit per stato verificato; §1-7 per contesto operativo.
+
 ---
 
 ## Scheduled checkpoints
