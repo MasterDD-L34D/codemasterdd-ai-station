@@ -30,6 +30,16 @@ origin-ahead commits did **NOT touch any visual doc** (41-44, 00F,
 the earlier collection of the visual quartet on the Lenovo working tree is
 **content-valid** (L-029 stale-state concern resolved for the visual scope).
 
+**Re-verification (L-029 pre-action, 2026-05-16 ~05:00Z):** origin/main
+advanced `4ab9db62` -> `d41c0120` via PR #17 (OD-032 chatgpt ingest), #18
+(Game-repo reconcile), #19 (5-repo ecosystem audit) + backups.
+Re-checked: **none of the new commits touched any visual doc OR the
+Evo-Tactics subtree at all** -- canonical claim holds, strengthened across
+n=2 verification windows. Additionally the Ryzen-ahead gap **self-resolved**:
+former Ryzen HEAD `c2a7b485` is now merged into origin/main (Ryzen->origin
+sync occurred); only the Lenovo `ba115b08` OD-033 divergence remains as an
+Eduardo-mediated follow-up.
+
 **Eduardo-mediated follow-ups (NOT codemasterdd actions, sovereign boundary):**
 - Lenovo `ba115b08` (OD-033) is the only true Lenovo divergence -- evaluate
   PR-to-origin vs confirm origin's parallel OD-033/OD-037 lineage supersedes.
