@@ -76,6 +76,7 @@ Legenda status: ⬜ TODO · 🟡 WIP · ✅ DONE · 🔒 GATED · ⏸ DEFERRED
 | Item | Stato | Trigger sblocco |
 |---|---|---|
 | ~~skiv-monitor redesign (OD-042-A)~~ | ✅ SHIPPED | Game **PR #2281 merged** (workflow orphan-push `skiv-monitor/state` + backend fetch-branch + ADR amend). #2257 CLOSED, branch `auto/skiv-monitor-update` deleted, Game 0 PR. Block + bloat 8MB/4h risolti insieme. OD-041 PAT aveva Workflows-perm (verificato empirico, spec era errata). Runbook 2c = moot |
+| **playtest#2 automation (OD-044)** | 🟡 Envelope A SHIPPED | Game **PR #2282 merged**: bridge sim→`playtest_2_analyzer.py` + step nightly-cron. 5/7 dimensioni real (P4 4-layer + perf latency); P3-promotion/P6/OD-024/OD-026 = Envelope C follow-up. PT2-A=🟢-hard ammesso. Cron 02:00 ora produce report verdetto-pilastri auto. Vault OD-044 |
 | Arte biomi Wildermyth-style (OD-026 polish) | ⏸ enhancement opzionale | post-playtest#2 — non-blocker (ColorRect tint funzionale già shipped) |
 | ~~Vault-write `45-VISUAL-IDENTITY-CANONICAL.md`~~ | ✅ DONE | 45 creato+raffinato (vault PR #43); follow-up 2b (42/43 Ferrospora) catturato; conflitto proiezione RISOLTO ortogonale (vault PR #44, master-dd 2026-05-16). Visual-identity = chiuso |
 | pack-v2 atomize-deep | ⏸ | Phase B trigger |
