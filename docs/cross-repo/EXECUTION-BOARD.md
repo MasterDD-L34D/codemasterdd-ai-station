@@ -35,16 +35,18 @@ vault `docs/decisions/OD-024-031-aistation-reanalysis-2026-05-14.md`.
 
 | # | OD | Cosa | Repo | Env | Effort | Status | PR | Gate |
 |--:|----|------|------|:---:|------:|:------:|----|------|
-| 1 | OD-030 | Game-Database flag-ON (ratifica #2259 già merged) | Game | A | 0.5h | ⬜ TODO | — | nessuno (parti da qui) |
-| 2 | OD-025 | Promotions: REJECT demolish (code LIVE) + Phase B2 catalog tier elite/master | Game+Godot | A+B | 3.5h | ⬜ TODO | — | nessuno |
-| 3 | OD-028 | Audio: adopt Howler.js middleware (5KB MIT) | Game | A | 2h | ⬜ TODO | — | nessuno |
-| 4 | OD-031 | Pack drift: merge core+pack-v2-full-plus + diff audit log | Game | B | 3h | ⬜ TODO | — | nessuno (precede #5) |
-| 5 | OD-027 | Bridge species: full Species type + ecotypes integration | Game+Godot | B | 3h | ⬜ TODO | — | dep #4 |
-| 6 | OD-024 | Sentience: full RFC T1-T6 45/45 + 4 traits interocettivi | Game+Godot | B | 3-4h | ⬜ TODO | — | dep #5 (species.sentience_tier) |
-| 7 | OD-029 | Ancestors Path B: neurons_bridge 13→~50 (Senses+Dexterity) | Game+Godot | B | 5h | ⬜ TODO | — | chiude P4 |
+| 1 | OD-030 | Game-Database flag-ON (ratifica #2259 già merged) | Game | A | 0.5h | ✅ DONE | shipped 2026-05-14 | — |
+| 3 | OD-028 | Audio: adopt Howler.js middleware (5KB MIT) | Game | A | 2h | ⬜ TODO | — | nessuno — **PROSSIMO** |
+| 2 | OD-025 | Promotions: REJECT demolish (code LIVE) + Phase B2 catalog tier elite/master | Game+Godot | A+B | 3.5h | ⬜ TODO | — | engine LIVE; catalog tier mancante |
+| 4 | OD-031 | Pack drift: merge core+pack-v2-full-plus + diff audit log | Game | B | 3h | 🟡 PARZIALE | — | ETL `merge_pack_v2_species.py` esiste; consolidamento da verificare |
+| 5 | OD-027 | Bridge species: full Species type + ecotypes integration | Game+Godot | B | 3h | 🟡 PARZIALE | — | schema+ETL presenti; triplet species.json/catalog/loader assente. dep #4 |
+| 6 | OD-024 | Sentience: full RFC T1-T6 45/45 + 4 traits interocettivi | Game+Godot | B | 3-4h | 🟡 PARZIALE | — | `incoming/sentience_traits_v1.0.yaml` presente; sentience_tier solo 3 file core (non 45/45). dep #5 |
+| 7 | OD-029 | Ancestors Path B: neurons_bridge 13→~50 | Game+Godot | B | 5h | ✅ DONE | neurons_bridge.csv = 52 righe | — |
 | 8 | OD-026 | Atlas: diegetic mini-map TV + Phone overlay (FDF §16) | Godot | C | 6-8h | 🔒 GATED | — | **master-dd checkpoint pre-impl** (rischio shader) |
 
-Totale ~23h, 2-3 settimane. PR-strategy = **bundle per Envelope** (A: 030+025-smoke+028 → 1 PR · B: 024+025-B2+027+029+031 → 2-3 PR · C: 026 → 1 PR).
+> **Reconcile 2026-05-16** (verifica stato Game `84e8c44` vs board-seed): OD-030 + OD-029 erano **già shipped** (board seedata TODO senza verificare codice Game = trap void-pick evitata dalla board stessa). OD-024/027/031 = parziali (tooling presente, output finale assente) → re-audit puntuale a inizio esecuzione, non assumere TODO né DONE. Effort residuo reale ≈ 11-13h (non 23h: -5.5h da 030+029 done, parziali da quantificare). Prossimo exec pulito certo = **OD-028** (audio.js confermato assente).
+
+Totale residuo ≈11-13h (rivisto post-reconcile). PR-strategy = **bundle per Envelope** (A: 025-smoke+028 → 1 PR · B: 024+025-B2+027+031 → 2-3 PR · C: 026 → 1 PR).
 
 Legenda status: ⬜ TODO · 🟡 WIP · ✅ DONE · 🔒 GATED · ⏸ DEFERRED
 
@@ -75,7 +77,7 @@ Legenda status: ⬜ TODO · 🟡 WIP · ✅ DONE · 🔒 GATED · ⏸ DEFERRED
 ## 4. Protocollo orchestrazione (questa chat = control)
 
 1. **Verifica-stato** (OD-038 step 1) = leggi §1 di questa board, non audit.
-2. Prossimo = prima riga §1 `⬜ TODO` senza gate aperto (ora: **OD-030**).
+2. Prossimo = prima riga §1 `⬜ TODO` senza gate aperto (ora: **OD-028**, post-reconcile 2026-05-16).
 3. Dispatch a sessione-repo (Game/Godot). Sessione esegue Quality Gate.
 4. Sessione esecutrice aggiorna la sua riga (status + PR + data) nel commit.
 5. Item gated/deferred (§3) → mai auto-eseguire; sblocco solo via trigger.
