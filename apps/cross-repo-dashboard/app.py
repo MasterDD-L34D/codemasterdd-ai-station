@@ -186,7 +186,11 @@ def gh_api(endpoint: str, timeout: int = HTTP_TIMEOUT) -> tuple[bool, Any, str |
 
 
 def fetch_repo_state(name: str, force_refresh: bool = False) -> dict[str, Any]:
-    """Fetch state for a single repo (cached unless force_refresh)."""
+    """Fetch state for a single repo (cached unless force_refresh).
+
+    Note: This function is actively called by `fetch_all_state()` to populate the
+    `repos` dictionary key, which is then rendered in `index.html`.
+    """
     config = REPOS[name]
     slug = config["slug"]
     cache_key_pr = f"pr:{name}"
@@ -278,6 +282,9 @@ def fetch_all_state(force_refresh: bool = False) -> dict[str, Any]:
 def fetch_healthchecks(force_refresh: bool = False) -> list[dict[str, Any]]:
     """C1: ping HTTP endpoints + TCP port check + cache.
 
+    Note: This function is actively called by `fetch_all_state()` to populate the
+    `healthchecks` dictionary key, which is then rendered in `index.html`.
+
     Distinguishes:
     - 'up'      service responding 200 OK
     - 'down'    ConnectionError (not running)
@@ -346,7 +353,11 @@ def fetch_healthchecks(force_refresh: bool = False) -> list[dict[str, Any]]:
 
 
 def fetch_git_local(local_path: str) -> dict[str, Any]:
-    """C2: git log local divergence vs origin/main (or origin/master)."""
+    """C2: git log local divergence vs origin/main (or origin/master).
+
+    Note: This function is actively called by `fetch_all_state()` to populate the
+    `git_local` dictionary key within each repository's state, rendered in `index.html`.
+    """
     try:
         # HEAD short
         head = subprocess.run(
@@ -576,7 +587,11 @@ def fetch_journal_preview(max_chars: int = 600) -> dict[str, Any]:
 
 
 def fetch_velocity(local_path: str) -> dict[str, Any]:
-    """v0.3 NEW: commits per week last 4 weeks via git log --since."""
+    """v0.3 NEW: commits per week last 4 weeks via git log --since.
+
+    Note: This function is actively called by `fetch_all_state()` to populate the
+    `velocity` dictionary key within each repository's state, rendered in `index.html`.
+    """
     try:
         weeks_count = []
         for week_offset in range(4, 0, -1):  # 4 weeks ago, 3, 2, 1
