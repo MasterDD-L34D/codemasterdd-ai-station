@@ -4,7 +4,7 @@
 >
 > **Governance ownership**: questo repo (codemasterdd) è policy hub, non esegue codice altri progetti. Le azioni specifiche vivono nei rispettivi repo.
 >
-> Riferimenti deep: CLAUDE.md sezione "Progetti monitorati" (descrittivo), memory `project_multi_repo_overview.md` (architetturale), questo file (operativo).
+> Riferimenti deep: CLAUDE.md sezione "Progetti monitorati" (descrittivo), memory `project_multi_repo_overview.md` (architetturale), questo file (operativo), vault `docs/decisions/ecosystem-state-audit-2026-05-16.md` (audit git fresco 15-repo 2026-05-16: 14/15 sani+synced, evidenza cross-stack esterna — integrare qui se/quando master-dd ratifica).
 
 **Ultimo refresh**: **2026-05-14 sera-tardi-ultra-3** (post Component 1 cross-repo Dashboard v0.3 daily-use features ship + Docker stack ADR-0017 LIVE + claude-mem disabled + 4 lessons promoted L-018/019/020/021 + Max parallel strategy doc + T9 methodology empirical + Cross-repo PR scan NEGATIVE finding).
 
