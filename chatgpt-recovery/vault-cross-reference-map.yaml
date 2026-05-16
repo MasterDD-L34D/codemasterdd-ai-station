@@ -1,0 +1,220 @@
+# Vault Cross-Reference Map -- 2026-05-14
+# Maps ChatGPT export entities to vault-shared Spaces for atomize phase.
+# Used by classify.py + atomize.py to land Cards in correct vault locations.
+
+# Boundary policy: writes happen to staging area first
+# (`Sources/raw/chatgpt-export-2026-05-14/_processed/Cards/<space>/`),
+# Eduardo promotes selectively to canonical `Spaces/<space>/` via personal workflow.
+
+vault_root: C:/dev/vault-shared
+
+# Existing vault Spaces structure (scanned 2026-05-14)
+existing_spaces:
+  Dev:
+    - Evo-Tactics
+    - Flint
+    - Synesthesia
+  GDR:
+    - CharacterForge
+    - HaoJin
+    - Pathfinder
+    - Valdombra
+  GPT-Prompts: []
+  UniUPO: []
+
+# ChatGPT Project -> Vault Space mapping (high confidence)
+project_to_space:
+  "Progetto Gioco Evo Tactics":
+    space: "Dev/Evo-Tactics"
+    confidence: high
+    rationale: "Direct name match + vault already has full Evo-Tactics structure (adr, core, balance, design-log)"
+    conv_count: 541
+    files_count: 3
+    subfolder_hint: "chatgpt-2026-05-14"
+
+  "Le Sfide dell'Arena di Hao Jin":
+    space: "GDR/HaoJin"
+    confidence: high
+    rationale: "Direct name match + vault has Vol1_Core_Meta/Vol2_Moduli_NR/AddOn for this campaign"
+    conv_count: 592
+    files_count: 8
+
+  "Valdombra":
+    space: "GDR/Valdombra"
+    confidence: high
+    rationale: "Direct name match + vault has Encounters JSON/MD, Handouts PDF, maps"
+    conv_count: 16
+    files_count: 19
+
+  "MEZIERES PRO 2025: Corso ed Esercitazioni Manuali":
+    space: "UniUPO/Mezieres-PRO-2025"  # new subfolder (UniUPO sparse)
+    confidence: high
+    rationale: "Academic course Lyon-Mezieres design"
+    conv_count: 88
+    files_count: 11
+
+  "Specifiche del progetto di esame (2025 - 2026)":
+    space: "UniUPO/Esame-2025-2026"
+    confidence: high
+    rationale: "Academic exam specs UniUPO"
+    conv_count: 4
+    files_count: 0
+
+  "Il mio Mondo Fantasy":
+    space: "GDR/MondoFantasy"  # new subfolder (worldbuilding distinct from campaigns)
+    confidence: medium
+    rationale: "Personal fantasy worldbuilding, distinct from specific campaigns"
+    conv_count: 168
+    files_count: 20
+
+  "Creazione gpts Master DD":
+    space: "GPT-Prompts/MasterDD"  # new subfolder
+    confidence: high
+    rationale: "Meta-design Custom GPT for own use (Master DD persona)"
+    conv_count: 624
+    files_count: 15
+
+  "Creazione Gpts Modulare":
+    space: "GPT-Prompts/Modular"
+    confidence: high
+    rationale: "Modular GPT prompts architecture work"
+    conv_count: 3
+    files_count: 0
+
+  "Torneo Cremesi":
+    space: "GDR/TorneoCremesi"  # new subfolder
+    confidence: high
+    rationale: "GDR campaign, no existing vault subfolder yet"
+    conv_count: 106
+    files_count: 1
+
+  "pg forge":
+    space: "GDR/CharacterForge"
+    confidence: medium
+    rationale: "PG = Personaggi Giocanti (character forge), maps to existing CharacterForge subfolder"
+    conv_count: 78
+    files_count: 3
+    note: "Verify content overlaps before promote; possibly merge or sibling"
+
+  "Campagna supporto":
+    space: "GDR/_support"
+    confidence: low
+    rationale: "Generic GDR campaign support, may span multiple campaigns"
+    conv_count: 9
+    files_count: 0
+
+  "Tatertot":
+    space: "_unclassified"
+    confidence: low
+    rationale: "Empty project (0 conv), skip"
+    conv_count: 0
+    skip: true
+
+# Memory item tag heuristic -> Vault Space (used by atomize-memory.py to set frontmatter)
+# These are GUIDES, not authoritative — LLM classification refines later
+tag_to_space:
+  rpg-pathfinder: "GDR/Pathfinder"
+  evo-tactics: "Dev/Evo-Tactics"
+  worldbuilding: "GDR/MondoFantasy"
+  rpg-character-sheet: "GDR/CharacterForge"
+  campaign-instances: "GDR"  # ambiguous, needs LLM refinement
+  ai-tooling: "GPT-Prompts"
+  personal-life: "_personal"  # outside formal Spaces
+  travel-iberia: "_personal/travels"
+  game-ecosystem: "Dev/Evo-Tactics/ecology"
+  game-ecology: "Dev/Evo-Tactics/ecology"
+  game-mechanics: "Dev/Evo-Tactics"
+  software-build: "Dev"
+  formatting-preference: "_meta"  # personal preference, not space
+  linguistic: "_personal/linguistic"
+  personal-language: "_personal/linguistic"
+  rpg-loot: "GDR/Pathfinder/loot"
+
+# Title keyword -> Project mapping (for regular non-project conversations)
+title_keyword_to_project:
+  - keywords: ["evo", "tactics", "tattic", "biome", "trait", "core loop"]
+    project: "Progetto Gioco Evo Tactics"
+    space: "Dev/Evo-Tactics"
+  - keywords: ["hao jin", "arena"]
+    project: "Le Sfide dell'Arena di Hao Jin"
+    space: "GDR/HaoJin"
+  - keywords: ["valdombra", "karth", "salnera"]
+    project: "Valdombra"
+    space: "GDR/Valdombra"
+  - keywords: ["pathfinder", "pf1e", "pf 1e", "pathbuilder"]
+    project: null
+    space: "GDR/Pathfinder"
+  - keywords: ["synesth", "sinestes", "uniupo", "esame"]
+    project: "UniUPO related"
+    space: "UniUPO"
+  - keywords: ["mezieres", "lione", "corso"]
+    project: "MEZIERES PRO 2025"
+    space: "UniUPO/Mezieres-PRO-2025"
+  - keywords: ["custom gpt", "gpts", "system prompt", "instructions gpt"]
+    project: "Creazione gpts"
+    space: "GPT-Prompts"
+  - keywords: ["napoli", "barcellona", "viaggio", "catalogna"]
+    project: null
+    space: "_personal/travels"
+  - keywords: ["chiara"]
+    project: null
+    space: "_personal"
+  - keywords: ["codex", "claude code", "aider", "ollama", "ram", "linux", "windows", "node", "python"]
+    project: null
+    space: "Dev/_tech-meta"
+
+# Topic clusters expected from BERTopic (a priori guess, refines after embedding)
+expected_topic_clusters:
+  - label: evo-tactics-design
+    space_target: Dev/Evo-Tactics
+    docs_estimate: 541
+  - label: hao-jin-campaign
+    space_target: GDR/HaoJin
+    docs_estimate: 592
+  - label: gpt-creation
+    space_target: GPT-Prompts
+    docs_estimate: 627  # = 624 + 3
+  - label: mondo-fantasy-worldbuilding
+    space_target: GDR/MondoFantasy
+    docs_estimate: 168
+  - label: torneo-cremesi
+    space_target: GDR/TorneoCremesi
+    docs_estimate: 106
+  - label: mezieres-uniupo
+    space_target: UniUPO/Mezieres-PRO-2025
+    docs_estimate: 88
+  - label: pathfinder-character-forge
+    space_target: GDR/CharacterForge
+    docs_estimate: 78
+  - label: tech-misc
+    space_target: Dev/_tech-meta
+    docs_estimate: 200  # from regular bucket sample
+  - label: personal-travel-language
+    space_target: _personal
+    docs_estimate: 50
+  - label: valdombra-encounters
+    space_target: GDR/Valdombra
+    docs_estimate: 16
+  - label: pathfinder-loot-mechanics
+    space_target: GDR/Pathfinder
+    docs_estimate: 100
+  - label: synesthesia-uniupo-thesis
+    space_target: UniUPO
+    docs_estimate: 4
+  # Outliers expected: 200-500 docs across personal/misc/ephemeral chats
+
+# Staging policy
+staging:
+  raw_landing: "Sources/raw/chatgpt-export-2026-05-14"
+  processed_landing: "Sources/raw/chatgpt-export-2026-05-14/_processed/Cards"
+  # _processed/Cards/<space>/<topic>/ structure
+  promote_to_canonical: "Eduardo-direct only"
+  rationale: "Sibling-peer NO-WRITE default for canonical Spaces. Bulk-imported Cards stay in staging until reviewed."
+
+# Quality gates before promotion
+promote_gates:
+  - "Eduardo review sample 5-10 cards from each topic cluster"
+  - "Verify LLM topic labels match content semantics"
+  - "Check duplicate detection (existing vault Cards may already cover same content)"
+  - "Confirm cross-link wikilinks resolve correctly"
+  - "Sanitize PII if necessary (memory items contain real persons/places)"

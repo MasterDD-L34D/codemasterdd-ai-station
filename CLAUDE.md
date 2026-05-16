@@ -184,9 +184,9 @@ _(completato il 2026-04-19 — vedi "Stack installato")_
   - Stack: Karpathy LLM-wiki + ACCESS structure (Atlas/Cards/Sources/Spaces) + 7 production agent (Quality Gate workflow smoke->draft->production 3-gate) + Ollama LAN (Qwen + deepseek-r1) + Claude variants
   - Status 2026-05-10: **7/7 PRODUCTION milestone hit** (vault-linter v2 nested-YAML FP 0%, design-watcher v2 deepseek-r1 recall +33pp, ollama-dispatcher v1 -91% wall claim methodology TBR). 15+ commit 30gg. LLM routing matrix v1.0 path `Extras/config/llm-routing.json`. **DRIFT CONFIRMED 2026-05-12 sera empirical SSH read-only**: file hardcodes `http://192.168.1.121:11434` (1 occurrence vs reale **`.10`** Lenovo Ollama post DHCP reservation 2026-05-13). Ryzen-side dispatch verso Lenovo Ollama fallirebbe se invocato. Fix vault-side Eduardo-direct (sibling-peer NO-WRITE da codemasterdd) — BACKLOG R5.
   - **Privacy**: sovereign-only (NON in `~/.config/aider-privacy-whitelist.txt`). Contiene UniUPO esame + GDR campagne curated + GPT-Prompts library + Dev/Synesthesia academic + Dev/Evo-Tactics design notes.
-  - **Relazione codemasterdd**: sibling-peer disjoint scope. NO write-path bidirezionale. Cross-pattern reference one-way: vault llm-routing matrix v1.0 -> potential MODEL_ROUTING.md addendum (methodology Quality Gate Step 2 con split metrics + keep_alive + retries + output validation).
+  - **Relazione codemasterdd**: sibling-peer disjoint scope. Cross-pattern reference one-way: vault llm-routing matrix v1.0 -> potential MODEL_ROUTING.md addendum (methodology Quality Gate Step 2 con split metrics + keep_alive + retries + output validation).
   - **Hook globali**: compat VALIDATED 2026-05-10 (empty commit test PASS, reverted post-test). Vault `core.hooksPath` punta a `C:/Users/edusc/.local/share/git-hooks`.
-  - **Boundary**: codemasterdd NON scrive su vault-shared. Vault-shared self-governs. Eduardo media bidirezionale via personal workflow. SPOF accepted risk documentato.
+  - **Boundary** (amended 2026-05-16 post OD-033): codemasterdd **PUÒ push feature-branch + creare PR** su vault-shared (es. `claude/<topic>` branch). **MAI direct-main push. MAI merge** — Eduardo media il merge via PR review (personal workflow, oversight gate mantenuto). Local commit + branch push + PR-create OK automatici; merge è Eduardo-only. Vault-shared self-governs il merge. Razionale amend: recovery/ingest operations autorizzate (es. OD-033 ChatGPT Business) generano branch+PR innocui+reversibili; il SPOF oversight resta sul merge-gate, non sul branch-push. Pre-amend policy ("codemasterdd NON scrive") era over-strict per casi recovery espliciti.
   - **Dettaglio completo**: memoria `project_vault_shared.md` + sezione 6 in `STATUS_MULTI_REPO.md`
 
 ### Relazioni inter-repo
@@ -209,7 +209,7 @@ codemasterdd-ai-station (policy + infrastruttura)
                  │ (Atto 2 day 14+ active)
 ```
 
-**Sibling-peer disjoint** (sovereign-only, NO write-path bidirezionale, cross-reference one-way):
+**Sibling-peer disjoint** (sovereign-only, branch+PR write-path OK / merge Eduardo-only, cross-reference one-way):
 
 ```
 vault-shared (C:\dev\vault-shared)
@@ -218,8 +218,8 @@ vault-shared (C:\dev\vault-shared)
        │ Cross-pattern reference one-way -> codemasterdd MODEL_ROUTING addendum
        │ Privacy: sovereign-only (UniUPO + GDR + GPT-Prompts + Dev notes)
        │ Hook globali: compatibili (validated 2026-05-10)
-       │ Boundary: NO write-path codemasterdd-side
-       │ Eduardo media tutti i flow
+       │ Boundary (amended 2026-05-16): branch+PR push OK codemasterdd, merge Eduardo-only
+       │ Eduardo media il MERGE-gate (oversight), non il branch-push
 ```
 
 ### Monitoring cross-repo (sessione 2026-04-24)
