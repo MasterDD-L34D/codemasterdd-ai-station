@@ -14,9 +14,13 @@ async function submitCoord() {
   const r = document.getElementById('coord-result');
   r.textContent = 'Logging...';
   try {
+    const headers = {'Content-Type': 'application/json'};
+    if (window.__API_SECRET__) {
+      headers['Authorization'] = `Bearer ${window.__API_SECRET__}`;
+    }
     const res = await fetch('/api/coord-event', {
       method: 'POST',
-      headers: {'Content-Type': 'application/json'},
+      headers,
       body: JSON.stringify({notes}),
     });
     const data = await res.json();
