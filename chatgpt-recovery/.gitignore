@@ -1,0 +1,46 @@
+# Sensitive runtime artifacts
+.playwright-auth-state.json
+*.env
+.env
+.env.local
+
+# Output data (lands in vault-shared, not codemasterdd)
+exports/
+custom-gpts-output/
+classification-output/
+
+# Mock test fixtures (regenerable via test-fixtures/generate_mock.py)
+test-fixtures/mock-export/
+test-fixtures/mock-classification/
+test-fixtures/mock-cards/
+
+# Partial outputs from real ChatGPT data (CONTAIN PII — never commit)
+test-fixtures/partial-*/
+test-fixtures/project-preview/
+test-fixtures/review-sample-*.md
+test-fixtures/chatgpt-recovery-*-moc.md
+test-fixtures/entities-index-*.md
+test-fixtures/vault-collisions-*.md
+test-fixtures/gpt-refs-*.md
+test-fixtures/validate-cards-report*.md
+
+# Audit output (contains workspace metadata)
+audit-result.yaml
+audit-*.yaml
+
+# Python venv
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Node
+node_modules/
+package-lock.json
+playwright-report/
+test-results/
+
+# Local logs
+*.log
+copy.log
