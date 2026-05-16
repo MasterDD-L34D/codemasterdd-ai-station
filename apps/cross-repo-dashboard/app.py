@@ -495,7 +495,11 @@ def fetch_adr_countdown() -> list[dict[str, Any]]:
 
 
 def fetch_open_decisions() -> dict[str, Any]:
-    """D1: count active OD entries per repo (codemasterdd OPEN_DECISIONS.md primary)."""
+    """D1: count active OD entries per repo (codemasterdd OPEN_DECISIONS.md primary).
+
+    Note: This function is called by `fetch_all_state` to populate the
+    `open_decisions` data used by `index.html`. It should not be removed.
+    """
     od_file = CODEMASTERDD_ROOT / "OPEN_DECISIONS.md"
     if not od_file.exists():
         return {"available": False, "count_active": 0, "entries": []}
