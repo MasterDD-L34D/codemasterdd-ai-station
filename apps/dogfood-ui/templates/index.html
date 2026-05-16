@@ -45,7 +45,7 @@
             </tr>
             {% endfor %}
             {% if not stats.class_breakdown %}
-            <tr><td colspan="6" class="empty">Nessuna entry — <a href="{{ url_for('new_entry') }}">creane una</a></td></tr>
+            <tr><td colspan="6" class="empty">Nessuna entry — <a href="{{ url_for('main.new_entry') }}">creane una</a></td></tr>
             {% endif %}
         </tbody>
     </table>
@@ -76,7 +76,7 @@
 <section class="panel">
     <h2>Ultime {{ entries|length }} entries</h2>
     {% include '_entries_table.html' %}
-    <p><a href="{{ url_for('list_entries') }}">Vedi tutte →</a></p>
+    <p><a href="{{ url_for('main.list_entries') }}">Vedi tutte →</a></p>
 </section>
 
 {% if not langfuse_configured %}

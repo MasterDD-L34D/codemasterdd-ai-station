@@ -41,7 +41,7 @@
             </td>
             <td>
                 {% if authenticated %}
-                <form method="post" action="{{ url_for('delete_entry', entry_id=e.id) }}" onsubmit="return confirm('Delete entry #{{ e.id }}?')" class="inline">
+                <form method="post" action="{{ url_for('main.delete_entry', entry_id=e.id) }}" onsubmit="return confirm('Delete entry #{{ e.id }}?')" class="inline">
                     <button type="submit" class="btn btn-danger btn-sm">×</button>
                 </form>
                 {% endif %}
