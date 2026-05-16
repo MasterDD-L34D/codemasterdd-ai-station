@@ -146,7 +146,7 @@ $Summary
 
 - Type: $Type
 - codemasterdd ADR ref: <fill in ADR-NNNN or N/A>
-- L-XXX lesson ref: <fill in L-2026-MM-NNN or N/A>
+- Lesson ref: <fill in L-2026-MM-NNN or N/A>
 
 ## Source codemasterdd
 

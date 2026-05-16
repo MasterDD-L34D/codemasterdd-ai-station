@@ -29,7 +29,7 @@ def app_factory(tmp_path, monkeypatch):
     HERMETIC_VARS = (
         "LANGFUSE_HOST", "LANGFUSE_PUBLIC_KEY", "LANGFUSE_SECRET_KEY",
         "LANGFUSE_PROJECT_ID", "DAFNE_HOST", "LITELLM_ENDPOINT",
-        "FLASK_SECRET",
+        "FLASK_SECRET", "API_SECRET",
     )
 
     def _build(**env: str):
@@ -39,6 +39,8 @@ def app_factory(tmp_path, monkeypatch):
         # Ensure a secret key is present for testing if not explicitly provided
         if "FLASK_SECRET" not in env:
             monkeypatch.setenv("FLASK_SECRET", "test-secret-key")
+        if "API_SECRET" not in env:
+            monkeypatch.setenv("API_SECRET", "test-api-secret")
 
         for k, v in env.items():
             monkeypatch.setenv(k, v)
