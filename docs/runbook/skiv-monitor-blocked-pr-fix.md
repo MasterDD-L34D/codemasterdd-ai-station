@@ -12,11 +12,11 @@ related: [docs/cross-repo/EXECUTION-BOARD.md]
 
 # Runbook — fix loop skiv-monitor PR BLOCKED
 
-> ⚠️ **Questo runbook = mitigazione-ponte temporanea.** Fix canonico
-> root-cause = vault `docs/decisions/OD-042-skiv-monitor-distribution-
-> channel-2026-05-16.md` (decisione A: branch dedicato non-PR; risolve
-> ANCHE il bloat feed.jsonl 8MB/4h che il workaround NON risolve). Usa
-> questo solo per sbloccare #2257 prima dell'esecuzione OD-042.
+> ✅ **RISOLTO 2026-05-16 — runbook MOOT.** OD-042-A eseguito (Game PR
+> #2281 merged): skiv-monitor force-push a branch dedicato, no PR-to-main.
+> #2257 CLOSED, branch deleted, Game 0 PR. Block + bloat 8MB/4h chiusi
+> insieme. Questo runbook conservato solo come record storico del
+> debito; nessuna azione richiesta. Canonico: vault OD-042.
 
 ## Sintomo
 
