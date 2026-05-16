@@ -174,9 +174,15 @@ def create_app() -> Flask:
         and relies on SESSION_COOKIE_SAMESITE="Strict" for CSRF mitigation. No
         explicit CSRF token is implemented, accepting the residual risk for this
         localhost, single-user developer tool.
+
+        Security Note (auth): fails closed with HTTP 403 when API_SECRET is
+        unconfigured, so this destructive action is never reachable without
+        authentication.
         """
         api_secret = os.environ.get("API_SECRET")
-        if api_secret:
+        if not api_secret:
+            abort(403)  # fail-closed security invariant
+        else:
             is_auth = session.get("authenticated", False)
             auth_header = request.headers.get("Authorization", "")
             if not is_auth and not hmac.compare_digest(auth_header, f"Bearer {api_secret}"):
