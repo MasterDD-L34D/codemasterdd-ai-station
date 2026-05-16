@@ -54,6 +54,8 @@ def create_app() -> Flask:
     if not flask_secret:
         raise RuntimeError("FLASK_SECRET environment variable is not set")
     app.secret_key = flask_secret
+    app.config["SESSION_COOKIE_SAMESITE"] = "Strict"
+    app.config["SESSION_COOKIE_HTTPONLY"] = True
 
     db = Database(DB_PATH)
     db.init_schema()
