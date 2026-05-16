@@ -369,10 +369,12 @@ def fetch_git_local(local_path: str) -> dict[str, Any]:
             ahead = subprocess.run(
                 ["git", "-C", local_path, "rev-list", "--count", f"{base}..HEAD"],
                 capture_output=True, text=False, timeout=5, check=False,
+                creationflags=_NO_WINDOW_FLAG,
             )
             behind = subprocess.run(
                 ["git", "-C", local_path, "rev-list", "--count", f"HEAD..{base}"],
                 capture_output=True, text=False, timeout=5, check=False,
+                creationflags=_NO_WINDOW_FLAG,
             )
             if ahead.returncode == 0 and behind.returncode == 0:
                 return {
