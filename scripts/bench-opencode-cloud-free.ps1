@@ -79,7 +79,7 @@ function Invoke-Bench {
     $tmpErr = [System.IO.Path]::GetTempFileName()
 
     try {
-        # Pre-compute argument list (PS5.1 bug: '+' su array dentro -ArgumentList mal-parsato come positional)
+        # Workaround implemented: Pre-compute argument list because PS5.1 misparses '+' array concatenation directly inside -ArgumentList
         $psArgs = @("-NoProfile", "-ExecutionPolicy", "Bypass", "-File", $OpencodeCmd) + $argList
         $proc = Start-Process -FilePath "powershell" `
             -ArgumentList $psArgs `
