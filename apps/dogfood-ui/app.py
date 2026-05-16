@@ -15,11 +15,12 @@ import csv
 import io
 import json
 import sqlite3
+import hmac
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-from flask import Flask, render_template, request, redirect, url_for, jsonify, flash, Response
+from flask import Flask, render_template, request, redirect, url_for, jsonify, flash, Response, session, abort
 
 from db import Database
 from langfuse_client import LangfuseClient
@@ -53,6 +54,8 @@ def create_app() -> Flask:
     if not flask_secret:
         raise RuntimeError("FLASK_SECRET environment variable is not set")
     app.secret_key = flask_secret
+    app.config["SESSION_COOKIE_SAMESITE"] = "Strict"
+    app.config["SESSION_COOKIE_HTTPONLY"] = True
 
     db = Database(DB_PATH)
     db.init_schema()
@@ -72,11 +75,15 @@ def create_app() -> Flask:
 
     @app.context_processor
     def inject_langfuse_ctx() -> dict[str, Any]:
+        api_secret = os.environ.get("API_SECRET")
+        auth = session.get("authenticated", False) if api_secret else True
         return {
             "langfuse_host": host,
             "langfuse_project_id": LANGFUSE_PROJECT_ID,
             "langfuse_trace_url": langfuse_trace_url,
             "langfuse_configured": bool(LANGFUSE_PUBLIC_KEY),
+            "authenticated": auth,
+            "api_secret_configured": bool(api_secret),
         }
 
     # -----------------------------------------------------------------------
@@ -135,8 +142,52 @@ def create_app() -> Flask:
             return redirect(url_for("list_entries"))
         return render_template("new_entry.html", form={})
 
+    @app.route("/login", methods=["GET", "POST"])
+    def login():
+        api_secret = os.environ.get("API_SECRET")
+        if not api_secret:
+            flash("API_SECRET not configured, authentication is disabled.", "success")
+            return redirect(url_for("index"))
+
+        if request.method == "POST":
+            password = request.form.get("password", "")
+            if hmac.compare_digest(password, api_secret):
+                session["authenticated"] = True
+                flash("Logged in successfully.", "success")
+                return redirect(url_for("index"))
+            else:
+                flash("Invalid password.", "error")
+        return render_template("login.html")
+
+    @app.route("/logout")
+    def logout():
+        session.pop("authenticated", None)
+        flash("Logged out successfully.", "success")
+        return redirect(url_for("index"))
+
     @app.route("/entries/<int:entry_id>/delete", methods=["POST"])
     def delete_entry(entry_id: int):
+        """
+        Deletes a specific entry.
+
+        Security Note (CSRF): This endpoint is protected by session authentication
+        and relies on SESSION_COOKIE_SAMESITE="Strict" for CSRF mitigation. No
+        explicit CSRF token is implemented, accepting the residual risk for this
+        localhost, single-user developer tool.
+
+        Security Note (auth): fails closed with HTTP 403 when API_SECRET is
+        unconfigured, so this destructive action is never reachable without
+        authentication.
+        """
+        api_secret = os.environ.get("API_SECRET")
+        if not api_secret:
+            abort(403)  # fail-closed security invariant
+        else:
+            is_auth = session.get("authenticated", False)
+            auth_header = request.headers.get("Authorization", "")
+            if not is_auth and not hmac.compare_digest(auth_header, f"Bearer {api_secret}"):
+                abort(401)
+
         db.delete_entry(entry_id)
         flash(f"Entry #{entry_id} deleted.", "success")
         return redirect(url_for("list_entries"))

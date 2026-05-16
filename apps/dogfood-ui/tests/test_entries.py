@@ -163,7 +163,24 @@ def test_delete_entry(client):
         "outcome": "success",
     })
     entry_id = r.get_json()["id"]
+
+    # Authenticate before deleting
+    client.post("/login", data={"password": "test-api-secret"})
+
     r = client.post(f"/entries/{entry_id}/delete", follow_redirects=True)
     assert r.status_code == 200
     entries = client.get("/api/entries").get_json()
     assert all(e["id"] != entry_id for e in entries)
+
+def test_delete_entry_requires_auth(client):
+    r = client.post("/api/entries", json={
+        "task_description": "to delete unauth",
+        "classe": "cosmetic",
+        "stack": "other",
+        "outcome": "success",
+    })
+    entry_id = r.get_json()["id"]
+
+    # Unauthenticated deletion attempt should fail with 401
+    r = client.post(f"/entries/{entry_id}/delete", follow_redirects=True)
+    assert r.status_code == 401
