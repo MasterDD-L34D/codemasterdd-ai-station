@@ -35,18 +35,25 @@ vault `docs/decisions/OD-024-031-aistation-reanalysis-2026-05-14.md`.
 
 | # | OD | Cosa | Repo | Env | Effort | Status | PR | Gate |
 |--:|----|------|------|:---:|------:|:------:|----|------|
-| 1 | OD-030 | Game-Database flag-ON (ratifica #2259 già merged) | Game | A | 0.5h | ✅ DONE | shipped 2026-05-14 | — |
-| 3 | OD-028 | Audio: adopt Howler.js middleware (5KB MIT) | Game | A | 2h | ⬜ TODO | — | nessuno — **PROSSIMO** |
-| 2 | OD-025 | Promotions: REJECT demolish (code LIVE) + Phase B2 catalog tier elite/master | Game+Godot | A+B | 3.5h | ⬜ TODO | — | engine LIVE; catalog tier mancante |
-| 4 | OD-031 | Pack drift: merge core+pack-v2-full-plus + diff audit log | Game | B | 3h | 🟡 PARZIALE | — | ETL `merge_pack_v2_species.py` esiste; consolidamento da verificare |
-| 5 | OD-027 | Bridge species: full Species type + ecotypes integration | Game+Godot | B | 3h | 🟡 PARZIALE | — | schema+ETL presenti; triplet species.json/catalog/loader assente. dep #4 |
-| 6 | OD-024 | Sentience: full RFC T1-T6 45/45 + 4 traits interocettivi | Game+Godot | B | 3-4h | 🟡 PARZIALE | — | `incoming/sentience_traits_v1.0.yaml` presente; sentience_tier solo 3 file core (non 45/45). dep #5 |
-| 7 | OD-029 | Ancestors Path B: neurons_bridge 13→~50 | Game+Godot | B | 5h | ✅ DONE | neurons_bridge.csv = 52 righe | — |
-| 8 | OD-026 | Atlas: diegetic mini-map TV + Phone overlay (FDF §16) | Godot | C | 6-8h | 🔒 GATED | — | **master-dd checkpoint pre-impl** (rischio shader) |
+| 1 | OD-030 | Game-Database flag-ON | Game | A | — | ✅ SHIPPED | Envelope A **PR #2261** | — |
+| 2 | OD-025 | Promotions REJECT demolish + B2 catalog elite/master | Game | A+B | — | ✅ SHIPPED | A: PR #2261 · B2: envelope-b 2026-05-14 (`promotions.yaml` v0.2.0) | — |
+| 3 | OD-028 | Audio Howler.js middleware | Game | A | — | ✅ SHIPPED | Envelope A PR #2261 (`apps/play/src/audio.js`) | — |
+| 4 | OD-031 | Pack v2-full-plus merge → species_catalog.json | Game | B | — | ✅ SHIPPED | envelope-b 2026-05-14 (15 species consolidated) | — |
+| 5 | OD-027 | Full Species type + ecotypes | Game | B | — | ✅ SHIPPED | envelope-b (`species_catalog.json` v0.2.0) | — |
+| 6 | OD-024 | Sentience full + 4 traits interocettivi | Game | B | — | ✅ SHIPPED | envelope-b (15/15 `sentience_index` T0-T3 + active_effects.yaml) | — |
+| 7 | OD-029 | Ancestors neurons_bridge 13→51 | Game | B | — | ✅ SHIPPED | envelope-b (`neurons_bridge.csv` 51 entries v0.2) | — |
+| 8 | OD-026 | Atlas diegetic mini-map TV + Phone overlay | Godot | C | 6-8h | ⏸ DEFERRED | — | **master-dd design call + asset commission** (shader/Wildermyth-style biome silhouette) |
+| 9 | **Godot v2 cross-stack mirror** | species_catalog.gd + species_loader.gd + neurons_bridge_catalog.gd + promotion_engine.gd elite/master extend | Godot | B | 4-6h | ⬜ **TODO** | — | nessuno — **UNICO EXEC APERTO**. Data landed Game-side, client Godot pending |
 
-> **Reconcile 2026-05-16** (verifica stato Game `84e8c44` vs board-seed): OD-030 + OD-029 erano **già shipped** (board seedata TODO senza verificare codice Game = trap void-pick evitata dalla board stessa). OD-024/027/031 = parziali (tooling presente, output finale assente) → re-audit puntuale a inizio esecuzione, non assumere TODO né DONE. Effort residuo reale ≈ 11-13h (non 23h: -5.5h da 030+029 done, parziali da quantificare). Prossimo exec pulito certo = **OD-028** (audio.js confermato assente).
+> **🔴 Reconcile DEFINITIVO 2026-05-16** (truth-layer trovato: Game `docs/governance/open-decisions/OD-024-031-envelope-b-summary.md` `status: shipped` + `OD-024-031-verdict-record.md` + Envelope A **PR #2261**):
+>
+> **7/8 OD GIÀ SHIPPED 2026-05-14** (stesso giorno della reanalisi — sequence eseguita in blocco da sessioni-Game subito dopo approvazione). Envelope A (OD-030+025-smoke+028) = PR #2261. Envelope B (OD-031/027/024/029/025-B2) = shipped 2026-05-14.
+>
+> **Fallimento metodo board (onesto)**: la prima board-seed era TODO **speculativo non verificato**; il reconcile intermedio usò un path-check errato (`apps/play/public/` invece di `src/`). Il truth-layer autoritativo (`envelope-b-summary status:shipped`, PR #2261) **esisteva già in Game** e doveva essere la fonte di seed. Board pre-reconcile = ~88% errata (7/8 mis-stati). **Lezione OD-038**: seed control-plane SEMPRE dal truth-layer esecuzione esistente (execution-summary nei repo), MAI da inferenza/ratifica-doc. Aggiunta §regola 0 protocollo.
+>
+> **Stato reale**: solo **#9 Godot cross-stack mirror** (~4-6h, 2-3 PR Godot v2) = exec aperto. OD-026 = deferred-gated. Sequence "23h" era già fatta.
 
-Totale residuo ≈11-13h (rivisto post-reconcile). PR-strategy = **bundle per Envelope** (A: 025-smoke+028 → 1 PR · B: 024+025-B2+027+031 → 2-3 PR · C: 026 → 1 PR).
+Effort residuo reale ≈ **4-6h** (solo Godot mirror #9; OD-026 gated separato). PR-strategy mirror = 2-3 PR Godot v2 (1 per Resource).
 
 Legenda status: ⬜ TODO · 🟡 WIP · ✅ DONE · 🔒 GATED · ⏸ DEFERRED
 
@@ -76,8 +83,9 @@ Legenda status: ⬜ TODO · 🟡 WIP · ✅ DONE · 🔒 GATED · ⏸ DEFERRED
 
 ## 4. Protocollo orchestrazione (questa chat = control)
 
+0. **Seed da truth-layer (regola anti-illusione)**: una riga board nasce/aggiorna SOLO da execution-summary verificato nel repo target (es. Game `docs/governance/open-decisions/*-envelope-*-summary.md`, PR merged), MAI da doc-ratifica/inferenza. Doc decisione = razionale; execution-summary repo = verità stato. Violata 2026-05-16 (board seedata speculativa, 7/8 errati) → questa regola.
 1. **Verifica-stato** (OD-038 step 1) = leggi §1 di questa board, non audit.
-2. Prossimo = prima riga §1 `⬜ TODO` senza gate aperto (ora: **OD-028**, post-reconcile 2026-05-16).
+2. Prossimo = prima riga §1 `⬜ TODO` senza gate aperto (ora: **#9 Godot v2 cross-stack mirror**, post-reconcile-definitivo 2026-05-16).
 3. Dispatch a sessione-repo (Game/Godot). Sessione esegue Quality Gate.
 4. Sessione esecutrice aggiorna la sua riga (status + PR + data) nel commit.
 5. Item gated/deferred (§3) → mai auto-eseguire; sblocco solo via trigger.
