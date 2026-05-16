@@ -668,11 +668,19 @@ def coord_event_log() -> Any:
     """B1: Invoca scripts/cross-repo/coord-event-log.ps1 -Quiet -NotesQuick <notes>.
 
     Security (P0.2 harsh-reviewer 2026-05-14 fix):
-    notes input regex-sanitized to prevent PowerShell command injection (CWE-77/78).
+    includes authentication (via API_SECRET if configured) and notes input
+    regex-sanitized to prevent PowerShell command injection (CWE-77/78).
     Blocked chars: backtick (`), dollar ($), parens (), pipe (|), semicolon (;),
     redirect (<>), ampersand (&), quotes ('"), CR/LF, backslash escape sequences.
     Allowed: alphanumeric + space + common punctuation [.,_/:#-+()=].
     """
+    api_secret = os.environ.get("API_SECRET")
+    if api_secret:
+        auth_header = request.headers.get("Authorization", "")
+        # Constant-time compare to avoid timing side-channel.
+        if not hmac.compare_digest(auth_header, f"Bearer {api_secret}"):
+            return jsonify({"ok": False, "error": "unauthorized"}), 401
+
     notes = (request.json or {}).get("notes", "").strip()
     if not notes:
         return jsonify({"ok": False, "error": "notes required"}), 400
