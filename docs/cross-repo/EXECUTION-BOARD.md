@@ -43,7 +43,7 @@ vault `docs/decisions/OD-024-031-aistation-reanalysis-2026-05-14.md`.
 | 6 | OD-024 | Sentience full + 4 traits interocettivi | Game | B | — | ✅ SHIPPED | envelope-b (15/15 `sentience_index` T0-T3 + active_effects.yaml) | — |
 | 7 | OD-029 | Ancestors neurons_bridge 13→51 | Game | B | — | ✅ SHIPPED | envelope-b (`neurons_bridge.csv` 51 entries v0.2) | — |
 | 8 | OD-026 | Atlas diegetic mini-map TV + Phone overlay | Godot | C | 6-8h | ⏸ DEFERRED | — | **master-dd design call + asset commission** (shader/Wildermyth-style biome silhouette) |
-| 9 | **Godot v2 cross-stack mirror** | species_catalog.gd + species_loader.gd + neurons_bridge_catalog.gd + promotion_engine.gd elite/master extend | Godot | B | 4-6h | ⬜ **TODO** | — | nessuno — **UNICO EXEC APERTO**. Data landed Game-side, client Godot pending |
+| 9 | Godot v2 cross-stack mirror | species_catalog.gd + neurons_bridge_catalog.gd + promotion_engine.gd elite/master | Godot | B | — | ✅ SHIPPED | Godot `afaa656`: species_catalog.gd (151r, facade+wired 6 callers) · neurons_bridge_catalog.gd (137r) · promotion_engine.gd (419r, OD-025-B2 elite/master 2026-05-14). `species_loader.gd` = redundant non-creato (YAGNI: catalog Resource È la facade, 0 consumer per loader separato) | — |
 
 > **🔴 Reconcile DEFINITIVO 2026-05-16** (truth-layer trovato: Game `docs/governance/open-decisions/OD-024-031-envelope-b-summary.md` `status: shipped` + `OD-024-031-verdict-record.md` + Envelope A **PR #2261**):
 >
@@ -51,9 +51,9 @@ vault `docs/decisions/OD-024-031-aistation-reanalysis-2026-05-14.md`.
 >
 > **Fallimento metodo board (onesto)**: la prima board-seed era TODO **speculativo non verificato**; il reconcile intermedio usò un path-check errato (`apps/play/public/` invece di `src/`). Il truth-layer autoritativo (`envelope-b-summary status:shipped`, PR #2261) **esisteva già in Game** e doveva essere la fonte di seed. Board pre-reconcile = ~88% errata (7/8 mis-stati). **Lezione OD-038**: seed control-plane SEMPRE dal truth-layer esecuzione esistente (execution-summary nei repo), MAI da inferenza/ratifica-doc. Aggiunta §regola 0 protocollo.
 >
-> **Stato reale**: solo **#9 Godot cross-stack mirror** (~4-6h, 2-3 PR Godot v2) = exec aperto. OD-026 = deferred-gated. Sequence "23h" era già fatta.
+> **Stato reale (3° reconcile 2026-05-16, regola-0 applicata)**: anche #9 Godot mirror era **già shipped** (verifica Godot `afaa656`: 3/3 file presenti+wired; species_loader.gd redundant non-creato by-design). **Sequence OD-024-031 INTERAMENTE COMPLETA** (Game+Godot). Unico residuo = **OD-026 deferred-gated** (master-dd design call). Effort exec aperto = **0h**. Regola-0 ha intercettato 3 board-row speculative consecutive (030/029/028 → 7/8 → #9): seed-da-truth-layer ora obbligatorio.
 
-Effort residuo reale ≈ **4-6h** (solo Godot mirror #9; OD-026 gated separato). PR-strategy mirror = 2-3 PR Godot v2 (1 per Resource).
+Effort residuo exec ≈ **0h**. Aperto solo OD-026 (⏸ deferred-gated, fuori dispatch autonomo). Sequence OD-024-031 = ✅ done end-to-end.
 
 Legenda status: ⬜ TODO · 🟡 WIP · ✅ DONE · 🔒 GATED · ⏸ DEFERRED
 
@@ -85,7 +85,7 @@ Legenda status: ⬜ TODO · 🟡 WIP · ✅ DONE · 🔒 GATED · ⏸ DEFERRED
 
 0. **Seed da truth-layer (regola anti-illusione)**: una riga board nasce/aggiorna SOLO da execution-summary verificato nel repo target (es. Game `docs/governance/open-decisions/*-envelope-*-summary.md`, PR merged), MAI da doc-ratifica/inferenza. Doc decisione = razionale; execution-summary repo = verità stato. Violata 2026-05-16 (board seedata speculativa, 7/8 errati) → questa regola.
 1. **Verifica-stato** (OD-038 step 1) = leggi §1 di questa board, non audit.
-2. Prossimo = prima riga §1 `⬜ TODO` senza gate aperto (ora: **#9 Godot v2 cross-stack mirror**, post-reconcile-definitivo 2026-05-16).
+2. Prossimo = prima riga §1 `⬜ TODO` senza gate aperto (ora: **NESSUNO** — sequence OD-024-031 completa; solo OD-026 ⏸ deferred-gated, sblocco = master-dd design call).
 3. Dispatch a sessione-repo (Game/Godot). Sessione esegue Quality Gate.
 4. Sessione esecutrice aggiorna la sua riga (status + PR + data) nel commit.
 5. Item gated/deferred (§3) → mai auto-eseguire; sblocco solo via trigger.
