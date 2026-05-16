@@ -384,7 +384,7 @@ Vault-shared workflow richiede Eduardo per ogni promote/tune/quality-gate -- int
 |------|-------------|--------|------|
 | **claude-supermemory-local** | main `a72152b` | Active dev | Local SDK replacement Supermemory cloud; Eduardo lavoro recente |
 | **compass-marketplace** | `fix/marketplace-schema-source-string` `5943ffa` | Active dev | v0.4.3 fix in flight (compass plugin marketplace) |
-| **Game-Database** | main `91f5468` PR #105 | **Active multi-AI** | **Taxonomy CMS Evo-Tactics** (Prisma + PG + Express + React MUI + Vite). Sibling Game (HTTP API integration ADR-2026-04-14). 7 PR Jules OPEN 2026-05-15 + 7 sessioni Jules cumulative cross-day. Has own CLAUDE.md (multi-client pattern ADR-0021). PUBLIC, no LICENSE. Audit 2026-05-15 sera codemasterdd-side (vedi paragrafo dedicato sotto + L-025 case study). |
+| **Game-Database** | origin/main `3be942c` (#114) | **Active, burst-landed** | **Taxonomy CMS Evo-Tactics** (Prisma + PG + Express + React MUI + Vite). Sibling Game (HTTP API integration ADR-2026-04-14). ~~7 PR Jules OPEN 2026-05-15~~ → **STALE-corretto 2026-05-16: burst #107-114 LANDED (security timing-fix, perf, test, refactor), 0 PR open ora, synced 0/0**. Has own CLAUDE.md (multi-client pattern ADR-0021). PUBLIC, no LICENSE. Reconcile OD-038 2026-05-16 (vault `cross-stack-state-delta-2026-05-16.md` §Game-Database): backlog `docs/operativo/ROADMAP.md` ~50% stale, OPEN-REALE = I1 standard-error-response-backend (Now-pri). |
 | **Master-DD-Pathfinder-GPT** | `codex-fix-pr-542-follow-up-regressions-clean` `5bd2ccb` | Active Codex | Pathfinder GPT campaign tooling (Codex branch flight) |
 | **torneo-cremesi-site** | main `43eda85` PR #18 | Active dev | Static site Pathfinder Torneo |
 
