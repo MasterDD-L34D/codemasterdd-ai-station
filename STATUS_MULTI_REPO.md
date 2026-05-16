@@ -4,7 +4,7 @@
 >
 > **Governance ownership**: questo repo (codemasterdd) è policy hub, non esegue codice altri progetti. Le azioni specifiche vivono nei rispettivi repo.
 >
-> Riferimenti deep: CLAUDE.md sezione "Progetti monitorati" (descrittivo), memory `project_multi_repo_overview.md` (architetturale), questo file (operativo), vault `docs/decisions/ecosystem-state-audit-2026-05-16.md` (audit git fresco 15-repo 2026-05-16: 14/15 sani+synced, evidenza cross-stack esterna — integrare qui se/quando master-dd ratifica).
+> Riferimenti deep: CLAUDE.md sezione "Progetti monitorati" (descrittivo), memory `project_multi_repo_overview.md` (architetturale), questo file (operativo), vault `docs/decisions/ecosystem-state-audit-2026-05-16.md` (audit git fresco 15-repo 2026-05-16: 14/15 sani+synced, evidenza cross-stack esterna — ✅ **RATIFICATO master-dd 2026-05-16, integrato §Ecosystem audit 15-repo sotto**).
 
 **Ultimo refresh**: **2026-05-14 sera-tardi-ultra-3** (post Component 1 cross-repo Dashboard v0.3 daily-use features ship + Docker stack ADR-0017 LIVE + claude-mem disabled + 4 lessons promoted L-018/019/020/021 + Max parallel strategy doc + T9 methodology empirical + Cross-repo PR scan NEGATIVE finding).
 
@@ -439,6 +439,24 @@ Game-Database e' emerso da audit Jules REST API come repo **attivamente lavorato
 - Aggiunta formale a CLAUDE.md "Progetti monitorati" sezione: DONE in stesso commit (vedi paragrafo Game-Database).
 - LICENSE add (no LICENSE current): defer Eduardo decisione strategica (MIT vs Apache vs proprietary).
 - Clone locale codemasterdd: defer, scope expansion Ryzen-led OK.
+
+---
+
+## Ecosystem audit 15-repo — git-verified (RATIFICATO master-dd 2026-05-16)
+
+Reactivation gate `EXTERNAL_REPOS.md` #6 (intento master-dd) + #7 (evidenza fresca) soddisfatti. Snapshot **git-ground-truth 2026-05-16** (branch/dirty/sync/detached verificati diretti). Supera gli HEAD sparsi/stale nelle sezioni §1-7 come *snapshot verità-git*; le §1-7 restano dettaglio operativo mantenuto (NON riscritte — additive per design, lezione PR #116 no-clobber).
+
+Fonte completa (matrice per-repo + raccomandazioni): vault `docs/decisions/ecosystem-state-audit-2026-05-16.md`.
+
+- **15 repo totali** (5 core + 10 scoperti). **14/15 git-sani + GitHub-synced.**
+- Drift reale al momento audit: `torneo-cremesi-site` (20-behind) → **risolto** (ff-pull 2026-05-16, ora 0/0).
+- `Game` root dir = DETACHED 5d27fc50 (cosmetico; lavoro nei worktree, main-wt synced 0/0 — documentato, lasciare).
+- `Game-Godot-v2` main-wt: ff-pull 2026-05-16 → 0/0. `.uid/.import` tracked (policy commit, PR #282).
+- `codemasterdd` (questo): policy-hub, governance riattivata da questo blocco.
+- Pattern: riconciliazione stale-doc applicabile **solo su drift dimostrato**, non default (provato 5× void blind-pick).
+- Hygiene minori (opzionali, non-blocking): Godot-v2 `*.uid` gitignore-policy (project decision), `.vs/` torneo junk.
+
+Regola: questo blocco = verità-git snapshot puntuale; ri-verificare con audit fresco prima di trattarlo come corrente (no hand-edit da memoria). Le §1-7 = stato operativo ricco continuativo.
 
 ---
 
