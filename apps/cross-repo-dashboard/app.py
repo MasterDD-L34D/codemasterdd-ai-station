@@ -600,8 +600,13 @@ def fetch_velocity(local_path: str) -> dict[str, Any]:
         return {"available": False, "reason": f"{type(e).__name__}: {str(e)[:100]}"}
 
 
-def fetch_activity_feed(repos_state: dict[str, Any], limit: int = 10) -> list[dict[str, Any]]:
-    """v0.3 NEW: aggregate last commits across all repos sorted by date desc."""
+def fetch_activity_feed(repos_state: dict[str, Any], limit: int = 10) -> list[dict[str, Any]]:  # noqa
+    """v0.3 NEW: aggregate last commits across all repos sorted by date desc.
+
+    Note: This function is actively called by fetch_all_state() to populate the
+    'activity_feed' data used by index.html. Do not remove it despite what static
+    analysis tools might suggest.
+    """
     activities = []
     for name, repo in repos_state.items():
         commit = repo.get("last_commit")
