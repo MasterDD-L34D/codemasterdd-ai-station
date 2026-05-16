@@ -4,9 +4,15 @@
 >
 > **Governance ownership**: questo repo (codemasterdd) è policy hub, non esegue codice altri progetti. Le azioni specifiche vivono nei rispettivi repo.
 >
-> Riferimenti deep: CLAUDE.md sezione "Progetti monitorati" (descrittivo), memory `project_multi_repo_overview.md` (architetturale), questo file (operativo).
+> Riferimenti deep: CLAUDE.md sezione "Progetti monitorati" (descrittivo), memory `project_multi_repo_overview.md` (architetturale), questo file (operativo), vault `docs/decisions/ecosystem-state-audit-2026-05-16.md` (audit git fresco 15-repo 2026-05-16: 14/15 sani+synced, evidenza cross-stack esterna — integrare qui se/quando master-dd ratifica).
 
-**Ultimo refresh**: 2026-05-12 sera (post cluster Bundle 1+2+3 12/5 sera + residual auto-ratification ADR-0025+0026: codemasterdd HEAD `1be6c5b` post PR #65 cumulative **47 PR 7-12/5** + **3 plugins installed** ecosystem MAJOR upgrade (compass + superpowers v5.1.0 + claude-mem v13.2.0 + 4 marketplaces + Bun v1.3.13 + repomix v1.14.0) + **5 research docs Bundle 2+3** + 2 lessons promoted (L-010 reflexive methodology audit + L-011 applicative optimization audit) + ADR-0025/0026 ratified Accepted; Game HEAD `36c9822` post PR #2258 200 PR last 14d sprint; Game-Godot-v2 HEAD `a765e4e` post PR #249 +34 PR dal 7/5 (+2 codemasterdd-authored #248+#249 TKT-P2 Phase D complete); Dafne stable HEAD `9255b4b` post PR #102 8/5 14:39 4gg inattivita'; **vault-shared HEAD `2007a8a2` 12/5 7/7 PRODUCTION milestone hit** + frontmatter drift 7/7 identificato + handoff doc Eduardo-direct `docs/aa01-handoff/2026-05-12-vault-frontmatter-drift-handoff.md`).
+**Ultimo refresh**: **2026-05-14 sera-tardi-ultra-3** (post Component 1 cross-repo Dashboard v0.3 daily-use features ship + Docker stack ADR-0017 LIVE + claude-mem disabled + 4 lessons promoted L-018/019/020/021 + Max parallel strategy doc + T9 methodology empirical + Cross-repo PR scan NEGATIVE finding).
+
+**Codemasterdd state**: HEAD main `6dc0bed` (console flash defensive fix) + branch `claude/max-parallel-execution-2026-05-14` commit `dfa7f59` post 5 commits Max-tier (strategy + T9 + dogfood-ui cache + JOURNAL + v0.3 features). Cumulative **57+ PR mergeati 7-14/5** + 5 PR open today (#87 #88 #89 #90 #91 merged #92 open). Plugin ecosystem: 3 plugins, claude-mem disabled 14/5 sera per upstream issue #19012 (console flash bug closed-not-planned). **21 lessons** AA01 cumulative (L-001..L-021, 4 new today). **15+ ADR** (P5 harsh-reviewer ratified Accepted 14/5 amendment).
+
+**Cross-repo state** (post empirical scan 14/5 sera): Game HEAD `36c9822d` post Phase B Day 5/8 OOA audit (200 PR last 14d sprint cumulative); Game-Godot-v2 HEAD `1d9ce3b` su local branch claude/tkt-p2-phase-d-phone-organization-mode (origin/main `a765e4e` ahead↑1↓1); Dafne stable HEAD `9255b4b` post PR #102 6gg inattivita; vault HEAD `1abaa743` post R5 IP fix today.
+
+**Cross-repo PR scan finding 14/5**: ZERO drift candidates emersi. Tutti 4 target repos (Game/Godot/Dafne/vault) governance interna autosufficiente CONFIRMED — 0 CLAUDE.md mentions di codemasterdd patterns. Component 2 first-3-PR validation NON ha organic emergence. Empirical insight: cross-repo PR pattern usable ONLY se drift specific emerge naturalmente, NON scan-driven.
 
 ---
 
@@ -14,13 +20,13 @@
 
 | Repo | Status | Next action | Deadline/trigger | Blocker |
 |------|--------|-------------|------------------|---------|
-| **codemasterdd-ai-station** | **Fase 6+7 CLOSED**. HEAD `1be6c5b` post PR #65 12/5 sera (**47 PR mergeati 7-12/5 cumulative**: pre-cluster #11-#62 + cluster 12/5 sera #63 Bundle 1 hygiene + #64 Bundle 2 methodological + #65 Bundle 3 applicative). **Plugin ecosystem MAJOR upgrade**: 3 plugins (compass v0.4.3 + superpowers v5.1.0 + claude-mem v13.2.0) + 4 marketplaces + Bun v1.3.13 + repomix v1.14.0. **ADR-0025+0026 ratified Accepted** auto 12/5 sera. **11 lessons** AA01 cumulative (L-001 + L-002..L-011). 12/18 agent ready (3 grandfathered + 6 dormant workflow-driven). | SPRINT_02 prima sessione 20/05+ (T1+T3+T4 anticipated DONE, restano T2/T5/T7) | 2026-05-19 (Claude Max expiration, **7gg residui**) | Nessuno bloccante. H7 ANTHROPIC_API_KEY pending Eduardo direct (Anthropic Console ~5min, browser-direct) |
+| **codemasterdd-ai-station** | **Fase 6+7 CLOSED + SPRINT_02 ATTACK MODE 14/5**. HEAD main `6dc0bed` + branch PR #92 `dfa7f59` Max-tier work. **57+ PR mergeati 7-14/5 cumulative** + 1 PR open #92 (5 commits Max parallel strategy + T9 methodology + dogfood-ui cache + JOURNAL + v0.3 features). **Component 1 Dashboard v0.3 LIVE** (apps/cross-repo-dashboard/, port 8081, daily-use features: filter/JOURNAL preview/drill-down/velocity/activity feed). **Docker stack ADR-0017 LIVE 3/3** (LiteLLM + Langfuse + Postgres + dogfood-ui). **claude-mem DISABLED 14/5** post upstream issue #19012 console flash bug. **21 lessons cumulative** L-001..L-021 (4 new today: L-018/019/020/021). **ADR-0026 P5 ACCEPTED ratified** 14/5 amendment empirical. | SPRINT_02 attack mode parallel Max+sovereign **NOW** (T8/T9/T10 shipped 14/5 NOT 5/20+) | 2026-05-19 (Claude Max expiration, **5gg residui**) | Nessuno bloccante. Eduardo restart CC quando convenient -> verify zero claude-mem flashes |
 | **Synesthesia** | Dormant, HEAD `05f8a92` (invariato) | Riattiva pre-esame UniUPO | ~agosto 2026 | Nessuno (dormant intenzionale) |
 | **Game (Evo-Tactics Vue3)** | **HEAD `36c9822` post PR #2258 11/5** (200 PR last 14d sprint multi-track). Local checkout `C:/dev/Game` reset --hard origin/main 2026-05-12 (Path A confirmed post Protocol 1+2 investigation: 27 commit AA01 CAP-* Sprint Impronta MAI shipped a origin -> safe abandon via 13 backup branches `aa01/cap-*` + stash safety net 295 file WIP refactor). PR open: solo #2257 skiv-monitor (auto-skip pattern). **OD-023 APERTA 2026-05-12** (Phase B execution date verdict, Path C+Path A 34/35). | Continue monitoring (Eduardo-driven). NO codemasterdd action proattiva. **Phase B Day 7 formal closure scheduled 2026-05-14 mattina UTC** (sub-event ADR-0024 codemasterdd addendum PR #55). | **2026-05-14** Phase B closure | Nessuno (governance interna Game autonoma) |
 | **Game-Godot-v2** | **249 PR mergeati cumulative** (+34 PR dal 7/5, +2 questa sessione codemasterdd-authored: #248 Main SeasonalService wire + #249 Phone MODE_ORGANIZATION). HEAD origin/main `a765e4e` PR #249. Local checkout pulled fast-forward post-merge. Path A canonical CHIUSO + Sprint AC bundle closed. Hook globali applicati. Governance interna autosufficiente. **TKT-P2 Brigandine Phase D cross-stack chain COMPLETE 2026-05-12**: backend (Game #2251+2252+2253) -> Godot HTTP client (#245) -> TV season label (#245) -> Main caller wire (#248) -> Phone organization mode (#249). | Continue port (Eduardo-driven). Deferred follow-up GUT integration tests test_main_seasonal_wire.gd + test_phone_composer_organization.gd (~55 LOC totali, NON blocking). | No fixed | Nessuno |
 | **Dafne swarm (evo-swarm)** | **Stable post-dashboard sprint**, HEAD origin/main `9255b4b` post PR #102 (fase 8 evaluation A/B + PII redaction, 8/5 14:39 UTC). **20 PR cascata 8/5** (PR #83-#102 dashboard fase 0-8 + Tier 4 fix x3 + orchestrator CO-02 + compass anchor fix). **4gg inattivita' post 8/5** (no commit dal 8/5). 0 PR open. Atto 2 status post-sprint indeterminate (probabilmente concluded post dashboard fase 8). | Continue (Eduardo-driven), pull locale se workflow Dafne riprende | No fixed | Nessuno |
 | **AA01 (Archon Atelier 01)** | v1.0.0 silent-driver mode. Counter 12/5 sera post Bundle 1+2+3: **14 archive entries + 11 lessons cumulative**. Bundle 2 SHIP + Bundle 3 SHIP questa sessione (2 task addizionali). 11 lessons cross-session `learnings/`: L-2026-04-001 + L-2026-05-002..L-2026-05-011 (+L-010 reflexive methodology audit + L-011 applicative optimization audit promoted 12/5 sera). Workspace 0 attivi. Inbox cleanup 12/5 pomeriggio. | Continua driver mode + nuovo task quando emerge. OD-007 Three Strikes counter: frizione tool-selection NON osservata. | nessuna | nessuno bloccante |
-| **vault-shared (Vault Knowledge Mgmt)** | **Sibling-peer Eduardo, monitored. 7/7 production agents milestone hit 2026-05-12** (HEAD `2007a8a2` "feat(milestone) 7/7 agents PRODUCTION + bulk ingest 100/100"). **Frontmatter drift 7/7 identificato** spot-check empirical 12/5 sera: production/agents/*.md status: draft non-synced (drift 100%). LLM routing matrix v1.0 path `Extras/config/llm-routing.json`. Stack overlap codemasterdd: Ollama LAN + qwen2.5-coder family + deepseek-r1 + Claude variants. Privacy: sovereign-only (NOT cloud whitelist). Hook globali compat VALIDATED. **Pattern D ADOPT codemasterdd 2026-05-12** (governance-lint.ps1 PR #51, audit-then-replay NO clone). **V3 cross-pattern adoption Quality Gate**: research doc Bundle 2 12/5 sera, DEFER fino SPRINT_02+. | Continue (Eduardo-driven). **Handoff doc Eduardo-direct** `docs/aa01-handoff/2026-05-12-vault-frontmatter-drift-handoff.md` (frontmatter fix + CLAUDE.md drift + README discoverability, 30-45min one-shot). NO write-path codemasterdd-side. | No fixed | Nessuno (sibling-peer disjoint scope) |
+| **vault-shared (Vault Knowledge Mgmt)** | **Sibling-peer Eduardo, monitored. 7/7 production agents milestone hit 2026-05-12** (HEAD `2007a8a2` "feat(milestone) 7/7 agents PRODUCTION + bulk ingest 100/100"). **Frontmatter drift 7/7 identificato** spot-check empirical 12/5 sera: production/agents/*.md status: draft non-synced (drift 100%). LLM routing matrix v1.0 path `Extras/config/llm-routing.json`. Stack overlap codemasterdd: Ollama LAN + qwen2.5-coder family + deepseek-r1 + Claude variants. Privacy: sovereign-only (NOT cloud whitelist). Hook globali compat VALIDATED. **Pattern D ADOPT codemasterdd 2026-05-12** (governance-lint.ps1 PR #51, audit-then-replay NO clone). **V3 cross-pattern adoption Quality Gate**: research doc Bundle 2 12/5 sera, DEFER fino SPRINT_02+. **ChatGPT Business recovery 2026-05-14..16**: 1361 conv + 132 projects + 83 memory + 2.15GB assets recovered (Business workspace, complementary OD-032 personal/deferred). 67 topic / 30,764 cards promossi Spaces `_imported-2026-05-14/` (gitignored bulk). **OD-033 doc superseded -> rappresentazione vault segue flusso OD-038** (Eduardo-mediated; guard rail PII-exfiltration impedisce push vault codemasterdd-side). Tooling/governance codemasterdd-side: **PR #118 MERGEABLE/CLEAN**. | Continue (Eduardo-driven). **Handoff doc Eduardo-direct** `docs/aa01-handoff/2026-05-12-vault-frontmatter-drift-handoff.md` (frontmatter fix + CLAUDE.md drift + README discoverability, 30-45min one-shot). Vault recovery staging: Eduardo-mediated via OD-038. NO write-path codemasterdd-side. | No fixed | Nessuno (sibling-peer disjoint scope) |
 
 ### Stack ADR-0017 runtime (aggiornato 2026-05-13 post Phase 2 cross-PC + T1 SPRINT_02 cluster)
 
@@ -33,7 +39,10 @@ Stack `Accepted` con **T3 SPRINT_02 hot-restart 2nd pass 10/5 mattina PASS**: `d
 | Postgres | 5432 | Accepted | scaffold opt-in (DOWN) | Persistence preservata cross-restart |
 | dogfood-ui Flask | 8080 | Accepted | scaffold opt-in (DOWN) | v0.2.0, 11 route, side-effect SQLite path worktree noto |
 | promptfoo CLI | -- | Accepted | installed v0.121.7 | Smoke 4/4 pass commit `327d078`. Eval on-demand via CLI |
-| Cross-repo coordination (Component 2+3) | -- | Accepted | DOC + scripts pre-Max | Gate E empirical 30gg post-Max pending |
+| Cross-repo coordination (Component 2+3) | -- | Accepted | DOC + scripts merged main (#87+#88) | Gate E empirical 30gg post-Max 5/20 -> 6/19 |
+| SPRINT_02 ACTIVE W0 pre-flight | -- | Active | 4-week window 5/20 -> 6/19 (W0 = 5/14 today) | Plan delta + Component 1 archived `docs/research/` |
+| Component 1 Dashboard v0.3 | 8081 | Active | Running pythonw tray.pyw background | 5 features + drill-down route |
+| Stack ADR-0017 LIVE | 3000/4000/5432/8080 | Active | Docker compose up 14/5 sera | 3 containers + dogfood-ui Python standalone |
 | Dafne swarm (esterna) | 5000 | -- | gestito da repo Dafne separato | Vedi sezione Dafne sotto |
 
 ---
@@ -92,7 +101,11 @@ curl -sf http://127.0.0.1:4000/health/readiness  # LiteLLM 200 OK
 curl -sf http://127.0.0.1:3000/api/public/health  # Langfuse 200 OK
 
 # dogfood-ui (Python venv esterno):
-cd ../apps/dogfood-ui && python app.py  # :8080
+# Post PR #96 (security): FLASK_SECRET required (app fail-fast se unset).
+# Setup .env (vedi apps/dogfood-ui/.env.example) o exportare inline:
+cd ../apps/dogfood-ui
+$env:FLASK_SECRET = "dev-only-replace-in-prod-$(Get-Random)"
+python app.py  # :8080
 ```
 
 Tutti i config + image gia' pulled. No re-setup necessario salvo upgrade pianificato. Edge cases documentati nel runbook (PowerShell IPv6, internal Docker bridge health-check 172.18.0.1, trace count preservation, dogfood-ui regression history).
@@ -371,7 +384,7 @@ Vault-shared workflow richiede Eduardo per ogni promote/tune/quality-gate -- int
 |------|-------------|--------|------|
 | **claude-supermemory-local** | main `a72152b` | Active dev | Local SDK replacement Supermemory cloud; Eduardo lavoro recente |
 | **compass-marketplace** | `fix/marketplace-schema-source-string` `5943ffa` | Active dev | v0.4.3 fix in flight (compass plugin marketplace) |
-| **Game-Database** | main `91f5468` PR #105 | Active dev | DB layer cross-repo Game-side |
+| **Game-Database** | main `91f5468` PR #105 | **Active multi-AI** | **Taxonomy CMS Evo-Tactics** (Prisma + PG + Express + React MUI + Vite). Sibling Game (HTTP API integration ADR-2026-04-14). 7 PR Jules OPEN 2026-05-15 + 7 sessioni Jules cumulative cross-day. Has own CLAUDE.md (multi-client pattern ADR-0021). PUBLIC, no LICENSE. Audit 2026-05-15 sera codemasterdd-side (vedi paragrafo dedicato sotto + L-025 case study). |
 | **Master-DD-Pathfinder-GPT** | `codex-fix-pr-542-follow-up-regressions-clean` `5bd2ccb` | Active Codex | Pathfinder GPT campaign tooling (Codex branch flight) |
 | **torneo-cremesi-site** | main `43eda85` PR #18 | Active dev | Static site Pathfinder Torneo |
 
@@ -380,6 +393,52 @@ Vault-shared workflow richiede Eduardo per ogni promote/tune/quality-gate -- int
 **Dormant repos** (silent-driver autonomous, no monitoring): Gpt, Item-generator, LeaD, pathfinder-1e-homebrew.
 
 **Cross-repo handoff** verso codemasterdd: nessuno attuale. compass-marketplace e claude-supermemory-local potrebbero trigger plugin ecosystem dogfood (SPRINT_02 T8) se Eduardo decide installation.
+
+### Game-Database audit dettagliato (2026-05-15 sera, post Jules API ground truth discovery L-025)
+
+Game-Database e' emerso da audit Jules REST API come repo **attivamente lavorato** dal pipeline multi-AI (Jules + Codex + Claude Code), NON minimal monitoring come precedente classificazione. Promozione scope giustificata:
+
+**Identita repo**:
+- Path Ryzen: `C:\Users\VGit\Documents\GitHub\Game-Database\`
+- Path Lenovo: nessun clone (Ryzen-only checkout, ma scope-monitorable da remote)
+- Remote: `github.com/MasterDD-L34D/Game-Database` (PUBLIC, no LICENSE -- de-facto copyright strict, candidate per MIT/Apache se Eduardo planning open-source)
+- Created 2025-11-07, default branch main, attivo May 2026
+- Stack: Express 4 + Prisma 5 + PostgreSQL 16 + React (MUI + TanStack Table + i18n + Vite)
+- Has own `CLAUDE.md` (multi-client governance autosufficiente, ADR-0021 ratificato)
+- Has `WORKSPACE_MAP.md` (cross-stack referenza Game)
+
+**Ruolo ecosystem**:
+- **Taxonomy CMS** canonical per Evo-Tactics (trait + species + biome + ecosystem)
+- Upstream content provider per **Game** (Vue3) via:
+  - Build-time import: `npm run evo:import -- --repo C:/Users/VGit/Documents/GitHub/Game` (idempotent upsert by slug)
+  - Runtime HTTP: opt-in `GAME_DATABASE_ENABLED=true` flag su Game backend (HTTP Alt B di ADR-2026-04-14 game-side)
+- Frontend dashboard standalone: React CRUD su localhost:5174 + API server localhost:3333 + Postgres localhost:5433 (port distinct da Game 5432 evita conflict)
+
+**Attivita multi-AI 2026-05-15** (via Jules REST API `GET /sessions`):
+- 7 sessioni cumulative cross-day (Game-Database e' il repo con piu' sessioni Jules dell'ecosystem)
+- 7 PR OPEN today con pattern Jules-signature `*-{14-22 digit}`:
+  - #107 [security] basicAuth timing attack fix
+  - #108 optimize DELETE response
+  - #109 tests DELETE species
+  - #110 biome import taxonomy slug pre-fetch
+  - #111 ecosystem update pagination refetch optimize
+  - #112 refactor normalizeId to shared utility (COMPLETED Jules session)
+  - #113 PUT tests ecosystems API
+- Pattern emerge: Jules sta sistematicamente migliorando coverage test (3 PR test) + perf (2 PR optimize) + security (1 PR) + code health (1 PR refactor) -- multi-stream improvement automatic.
+
+**Cross-PC sync status**:
+- HEAD main `91f5468` PR #105 (snapshot 2026-05-15 sera): ancora pre-cluster Jules-PR-questa-mattina. 7 PR open in attesa merge -> main ahead of HEAD via 7+ commits potenziale.
+- Push frequency aggressive (last push 2026-05-15 12:39 UTC = same day).
+
+**Cosa cambia per codemasterdd-side monitoring**:
+- Da "Ryzen-only sibling, minimal monitoring" -> **attivo monitored ecosystem**, scope simile a Game (Vue3): cross-repo content dependency + Eduardo lavoro ricorrente.
+- Quando PR Jules vengono mergiate -> codemasterdd review opportunistico. **Boundary update post PR #100 merge**: Game-Database e' ORA in CLAUDE.md "Progetti monitorati" sezione, MA `feedback_external_repo_action_boundary` memory rule persiste (sibling Evo-Tactics family). Auth esplicita Eduardo per review/merge/close mantenuta per coerenza con Game / Game-Godot-v2. "Monitored" (scope-tracked) e "external boundary" (action-level safety) sono ortogonali.
+- Privacy: PUBLIC, cloud-OK come Game/Game-Godot-v2. Future clone locale opzionale -> aggiungere a `~/.config/aider-privacy-whitelist.txt`. Pending fino actual clone.
+
+**Decisioni differite**:
+- Aggiunta formale a CLAUDE.md "Progetti monitorati" sezione: DONE in stesso commit (vedi paragrafo Game-Database).
+- LICENSE add (no LICENSE current): defer Eduardo decisione strategica (MIT vs Apache vs proprietary).
+- Clone locale codemasterdd: defer, scope expansion Ryzen-led OK.
 
 ---
 

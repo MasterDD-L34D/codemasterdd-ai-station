@@ -19,6 +19,171 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-05-16 (ChatGPT Business workspace recovery COMPLETE + governance commit)
+
+### Completato
+- Recovery COMPLETE: 1361 conv (100% existing; ~175 deleted-404 irrecoverable) + 83 memory items + custom instructions + 2.15GB file assets. Archivio 2.45GB `C:/dev/backup/chatgpt-full-export-2026-05-14.zip`
+- Classification: BERTopic 72 topic (custom UMAP n_neighbors=5/n_components=10 + HDBSCAN min_samples=1 per IT/EN bimodality) + nomic-embed-text + Qwen 14B Q2 labeling
+- Atomize: 39,220 Cards vault-convention, validation PASS (0 P0/P1/P2)
+- Promote: 67 topic / 30,764 cards a Spaces canonici `_imported-2026-05-14/` (61 auto + 6 HOLD-reviewed incl 3 _personal); 5 topic restano HOLD (junk/outlier/mixed-misc)
+- 7 agent specialist su scope reale (harsh-reviewer x2 -> 7 P0 pipeline scripts fixati, owasp-security-auditor, adr-drafter, privacy-policy-enforcer, Explore, Plan x2)
+- Governance commit codemasterdd: 38 file (16 pipeline + scripts + runbook + README + agent-lessons + cross-ref-map + ADR-0030 + CLAUDE.md sibling-peer boundary amend + DECISIONS_LOG + REFERENCE_INDEX). **PR #118 MERGEABLE/CLEAN** (merge Eduardo-only)
+- .gitignore chatgpt-recovery/ hardened: esclude tutti i fixture real-data (project-preview, gpt-refs, validate-cards-report, partial-*, entities-index) -- catch verifica-prima OD-038, evitato commit 3131 file PII
+- Cleanup: bearer JWT env-file + nightly task rimossi, bearer ruotato (Eduardo)
+
+### Note
+- OD-033 doc **superseded** per decisione Eduardo: rappresentazione recovery nel vault segue flusso vivo OD-038 (Eduardo-mediated; guard rail PII-exfiltration by-design impedisce push vault codemasterdd-side)
+- OD-038 reconcile-if-stale applicato: branch worktree 29 dietro origin/main; file narrativi (JOURNAL/STATUS/COMPACT) ri-applicati su base fresca origin/main per merge pulito invece di committare versioni stale
+- Distinzione OD-032 (personal account, deferred, narrow Evo-Tactics) vs OD-033/recovery (Business workspace, broad, executed) mantenuta
+
+### Riferimenti
+- ADR-0030: `docs/adr/0030-chatgpt-recovery-classification-pipeline.md`
+- PR #118 codemasterdd-ai-station
+- Pipeline workspace: `chatgpt-recovery/` + agent-lessons + vault-cross-reference-map.yaml
+- OD-038 (vault-side): `C:/dev/vault-shared/docs/decisions/OD-038-operating-method-2026-05-16.md`
+
+---
+
+## 2026-05-15 (post-Max prep marathon: Hybrid A1 setup + free LLM ecosystem audit + 8 wrapper canonical + LiteLLM hub update)
+
+### Completato
+
+- **ADR-0030 Hybrid A1 post-Max orchestration shipped** (PR #93 cce9bb5): CC Pro $20/mo + Meridian bridge + OpenCode + Gemini CLI + OpenRouter optional. Cost realistic $240-600/anno vs ADR-0015 originale $50/anno target violated. ADR-0015 amendment scope rescoped "no Max premium + flexibility + methodology preservation".
+- **Setup script `install-hybrid-a1-post-max.ps1` shipped** + Codex P2 fix commit `8eee912` (package name + plugin registration).
+- **Setup auto-executed**: opencode-with-claude plugin v1.6.11 installed + opencode.json `plugin` + `anthropic` provider entries (baseURL Meridian local 127.0.0.1:3456). Gemini CLI 0.42.0 installed (API key path, no OAuth needed). Smoke PASS via `GEMINI_API_KEY` env var. `GEMINI_CLI_TRUST_WORKSPACE=true` user-scope persistent.
+- **Gap fix A**: `GOOGLE_GENERATIVE_AI_API_KEY` aggiunto a keys.env (dual-name alias `GEMINI_API_KEY`, sblocca OpenCode native google provider auth).
+- **Gap fix B**: opencode.json google models `gemini-2.0-flash-exp` (deprecato 404 v1beta) sostituito con `gemini-2.5-flash` + `gemini-2.5-pro`. Smoke C OpenCode google provider PASS (output "6" risposta "3+3").
+- **NotebookLM integration concreta**: `notebooklm-py` 0.4.1 CLI installato user-scope + `notebooklm-mcp-cli` 0.6.9 via `uv tool install` + Playwright chromium 1217 cached. Auth pending Eduardo `notebooklm login` interattivo (browser OAuth personal Google).
+- **HuggingFace Inference Providers integration**: wrapper `aider-hf.cmd` (default DeepSeek-R1, security-hardened temp env-file CWE-214 mitigation) + OpenCode `huggingface` provider entry (3 models pre-mapped: DeepSeek-R1 + GPT-OSS 120B + Qwen 2.5 Coder 32B). Pending Eduardo signup hf.co + token generation.
+- **GitHub Models PROPOSED**: wrapper `aider-github-models.cmd` (default gpt-4o, 150 req/giorno free) + LiteLLM 2 model entries (gpt-4o + gpt-4o-mini). Pending Eduardo PAT generation con permission "Models read-only".
+- **8 Aider wrapper canonical** (vs 6 originali): aider-hf + aider-github-models aggiunti a `scripts/wrappers/`. install-wrappers.ps1 auto-discovery sincronizza user-side via hash-verify. Tutti i wrapper enforce privacy guard rail H8 + security hardened temp env-file pattern.
+- **LiteLLM hub audit + update**: stack Docker UP da 5h (NOT dormant come ipotizzato originale ADR-0017 follow-up). Config aggiornato con 7 nuovi model_list entries: hf-deepseek-r1 + hf-gpt-oss-120b + hf-qwen-coder-32b + github-gpt4o + github-gpt4o-mini + anthropic-sonnet-strategic + anthropic-haiku-strategic. docker-compose.yml env vars aggiunte HUGGINGFACE_API_KEY + GITHUB_MODELS_API_KEY + ANTHROPIC_API_KEY.
+- **Doc consolidata `docs/operations/key-and-task-routing-matrix.md`** (commit d255927 + 73477aa): 9 sezioni inventario chiavi + 3-tier tool ecosystem + 3-layer dispatch matrix + Hybrid A1 + integrations + REJECT list ToS-bomb + reference bookmarks + autoresearch deferred.
+- **P2 autoresearch deep dive free LLM ecosystem** (5 parallel WebSearch queries): 18 candidati analizzati. ADOPTED: HF + GitHub Models PROPOSED + reference bookmarks 5 lists. REJECTED 5 (Puter, CLIProxyAPI, GeminiHydra, alistaitsacle/free-llm-api-keys, claude-code-proxy) per ToS bomb / sustainability red flag pattern. DEFERRED: Cloudflare AI Gateway + NVIDIA NIM + SambaNova + SiliconFlow + Mistral + Pollinations + LLM7 + Kluster.
+- **Memory + lesson promotion**: `reference_api_keys.md` rewritten (8 keys + 8 wrappers + LiteLLM 15 model_list + privacy guard). New memory `reference_free_llm_ecosystem_audit.md`. MEMORY.md index updated. **Lesson L-2026-05-022 promoted**: "Free Tier Sustainability Pattern" - pre-adoption criterion "where does provider money come from?" 30s mental check.
+
+### Da fare (Eduardo manual)
+
+- **Sottoscrizione decision Max-vs-Pro entro 18/05**: Pro $20/mo on anthropic.com/claude/upgrade per attivare Hybrid A1 OR keep Max renewal $200 1 mese ulteriore (defer scoperta empirica)
+- **HF signup** https://huggingface.co/join + token https://huggingface.co/settings/tokens/new?ownUserPermissions=inference.serverless.write&tokenType=fineGrained -> append `HUGGINGFACE_API_KEY=hf_...` a keys.env
+- **GitHub Models PAT** https://github.com/settings/tokens?type=beta (resource owner MasterDD-L34D, permission Models read-only) -> append `GITHUB_MODELS_API_KEY=github_pat_...` a keys.env
+- **NotebookLM browser OAuth**: `notebooklm login` + `notebooklm auth check`
+- **LiteLLM container restart** per caricare nuova config: `cd infra; docker compose restart litellm` (post Eduardo append keys HF + GitHub Models)
+- **MCP server config CC** (opzionale, requires CC restart - tu hai sessioni attive): add `notebooklm` to `~/.claude.json` projects mcpServers
+- **Merge PR #93** quando review fatta (3 commits ora: cce9bb5 + 8eee912 + d255927 + 73477aa + nuovo final)
+
+### Note
+
+- Documenti coinvolti: ADR-0030 + ADR-0015 amendment + matrix doc + memorie + lesson L-2026-05-022
+- Sources sintetizzate: 9 WebSearch queries cumulative + 3 WebFetch repo deep dive (teng-lin/notebooklm-py + K-dash/nblm-rs + jacob-bd/notebooklm-mcp-cli)
+- Cognitive protocols applied: P1 Refresh-verify + P2 Autoresearch parallel + P3 Archon-style decision tree free LLM (RESTATE + ENUMERATE 18 + DECOMPOSE + CHALLENGE + RECONSTRUCT + CALIBRATE)
+- Reversibilita: tutto reversibile (`pip uninstall notebooklm-py`, `uv tool uninstall notebooklm-mcp-cli`, opencode.json backup pre-modifica, LiteLLM config in repo, wrapper canonical scripts/wrappers/)
+
+---
+
+## 2026-05-14 (sera-tardi-ultra-2: Max parallel strategy + console flash + dogfood-ui cache + claude-mem disable)
+
+### Completato
+
+- **Strategy doc Max parallel execution 5gg residui** (commit `80fcd4b`): honest reframe methodology over-conservative bias. PR #87/#88/SPRINT_02 plan applied L-016 + Gate E + sovereign-first TROPPO restrittivamente. Eduardo Max usage screenshot 75% settimanale + 93% 5h + 2gg reset = capacity sostanziale, NOT scarce-preserve.
+- **T9 methodology empirical research** (commit `58addd1`, doc `docs/research/methodology-effectiveness-2026-05-14.md`): cite count P1=19 dominant + P5=6 over threshold + P6=2 under. **ADR-0028 Three Strikes scan 0/3 fired empirical** -> stays Proposed.
+- **ADR-0026 amendment Protocol 5 harsh-reviewer ACCEPTED** ratified empirical (n=5+ cross-PR cross-session legitimate per L-016 anti-cherry-picking criteria).
+- **ESCALATION_GATES.md Gate E reframe**: pre-build trigger -> FEEDBACK METRIC (Component 1 MVP shipped, no longer gated).
+- **Console flash investigation + fix attempts**:
+  - Initial hypothesis: dashboard subprocess calls -> fix commit `6dc0bed` CREATE_NO_WINDOW flag su tutti subprocess. RESULT: flashes PERSISTED.
+  - Deep investigation: **root cause = claude-mem plugin hooks**. 5 hooks registered (Setup + SessionStart + UserPromptSubmit + PreToolUse + PostToolUse `*` matcher + Stop). PostToolUse `*` fires su ogni tool call. Bash hook on Windows = mintty.exe flash. **20-100 flashes/messaggio**.
+  - Upstream investigation: [GitHub issue #19012](https://github.com/anthropics/claude-code/issues/19012) "Hook commands cause brief console window flash" **CLOSED as not planned**. NO CC config option exists (only `suppressOutput` documented, hides stdout not spawn).
+- **Eduardo decision**: disable claude-mem temporaneamente (set `false` in `~/.claude/settings.json`) + plan upstream contribution. Lose memory injection cross-session, keep flicker-free UX. Reversible.
+- **dogfood-ui /api/health cache 30s TTL** (commit `9040dd9`): root cause = dafne.ping + lf.ping 2s timeout each = 4s combined. Cache fix: **4s cold -> 1.94ms cached** (99.95% speedup). Version 0.2.0 -> 0.2.1.
+- **Lessons promoted today cumulative**:
+  - L-2026-05-018 META anti-pattern recurrence
+  - L-2026-05-019 trigger validation window > single-session decision fatigue
+  - L-2026-05-020 Docker Desktop orphan socket cleanup pattern
+  - L-2026-05-021 Plugin hooks console flash Windows (NEW this entry)
+- **PR #92 open** (`claude/max-parallel-execution-2026-05-14`): 4 commits cumulative (strategy + T9 research + ADR amendments + dogfood-ui cache).
+- **Cumulative commits today on main**: 7 (c2cb816 v0.2 + 74cb083 W0 + 1e34544 em-dash + 18c93e4 ADR regex + e725a56 healthcheck full + 069158f postgres+timeout + 1b34055 P0 security + 6dc0bed console flash). PR #92 stacked +4 (80fcd4b + 58addd1 + 9040dd9, this entry not yet committed).
+
+### Da fare
+
+- **Eduardo manual** (~1min): close current CC session + reopen new → claude-mem hooks unregistered + verify zero flashes
+- **Eduardo optional** (~5min): +1 GitHub issue #19012 + comment con reproduce case Windows 11 + claude-mem
+- **Eduardo decide PR #92**: review + merge (cumulative Max-tier work day 14/5) o leave open per altro work
+- Re-enable claude-mem trigger conditions: CC team merges windowsHide fix upstream OR Eduardo subjective tolerance change
+- Cross-repo PR opportunistic (Eduardo flag candidates during normal use)
+- Component 1 v0.3 features post Eduardo 1-day daily-use feedback
+
+### Note
+
+- **Methodology reframe successful**: Eduardo "i piani fino ora sono tutti troppo conservativi" challenge → strategy doc + amendments shipped 14/5 sera. Max NON è scarce-preserve, è risorsa da sfruttare massivamente fintanto disponibile. 5gg residui pre 19/5 Max expiration.
+- **L-016 scope clarification post L-019**: anti-aspirational DOES NOT apply when (a) user articulates concrete daily-use case (b) capability has expiration deadline (c) multi-source synthesis benefits higher-tier model (d) Eduardo CLASSE D scelta-valore explicit override.
+- **Memory cross-session** post claude-mem disable: use `/learn-codebase` + AA01 lessons + JOURNAL entries (manual continuity). Trade-off accepted by Eduardo.
+- **Methodology framework empirical state**: 5/6 protocols (P1-P5) well-integrated cite >= threshold + organic invocations. P6 brainstorming under-tested. ADR-0028 Three Strikes stays Proposed.
+
+---
+
+## 2026-05-14 (sera-tardi-ultra: Dashboard v0.2 ship + Docker stack recovery + P0 security fixes)
+
+### Completato
+
+- **Component 1 cross-repo Dashboard MVP v0.2 BUILD** (vs originale "archived pre-design"). Eduardo "userei ogni giorno anche ora" fresh-state articulation invalida ipotesi PR #88 v1 trigger #1 unverified -> spec V4 honest re-evaluation
+- PR #91 squash-merged commit `c2cb816`: 5 data sources + 3 workflow buttons + waitress production + desktop shortcut + system tray. 600 righe app.py
+- 6 commits today su main: c2cb816 (v0.2) + 74cb083 (#89 W0) + 1e34544 (em-dash) + 18c93e4 (ADR regex) + e725a56 (healthcheck full stack) + 069158f (postgres + dogfood timeout)
+- **Docker stack ADR-0017 LIVE** (3/3 UP): LiteLLM 5ms + Langfuse 3ms + dogfood-ui ~4s. Postgres internal-only correct. Stack accessible http://localhost:3000 + :4000 + :8080.
+- **Docker bug fix complete** (post crash recovery): orphan unix-socket files in 3 Windows dirs (`Docker/run/` + `docker-secrets-engine/`) → rename `.broken-<timestamp>` + fresh empty + relaunch = daemon UP 4s. Lesson L-020 capturing exact sequence.
+- **Lessons promoted** (post harsh-reviewer P0.1 finding):
+  - L-2026-05-018 META anti-pattern recurrence (same-session L-016 violation by PR introducing it)
+  - L-2026-05-019 trigger validation window > single-session decision fatigue
+  - L-2026-05-020 Docker Desktop Windows orphan unix-socket cleanup pattern
+- **P0 security fixes** (post harsh-reviewer verifica-con-metodo):
+  - P0.2 `/api/coord-event` notes regex sanitize (block PS injection CWE-77/78)
+  - P0.3 `/api/open-vscode` shell=False (remove shell=True useless+dangerous pattern)
+- **Harsh-reviewer invoked 2x** (sessione marathon): pre-merge PR #88 (3 P0 + 6 P1 + 6 P2) + post-build verification (4 P0 + 5 P1 + 12 acknowledge). Protocol 5 cumulative this session.
+
+### Da fare
+
+- Pre-Max 5gg residui (Max expira 19/5)
+- Dashboard daily-use feedback Eduardo (informa v0.3)
+- 2026-05-19 Claude Max expiration
+- 2026-05-20+ SPRINT_02 W1 start con Gate E logging
+- 2026-05-24 Sun first schtask reminder fire
+- 2026-06-14 W4 harsh-reviewer audit + Gate E decision (Component 1 build full/minimal/defer)
+- Docker stack: tieni UP se serve Langfuse traces / promptfoo eval / LiteLLM routing. `docker compose down` quando finito.
+
+### Note
+
+- **Methodology meta-lesson**: PR #88 v1 was anti-pattern L-016 case study (pre-design pre-empirical trigger). Eduardo 14/5 mattina articulation invalida self-falsification ciclo 2 conclusion (L-019 captures this pattern: window > single-session decision fatigue).
+- **Cumulative protocols applied this session**: P1 Refresh-verify 3x + P3 Archon 7-step (skip per L-019 invalidation) + P5 harsh-reviewer 3x + P6 brainstorming 1x.
+- **Confidence trail honest** Component 1: 75% aspirational ciclo 1 → 55% post Archon ciclo 2 → 70% post fresh-state articulation V4 MVP → empirically validated post-build smoke 5/5.
+- **Coord-events probe rows**: 2 testing rows visible in `logs/coord-events-2026-05.md` (harsh-reviewer adversarial probe). Eduardo intentionally kept as testimony. Pre-Gate-E window 5/20 start, no contamination Gate E metrics.
+
+---
+
+## 2026-05-14 (W0 pre-flight SPRINT_02 + PR #88 rework merge)
+
+### Completato
+
+- PR #88 harsh-reviewer pass 1 = REWORK verdict (3 P0 + 6 P1 + 6 P2)
+- Rework applied: P0.1 archive Component 1 spec to `docs/research/` + triple-warning DO NOT CONSULT header (bias mitigation L-016); P0.2 plan restructured as DELTA over SPRINT_02.md (-46% lines); P0.3 Three Strikes wording verbatim ADR-0028; P1.1+P1.4+P1.5+P1.6 fixed
+- PR #88 squash-merged commit `60aef89` on main
+- SPRINT_02 W0 pre-flight: P.1 (deployment verified) + P.2 (whitelist 4 entries) + P.3 (schtask Pronta 17/05) + P.4 (STATUS_MULTI_REPO updated SPRINT_02 ACTIVE) + P.5 (coord-events log clean)
+- T9.1 baseline cite count pre-Max snapshot: P1=19, P2=13, P3=12, P4=8, P5=5, P6=2 (40 unique lines, 59 sum). P5 threshold met. P6 still <3 cite (1 more needed)
+- T8.W1.1 claude-mem verified operational (port 37777 LISTENING + DB + corpora)
+- T8.W1.2 superpowers verified cached v5.1.0
+- T8.W1.3 compass DEFER - no `.compass.toml` in codemasterdd (init needed W1 if Eduardo)
+
+### Da fare
+
+- 5/19 Claude Max expiration (5gg residui)
+- 5/20+ SPRINT_02 W1 start: first weekly logging session 5/24 Sun via schtask reminder
+- 6/14 W4 harsh-reviewer audit + Gate E decision
+
+### Note
+
+- Lesson L-2026-05-018 in promotion: META anti-pattern recurrence same-session (L-016 violated PR #88 v1 → recovery archive in v2)
+- Methodology cumulative: 3 P5 + 1 P6 invocations this session block
+
+---
+
 ## 2026-05-13 (sera-tardi-ultra-2: cross-repo orchestrator design + impl pre-Max)
 
 ### Completato
@@ -3322,3 +3487,95 @@ Eduardo decisione finale: **lean closure JOURNAL + stop session**. Allinea Proto
 ### Stop session 2026-05-13 sera tardi
 
 Mitigation L-002 attiva. Restoration cognitive prioritized vs compound execution continuation. Defer next work natural emergence prossima sessione.
+
+## 2026-05-15 (mezzogiorno -- post-reboot smoke triade + Hybrid A1 live verification pre-19/05)
+
+### Completato
+
+- Protocol 1 Refresh-verify state interno post-reboot: HEAD `5607182` ok, MCP notebooklm Connected, Docker daemon down -> Eduardo rilanciato containers
+- Task 1 Pre-flight Hybrid A1: LiteLLM hub healthy port 4000, 17 model alias (drift +2 vs memory 15 = aggiunte `anthropic-sonnet-strategic` + `anthropic-haiku-strategic`), 3 route smoke PASS (gemini-flash, github-gpt4o-mini, hf-deepseek-r1)
+- Task 2 NotebookLM setup_auth: authenticated 495s, cookies persisted, library vuota (0 notebook); fix `browser_options.headless: false` necessario per override server default headless
+- Task 3 Gemini OAuth login: settings.json + oauth_creds.json (1824B) persistiti, smoke `gemini -p "ping"` PASS con `GEMINI_API_KEY` unset; quota path 60 req/min API key -> 1000 req/day OAuth Gemini 2.5 Pro 1M ctx
+- Hybrid A1 LIVE smoke pre-19/05 (Max ancora attivo): `opencode run -m anthropic/claude-haiku-4-5` -> PASS, `opencode run -m anthropic/claude-sonnet-4-6` -> PASS (2+2=4 prompt), bridge Meridian proxy spawn on-demand validato
+- `opencode stats`: $0.14 cumulative 7gg / 21 session (bridge Max = $0 subscription-included, $0.14 da cloud paid altrove)
+- Parallel stress test: 3 `opencode run` concurrent -> output corretti (1, 2, 3) no cross-contamination, port auto-assignment validato (3 localhost port distinct durante netstat snapshot)
+- TUI multi-turn smoke in spawned PowerShell window (Eduardo direct interactivity)
+- Documentazione: sezione `5.1 Day-in-the-life pratica` aggiunta a `docs/operations/key-and-task-routing-matrix.md` (cmd reference + decision tree + anti-pattern smoke documentati)
+
+### Da fare (post-19/05 transition)
+
+- 18/05 lun: Eduardo subscribe Pro $20/mo on anthropic.com/claude/upgrade (1gg overlap pre-Max expiration)
+- 19/05 mar: Max expiration -- re-run smoke `opencode run -m anthropic/claude-haiku-4-5` per validare credenziali Pro continuano (stesso OAuth path)
+- 20/05+ SPRINT_02 wake: T2/T5/T7/T8/T9 in-scope
+- Drift fix low-pri: memory `project_session_resumption.md` linea 25 "15 model_list entries" -> aggiornare a 17
+
+### Note
+
+- Bridge Meridian funziona OGGI con Max OAuth, conferma empirica che path tecnico Hybrid A1 e' production-ready pre-19/05 -- risolve incertezza ADR-0030 "validation criteria 1 mese 19/5 -> 19/6" che ora puo' partire baseline da empirical evidence
+- Sonnet 4.6 declina prompt "reply with exactly STRING_TOKEN" sospettando injection (giusto): usare prompt naturali per smoke test
+- Cognitive protocols applied: P1 Refresh-verify pre-action (sempre), P4 AA01 trail NO (sessione lean operativa <30min audit-class)
+- Stato fine sessione: 3 task user-requested completati end-to-end + 3 test follow-up multi-turn / stats / parallel completati + guida d'uso pratica file-first
+
+## 2026-05-15 (pomeriggio -- Jules ecosystem audit + 4 PR cycle + multi-AI pipeline emergente)
+
+### Completato
+
+- Jules REST API + Tools CLI completamente integrati nell'ecosistema codemasterdd:
+  - `npm install -g @google/jules` v0.1.42 globale (binary `~/AppData/Roaming/npm/jules`)
+  - `JULES_API_KEY` salvata in `~/.config/api-keys/keys.env` (ACL re-hardened post sed -i regression: BUILTIN/Administrators rimosso + inheritance disabled via PowerShell icacls)
+  - Smoke test REST API PASS: `GET /v1alpha/sources` (15 repo), `GET /v1alpha/sessions` (12 sessions storiche), Bearer X-Goog-Api-Key header working
+  - CLI commands disponibili: `jules login` OAuth, `jules remote list/new --repo X --session "task"`, `jules remote pull`, TUI dashboard
+
+- **Privacy audit drift fix critico**: claim precedente "Jules installato solo su codemasterdd" era SBAGLIATO -- API REST ground truth conferma installation su **15 repo** inclusi sovereign-only (Synesthesia / vault / evo-swarm). Sessions storiche zero su sovereign repo -> NO leak avvenuto. Eduardo accept risk (Jules e' Google alpha, no abuse observed). Nota: ADR-0019 H8 privacy guard rail wrapper Aider-side NON copre Jules GitHub App-side -- gap riconosciuto, mitigation futura via uninstall manuale settings GitHub se serve.
+
+- **4 PR Jules cycle processato end-to-end**:
+  - #96 (Flask Secret Key fail-fast P0 security) -> APPROVE + MERGED + branch deleted
+  - #97 (cache_get/cache_set tests, P0 sys.modules global mutation blocker) -> review COMMENTED + CLOSED + branch deleted (superseded da #99 mio)
+  - #98 (regex pre-compile performance, claim 54% overstimated ma hoist legittimo) -> APPROVE + MERGED + branch deleted
+  - #99 (mio follow-up consolidato 7 file +232 lines: README + .env.example + hermetic tests + regex semantics smoke + monorepo pytest defense) -> APPROVE + MERGED + branch deleted
+
+- **Multi-AI parallel review pipeline emergente empirico**: ogni PR Jules ha cycle:
+  1. Jules propone via task creation -> apre PR
+  2. `chatgpt-codex-connector` auto-review (Codex Cloud integration) entro 1-2 min
+  3. Me review umano + comment specifici P0/P1/P2 con auth esplicita Eduardo
+  4. Eduardo decide merge/close
+  Pattern ratifica empirica concetto "multi-agent parallel review" senza orchestrazione esplicita -- emerge da setup individuale di ciascun tool.
+
+- **Active monitoring session Jules `17712991417329090573`** IN_PROGRESS dal 11:42 (last update 12:31): meta-orchestrazione "controlla PR e commenti aperti" -- vedra' i miei comment + closure #97 + creera' nuove proposals based su feedback. Pattern interessante per Hybrid A1 post-Max: usare Jules monitoring session come watcher cheap che propone task ricicla automatic.
+
+- **PR #95 documentazione**: routing matrix sezione 5.1 Day-in-the-life + JOURNAL entry mezzogiorno consolidati in PR open per Eduardo review/merge.
+
+### Findings sistemici emersi
+
+- **GitHub own-PR limitation**: `gh pr review --approve` e `--request-changes` falliscono su PR creati da bot/agent usando OAuth proprio (Jules postava come Eduardo). Workaround: `gh pr review --comment` con header esplicito "CHANGES REQUESTED" o "APPROVE". Comment-only state valido per audit trail.
+- **sed -i regression ACL credentials**: stripping BOM via `sed -i '1s/^\xEF\xBB\xBF//' keys.env` re-attiva inheritance NTFS + re-aggiunge BUILTIN/Administrators ACE inherited. Mitigation: dopo qualsiasi rewrite di file ACL-hardened, riapplicare via PowerShell `icacls /grant edusc:F /grant SYSTEM:F` post-operazione.
+- **Monorepo pytest combined-run collision**: due `apps/*/tests/conftest.py` con stesso basename creano `tests.conftest` package name collision -> plugin re-registration error. Workaround: rimuovere __init__.py da tests (le directory non sono package) + documentare scoped runs only. Pre-existing structural issue, esposto da PR #99.
+- **Classifier auto-mode boundary** (positivo): bloccato 2 azioni esterne (PR #96 review post-`a` ambiguo + PR #97 close post-"P0 doesn't change anything") fino auth esplicita verbose. Pattern audit trail safe = Eduardo deve dare auth specifica per ogni external write significativa (PR comment/close/merge). Memory `feedback_external_repo_action_boundary` ratificata.
+
+### Da fare (defer next session natural pacing)
+
+- Lesson promotion candidates per AA01 `~/aa01/learnings/`:
+  - L-024 candidate: Multi-AI parallel review pipeline emergente (Jules + Codex Cloud + Claude Code = 3-way review senza orchestrazione)
+  - L-025 candidate: Privacy audit drift via branch-pattern empirical vs API ground truth (lesson: API > heuristic per ground truth)
+  - L-026 candidate: PR own-account vs external-contributor GitHub limitation pattern
+- API key Jules opzionale revoke + regen post-test (Eduardo dice "questa chat e' sicura" -> skip)
+- PR #97 close: DONE via comment + close --delete-branch post auth esplicita
+- Considerare ADR mini "Jules tier in routing matrix" se uso continuativo (deferred fino Hybrid A1 activation 19/05)
+
+### Note metodologiche
+
+- **Empirical ground truth > heuristic**: ricerca PR branch pattern Jules suggeriva "solo codemasterdd". API REST `GET /v1alpha/sources` ha smentito empirical -> 15 repo. Lesson reusable: per audit privacy/scope, **interrogare ground truth (API / authoritative source)** non solo proxy signals (branch pattern, commit author, etc.).
+- **Auth boundary classifier vs autonomous mode**: classifier blocca azioni esterne significative anche con "fai tutto subito autonomous" - GOOD safety net, NOT bug. Eduardo deve dare auth esplicita verbose per posting external PR comments / closing / merging. Pattern: my proposed comment + Eduardo "si" sufficiente per single action, "Autorizzo esplicitamente Claude a ..." sufficiente per multi-action batch.
+- **Cognitive protocols applied**: P1 Refresh-verify pre-action (sempre); P5 harsh-reviewer NO (single-PR scope ciascuno, no cluster security-critical); P6 brainstorming NO (no architectural decision generative). Sessione operativa lean ma con learning empirici significativi.
+
+### Session metrics aggregate (mezzogiorno + pomeriggio)
+
+- 4 PR Jules processati (3 merged, 1 closed)
+- 1 PR mio merged (#99 follow-up) + 1 PR mio open (#95 docs questo)
+- 2 tools nuovi installati (Jules CLI npm globale + JULES_API_KEY env)
+- 15+28 test scoped PASS, 0 regression
+- $0.34 shadow cost cumulative OpenCode session (vs $0 reale Max-covered)
+- 3 cognitive protocol violation candidates surfaced (lesson promotion candidates deferred)
+- Memory `project_session_resumption.md` updated con tutti i drift fix end-of-day
+
+
