@@ -35,7 +35,7 @@ Log smoke test completi: [docs/agent-smoke-tests/](../../docs/agent-smoke-tests/
 | [repo-health-auditor](repo-health-auditor.md) | ✅ ready | sonnet | Audit cross-repo superficie + STATUS_MULTI_REPO refresh | "audit cross-repo", "stato tutti repo" |
 | [adr-drafter](adr-drafter.md) | ✅ ready | sonnet | Scaffold nuovi ADR seguendo MADR | "scrivi ADR per X" |
 
-### 🎮 Game (Evo-Tactics) — 4
+### 🎮 Game (Evo-Tactics) — 5
 
 | Agent | Status | Model | Scope | When to invoke |
 |-------|:------:|-------|-------|----------------|
@@ -43,6 +43,7 @@ Log smoke test completi: [docs/agent-smoke-tests/](../../docs/agent-smoke-tests/
 | [game-systems-designer](game-systems-designer.md) | 🟡 draft | sonnet | Design core loop + sub-loop + experience arc | "design core loop", "progetta sistema X" |
 | [game-design-validator](game-design-validator.md) | 🟡 draft | opus | First principles + Rule of Threes + elimination test | "valida design", "first principles game" |
 | [lore-consistency-checker](lore-consistency-checker.md) | 🟡 draft | sonnet | Coerenza narrativa cross-artifact lore | "check lore", "coerenza narrativa" |
+| [jules-pr-triager](jules-pr-triager.md) | 🟡 draft | sonnet | Triage PR Jules code-health su Game (MERGE-OK/CLOSE/NEEDS-REVIEW, NO auto-merge) | "triage pr jules", "valuta pr game" |
 
 ### 🐝 Dafne swarm — 2 (oltre a repo-health-auditor per quick check)
 
