@@ -1,5 +1,7 @@
 # AA01 Task A — Skills collection evaluation (4 repo)
 
+> **🟢 RESOLVED 2026-05-12 (anti-rot pointer, no re-triage)** — Scaffold AA01 SUPERSEDED dalla decisione finale. Verdetti shippati: **#1** everything-claude-code = DEFER post-1wk-monitor superpowers · **#3** superpowers = INSTALLED v5.1.0 · **#5** forrestchang = AUDIT-ONLY (LICENSE missing) · **#10** anthropics/skills = MARKETPLACE registered (bundle=skip-dup). Fonte-verità: `docs/reference/subagents-skills-candidates.md` §"Riepilogo decisioni preliminari" + canonical `Vault-ops-remote/claude-global/canonical-config.json` `shipped_triage_reference_ANTI_ROT`. Nessuna azione autonoma residua (chiuso / time-gated / Eduardo-direct). NON re-triagare.
+
 > **Preset**: `research-long`
 > **Slug**: `2026-05-12-A-skills-resources`
 > **Effort stima**: 4-6 ore (audit + selective install + collision check)

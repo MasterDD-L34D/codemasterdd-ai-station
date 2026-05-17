@@ -1,5 +1,7 @@
 # AA01 Task B — Subagent + memory evaluation (2 repo)
 
+> **🟢 RESOLVED 2026-05-12 (anti-rot pointer, no re-triage)** — Scaffold AA01 SUPERSEDED dalla decisione finale. Verdetti shippati: **#4** claude-mem = INSTALLED 12/5 → DISABLED 14/5 (canonico `false`, upstream console-flash #19012) · **#11** VoltAgent subagents = REFRESH cherry-pick **dormant-no-trigger** (REFRESH≠INSTALL; nessun use-case reale fired — stack ha già jules-pr-triager + 18 subagent + superpowers). Fonte-verità: `docs/reference/subagents-skills-candidates.md` §"Riepilogo decisioni preliminari" + canonical `shipped_triage_reference_ANTI_ROT`. Nessuna azione autonoma residua. NON re-triagare.
+
 > **Preset**: `research-long`
 > **Slug**: `2026-05-12-B-subagent-memory-resources`
 > **Effort stima**: 2-3 ore (claude-mem install + integration + subagent cherry-pick refresh)

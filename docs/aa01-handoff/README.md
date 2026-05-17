@@ -1,5 +1,7 @@
 # AA01 handoff — scaffold paste-ready
 
+> **🟢 4 task RESOLVED 2026-05-12 (anti-rot pointer)** — I 4 scaffold (A/B/C/D) sono SUPERSEDED dalla decisione finale 12-repo. Verdetti per-task nei banner in testa a ciascun file. Fonte-verità unica: `docs/reference/subagents-skills-candidates.md` §"Riepilogo decisioni preliminari" + canonical `Vault-ops-remote/claude-global/canonical-config.json` `shipped_triage_reference_ANTI_ROT`. Residuo NON-autonomo: repomix `npm i -g` (per-macchina) + everything-claude-code time-gated (~19/5). NON re-triagare i 12.
+
 AA01 workspace vive su `C:/Users/edusc/aa01/` (NON-git, disciplina personale Eduardo, non versionato in questo repo per design — vedi CLAUDE.md "Protocol 4 AA01 workspace audit trail").
 
 Questa directory contiene **scaffold paste-ready** generati da Claude Code in sessioni codemasterdd quando emergono task evaluation che richiedono workflow AA01 (`inbox/ -> classify -> promote -> SHIP -> lesson`).
