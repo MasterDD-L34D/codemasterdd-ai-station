@@ -94,10 +94,30 @@ Markdown ~400-500 parole:
 
 Chiudi con: "Eduardo: autorizza batch — MERGE-OK [..] / CLOSE [..] / NEEDS-REVIEW [..]. Merge/close = tua explicit action. Throttle Jules (jules.google + GitHub-App) se volume insostenibile."
 
-## Cadenza periodica (policy master-dd 2026-05-17)
+## Cadenza periodica (RICONCILIATO ADR-0033 — supersede policy master-dd ore-mattina 2026-05-17)
 
-Decisione master-dd: **tieni i PR Jules + triage periodico** (NO throttle
-— i PR hanno valore selettivo). Cadenza operativa:
+> **Fix contraddizione (arbitro esterno 2026-05-17, conf 74%)**: la riga
+> originale "NO throttle" era la decisione PRE-ADR-0033. **ADR-0033**
+> (stesso giorno, dopo, Archon+arbitro 82%, supersede ADR-0032) stabilisce
+> il **throttle org-level Eduardo come Azione #1 primaria**; ogni
+> processing-machinery (incluso questo triage) è giustificata SOLO sul
+> **residuo post-throttle** (ADR-0033 linea 39). Stato operativo corrente:
+> throttle soddisfatto da Eduardo via pausa-manuale-Jules. NON è "NO
+> throttle".
+
+Cadenza (sul **residuo post-throttle**): **tieni i PR Jules + triage
+periodico** (i PR residui hanno valore selettivo). Operativa:
+
+- **S3-flag (unica aggiunta verdict-logic, NO metodo/A8)**: per PR
+  `state=COMPLETED ∧ pr-diff vuoto ∧ Σ gitPatch>0` → colonna tabella
+  "gitPatch: Y — recoverable; Eduardo relaunch/extract". È un **FLAG**,
+  NON una patch/spec Claude-authored (rifiutato A8: sovereign-fix-by-proxy,
+  arbitro esterno). RELAUNCH resta assegnato a Eduardo per nome (ADR-0033
+  linea 56).
+- **S6 SELETTIVO**: specialist subagent (game-balance/design-validator/
+  owasp) SOLO su behavior-under-cosmetic ground-truth-confermato su path
+  balance/security — NON router standing (costo/burocrazia su coda
+  41%-noise). I 4 triviali → Eduardo legge i diff.
 
 - **Trigger soglia**: quando `gh pr list --repo MasterDD-L34D/Game
   --state open` Jules-PR **≥ 10** → invoca questo agent ("triage pr

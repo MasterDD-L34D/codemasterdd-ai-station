@@ -62,6 +62,35 @@ Tassonomia S1-S7, 3-obblighi (E)splicazione/(R1)eazione/(R2)esponse, no-silent-c
 
 **Azione #1 per Eduardo**: settare il throttle Jules a jules.google OGGI (org-level, fuori scope Claude). E' la leva di massima leva, costo ~0.
 
+## Post-resolution note 2026-05-17 -- A8 RIFIUTATO (anti-accretion)
+
+Eduardo ha chiesto di studiare un metodo RELAUNCH (extract gitPatch +
+ground-truth + ready-artifact) + REDESIGN/S6 (specialist-router) e
+integrarlo come **A8**. Test empirico RELAUNCH (6 PR, read-only) +
+**arbitro esterno indipendente** (verdetto **REJECT-method, conf 74%**):
+
+- A8-RELAUNCH = **sovereign-fix-by-proxy**: una relaunch-spec authored
+  dal giudizio Claude (FP 69% / 3-4 self-revision questa sessione) e'
+  "il destabilizzatore travestito da deliverable". ADR-0033 linea 56
+  assegna relaunch a Eduardo per nome -- A8 lo riprenderebbe.
+- premise-inversion detection = giudizio classe-69%-FP, n=1
+  un-ground-truthed -> istituzionalizza l'errore-firma della sessione.
+- A8 ripete il pattern accretion ADR-0032 (machinery su base non risolta).
+- **Difetto vivo trovato dall'arbitro (mancato da me)**: `jules-pr-
+  triager.md` portava "NO throttle" in contraddizione con Azione#1
+  throttle di questo ADR -> **fixato** (triager riconciliato: throttle
+  primario, machinery solo su residuo).
+
+**Adottato (narrow, NO A8)**: (1) triager verdict-logic guadagna un solo
+**FLAG** S3 ("gitPatch: Y — recoverable; Eduardo relaunch/extract"), non
+una patch/spec Claude. (2) S6 = specialist SELETTIVO (solo behavior-
+under-cosmetic ground-truth-confermato balance/security), non router
+standing. (3) Contraddizione throttle risolta. RELAUNCH/redesign restano
+Eduardo (ADR-0033 invariato). Lesson meta: **L-2026-05-033** (metodi
+self-designed -> falsificazione esterna OBBLIGATORIA pre-integrazione;
+6a volta che esterno/ground-truth batte il mio design non-validato;
+"fix the base, don't accrete").
+
 ## Riferimenti
 
 - ADR-0032 (superseded), `docs/research/jules-operating-model-study-2026-05-17.md`
