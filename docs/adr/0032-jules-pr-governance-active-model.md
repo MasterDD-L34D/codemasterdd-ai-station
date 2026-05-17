@@ -71,6 +71,27 @@ empirico -- caso gitpatch: mia conclusione "8 vuote/spreco" falsa al 50%,
   response-a-Jules + ground-truth sessione.
 - **A4**: `jules-pr-triager` step 3 -- check `gitPatch` in-session per PR
   a diff-zero (oggi falso-negativo S3 dimostrato).
+- **A5 (corrective-explosion guard)**: il corrective sendMessage NON e'
+  safe-by-default. Caso empirico 2026-05-17: correttivo su #2294/#2313
+  (S2 scope-creep) -> Jules ha over-rebasato -> PR esplose da 1 file a
+  14/18 file (CI/ADR/registry inclusi). Mitigazione obbligatoria: (a) il
+  messaggio correttivo deve vincolare esplicitamente ("revert allo scope
+  minimo, NON rebase, NON merge main, NON toccare altri file, se non
+  isolabile STOP e segnala"); (b) **ground-truth post-corrective
+  obbligatorio**: se il re-submit supera N file/scope atteso ->
+  ABORT-loop, escalate a Eduardo, **vietato un ulteriore corrective
+  cieco** sullo stesso item.
+- **A6 (self-revision circuit-breaker)**: dopo >=3 auto-revisioni del
+  verdetto sullo stesso item (osservato: gitpatch, governance
+  main-vs-Jules, corrective-safe -- 3-4 flip in sessione) -> STOP,
+  escalate a Eduardo con i dati, **vietato continuare a iterare**. La
+  tesi dello studio (mie conclusioni biased) richiede un cap, non solo
+  consapevolezza.
+
+Trigger di ri-presentazione: A5+A6 sono scoperti SOLO eseguendo l'ADR
+(failure mode reali non previsti). Status resta **Proposed**; maturita'
+Accepted richiede 1 ciclo con A5+A6 attivi senza incidente. Il valore di
+aver eseguito ADR-0032 e' aver trovato questi due buchi prima di ratifica.
 
 Tre obblighi per ogni PR Jules: **(E)** spiegazione (stato S1..S7
 ground-truthed) **(R1)** reazione Model-3 per-stato **(R2)** response a
