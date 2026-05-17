@@ -18,16 +18,16 @@ Questa directory contiene **scaffold paste-ready** generati da Claude Code in se
 
 ## File presenti
 
-- `2026-05-12-A-skills-resources.md` — Task A: skills collection (#1 refresh, #3, #5, #10)
-- `2026-05-12-B-subagent-memory-resources.md` — Task B: subagent + memory (#4, #11 refresh)
-- `2026-05-12-C-dev-tools-resources.md` — Task C: dev-tools (#7, #8)
-- `2026-05-12-D-guides-awesome-design-resources.md` — Task D: guides + awesome + design (#2, #6 refresh, #9, #12)
+- `2026-05-12-vault-frontmatter-drift-handoff.md` — attivo
+- **`archive/`** — 4 scaffold Wave-12 (A/B/C/D) **spenti/superseded** → vedi `archive/README.md`
 
-Trigger: screenshot OCR `TOP CLAUDE CODE REPOSITORIES` di Eduardo, sessione 2026-05-12 codemasterdd (this repo).
+> **🟢 Wave-12 RESOLVED + ARCHIVED 2026-05-17** — I 4 scaffold A/B/C/D **non eseguiti via rituale-paste** (final-table 12-repo li ha superseded prima). Spostati in `archive/`. **Meccanismo corretto per adoption-work**: loop `studio → conferma Eduardo → tuning → reiterazione → apply` (NON rituale-paste AA01, che resta valido solo per *nuovi* trigger spontanei). Esiti: #1 Instincts cherry-pick (vault canonical) · #11 → custom `godot-engine-specialist` agent (questo repo) · #6 parry/Rulesync parked-with-trigger · resto chiuso/Eduardo-direct. Fonte-verità: `docs/reference/subagents-skills-candidates.md`.
+
+Trigger origin: screenshot OCR `TOP CLAUDE CODE REPOSITORIES` di Eduardo, sessione 2026-05-12 codemasterdd (this repo).
 
 Index master: `docs/reference/subagents-skills-candidates.md` sezione "Wave 2026-05-12".
 
-BACKLOG tracking: M11 (Task A), M12 (Task B), M13 (Task C), M14 (Task D).
+BACKLOG tracking: M11-M14 **CHIUSI** (Wave-12 resolved via final-table, scaffold archiviati 2026-05-17).
 
 ## Anti-pattern
 
