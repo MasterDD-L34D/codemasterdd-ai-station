@@ -56,6 +56,26 @@ Workflow canonico per i PR Jules su qualsiasi repo monitorato (codemasterdd, Gam
 
 **Ratification trigger**: OK esplicito Eduardo su questo ADR + primo ciclo Model-3 applicato su Game (32-PR backlog) chiuso senza incidente boundary (nessun merge/close non autorizzato).
 
+## Amendment proposals (pending Eduardo ratification, 2026-05-17)
+
+Da `docs/research/jules-operating-model-study-2026-05-17.md` (backbone
+empirico -- caso gitpatch: mia conclusione "8 vuote/spreco" falsa al 50%,
+4/8 erano lavoro reale intrappolato S3):
+
+- **A1**: nessun verdetto CLOSE/empty su PR Jules senza ground-truth della
+  sessione (`GET /v1alpha/sessions/<id>/activities` + check `gitPatch`).
+- **A2**: tassonomia 7-stati (S1 PR-faithful / S2 scope-creep / S3
+  sandbox-stale / S4 genuinely-empty / S5 premise-false / S6
+  behavior-under-cosmetic / S7 duplicate) come riferimento canonico.
+- **A3**: "close silenzioso" = errore cardinale; ogni close preceduto da
+  response-a-Jules + ground-truth sessione.
+- **A4**: `jules-pr-triager` step 3 -- check `gitPatch` in-session per PR
+  a diff-zero (oggi falso-negativo S3 dimostrato).
+
+Tre obblighi per ogni PR Jules: **(E)** spiegazione (stato S1..S7
+ground-truthed) **(R1)** reazione Model-3 per-stato **(R2)** response a
+Jules (loop chiuso). Merge/close resta Eduardo-explicit (invariato).
+
 ## Riferimenti
 
 - L-030 (Jules session premise pre-verify + corrective sendMessage), L-029/L-025 (ground-truth), L-002 (cross-repo narrative drift), L-012 (vault sibling-peer write-under-auth)
