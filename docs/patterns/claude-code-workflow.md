@@ -138,12 +138,16 @@ Ogni commit ha **uno scope chiaro**. Non "misto" (5 tipi di cambi insieme).
 - Lower case (tranne nomi propri)
 - <72 caratteri subject, dettagli in body
 
-**Claude Code co-author**: per i commit che Claude genera, includo:
+**Claude Code attribution** (policy canonica ADR-0011 Addendum 2026-05-17, opzione C):
+per i commit che Claude genera, trailer metadata (MAI `Co-Authored-By:` — vietato):
 ```
-Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>
+Coding-Agent: claude-opus-4.7
+Trace-Id: <uuidv7>
 ```
 
-**Motivazione**: attribution onesto, permette di vedere chi ha co-generato cosa
+**Motivazione**: attribution onesto trace-able, co-author-noise GitHub rimosso.
+Enforcement 2-layer (commit-guard.js sempre-attivo + global commit-msg). Vedi
+`docs/adr/0011-cross-agent-commit-governance.md` §Addendum 2026-05-17.
 in git log.
 
 ### 7. Journaling in tempo reale

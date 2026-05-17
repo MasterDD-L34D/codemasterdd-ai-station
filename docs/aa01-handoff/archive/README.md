@@ -5,9 +5,17 @@ Scaffold AA01 **processati/superseded**, conservati come reference storica (NON 
 ## 2026-05-12 Wave 12-repo (A/B/C/D)
 
 I 4 scaffold A/B/C/D erano paste-ready per il lifecycle AA01 personale di Eduardo
-(`C:/Users/edusc/aa01/`). **Mai eseguiti via rituale-paste** perché la decisione
-finale 12-repo li ha superseded *prima* dell'esecuzione (final-table in
-`docs/reference/subagents-skills-candidates.md` §"Riepilogo decisioni preliminari").
+(`C:/Users/edusc/aa01/`).
+
+> **🔴 Correzione onesta 2026-05-17 (regola-0, cross-PC audit)**: claim precedente
+> "Mai eseguiti via rituale-paste" **FALSO**. Verifica git-truth Lenovo: archive
+> `C:/Users/edusc/aa01/archive/2026-05-aa01-001-2026-05-12-a-skills-resources/`
+> esiste con `decisions.md`+`lesson.md`+`plan.md` → **Task-A ESEGUITO su Lenovo
+> 2026-05-12** via lifecycle AA01 reale. Task B/C/D: non risultano eseguiti
+> (no archive corrispondente). La final-table 12-repo ha superseded l'output ma
+> Task-A *girò* (non fu skippato). Correzione dovuta: l'asserzione generalizzata
+> era governance-blind (non avevo verificato lo stato Lenovo non-git).
+
 Banner `🟢 RESOLVED` in testa a ciascun file = verdetti shippati per-repo.
 
 **Perché archiviati e non eseguiti**: il piano originale assumeva che ogni
