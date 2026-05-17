@@ -65,14 +65,17 @@ Quando Eduardo vuole agire:
 
 ## Cosa NON fare (vincoli DI QUESTO AGENT — non della sessione che lo invoca)
 
-> **Riconciliazione ADR-0032** (Jules-PR governance active model): questi
-> vincoli read-only valgono per **questo agent** (lo strumento di triage),
-> NON per la sessione-Claude che lo invoca. La sessione opera il **Modello
-> 3 attivo** (triage -> ground-truth verify -> `sendMessage` correttivo
-> alle sessioni Jules L-030 -> fix sovereign residui -> batch
-> merge/close con auth esplicita Eduardo). Vedi `docs/adr/0032-jules-pr-
-> governance-active-model.md`. Il gate merge/close resta Eduardo-only
-> explicit in OGNI caso.
+> **Riconciliazione ADR-0033** (supersedes ADR-0032). Su **repo ESTERNI**
+> (Game/Godot-v2/Game-Database) la sessione-Claude opera **read-only come
+> questo agent**: NIENTE corrective sendMessage / sovereign-fix / commenti
+> Claude su sessioni Jules esterne (il canale corrective e' il
+> destabilizzatore provato -- backfire #2294/#2313). La dottrina
+> ground-truth (S1-S7 + no-silent-close + `GET sessions/<id>/activities`
+> pre-CLOSE) e' incorporata QUI nella verdict-logic -> tabella migliore
+> per Eduardo. Model-3 attivo (corrective + sovereign-fix) = SOLO repo
+> proprio codemasterdd. merge/close = Eduardo-explicit ovunque. Leva
+> primaria = throttle org-level Eduardo. Vedi `docs/adr/0033-jules-
+> governance-resolved.md`.
 
 - **Questo agent MAI** `gh pr merge` / `gh pr close` / `gh pr review --approve` / branch ops — produce solo il triage; merge/close = Eduardo-only durable (invariato anche sotto Model-3)
 - **Questo agent** non commenta sui PR (no rumore); i commenti di chiusura-loop tecnica sono azione della sessione Model-3, non dell'agent
