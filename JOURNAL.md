@@ -3579,3 +3579,23 @@ Mitigation L-002 attiva. Restoration cognitive prioritized vs compound execution
 - Memory `project_session_resumption.md` updated con tutti i drift fix end-of-day
 
 
+
+## 2026-05-17 — Sessione Jules-governance maratona (ADR-0032→0033 + Protocol 7)
+
+### Completato
+- **~16 PR Jules MERGED su Game** (Batch B 2307/2312/2300/2311/2308 + MERGE-OK 7 + #2314 + S7 2293/2292/2301) + **#2325** sblocco governance (placeholder ADR-XXX morto in docs_registry bloccava l'intera coda) + **~11 PR CLOSED con diagnosi** (S4-empty + RELAUNCH-zombie work-lost) + **#2300 conflitto risolto** (gen-artifact, companionPicker preservato).
+- **ADR-0032 SUPERSEDED → ADR-0033 Accepted**: Model-3-attivo-su-esterni net-negative (provato via Archon 7-step interno c'-75% + arbitro esterno harsh-reviewer b-with-teeth-82% che ha falsificato c'). Risolto: throttle org-level primario + esterni=read-only-triage-con-ground-truth + Model-3-attivo solo codemasterdd. Contraddizione throttle nel triager (mancata da me, trovata da arbitro) fixata.
+- **Protocol 7 (SDMG) salvato come gate ripetibile**: `docs/patterns/self-designed-method-governance.md` + pointer CLAUDE.md cognitive-protocols. Metodo A8 RELAUNCH/REDESIGN progettato → falsificato dall'arbitro → adozione narrow (FLAG S3 + S6-selettivo, NO A8 anti-accretion).
+- **autoresearch-cli**: provenance-verificata, install compile-failed v0.3.3, mismatch strutturale per Jules-PR (negative result), riservato uso futuro (overnight numeric-metric optimization). Registrato memory + L-032.
+- **Lessons AA01 promosse**: L-031 (session-state > PR proiezione lossy), L-032 (tool-fit negative-result method), L-033 (self-designed-method → falsificazione esterna obbligatoria).
+- Game main post-storm: **SANO** (CI verde, governance success, fix #2325 regge dopo ~16 merge).
+
+### Da fare (residuo tuo by-design, ADR-0033)
+- #2321 (mislabeled-clean, keep/relaunch decisione Eduardo) + #2318/#2316 (S6-triviali, Eduardo legge diff).
+- RELAUNCH recovery: la diagnosi-tabella-FLAG è la guida per clean relaunch via jules.google quando Jules riprende (Eduardo l'ha messo in pausa manuale = throttle comportamentale).
+- Throttle Jules formale (jules.google/GitHub-App) = leva #1 ADR-0033, org-level Eduardo, quando riattiva Jules.
+
+### Note metodologiche
+- **n=7 auto-correzioni in sessione**: ogni mia conclusione/design NON falsificato esternamente era errato (gitpatch / governance-attribution / corrective-safe / F4 / A8-method / triager-contradiction / tuning-#2314). L'arbitro esterno + ground-truth + specialista li hanno corretti tutti, **incluso fermare me** quando "B+C" ri-autorizzava il relaunch che il metodo aveva rifiutato. Protocol 7 nasce da questo: il gate disciplinare regge alla pressione di ri-autorizzazione.
+- **Serialize-not-parallelize**: orchestratori-merge paralleli causano livelock BEHIND-starvation (#2311). Serializzati = throughput pulito. Finding operativo.
+- **Cognitive protocols applied**: P1 sempre; P3 Archon 7-step (decisione ADR); P5 harsh-reviewer arbitro esterno ×3 (cluster + decisione + metodo); P7 SDMG nato e applicato a se stesso.
