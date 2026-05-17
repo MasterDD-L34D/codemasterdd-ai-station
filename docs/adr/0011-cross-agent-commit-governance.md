@@ -206,6 +206,44 @@ Dopo fix 2C il wrapper Aider produce commit message conformi in inglese; 1A bloc
 - [ ] Se emerge drift regex (divergenza commit-guard.js vs commit-msg): refactor con shared JSON source
 - [ ] Decidere se mantenere wrapper corrente (gate + manual commit fallback) o investire in soluzione convergence-automatic
 
+## Addendum 2026-05-17 — Commit-attribution policy (conflict resolution, Eduardo-decided)
+
+**Status**: Accepted (Eduardo decision 2026-05-17, opzione C Hybrid).
+
+**Problema**: conflitto cross-sistema scoperto in cross-PC reconciliation. Tre fonti
+divergenti sull'attribution Claude nei commit:
+- vault `Spaces/Dev/Evo-Tactics/COMMIT_STYLE.md` → **raccomanda** `Co-Authored-By: Claude Opus 4.6`
+- codemasterdd `docs/patterns/claude-code-workflow.md` → **prescrive** `Co-Authored-By: Claude Opus 4.7`
+- Lenovo AA01 `AGENTS.md` FORBIDDEN-#6 → **vieta** `Co-authored-by: Claude`, trailer `Coding-Agent:`
+
+Drift aggiuntivo: i due doc git divergono pure sul model (4.6 vs 4.7). Nessuna
+authority aveva arbitrato → commit Claude erano git-compliant ma AA01-non-compliant.
+
+**Decisione (opzione C — Hybrid)**: policy canonica unica per OGNI repo dell'ecosistema.
+- **VIETATO** trailer GitHub `Co-Authored-By: Claude ...` (rumore co-author PR, semantica fuorviante).
+- **OBBLIGATORIO** trailer attribution-as-metadata:
+  ```
+  Coding-Agent: <agent-id>      # es. claude-opus-4.7
+  Trace-Id: <uuidv7>            # uuid v7 per-commit
+  ```
+  `Model:` opzionale (ridondante se agent-id porta il model). AA01-task aggiunge
+  `Coding-Agent: aa01-executor` nel proprio scope; ecosistema usa il model-id.
+- Riconcilia entrambe le intenzioni: attribuzione **mantenuta** (metadata onesto,
+  trace-able) + co-author-noise **rimosso**.
+
+**Enforcement (allineato 2-layer ADR-0011 esistente)**:
+- Layer 1 PreToolUse `commit-guard.js`: aggiungere check **sempre-attivo** (heredoc
+  INCLUSO, ortogonale al format-check Conventional che resta heredoc-skip) → BLOCK
+  se `Co-Authored-By:` presente nel messaggio. Cheap regex, zero falsi-positivi.
+- Layer 2 global `commit-msg` hook: stessa regola (copertura Aider/agent esterni).
+
+**Sync obbligatorio (anti-rot, stesso PR/follow-up)**: COMMIT_STYLE.md +
+claude-code-workflow.md + canonical `claude-global/CLAUDE.md` allineati a questa
+policy. Cross-link bidirezionale.
+
+**Effetto immediato**: da 2026-05-17 ogni commit ecosistema usa trailer
+`Coding-Agent`/`Trace-Id`, mai `Co-Authored-By`.
+
 ## Riferimenti
 
 - Log dogfood: `logs/aider-delegation-2026-04.md` entry 2026-04-22 11:58

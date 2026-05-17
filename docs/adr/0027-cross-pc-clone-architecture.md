@@ -131,3 +131,38 @@ storico 2026-05-13, NON stato corrente*. Stato cloni reale → eseguire
 `Vault-ops-remote/scripts/cross_pc_mgmt_reconcile.py` (git-truth fresh),
 mai i numeri qui. Anti-rot principio #135 (decouple narrativa da
 git-truth).
+
+## Addendum 2026-05-17 — Capability-parity objective (Eduardo-decided, scoped override)
+
+**Status**: Accepted (Eduardo decision 2026-05-17).
+
+**Contesto**: cross-PC reconciliation 2026-05-17 ha rivelato che il layer
+`~/.claude` + sistema metodo-personale (ARCHON v2 + AA01 engine) era
+**100% Lenovo-only, zero Ryzen, zero git** → causa-radice profonda di
+"Claude si comporta diversamente per PC" a livello **capacità/metodo**
+(non solo repo-clone-staleness, già trattata sopra).
+
+**Decisione (obiettivo Eduardo)**: per il **layer user-home capability**
+(`~/.claude`: CLAUDE.md, skills, agents, hooks, commands, plugins-set,
+ARCHON/AA01 engine) l'obiettivo diventa **parità funzioni-complete identiche
+su ENTRAMBI i PC**. Questo **supersede localmente** il framing
+"Ryzen = stale exploration sandbox" *limitatamente a questo layer*.
+
+**NON cambia** (resta valido dal corpo ADR-0027): repo-clone canonical =
+origin/main; Lenovo = primary client per i repo; Ryzen-repo-clones =
+sandbox (staleness gestita via reconcile, non via parità forzata).
+La parità è del **capability/engine layer**, non dei **repo working-copies**.
+
+**Distinzione parità**:
+- **Engine/metodo/agent/skill/regole/hooks** = identici, git-truth-deployed
+  entrambi PC (via `deploy_claude_global.ps1` + canonical-config).
+- **Dati-task personali** (AA01 inbox/workspace/archive/decision-log/lesson):
+  Eduardo 2026-05-17 ha autorizzato **sync in vault-privato git** (opzione
+  "Engine completo + dati sync") → parità totale incluso storico personale.
+  Audience-expansion scritture personali consapevolmente autorizzata
+  (vault = repo privato MasterDD-L34D).
+
+**Implementazione**: vendor ARCHON+AA01 → `Vault-ops-remote/claude-global/`;
+deploy esteso path-canonico entrambi PC; reconcile.py `--parity` flag drift.
+Anchor metodologico: ADR-0026 triple→quad-anchor (+layer `~/.claude`).
+Cross-link: vault `docs/decisions/OD-046` (lesson-layer durability).
