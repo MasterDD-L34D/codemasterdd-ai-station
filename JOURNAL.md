@@ -37,7 +37,7 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 - Distinzione OD-032 (personal account, deferred, narrow Evo-Tactics) vs OD-033/recovery (Business workspace, broad, executed) mantenuta
 
 ### Riferimenti
-- ADR-0030: `docs/adr/0030-chatgpt-recovery-classification-pipeline.md`
+- ADR-0030: `docs/adr/0031-chatgpt-recovery-classification-pipeline.md`
 - PR #118 codemasterdd-ai-station
 - Pipeline workspace: `chatgpt-recovery/` + agent-lessons + vault-cross-reference-map.yaml
 - OD-038 (vault-side): `C:/dev/vault-shared/docs/decisions/OD-038-operating-method-2026-05-16.md`

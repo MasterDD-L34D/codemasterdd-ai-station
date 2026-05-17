@@ -81,3 +81,23 @@ Markdown ~400-500 parole:
 - **Recommendation**: set batch per autorizzazione Eduardo, ordinati per valore/sicurezza
 
 Chiudi con: "Eduardo: autorizza batch — MERGE-OK [..] / CLOSE [..] / NEEDS-REVIEW [..]. Merge/close = tua explicit action. Throttle Jules (jules.google + GitHub-App) se volume insostenibile."
+
+## Cadenza periodica (policy master-dd 2026-05-17)
+
+Decisione master-dd: **tieni i PR Jules + triage periodico** (NO throttle
+— i PR hanno valore selettivo). Cadenza operativa:
+
+- **Trigger soglia**: quando `gh pr list --repo MasterDD-L34D/Game
+  --state open` Jules-PR **≥ 10** → invoca questo agent ("triage pr
+  jules"). Evita accumulo >20-30 (debito-review).
+- **Trigger tempo**: comunque almeno **1×/settimana** se ci sono PR Jules
+  aperti, anche sotto soglia (evita stagnazione).
+- L'agent NON è auto-eseguibile da workflow (.claude/agents = invoke-
+  driven). La cadenza è un **promemoria operativo**: Eduardo (o sessione
+  Claude in apertura-lavoro su Game) invoca quando soglia/tempo scatta.
+- Output triage → Eduardo autorizza batch MERGE-OK/CLOSE; NEEDS-REVIEW
+  decisi caso-caso. Il triage NON merge/close (resta Eduardo-explicit).
+- Se per ≥2 cicli consecutivi il rapporto MERGE-OK/totale resta basso
+  (<20%, come osservato 2/17 2026-05-17) → ri-valutare throttle Jules
+  (flag esplicito nel report dell'agent: "value-ratio basso N cicli →
+  considera throttle jules.google").
