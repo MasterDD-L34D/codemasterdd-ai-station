@@ -2,7 +2,7 @@
 
 Catalogo curato post-rivalutazione approfondita del materiale research 2026-04-21. **NON sono installati**. Reference per futuro: se emerge use case reale, passare per `gh skill preview` (ADR-0010) o manual copy in `.claude/agents/` del repo target, audit markdown content prima.
 
-**Estensione 2026-05-12**: 9 repo aggiuntivi triagati post-screenshot OCR di Eduardo (sezione "Wave 2026-05-12 batch evaluation" in fondo). Total catalogo ora: **12 external resources** indicizzati, di cui 3 nella sezione originale + 9 nella wave 2026-05-12. Workflow di adozione (4 task AA01 raggruppati per categoria) in `docs/aa01-handoff/2026-05-12-*-resources.md`.
+**Estensione 2026-05-12**: 9 repo aggiuntivi triagati post-screenshot OCR di Eduardo (sezione "Wave 2026-05-12 batch evaluation" in fondo). Total catalogo ora: **12 external resources** indicizzati, di cui 3 nella sezione originale + 9 nella wave 2026-05-12. Workflow di adozione: 4 scaffold AA01 **superseded+archiviati 2026-05-17** in `docs/aa01-handoff/archive/` (vedi "Re-decisione 2026-05-17" in fondo — adoption via loop studio→conferma→tuning→apply).
 
 ## Subagent Claude Code — da `VoltAgent/awesome-claude-code-subagents` (17.9k⭐)
 
@@ -229,9 +229,20 @@ OCR font monospace ha distrorto cifre. Validazione via star-history + GitHub-liv
 | 8 | gsd-build/get-shit-done | tool | BOOKMARK (no install, audit vs AA01) | vault Card |
 | 9 | dair-ai/Prompt-Engineering-Guide | guide | BOOKMARK | vault Atlas + `REFERENCE_INDEX.md` |
 | 10 | anthropics/skills | skills | **MARKETPLACE REGISTERED 2026-05-12** as `anthropic-agent-skills`. **NO additional per-skill install required**: skill bundle disponibili nativamente in session via `anthropic-skills:*` namespace (algorithmic-art, brand-guidelines, canvas-design, claude-api, doc-coauthoring, docx, internal-comms, mcp-builder, pdf, pptx, skill-creator, slack-gif-creator, theme-factory, webapp-testing, xlsx). Marketplace expose **2 BUNDLE plugins NON per-skill**: `document-skills` (xlsx+docx+pptx+pdf) + `example-skills` (collection ~13 skills). Install bundle plugin = duplicate skill già accessible session = skip default. | Bundle install solo se sandbox/CI senza native skills bundle accessible |
-| 11 | VoltAgent/awesome-claude-code-subagents | subagents | REFRESH (re-audit catalogo) | `.claude/agents/` cherry-pick |
+| 11 | VoltAgent/awesome-claude-code-subagents | subagents | **ADOPT-custom 2026-05-17**: REFRESH-re-audit confermò 0 agent generici valgono cherry-pick (tutti redundant vs ~23 nostri / no use-case). MA gap ENGINE-layer Godot reale → creato custom `godot-engine-specialist` (1-file structural seed da VoltAgent `game-developer` MIT injection-clean + specializzazione Godot-4.x originale) | `.claude/agents/godot-engine-specialist.md` |
 | 12 | VoltAgent/awesome-design-md | design | BOOKMARK (clone read-only se trigger) | `C:\dev\` clone su trigger |
 
-**4 task AA01 raggruppati**: vedi `docs/aa01-handoff/2026-05-12-{A-skills,B-subagent-memory,C-dev-tools,D-guides-awesome-design}-resources.md`.
+### Re-decisione 2026-05-17 (loop studio→conferma→tuning→apply, Eduardo-confermato)
 
-**Tracking BACKLOG**: M11 (Task A), M12 (Task B), M13 (Task C), M14 (Task D).
+| # | Aggiornamento vs final-table |
+|---|---|
+| 1 | DEFER → **ADOPT scoped**: cherry-pick SOLO `continuous-learning-v2/Instincts` (MIT, gap pattern-mining no-overlap), gated default-OFF, vendored `vault Vault-ops-remote/claude-global/skills/`. Time-gate droppato. |
+| 3 | INSTALLED-canon ma **ASSENTE Ryzen** (regola-0) → azione user-CLI `/plugin install superpowers@claude-plugins-official` |
+| 4 | DISABLED → **trigger fired**: upstream #19012 CLOSED. Re-eval re-enable pending (verifica fix-in-versione + smoke, NON auto-flip) |
+| 6 | REFRESH → studio: parry (Windows-NO=bloccante) + Rulesync (merge-semantics non verif) = **STUDY-MORE parked-with-trigger**; ClaudeCTX=SKIP (overwrite regressione). Cross-PC resta bespoke (§7: no re-architettura non giustificata). |
+| 7 | INSTALL → **DONE** repomix v1.14.0 (`npm i -g`, Ryzen 2026-05-17 verificato) |
+| 11 | REFRESH → **ADOPT-custom** `godot-engine-specialist` (vedi sopra) |
+
+**Wave-12 scaffold AA01 (A/B/C/D)**: superseded+**ARCHIVED 2026-05-17** → `docs/aa01-handoff/archive/`. Meccanismo adoption corretto = loop studio→conferma→tuning→apply (NON rituale-paste AA01).
+
+**Tracking BACKLOG**: M11-M14 **CHIUSI** (Wave-12 resolved, scaffold archiviati 2026-05-17).
