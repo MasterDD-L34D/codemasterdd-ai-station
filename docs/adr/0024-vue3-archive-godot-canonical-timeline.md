@@ -196,3 +196,23 @@ Game OD-023 propone **Path C ORA + Path A Day 8** (canonical execution 2026-05-1
 - BACKLOG H11 (AA01 attivazione Ondata 1+2 Eduardo direct)
 - Game `OPEN_DECISIONS.md` OD-023 -- Phase B execution date verdict 2026-05-12 (cross-repo dependency citata)
 - Game `docs/adr/ADR-2026-05-05-cutover-godot-v2-fase-3-formal.md` -- scope `apps/play/` web archive Phase B
+
+## Addendum anti-rot — evidence block CONTRADICTED (reconcile 2026-05-17)
+
+⚠️ **La DECISIONE resta valida** (soft-deadline archive Vue3 2026-09-30,
+status `Proposed`, trigger 60gg/feature-parity). **Ma il blocco-evidenza
+Context era snapshot 2026-05-09 ora FALSIFICATO da git-truth** (audit
+veracità ADR 2026-05-17, regola-0):
+
+- "HEAD `5f42757a` invariato" → FALSO: `5f42757a` = commit **2026-04-26**
+  (`Merge aa01/cap-15-imprint-phase`), non freeze-marker 9/5. Game `main`
+  ora = `427db9a6` (2026-05-17), repo iper-attivo (2300+ PR, merge
+  giornalieri). Premessa "Vue3 in pausa / HEAD frozen" contraddetta.
+- "2 PR DRAFT #2138/#2139" → FALSO: **#2138 e #2139 sono MERGED**.
+- "Game-Godot-v2 215+ PR / 0 open 9/5" + cascade-timeline + AA01-state =
+  snapshot rotti.
+
+**Trattamento**: decisione invariata (timeless, deadline futura); il
+Context/§"NEW 9/5" = *snapshot storico 2026-05-09 rotto*, NON stato
+corrente. Stato Game reale → git-truth / EXECUTION-BOARD, mai i conteggi
+qui. (Stesso anti-rot pattern PR #154 / ADR-0027.)

@@ -112,3 +112,22 @@ ADR Accepted da subito (early-acceptance ADR-0010 pattern, low-stakes empirical 
 - L-2026-05-014 candidate (autoresearch first, in promotion)
 - ADR-0026 cognitive workflow protocols (P1 Refresh-verify + P3 Archon)
 - Session 2026-05-13 notte auto-mode execution
+
+## Addendum anti-rot — snapshot HEAD/N-behind rotti (fence 2026-05-17)
+
+⚠️ **I verdetti Q1/Q2/Q3 restano VALIDI** (status-quo, Lenovo=hub
+canonico, Ryzen=scratch ortogonale, no migration). **Ma le tabelle
+HEAD/N-behind erano snapshot 2026-05-13 e sono ROTTE** (audit veracità
+ADR 2026-05-17, regola-0):
+
+- "Ryzen Game `5d27fc50` 107 BEHIND" / "codemasterdd Ryzen `4b7c84a`
+  6-ahead codex" = conteggi 2026-05-13. Verifica fresca 2026-05-17:
+  Game origin `427db9a6`, cloni Ryzen Game+codemasterdd **riallineati a
+  origin/main** (0/0) post-fix; vault Ryzen sempre synced. Q3 repo-HEAD
+  (Game-Database `91f5468` → ora `3be942cc`) rotti.
+
+**Trattamento**: verdetti invariati; le tabelle HEAD/N-behind = *snapshot
+storico 2026-05-13, NON stato corrente*. Stato cloni reale → eseguire
+`Vault-ops-remote/scripts/cross_pc_mgmt_reconcile.py` (git-truth fresh),
+mai i numeri qui. Anti-rot principio #135 (decouple narrativa da
+git-truth).
