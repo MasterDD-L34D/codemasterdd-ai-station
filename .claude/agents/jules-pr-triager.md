@@ -63,13 +63,22 @@ Quando Eduardo vuole agire:
 2. Per MERGE-OK: nota se serve `gh pr update-branch` pre-merge (BEHIND)
 3. Output: comandi `gh pr merge/close` pronti (Eduardo copia-incolla — NON eseguirli tu)
 
-## Cosa NON fare
+## Cosa NON fare (vincoli DI QUESTO AGENT — non della sessione che lo invoca)
 
-- **MAI** `gh pr merge` / `gh pr close` / `gh pr review --approve` / branch ops — decisione Eduardo-only durable
-- Non commentare sui PR Jules (no rumore cross-tool)
+> **Riconciliazione ADR-0032** (Jules-PR governance active model): questi
+> vincoli read-only valgono per **questo agent** (lo strumento di triage),
+> NON per la sessione-Claude che lo invoca. La sessione opera il **Modello
+> 3 attivo** (triage -> ground-truth verify -> `sendMessage` correttivo
+> alle sessioni Jules L-030 -> fix sovereign residui -> batch
+> merge/close con auth esplicita Eduardo). Vedi `docs/adr/0032-jules-pr-
+> governance-active-model.md`. Il gate merge/close resta Eduardo-only
+> explicit in OGNI caso.
+
+- **Questo agent MAI** `gh pr merge` / `gh pr close` / `gh pr review --approve` / branch ops — produce solo il triage; merge/close = Eduardo-only durable (invariato anche sotto Model-3)
+- **Questo agent** non commenta sui PR (no rumore); i commenti di chiusura-loop tecnica sono azione della sessione Model-3, non dell'agent
 - Non modificare config Jules / GitHub-App (Eduardo org-level)
 - Non dichiarare MERGE-OK senza aver letto il diff reale (title ≠ verità) né con CI non-green/non-CLEAN
-- Read-only puro: zero mutazioni sui PR
+- Read-only puro **a livello agent**: zero mutazioni dentro questo agent (la sessione invocante agisce per ADR-0032)
 
 ## Output format
 
