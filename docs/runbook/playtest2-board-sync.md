@@ -35,7 +35,7 @@ baseline-update PR (Envelope-B B3). codemasterdd lo legge via
 `raw.githubusercontent.com` + legge la conclusione dell'ultimo run
 `ai-sim-nightly` via REST API pubblica (repo pubblico → nessun PAT).
 
-## Cosa è AUTO vs RESIDUO ONESTO
+## Cosa è AUTO (residuo deep-metrics CHIUSO)
 
 | Segnale | Stato | Fonte |
 |---|---|---|
@@ -43,22 +43,30 @@ baseline-update PR (Envelope-B B3). codemasterdd lo legge via
 | Baseline **samples** count | ✅ AUTO | idem |
 | Baseline **updated_at** | ✅ AUTO | idem |
 | Ultimo `ai-sim-nightly` **run conclusion** + data + link | ✅ AUTO | GitHub REST pubblica |
-| `metrics.json` deep (p3_promotions / p4_psicologico / p6_fairness / od024_interoception / od026_atlas / performance) | ❌ **RESIDUO** | solo nell'**artifact** Game (auth-gated, non raw-fetchabile) |
+| Deep per-pilastro (P3 promos / P4 4-layer / P6 rewind% / OD-024 firing% / OD-026 skiv+biome-focus / perf p95) | ✅ AUTO | Game `tools/sim/playtest2-latest.json` (raw) |
 
-**Residuo onesto**: l'analyzer Game emette `metrics.json` (chiavi:
-summary, p3_promotions, p4_psicologico, p6_fairness, od024_interoception,
-od026_atlas, performance) **solo dentro l'artifact** del workflow Game.
-Gli artifact non sono leggibili cross-repo senza auth. Quindi le metriche
-per-pilastro **non** sono sincronizzate — non vengono fabbricate.
+**Residuo CHIUSO (Game `feat/playtest2-deep-metrics-digest`)**: il
+`metrics.json` completo resta nell'artifact auth-gated (non raw-fetchabile,
+invariato), ma la nightly Game ora ne **distilla un digest
+board-consumabile** (`tools/sim/playtest2-digest.py` →
+`tools/sim/playtest2-latest.json`) e lo committa **nello STESSO
+baseline-update PR** di `pillar-baseline.json` (stesso branch
+`auto/playtest2-baseline-<date>`, stesso guard di idempotenza/bootstrap —
+churn solo-timestamp soppresso, niente PR se nulla cambia). codemasterdd
+`tools/playtest2-board-sync.sh` raw-fetcha quel digest (sezione 2b, **no
+cross-repo auth**) e arricchisce il blocco AUTO-SYNC con la riga
+per-pilastro reale.
 
-**TODO sblocco residuo**: Game committa `metrics.json` (o un estratto
-stabile) a un path/branch noto (es. `docs/playtest/playtest-2-metrics.json`
-su `main`, come fa già con `pillar-baseline.json`). Allora estendere
-`tools/playtest2-board-sync.sh` per raw-fetchare anche quel file e
-arricchire il blocco AUTO-SYNC con le 7 dim. Finché Game non committa
-nulla di consumabile in più, il valore reale resta: verdict + samples +
-run status/data/link auto-refreshati + questo runbook chiude il knowledge
-gap.
+**Onestà preservata**:
+- Game non ha ancora prodotto/committato il digest (bootstrap, o `main`
+  vecchia) → fetch 404 → lo script **degrada al verdict-only** con una
+  frase esplicita _"Deep per-pillar metrics: not yet published by Game
+  (digest absent / bootstrap)"_. Mai crash, mai fabbricazione.
+- Campo del digest assente (analyzer non l'ha prodotto) → reso come
+  `n/a`, mai inventato.
+- Digest identico fra run → blocco AUTO-SYNC identico (idempotente; il
+  solo refresh data resta comportamento pre-esistente dello script,
+  gated dal git-diff del workflow = no-spam PR).
 
 ## Come funziona
 
@@ -106,6 +114,12 @@ nuovo.
    "baseline unreachable" → no-op `exit 0` — verificato (bad owner +
    host non risolvibile).
 4. **Marker riga OD-044 assente** → patcher Python `exit 0`, no-op.
+5. **Digest deep-metrics 404 / assente (Game bootstrap o `main`
+   vecchia)** → sezione 2b lascia `pillar_line` vuoto → blocco AUTO-SYNC
+   degrada al verdict-only con frase esplicita, mai crash — verificato
+   contro Game/main live (digest non ancora committato).
+6. **Digest presente ma campo nullo** (analyzer non l'ha prodotto) →
+   reso `n/a`, mai fabbricato — verificato con digest bootstrap-empty.
 
 ## Cross-link
 
