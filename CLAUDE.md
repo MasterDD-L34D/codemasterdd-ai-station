@@ -477,6 +477,16 @@ Per ADR-class architectural decision generative (new sub-system / replace compon
 
 **Caso studio**: brainstorming loaded 2026-05-13 pomeriggio per OpenRouter eval → 4 options A/B/C/D → Option C → ADR-0029 scaffold.
 
+### Protocol 7 -- Self-Designed-Method Governance (SDMG) -- addendum 2026-05-17
+
+Quando sto per **integrare in governance durevole** (ADR/agent/policy/memory) o **rendere autonomo** un METODO/processo che ho progettato io (NON azioni one-off): il mio design e' **ipotesi con tasso d'errore alto dimostrato**, non decisione. Gate obbligatorio: (1) design=ipotesi · (2) test empirico read-only (necessario NON sufficiente) · (3) **falsificazione esterna** arbitro `harsh-reviewer` + Archon CALIBRATE, pre-commit "se rigetta adotto non difendo" · (4) **anti-accretion check** -- se e' l'ennesimo emendamento su base con difetto irrisolto -> STOP, fix la base prima · (5) **adozione narrow** read-only/flag, azione resta umano/specialista · (6) **tuning-before-execute**, il decider e' specialista/ground-truth MAI il mio euristico · (7) post-exec validation.
+
+**Trigger**: integrazione governance / autonomizzazione di un metodo self-designed.
+**Evidenza**: n=7 auto-correzioni in sessione 2026-05-16/17 (ogni mio output non-falsificato esternamente era errato).
+**Anti-pattern**: design->integra->"poi vediamo"; test-positivo=sufficiente; difendere metodo falsificato; accretion su base difettosa; euristico-come-decider; SDMG su fix one-off (over-engineering).
+**Complementarita'**: sequenzia P3 (Archon) + P5 (harsh-reviewer) specificamente per metodi self-designed.
+**Reference**: `docs/patterns/self-designed-method-governance.md` + L-2026-05-033 + ADR-0033 post-resolution note.
+
 ### Combined methodology UPDATED 2026-05-13 (post Protocol 5+6 addendum)
 
 ```
