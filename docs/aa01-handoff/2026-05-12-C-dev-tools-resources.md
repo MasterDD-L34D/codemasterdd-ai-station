@@ -1,5 +1,7 @@
 # AA01 Task C — Dev-tools evaluation (2 repo)
 
+> **🟢 RESOLVED 2026-05-12 (anti-rot pointer, no re-triage)** — Scaffold AA01 SUPERSEDED dalla decisione finale. Verdetti shippati: **#7** repomix = INSTALL `npm install -g repomix` (**azione utente per-macchina**, NON eseguito Ryzen 2026-05-17) · **#8** get-shit-done = BOOKMARK (no install, audit vs AA01). Fonte-verità: `docs/reference/subagents-skills-candidates.md` §"Riepilogo decisioni preliminari" + canonical `shipped_triage_reference_ANTI_ROT`. Unico residuo = repomix install per-macchina (utente). NON re-triagare.
+
 > **Preset**: `research-long`
 > **Slug**: `2026-05-12-C-dev-tools-resources`
 > **Effort stima**: 2 ore (repomix install + use case validation + gsd audit comparativo)

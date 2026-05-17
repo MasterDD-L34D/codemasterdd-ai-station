@@ -1,5 +1,7 @@
 # AA01 Task D — Guides + awesome-list + design-resource (4 repo)
 
+> **🟢 RESOLVED 2026-05-12 (anti-rot pointer, no re-triage)** — Scaffold AA01 SUPERSEDED dalla decisione finale. Verdetti shippati: **#2** shanraisshan · **#9** dair-ai · **#12** awesome-design-md = BOOKMARK → vault Card (**Eduardo direct**, boundary sibling-peer: agent NON scrive vault-shared) · **#6** hesreallyhim = REFRESH curator **già minato** (→ tdd-guard shippato), dormant-no-trigger. Fonte-verità: `docs/reference/subagents-skills-candidates.md` §"Riepilogo decisioni preliminari" + canonical `shipped_triage_reference_ANTI_ROT`. Nessuna azione autonoma residua (BOOKMARK = Eduardo-direct). NON re-triagare.
+
 > **Preset**: `research-long` (lightweight — bookmark-heavy, no install eseguibile)
 > **Slug**: `2026-05-12-D-guides-awesome-design-resources`
 > **Effort stima**: 1-2 ore (review + vault Card creation Eduardo direct)
