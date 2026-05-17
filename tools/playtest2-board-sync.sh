@@ -24,6 +24,14 @@ GAME_OWNER="MasterDD-L34D"
 GAME_REPO="Game"
 GAME_REF="main"
 BASELINE_PATH="tools/sim/pillar-baseline.json"
+# OD-044 deep-metrics: Game's ai-sim-nightly baseline-update PR now ALSO
+# commits a small board-consumable digest of the analyzer metrics.json to
+# this stable public path (same auto-PR, same idempotency guard). It is
+# raw-fetchable with no cross-repo auth, exactly like pillar-baseline.json.
+# Honest residual closer: if Game has not produced/committed it yet
+# (bootstrap, 404), this script falls back to the verdict-only block —
+# the per-pillar line is simply omitted, never fabricated, never crashes.
+DIGEST_PATH="tools/sim/playtest2-latest.json"
 WORKFLOW_FILE="ai-sim-nightly.yml"
 BOARD="docs/cross-repo/EXECUTION-BOARD.md"
 
@@ -69,30 +77,86 @@ except Exception: print("")' 2>/dev/null || echo '')"
 fi
 log "nightly run: status=$run_status date=$run_date"
 
+# --- 2b. Fetch Game's committed deep-metrics digest (raw, no auth) --------
+# OD-044 residual closer. Optional + graceful: a 404 (Game has not yet
+# committed the digest — bootstrap, or older Game main) or any parse
+# failure leaves $pillar_line empty, so the block degrades cleanly to the
+# pre-existing verdict-only behavior. NEVER fabricated, NEVER crashes.
+DIGEST_RAW_URL="https://raw.githubusercontent.com/${GAME_OWNER}/${GAME_REPO}/${GAME_REF}/${DIGEST_PATH}"
+digest_json="$(curl -fsSL --max-time 25 "$DIGEST_RAW_URL" 2>/dev/null || true)"
+pillar_line=""
+if [ -n "$digest_json" ] && echo "$digest_json" | python3 -c 'import sys,json; json.load(sys.stdin)' 2>/dev/null; then
+  pillar_line="$(echo "$digest_json" | python3 -c '
+import sys, json
+try:
+    d = json.load(sys.stdin)
+    def g(path, default="n/a"):
+        cur = d
+        for k in path.split("."):
+            if not isinstance(cur, dict) or k not in cur or cur[k] is None:
+                return default
+            cur = cur[k]
+        return cur
+    def n(path, suffix=""):
+        v = g(path)
+        if isinstance(v, float):
+            v = round(v, 1)
+        return "n/a" if v == "n/a" else "{}{}".format(v, suffix)
+    parts = [
+        "P3 **{}** (promos {})".format(g("pillars.p3.verdict"), n("pillars.p3.key_metric")),
+        "P4 **{}**".format(g("pillars.p4.verdict")),
+        "P6 **{}** (rewind {})".format(g("pillars.p6.verdict"), n("pillars.p6.rewind_pct", "%")),
+        "OD-024 firing {}".format(n("pillars.od024.firing_pct", "%")),
+        "OD-026 skiv {} / biome-focus {}".format(n("pillars.od026.skiv_pulse"), n("pillars.od026.biome_focus")),
+        "perf p95 {} ({})".format(n("pillars.performance.p95_ms", "ms"), g("pillars.performance.verdict")),
+    ]
+    ss = g("sample_size")
+    rid = g("run_id")
+    print("Deep per-pillar (Game `{}` @ `main`, sample {}, run {}): ".format("tools/sim/playtest2-latest.json", ss, rid) + " · ".join(parts))
+except Exception:
+    print("")
+' 2>/dev/null || echo "")"
+  if [ -n "$pillar_line" ]; then
+    log "deep-metrics digest fetched: $pillar_line"
+  else
+    log "deep-metrics digest present but unparseable — verdict-only fallback"
+  fi
+else
+  log "deep-metrics digest unreachable/404 (Game not yet committed it) — verdict-only fallback (honest, no-op)"
+fi
+
 TODAY="$(date -u +%Y-%m-%d)"
 run_link="${run_url:-https://github.com/${GAME_OWNER}/${GAME_REPO}/actions/workflows/${WORKFLOW_FILE}}"
+
+# Deep-metrics sentence: present only when the digest was fetched + parsed.
+# Honest fallback line otherwise so the board is explicit about the gap.
+if [ -n "$pillar_line" ]; then
+  pillar_md=" ${pillar_line}."
+else
+  pillar_md=" Deep per-pillar metrics: _not yet published by Game (digest absent / bootstrap) — verdict-only above is authoritative._"
+fi
 
 # --- 3. Build the auto-sync snapshot block -------------------------------
 read -r -d '' BLOCK <<EOF || true
 $BEGIN
-**Auto-sync (OD-044, last refresh ${TODAY} UTC)** — source: Game \`${BASELINE_PATH}\` @ \`${GAME_REF}\` (raw-fetch, OD-042-A pattern). Pillar verdict: **${verdict}** · baseline samples: **${samples}** · baseline updated_at: \`${updated_at}\`. Latest \`ai-sim-nightly\` run: **${run_status}** (${run_date}) → [run log](${run_link}). _Auto-refreshed signal only; human prose below is authoritative for context._
+**Auto-sync (OD-044, last refresh ${TODAY} UTC)** — source: Game \`${BASELINE_PATH}\` @ \`${GAME_REF}\` (raw-fetch, OD-042-A pattern). Pillar verdict: **${verdict}** · baseline samples: **${samples}** · baseline updated_at: \`${updated_at}\`. Latest \`ai-sim-nightly\` run: **${run_status}** (${run_date}) → [run log](${run_link}).${pillar_md} _Auto-refreshed signal only; human prose below is authoritative for context._
 $END
 EOF
 
 if [ ! -f "$BOARD" ]; then log "board missing: $BOARD"; exit 0; fi
 
 # --- 4. Patch: inject or replace block immediately after the row ----------
-python3 - "$BOARD" "$BEGIN" "$END" <<'PYEOF' > /tmp/.p2sync_block.txt
-import sys
-# block content arrives on stdin via env; we just stage markers here.
-PYEOF
-
-python3 - "$BOARD" <<PYEOF
-import io, re, sys
-board_path = "$BOARD"
-begin = """$BEGIN"""
-end   = """$END"""
-block = """$BLOCK"""
+# Pass block + markers via the ENVIRONMENT (not source interpolation) so
+# UTF-8 content (·, →, accented prose) never corrupts the inline python
+# source bytes. The heredoc body is fully static + quoted.
+P2SYNC_BOARD="$BOARD" P2SYNC_BEGIN="$BEGIN" P2SYNC_END="$END" P2SYNC_BLOCK="$BLOCK" \
+python3 - <<'PYEOF'
+# -*- coding: utf-8 -*-
+import io, os, re, sys
+board_path = os.environ["P2SYNC_BOARD"]
+begin = os.environ["P2SYNC_BEGIN"]
+end   = os.environ["P2SYNC_END"]
+block = os.environ["P2SYNC_BLOCK"]
 
 with io.open(board_path, "r", encoding="utf-8") as f:
     text = f.read()
