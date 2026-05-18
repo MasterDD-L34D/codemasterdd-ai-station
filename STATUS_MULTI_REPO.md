@@ -517,7 +517,7 @@ Eduardo claude.ai session ha prodotto 3 doc DF-integration (RECONCILIATION-MASTE
   - Game [PR #2326](https://github.com/MasterDD-L34D/Game/pull/2326): RESCUE doc → `docs/planning/`
 - **Rescue governance mutation (Q-001 + TKT-RESCUE-001..004 + "rescue in corso")**: ❌ **NON applicato — premessa falsificata da ground-truth Game 2026-05-18**:
   - Triangle Strategy Proposal A (MBTI phased reveal) **GIÀ SHIPPED 2026-04-25** (`apps/backend/services/mbtiSurface.js` ~140 LOC, 12/12 test, BACKLOG OD-013, card M-2026-04-25-009 reuse_path eseguito)
-  - Sentience tier backfill 15/15 lifecycle **SHIPPED #2262**
+  - Sentience tier backfill **SHIPPED PR #1808** (OD-008, ALL 45 species, 25/04) — NB BACKLOG L23 cita erroneamente #2262 (Envelope-B bundle scollegato), upstream-wrong Eduardo-side
   - `docs/research/triangle-strategy-transfer-plan.md` esiste dal 25/04 (65KB)
 - **Stato reale**: NON "rescue in corso". Pattern L-025/L-030/anti-pattern #8 (snapshot stale claude.ai vs Game ground-truth daily-ship).
 
@@ -528,7 +528,7 @@ Eduardo claude.ai session ha prodotto 3 doc DF-integration (RECONCILIATION-MASTE
 | Triangle Strategy **Proposal A** | rescue ROI 5/5 ~6h | **SHIPPED 2026-04-26** | `apps/backend/services/mbtiSurface.js`, 12/12 test, OD-013 Path A, PR #1848 | **DROP — fatto** |
 | Triangle Strategy **Proposal B** | proposta ~4h | **SHIPPED 2026-04-26** | `data/core/personality/mbti_axis_palette.yaml` + `mbtiPalette.js` + 26/26 test, OD-013 Path B | **DROP — fatto** |
 | Triangle Strategy **Proposal C** (recruit gating) | ~5h post-recruit | **OPEN ma gated** | OD-013 "Proposal C deferred a OD-001 Path A"; no recruit-gate service | KEEP (gated OD-001/M-007) |
-| Sentience tier backfill 15/15 | rescue ~3h | **SHIPPED #2262** | BACKLOG "A4 sentience backfill 15/15 lifecycle SHIPPED" | **DROP — fatto** |
+| Sentience tier backfill | rescue ~3h | **SHIPPED PR #1808** | OD-008 "sentience_tier backfill ALL 45 species" merged 2026-04-25 (BACKLOG L23 #2262 = upstream-wrong, Envelope-B bundle) | **DROP — fatto** |
 | Sentience A4-residue 30 species | — | **PENDING gated** | BACKLOG "A4-residue 30 species heuristic PENDING gated master-dd" | KEEP (master-dd verdict) |
 | Sistema intelligence S7/S8 | nuovo state-machine | **PARTIAL** | `services/ai/sistemaTurnRunner.js` + `declareSistemaIntents.js` esistono; no standalone state-machine/persistence | KEEP (formalizzazione, engine c'è) |
 | A6 starter_bioma frontend label | — | **PARTIAL ~30 LOC** | BACKLOG A6 backend ✅, frontend label gap | KEEP (low-lift) |
