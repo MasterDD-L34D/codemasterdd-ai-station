@@ -12,7 +12,8 @@ Target: piattaforma AI sovereign con zero subscription fisse post-maggio 2026.
 - **22-23/04 notte**: ✅ quality bench + 4 wrapper cloud + 6 dogfood Fase 6 inaugurati
 - **Fino al 19/05**: Claude Max attivo, Fase 6 tracking compresso (ADR-0014 Accepted) — target n≥20 dogfood + privacy validation + cost tracking <$20/mese
 - **20/05/2026 (approx, allineato Claude Max expiration)**: Fase 6 closure → **ADR-0015 budget decision finale**
-- **Post 20/05**: operatività target **full-sovereign $0-50/anno** via:
+- ⚠️ **AGGIORNAMENTO 2026-05-18 (premessa-drift corretta)**: deadline reale era ~**17/05** (non 19/20). Eduardo ha **ri-acquistato Claude Max +1 mese** (~17/05 → ~17/06/2026). Le righe "Fino al 19/05" / "20/05 closure / Post 20/05 sovereign" sopra sono **storiche, NON la deadline corrente**. Deadline sovereign-transition reale = **~17/06/2026**. Urgenza esistenziale OFF, scope sovereign INVARIATO (long-term). Dettaglio: ADR-0023 §Addendum 2026-05-18 + DECISIONS_LOG.
+- **Post ~17/06 (deadline aggiornata)**: operatività target **full-sovereign $0-50/anno** via:
   - Tier 1-2 locale: Qwen Coder 7B/14B/30B MoE (Ollama, RTX 5060)
   - Tier 3 cloud free: Groq llama-70B + Cerebras llama-8B
   - Tier 4 cloud paid (emergency only): OpenAI gpt-4o-mini
@@ -322,8 +323,8 @@ codemasterdd-ai-station/
 **NON contiene codice di progetti reali Game/Synesthesia** (vivono in repo separati). Le "apps/" root-level sono mini-strumenti operativi per questo repo stesso (dashboard, Aider wrapper, bench viewer), non gioco né prodotto esterno.
 
 ## Priorità modelli AI
-- **Durante Claude Max (fino 19/05/2026)**: Opus 4.7 per tutto
-- **Tier 0 strategic post-Max (2026-05-20+)** — ADR-0023 Proposed 2026-05-09:
+- **Durante Claude Max (~fino 17/06/2026, ri-acquistato +1mo 2026-05-17 — vedi roadmap AGGIORNAMENTO)**: Opus 4.7 per tutto
+- **Tier 0 strategic post-Max (~2026-06-17+, deadline aggiornata)** — ADR-0023 Proposed 2026-05-09 (vedi §Addendum 2026-05-18):
   - Strategic = NON-delegabile (multi-file refactor ≥3 file, debug architetturale, ADR draft, synthesis cross-source, constraint ≥5 strict). Vedi ADR-0008 per rationale.
   - **Default**: Claude API pay-per-use on-demand con budget cap mensile $10-20, tracciato in ccusage. Eduardo autorizza spend esplicitamente per task strategic complesso, poi torna sovereign.
   - **Setup**: `ANTHROPIC_API_KEY` in `~/.config/api-keys/keys.env` (verificare presenza, eventualmente generare via Anthropic Console)

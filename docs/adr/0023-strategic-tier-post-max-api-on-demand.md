@@ -190,6 +190,19 @@ Task strategic complesso (multi-file >=3 / constraint >=5 / debug arch / ADR dra
 - [ ] Trigger Accepted (status flip Proposed -> Accepted): n>=2 task strategic completati post-19/05 con cost <$20/mese OR documentazione 1 task con cost >$10 ma rationale forte (es. ADR-0024 draft).
 - [ ] Backup automation API keys (deferred SPRINT_02): script PowerShell daily rotation backup.
 
+## Addendum 2026-05-18 — Premessa-drift deadline + Max ri-acquistato
+
+**Fatto**: la deadline Max reale era **~17/05/2026** (non 19/20 come da TL;DR + roadmap CLAUDE.md). Eduardo ha **ri-acquistato Claude Max per +1 mese (~17/05 → ~17/06/2026)**.
+
+**Impatto decisione**:
+- La premessa "post-19/05 Claude Max OAuth scade" di questo ADR e' **temporaneamente differita**, NON annullata. Strategic-tier-fallback resta valido come piano; il trigger si sposta a **~17/06/2026**.
+- ADR-0023 resta **Proposed** (non flip): non c'e' ancora periodo post-Max reale su cui raccogliere n>=2 dogfood strategic-tier. Il mese Max aggiuntivo = finestra per **validazione empirica sovereign-tier** (provare il fallback davvero, non teorizzare) → a ~17/06 la budget-decision avra' dati reali invece di stima.
+- Trigger reactivation Pro / Accepted invariati come *logica*; le *date* shiftano +1 mese.
+
+**Classe-errore**: stesso pattern drift doc-vs-reality cacciato nella sessione 2026-05-18 (Triangle/Sentience premise falsificate via ground-truth). Qui il doc strategico *fondante* (roadmap CLAUDE.md + TL;DR questo ADR) aveva deadline-fantasma. Lezione: anche le date strategiche vanno re-verify, non ereditate.
+
+**Azioni derivate** (questa sessione): CLAUDE.md roadmap §AGGIORNAMENTO 2026-05-18 + "Priorita' modelli AI" date corrette; DECISIONS_LOG pointer; STATUS_MULTI_REPO §DF gia' nota verdetto C/C indipendente. Sovereign scope **INVARIATO** (long-term), solo cronometro rilassato.
+
 ## Riferimenti
 
 - ADR-0001 -- Sovereign AI strategy: `0001-sovereign-ai-strategy.md`
