@@ -89,3 +89,12 @@ Dashboard "Top suggestions" Game = code-health `services/generation/*`.
   per-ciclo (modello ADR-0034:15 funzionante).
 - **Net**: 8/8 sessioni gestite correttamente; design RESPOND-then-archive
   falsificato e sostituito da R3-bis. SDMG: lezione, non vittoria.
+
+## DEFER risolte — 2026-05-18 (decisione Eduardo)
+
+`3185792447598546850` `14605750167862575595`: PR #2305/#2292 ground-truth
+**MERGED su main 2026-05-17** (codice già shippato indipendentemente).
+Sessioni = leftover moot. Eduardo ha deciso **ARCHIVE entrambe**:
+session-archive = soft-flag, zero modifiche a `services/generation/`
+→ freeze NON violato. R3-bis applicato (archive-only, no message).
+Esito: archived=True su entrambe. **Ciclo-1 8/8 completo, residue=0.**
