@@ -444,6 +444,35 @@ Game-Database e' emerso da audit Jules REST API come repo **attivamente lavorato
 
 ---
 
+## 7b. evo-tactics-refs-meta (asset pipeline Evo-Tactics, remote-only minimal monitoring)
+
+**Remote**: [MasterDD-L34D/evo-tactics-refs-meta](https://github.com/MasterDD-L34D/evo-tactics-refs-meta) (PRIVATE)
+**Path**: nessun clone (remote-only, scope-monitorable da gh API)
+**Aggiunto a monitoring**: 2026-05-18 (gap reale nella mappa ecosistema -- Eduardo conferma)
+
+### Identita
+
+- **Ruolo**: meta-backup pipeline asset reference (3D/2D/concept art, SFX, SKIV creature refs) per Evo-Tactics. NO binari versionati -- rebuildable via `robust_download.py` + `urls-*.txt` + `gen_manifest.py`.
+- **Conformita licenze**: solo CC0/Public Domain/Sonniss royalty-free, zero estrazioni Tier B/C (provenance in `CC0_SOURCES.md`).
+- **Connessione gioco**: asset finali -> `C:\dev\Game\assets\` via output-staging.
+- **Stato**: idle (last push 2026-04-29). Layer asset legittimo ma non daily-ship.
+
+### File chiave
+
+| File | Scopo |
+|------|-------|
+| `README.md` | Tier policy + confini legali |
+| `SKIV_REFS_EXTRACTED.md` | Registry asset direct-use creatura Skiv |
+| `robust_download.py` + `urls-*.txt` | Pipeline rebuild deterministico |
+| `gen_manifest.py` + `MANIFEST.json` | Catalogazione post-download |
+| `HANDOFF.md` / `WORKSPACE.md` / `STATUS.md` | Handoff + folder map + stato |
+
+### Monitoring tier
+
+Minimal informational, scope simile §7 (Ryzen-only): snapshot on-demand, no piano operativo cross-repo. Privacy: PRIVATE, sovereign-default (NON cloud-whitelisted finche no clone locale). Trigger scope-up: se Eduardo riprende lavoro asset attivo o clona Lenovo-side. Dettaglio: `docs/EVO_TACTICS_ECOSYSTEM_GUIDE.md` sezione 4.
+
+---
+
 ## Ecosystem audit 15-repo — git-verified (RATIFICATO master-dd 2026-05-16)
 
 Reactivation gate `EXTERNAL_REPOS.md` #6 (intento master-dd) + #7 (evidenza fresca) soddisfatti. Snapshot **git-ground-truth 2026-05-16** (branch/dirty/sync/detached verificati diretti). Supera gli HEAD sparsi/stale nelle sezioni §1-7 come *snapshot verità-git*; le §1-7 restano dettaglio operativo mantenuto (NON riscritte — additive per design, lezione PR #116 no-clobber).
@@ -476,6 +505,52 @@ Falsify di TUTTI i claim §Snapshot/§1-7 vs git reale (vault `cross-stack-state
 | AA01 / Gpt | tracciati | AA01 no-.git; Gpt repo vuoto | 🔒N-A |
 
 **No loss-risk** ovunque (branch autoritativi synced; Game/Godot root-detached = cosmetico già documentato sopra). Drift = §1-7 ~2gg dietro su repo daily-ship (Game/Godot) + torneo §7 entry mai-vera (PR#18/SHA dangling — da correggere a parte, dominio §7). Raccomandazione: §1-7 HEAD-narrativi non affidabili come git-truth → usare QUESTO blocco §Ecosystem-audit per stato verificato; §1-7 per contesto operativo.
+
+---
+
+## DF Integration (Dwarf-Fortress-style levels) status — 2026-05-18
+
+Eduardo claude.ai session ha prodotto 3 doc DF-integration (RECONCILIATION-MASTER, PHASE-PLAN-COMPLETE, RESCUE-FORGOTTEN-HIGH-ROI + mappa HTML).
+
+- **Fase 0 file-placement**: ✅ filed via PR (no direct-main, no merge — Eduardo media):
+  - vault A5 [PR #94](https://github.com/MasterDD-L34D/vault/pull/94): RECONCILIATION + PHASE-PLAN + HTML map → `Spaces/Dev/Evo-Tactics/core/`
+  - Game [PR #2326](https://github.com/MasterDD-L34D/Game/pull/2326): RESCUE doc → `docs/planning/`
+- **Rescue governance mutation (Q-001 + TKT-RESCUE-001..004 + "rescue in corso")**: ❌ **NON applicato — premessa falsificata da ground-truth Game 2026-05-18**:
+  - Triangle Strategy Proposal A (MBTI phased reveal) **GIÀ SHIPPED 2026-04-25** (`apps/backend/services/mbtiSurface.js` ~140 LOC, 12/12 test, BACKLOG OD-013, card M-2026-04-25-009 reuse_path eseguito)
+  - Sentience tier backfill **SHIPPED PR #1808** (OD-008, ALL 45 species, 25/04) — NB BACKLOG L23 cita erroneamente #2262 (Envelope-B bundle scollegato), upstream-wrong Eduardo-side
+  - `docs/research/triangle-strategy-transfer-plan.md` esiste dal 25/04 (65KB)
+- **Stato reale**: NON "rescue in corso". Pattern L-025/L-030/anti-pattern #8 (snapshot stale claude.ai vs Game ground-truth daily-ship).
+
+### Re-scope ground-truth verificato (gh api origin/main, 2026-05-18)
+
+| Item plan | Claim plan | Ground-truth | Evidenza | Verdetto |
+|-----------|-----------|--------------|----------|----------|
+| Triangle Strategy **Proposal A** | rescue ROI 5/5 ~6h | **SHIPPED 2026-04-26** | `apps/backend/services/mbtiSurface.js`, 12/12 test, OD-013 Path A, PR #1848 | **DROP — fatto** |
+| Triangle Strategy **Proposal B** | proposta ~4h | **SHIPPED 2026-04-26** | `data/core/personality/mbti_axis_palette.yaml` + `mbtiPalette.js` + 26/26 test, OD-013 Path B | **DROP — fatto** |
+| Triangle Strategy **Proposal C** (recruit gating) | ~5h post-recruit | **OPEN ma gated** | OD-013 "Proposal C deferred a OD-001 Path A"; no recruit-gate service | KEEP (gated OD-001/M-007) |
+| Sentience tier backfill | rescue ~3h | **SHIPPED PR #1808** | OD-008 "sentience_tier backfill ALL 45 species" merged 2026-04-25 (BACKLOG L23 #2262 = upstream-wrong, Envelope-B bundle) | **DROP — fatto** |
+| Sentience A4-residue 30 species | — | **PENDING gated** | BACKLOG "A4-residue 30 species heuristic PENDING gated master-dd" | KEEP (master-dd verdict) |
+| Sistema intelligence S7/S8 | nuovo state-machine | **PARTIAL** | `services/ai/sistemaTurnRunner.js` + `declareSistemaIntents.js` esistono; no standalone state-machine/persistence | KEEP (formalizzazione, engine c'è) |
+| A6 starter_bioma frontend label | — | **PARTIAL ~30 LOC** | BACKLOG A6 backend ✅, frontend label gap | KEEP (low-lift) |
+| S2 eventlog / S3 population-tick / S4-S6 identity / S9-S10 chronicle | "rescue/orphan esistente" | **greenfield non-costruito** | nessun `services/eventlog|worldstate/population_tick|identity|chronicle` | RE-FRAME: feature nuove normali, NON "rescue", competono in BACKLOG |
+
+**Errore-chiave premessa**: i doc framing "FORGOTTEN/orphan/rescue high-ROI 5/5". Realtà: Triangle A+B = già shipped; Sentience-backfill = shipped; il resto = greenfield ordinario (non orphan da rescuare). I doc restano validi come ragionamento L0-L5 + modello identità, NON come task-source.
+
+### Genuinely-open azionabile (ranked, post ground-truth)
+
+1. **Triangle Proposal C** recruit-gating MBTI — gated OD-001/M-007 (no action finché mating closure)
+2. **Sistema S7 state-machine formalization** — audit DONE 2026-05-18. Gap: `sistemaTurnRunner.js`+`declareSistemaIntents.js` stateless cross-session, no Prisma Sistema model. **ADR DRAFT filed [Game PR #2328](https://github.com/MasterDD-L34D/Game/pull/2328)** (Option A full ~9h / B pilot ~3-4h / C defer). Verdict master-dd pending — NO code finche' deciso
+3. **A4-residue 30-species heuristic** — PENDING gated master-dd verdict (decisione Eduardo prima)
+4. **A6 frontend label** starter_bioma — ~30 LOC UI, low-lift standalone ship
+5. Greenfield DF (eventlog/population-tick/identity/chronicle) — SE voluti: ticket BACKLOG normali, gate GREEN/YELLOW, NON priorità "rescue"
+
+### Consolidamento governance (2026-05-18, opzione 2)
+
+- **GAME-ANALYSIS-COMPLETE.md** (4° doc A5) analizzato: formato migliore (per-game cosa-prendi/NO/integra + anti-ref + ROI) ma **ripete premessa falsificata** (Triangle A+B "RESCUE" = shipped; greenfield travestito "IN-DESIGN"). Verdetto: NON filing standalone (sprawl 4-doc) → contenuto **corretto** assorbito in umbrella ADR.
+- **Umbrella ADR DRAFT** [Game PR #2330](https://github.com/MasterDD-L34D/Game/pull/2330) `ADR-2026-05-18-df-levels-integration-direction.md`: afferma intento DF reale+governato, decision-matrix ground-truth-corretta (5 fix), supersede 3 A5 sparsi → reasoning-archive, linka figlio #2328. **Verdetto master-dd pending** (A full / B core-only / C reject).
+- Artefatti finali: umbrella ADR #2330 = governance DF · #2328 = sub-decisione Sistema S7 · DESIGN_DIGEST = catalogo player/ref · PLAYER-VISION #2329 = player-facing · RECONCILIATION/PHASE-PLAN/GAME-ANALYSIS = A5 reasoning non-governante.
+
+**Next Eduardo**: nessun "Sprint S1". Triage 1-4 sopra. **6 PR aperte**: codemasterdd #160, Game #2326/#2328/#2329/#2330, vault #94. Verdetti chiave: umbrella #2330 (A/B/C) + figlio #2328 (Sistema S7 A/B/C). Greenfield DF = roadmap M2+ ordinaria, non rescue.
 
 ---
 
