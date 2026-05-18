@@ -508,6 +508,22 @@ Falsify di TUTTI i claim §Snapshot/§1-7 vs git reale (vault `cross-stack-state
 
 ---
 
+## DF Integration (Dwarf-Fortress-style levels) status — 2026-05-18
+
+Eduardo claude.ai session ha prodotto 3 doc DF-integration (RECONCILIATION-MASTER, PHASE-PLAN-COMPLETE, RESCUE-FORGOTTEN-HIGH-ROI + mappa HTML).
+
+- **Fase 0 file-placement**: ✅ filed via PR (no direct-main, no merge — Eduardo media):
+  - vault A5 [PR #94](https://github.com/MasterDD-L34D/vault/pull/94): RECONCILIATION + PHASE-PLAN + HTML map → `Spaces/Dev/Evo-Tactics/core/`
+  - Game [PR #2326](https://github.com/MasterDD-L34D/Game/pull/2326): RESCUE doc → `docs/planning/`
+- **Rescue governance mutation (Q-001 + TKT-RESCUE-001..004 + "rescue in corso")**: ❌ **NON applicato — premessa falsificata da ground-truth Game 2026-05-18**:
+  - Triangle Strategy Proposal A (MBTI phased reveal) **GIÀ SHIPPED 2026-04-25** (`apps/backend/services/mbtiSurface.js` ~140 LOC, 12/12 test, BACKLOG OD-013, card M-2026-04-25-009 reuse_path eseguito)
+  - Sentience tier backfill 15/15 lifecycle **SHIPPED #2262**
+  - `docs/research/triangle-strategy-transfer-plan.md` esiste dal 25/04 (65KB)
+- **Stato reale**: NON "rescue in corso". Sprint S1 (Triangle A) = già fatto, NON rilanciare. Pattern L-025/L-030/anti-pattern #8 (snapshot stale claude.ai vs Game ground-truth daily-ship).
+- **Next (Eduardo-triage)**: re-scope DF plan vs BACKLOG reale; verificare se Proposal B/C + Worldgen population-tick + Sentience A4-residue sono genuinamente open prima di schedulare.
+
+---
+
 ## Scheduled checkpoints
 
 | Data | Evento | Progetto | Azione |
