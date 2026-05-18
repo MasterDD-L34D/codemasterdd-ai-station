@@ -550,7 +550,35 @@ Eduardo claude.ai session ha prodotto 3 doc DF-integration (RECONCILIATION-MASTE
 - **Umbrella ADR DRAFT** [Game PR #2330](https://github.com/MasterDD-L34D/Game/pull/2330) `ADR-2026-05-18-df-levels-integration-direction.md`: afferma intento DF reale+governato, decision-matrix ground-truth-corretta (5 fix), supersede 3 A5 sparsi → reasoning-archive, linka figlio #2328. **Verdetto master-dd pending** (A full / B core-only / C reject).
 - Artefatti finali: umbrella ADR #2330 = governance DF · #2328 = sub-decisione Sistema S7 · DESIGN_DIGEST = catalogo player/ref · PLAYER-VISION #2329 = player-facing · RECONCILIATION/PHASE-PLAN/GAME-ANALYSIS = A5 reasoning non-governante.
 
-**Next Eduardo**: nessun "Sprint S1". Triage 1-4 sopra. **6 PR aperte**: codemasterdd #160, Game #2326/#2328/#2329/#2330, vault #94. Verdetti chiave: umbrella #2330 (A/B/C) + figlio #2328 (Sistema S7 A/B/C). Greenfield DF = roadmap M2+ ordinaria, non rescue.
+**Next Eduardo**: nessun "Sprint S1". Triage 1-4 sopra. Game #2326/#2328/#2329/#2330 + vault #94 MERGED 2026-05-18. codemasterdd #160/#162/#163 MERGED. Verdetti chiave: umbrella #2330 (A/B/C) + figlio #2328 (Sistema S7 A/B/C). Greenfield DF = roadmap M2+ ordinaria, non rescue.
+
+### First-principles verdict DF (game-design-validator, 2026-05-18)
+
+Ipotesi B/B falsificata da evidenza freeze-doc. Verdetto:
+- **#2330 umbrella DF -> C** (reject come governance artifact). `90-FINAL-DESIGN-FREEZE` §21.3/§4.2 ha gia' tagliato L2-L5; §18.2 barra Director narrativo. L0-L1 = gia' P2/P4. Prova-eliminazione: rimuovi ADR -> nessun pilastro/vision/loop fallisce = cerimonia.
+- **#2328 Sistema S7 -> C/defer no pilot**. Gate P5 = playtest co-op live (TKT-M11B-06), zero codice. Persistenza su core M1 non-frozen per debolezza mai-osservata = ottimizza-prima-di-misurare.
+- **Mossa max-leverage**: chiudi M1 -> playtest co-op live -> ri-deriva da evidenza. Nessun codice DF prima.
+- **Cut permanente**: DF L0-L5 meta-framework governance; L2 persistence; L5 "losing is fun" build-goal; Sistema full-A; framing "rescue".
+
+### PILLAR data-integrity (A2 reconcile — RISOLTO 2026-05-18)
+
+Drift "6/6 yellow post-M1" = **FALSO, zero fonte canonical** (fabbricazione explore-agent propagata in DESIGN_DIGEST, corretta PR #163). Ground-truth Game: `PILLAR-LIVE-STATUS.md` (SOT, 2026-05-06) + `02-PILASTRI` snapshot concordano = **5/6 🟢 + 1/6 🟡 (P3). Demo-ready confirmed.** Pillar health single-voice. C/C verdict regge su freeze-evidence indipendente.
+
+---
+
+## ADR retrospective 2026-05-18 (B1 decision-review, harsh-reviewer)
+
+Audit 34 ADR. **17 HELD / 8 DRIFTED / 3 FALSIFIED / 6 STALE-STATUS**.
+
+**Malattia**: NON premise-drift (sintomo) ma **assenza owner status-lifecycle** — check-date/trigger scritti come se scrivere=eseguire. Cascade Max-deadline (0014/15/23) non-owned. Decision-leak (0030 Proposed mentre stack tratta Pro installato-fatto). DECISIONS_LOG index desync (ferma 0030, omette 0031-0033).
+
+**⚠️ Direction-finding (risposta "stiamo andando giusti?")**: obiettivo fondante **sovereign-$0-50 (ADR-0001) de-facto MORTO** via **ADR-0030 (15/05, Pro $20/mese "Hybrid A1")**. ADR-0015 auto-emendato 15/05 "$0-50 VIOLATO". Notizia "Max +1mese" = parte realta' Pro-acquisita, NON isolata. Corpus (0001/0015/0023) encoda ancora goal morto. **Deriva piu' grossa del DF.**
+
+**Meta**: PR #161/#162/#163/#164 (correzioni sessione) erano UNVERIFIABLE dall'agent perche' non-merged = prova vivente malattia "autored-not-closed". Loop chiuso (consolidate PR + merge).
+
+**Top-3 azioni Eduardo**: (1) ADR-0023 supersede/rewrite (premessa morta da 0030); (2) DECISIONS_LOG index reconcile (rigenera da headers, omette 0031-0033); (3) ADR-0030 ratify Proposed->Accepted ($ gia' eseguito).
+
+**Process-fix max-leverage proposto**: `STATUS-CHECK: YYYY-MM-DD | trigger | default-if-elapsed` machine-greppable per ADR non-finale + cron settimanale grep check scadute (infra cron esiste). Uccide 6 STALE-STATUS + forza collisioni 0023/0030. Pending Eduardo.
 
 ---
 
