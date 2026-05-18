@@ -137,6 +137,7 @@ npm run test:stack        # suite cross-stack (~150 AI test + 196 Python)
 | `data/lifecycle/lifecycles.json` | 15 specie, fasi lifecycle (hatchling->juvenile->mature->apex->legacy) |
 | `docs/godot-v2/architecture/combat-resolver.md` | Spec port logica d20 da session.js |
 | `docs/godot-v2/architecture/net-stack.md` | Spec HTTP + WS, endpoint, JWT, CORS, target latenza |
+| `docs/godot-v2/visual-screen-bible.md` | Bibbia visiva 3-modi (World/Tactical/Memory) |
 
 ### Run & test
 
@@ -467,239 +468,126 @@ Punti integrazione verificati (file-cited):
 
 ---
 
-## 11. Ispirazioni, Fonti & Stato design
+## 11. Ispirazioni, Fonti & Stato Design (catalogo completo)
 
-> Ricostruzione 2026-05-18 da audit cross-source (4 explore agent paralleli,
-> Protocol 2 autoresearch). Due layer di documentazione indipendenti:
-> **(A) Game museum cards** (`docs/museum/cards/` -- Dublin Core, alternative
-> preservate) e **(B) vault pillars** (`Spaces/Dev/Evo-Tactics/core/` -- fonte
-> verita' design). Si corroborano: dove un'ispirazione appare in entrambi e'
-> alta confidenza. Weighting: internal>external, empirical>doc. Gap dichiarati
-> esplicitamente, no fabbricazione.
+> Ricostruzione 2026-05-18 da audit cross-source esaustivo (6 explore agent,
+> Protocol 2 autoresearch): lettura di TUTTE le ~45 museum card + grep vault
+> completo. Documento unico e completo -- non sommario. Le decisioni di design
+> vivono in due layer indipendenti che si corroborano:
+>
+> - **(A) Game museum cards** -- `Game/docs/museum/cards/` (Dublin Core,
+>   alternative + ROI + reuse path, ~45 card, indice `docs/museum/MUSEUM.md`)
+> - **(B) vault pillars** -- `vault/Spaces/Dev/Evo-Tactics/core/` (fonte
+>   verita' canonical, autorita' A1-A3, freeze A3)
+>
+> Weighting: internal>external, empirical>doc, multi-source-converge >
+> single-signal. Dove un'ispirazione appare in entrambi i layer = alta
+> confidenza. Autorita' in caso di divergenza: vault `core/` (freeze A3)
+> vince per scope shipping; museum = catalogo alternative + ROI.
 
-### 11.1 I 6 pilastri <-> ispirazione ancora
+### 11.1 I 6 pilastri di design <-> ispirazione ancora
 
-I pilastri di design (vault `core/02-PILASTRI.md`) sono ciascuno ancorato a
-un'ispirazione precisa:
+Ogni pilastro (vault `core/02-PILASTRI.md`) e' ancorato a un'ispirazione
+precisa. Stato pilastri 2026-04-20: 0/6 verde, 6/6 giallo (revisione onesta
+post-playtest M1; pre-playtest era 5/6 verde -- NON regressione, realta'
+testata).
 
-| Pilastro | Nome | Ispirazione ancora | Stato (vault 2026-04-20) |
-|----------|------|--------------------|--------------------------|
-| P1 | Tattica leggibile | **Final Fantasy Tactics** + Into the Breach | 🟡 (d20+MoS funziona, notazione AP ambigua) |
-| P2 | Evoluzione emergente | **Spore** (concetto) via Wesnoth + AI War (meccanica) | 🟡 (mating non testato M1, persistence M10) |
-| P3 | Identita Specie x Job | FFT job cross-inheritance | 🟡 (specie differenziate, job ability costs unclear) |
-| P4 | Temperamenti giocati | **Disco Elysium** (reveal diegetico MBTI/Ennea) | 🟡 (VC tracking off in M1, T_F full only) |
-| P5 | Co-op vs Sistema | **AI War** + NS2 Strategist + Frozen Synapse | 🟡 (focus-fire live, "Sistema troppo passivo") |
-| P6 | Fairness | Hades Heat + Monster Train Pact + AI War Progress | 🟡 (d20 trasparente, scaling curves canonical) |
+| Pilastro | Nome | Ispirazione ancora | Stato |
+|----------|------|--------------------|-------|
+| P1 | Tattica leggibile | **Final Fantasy Tactics** + Into the Breach | 🟡 d20+MoS funziona, notazione AP ambigua (friction #1-2) |
+| P2 | Evoluzione emergente | **Spore** (concetto) via Wesnoth + AI War (meccanica) | 🟡 mating non testato M1, persistence M10, runtime M12+ |
+| P3 | Identita Specie x Job | FFT job cross-inheritance | 🟡 specie differenziate, job ability costs unclear (friction #4) |
+| P4 | Temperamenti giocati | **Disco Elysium** (reveal diegetico MBTI/Ennea) | 🟡 VC tracking off in M1, solo T_F full |
+| P5 | Co-op vs Sistema | **AI War** + NS2 Strategist + Frozen Synapse | 🟡 focus-fire live, "Sistema troppo passivo" |
+| P6 | Fairness | Hades Heat + Monster Train Pact + AI War Progress | 🟡 d20 trasparente, scaling curves canonical |
 
-Score: 0/6 verde, 6/6 giallo. Trend: pre-playtest era 5/6 verde -> revisione
-onesta post-playtest M1 a 6/6 giallo (NON regressione: realta' testata).
+### 11.2 Catalogo completo ispirazioni positive
 
-### 11.2 Tabella master ispirazioni
+Legenda stato: **SHIPPED** = implementato | **IN-DESIGN** = deciso/ADR ma
+non shippato | **DEFERRED** = post-playtest/post-EA | **MUSEUM** = curated,
+preservato ma non shippato (alternativa o forgotten).
 
-Per ogni gioco/sistema: cosa ci piaceva | come intendiamo farlo | fonte | stato.
-Stato legenda: SHIPPED = implementato, IN-DESIGN = deciso ma non shippato,
-DEFERRED = post-playtest/post-EA, MUSEUM = preservato ma scartato/parcheggiato.
+#### A. Pillar-tier / architetturale (ancore dei pilastri)
 
 | Gioco / Sistema | Cosa ci piaceva | Come intendiamo farlo | Fonte (file) | Stato |
 |-----------------|-----------------|------------------------|--------------|-------|
-| **Final Fantasy Tactics** (1997) | Initiative/CT bar, facing crit (rear+50%/side+25%), positioning, job cross-inheritance | Adotta legibilita' temporale (init + action_speed + wait action) ma RIFIUTA crit Zodiac opaco. Wait shipped PR#1896. CT bar + facing 3-zone ~8h | Game `docs/museum/cards/combat-fft-ct-bar-wait-facing-crit.md` (4/5); vault `core/02-PILASTRI.md`,`10-SISTEMA_TATTICO.md` | SHIPPED (wait) + DEFERRED (CT bar/facing) |
-| **Spore** (2008) | Part-pack creature assembly, ability derivata da parti, mutazione morfologica runtime | RIFIUTA sandbox real-time; adotta 6-pattern stack: slot morfologia, ability auto-derive, DNA budget, **visual swap obbligatorio**, ereditarieta' generazionale, part-bingo. Path moderato ~21h chiude P2 | Game `docs/museum/cards/spore-part-pack-runtime-stack.md` (5/5); vault `core/20-SPECIE_E_PARTI.md` | IN-DESIGN (engine mating shipped, evoluzione runtime M12+) |
-| **Into the Breach** (2018) | Telegraph rule (tutto visibile pre-commit), push/pull arrows, kill-probability badge, zero RNG nascosto | "Sacrifice cool for clarity, every time". Threat tile overlay shipped PR#1884. Push/pull + kill badge ~3h. Determinismo = zero RNG post-decisione | Game `docs/museum/cards/ui-itb-telegraph-deterministic.md` (4/5); vault `core/41-ART-DIRECTION.md` | SHIPPED (threat overlay) + DEFERRED (arrows/badge) |
-| **Disco Elysium** (2019) | Thought Cabinet equip slots, voce interna (assi personalita' -> narrativa), reveal diegetico MBTI color-coded | MBTI tag debrief shipped PR#1897. Thought Cabinet UI ~8h (P0 residuo). Voce interna 4-assi ~10h. Disco = "fonte calore" per pilastro piu' freddo (P4) | Game `docs/museum/cards/narrative-disco-thought-cabinet-diegetic.md` (5/5); vault `core/02-PILASTRI.md` P4 | SHIPPED (MBTI debrief) + DEFERRED (Thought Cabinet/voce) |
-| **AI War** (2019) | Multi-player asimmetrico vs antagonista data-driven, pack-unlock progression (no power-creep grind), progress meter chosen-escalation | Pattern A Sistema-centric Fase 1. aiProgressMeter.js shipped #1898. 4-8 player co-op vs AI | vault `core/00F-ART_AUDIO_BUSINESS.md`,`00-SOURCE-OF-TRUTH.md`; Game ADR-2026-04-16-networking | SHIPPED (progress meter) + IN-DESIGN (co-op net M11) |
-| **Wildermyth** (2021) | Cambio aspetto permanente visibile (cicatrice = sprite change), narrativa stratificata, lifecycle aging | Battle-scar registry + ritratti stratificati + flag narrativi permanenti. Convergenza con Spore S4 (visual swap obbligatorio, 3-source) | Game `docs/museum/cards/creature-wildermyth-battle-scar-portrait.md` (4/5); vault `core/41-ART-DIRECTION.md` | IN-DESIGN (silhouette-per-specie canonical) |
-| **Tactics Ogre: Reborn** (2022) | HP floating bar sopra sprite, AP pip, charm/recruit boss, auto-battle | HUD canonical: HP floating (5/5 in `44-HUD-LAYOUT-REFERENCES.md`), AP pip shipped PR#1901. Charm recruit + auto-battle deferred | Game `docs/museum/cards/combat-tactics-ogre-hp-floating-charm.md` (5/5) | SHIPPED (HP/AP) + DEFERRED (charm/auto-battle) |
-| **Hades + Monster Train** (2020) | Multi-currency (tight vs long loop), Pact opt-in difficulty composable (non preset monolitico) | 3-currency split (PE-run/Shards-meta/PI-pack). Pact Shards 0-5 ~5h. Cap a 3 currency (Hades 7 = overkill) | Game `docs/museum/cards/economy-hades-multi-currency-pact-menu.md` (5/5) | DEFERRED (post-playtest) |
-| **NS2 + Frozen Synapse** (2012/2011) | NS2 Strategist 5p+ role asimmetrico (1 atlas-overview, 4 tactical); Frozen Synapse replay cinematico round | Frozen Synapse replay ~10-14h (rewatch deterministico TV condiviso). NS2 Strategist 5p+ ~25-30h | Game `docs/museum/cards/coop-ns2-frozen-synapse-replay-asymmetric.md` (4/5) | DEFERRED (M11 base shipped) |
-| **Slay the Spire** (2019) | Mood UI scuro TV-first, loop economici scarsita'-driven, pacing turn-based | Mood canonical post ADR-2026-04-18. Economia non-gacha (tri-sorgente) | vault `core/41-ART-DIRECTION.md` | IN-DESIGN (art direction decisa) |
-| **Wargroove** (2019) | Pixel-art moderno (no 8-bit retro, no 3D), clarity combat, palette vivida | Pixel-art ortho, palette matrix 9 biomi x 4-color identity | vault `core/41-ART-DIRECTION.md`,`00F-ART_AUDIO_BUSINESS.md` | IN-DESIGN (reference, no ADR esplicito) |
-| **Descent: Road to Legend** | Overlord plot-card rhythm, struttura campagna multi-hero, branching win/loss | Pattern B "Overlord + Custodi named" -- narrative Fase B post-EA (Fase A = Sistema-centric AI War) | vault `core/00F-ART_AUDIO_BUSINESS.md` §4.3-4.4 | DEFERRED (narrative Fase B post-EA) |
-| **Banner Saga** (2014) | Caravan supply attrition cross-mission, permadeath opt-in | Supply tracker ~6h. Permadeath party.yaml preset ~4h | Game `docs/museum/cards/indie-banner-saga-*.md` (4/5) | DEFERRED (post-playtest) |
-| **Cobalt Core** (2024) | Bonus ability position-conditional (blast/push scala con formazione) | abilityExecutor position_condition hook, blast x1.5 formazione | Game `docs/museum/cards/indie-cobalt-core-position-bonus.md` (4/5) | DEFERRED (post-Bundle A) |
-| **Citizen Sleeper** (2022) | Fatigue drift cross-encounter (trauma combat -> stato persistente) | VC axes come state modifier persistente | Game `docs/museum/cards/indie-citizen-sleeper-fatigue-drift.md` (3/5) | DEFERRED (post-Bundle C) |
+| **Final Fantasy Tactics** (1997) | CT bar charge-time, Wait action, facing crit (rear+50%/side+25%), JP cross-job inheritance | Adotta legibilita' temporale (init + action_speed + wait) RIFIUTA crit Zodiac opaco. Wait shipped PR#1896. CT bar+facing 3-zone ~8h. JP cross-job M14+ | museum `combat-fft-ct-bar-wait-facing-crit.md` (4/5); vault `core/02-PILASTRI.md`,`10-SISTEMA_TATTICO.md` | SHIPPED (wait) + DEFERRED (CT/facing) |
+| **Spore** (2008) | Part-pack assembly, ability auto-derivata da parti, mutazione morfologica runtime | RIFIUTA sandbox real-time; 6-pattern stack: slot morfologia, ability auto-derive, DNA budget, visual swap obbligatorio, ereditarieta' generazionale, part-bingo. Path moderato ~21h chiude P2 | museum `spore-part-pack-runtime-stack.md` (5/5); vault `core/20-SPECIE_E_PARTI.md`,`00-SOURCE-OF-TRUTH.md` §20 | IN-DESIGN (engine mating shipped, runtime M12+) |
+| **Disco Elysium** (2019) | Thought Cabinet slots, voce interna 4-MBTI assi, skill-check passive->active popup, reveal diegetico MBTI color-coded | MBTI tag debrief shipped PR#1897. Thought Cabinet UI ~8h (P0 residuo). Voce interna ~10h. "Fonte calore" per P4 (pilastro piu' freddo) | museum `narrative-disco-thought-cabinet-diegetic.md` (5/5); vault `core/02-PILASTRI.md` P4 | SHIPPED (MBTI debrief) + DEFERRED (Cabinet/voce) |
+| **AI War** (2009) | Antagonista data-driven persistente (Sistema), pack-unlock progression (no power-creep grind), progress meter chosen-escalation, multi-profile narrative voice | Pattern A Sistema-centric Fase 1. aiProgressMeter.js shipped #1898. `ai_profiles.yaml` narrative_voice per tier. 4-8 player co-op vs AI | vault `core/00F-ART_AUDIO_BUSINESS.md` §4.1,`00-SOURCE-OF-TRUTH.md`; museum `economy-hades-multi-currency-pact-menu.md` §convergenza | SHIPPED (progress meter, Fase 1) + IN-DESIGN (co-op net M11) |
+| **Into the Breach** (2018) | Telegraph rule (tutto visibile pre-commit), push/pull arrows, kill-probability badge, zero RNG nascosto | "Sacrifice cool for clarity, every time". Threat tile overlay shipped PR#1884. Push/pull+kill badge ~3h. Determinismo = zero RNG post-decisione. Hand-curate maps ~10h | museum `ui-itb-telegraph-deterministic.md` (4/5); vault `core/41-ART-DIRECTION.md` | SHIPPED (threat overlay) + DEFERRED (arrows/badge) |
+| **Hades** (2020) | Multi-currency split (PE-run vs Shards-meta), Pact menu opt-in difficulty, Codex tematico, gradual reveal | 3-currency split (PE-run/Shards-meta/PI-pack) ~6h. Pact Shards 0-5 ~5h. Cap a 3 currency (Hades 7 = overkill). Codex panel ~20h | museum `economy-hades-multi-currency-pact-menu.md` (5/5) | DEFERRED (post-playtest) |
+| **Monster Train** (2020) | Pact Shards opt-in scaling componibile (modifier additivo, NON preset monolitico) | Pact Shards opt-in N-tier, reward tradeoff trasparente. Convergenza 4-source (Hades+MonsterTrain+AIWar+XCOM LW2) | museum `economy-hades-multi-currency-pact-menu.md` (5/5, row Monster Train) | DEFERRED (post-playtest) |
+| **Tactics Ogre: Reborn** (2022) | HP floating bar sopra sprite, charm/recruit boss via dialogue, auto-battle button, class-change altare, WORLD rewind | HUD canonical: HP floating refactor ~5-7h, AP pip shipped PR#1901, charm recruit ~8h, auto-battle ~3h | museum `combat-tactics-ogre-hp-floating-charm.md` (5/5); vault `core/44-HUD-LAYOUT-REFERENCES.md` | SHIPPED (HP/AP) + DEFERRED (charm/auto/WORLD) |
 
-> Nota d20/TTRPG: il progetto usa la regola meccanica d20 + Margin-of-Success
-> (ADR-2026-04-13) **senza accreditare** Pathfinder/D&D 5e per nome. Ispirazione
+#### B. Creature & narrativa (museum cards)
+
+| Gioco / Sistema | Cosa ci piaceva | Come intendiamo farlo | Fonte | Stato |
+|-----------------|-----------------|------------------------|-------|-------|
+| **Wildermyth** (2021) | Battle-scar permanent (cicatrice=sprite change), ritratto stratificato, aging cross-session, choice->flag permanente, narrativa storylet | battle-scar registry ~12h, portrait layered ~15h, aging ~10h, choice flag ~4h. Convergenza 3-source (Wildermyth+SporeS4+VoidlingP6) | museum `creature-wildermyth-battle-scar-portrait.md` (4/5); vault `core/41-ART-DIRECTION.md` | IN-DESIGN (silhouette-per-specie canonical) |
+| **Triangle Strategy** (2022) | MBTI Transfer Plan: 3 proposte concrete P4-closure -- (A) phased reveal Disco-style, (B) dialogue color codes diegetic, (C) recruit gating by MBTI threshold | 3 proposte mai citate in BACKLOG/OD = dimenticate. Map: vcScoring.js + formSessionStore.js + mbti_forms.yaml. **Solo museum, NON vault** | museum `personality-triangle-strategy-transfer.md` (M-2026-04-25-009, 5/5) | MUSEUM (FORGOTTEN, 5/5 high-ROI) |
+
+#### C. Combat & UI quick-win (museum cards)
+
+| Gioco / Sistema | Cosa ci piaceva | Come intendiamo farlo | Fonte | Stato |
+|-----------------|-----------------|------------------------|-------|-------|
+| **Cogmind** (2015) | Tooltip stratificati base+expand-on-hover, trade-off espliciti per componente | trait cost_ap -> multi-cost ~4-6h. Gold standard "identita = equip + trade-off espliciti" (P2+P3) | museum `ui-cogmind-tooltip-stratificati-quick-win.md` (4/5) | MUSEUM (quick-win ready) |
+
+#### D. Indie research cluster (museum M-2026-04-27-019..031)
+
+| Gioco / Sistema | Cosa ci piaceva | Come intendiamo farlo | Fonte | Stato |
+|-----------------|-----------------|------------------------|-------|-------|
+| **The Banner Saga** (2014) | Caravan supply attrition cross-mission ("3 giorni cibo, 47 bocche") + permadeath autentico opt-in | campaignResourceTracker.js ~6h minimal. Permadeath party.yaml preset ~4h | museum `indie-banner-saga-caravan-attrition.md` + `indie-banner-saga-permadeath-optin.md` (4/5) | DEFERRED (post-playtest) |
+| **Cobalt Core** (2023) | Position-conditional ability bonus (posizione = prerequisito ability) | abilityExecutor.js position_condition tag -> +2 se flanking. Ripple ~15h post-Bundle A | museum `indie-cobalt-core-position-bonus.md` (4/5) | DEFERRED (post-Bundle A) |
+| **Backpack Hero** (2023) | Spatial inventory adjacency (Tetris-griglia, posizione crea bonus) | 2+ trait stesso organ_system -> bonus passivo. form_pack_bias.yaml live, layer post-S6 | museum `indie-backpack-hero-spatial-inventory.md` (3/5) | DEFERRED (post-S6) |
+| **Astrea: Six-Sided Oracles** (2023) | Dadi contaminati/puri = character sheet visibile (pool dadi tangibile) | VC axes come dadi facce contaminate/pure. Defer fino OD-013 MBTI surface verdict | museum `indie-astrea-dice-purification.md` (3/5) | DEFERRED (OD-013) |
+| **Citizen Sleeper** (2022) | Fatigue drift cross-encounter (corpo si degrada -> modifica VC axis) | fatigue accumulator store + ink rest events. Post-Bundle C | museum `indie-citizen-sleeper-fatigue-drift.md` (3/5) | DEFERRED (post-Bundle C) |
+| **Slay the Princess** (2023) | 12-knot branching state memory ("il gioco sa come ho giocato") | narrativeRoutes.js debrief knot per mbti_group. Writer D4 bottleneck (55 ink unit, 8h) | museum `indie-slay-princess-branching-state.md` (3/5) | DEFERRED (D4 writer) |
+| **Pentiment** (2022) | Job voice + confessionals (job player colora comunicazione) | job-variant briefing ink (35+ stitch x 7 job). Writer D4 bottleneck | museum `indie-pentiment-job-voice-confessionals.md` (3/5) | DEFERRED (D4 writer) |
+| **Inscryption** (2021) | Camera reveal meta-frame escalating (Sistema rivela dati progressive come "dossier intercettato") | objectiveEvaluator.js esposto post-MVP. TKT-09 prereq. Dossier tracker 3-consecutive | museum `indie-inscryption-camera-reveal-meta.md` (2/5) | DEFERRED (post-MVP) |
+| **1000xRESIST** (2024) | Memory layered POV (briefing cita "volta scorsa Sistema ha usato fianco destro") | previousBiomeLoss store + conditional ink knot ~5h. Post-Bundle B | museum `indie-1000xresist-memory-layered-pov.md` (3/5) | DEFERRED (post-Bundle B) |
+| **Loop Hero** (2021) | Minimap campaign visual emergence (hex 5x5 illumina post-scenario, grigio = attesa) | briefing hex_revealed array 1-3/scenario. Decisione D5 pending (diegetic vs HUD) ~6-9h | museum `indie-loop-hero-minimap-visual-emergence.md` (3/5) | DEFERRED (D5) |
+| **Cocoon** (2023) | Biome rules layer (1-2 regole tattiche uniche/bioma, combinano in transition) | biome_rules.yaml ext, biomeSpawnBias rework ~7h post-P3 | museum `indie-cocoon-biome-rules-layer.md` (3/5) | DEFERRED (post-P3) |
+| **Tunic** (2022) | Manual-as-puzzle diegetic knowledge (codex sbloccabile, lingua gliffica deduci) | subset decipher Codex ADOPT ~5h. Broader scope post-MVP UX | museum `indie-tunic-manual-puzzle-broader.md` (2/5) | DEFERRED / partial ADOPT |
+
+#### E. Core/GDD narrative & system tier (vault canonical)
+
+| Gioco / Sistema | Cosa ci piaceva | Come intendiamo farlo | Fonte | Stato |
+|-----------------|-----------------|------------------------|-------|-------|
+| **Wesnoth** (GPL) | Campaign dialogue inline, leader named = unita giocabile, `{QUANTITY}` scaling (Easy 0.7x/Norm 1.0x/Hard 1.3x). **Validatore pattern P2** (evoluzione = advancement tree, NON sim) | Pattern citato (no code-clone) per campaign + difficulty scaling Fase 2 | vault `00-SOURCE-OF-TRUTH.md` §15.4-15.5; `00F` §4.4 | Research-validated, narrative Fase 2 |
+| **Descent: Road to Legend** (FFG board) | Overlord plot-card rhythm, struttura campagna multi-hero, quest branching win/loss, campaign book + "dadi Descent-like" su spese PT/PP | Pattern B "Overlord + Custodi named" Fase 2 post-EA: `data/core/custodi.yaml` + campaign book. Dice metaphor TV in `11-REGOLE_D20_TV.md` | vault `core/00F-ART_AUDIO_BUSINESS.md` §4.3-4.4; `core/11-REGOLE_D20_TV.md` | DEFERRED (narrative Fase 2) + SHIPPED (dice metaphor) |
+| **Fire Emblem** | Square grid tactics, positioning depth (ref comparativo scelta grid) | Hex preferito su square (ADR-2026-04-16), pattern FE noto | vault `00-SOURCE-OF-TRUTH.md` §14.1 | Design-known |
+| **AncientBeast** (GPL) | Hex 16x9 grid, multi-tile creature, coord axial/cube, pathfinding+FOV/LOS | **DECISO**: hex axial adottato | vault `00-SOURCE-OF-TRUTH.md` §14.1-14.3; **ADR-2026-04-16-grid-type-hex-axial** | IN-DESIGN (ADR DECIDED) |
+| **Don't Starve** | Silhouette forte + palette limitata (16-24 col/biome), creature iconiche | Silhouette language (P3 job-to-shape), 32x32 sprite, indexed PNG | vault `41-ART-DIRECTION.md` §Implementazione | IN-DESIGN (art-direction APPROVED) |
+| **Slay the Spire** (2017) | Mood UI scuro TV-first, intent preview info-on-entity, loop economici scarsita'-driven | Mood canonical post ADR-2026-04-18. Economia non-gacha. Convergenza UI Telegraph | vault `core/41-ART-DIRECTION.md`; Game `docs/planning/2026-04-20-design-audit-consolidated.md` | IN-DESIGN (art-direction decisa) |
+| **Wargroove** (2019) | Pixel-art moderno (no 8-bit, no 3D), clarity combat, palette vivida | Pixel-art ortho, palette matrix 9 biomi x 4-color, Aseprite pipeline. Reference moodboard ufficiale | vault `core/41-ART-DIRECTION.md`,`00F` §2.4 | IN-DESIGN (reference, no ADR esplicito) |
+| **OpenRA** (GPL) | Mission briefing + campaign scripting Lua, objective narrativi | encounter YAML schema `narrative.briefing_ink` field | vault `00-SOURCE-OF-TRUTH.md` §15.2; `00F` §4.4 | Schema-integrated |
+| **FFT: War of the Lions** (2007) | Named companion dialogue + generic recruit, acted scenes, isometric legibility | Fase 2: 2-4 Custodi named + generic "Wolf-03" slot. Campaign arc intro->acts->climax | vault `00F` §4.4; `00-SOURCE-OF-TRUTH.md` audience | DEFERRED (narrative Fase 2) |
+| **Ink / inkle** (engine) | Multi-speaker knot dialogue, branching variable state | narrativeEngine.js (inkjs) + ai_profiles.yaml narrative_voice | vault `00F` §4.2,§4.4 | **IMPLEMENTED** (Fase 1 minimal) |
+| **80 Days / Sorcery** (inkle) | Gold standard Ink multi-speaker, no-VO emphasis | Validazione pattern Ink (creature silent, Sistema narra) | vault `00F` §4.4 | Reference-validated |
+
+> **Nota d20/TTRPG**: il progetto usa la regola d20 + Margin-of-Success
+> (ADR-2026-04-13) senza accreditare Pathfinder/D&D 5e per nome. Ispirazione
 > meccanica, non sistema citato.
 
-### 11.3 Pattern di convergenza (multi-source = alta confidenza)
+### 11.3 Pattern di convergenza (multi-source = principio hard)
 
-Dove >=3 fonti indipendenti convergono = principio di design hard:
+Dove >=3 fonti indipendenti convergono = principio di design non negoziabile:
 
-1. **UI Telegraph** (7-source: StS + ITB + Tactics Ogre + FFT CT bar + Cogmind
-   + Battle Brothers + Halfway) -> "info attaccata all'entita', mai nascosta".
-   Hybrid overlay (Tactics Ogre base + Dead Space tint additivo).
+1. **UI Telegraph** (7-source: Slay the Spire + ITB + Tactics Ogre + FFT CT bar
+   + Cogmind + Battle Brothers ATB + Halfway) -> "info attaccata all'entita',
+   mai nascosta". Hybrid overlay (Tactics Ogre base + Dead Space tint additivo).
 2. **Cambio visibile permanente** (3-source: Wildermyth + Spore S4 + Voidling
    Pattern 6) -> ogni cambio meccanico significativo HA conseguenza visiva (P3+P4).
 3. **Difficolta' opt-in componibile** (4-source: Hades Heat + Monster Train Pact
-   + AI War Progress + XCOM Long War) -> scaling player-controlled, NON preset (P6).
-4. **Visibilita' co-op** (3-source: Frozen Synapse + ITB + NS2 Strategist) ->
-   reveal simultaneo post-decisione = sblocco planning condiviso (P5).
+   + AI War Progress + XCOM Long War 2) -> scaling player-controlled, NON preset (P6).
+4. **Visibilita' co-op** (3-source: Frozen Synapse replay + ITB telegraph + NS2
+   Strategist atlas) -> reveal simultaneo post-decisione = sblocco planning (P5).
 
-### 11.4 Museum -- alternative scartate/parcheggiate preservate
+### 11.4 Anti-reference (cosa NON vogliamo essere)
 
-Game `docs/museum/` (museum-first protocol): ~101 artifact, 34 curator card
-Dublin Core, 3 gallerie, 9 inventory. Indice: `docs/museum/MUSEUM.md`.
-
-| Card | Cos'era | Perche' scartato/parcheggiato |
-|------|---------|-------------------------------|
-| Promotions-orphan (3/5) | Job rank advancement (JP inheritance FFT) | Complessita' FFT-specifica, scope creep. JP cross-job deferred M14+ |
-| MBTI Gates Ghost (4/5) | Modal unlock gate MBTI early | Opaco -> sostituito da Disco color-coded debrief. Recuperabile via git |
-| Magnetic Rift Resonance (4/5) | Swarm trait T2 biome-resonance oscillator | Simulazione real-time troppo costosa -> trait cost + biome memory |
-| Sentience Tiers v1.0 (5/5) | Interocezione T0-T6 + 22 Self-Control trigger | Non integrato ma high-ROI. Skiv Sprint C unblock (290/297 trait live) |
-| Worldgen 4-level stack (5/5) | Bioma->Ecosistema->Foodweb->Network | Infra completa MA zero runtime consumption. Revive ~3-6h quick win |
-| Enneagramma Registry (5/5) | 16 hook stub Ennea effect injection | Non integrato, ready-to-wire. 93 LOC orphan ~3h |
-| Voidling Bound 6 Patterns (4/5) | Genetics: rarity-gate, path-lock, Apex terminal, visual_swap | Pattern 6 non integrato, P0 gap |
-| Mating Engine D1+D2 (5/5) | 1053 LOC engine + 7 REST, zero frontend | **REVIVED 2026-04-27**: PR#1876/1879/1911 shipped. OD-001 era disinfo |
-
-### 11.5 Direzione artistica + creature + biomi + audio
-
-**Stile target**: "readable biopunk tactical diorama" -- NO parchment fantasy,
-NO cute pixel, NO sci-fi sterile. Fonte: Game-Godot-v2
-`docs/godot-v2/visual-screen-bible.md` + `visual-design-research.md`.
-3 modi visivi: World-forming (void vivo, beat ritual 500-900ms) / Tactical
-(grid pulita, overlay alto-contrasto cyan/amber/red 80-350ms) / Memory
-(battlefield dim, portrait/voce forte 400-900ms). Palette 4-layer: biome base
-(low sat) + unit identity (outline team + tint specie) + tactical overlay +
-ritual overlay (deep ink, warm bone text).
-
-**Creatura Skiv** (refs in `evo-tactics-refs-meta/SKIV_REFS_EXTRACTED.md`):
-- 3D anatomia: Quaternius Wolf/Red Fox (CC0, rig posing), wolf-skiv-ref PBR
-- 2D sprite: HF OGA-CC0 Desert Kit Wild Animals (Fox/Wolf 36-40px, Wolf Howl
-  16fr = "calling pack" diretto per lore Skiv), DENZI cat 32x32
-- Concept: Surt CC0 pack 175+ file (silhouette study, mood board), HF "creature
-  and cub sketch" (anatomia + relazione madre/cucciolo)
-- Skiv design = **lavoro originale** ground-su questi ref, no artista attribuito
-
-**Biomi**: Africa Savanna Pack 493 file DAE (habitat Skiv), CAVE_PACK_PRO 272
-file (burrow), HF Desert Kit tileset + Hermit Sand (animazione burrow),
-ambientCG PBR sand 20 material.
-
-**Audio**: Sonniss 6691 file royalty-free (Paw Trot = "Skiv soft paw trot
-diretto", Deep Breather idle -2 semitoni, Eerie Cave atmo) + HF OGA-CC0
-creature SFX 811. **`vocal/sand-spell.flac` = DIRECT FIT Skiv echolocation**.
-Pipeline Audacity documentata (idle/roar/echolocation layering).
-
-**Licensing**: 100% license-clean (`evo-tactics-refs-meta/HANDOFF.md`). ~8080
-CC0 + 6691 Sonniss perpetual + ~1240 PD. Zero Tier B/C (DMCA: GTA/CoD/Pokemon
-banditi esplicitamente). 4 path workflow: CC0+modify / AI-gen indemnified /
-ref+redraw-fresh / audio-process. Shipping solo da `Game/assets/` con CREDITS.md.
-
-### 11.6 Fonti & ricerca disponibili
-
-| Fonte | Path | Contenuto |
-|-------|------|-----------|
-| Museum index | Game `docs/museum/MUSEUM.md` | 34 card + 3 gallerie + 9 inventory |
-| Pilastri canonical | vault `Spaces/Dev/Evo-Tactics/core/02-PILASTRI.md` | 6 pilastri + ancora ispirazione |
-| Art direction | vault `core/41-ART-DIRECTION.md` + `00F-ART_AUDIO_BUSINESS.md` | Reference visivi + anti-reference |
-| Design freeze | Game `docs/core/90-FINAL-DESIGN-FREEZE.md` (A3 authority) | Scope shipping locked |
-| Roadmap index | Game `docs/planning/EVO_FINAL_DESIGN_ROADMAPS_INDEX.md` | M0-M6 + FD-ID backlog |
-| Combat canon | Game `docs/combat/combat-canon.md` + `round-loop.md` | d20 + status + economy frozen |
-| ADR game-design | vault `Spaces/Dev/Evo-Tactics/adr/` (39) + Game `docs/adr/` (date-named) | Decisioni architetturali |
-| Design watcher | vault `production/agents/evo-tactics-design-watcher.md` | Agent flag contraddizioni |
-| Asset refs | `evo-tactics-refs-meta/` (SKIV_REFS, CATALOG, CC0_SOURCES) | Provenance asset 100% classificata |
-| Art Godot | Game-Godot-v2 `docs/godot-v2/visual-screen-bible.md` | Bibbia visiva 3-modi |
-
-### 11.7 A che punto siamo (roadmap M0-M6)
-
-Fase: **Final Design Freeze** (scope locked 2026-04-20). M0 baseline ~completo,
-**M1 Combat Freeze in corso**, M2-M6 bloccati dietro gate M1.
-
-| Fase | Nome | Stato |
-|------|------|-------|
-| M0 | Baseline & Governance | ~completo (freeze pubblicato, owner matrix pending) |
-| M1 | Combat Freeze | **IN CORSO** (resolver Python deprecato 2026-05-05, Node canonical, contracts 23/23, 237 Python test archiviati) |
-| M2 | Balance & Progression | Attesa M1 (trait audit 33/33 done, economia PE/PI/Seed non frozen) |
-| M3 | Content Slice | Attesa M2 (4 specie + 6 job + 3 biomi presenti, mission slice incompleta) |
-| M4 | UX/HUD/Telemetry | Parziale (HUD Wave 2-7 shipped, debrief spec pending) |
-| M5 | Meta & Cross-Repo | Attesa M4 (Form Evolution Engine Phase A-D done, Recruit/Nest slice pending) |
-| M6 | Release Candidate | Attesa M5 (target 50 playtest, no Master DD approval) |
-
-Critical path: Combat -> Balance -> Content -> UX -> Meta -> RC. Ogni gate
-blocca il successivo + richiede approvazione Master DD.
-
-**Deferred/cut espliciti**: XP Cipher (parked redundant ADR-2026-04-17),
-tabletop DM mode (killed ADR-2026-04-19, digital-only no master), genetics
-mating complesse (M5 slice minima), Game-Database HTTP runtime (out-of-scope
-freeze), Rust CLI rewrite (won't, no perf problem).
-
-### 11.8 Gap & contraddizioni (dichiarati, no fabbricazione)
-
-1. **Spore "muddied"**: vault dice "Spore-like" poi chiarisce "NON sandbox,
-   pattern = Wesnoth + AI War pack-unlock". Nome ref corretto, adozione ibrida.
-2. **FFT grid-agnostic**: ADR-2026-04-16 accetta hex-axial citando FFT, ma
-   pathfinding/FOV non implementati (TV-first shared-screen). Rischio: borrow
-   UX FFT senza richiederne complessita' grid. Accettabile MVP.
-3. **Iso vs ortho RISOLTO**: intento "2.5D iso" vs codice ortho (Camera2D zoom
-   2.0). Verdetto: codice canonical, art direction ora ortho.
-4. **Narrative Fase A vs B**: Fase A Sistema-centric (AI War) defer named-hero
-   (Descent) a Fase B post-EA. Rischio se community chiede narrativa prima.
-5. **Audio senza ancora esterna**: unico pilastro senza ispirazione-gioco
-   nominata (solo source pack). Accettabile (low-pri pre-MVP).
-6. **Moodboard visivo pending**: palette matrix 9 biomi canonical ma esempi
-   visivi moodboard ancora da produrre.
-7. **Due layer doc (museum vs vault)**: framing leggermente diverso per stesse
-   ispirazioni (es. FFT). Non contraddizione -- complementari, ma verificare
-   coerenza quando si wira una meccanica (museum = alternative, vault = canonical).
-
-### 11.9 Sweep esaustivo 2026-05-18 (correzione + ispirazioni mancanti)
-
-> Sezioni 11.1-11.8 erano sintesi parziale: la prima passata mancava ~16
-> titoli + tutte le anti-reference. Sweep esaustivo (lettura di TUTTE le ~45
-> museum card + grep vault completo) qui sotto. Additive, non riscrive sopra
-> (no-clobber museum-style). Correzioni dichiarate apertamente.
-
-**Correzioni a 11.2:**
-
-- **Triangle Strategy** (Nintendo 2022) -- ERA MANCANTE. Solo Game-museum
-  (`docs/museum/cards/personality-triangle-strategy-transfer.md`,
-  M-2026-04-25-009, **5/5, FORGOTTEN**). NON in vault (confermato assente).
-  Cosa ci piaceva: MBTI Transfer Plan, 3 proposte concrete P4 closure --
-  (A) phased reveal Disco-style, (B) dialogue color codes diegetic,
-  (C) recruit gating by MBTI threshold. Mai citato in BACKLOG/OD: dimenticato.
-  Map: vcScoring.js + formSessionStore.js + mbti_forms.yaml. Stato: MUSEUM.
-- **Descent** -- framing prima passata "Descent 1997 reactive-biome" NON
-  corroborato dallo sweep. Realta' verificata: **Descent: Road to Legend**
-  (FFG board game) = reference narrative Fase 2 (`core/00F-ART_AUDIO_BUSINESS.md`
-  §4.3-4.4 "Pattern B Overlord + Custodi named, Descent ibrido" -- quote vault
-  diretta) + **"dadi Descent-like"** pattern in `docs/core/11-REGOLE_D20_TV.md`
-  (d20 + spese PT/PP come metafora dice visuale co-op TV). NO Descent-1997
-  reactive-biome confermato: era interpretazione primo agent, ritirata.
-  Stato: DEFERRED (narrative Fase 2) + SHIPPED (dice metaphor TV core).
-
-**Indie research cluster (museum cards M-2026-04-27-021..031) -- mancante in 11.2:**
-
-| Gioco | Cosa ci piaceva | Come intendiamo farlo | Card | Score |
-|-------|-----------------|------------------------|------|-------|
-| **Cogmind** (2015) | Tooltip stratificati base+expand, trade-off espliciti per componente | trait cost_ap -> multi-cost ~4-6h. "identita = equip + trade-off" | `ui-cogmind-tooltip-stratificati-quick-win.md` | 4/5 |
-| **Backpack Hero** (2023) | Spatial inventory adjacency (Tetris bonus posizione) | 2+ trait stesso organ_system -> bonus passivo, post-S6 | `indie-backpack-hero-spatial-inventory.md` | 3/5 |
-| **Astrea: Six-Sided Oracles** (2023) | Dadi contaminati/puri = character sheet visibile | VC axes come dadi facce contaminate/pure, defer OD-013 | `indie-astrea-dice-purification.md` | 3/5 |
-| **Slay the Princess** (2023) | 12-knot branching state memory ("il gioco sa come ho giocato") | narrativeRoutes.js debrief knot per mbti_group | `indie-slay-princess-branching-state.md` | 3/5 |
-| **Pentiment** (2022) | Job voice + confessionals (job colora comunicazione) | job-variant briefing ink (35+ stitch, D4 bottleneck) | `indie-pentiment-job-voice-confessionals.md` | 3/5 |
-| **Inscryption** (2021) | Camera reveal meta-frame escalating (Sistema rivela dati progressive) | objectiveEvaluator.js esposto post-MVP, dossier tracker | `indie-inscryption-camera-reveal-meta.md` | 2/5 |
-| **1000xRESIST** (2024) | Memory layered POV (briefing cita cosa successo "volta scorsa") | previousBiomeLoss store + conditional ink, post-Bundle B | `indie-1000xresist-memory-layered-pov.md` | 3/5 |
-| **Loop Hero** (2021) | Minimap campaign visual emergence (hex illumina post-scenario) | briefing hex_revealed array 1-3/scenario, post-D5 | `indie-loop-hero-minimap-visual-emergence.md` | 3/5 |
-| **Cocoon** (2023) | Biome rules layer (1-2 regole tattiche uniche/bioma, combinano) | biome_rules.yaml ext, biomeSpawnBias rework, post-P3 | `indie-cocoon-biome-rules-layer.md` | 3/5 |
-| **Tunic** (2022) | Manual-as-puzzle (codex sbloccabile, lingua gliffica deduci) | diegetic knowledge Thought Cabinet ext, subset decipher ADOPT ~5h | `indie-tunic-manual-puzzle-broader.md` | 2/5 |
-
-Tutte stato MUSEUM/DEFERRED (curated, non shippate).
-
-**Reference core/GDD aggiuntive -- mancanti in 11.2:**
-
-| Gioco | Cosa ci piaceva | Fonte | Stato |
-|-------|-----------------|-------|-------|
-| **Wesnoth** (GPL) | Campaign dialogue inline, leader named = unita giocabile, `{QUANTITY}` scaling (Easy 0.7x/Norm 1.0x/Hard 1.3x). **Validatore pattern P2** (evoluzione = advancement tree, non sim) | vault `00-SOURCE-OF-TRUTH.md` §15.4-15.5; `00F` §4.4 | Research-validated, narrative Fase 2 |
-| **Fire Emblem** | Square grid tactics positioning depth (ref comparativo per scelta hex) | vault `00-SOURCE-OF-TRUTH.md` §14.1 | Design-known (hex preferito) |
-| **AncientBeast** (GPL) | Hex 16x9 grid, multi-tile creature, coord axial/cube | vault `00-SOURCE-OF-TRUTH.md` §14.1-14.3 | **ADR-2026-04-16 DECIDED** (hex axial) |
-| **Don't Starve** | Silhouette forte + palette limitata (16-24 col/biome) | vault `41-ART-DIRECTION.md` reference positivi | Art-direction APPROVED |
-| **OpenRA** (GPL) | Mission briefing + campaign scripting Lua, objective narrativi | vault `00-SOURCE-OF-TRUTH.md` §15.2; `00F` §4.4 | Schema-integrated (briefing_ink) |
-| **FFT War of the Lions** (2007) | Named companion dialogue + generic recruit, acted scenes | vault `00F` §4.4 | Deferred Fase 2 |
-| **Ink / inkle** (engine) | Multi-speaker knot dialogue, branching state | vault `00F` §4.2,§4.4 (inkjs gia' in uso) | **IMPLEMENTED** (Fase 1 minimal) |
-| **80 Days / Sorcery** (inkle) | Gold standard Ink multi-speaker, no-VO emphasis | vault `00F` §4.4 | Reference-validated |
-
-**Anti-reference (cosa NON vogliamo essere) -- ERA TUTTO MANCANTE:**
-
-Fonte: vault `41-ART-DIRECTION.md` §Direzione sintetica + `00F-ART_AUDIO_BUSINESS.md` §1.2,§4.5.
+Fonte: vault `41-ART-DIRECTION.md` §Direzione sintetica + `00F-ART_AUDIO_BUSINESS.md`
+§1.2,§4.5. Decisioni esplicite di rifiuto:
 
 | Anti-reference | Perche' rifiutato |
 |----------------|-------------------|
@@ -709,22 +597,165 @@ Fonte: vault `41-ART-DIRECTION.md` §Direzione sintetica + `00F-ART_AUDIO_BUSINE
 | Anime shonen | Taglio adulto, no narrativa serializzata |
 | Military sci-fi polished | Contro tono bio-plausibile + autonomia creature |
 | Descent puro (Heroes fissi) | Named heroes contraddicono creature modulari (creature != player) |
-| Pattern C (Player-named Commander) | Ownership si ma caratterizzazione generica, anchor debole |
+| Pattern C (Player-named Commander) | Ownership si ma caratterizzazione generica, anchor narrativo debole |
 | Pattern D (Ramza-light FFT single-POV) | Single protagonist contraddice co-op ownership, costo lineare alto |
 
-**Negative results (cercati esplicitamente, CONFERMATI assenti):**
-Darkest Dungeon, XCOM core series (solo "Long War 2" come analog convergenza P6),
-Pikmin, Pokemon (come ref positivo -- solo anti-ref), Monster Hunter, Battle
-Brothers, Halfway, Resident Evil, Don't Starve assente vault-museum (solo
-art-direction vault). Nessun "Descent: Journeys" board game (solo Road to Legend).
+### 11.5 Museum -- alternative scartate/parcheggiate preservate
 
-**Conteggio finale**: ~31 titoli unici citati (8 pillar-tier + 14+ museum
-indie-cluster + ~8 core/GDD narrative-tier) + 8 anti-reference esplicite.
-Tutte le ~45 museum card lette (31 con citazione gioco esterno, 14 senza =
-worldgen/genetics interni).
+Game `docs/museum/` (museum-first protocol): ~101 artifact, ~45 curator card
+Dublin Core (31 con citazione gioco esterno, 14 worldgen/genetics interni),
+3 gallerie, 9 inventory. Indice: `docs/museum/MUSEUM.md`.
 
-**Discrepanza cross-layer da sapere**: Triangle Strategy = museum-only (NON
-vault). Don't Starve / AncientBeast / Fire Emblem / OpenRA / Wesnoth = vault
-core (framing diverso o assenti in museum). Quando wiri una meccanica:
-museum = catalogo alternative + ROI, vault = decisione canonical. Se diverge,
-vault `core/` (autorita' A1-A3, freeze A3) vince per scope shipping.
+| Card | Cos'era | Perche' scartato/parcheggiato |
+|------|---------|-------------------------------|
+| Promotions-orphan (3/5) | Job rank advancement (JP inheritance FFT) | Complessita' FFT-specifica, scope creep. JP cross-job deferred M14+ |
+| MBTI Gates Ghost (4/5) | Modal unlock gate MBTI early | Opaco -> sostituito da Disco color-coded debrief. Recuperabile via git |
+| Magnetic Rift Resonance (4/5) | Swarm trait T2 biome-resonance oscillator | Simulazione real-time troppo costosa -> trait cost + biome memory |
+| Sentience Tiers v1.0 (5/5) | Interocezione T0-T6 + 22 Self-Control trigger | Non integrato ma high-ROI. Skiv Sprint C unblock (290/297 trait live) |
+| Worldgen 4-level stack (5/5) | Bioma->Ecosistema->Foodweb->Network | Infra completa MA zero runtime consumption. Revive ~3-6h quick win |
+| Enneagramma Registry (5/5) | 16 hook stub Ennea effect injection | Non integrato, ready-to-wire. 93 LOC orphan ~3h |
+| Voidling Bound 6 Patterns (4/5) | Genetics: rarity-gate, path-lock, Apex terminal, visual_swap | Pattern 6 (visual swap) non integrato, P0 gap |
+| Triangle Strategy Transfer (5/5) | 3 proposte P4-closure A/B/C | Dimenticato, mai in BACKLOG/OD. Cross-validate quando Thought Cabinet wiring |
+| Mating Engine D1+D2 (5/5) | 1053 LOC engine + 7 REST, zero frontend | **REVIVED 2026-04-27**: PR#1876/1879/1911 shipped. OD-001 era disinfo |
+
+### 11.6 Direzione artistica + creature + biomi + audio
+
+**Stile target**: "readable biopunk tactical diorama" -- NO parchment fantasy,
+NO cute pixel, NO sci-fi sterile. Fonte: Game-Godot-v2
+`docs/godot-v2/visual-screen-bible.md` + `visual-design-research.md`.
+
+3 modi visivi:
+- **World-forming**: void vivo, biome color signal, beat ritual 500-900ms
+- **Tactical**: grid pulita, overlay alto-contrasto cyan/amber/red/white
+  shape-coded, feedback 80-350ms
+- **Memory**: battlefield dim, portrait/voce forte, reveal ordinato 400-900ms
+
+Palette 4-layer: biome base (low sat) + unit identity (outline team + tint
+specie) + tactical overlay (cyan/amber/red/white) + ritual overlay (deep ink,
+warm bone text).
+
+**Creatura Skiv** (refs in `evo-tactics-refs-meta/SKIV_REFS_EXTRACTED.md`):
+- 3D anatomia: Quaternius Animal Pack Vol.2 Wolf + Red Fox (CC0, rig posing),
+  wolf-skiv-ref (Blender rigged + 3dwolf FBX PBR color/normal/rough/spec)
+- 2D sprite: HF OGA-CC0 Desert Kit Wild Animals (Fox/Wolf 36-40px, Wolf Howl
+  16fr = "calling pack" diretto per lore Skiv), DENZI cat 32x32 (12 variant)
+- Concept: Surt CC0 pack 175+ file (100 color + 26 doodle + silhouette_pack +
+  monster concept), HF "creature and cub sketch" 21MB PNG+PSD (anatomia +
+  relazione madre/cucciolo), Kenney Monster Builder, PhyloPic 581 SVG
+- Skiv design = **lavoro originale** ground su questi ref, no artista attribuito
+
+**Biomi**: Africa Savanna Pack v1.0 493 file DAE (habitat Skiv, scale creature
+vs env, sun-angle warm), CAVE_PACK_PRO 272 file (burrow secondario), 3D Nature
+Pack 160 + Desert Arena 53, HF Desert Kit tileset (Cactus/Palm/Sand 32-8px,
+quicksand animato GIF, Hermit Sand 5-sprite burrow), ambientCG PBR sand 20
+material seamless 1K, Kenney roguelike-caves.
+
+**Audio**: Sonniss 6691 file royalty-free perpetual (Paw Trot = "Skiv soft paw
+trot diretto", Deep Breather idle pitch -2 semitoni, Alien Creature Growl
+sweep, AMB Wind-Gusty desert, ATMO Eerie Cave loop) + HF OGA-CC0 creature SFX
+811 (80-CC0-creature roar, Monster RPG 2, Baby Animals cub, cat purr).
+**`vocal/sand-spell.flac` = DIRECT FIT Skiv echolocation/sand-magic SFX**.
+Pipeline Audacity documentata: idle (Deep Breather trim 3s + pitch -2 +
+22050Hz mono), roar (roar_01.ogg + Punch Whoosh layered), echolocation
+(sand-spell trim 800ms + EQ high-pass 2kHz + reverb tail). Kenney UI/impact +
+FreePD orchestral 1237 MP3.
+
+**Licensing**: 100% license-clean (`evo-tactics-refs-meta/HANDOFF.md`,
+MANIFEST.json indicizza 32136 file). ~8080 CC0 + 6691 Sonniss perpetual +
+~1240 PD reference-only. Zero CC-BY-SA viral. Zero Tier B/C (DMCA: GTA/CoD/
+Pokemon banditi esplicitamente). 4 path workflow:
+1. **Path 1**: Kenney/CC0 base + modify Aseprite + CREDITS.md entry
+2. **Path 2**: AI gen (Retro Diffusion ToS enterprise indemnified) 10 variant
+   -> pick 1-3 -> polish -> CREDITS "AI generated, human-edited"
+3. **Path 3**: ref + redraw fresh (studia, chiudi file, canvas blank, redraw)
+   -> CREDITS "original work, inspired by [era]"
+4. **Path 4**: licensed SFX -> Audacity edit/layer -> CREDITS source
+Local ref folder PRIVATO (mai synced). Shipping solo da `Game/assets/` +
+CREDITS.md provenance.
+
+### 11.7 Fonti & ricerca disponibili (indice)
+
+| Fonte | Path | Contenuto |
+|-------|------|-----------|
+| Museum index | Game `docs/museum/MUSEUM.md` | ~45 card + 3 gallerie + 9 inventory + relevance table |
+| Pilastri canonical | vault `Spaces/Dev/Evo-Tactics/core/02-PILASTRI.md` | 6 pilastri + ancora ispirazione |
+| Source of Truth | vault `core/00-SOURCE-OF-TRUTH.md` | §14 grid, §15 campaign/encounter, §20-23 evoluzione |
+| Art direction | vault `core/41-ART-DIRECTION.md` + `00F-ART_AUDIO_BUSINESS.md` | Reference + anti-reference + audio + business |
+| HUD layout | vault `core/44-HUD-LAYOUT-REFERENCES.md` | HP floating + AP pip ref |
+| Design freeze | Game `docs/core/90-FINAL-DESIGN-FREEZE.md` (A3) | Scope shipping locked |
+| Roadmap index | Game `docs/planning/EVO_FINAL_DESIGN_ROADMAPS_INDEX.md` | M0-M6 + FD-ID backlog |
+| Combat canon | Game `docs/combat/combat-canon.md` + `round-loop.md` | d20 + status + economy frozen |
+| Design audit | Game `docs/planning/2026-04-20-design-audit-consolidated.md` + `pilastri-reality-audit.md` | Pillar audit post-M1 |
+| ADR game-design | vault `Spaces/Dev/Evo-Tactics/adr/` (39) + Game `docs/adr/` (date-named) | Decisioni architetturali |
+| Design watcher | vault `production/agents/evo-tactics-design-watcher.md` | Agent flag contraddizioni |
+| Asset refs | `evo-tactics-refs-meta/` (SKIV_REFS, CATALOG, CC0_SOURCES, HANDOFF) | Provenance asset 100% classificata |
+| Art Godot | Game-Godot-v2 `docs/godot-v2/visual-screen-bible.md` + `visual-design-research.md` | Bibbia visiva 3-modi |
+| External repos | vault `memory/reference_external_repos.md` | Repo tracciati Fase 2 (non letto in audit) |
+
+### 11.8 A che punto siamo (roadmap M0-M6)
+
+Fase: **Final Design Freeze** (scope locked 2026-04-20). Critical path:
+Combat -> Balance -> Content -> UX -> Meta -> RC. Ogni gate blocca il
+successivo + richiede approvazione Master DD.
+
+| Fase | Nome | Stato | Dettaglio |
+|------|------|-------|-----------|
+| M0 | Baseline & Governance | ~completo | Freeze pubblicato, docs registry, owner matrix pending (FD-006) |
+| M1 | Combat Freeze | **IN CORSO** | Resolver Python deprecato/killed 2026-05-05 (ADR-2026-04-19), Node canonical, contracts 23/23, 237 Python test archiviati, 6 azioni + 6 status + economy PT/PP/SG frozen. Gate: validator+smoke CI |
+| M2 | Balance & Progression | Attesa M1 | trait audit 33/33 done; economia PE/PI/Seed non frozen (FD-050-058) |
+| M3 | Content Slice | Attesa M2 | 4 specie (Dune Stalker/Sand Burrower/Echo Wing/Rust Scavenger) + 6 job + 3 biomi (Desert/Cavern/Badlands); mission slice incompleta (FD-060-068) |
+| M4 | UX/HUD/Telemetry | Parziale | HUD Wave 2-7 shipped (PT/PP/SG, AP, status, biome bonus, warning); debrief spec pending (FD-080-087) |
+| M5 | Meta & Cross-Repo | Attesa M4 | Form Evolution Engine Phase A-D done (🟢 cand P2, Prisma persistence); Recruit/Trust + Nest/Mating slice pending |
+| M6 | Release Candidate | Attesa M5 | Target 50 playtest; validator/smoke/snapshot pending; no Master DD approval |
+
+**Deferred / cut espliciti** (con motivazione):
+- XP Cipher: parked redundant (ADR-2026-04-17; coperto da job/mating/VC economy)
+- Tabletop DM mode: killed digital-only (ADR-2026-04-19; "1 gioco online no master")
+- Genetics mating complesse: M5 slice minima (genealogy/multi-gen deferred post-freeze)
+- Game-Database HTTP runtime: out-of-scope freeze (solo Game->DB import unidirezionale)
+- Enneagram deep tuning: modulo secondario (ADR-2026-04-23; non asse design core)
+- Burnout/sentiment detection + Rust CLI rewrite: won't (RESEARCH_TODO W3/W6, no perf problem)
+
+### 11.9 Gap, contraddizioni & autorita' cross-layer (onesto, no fabbricazione)
+
+1. **Spore ibrido**: vault dice "Spore-like" poi chiarisce "NON sandbox,
+   pattern = Wesnoth advancement tree + AI War pack-unlock". Nome ref corretto,
+   adozione meccanica ibrida (concetto non meccanica diretta).
+2. **FFT grid-agnostic**: ADR-2026-04-16 accetta hex-axial citando FFT, ma
+   pathfinding/FOV non implementati (TV-first shared-screen). Borrow UX FFT
+   senza richiederne complessita' grid. Accettabile MVP.
+3. **Iso vs ortho RISOLTO**: intento "2.5D iso" vs codice ortho (Camera2D
+   zoom 2.0, no shear). Verdetto 2026-05-16: codice canonical, art-direction
+   ora ortho. Asset pipeline zero-cost ri-allineata.
+4. **Narrative Fase A vs B**: Fase A Sistema-centric (AI War) defer named-hero
+   (Descent Road to Legend) a Fase B post-EA. Rischio se community chiede
+   narrativa prima del trigger story-mode workstream.
+5. **Audio senza ancora-gioco**: unico pilastro senza ispirazione-gioco
+   nominata (solo source pack Sonniss/HF/Kenney). Accettabile (low-pri pre-MVP).
+6. **Moodboard visivo pending**: palette matrix 9 biomi canonical ma esempi
+   visivi moodboard ancora da produrre.
+7. **Discrepanza cross-layer (sapere quando si wira)**:
+   - Triangle Strategy = **museum-only** (5/5 FORGOTTEN), NON in vault
+   - Don't Starve / AncientBeast / Fire Emblem / OpenRA / Wesnoth / Ink =
+     **vault core**, framing diverso o assenti in museum
+   - Stessa ispirazione (es. FFT) ha framing leggermente diverso nei 2 layer:
+     non contraddizione, complementare. Museum = catalogo alternative + ROI +
+     reuse-path; vault `core/` = decisione canonical (autorita' A1-A3, freeze
+     A3 vince per scope shipping). Verificare coerenza prima di wire meccanica.
+
+**Negative results** (cercati esplicitamente, CONFERMATI assenti): Darkest
+Dungeon, XCOM core series (solo "Long War 2" come analog convergenza P6),
+Pikmin, Pokemon (solo anti-reference, mai positivo), Monster Hunter, Battle
+Brothers (citato solo in pattern Telegraph 7-source, no card), Halfway (idem),
+Resident Evil, nessun "Descent: Journeys" board game (solo Road to Legend).
+
+**Conteggio finale**: ~31 titoli unici citati positivamente (8 pillar-tier +
+1 creature museum + 1 quick-win + 11 indie-cluster + 10 core/GDD narrative+
+system) + 8 anti-reference esplicite + ~14 museum card senza gioco esterno
+(worldgen/genetics interni). Tutte le ~45 museum card lette.
+
+---
+
+> Documento completo. Fonti file-cited verificate 2026-05-18. Path strutturali
+> stabili; HEAD/PR/sprint-status volatili -- ri-verifica vault `core/` + Game
+> `docs/planning/` + `gh pr list` prima di azioni puntuali.
