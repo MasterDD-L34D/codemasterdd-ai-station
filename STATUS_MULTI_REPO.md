@@ -550,7 +550,23 @@ Eduardo claude.ai session ha prodotto 3 doc DF-integration (RECONCILIATION-MASTE
 - **Umbrella ADR DRAFT** [Game PR #2330](https://github.com/MasterDD-L34D/Game/pull/2330) `ADR-2026-05-18-df-levels-integration-direction.md`: afferma intento DF reale+governato, decision-matrix ground-truth-corretta (5 fix), supersede 3 A5 sparsi → reasoning-archive, linka figlio #2328. **Verdetto master-dd pending** (A full / B core-only / C reject).
 - Artefatti finali: umbrella ADR #2330 = governance DF · #2328 = sub-decisione Sistema S7 · DESIGN_DIGEST = catalogo player/ref · PLAYER-VISION #2329 = player-facing · RECONCILIATION/PHASE-PLAN/GAME-ANALYSIS = A5 reasoning non-governante.
 
-**Next Eduardo**: nessun "Sprint S1". Triage 1-4 sopra. **6 PR aperte**: codemasterdd #160, Game #2326/#2328/#2329/#2330, vault #94. Verdetti chiave: umbrella #2330 (A/B/C) + figlio #2328 (Sistema S7 A/B/C). Greenfield DF = roadmap M2+ ordinaria, non rescue.
+**Next Eduardo**: nessun "Sprint S1". Triage 1-4 sopra. Game #2326/#2328/#2329/#2330 + vault #94 MERGED 2026-05-18. Verdetti chiave: umbrella #2330 (A/B/C) + figlio #2328 (Sistema S7 A/B/C). Greenfield DF = roadmap M2+ ordinaria, non rescue.
+
+---
+
+## ADR retrospective 2026-05-18 (B1 decision-review, harsh-reviewer)
+
+Audit 34 ADR codemasterdd. Distribuzione: **17 HELD / 8 DRIFTED / 3 FALSIFIED / 6 STALE-STATUS**.
+
+**Malattia diagnosticata**: NON premise-drift (sintomo) ma **assenza owner status-lifecycle** — check-date/trigger scritti come se scrivere=eseguire, nessuno li rilegge. Cascade Max-deadline (0014/15/23) non-owned. Decision-leak (0030 "Proposed" mentre stack tratta Pro/Meridian installato-fatto). DECISIONS_LOG index desync (ferma a 0030, mis-mappa, omette 0031-0033).
+
+**⚠️ Direction-finding (risposta a "stiamo andando giusti?")**: l'obiettivo fondante **sovereign-$0-50/anno (ADR-0001) e' di fatto MORTO** via **ADR-0030 (15/05, Pro $20/mese "Hybrid A1" acquisito)**. ADR-0015 auto-emendato 15/05 "$0-50 VIOLATO". La notizia "Max +1mese" e' parte della realta' Pro-acquisita, NON evento isolato. Il corpus ADR (0001/0015/0023) ancora encoda il goal morto. **Decisione strategica reale gia' presa (Hybrid A1 paid) ma non propagata = la deriva piu' grossa, piu' del DF.**
+
+**Meta**: PR #161/#162/#163 (correzioni questa sessione) erano UNVERIFIABLE dall'agent perche' non-merged = prova vivente della malattia "autored-not-closed". Loop chiuso questa sessione (merge tracking PR).
+
+**Top-3 azioni Eduardo**: (1) ADR-0023 supersede/rewrite (premessa morta da 0030); (2) DECISIONS_LOG index reconcile (rigenera da headers); (3) ADR-0030 ratify Proposed->Accepted (impegno $ gia' eseguito).
+
+**Process-fix max-leverage proposto**: `STATUS-CHECK: YYYY-MM-DD | trigger | default-if-elapsed` machine-greppable per ADR non-finale + cron settimanale grep check-date scadute (infra cron gia' esiste). Uccide 6 STALE-STATUS + forza collisioni tipo 0023/0030. Pending approvazione Eduardo.
 
 ---
 
