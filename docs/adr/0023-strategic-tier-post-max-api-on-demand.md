@@ -2,7 +2,7 @@
 
 > *TL;DR: post-19/05/2026 Claude Max OAuth scade. Strategic tier (multi-file refactor / debug architetturale / ADR draft / synthesis cross-source) e' NON-delegabile (ADR-0008). Senza Pro $240/anno acquisito (Scenario A full-sovereign confermato in ADR-0015), strategic tier necessita fallback formalizzato. Decisione: **Claude API pay-per-use on-demand con budget cap mensile $10-20** tracciato in ccusage. Quando emerge task strategic complesso (multi-file ≥3 OR constraint ≥5 OR debug architetturale), Eduardo autorizza spend per quella sessione esplicitamente, poi torna sovereign. Trigger reactivation Pro condizionale: se utilizzo medio API >$20/mese per 2 mesi consecutivi -> ratification ADR-0023 addendum revisita Scenario A vs B (Pro $240/anno = $20/mese effective, costo orario uguale ma flat-rate predicibile).*
 
-- **Status**: Proposed (empirical support refresh 2026-05-12 sera, soft-default Accepted 2026-06-08 30gg post-Proposed)
+- **Status**: **SUPERSEDED-by-ADR-0030 2026-05-18**. Premessa "Senza Pro $240/anno acquisito (Scenario A)" e' **factualmente morta**: ADR-0030 (Hybrid A1, Accepted 2026-05-18) ha acquisito Pro $20/mo. Lo strategic-tier-fallback non e' piu' "Claude API on-demand senza Pro" ma e' coperto dalla Pro subscription Hybrid A1. Questo ADR resta come reasoning storico; routing strategic -> vedi ADR-0030. (era: Proposed 2026-05-09, premise-falsificata caught retrospective B1 2026-05-18.)
 - **Data**: 2026-05-09 (originale) / 2026-05-12 sera (empirical refresh)
 - **Decisore**: Eduardo Scarpelli
 - **Tipo decisione**: budget + workflow tier 0 strategic post-19/05 expiration

@@ -4,8 +4,8 @@
 
 > **⚠️ AMENDMENT 2026-05-15 sera-tardi-ultra-3 (ADR-0030)**: Target $0-50/anno **VIOLATED by realism**. Eduardo realization mattina 15/5: scenario A copre code-editing tier MA NON copre orchestration + reasoning + methodology + sub-agents + skills (CC desktop unique value). Eduardo usage 75% Max settimanale = high-volume incompatibile free-tier-only. Decisione amendment: **scope rescoped da "$0-50/anno absolute"** → **"no Claude Max premium (~$1200/anno) + multi-provider flexibility + methodology preservation"**. Nuovo target realistico **$240-600/anno** via Hybrid A1 (CC Pro $20/mo + Meridian + OpenCode + Gemini CLI free + OpenRouter overflow). ADR-0030 supersedes scenario A absolute target. Vedi ADR-0030 per architectural detail + Implementation Plan + Validation criteria.
 
-- **Status**: **Accepted con amendment 2026-05-15** (target $0-50/anno violated, scope rescoped per ADR-0030)
-- **Data**: 2026-04-24 (Proposed) -- 2026-05-07 (Accepted) -- 2026-05-15 (Amendment ADR-0030 supersedes scenario target)
+- **Status**: **Accepted, target $0-50/anno SUPERSEDED-by-ADR-0030 (pivot ratificato 2026-05-18)**. Amendment 2026-05-15 dichiaro' "violated by realism"; Eduardo ha **esplicitamente accettato il pivot 2026-05-18** (DECISIONS_LOG Decisione 009, ADR-0030 Accepted). Scenario A absolute = chiuso; deroga criterio #3 privacy invariata.
+- **Data**: 2026-04-24 (Proposed) -- 2026-05-07 (Accepted) -- 2026-05-15 (Amendment ADR-0030) -- 2026-05-18 (pivot ratificato Decisione 009)
 - **Decisore**: Eduardo Scarpelli
 - **Deciders**: solo-dev (single-user workstation)
 - **Amendment trigger**: Eduardo statement 2026-05-15 mattina "non ho un modo effettivo per affrontare il tutto senza claude code desktop" + autoresearch Meridian/OpenCode plugin discovery
