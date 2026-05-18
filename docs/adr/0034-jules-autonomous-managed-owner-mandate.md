@@ -176,3 +176,35 @@ anti-backfire NON negoziabili. Scope = own (codemasterdd) + esterni
 Rif: ADR-0033 (ledger + S1-S7 + throttle), runbook
 `jules-session-triage-via-cli.md`, DECISIONS_LOG Decisione 010,
 audit 8/8 2026-05-18 (STATUS_MULTI_REPO).
+
+## Addendum 2026-05-18 — R3-bis "no-message-on-moot" (post-exec evidence)
+
+**Evidenza empirica ciclo 1 (batch-01-CORRECTED eseguito 2026-05-18).**
+6 ARCHIVE + 3 sendMessage "superseded" (su sessioni task-moot 9784/5423/
+7022) + 2 DEFER. Risultato: i 3 `sendMessage` (HTTP 200) hanno
+**RIATTIVATO** le sessioni (state → IN_PROGRESS/PAUSED), `archived` non
+ha tenuto al primo colpo (7022 archived=False, 5423 IN_PROGRESS). Recovery:
+re-archive → archived=True su tutte 3, sessioni PAUSED prima di produrre
+output (0 nuove PR → R4 backfire intercettato pre-danno). Delivery del
+messaggio come `userMessaged` non confermata (9784 = NONE).
+
+**Causa**: qualunque `sendMessage` a una sessione Jules la risveglia —
+è lo stesso vettore #2294/#2313 che R3/R4 esistono per contenere. Su una
+sessione **già-shippata / task-moot** il messaggio aggiunge rischio
+backfire per **zero valore** (la sessione è comunque chiusa).
+
+**R3-bis (vincolante, integra R3):**
+- Sessione verdetto `archive-already-shipped` / `task-moot` →
+  **archive-only, MAI `sendMessage`**. Nessun messaggio di cortesia.
+- `sendMessage` consentito SOLO su sessione **genuinamente-open** che
+  richiede scope-correction (R3 originale), MAI per chiudere/notificare.
+- Sequenza batch: archive PRIMA, mai message-poi-archive (l'ordine
+  inverso = il backfire osservato).
+- Post-archive verify OBBLIGATORIO: ri-GET la sessione, conferma
+  `archived=true`; se una sessione torna attiva → R4 (stop, no
+  corrective, flag), NON ri-messaggiare.
+
+batch-01-CORRECTED §"RESPOND scoped prima di archiviare #4/#5/#6" è
+**superato da R3-bis** (era design difettoso self-generato; SDMG/
+Protocol-7: adottata la falsificazione empirica, non difeso il design).
+Rif: L-2026-05-031.

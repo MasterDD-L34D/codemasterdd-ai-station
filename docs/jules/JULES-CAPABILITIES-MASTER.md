@@ -149,6 +149,14 @@ ZERO mutazione Jules.
   (activities/diff) in fase di batch-draft.
 - Generativo (archive/respond/start) = Eduardo approve in chat per ciclo,
   **non** standing settings entry (P0-3, §3).
+- **R3-bis no-message-on-moot** (ADR-0034 addendum 2026-05-18, evidenza
+  ciclo 1, L-2026-05-031): sessione already-shipped/task-moot →
+  **archive-only, MAI `sendMessage`** (il messaggio risveglia la sessione
+  = backfire #2294/#2313, zero valore). `sendMessage` SOLO per
+  scope-correction su sessione genuinamente-open. Batch: archive PRIMA;
+  post-archive ri-GET conferma `archived=true`; ritorno-attiva → R4
+  stop+flag, no ri-messaggio. API: `POST /v1alpha/sessions/{id}:archive`
+  body `{}` (soft-flag, verificato); `:sendMessage` body `{"prompt":...}`.
 
 ### Flusso risultante
 Daily 8am → script → `docs/jules-batch/<day>-digest.md` + toast → Eduardo
