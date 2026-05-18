@@ -111,6 +111,14 @@ Formato granulare per decisioni che non meritano ADR (reversibili, locali, non v
 - **Conseguenze**: ADR-0021 Accepted, AGENTS.md attivo come instruction file Codex, encoding policy ASCII-first nuovi doc. Pattern Codex Cloud confusion documentato come caso-studio.
 - **Azioni derivate**: ADR-0021 mergeato (PR #2). Branch deleted da origin. Mitigation strutturale anti-ricorrenza in AGENTS.md preamble.
 
+### Decisione 008 -- Claude Max ri-acquistato +1mo, deadline-drift corretta (2026-05-18)
+- **Data**: 2026-05-18
+- **Decisione presa**: Eduardo ha ri-acquistato Claude Max per +1 mese. Deadline reale era ~17/05 (non 19/20: premessa-drift nel doc strategico fondante). Nuova deadline sovereign-transition = ~17/06/2026. Urgenza esistenziale OFF, scope sovereign INVARIATO.
+- **Perche'**: rilassare il cronometro, non la rotta. Il mese aggiuntivo = finestra per validazione empirica sovereign-tier + decision-review profonda (uso produttivo capacita' Opus, no limit-anxiety).
+- **Conseguenze**: ADR-0023 resta Proposed (no periodo post-Max reale ancora); trigger/date shiftano +1mo. CLAUDE.md roadmap §AGGIORNAMENTO 2026-05-18 + "Priorita' modelli AI" date corrette. ADR-0023 §Addendum 2026-05-18.
+- **Classe-errore**: drift doc-vs-reality (deadline-fantasma), stessa famiglia Triangle/Sentience caught 2026-05-18. Lezione: date strategiche = re-verify, non ereditare.
+- **Azioni derivate**: CLAUDE.md + ADR-0023 addendum + questo entry. NO flip ADR-0023 status. Programma decision-review (A2 PILLAR reconcile -> B1 ADR-retrospective -> B2 compass) prosegue, deadline-pressure rimossa.
+
 ### Decisione 007 -- Risposte 6 questions BLOCKING harsh review (2026-05-09)
 - **Data**: 2026-05-09 mattino
 - **Titolo**: Eduardo ha risposto alle 6 questions BLOCKING/SIGNIFICANT/MEDIUM identificate da harsh review flow chart 2026-05-09 (`docs/reviews/flow-chart-harsh-review-2026-05-09.md`)
