@@ -756,6 +756,263 @@ system) + 8 anti-reference esplicite + ~14 museum card senza gioco esterno
 
 ---
 
+---
+
+## 12. Stile distillato & sistema design/contenuti
+
+> Ricostruzione 2026-05-18 da audit cross-source (3 explore agent paralleli,
+> Protocol 2). Fonti: vault `core/` (canonical), Game-Godot-v2 impl
+> (`tokens.gd`, `cinzel.tres`, `visual-screen-bible.md`), Game `docs/`,
+> Game-Database. File-cited, gap dichiarati, no fabbricazione.
+
+### 12.1 Stile distillato (fingerprint)
+
+#### Identita & naming
+
+| Dimensione | Valore canonical | Fonte |
+|------------|------------------|-------|
+| Nome progetto | **Evo-Tactics** -- co-op tactical RPG, 4-8 player vs antagonista. PEGI 16. Early Access -> Premium (no F2P) | vault `00F-ART_AUDIO_BUSINESS.md` §1 |
+| Antagonista | **Sistema** (mai chiamato "AI" -- entita' diegetica persistente) | vault `00F` §4.1; `visual-screen-bible.md` |
+| "Skiv" | **NON una specie letterale**: archetipo/shorthand player-facing EN. Es. "Dune Skiver" = `Arenavolux sagittalis` (IT primary "Predatore delle Dune"). Etimologia non dichiarata | vault `00E-NAMING_STYLEGUIDE.md` |
+| Naming specie | Code: Genus latinizzato Title Case 4-18char + epithet lowercase semantico. Player-facing: 2-3 parole, IT primary + EN alt. 84 specie canonical, 7 job, 4 archetipi | vault `00E §Regole formali` |
+| Naming biomi | kebab/snake ASCII descrittivo (`ferrous-badlands`, `caverna_sotterranea`). 9 shipping + 11 deferred. 6 class enum (arid/subterranean/wetland/upland/canopy/littoral) | vault `00E` + `41-ART-DIRECTION.md` |
+| Bias fonetico | Apex/Threat -> cluster duri (k,t,x); Keystone/Support -> sonoranti (m,n,l). Bias non regola | vault `00E §Regole formali` |
+
+#### Narrativa & tono
+
+- **Pattern A Sistema-centric** (attivo): Sistema = unico attore narrativo,
+  parla al player via Ink (5-8 knot/tier). Creature = **mute, anonime**
+  ("Wolf-03"), identita' emerge da trait+MBTI+comportamento.
+- **Tono modulato** per `sistema_pressure`: Calm -> Tense -> Apex
+  (`ai_profiles.yaml` campo `narrative_voice` opzionale).
+- **PEGI 16**: body-horror trait (denti seghettati, bleeding, fracture),
+  status mentali (panic/rage), antagonista distopico.
+- **Fase B post-EA** (deferred): hybrid Overlord (Sistema) + 2-4 Custodi
+  named (Descent-inspired). Non implementato.
+- Fonte: vault `00F` §4 + `02-PILASTRI.md` P5 + `visual-screen-bible.md` Screen 3.
+
+#### Tipografia / font
+
+Stack canonical (vault `42-STYLE-GUIDE-UI.md §Typography`):
+```
+--font-ui:   'Inter', 'Noto Sans', system-ui, sans-serif
+--font-mono: 'JetBrains Mono', 'Consolas', monospace
+```
+Scale TV-first (1080p @ 3m): xs 14 / s 16 / m 20 (default) / l 24 / xl 32 /
+xxl 48 / hero 72 px. **Min 16px legibile, NO weight <400** (illeggibile TV).
+
+Godot impl (`Game-Godot-v2 tokens.gd`): FONT_LABEL 12 / BODY 14 / H3 18 /
+H2 20 / H1 28 / DISPLAY 36 / HERO 56. Theme resource `cinzel.tres`
+(variant label/button/progressbar). **Nota onesta**: nessun .ttf "Cinzel"
+nel repo -- system font fallback; "Cinzel" = intento estetico serif
+rinascimentale, non font caricato. Scale Godot px != scale CSS (due
+sistemi, riconciliare se si unifica).
+
+#### Palette canonica
+
+**Funzionali universali** (10, vault `41-ART-DIRECTION.md`):
+Player `#4a8ad4` | Sistema `#d44a4a` | NPC recruit `#e8c040` | Selection
+`#f0f0f4` | AoE `#d44a4a80` | Path preview `#40d4a8` | Buff `#4ad488` |
+Debuff `#d4884a` | Crit flash `#f0d040` | Heal flash `#88d444`.
+
+**Surface dark** (vault `42-STYLE-GUIDE-UI.md`): bg-primary `#030912` /
+surface-soft `#0a1420` / elevated `#142030` / text-primary `#f2f8ff`
+(17.8:1) / text-secondary rgba(242,248,255,.7).
+
+**Biome matrix 9 shipping** (vault `41-ART-DIRECTION.md §Palette matrix`,
+dominante/accent/mood): savana ocra `#b8935a` | caverna basalt `#3d3d42`
+cyan-bio | foresta_acida poison `#5a7a3a` | foresta_miceliale fungal
+`#6b4a7a` | rovine_planari stone `#5e5a52` | frattura_abissale deep-blue
+`#0d1e3d` | reef teal `#1e6a7a` | abisso_vulcanico lava `#c83a1e` |
+steppe_algoritmiche steel `#6a6e78`. (11 biomi extended deferred post-MVP).
+
+**Ferrospora UI shell** (vault `42-STYLE-GUIDE-UI.md §Ferrospora tokens`,
+sampled 2026-05-16): teal `#3acde5` | mycelium `#cd52d2` | bronze-gold
+`#eedbae` | ground `#070707` | frame-gold `#f5e1aa`. **Finding**: sigil
+action-dock attack/defend/ritual = AI art painterly-gradient, NON flat
+token (no hex canonical -- design decision aperta, non valore nascosto).
+
+#### UI identity
+
+- **3 modi visivi** (`visual-screen-bible.md §Screen grammar`):
+  World-forming (void vivo, beat ritual 500-900ms) / Tactical (grid pulita,
+  overlay alto-contrasto, feedback 80-350ms) / Memory (battlefield dim,
+  portrait/voce, reveal 400-900ms).
+- **HUD hierarchy** (`41-ART-DIRECTION.md`): L1 Unit+HP (center, always) >
+  L2 grid+cover > L3 intents (overlay planning) > L4 HUD AP/PT/status
+  (edge) > L5 log (lateral) > L6 minimap (corner toggle).
+- **Motion** (`tokens.gd`): pulse .08 / quick .18 / normal .3 /
+  transition .5 / slow .7 / ritual .9.
+- **TV safe-zone**: padding >=5% viewport (>=54px @1080p), zero UI critica
+  outer 5%. Target MVP TV-1080p; 4K integer 2x.
+- **Pixel art**: 32x32 tile MVP, upscaling integer-only 2x/3x/4x.
+
+#### Audio identity
+
+SFX-only, **creature silent** (no VO -- comunicano via comportamento),
+Sistema narra via Ink (tono Calm/Tense/Apex). Mix default Music 70% /
+SFX 100% / Master 80%. MVP prototype freesound.org; post-EA asset pack
+commerciale. **Status DRAFT** (ADR-2026-04-18-audio-direction-placeholder,
+`creature-sfx-spec.md` draft, pitch convention TBD). Fonte: vault `00F` §3.
+
+#### Accessibility (gate canonical, vault `41-ART-DIRECTION.md`)
+
+Contrast body >=4.5:1 (WCAG AA), large >=3:1, critical >=7:1 (AAA target).
+Colorblind mode (shape+color), high-contrast (2px border, 90% opaque bg),
+3 scale font, screen-reader parity.
+
+### 12.2 Sistema design-doc & autorita
+
+**Stack autorita A0-A5** (Game `docs/planning/EVO_FINAL_DESIGN_SOURCE_AUTHORITY_MAP.md`).
+Nota: la sez. 11 citava genericamente "A1-A3 freeze"; la gerarchia precisa e':
+
+| Liv | Autorita | Governa | Precedenza |
+|-----|----------|---------|------------|
+| **A0** | `docs/governance/*`, `docs_registry.json` | Path file, frontmatter, status, canonical-vs-storico | Vince su planning + convenzioni locali |
+| **A1** | `docs/hubs/*`, `docs/combat/round-loop.md`, `docs/adr/*` | Boundary architetturali, contratti, runtime scope | Vince su freeze se boundary contraddetto; non override data |
+| **A2** | `data/core/*`, `packs/.../data/*`, `packages/contracts/schemas/*` | Verita' meccanica/numerica/schema, validazione, tuning | Vince su doc descrittivi |
+| **A3** | `docs/core/90-FINAL-DESIGN-FREEZE.md` | Sintesi prodotto, scope shipping, priorita' | Vince su roadmap/planning |
+| **A4** | `AGENTS.md`, `.claude/*`, `CLAUDE.md`, `SAFE_CHANGES.md` | Modo operativo agent, DoD, guardrail | Governa "how" non "what" |
+| **A5** | Canvas, appendici, playtest notes, research backlog | Contesto, intento, baseline | Solo informa; perde vs A0-A4 |
+
+Principio: *governance colleziona, ADR delimita, YAML prova, freeze decide
+prodotto, agent-doc esegue, storico ispira ma non governa.*
+
+**Serie core numerata** (`docs/core/NN-*.md`, Game canonical + vault shadow).
+Indice essenziale (A0 registry):
+
+| Doc | Scopo |
+|-----|-------|
+| 00-GDD_MASTER / 00-SOURCE-OF-TRUTH | Master index + sorgente unificata (vision+loop+ecosystem) |
+| 00B/00C/00D/00E/00F | Promotion matrix / where-to-use / engines-as-features / **naming styleguide** / art-audio-business |
+| 01-VISIONE / 02-PILASTRI / 03-LOOP | Vision + 6 pilastri + session loop |
+| 10-SISTEMA_TATTICO / 11-REGOLE_D20_TV | Combat ruleset d20/AP/MoS/PT-PP-SG + TV rulebook |
+| 15-LEVEL_DESIGN / 17-SCREEN_FLOW | Map/encounter + UX flow |
+| 20-SPECIE_E_PARTI / 22-FORME_BASE_16 / 24-TELEMETRIA_VC | Specie/morph-slot + 16 forme MBTI + VC scoring |
+| 25-REGOLE_SBLOCCO_PE / 26-ECONOMY / 27-MATING_NIDO / 28-NPC_BIOMI_SPAWN | Unlock PE/PI + economy + mating/nido + Director/spawn |
+| 30-UI_TV_IDENTITA / 40-ROADMAP / 41-ART-DIRECTION / 42-STYLE-GUIDE-UI / 43-ASSET-SOURCING / 44-HUD-LAYOUT | UI TV + roadmap + arte + style-guide + asset sourcing + HUD ref |
+| 51-ONBOARDING-60S | First-match 60s UX |
+| **90-FINAL-DESIGN-FREEZE** | **A3 supreme** -- scope shipping, freeze, validation gates |
+
+**Governance machinery (A0)** -- `Spaces/Dev/Evo-Tactics/governance/` +
+Game `docs/governance/`:
+- `docs_registry.json` -- SSoT inventory (path/title/status/owner/workstream/
+  last_verified), CI gate ogni doc -> entry
+- `docs_metadata.schema.json` -- JSON Schema frontmatter (status/workstream/
+  language enum), linter CI
+- `workstream_matrix.json` -- 7-8 workstream (flow/atlas/backend/dataset-pack/
+  ops-qa/combat/cross-cutting/incoming), owner + exit-criteria
+- `GLOSSARY.md` -- vocabolario canonico IT+EN
+- `Q-001-DECISIONS-LOG.md` -- tracker approvazioni Tier1/2/3 + outcome+commit
+- `QUARANTINE.md` / `legacy_index_mapping.md` / `master_realign_plan.md` --
+  doc deprecati / mapping storico->active / piano migrazione
+
+**Decision recording** -- 3 convenzioni ADR coesistono:
+- vault `adr/ADR-YYYY-MM-DD-<slug>.md` (~44, date-named, immutabile)
+- Game `docs/adr/` (date-named, sync con vault, cross-ref in freeze/hubs)
+- codemasterdd `docs/adr/NNNN-*.md` (numerati, infra non game-design)
+- Museum-first: `docs/museum/cards/` cattura intento/alternative (A5)
+
+**Godot DoD/safe-change gate** (`Game-Godot-v2 .claude/`):
+- `SAFE_CHANGES.md`: 🟢 safe (doc, refactor <50LOC, test, component) /
+  🟡 checkpoint (round flow, initiative, VC, schema, endpoint, scope-cut) /
+  🔴 hard-gate (`.github/workflows`, `migrations/`, `packages/contracts/`,
+  `services/generation/`, `.env`)
+- `TASK_PROTOCOL.md`: 7-fase (orient->min-read->map->analysis->plan->
+  execute->DoD-verify); DoD = prettier + governance + AI test + smoke
+- Godot rispetta canon Game via reference (no duplicazione file)
+
+**Consistency**: CI governance gate (`tools/check_docs_governance.py`:
+registry completeness + frontmatter + stale + orphan) + design-watcher
+agent (drift freeze/ADR/YAML/schema -> Q-001) + dual-track canonical/storico
++ frontmatter lifecycle (status enum + review_cycle_days).
+
+### 12.3 Pipeline generazione & gestione contenuti
+
+#### Dove vive il content (canonical + formato)
+
+| Content | Sorgente canonical | Formato | Validato da | ETL target Godot |
+|---------|--------------------|---------|-------------|-------------------|
+| Specie lifecycle | Game `data/core/species/*_lifecycle.yaml` | YAML v1.7 | `validate_species_v1_7.py` | `data/lifecycle/lifecycles.json` (15 specie) |
+| Trait | Game `data/core/traits/active_effects.yaml` | YAML (+JSON catalog derivato) | foodweb/trophic validators | `data/traits/active_effects.json` (458) |
+| Biomi | Game `data/core/biomes.yaml` | YAML | `validate_bioma_v1_1.py` | `data/biomes/biomes.json` |
+| Foodweb | Game `packs/.../data/foodwebs/*.yaml` | YAML | `validate_foodweb_v1_0.py` | (no auto-export) |
+| NPG/Director | Game `packs/.../data/npg/*.json` | JSON | schema | (se serve) |
+| Taxonomy CMS | Game-Database `server/prisma/schema.prisma` | Prisma->PostgreSQL | AJV (import-taxonomy) | sync via import script |
+| Swarm artifact | Dafne `camel-agents/artifacts/*.json` | JSON (coherence+payload+confidence) | review manuale | -> Game (0 auto-integrated) |
+
+#### Generazione
+
+- **Director / NPG** (Game `docs/core/28-NPC_BIOMI_SPAWN.md` +
+  `apps/mission-console/src/state/generator/`): da biome context -> NPC
+  group (power_range, group_size, role_weights), consuma `trophic_roles.yaml`,
+  valida vs `species.yaml` global_rules.
+- **Dafne specialists** (swarm): trait/biome/species/lore curator generano
+  artifact JSON con `confidence` 0-1 (>=0.9 auto-integrabile / 0.5-0.9
+  review / <0.5 reject) + `coherence_check` (deve referenziare file esistenti).
+- **AI narrative** (Game `apps/backend/services/narrative/`):
+  briefingVariations / enneaVoice / innerVoice / mbtiInsights / qbnEngine
+  (Ink-based). Personality synth Enneagram+MBTI da `tools/py/modules/personality/`.
+
+#### Gestione / authoring
+
+- **Game-Database dashboard** (`apps/dashboard/src/features/`): CRUD React
+  trait/specie/biome (slug auto, dataType, range, synergies, conflicts).
+  E2E `e2e/traits.crud.spec.ts`. Storage Prisma->PostgreSQL + AuditLog.
+- **Trait scheda operativa** (`README_HOWTO_AUTHOR_TRAIT.md` +
+  `docs/traits_scheda_operativa.md`): definisci slug+dataType, ref
+  `trait_reference.json` per label condivise.
+- **Validation gate** (Game `packs/evo_tactics_pack/`):
+  foodweb.py (edge predation/scavenging/detritus) + trophic_roles.py
+  (keystone/dominant/engineer/...) + schema validators per versione +
+  `validate_package.py` (all-in-one -> `out/validation/*.json`).
+  No playtest valido finche' Balancer pass (placeholder 0 -> verificato).
+
+#### Flusso cross-repo content
+
+```
+[Authoring] Game-Database dashboard CRUD  --\
+                                             > Prisma/PostgreSQL (canonical CMS)
+[Authoring] Game data/core/*.yaml  --------/        |
+                                                    | import-taxonomy.js
+                                                    v
+   Game-Database  --(npm run evo:import --repo Game)--> Postgres + AuditLog
+        ^                                                    |
+        | legge packs/evo_tactics_pack/docs/catalog/         |
+        |                                                    v
+   Game data/core/ (YAML A2 truth)  <-- runtime fallback OR GET /api/traits/glossary
+        |
+        | tools/etl/*.py (lifecycle/species/biome/ai_profiles yaml->json)
+        v
+   Game-Godot-v2 data/*.json  --> GDScript loader scripts/data/*.gd --> runtime
+```
+
+- **Game-DB <- Game** (build-time, `import-taxonomy.js`): legge
+  `packs/evo_tactics_pack/docs/catalog/` (species/trait/biome/ecosystem),
+  AJV validate, batch 50, upsert by slug -> Postgres + AuditLog.
+- **Game-DB -> Game** (runtime opt-in): `GET /api/traits/glossary`,
+  `GAME_DATABASE_ENABLED=true`.
+- **Game -> Godot** (ETL per sprint, `Game-Godot-v2 tools/etl/*.py`):
+  `lifecycle_yaml_to_json.py` (15 specie: anguis_magnetica, dune_stalker,
+  leviatano_risonante, ...), `species/biome/ai_profiles_yaml_to_json.py`.
+  Output JSON -> GDScript loader `scripts/data/lifecycle_catalog.gd`.
+
+#### Gap & step manuali (dichiarati)
+
+1. **Swarm artifact integration**: 223+ generati, **0 auto-integrati**
+   (review Eduardo manuale, copia in target_files, commit). No re-validate
+   post-merge.
+2. **Godot ETL manuale per sprint**: no CI continuo, dev lancia
+   `python tools/etl/*.py` dopo update content Game.
+3. **Game-DB <-> Game one-way**: import legge Game->Prisma; no reverse
+   sync Prisma->file. Authoring dashboard ma file restano in catalog.
+4. **Trait dual-source**: `active_effects.yaml` (canonical) +
+   `catalog/trait_*.json` (derivato). No SSoT unico -- validare entrambi.
+5. **Cross-biome trait inheritance non documentato**:
+   `global-trait-keeper.yaml` + per-biome keeper, merge strategy unclear.
+
+---
+
 > Documento completo. Fonti file-cited verificate 2026-05-18. Path strutturali
 > stabili; HEAD/PR/sprint-status volatili -- ri-verifica vault `core/` + Game
 > `docs/planning/` + `gh pr list` prima di azioni puntuali.
