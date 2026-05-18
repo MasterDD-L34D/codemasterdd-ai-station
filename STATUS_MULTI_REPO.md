@@ -519,8 +519,32 @@ Eduardo claude.ai session ha prodotto 3 doc DF-integration (RECONCILIATION-MASTE
   - Triangle Strategy Proposal A (MBTI phased reveal) **GIÀ SHIPPED 2026-04-25** (`apps/backend/services/mbtiSurface.js` ~140 LOC, 12/12 test, BACKLOG OD-013, card M-2026-04-25-009 reuse_path eseguito)
   - Sentience tier backfill 15/15 lifecycle **SHIPPED #2262**
   - `docs/research/triangle-strategy-transfer-plan.md` esiste dal 25/04 (65KB)
-- **Stato reale**: NON "rescue in corso". Sprint S1 (Triangle A) = già fatto, NON rilanciare. Pattern L-025/L-030/anti-pattern #8 (snapshot stale claude.ai vs Game ground-truth daily-ship).
-- **Next (Eduardo-triage)**: re-scope DF plan vs BACKLOG reale; verificare se Proposal B/C + Worldgen population-tick + Sentience A4-residue sono genuinamente open prima di schedulare.
+- **Stato reale**: NON "rescue in corso". Pattern L-025/L-030/anti-pattern #8 (snapshot stale claude.ai vs Game ground-truth daily-ship).
+
+### Re-scope ground-truth verificato (gh api origin/main, 2026-05-18)
+
+| Item plan | Claim plan | Ground-truth | Evidenza | Verdetto |
+|-----------|-----------|--------------|----------|----------|
+| Triangle Strategy **Proposal A** | rescue ROI 5/5 ~6h | **SHIPPED 2026-04-26** | `apps/backend/services/mbtiSurface.js`, 12/12 test, OD-013 Path A, PR #1848 | **DROP — fatto** |
+| Triangle Strategy **Proposal B** | proposta ~4h | **SHIPPED 2026-04-26** | `data/core/personality/mbti_axis_palette.yaml` + `mbtiPalette.js` + 26/26 test, OD-013 Path B | **DROP — fatto** |
+| Triangle Strategy **Proposal C** (recruit gating) | ~5h post-recruit | **OPEN ma gated** | OD-013 "Proposal C deferred a OD-001 Path A"; no recruit-gate service | KEEP (gated OD-001/M-007) |
+| Sentience tier backfill 15/15 | rescue ~3h | **SHIPPED #2262** | BACKLOG "A4 sentience backfill 15/15 lifecycle SHIPPED" | **DROP — fatto** |
+| Sentience A4-residue 30 species | — | **PENDING gated** | BACKLOG "A4-residue 30 species heuristic PENDING gated master-dd" | KEEP (master-dd verdict) |
+| Sistema intelligence S7/S8 | nuovo state-machine | **PARTIAL** | `services/ai/sistemaTurnRunner.js` + `declareSistemaIntents.js` esistono; no standalone state-machine/persistence | KEEP (formalizzazione, engine c'è) |
+| A6 starter_bioma frontend label | — | **PARTIAL ~30 LOC** | BACKLOG A6 backend ✅, frontend label gap | KEEP (low-lift) |
+| S2 eventlog / S3 population-tick / S4-S6 identity / S9-S10 chronicle | "rescue/orphan esistente" | **greenfield non-costruito** | nessun `services/eventlog|worldstate/population_tick|identity|chronicle` | RE-FRAME: feature nuove normali, NON "rescue", competono in BACKLOG |
+
+**Errore-chiave premessa**: i doc framing "FORGOTTEN/orphan/rescue high-ROI 5/5". Realtà: Triangle A+B = già shipped; Sentience-backfill = shipped; il resto = greenfield ordinario (non orphan da rescuare). I doc restano validi come ragionamento L0-L5 + modello identità, NON come task-source.
+
+### Genuinely-open azionabile (ranked, post ground-truth)
+
+1. **Triangle Proposal C** recruit-gating MBTI — gated OD-001/M-007 (no action finché mating closure)
+2. **Sistema S7 state-machine formalization** — engine esiste (`sistemaTurnRunner.js`), manca struttura stato persistente. ~3-5h audit+design se perseguito
+3. **A4-residue 30-species heuristic** — PENDING gated master-dd verdict (decisione Eduardo prima)
+4. **A6 frontend label** starter_bioma — ~30 LOC UI, low-lift standalone ship
+5. Greenfield DF (eventlog/population-tick/identity/chronicle) — SE voluti: ticket BACKLOG normali, gate GREEN/YELLOW, NON priorità "rescue"
+
+**Next Eduardo**: nessun "Sprint S1". Triage 1-4 sopra. Merge PR #94/#2326/#160. Decidere se greenfield DF entra in roadmap reale (M2+ feature, non rescue).
 
 ---
 
