@@ -539,7 +539,7 @@ Eduardo claude.ai session ha prodotto 3 doc DF-integration (RECONCILIATION-MASTE
 ### Genuinely-open azionabile (ranked, post ground-truth)
 
 1. **Triangle Proposal C** recruit-gating MBTI — gated OD-001/M-007 (no action finché mating closure)
-2. **Sistema S7 state-machine formalization** — engine esiste (`sistemaTurnRunner.js`), manca struttura stato persistente. ~3-5h audit+design se perseguito
+2. **Sistema S7 state-machine formalization** — audit DONE 2026-05-18. Gap: `sistemaTurnRunner.js`+`declareSistemaIntents.js` stateless cross-session, no Prisma Sistema model. **ADR DRAFT filed [Game PR #2328](https://github.com/MasterDD-L34D/Game/pull/2328)** (Option A full ~9h / B pilot ~3-4h / C defer). Verdict master-dd pending — NO code finche' deciso
 3. **A4-residue 30-species heuristic** — PENDING gated master-dd verdict (decisione Eduardo prima)
 4. **A6 frontend label** starter_bioma — ~30 LOC UI, low-lift standalone ship
 5. Greenfield DF (eventlog/population-tick/identity/chronicle) — SE voluti: ticket BACKLOG normali, gate GREEN/YELLOW, NON priorità "rescue"
