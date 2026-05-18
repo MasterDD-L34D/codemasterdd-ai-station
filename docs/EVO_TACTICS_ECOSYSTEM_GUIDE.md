@@ -641,3 +641,90 @@ freeze), Rust CLI rewrite (won't, no perf problem).
 7. **Due layer doc (museum vs vault)**: framing leggermente diverso per stesse
    ispirazioni (es. FFT). Non contraddizione -- complementari, ma verificare
    coerenza quando si wira una meccanica (museum = alternative, vault = canonical).
+
+### 11.9 Sweep esaustivo 2026-05-18 (correzione + ispirazioni mancanti)
+
+> Sezioni 11.1-11.8 erano sintesi parziale: la prima passata mancava ~16
+> titoli + tutte le anti-reference. Sweep esaustivo (lettura di TUTTE le ~45
+> museum card + grep vault completo) qui sotto. Additive, non riscrive sopra
+> (no-clobber museum-style). Correzioni dichiarate apertamente.
+
+**Correzioni a 11.2:**
+
+- **Triangle Strategy** (Nintendo 2022) -- ERA MANCANTE. Solo Game-museum
+  (`docs/museum/cards/personality-triangle-strategy-transfer.md`,
+  M-2026-04-25-009, **5/5, FORGOTTEN**). NON in vault (confermato assente).
+  Cosa ci piaceva: MBTI Transfer Plan, 3 proposte concrete P4 closure --
+  (A) phased reveal Disco-style, (B) dialogue color codes diegetic,
+  (C) recruit gating by MBTI threshold. Mai citato in BACKLOG/OD: dimenticato.
+  Map: vcScoring.js + formSessionStore.js + mbti_forms.yaml. Stato: MUSEUM.
+- **Descent** -- framing prima passata "Descent 1997 reactive-biome" NON
+  corroborato dallo sweep. Realta' verificata: **Descent: Road to Legend**
+  (FFG board game) = reference narrative Fase 2 (`core/00F-ART_AUDIO_BUSINESS.md`
+  §4.3-4.4 "Pattern B Overlord + Custodi named, Descent ibrido" -- quote vault
+  diretta) + **"dadi Descent-like"** pattern in `docs/core/11-REGOLE_D20_TV.md`
+  (d20 + spese PT/PP come metafora dice visuale co-op TV). NO Descent-1997
+  reactive-biome confermato: era interpretazione primo agent, ritirata.
+  Stato: DEFERRED (narrative Fase 2) + SHIPPED (dice metaphor TV core).
+
+**Indie research cluster (museum cards M-2026-04-27-021..031) -- mancante in 11.2:**
+
+| Gioco | Cosa ci piaceva | Come intendiamo farlo | Card | Score |
+|-------|-----------------|------------------------|------|-------|
+| **Cogmind** (2015) | Tooltip stratificati base+expand, trade-off espliciti per componente | trait cost_ap -> multi-cost ~4-6h. "identita = equip + trade-off" | `ui-cogmind-tooltip-stratificati-quick-win.md` | 4/5 |
+| **Backpack Hero** (2023) | Spatial inventory adjacency (Tetris bonus posizione) | 2+ trait stesso organ_system -> bonus passivo, post-S6 | `indie-backpack-hero-spatial-inventory.md` | 3/5 |
+| **Astrea: Six-Sided Oracles** (2023) | Dadi contaminati/puri = character sheet visibile | VC axes come dadi facce contaminate/pure, defer OD-013 | `indie-astrea-dice-purification.md` | 3/5 |
+| **Slay the Princess** (2023) | 12-knot branching state memory ("il gioco sa come ho giocato") | narrativeRoutes.js debrief knot per mbti_group | `indie-slay-princess-branching-state.md` | 3/5 |
+| **Pentiment** (2022) | Job voice + confessionals (job colora comunicazione) | job-variant briefing ink (35+ stitch, D4 bottleneck) | `indie-pentiment-job-voice-confessionals.md` | 3/5 |
+| **Inscryption** (2021) | Camera reveal meta-frame escalating (Sistema rivela dati progressive) | objectiveEvaluator.js esposto post-MVP, dossier tracker | `indie-inscryption-camera-reveal-meta.md` | 2/5 |
+| **1000xRESIST** (2024) | Memory layered POV (briefing cita cosa successo "volta scorsa") | previousBiomeLoss store + conditional ink, post-Bundle B | `indie-1000xresist-memory-layered-pov.md` | 3/5 |
+| **Loop Hero** (2021) | Minimap campaign visual emergence (hex illumina post-scenario) | briefing hex_revealed array 1-3/scenario, post-D5 | `indie-loop-hero-minimap-visual-emergence.md` | 3/5 |
+| **Cocoon** (2023) | Biome rules layer (1-2 regole tattiche uniche/bioma, combinano) | biome_rules.yaml ext, biomeSpawnBias rework, post-P3 | `indie-cocoon-biome-rules-layer.md` | 3/5 |
+| **Tunic** (2022) | Manual-as-puzzle (codex sbloccabile, lingua gliffica deduci) | diegetic knowledge Thought Cabinet ext, subset decipher ADOPT ~5h | `indie-tunic-manual-puzzle-broader.md` | 2/5 |
+
+Tutte stato MUSEUM/DEFERRED (curated, non shippate).
+
+**Reference core/GDD aggiuntive -- mancanti in 11.2:**
+
+| Gioco | Cosa ci piaceva | Fonte | Stato |
+|-------|-----------------|-------|-------|
+| **Wesnoth** (GPL) | Campaign dialogue inline, leader named = unita giocabile, `{QUANTITY}` scaling (Easy 0.7x/Norm 1.0x/Hard 1.3x). **Validatore pattern P2** (evoluzione = advancement tree, non sim) | vault `00-SOURCE-OF-TRUTH.md` §15.4-15.5; `00F` §4.4 | Research-validated, narrative Fase 2 |
+| **Fire Emblem** | Square grid tactics positioning depth (ref comparativo per scelta hex) | vault `00-SOURCE-OF-TRUTH.md` §14.1 | Design-known (hex preferito) |
+| **AncientBeast** (GPL) | Hex 16x9 grid, multi-tile creature, coord axial/cube | vault `00-SOURCE-OF-TRUTH.md` §14.1-14.3 | **ADR-2026-04-16 DECIDED** (hex axial) |
+| **Don't Starve** | Silhouette forte + palette limitata (16-24 col/biome) | vault `41-ART-DIRECTION.md` reference positivi | Art-direction APPROVED |
+| **OpenRA** (GPL) | Mission briefing + campaign scripting Lua, objective narrativi | vault `00-SOURCE-OF-TRUTH.md` §15.2; `00F` §4.4 | Schema-integrated (briefing_ink) |
+| **FFT War of the Lions** (2007) | Named companion dialogue + generic recruit, acted scenes | vault `00F` §4.4 | Deferred Fase 2 |
+| **Ink / inkle** (engine) | Multi-speaker knot dialogue, branching state | vault `00F` §4.2,§4.4 (inkjs gia' in uso) | **IMPLEMENTED** (Fase 1 minimal) |
+| **80 Days / Sorcery** (inkle) | Gold standard Ink multi-speaker, no-VO emphasis | vault `00F` §4.4 | Reference-validated |
+
+**Anti-reference (cosa NON vogliamo essere) -- ERA TUTTO MANCANTE:**
+
+Fonte: vault `41-ART-DIRECTION.md` §Direzione sintetica + `00F-ART_AUDIO_BUSINESS.md` §1.2,§4.5.
+
+| Anti-reference | Perche' rifiutato |
+|----------------|-------------------|
+| Disney cartoon | No cute -- creature bio-plausibili, body-horror trait |
+| Pokemon-style cute | Incompatibile PEGI 16 + creature mature |
+| Full-3D realistico | Budget indie, TV pixel clarity > fidelity |
+| Anime shonen | Taglio adulto, no narrativa serializzata |
+| Military sci-fi polished | Contro tono bio-plausibile + autonomia creature |
+| Descent puro (Heroes fissi) | Named heroes contraddicono creature modulari (creature != player) |
+| Pattern C (Player-named Commander) | Ownership si ma caratterizzazione generica, anchor debole |
+| Pattern D (Ramza-light FFT single-POV) | Single protagonist contraddice co-op ownership, costo lineare alto |
+
+**Negative results (cercati esplicitamente, CONFERMATI assenti):**
+Darkest Dungeon, XCOM core series (solo "Long War 2" come analog convergenza P6),
+Pikmin, Pokemon (come ref positivo -- solo anti-ref), Monster Hunter, Battle
+Brothers, Halfway, Resident Evil, Don't Starve assente vault-museum (solo
+art-direction vault). Nessun "Descent: Journeys" board game (solo Road to Legend).
+
+**Conteggio finale**: ~31 titoli unici citati (8 pillar-tier + 14+ museum
+indie-cluster + ~8 core/GDD narrative-tier) + 8 anti-reference esplicite.
+Tutte le ~45 museum card lette (31 con citazione gioco esterno, 14 senza =
+worldgen/genetics interni).
+
+**Discrepanza cross-layer da sapere**: Triangle Strategy = museum-only (NON
+vault). Don't Starve / AncientBeast / Fire Emblem / OpenRA / Wesnoth = vault
+core (framing diverso o assenti in museum). Quando wiri una meccanica:
+museum = catalogo alternative + ROI, vault = decisione canonical. Se diverge,
+vault `core/` (autorita' A1-A3, freeze A3) vince per scope shipping.
