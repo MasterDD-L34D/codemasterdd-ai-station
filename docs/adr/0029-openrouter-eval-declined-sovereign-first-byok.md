@@ -1,6 +1,7 @@
 # ADR-0029 -- OpenRouter eval declined for sovereign-first BYOK pattern
 
 **Status**: Proposed 2026-05-13 pomeriggio (post harsh-reviewer P2 #7 trigger Eduardo decision "si" + autoresearch doc-only)
+STATUS-CHECK: 2026-06-13 | trigger: >$5/mese x2 mesi consecutivi OR >8 wrapper | default-if-elapsed: Accept (decline regge se nessun trigger)
 
 **Context**: harsh-reviewer (PR #80+#81 cluster review 2026-05-13) ha sollevato P2 #7: "OpenRouter NON valutato -- 6 wrapper potrebbero essere 1 wrapper unificato (`aider-router --model openrouter/...`) con OpenAI-compatible single endpoint verso N provider con 1 key. Sostituirebbe 5 wrapper cloud con 1, unificando privacy guard, key handling, error mode."
 
