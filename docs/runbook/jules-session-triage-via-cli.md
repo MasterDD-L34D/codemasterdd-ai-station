@@ -50,6 +50,15 @@ gh api repos/<owner>/<repo>/contents/<file> --jq '.content' | base64 -d \
 | Path sensibile (`services/generation/`, hard-gate, freeze-active) | **Eduardo-review**, mai auto |
 | Premessa task falsa (grep smentisce) | **CLOSE + flag premise-false** |
 
+> **R3-bis (ADR-0034 addendum 2026-05-18, vincolante).** Verdetto
+> `CLOSE`/already-shipped/task-moot → **archive-only via API, MAI
+> `sendMessage`** (nessun messaggio di cortesia "superseded": risveglia
+> la sessione = vettore backfire #2294/#2313, zero valore su sessione
+> moot — evidenza empirica ciclo 1, L-2026-05-031). `sendMessage` SOLO
+> su sessione genuinamente-open per scope-correction. Sequenza:
+> archive PRIMA; post-archive ri-GET + conferma `archived=true`; se
+> torna attiva → R4 stop+flag, NON ri-messaggiare.
+
 ## Output
 
 Tabella per-sessione: `ID | task | ground-truth | verdetto`. Consegna a

@@ -44,16 +44,14 @@ Repo: MasterDD-L34D/Game · Awaiting: 8 (CLI/API ground-truth).
 `11590677343400081211` `6598152909540790480` `9814502162186952723`
 `9784941994069978251` `5423761051988755133` `7022674166615398479`
 
-### RESPOND scoped (R3 anti-backfire) prima di archiviare #4/#5/#6
-Solo informativo, zero scope-explosion risk. Testo identico-pattern:
-
-```
-This task is already addressed in origin/main (the referenced Codex fix
-is present). No code change is needed; the rework is redundant. Closing
-this session as superseded. If you believe a residual gap exists, open a
-NEW narrowly-scoped session citing the exact missing line -- do NOT
-expand scope here.
-```
+### ~~RESPOND scoped prima di archiviare #4/#5/#6~~ — SUPERATO da R3-bis
+> **DESIGN DIFETTOSO, falsificato in exec (SDMG/Protocol-7: adottato non
+> difeso).** `sendMessage` "superseded" su sessione moot la RIATTIVA
+> (9784/5423/7022 -> IN_PROGRESS/PAUSED, archived non tenuto al 1 colpo)
+> = vettore backfire #2294/#2313, zero valore. **R3-bis** (ADR-0034
+> addendum 2026-05-18 + L-2026-05-031): sessione moot/already-shipped =
+> **archive-only, MAI sendMessage**. Recovery applicato: re-archive ->
+> archived=True su tutte 3, PAUSED pre-output (R4 intercettato).
 
 ### DEFER x2 (#7/#8) -- NESSUNA azione auto
 `3185792447598546850` `14605750167862575595`: PR gia' merged ma path
@@ -75,3 +73,19 @@ Dashboard "Top suggestions" Game = code-health `services/generation/*`.
   corretto = approve esplicito in chat per ciclo = autorizzazione. Linea
   122 (sendMessage, sessione precedente) stessa classe -> decisione
   consistenza Eduardo. Finche' non risolto: exec batch = manuale Eduardo.
+
+## Exec result — ciclo 1 (2026-05-18, Eduardo "approvo esecuzione")
+
+- **ARCHIVE x6 DONE** (archived=True verificato): 11590677343400081211 ·
+  6598152909540790480 · 9814502162186952723 (AWAITING) ·
+  9784941994069978251 · 5423761051988755133 · 7022674166615398479 (PAUSED).
+- **DEFER x2 INTATTE**: 3185792447598546850 · 14605750167862575595
+  (archived=False, freeze, Eduardo-review).
+- **3 sendMessage = BACKFIRE** (R3-bis lesson): hanno riattivato le
+  sessioni; recovery re-archive OK, 0 nuove PR (R4 intercettato pre-danno).
+- **API verificata**: `POST /v1alpha/sessions/{id}:archive` body `{}` =
+  soft-flag `archived:true` (sessione non distrutta, PAUSED). settings.json
+  standing entries RIMOSSE (P0-3); exec autorizzato via approve-in-chat
+  per-ciclo (modello ADR-0034:15 funzionante).
+- **Net**: 8/8 sessioni gestite correttamente; design RESPOND-then-archive
+  falsificato e sostituito da R3-bis. SDMG: lezione, non vittoria.
