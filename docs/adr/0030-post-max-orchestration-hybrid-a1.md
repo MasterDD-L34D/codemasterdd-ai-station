@@ -2,8 +2,8 @@
 
 > *TL;DR: Eduardo realization 2026-05-15 mattina: sovereign post-Max ADR-0015 scenario A è INCOMPLETO — copre solo code-editing tier (Aider/OpenCode), NON copre orchestration + reasoning + methodology + sub-agents + skills layer fornito da Claude Code desktop. Eduardo usage 75% Max settimanale = volume incompatibile con free-tier-only. Autoresearch deep ha identificato meridian + opencode-with-claude plugin che bridge official Anthropic SDK a OpenCode = preserva methodology + Pro subscription $20/mo. Decisione: **Hybrid A1** = CC Pro $20/mo + Meridian + OpenCode (orchestration heavy) + Gemini CLI free 1000 req/day (routine fallback) + OpenRouter (emergency pay-per-use). Cost realistico: $240-600/anno = ADR-0015 target $50/anno VIOLATED + amendment necessario.*
 
-- **Status**: Proposed (2026-05-15 mattina)
-- **Data**: 2026-05-15
+- **Status**: **Accepted 2026-05-18** (pivot sovereign->hybrid-paid ratificato esplicitamente da Eduardo — vedi DECISIONS_LOG Decisione 009). Originale Proposed 2026-05-15 mattina.
+- **Data**: 2026-05-15 (P) -> 2026-05-18 (A)
 - **Decisore**: Eduardo Scarpelli
 - **Type decisione**: architectural post-Max strategy + financial commitment
 - **Supersedes**: parziale ADR-0015 scenario A (full-sovereign $0-50/anno target unrealistic at Eduardo usage)

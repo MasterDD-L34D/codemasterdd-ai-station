@@ -2,7 +2,9 @@
 
 > *TL;DR: post Claude Max (scadenza 19/05/2026), transizione a stack sovereign Ollama+Claude Code senza OAuth con fallback OpenRouter pay-per-use, target €60-180/anno invece di €2400. Trade-off: minor capability frontier, validazione empirica richiesta in Fase 6.*
 
-**Status**: Accepted
+> ⚠️ **AMENDMENT 2026-05-18 (pivot accettato da Eduardo)**: il target sovereign-$0-50/anno e' **ufficialmente RITIRATO**. ADR-0015 amendment 15/05 lo aveva dichiarato "VIOLATED by realism"; **ADR-0030 (Hybrid A1, Accepted 2026-05-18) lo supersede**: nuovo modello = Pro $20/mo + Meridian + OpenCode + Gemini-CLI-free + OpenRouter-overflow, target realistico **$240-600/anno**. La filosofia sovereign-first (locale-prioritario, no-lock-in, multi-provider) RESTA valida come *principio*; il *numero* $0-50 e' morto. Vedi ADR-0030 + DECISIONS_LOG Decisione 009.
+
+**Status**: Accepted (target $0-50/anno superseded-by-ADR-0030 2026-05-18; filosofia sovereign-first invariata)
 **Data**: 2026-04-20
 **Decisore**: Eduardo Scarpelli
 **Tipo decisione**: strategica (lungo termine, budget, filosofia)

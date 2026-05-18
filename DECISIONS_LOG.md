@@ -8,7 +8,7 @@
 
 | # | Topic | Status | Data | Decisione operativa derivata |
 |--:|-------|--------|------|------------------------------|
-| 0001 | Sovereign AI strategy | Accepted (timeline parzialmente superata da 0014) | 2026-04-20 | Target $0-50/anno; Fasi 1-3 strategiche invariate |
+| 0001 | Sovereign AI strategy | Accepted (target $0-50 **SUPERSEDED-by-0030** 2026-05-18; filosofia sovereign-first invariata) | 2026-04-20 | ~~Target $0-50/anno~~ -> Hybrid A1 $240-600/anno (ADR-0030). Principio locale-first/no-lock-in invariato |
 | 0002 | Workstation naming CodeMasterDD | Accepted | 2026-04-19 | Label "Lenovo AI Station" → "CodeMasterDD AI Station" |
 | 0003 | Node 24 vs 22 | Accepted | 2026-04-19 | Node 24 LTS vanilla, `nvm-windows` deferred YAGNI |
 | 0004 | Ollama RTX 5060 config | Accepted (partial, `num_ctx` superseded da 0012) | 2026-04-20 | FA=1, KV q8_0, MAX_LOADED=1, ctx 8192 default |
@@ -30,14 +30,17 @@
 | 0020 | Silent-fail Python guardrail (extension pre-commit) | **Accepted** | 2026-04-25 | Pre-commit hook globale Layer 2: bare `except:` + `except: pass` one-liner blocked. Bypass: `# silent-ok`. PR #1 mergeato. |
 | 0021 | Multi-client instruction files (AGENTS.md + Codex anti-confusion) | **Accepted (early, n=1, ratification check 2026-06-07)** | 2026-05-07 | AGENTS.md preamble Codex sandbox-aware + CLAUDE.md autoritativo + encoding ASCII-first nuovi doc. PR #2 mergeato. Trigger: branch `codex/structural-reset` REJECTED per false-premise sandbox-confusion. Status flip Accepted (early) 2026-05-09 via ADR-0010 addendum. |
 | 0022 | OpenCode tool-use model routing (tier dedicato vs Aider) | **Accepted (early, n=3, ratification check 2026-06-09)** | 2026-05-08 (P) -> 2026-05-09 (A early) | Tier OpenCode-specifico distinto da Aider tier ADR-0008. Default `ollama/qwen3-coder:30b` MoE A3B (3/3 PASS empirico). NON usare con OpenCode: Qwen 2.5 Coder family (raw JSON tool call) + cloud free 8B-70B (rate-limited TPM/context). PR #15 Proposed + #16 addendum cloud + #19 Accepted + #20 integrazione CLAUDE.md+MODEL_ROUTING. Status flip Accepted (early) 2026-05-09 via ADR-0010 addendum. |
-| 0023 | Strategic tier post-Max API on-demand budget cap | **Proposed 2026-05-09** | 2026-05-09 | Claude API pay-per-use $10-20/mese cap. Strategic NON-delegabile (ADR-0008) + Pro NOT acquisito (ADR-0015 Scenario A) -> fallback formalizzato. Trigger reactivation Pro: utilizzo >$20/mese 2 mesi consecutivi. ccusage tracking. Risolve V1 BLOCKING harsh review 9/5. |
+| 0023 | Strategic tier post-Max API on-demand budget cap | **SUPERSEDED-by-0030 2026-05-18** | 2026-05-09 | Premessa "Pro NOT acquisito" morta: ADR-0030 (Hybrid A1 Accepted) ha acquisito Pro. Strategic-tier ora coperto da Pro subscription. Reasoning storico. |
 | 0024 | Vue3 archive + Godot v2 canonical timeline | **Proposed 2026-05-09** | 2026-05-09 | Soft-deadline archive Vue3 entro 2026-09-30 (4 mesi). Review trimestrale 2026-08-01. Trigger archive: 60gg silenzio commit Vue3 main OR feature parity Godot v2 dichiarata Eduardo. AA01 attivazione esplicita Sprint Impronta Ondata 1+2 (Eduardo direct H11). Risolve edge case HIGH harsh review 9/5. |
 | 0025 | Hyperspace Pods privacy assessment (NO-GO empirico) | **Accepted 2026-05-12** (auto-ratified) | 2026-05-11 | NO-GO definitivo: 3 finding architetturali non-config-fixable (auto-update FORCED + Ollama auto-expose + pulse voting). pktmon 120149 pkt/3min TUTTE pubbliche. Pivot: llama.cpp RPC LAN-only. |
 | 0026 | Cognitive workflow protocols (6 protocol P1-P6) | **Accepted** | 2026-05-13 | P1 Refresh-verify + P2 Autoresearch + P3 Archon 7-step + P4 AA01 audit trail + P5 harsh-reviewer + P6 brainstorming skill. Combined methodology + anti-aspirational measurement. |
 | 0027 | Cross-PC clone architecture Lenovo+Ryzen | **Accepted (early 2026-05-13)** | 2026-05-13 | Fleet 4 PC LAN: Lenovo `.10` agentic hub + Ryzen `.11` inference secondary 4070S 12GB. DHCP reservation permanent TIM HUB. SSH key-based auth. |
 | 0028 | Tier promotion quality gate methodology | **Accepted** | 2026-05-13 | 3-gate (smoke->draft->production) per vault agent + wrapper promotion. Anti-aspirational: n>=1 empirical PASS required. |
 | 0029 | OpenRouter eval declined sovereign-first BYOK | **Proposed 2026-05-13** | 2026-05-13 | Decline OpenRouter: free tier Groq 70B NON incluso + SPOF cloud + BYOK negate simplification. Mantieni 6-wrapper direct. Trigger reactivation: >$5/mese x2 mesi OR >8 wrapper. |
-| 0030 | ChatGPT Business workspace recovery + classification pipeline | **Proposed 2026-05-14** | 2026-05-14 | brianjlacy/export-chatgpt MIT (unico con Projects traversal Business verificato) + BERTopic + nomic-embed-text + Qwen 14B Q2 100% sovereign. Staging vault Sources/raw/, promozione Eduardo-direct. Ratification: bulk export PASS + classify.py smoke PASS. |
+| 0030 | Post-Max orchestration Hybrid A1 (Pro+Meridian+OpenCode+Gemini-CLI) | **Accepted 2026-05-18** (pivot ratificato Eduardo) | 2026-05-15 (P) -> 2026-05-18 (A) | **Pivot sovereign->hybrid-paid**: Pro $20/mo + Meridian + OpenCode + Gemini-CLI-free + OpenRouter-overflow. Target realistico $240-600/anno. Supersede ADR-0015 scenario-A-absolute + ADR-0023 + ADR-0001 $0-50. |
+| 0031 | ChatGPT Business workspace recovery + classification pipeline | **Proposed 2026-05-14** | 2026-05-14 | brianjlacy/export-chatgpt MIT + BERTopic + nomic-embed-text + Qwen 14B Q2 sovereign. Staging vault Sources/raw/, promozione Eduardo-direct. (era erroneamente indicizzato 0030 — index desync corretto retrospective B1 2026-05-18.) |
+| 0032 | Jules PR governance active model | **Superseded-by-0033** | 2026-05-15 | Self-falsified by execution (0 attributable merges, 2 backfire, 69% FP-close). Closed model. |
+| 0033 | Jules governance resolved | **Accepted** | 2026-05-16 | Risoluzione post-0032 falsificazione. Supersede 0032 cleanly. |
 
 ### In review (Proposed, awaiting Accepted trigger)
 - **ADR-0016** -- Constraint-count routing dimension. Trigger Accepted: n>=3 data points addizionali (constraint=4 explicit LOCAL, 2-transform LOCAL, 5-strict LOCAL). Update 2026-04-24: +1 data point (#12 constraint=4 parity-based, partial). Stato 2026-05-09: dataset Fase 6 closed a n=12 + smoke OpenCode 9 + dogfood OpenCode 2 = ulteriori data points emergeranno organicamente in SPRINT_02 post-Max.
@@ -110,6 +113,15 @@ Formato granulare per decisioni che non meritano ADR (reversibili, locali, non v
   - Close veloce senza cherry-pick -> rigetto (perderemmo concept utili emersi)
 - **Conseguenze**: ADR-0021 Accepted, AGENTS.md attivo come instruction file Codex, encoding policy ASCII-first nuovi doc. Pattern Codex Cloud confusion documentato come caso-studio.
 - **Azioni derivate**: ADR-0021 mergeato (PR #2). Branch deleted da origin. Mitigation strutturale anti-ricorrenza in AGENTS.md preamble.
+
+### Decisione 009 -- Pivot sovereign->hybrid-paid ACCETTATO + corpus reconcile (2026-05-18)
+- **Data**: 2026-05-18
+- **Decisione presa**: Eduardo ha **esplicitamente accettato** il pivot da "sovereign-$0-50/anno absolute" a **Hybrid A1 paid** (ADR-0030: Pro $20/mo + Meridian + OpenCode + Gemini-CLI-free + OpenRouter-overflow, ~$240-600/anno). Decisione emersa per accrezione via ADR-0015-amendment + ADR-0030, ora ratificata coscientemente post retrospettiva B1.
+- **Perche'**: scenario-A absolute copriva solo code-editing tier, NON orchestration/reasoning/methodology/sub-agents/skills (CC desktop unique value). Usage 75% Max settimanale = incompatibile free-tier-only. Filosofia sovereign-first (locale-prioritario, no-lock-in, multi-provider) RESTA; il numero $0-50 e' morto.
+- **Conseguenze (corpus reconcile applicato)**: ADR-0030 Proposed->**Accepted 2026-05-18**. ADR-0001 amendment ($0-50 superseded, filosofia invariata). ADR-0023 **Superseded-by-0030** (premessa "Pro NOT acquisito" morta). ADR-0015 status nota pivot-ratificato. DECISIONS_LOG index desync corretto (0030=Hybrid-A1 non ChatGPT; aggiunti 0031/0032/0033 mancanti). CLAUDE.md roadmap pivot-note.
+- **Decision 2 collegata**: mossa max-leverage gioco (close M1 Combat Freeze + playtest co-op live TKT-M11B-06) ACCETTATA da Eduardo — azione Eduardo-direct, zero codice. Pre-condizione per ri-derivare DF/Sistema da evidenza.
+- **Classe-errore risolta**: la deriva-direzione piu' grossa (goal fondante morto non-propagato, retrospettiva B1) ora coscientemente decisa + propagata nel corpus. NON piu' accrezione silenziosa.
+- **Process-fix proposto NON ancora applicato** (pending Eduardo): `STATUS-CHECK:` machine-greppable + cron settimanale anti-STALE-STATUS.
 
 ### Decisione 008 -- Claude Max ri-acquistato +1mo, deadline-drift corretta (2026-05-18)
 - **Data**: 2026-05-18

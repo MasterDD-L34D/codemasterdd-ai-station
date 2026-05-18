@@ -3,7 +3,7 @@
 ## Ruolo workstation
 Dev workstation AI agentic **PRINCIPALE** per Eduardo Scarpelli.
 Questa macchina è autosufficiente per tutti i workflow dev e AI locali.
-Target: piattaforma AI sovereign con zero subscription fisse post-maggio 2026.
+Target: piattaforma AI sovereign-first (locale-prioritario, no-lock-in, multi-provider). ⚠️ **PIVOT ACCETTATO 2026-05-18 (ADR-0030, Decisione 009)**: il target "zero subscription / $0-50/anno absolute" e' **SUPERSEDED** -> **Hybrid A1** (Pro $20/mo + Meridian + OpenCode + Gemini-CLI-free + OpenRouter-overflow, ~$240-600/anno). Filosofia sovereign-first invariata; il numero $0-50 e' morto. Vedi ADR-0030.
 
 ## Roadmap strategica (realistica — aggiornata 2026-04-23 post ADR-0013+0014)
 - **19/04/2026**: ✅ setup Lenovo completato, infrastructure ready
@@ -13,7 +13,7 @@ Target: piattaforma AI sovereign con zero subscription fisse post-maggio 2026.
 - **Fino al 19/05**: Claude Max attivo, Fase 6 tracking compresso (ADR-0014 Accepted) — target n≥20 dogfood + privacy validation + cost tracking <$20/mese
 - **20/05/2026 (approx, allineato Claude Max expiration)**: Fase 6 closure → **ADR-0015 budget decision finale**
 - ⚠️ **AGGIORNAMENTO 2026-05-18 (premessa-drift corretta)**: deadline reale era ~**17/05** (non 19/20). Eduardo ha **ri-acquistato Claude Max +1 mese** (~17/05 → ~17/06/2026). Le righe "Fino al 19/05" / "20/05 closure / Post 20/05 sovereign" sopra sono **storiche, NON la deadline corrente**. Deadline sovereign-transition reale = **~17/06/2026**. Urgenza esistenziale OFF, scope sovereign INVARIATO (long-term). Dettaglio: ADR-0023 §Addendum 2026-05-18 + DECISIONS_LOG.
-- **Post ~17/06 (deadline aggiornata)**: operatività target **full-sovereign $0-50/anno** via:
+- **Post ~17/06 (deadline aggiornata)**: ~~full-sovereign $0-50/anno~~ → **Hybrid A1 ~$240-600/anno (ADR-0030 Accepted, pivot Decisione 009)**. Stack tier sotto resta valido come *layer locale-first*, ma orchestration/reasoning = Pro+Meridian, non free-tier-only:
   - Tier 1-2 locale: Qwen Coder 7B/14B/30B MoE (Ollama, RTX 5060)
   - Tier 3 cloud free: Groq llama-70B + Cerebras llama-8B
   - Tier 4 cloud paid (emergency only): OpenAI gpt-4o-mini
