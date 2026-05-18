@@ -550,7 +550,22 @@ Eduardo claude.ai session ha prodotto 3 doc DF-integration (RECONCILIATION-MASTE
 - **Umbrella ADR DRAFT** [Game PR #2330](https://github.com/MasterDD-L34D/Game/pull/2330) `ADR-2026-05-18-df-levels-integration-direction.md`: afferma intento DF reale+governato, decision-matrix ground-truth-corretta (5 fix), supersede 3 A5 sparsi → reasoning-archive, linka figlio #2328. **Verdetto master-dd pending** (A full / B core-only / C reject).
 - Artefatti finali: umbrella ADR #2330 = governance DF · #2328 = sub-decisione Sistema S7 · DESIGN_DIGEST = catalogo player/ref · PLAYER-VISION #2329 = player-facing · RECONCILIATION/PHASE-PLAN/GAME-ANALYSIS = A5 reasoning non-governante.
 
-**Next Eduardo**: nessun "Sprint S1". Triage 1-4 sopra. **6 PR aperte**: codemasterdd #160, Game #2326/#2328/#2329/#2330, vault #94. Verdetti chiave: umbrella #2330 (A/B/C) + figlio #2328 (Sistema S7 A/B/C). Greenfield DF = roadmap M2+ ordinaria, non rescue.
+**6 PR MERGED 2026-05-18 12:56-12:58 UTC** (autorizzazione esplicita Eduardo): codemasterdd #160, Game #2326/#2328/#2329/#2330, vault #94. ADR #2328/#2330 mergiati come **DRAFT** (status:draft = proposta filed, NON decisione).
+
+### First-principles verdict (game-design-validator, 2026-05-18 — DISCUSSION/tracking)
+
+Ipotesi iniziale B/B (scope-constrained) **falsificata** da evidenza freeze-doc. Verdetto rivisto:
+
+- **#2330 umbrella DF -> C (reject come governance artifact)**. `90-FINAL-DESIGN-FREEZE.md` (A3) §21.3+§4.2 ha **gia' tagliato** L2-L5 (genetica/genealogie/sim multi-gen/sim sociale profonda); §18.2 barra Director narrativo autonomo (gate S7). L0-L1 = gia' P2/P4 (Triangle A+B + Disco debrief + VC shipped). L'umbrella non decide nulla che pilastri+freeze non decidano gia' + riapre scope chiuso senza nuova evidenza = accretion. Prova-eliminazione: rimuovi ADR -> nessun pilastro/vision/loop fallisce = cerimonia. Azione: 1-frase ADR "L0-L1 coperti P2/P4+freeze; L2-L5 cut per §21.3/§4.2; re-eval gated post-M1 playtest". Vault A5 resta reasoning-archive non-governante.
+- **#2328 Sistema S7 -> C / defer, no pilot**. Gate canonico P5 "Sistema troppo passivo" = playtest co-op umano live (TKT-M11B-06), **zero codice**. Persistenza su core M1 non-frozen per debolezza mai-osservata = ottimizza-prima-di-misurare.
+- **Mossa max-leverage**: chiudi M1 Combat Freeze -> playtest co-op live 2-4p (TKT-M11B-06, eng-cost zero) -> ri-deriva ogni domanda DF/Sistema da evidenza. Nessun codice DF prima.
+- **Cut permanente** (non defer): DF L0-L5 meta-framework come governance; L2 cross-session persistence come ambizione; L5 "losing is fun" come build-goal (resta lente eval); Sistema full-A; framing "rescue/forgotten".
+
+### ⚠️ Decision-data integrity (PRIMA di ogni verdetto scope)
+
+Drift critico: `Game/docs/reports/PILLAR-LIVE-STATUS.md` (verificato 2026-05-06) dice **5/6 green "demo-ready"**; working-belief sessione = **6/6 yellow post-M1-playtest**. Decisioni scope su dati-pilastro contraddittori = inaffidabili. **Riconciliare quale e' vero (single voice) PRIMA di flip verdetti #2330/#2328.** Side-effect del playtest M1 lo risolve.
+
+**Next Eduardo** (planning, NON azionato): (1) reconcile PILLAR-LIVE-STATUS vs 6/6-yellow. (2) verdetto #2330=C / #2328=C su ADR (flip status draft->rejected/superseded-by-freeze, 1 frase). (3) chiudi M1. (4) playtest co-op live. (5) solo DOPO ri-applica prova-eliminazione su cio' che il playtest rivela.
 
 ---
 
