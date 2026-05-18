@@ -12,7 +12,7 @@
 > precedente self-designed Jules-active ADR-0032 si e' AUTO-DISTRUTTO) +
 > (b) Eduardo permission-rule che sblocca il classifier auto-mode.*
 
-- **Status**: **Proposed 2026-05-18** (go-live gated: harsh-reviewer survive + permission-rule)
+- **Status**: **Option A REJECTED-redux 2026-05-18 da arbitro esterno harsh-reviewer (conf 84%); Option D adottata-come-raccomandazione, pending Eduardo accept + permission-rule.** SDMG/Protocol-7 pre-commit ("se rigetta adotto non difendo") onorato — Option A NON difesa.
 - **Data**: 2026-05-18
 - **Decisore**: Eduardo Scarpelli (mandato durevole esplicito)
 - **Supersedes**: ADR-0033 decision (2) (esterni read-only / zero sendMessage / Eduardo-explicit). ADR-0033 (1) throttle + (3) own-repo-active RESTANO validi e incorporati.
@@ -38,7 +38,63 @@ Evidenza fresca a supporto del valore (audit CLI 8/8 2026-05-18):
 autonomo + throttle taglierebbe rumore reale; ground-truth-gate funziona
 (8/8 verificate vs 5+inferenza del browser-scrape).
 
-## Decision (proposed)
+## External falsification outcome (2026-05-18, harsh-reviewer SDMG arbiter)
+
+**Verdetto: REJECT-redux, confidence 84%.** Pre-commit SDMG onorato: Option A
+NON difesa, rigetto adottato.
+
+Findings P0 (ground-truthed, validi):
+- **R3 = il messaggio A5 fallito ri-emesso**: lo scope-explosion #2294/#2313
+  era comportamento generativo di Jules, NON funzione della precisione del
+  nostro prompt. Un template "scoped" non puo' impedire a un agent terzo
+  incontrollabile di esplodere lo scope. R3 wishful.
+- **R1 valida solo la meta' sicura**: ground-truth-gate provato su
+  *detection statica* (8/8), NON sul *corrective generativo* (il vettore
+  reale del 69%-FP + backfire). Claim "gia' validato empiricamente"
+  fuorviante → ritirato.
+- **R4 = il gate no-incident gia' fallito, ricalibrato**: scatta dopo 2
+  backfire = blast-radius storico INTERO (il totale storico era esattamente
+  2). Non previene, registra a danno avvenuto.
+- **R2-as-decider = l'euristico 69%-FP che SDMG vieta** (decider deve essere
+  ground-truth/specialista, MAI euristico self-designed).
+- Anti-accretion: ADR-0032→0033→0034 = l'accretion che L-2026-05-033
+  proibiva; base-defect (azione generativa autonoma esterna vs agent
+  incontrollabile) non risolto, ri-avvolto in 7 promesse. 0 upside esterno
+  mai dimostrato (ADR-0033: 0 merge utili da active-mode).
+
+→ **Option A = ADR-0032-redux. RIGETTATA.** (Sezione "Decision (proposed)"
+sotto = storica, NON adottata.)
+
+## Decision (ADOTTATA: Option D — draft-batch, execute-only-non-generative)
+
+Soddisfa l'intento owner (Eduardo operativamente fuori dal loop) SENZA
+autonomia di corrective-send su agent non-falsificabile:
+
+1. **Claude full-auto triage + ground-truth** (R1 read-path, provato 8/8)
+   su own + esterni. R7 audit-trail. R5 throttle-primario (ADR-0033(1)).
+2. **Auto-esegue SOLO non-generativo verificabile-safe**: archive-gia-
+   shippato (ground-truth-confermato), flag, log. Zero mutazione live-agent.
+3. **Generativo/corrective** (respond/correct/send a sessioni Jules vive +
+   suggestions apply/modify) → Claude **drafta l'INTERO batch come 1
+   artefatto** con ground-truth-evidenza + scope-lock per-item.
+4. **Eduardo: unica interazione loop = 1 batch approve/reject** (NON triage
+   per-sessione, NON per-item). Operativamente fuori dal loop = intento
+   mandato soddisfatto. Lui resta decider non-euristico sul path generativo
+   (dove SDMG lo richiede), a costo ~1 approve/ciclo ≪ rischio auto-distruz.
+5. **own-repo codemasterdd**: active-mode pieno preservato (ADR-0033(3),
+   unico dominio con evidenza positiva).
+6. **15-cap**: ceiling per il triage read-path, NON target da imbottire
+   (R5; risolve la contraddizione P1 exploit-max vs anti-noise — il
+   batch-approve di Eduardo e' il vero throttle del path generativo).
+
+### Falsifying experiment pre-go-live (proposto dall'arbitro)
+Dry-run: Claude drafta ogni corrective su prossimo cluster Game "open"
+SENZA inviare (artefatto). Eduardo+ground-truth post-hoc: % che (a)
+targetta sessione davvero-open-sana + (b) scoped tale che reviewer onesto
+predice no-scope-explosion. **Se <90% entrambi → Option D stessa va
+ri-tarata prima di go-live.** Costo ~0, dirimente.
+
+## Decision (proposed) [STORICA — Option A, REJECTED-redux, NON adottata]
 
 **Claude gestisce il ciclo Jules completo in autonomia**, sotto rail hard
 anti-backfire NON negoziabili. Scope = own (codemasterdd) + esterni
