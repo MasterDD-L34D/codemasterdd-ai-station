@@ -3,6 +3,7 @@
 > *TL;DR: Game-Godot-v2 (port pivot 2026-04-29) ha 215+ PR mergeati con governance interna autosufficiente. Game (Vue3) Sprint Impronta Ondata 1 in pausa dal 26/04, 2 PR DRAFT 9/5 mattino possibile Ondata 2 status-effect. Long-term Godot v2 frontend canonical, Vue3 archive (gia' dichiarato CLAUDE.md ma senza ADR). Decisione: **soft-deadline archive Vue3 entro 2026-09-30** (4 mesi) con review trimestrale. Trigger archive switch: 60gg senza commit Vue3 OR feature parity Godot v2 dichiarata da Eduardo. Bonus action: AA01 silent-driver attivato esplicitamente su Sprint Impronta Ondata 1+2 status-phase-a per accelerare closure feature flow Vue3 prima dell'archive.*
 
 - **Status**: Proposed
+- STATUS-CHECK: 2026-08-01 | trigger: Vue3 main 60gg-silence OR Godot parity dichiarata Eduardo | default-if-elapsed: Escalate
 - **Data**: 2026-05-09
 - **Decisore**: Eduardo Scarpelli
 - **Tipo decisione**: cross-repo strategic timeline (Game Vue3 + Game-Godot-v2)

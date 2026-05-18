@@ -3,6 +3,7 @@
 > *TL;DR: La matrice routing modelli di ADR-0008 (hub pattern) classifica per **natura task** (cosmetic/behavior/strategic). Dogfood Fase 6 n=11 rivela pattern empirico non catturato dalla prima dimensione: la success-rate della delega degrada con il **numero di constraint espliciti** nel prompt, indipendentemente dalla classe. Questo ADR formalizza **constraint-count** come seconda dimensione di routing. Soglia pratica: 1 constraint → qualsiasi tier; 2-3 constraint additivi/preserve → 14B Q2 local o 70B cloud; 2 constraint fix+transform → downgrade a 14B Q2 (7B skippa transform); 5+ constraint strict → **manual Claude Code** (delegazione anti-pattern). Dataset validation: 6 data points cross-tier + 11 cumulative + 0 silent-corruption.*
 
 - **Status**: **Proposed** (2026-04-24)
+- STATUS-CHECK: 2026-06-09 | trigger: n>=3 data point constraint-count OR SPRINT_02 close | default-if-elapsed: Escalate
 - **Data**: 2026-04-24 (dopo sessione notturna con dogfood #9/#10/#11)
 - **Decisore**: Eduardo Scarpelli
 - **Deciders**: solo-dev (single-user workstation)

@@ -3,6 +3,7 @@
 > *TL;DR: Esportare l'intero workspace ChatGPT Business "Area di lavoro di Master DD" (12 progetti, ~3500 conversazioni, 83 memory items, custom instructions) non e' possibile via native OpenAI export (Business/Team plans GDPR-blocked). Tool selezionato per bulk export: `brianjlacy/export-chatgpt` MIT (last push 2026-04-24), unico candidato con Projects folder traversal verificato empiricamente. Classificazione offline 100% sovereign: BERTopic + nomic-embed-text (Ollama) + Qwen 14B Q2 LLM labeling. Output staging in vault Sources/raw/ con promozione Eduardo-direct (sibling-peer NO-WRITE default codemasterdd). Decisione presa 2026-05-14, ratification trigger: bulk export run PASS + classify.py smoke.*
 
 - **Status**: **Proposed** (2026-05-14 pre-execution)
+- STATUS-CHECK: 2026-06-14 | trigger: bulk-export PASS + classify.py smoke PASS | default-if-elapsed: Escalate
 - **Data**: 2026-05-14
 - **Decisore**: Eduardo Scarpelli
 - **Deciders**: solo-dev (single-user workstation)
