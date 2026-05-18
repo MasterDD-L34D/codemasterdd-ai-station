@@ -40,7 +40,8 @@
 | 0030 | Post-Max orchestration Hybrid A1 (Pro+Meridian+OpenCode+Gemini-CLI) | **Accepted 2026-05-18** (pivot ratificato Eduardo) | 2026-05-15 (P) -> 2026-05-18 (A) | **Pivot sovereign->hybrid-paid**: Pro $20/mo + Meridian + OpenCode + Gemini-CLI-free + OpenRouter-overflow. Target realistico $240-600/anno. Supersede ADR-0015 scenario-A-absolute + ADR-0023 + ADR-0001 $0-50. |
 | 0031 | ChatGPT Business workspace recovery + classification pipeline | **Proposed 2026-05-14** | 2026-05-14 | brianjlacy/export-chatgpt MIT + BERTopic + nomic-embed-text + Qwen 14B Q2 sovereign. Staging vault Sources/raw/, promozione Eduardo-direct. (era erroneamente indicizzato 0030 — index desync corretto retrospective B1 2026-05-18.) |
 | 0032 | Jules PR governance active model | **Superseded-by-0033** | 2026-05-15 | Self-falsified by execution (0 attributable merges, 2 backfire, 69% FP-close). Closed model. |
-| 0033 | Jules governance resolved | **Accepted** | 2026-05-16 | Risoluzione post-0032 falsificazione. Supersede 0032 cleanly. |
+| 0033 | Jules governance resolved | **Accepted** (esterni read-only superseded da 0034) | 2026-05-16 | Risoluzione post-0032 falsificazione. Supersede 0032 cleanly. Decision (1)throttle + (3)own-active restano; (2)read-only-esterni superseded da 0034. |
+| 0034 | Jules autonomous-managed (owner mandate) | **Proposed 2026-05-18** (go-live gated) | 2026-05-18 | Mandato owner: Claude gestisce ciclo Jules completo autonomo (triage+respond+correct+send+suggestions-loop, cap 15) su own+esterni. Supersede 0033(2). Rail hard R1-R7 anti-backfire. Go-live gated: harsh-reviewer survive + permission-rule. |
 
 ### In review (Proposed, awaiting Accepted trigger)
 - **ADR-0016** -- Constraint-count routing dimension. Trigger Accepted: n>=3 data points addizionali (constraint=4 explicit LOCAL, 2-transform LOCAL, 5-strict LOCAL). Update 2026-04-24: +1 data point (#12 constraint=4 parity-based, partial). Stato 2026-05-09: dataset Fase 6 closed a n=12 + smoke OpenCode 9 + dogfood OpenCode 2 = ulteriori data points emergeranno organicamente in SPRINT_02 post-Max.
@@ -113,6 +114,14 @@ Formato granulare per decisioni che non meritano ADR (reversibili, locali, non v
   - Close veloce senza cherry-pick -> rigetto (perderemmo concept utili emersi)
 - **Conseguenze**: ADR-0021 Accepted, AGENTS.md attivo come instruction file Codex, encoding policy ASCII-first nuovi doc. Pattern Codex Cloud confusion documentato come caso-studio.
 - **Azioni derivate**: ADR-0021 mergeato (PR #2). Branch deleted da origin. Mitigation strutturale anti-ricorrenza in AGENTS.md preamble.
+
+### Decisione 010 -- Jules autonomous-managed: mandato owner durevole (2026-05-18)
+- **Data**: 2026-05-18
+- **Decisione presa**: Eduardo (master-dd) mandato durevole esplicito (3x ribadito): Claude gestisce L'INTERO processo Jules autonomo su own+esterni — triage + risposta (write/correzione/invio) + suggestions per-repo (apply-full/modify/reject+iter) + orchestrazione cap **15 sessioni attive concorrenti sfruttato max**. Eduardo interviene SOLO su orchestratore + contenuti finali.
+- **Perche'**: Eduardo vuole essere libero dal loop Jules; il valore del suo tempo e' su orchestratore/contenuti, non triage. Override legittimo (owner authority) di ADR-0033(2).
+- **Conseguenze**: ADR-0034 Proposed (supersede ADR-0033(2); (1)throttle+(3)own-active restano incorporati). Rail hard R1-R7 anti-backfire codificati. **Go-live GATED**: (a) harsh-reviewer falsifica ADR-0034 (SDMG/Protocol-7 obbligatorio — ADR-0032 self-designed-active si AUTO-DISTRUSSE: 69% FP, 2 backfire); "se rigetta adotto non difendo"; (b) Eduardo permission-rule sblocca classifier auto-mode (denial 2026-05-18 = agent-inferred-external-write bloccato; chat-authorization non lo lifta).
+- **Classe-rischio**: autonomizzazione metodo self-designed high-error-rate dimostrato. SDMG gate applicato (no improvvisazione = no ADR-0032-redux). Il mandato cambia chi-decide, non se-falsificare.
+- **Azioni derivate**: ADR-0034 draft + harsh-reviewer dispatch (questa sessione). Post-survive+permission-rule → loop autonomo attivo. NO azione Jules esterna finche' gate non chiuso.
 
 ### Decisione 009 -- Pivot sovereign->hybrid-paid ACCETTATO + corpus reconcile (2026-05-18)
 - **Data**: 2026-05-18
