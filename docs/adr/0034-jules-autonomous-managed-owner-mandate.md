@@ -12,7 +12,7 @@
 > precedente self-designed Jules-active ADR-0032 si e' AUTO-DISTRUTTO) +
 > (b) Eduardo permission-rule che sblocca il classifier auto-mode.*
 
-- **Status**: **Option A REJECTED-redux 2026-05-18 da arbitro esterno harsh-reviewer (conf 84%); Option D adottata-come-raccomandazione, pending Eduardo accept + permission-rule.** SDMG/Protocol-7 pre-commit ("se rigetta adotto non difendo") onorato — Option A NON difesa.
+- **Status**: **Accepted (Option D) 2026-05-18** — Eduardo "si confermo". Option A REJECTED-redux da arbitro esterno harsh-reviewer (conf 84%, SDMG pre-commit onorato, NON difesa). **Modello vincolante = Option D**: full-auto triage+ground-truth + auto-exec-solo-non-generativo + generativo via 1 batch-artifact Eduardo-approve/ciclo. Unlock = **batch-approve esplicito Eduardo** (NON standing permission-rule — least-privilege: nessun privilegio autonomo external-write permanente; il batch-approve umano e' il throttle generativo). Go-live operativo = primo batch-artifact approvato (= dry-run falsifying experiment).
 - **Data**: 2026-05-18
 - **Decisore**: Eduardo Scarpelli (mandato durevole esplicito)
 - **Supersedes**: ADR-0033 decision (2) (esterni read-only / zero sendMessage / Eduardo-explicit). ADR-0033 (1) throttle + (3) own-repo-active RESTANO validi e incorporati.
@@ -136,15 +136,19 @@ anti-backfire NON negoziabili. Scope = own (codemasterdd) + esterni
 - **R7 Audit-trail**: ogni azione autonoma loggata (sessione-id, verdetto,
   ground-truth-evidenza, azione, esito) — `logs/jules-autonomous-YYYY-MM.md`.
 
-## Go-live gate (NON attivo finche':)
+## Go-live gate — ESITO
 
-1. **harsh-reviewer** falsifica questo ADR (SDMG external arbiter,
-   obbligatorio dato auto-distruzione ADR-0032). "Se rigetta → adotto, non
-   difendo." Verdetto + confidence pre-committato.
-2. **Eduardo permission-rule** che autorizza il classifier auto-mode a
-   permettere Jules external-write *policy-authorized* (non agent-inferred).
-   Senza, il harness ri-blocca (denial 2026-05-18 documentato).
-3. Post-(1)+(2): Status → Accepted, loop autonomo attivo.
+1. **harsh-reviewer** falsificazione: ✅ ESEGUITA → Option A REJECT-redux
+   84% → Option D adottata (pre-commit onorato).
+2. **Unlock**: NON standing permission-rule. **Batch-approve esplicito
+   Eduardo per ciclo** = autorizzazione (rende le azioni user-authorized,
+   NON agent-inferred → classifier OK + zero standing privilege). Scelta
+   least-privilege deliberata vs broad-rule.
+3. **Go-live operativo**: primo BATCH-ARTIFACT prodotto + approvato da
+   Eduardo (= dry-run falsifying experiment del reviewer in un colpo).
+   Post-approve: azioni del batch eseguibili (user-authorized).
+4. Status → **Accepted (Option D) 2026-05-18**. Loop Option D attivo;
+   ogni ciclo = batch-artifact → Eduardo 1-approve → exec.
 
 ## Options considered
 
