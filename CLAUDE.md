@@ -77,6 +77,8 @@ Fleet Eduardo on-LAN 192.168.1.0/24 (4 PC totali, 2 di Eduardo + 2 di moglie):
 
 **Drift fix 2026-05-10**: claim originale "Ryzen 9600X desktop: PC appoggio corrente, dismissione graduale" e' OBSOLETO. Ryzen ha 4070 SUPER 12GB > Lenovo 5060 8GB per modelli 14B-22B. Ryzen e' **secondary inference active** + complementary tier capability, NOT phase-out.
 
+**Drift fix 2026-05-17 (chiude A.4#7 runbook)**: SSH ora **bidirezionale WORKING** Ryzen<->Lenovo. Oltre Lenovo->Ryzen (2026-05-12, key in Ryzen admin-file), stabilito **Ryzen->Lenovo 2026-05-17** (keypair `vgit-ryzen-to-lenovo-2026-05-17`: keygen locale Lenovo -> scp privata su Ryzen `C:\Users\Vgit\.ssh\id_ed25519` -> `setup-ssh-inbound.ps1` elevato+UAC su Lenovo; pub in Lenovo `administrators_authorized_keys`). Verificato test-annidato `OK_RYZEN_TO_LENOVO`. Comando: `ssh -i ~/.ssh/id_ed25519 edusc@192.168.1.10`. **SoT-completo**: `docs/runbook/ssh-inbound-fleet-setup.md` (inventario+matrice+gotcha-admin-ACL+script idempotente). SSH = mezzo-coordinamento PRIMARIO NOTO (anti-rot Eduardo-flag 2026-05-18): read-ops=libero, mutating-remote=gated-ma-noto. Wife-PC (.37/.130) SSH-PENDING = stesso script §Riuso-fleet quando-serve.
+
 **Strategic implication fleet-aware**:
 - Lenovo: tier 1 cosmetic (7B Q4 full-GPU 114 tok/s) + agentic hub (Aider/OpenCode/Claude Code stack) + 30B MoE Ollama partial
 - Ryzen: tier 2 behavior (14B Q4 full-GPU atteso ~30-40 tok/s) + 22B Q4 split + image gen
