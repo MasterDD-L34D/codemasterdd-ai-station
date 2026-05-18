@@ -94,6 +94,83 @@ throttle org-level. Exec bloccato solo da: archive-endpoint-authorization
    +archive+create), Eduardo solo batch-approve + suggestions-manuali.
 
 ---
+## 8. Daily-digest automation (Eduardo applica one-time — agent barrato self-bootstrap)
+
+**Perche' locale-non-remoto**: routine remoti (`/schedule`) = cloud, ZERO
+key/gh/browser locali → digest vuoto = false-confidence noise. Il digest
+richiede `JULES_API_KEY` + `gh` + repo locali → **solo script locale**.
+Automatizzabile: sessioni-API + ground-truth (scriptabile puro, no Claude/
+browser). NON automatizzabile: suggestions (browser-only) + verdict-sfumato
+(needs Claude) → il digest li FLAGGA manuali (no overclaim, lezione 69%-FP).
+
+### Script (Eduardo salva come `scripts/jules-daily-digest.ps1`)
+
+> Agent NON crea il .ps1 (TDD-guard premature-impl + self-bootstrap-infra
+> barrato). Qui = documentato; Eduardo lo crea+installa. Read-only +
+> scrive solo digest .md locale. ZERO mutazione Jules (no archive/send).
+
+```powershell
+# jules-daily-digest.ps1 -- READ-ONLY sessions digest (ADR-0034 Option D)
+$ErrorActionPreference='Stop'
+$env:JULES_API_KEY=(Get-Content "$HOME/.config/api-keys/keys.env" |
+  Where-Object {$_ -match '^JULES_API_KEY='}) -replace '^JULES_API_KEY=',''
+$repo='C:/dev/codemasterdd-ai-station'
+$day=Get-Date -Format 'yyyy-MM-dd'
+$out="$repo/docs/jules-batch/$day-digest.md"
+$api='https://jules.googleapis.com/v1alpha'
+$hdr=@{'x-goog-api-key'=$env:JULES_API_KEY}
+$sess=(Invoke-RestMethod -Headers $hdr "$api/sessions?pageSize=100").sessions |
+  Where-Object {$_.state -eq 'AWAITING_USER_FEEDBACK'}
+$lines=@("# Jules daily digest $day (ADR-0034 Option D, READ-ONLY)",
+ "> Verdetti FIRST-PASS scriptabili. Generative=Eduardo batch-approve.",
+ "> Suggestions NON incluse (browser-only). Ambigui=Claude-review.","")
+foreach($s in $sess){
+  $id=$s.name -replace 'sessions/',''
+  $src=$s.sourceContext.source -replace 'sources/github/',''
+  # heuristic ground-truth: estrai 'File: <path>' dal prompt + marker
+  $f=([regex]'File:\s*([^\s:]+)').Match($s.prompt).Groups[1].Value
+  $verdict='NEEDS-CLAUDE-EVAL'; $ev=''
+  if($f){
+    $c=(gh api "repos/$src/contents/$f" --jq '.content' 2>$null |
+        ForEach-Object {[Text.Encoding]::UTF8.GetString([Convert]::FromBase64String($_))})
+    # marker = prima riga commento-fix significativa nel prompt context
+    $mk=([regex]'(?m)^\s*//\s*(.{12,60})').Match($s.prompt).Groups[1].Value
+    if($mk -and $c -match [regex]::Escape($mk)){ $verdict='ARCHIVE? (marker gia su origin/main)'; $ev="$f :: $mk" }
+    elseif($f -match 'services/generation'){ $verdict='DEFER (services/generation = M1-freeze sensitive)' }
+    else { $verdict='NEEDS-CLAUDE-EVAL'; $ev="$f (no marker match -> ambiguo)" }
+  }
+  $lines+="- ``$id`` [$src] **$verdict** -- $($s.title.Split([char]10)[0].Substring(0,[Math]::Min(70,$s.title.Length)))  | $ev"
+}
+$lines+="","## Manuale (non scriptabile)","- Suggestions: apri jules.google dashboard per-repo, review.","- NEEDS-CLAUDE-EVAL sopra: ping Claude per ground-truth profondo.","","## Gate","Nessuna azione auto. Eduardo: review -> approva batch (archive/respond) -> Claude esegue via API (sendMessage pre-auth riga 122; archive post §3-permission)."
+Set-Content -Encoding utf8 $out ($lines -join "`n")
+# reminder toast
+[void][Windows.UI.Notifications.ToastNotificationManager,Windows.UI.Notifications,ContentType=WindowsRuntime]
+Write-Host "DIGEST -> $out ($($sess.Count) Awaiting)"
+```
+
+### Scheduler (Eduardo one-time)
+
+```powershell
+$a=New-ScheduledTaskAction -Execute 'powershell' -Argument '-NoProfile -ExecutionPolicy Bypass -File C:\dev\codemasterdd-ai-station\scripts\jules-daily-digest.ps1'
+$t=New-ScheduledTaskTrigger -Daily -At 8am
+Register-ScheduledTask -TaskName 'jules-daily-digest' -Action $a -Trigger $t -Description 'ADR-0034 Option D daily Jules sessions digest (read-only)'
+```
+
+### Limiti onesti (encoded nel digest)
+- Verdetti = **FIRST-PASS euristici** (marker-match). ARCHIVE? col `?` =
+  candidato, NON auto-eseguito (Eduardo/Claude conferma — lezione 69%-FP).
+- Suggestions: NON nel digest (browser-only). Riga manuale.
+- Ambigui (no marker) → `NEEDS-CLAUDE-EVAL` → ping Claude per ground-truth.
+- Script READ-ONLY: solo `GET` API + `gh api` + scrive .md locale. ZERO
+  archive/sendMessage/start (quelli = Eduardo batch-approve → Claude API).
+
+### Flusso risultante
+Daily 8am → script → `docs/jules-batch/<day>-digest.md` + toast → Eduardo
+apre, review (no copia-incolla dashboard) → approva azioni → Claude esegue
+via API (Option D). Suggestions = check dashboard manuale quando vuole.
+
+---
+
 *Doc unico. Authority ADR-0034. Wiring empirico 2026-05-18. Supersede note
-Jules sparse. Update quando endpoint archive/create verificati o API
-suggestions emerge.*
+Jules sparse. §8 = digest automation (Eduardo installa). Update quando
+endpoint archive/create verificati o API suggestions emerge.*
