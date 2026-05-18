@@ -169,6 +169,16 @@ _(completato il 2026-04-19 — vedi "Stack installato")_
   - **Privacy**: PUBLIC + cloud-OK come Game / Game-Godot-v2. NON in `~/.config/aider-privacy-whitelist.txt` perche' no clone locale current; aggiungere se cloning futuro
   - **Stack ADR-0021 multi-client pattern**: Jules + Codex Cloud + Claude Code (multi-AI pipeline empirico, L-024 case study)
 
+- **evo-tactics-refs-meta** — pipeline asset reference Evo-Tactics (added monitoring 2026-05-18, gap reale mappa ecosistema)
+  - GitHub: `github.com/MasterDD-L34D/evo-tactics-refs-meta` (PRIVATE)
+  - Path: nessun clone (remote-only, scope-monitorable da gh API)
+  - Stack: Python (download tooling) + manifest JSON + URL lists. NO binari versionati
+  - **Ruolo**: meta-backup asset reference (3D/2D/concept art, SFX, SKIV creature refs). Rebuildable via `robust_download.py` + `urls-*.txt` + `gen_manifest.py`. Conformita licenze CC0/PD/Sonniss (provenance `CC0_SOURCES.md`)
+  - **Connessione gioco**: asset finali -> `C:\dev\Game\assets\` via output-staging
+  - **Status 2026-05-18**: idle (last push 2026-04-29), layer asset legittimo non daily-ship. Minimal informational monitoring (snapshot on-demand, no piano operativo cross-repo)
+  - **Privacy**: PRIVATE, sovereign-default (NON cloud-whitelisted finche no clone locale)
+  - **Dettaglio completo**: `docs/EVO_TACTICS_ECOSYSTEM_GUIDE.md` sezione 4 + `STATUS_MULTI_REPO.md` §7b
+
 - **Synesthesia** — web app esame UniUPO
   - GitHub: `github.com/MasterDD-L34D/synesthesia`
   - Path Lenovo: `C:\dev\synesthesia` (dormant per Sprint plan UniUPO esame ~ago 2026)

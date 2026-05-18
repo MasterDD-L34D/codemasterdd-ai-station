@@ -444,6 +444,35 @@ Game-Database e' emerso da audit Jules REST API come repo **attivamente lavorato
 
 ---
 
+## 7b. evo-tactics-refs-meta (asset pipeline Evo-Tactics, remote-only minimal monitoring)
+
+**Remote**: [MasterDD-L34D/evo-tactics-refs-meta](https://github.com/MasterDD-L34D/evo-tactics-refs-meta) (PRIVATE)
+**Path**: nessun clone (remote-only, scope-monitorable da gh API)
+**Aggiunto a monitoring**: 2026-05-18 (gap reale nella mappa ecosistema -- Eduardo conferma)
+
+### Identita
+
+- **Ruolo**: meta-backup pipeline asset reference (3D/2D/concept art, SFX, SKIV creature refs) per Evo-Tactics. NO binari versionati -- rebuildable via `robust_download.py` + `urls-*.txt` + `gen_manifest.py`.
+- **Conformita licenze**: solo CC0/Public Domain/Sonniss royalty-free, zero estrazioni Tier B/C (provenance in `CC0_SOURCES.md`).
+- **Connessione gioco**: asset finali -> `C:\dev\Game\assets\` via output-staging.
+- **Stato**: idle (last push 2026-04-29). Layer asset legittimo ma non daily-ship.
+
+### File chiave
+
+| File | Scopo |
+|------|-------|
+| `README.md` | Tier policy + confini legali |
+| `SKIV_REFS_EXTRACTED.md` | Registry asset direct-use creatura Skiv |
+| `robust_download.py` + `urls-*.txt` | Pipeline rebuild deterministico |
+| `gen_manifest.py` + `MANIFEST.json` | Catalogazione post-download |
+| `HANDOFF.md` / `WORKSPACE.md` / `STATUS.md` | Handoff + folder map + stato |
+
+### Monitoring tier
+
+Minimal informational, scope simile §7 (Ryzen-only): snapshot on-demand, no piano operativo cross-repo. Privacy: PRIVATE, sovereign-default (NON cloud-whitelisted finche no clone locale). Trigger scope-up: se Eduardo riprende lavoro asset attivo o clona Lenovo-side. Dettaglio: `docs/EVO_TACTICS_ECOSYSTEM_GUIDE.md` sezione 4.
+
+---
+
 ## Ecosystem audit 15-repo — git-verified (RATIFICATO master-dd 2026-05-16)
 
 Reactivation gate `EXTERNAL_REPOS.md` #6 (intento master-dd) + #7 (evidenza fresca) soddisfatti. Snapshot **git-ground-truth 2026-05-16** (branch/dirty/sync/detached verificati diretti). Supera gli HEAD sparsi/stale nelle sezioni §1-7 come *snapshot verità-git*; le §1-7 restano dettaglio operativo mantenuto (NON riscritte — additive per design, lezione PR #116 no-clobber).
