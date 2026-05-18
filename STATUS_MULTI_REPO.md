@@ -544,7 +544,13 @@ Eduardo claude.ai session ha prodotto 3 doc DF-integration (RECONCILIATION-MASTE
 4. **A6 frontend label** starter_bioma — ~30 LOC UI, low-lift standalone ship
 5. Greenfield DF (eventlog/population-tick/identity/chronicle) — SE voluti: ticket BACKLOG normali, gate GREEN/YELLOW, NON priorità "rescue"
 
-**Next Eduardo**: nessun "Sprint S1". Triage 1-4 sopra. Merge PR #94/#2326/#160. Decidere se greenfield DF entra in roadmap reale (M2+ feature, non rescue).
+### Consolidamento governance (2026-05-18, opzione 2)
+
+- **GAME-ANALYSIS-COMPLETE.md** (4° doc A5) analizzato: formato migliore (per-game cosa-prendi/NO/integra + anti-ref + ROI) ma **ripete premessa falsificata** (Triangle A+B "RESCUE" = shipped; greenfield travestito "IN-DESIGN"). Verdetto: NON filing standalone (sprawl 4-doc) → contenuto **corretto** assorbito in umbrella ADR.
+- **Umbrella ADR DRAFT** [Game PR #2330](https://github.com/MasterDD-L34D/Game/pull/2330) `ADR-2026-05-18-df-levels-integration-direction.md`: afferma intento DF reale+governato, decision-matrix ground-truth-corretta (5 fix), supersede 3 A5 sparsi → reasoning-archive, linka figlio #2328. **Verdetto master-dd pending** (A full / B core-only / C reject).
+- Artefatti finali: umbrella ADR #2330 = governance DF · #2328 = sub-decisione Sistema S7 · DESIGN_DIGEST = catalogo player/ref · PLAYER-VISION #2329 = player-facing · RECONCILIATION/PHASE-PLAN/GAME-ANALYSIS = A5 reasoning non-governante.
+
+**Next Eduardo**: nessun "Sprint S1". Triage 1-4 sopra. **6 PR aperte**: codemasterdd #160, Game #2326/#2328/#2329/#2330, vault #94. Verdetti chiave: umbrella #2330 (A/B/C) + figlio #2328 (Sistema S7 A/B/C). Greenfield DF = roadmap M2+ ordinaria, non rescue.
 
 ---
 
