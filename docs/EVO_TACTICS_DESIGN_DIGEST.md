@@ -30,18 +30,32 @@
 ### 11.1 I 6 pilastri di design <-> ispirazione ancora
 
 Ogni pilastro (vault `core/02-PILASTRI.md`) e' ancorato a un'ispirazione
-precisa. Stato pilastri 2026-04-20: 0/6 verde, 6/6 giallo (revisione onesta
-post-playtest M1; pre-playtest era 5/6 verde -- NON regressione, realta'
-testata).
+precisa.
 
-| Pilastro | Nome | Ispirazione ancora | Stato |
-|----------|------|--------------------|-------|
-| P1 | Tattica leggibile | **Final Fantasy Tactics** + Into the Breach | 🟡 d20+MoS funziona, notazione AP ambigua (friction #1-2) |
-| P2 | Evoluzione emergente | **Spore** (concetto) via Wesnoth + AI War (meccanica) | 🟡 mating non testato M1, persistence M10, runtime M12+ |
-| P3 | Identita Specie x Job | FFT job cross-inheritance | 🟡 specie differenziate, job ability costs unclear (friction #4) |
-| P4 | Temperamenti giocati | **Disco Elysium** (reveal diegetico MBTI/Ennea) | 🟡 VC tracking off in M1, solo T_F full |
-| P5 | Co-op vs Sistema | **AI War** + NS2 Strategist + Frozen Synapse | 🟡 focus-fire live, "Sistema troppo passivo" |
-| P6 | Fairness | Hades Heat + Monster Train Pact + AI War Progress | 🟡 d20 trasparente, scaling curves canonical |
+> ⚠️ **CORREZIONE 2026-05-18 (anti-pattern #8 — claim non-verificato propagato)**:
+> la versione precedente diceva "0/6 verde, 6/6 giallo post-playtest M1".
+> **FALSO, zero fonte canonical.** Ground-truth Game (gh-api): due sorgenti
+> canonical concordano — `docs/reports/PILLAR-LIVE-STATUS.md` (SOT runtime,
+> source_of_truth:true, verified 2026-05-06) + `docs/core/02-PILASTRI.md`
+> snapshot 2026-04-28 → **5/6 🟢 + 1/6 🟡 (solo P3), "demo-ready confirmed"**.
+> Il "6/6 giallo" era fabbricazione explore-agent non corroborata. Stato
+> reale sotto. Nota: PILLAR-LIVE-STATUS = volatile, ~2026-05-06; ri-verifica
+> via gh-api per stato corrente (review_cycle 7gg).
+
+Stato canonical (Game `PILLAR-LIVE-STATUS.md`, 2026-05-06):
+
+| Pilastro | Nome | Ispirazione ancora | Stato canonical |
+|----------|------|--------------------|-----------------|
+| P1 | Tattica leggibile | **Final Fantasy Tactics** + Into the Breach | 🟢 def++ (Sprint α + #1975/76/1932) |
+| P2 | Evoluzione emergente | **Spore** (concetto) via Wesnoth + AI War (meccanica) | 🟢 def++ (Spore Moderate FULL S1-S6) |
+| P3 | Identita Specie x Job | FFT job cross-inheritance | 🟡++ (portrait #1960 + ecology #1967; **unico giallo**) |
+| P4 | Temperamenti giocati | **Disco Elysium** (reveal diegetico MBTI/Ennea) | 🟢 def (Triangle A+B + #1966/72/45/79/83 shipped) |
+| P5 | Co-op vs Sistema | **AI War** + NS2 Strategist + Frozen Synapse | 🟢 cand (M11 stack; gate finale TKT-M11B-06 = playtest co-op live) |
+| P6 | Fairness | Hades Heat + Monster Train Pact + AI War Progress | 🟢 (pseudoRng + tension gauge + body-part) |
+
+Score: **5/6 🟢 + 1/6 🟡++ (P3). Demo-ready confirmed.** P5 verde-candidato:
+sblocco finale = playtest co-op live (TKT-M11B-06, zero codice) — coerente
+con la "mossa max-leverage" del first-principles verdict.
 
 ### 11.2 Catalogo completo ispirazioni positive
 
