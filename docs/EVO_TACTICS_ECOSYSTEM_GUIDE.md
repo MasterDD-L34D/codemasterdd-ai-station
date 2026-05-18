@@ -6,6 +6,121 @@
 > evolvono in ~2gg: i path strutturali restano stabili, gli HEAD/PR no --
 > ri-verifica con `gh` prima di azioni puntuali.
 
+> **Portabilita'**: i path assoluti in questa guida sono della workstation
+> Lenovo `CODEMASTERDD` (Eduardo). Su altre macchine (split Ryzen/Lenovo)
+> vedi codemasterdd `CLAUDE.md` device map. Riferimenti repo-relativi dove
+> possibile; path macchina = appendice operativa, non canonici.
+
+---
+
+## Indice
+
+- **Front matter**: Autorita' & fonte verita' | Stato & attivita' | Testing/Licensing/Ownership | Glossario
+- **0** Mappa mentale corretta
+- **1-7** Repo deep-dive: Game (1) | Game-Godot-v2 (2) | Game-Database (3) | evo-tactics-refs-meta (4) | evo-swarm/Dafne (5) | vault (6) | codemasterdd (7)
+- **8** Data flow cross-repo *(diagramma sintetico; versione dettagliata = 12.3)*
+- **9** Come continuare -- workflow concreti
+- **10** Ordine lettura nuova sessione
+- **11** Ispirazioni, Fonti & Stato Design (catalogo completo)
+- **12** Stile distillato & sistema design/contenuti
+- **Coda** Doc improvement backlog (finding harsh-review aperti)
+
+---
+
+## Autorita' & fonte verita' (canonico -- risolve ambiguita' sez. 6/9/11/12)
+
+Modello unico (precedenza decrescente). vault e Game NON sono entrambi
+"fonte verita'" allo stesso modo:
+
+| Cosa | Autorita' | Dove | Nota |
+|------|-----------|------|------|
+| Verita' meccanica/numerica/schema | **A2** | **Game** `data/core/*`, `packs/.../data/*`, `packages/contracts/schemas/*` | YAML/schema vince su ogni doc descrittivo |
+| Scope prodotto / freeze | **A3** | **Game** `docs/core/90-FINAL-DESIGN-FREEZE.md` | Vince su roadmap/planning |
+| Boundary architetturale | **A1** | **Game** `docs/hubs/*`, `docs/combat/round-loop.md`, `docs/adr/*` | Vince su freeze se boundary contraddetto |
+| Inventory/governance doc | **A0** | **Game** `docs/governance/`, `docs_registry.json` | Path/status/ownership |
+| Modo operativo agent | **A4** | `CLAUDE.md`, `.claude/*`, `SAFE_CHANGES.md` | "how" non "what" |
+| Contesto/intento/ricerca | **A5** | museum cards, Canvas, playtest notes | Informa, non governa |
+
+**vault `Spaces/Dev/Evo-Tactics/` = layer A5/narrativo + shadow copy
+read-only di reference**, NON canonical per meccanica/scope. Quando sez.
+6/9/10 dicono "fonte verita' = vault" intendono *design narrative + ricerca
++ ADR storici*; la verita' runtime/shipping vive in **Game** (A0-A3). In
+conflitto: **Game A2 YAML > A3 freeze > A1 ADR**; vault perde. (Sez. 11
+usava "A1-A3" in modo generico -- la gerarchia precisa e' A0-A5 sopra,
+fonte Game `docs/planning/EVO_FINAL_DESIGN_SOURCE_AUTHORITY_MAP.md`.)
+
+---
+
+## Stato & attivita' (verificato 2026-05-18, volatile)
+
+> Repo daily-ship: HEAD/PR/sprint driftano in ~2gg. Tabella = snapshot
+> 2026-05-18; ri-verifica `gh` prima di azioni puntuali.
+
+| Repo | Visibilita' | Attivita' (as-of 2026-05-18) | Privacy / cloud | Playable |
+|------|-------------|------------------------------|-----------------|----------|
+| Game (Vue3) | PUBLIC | VIVO daily-ship | cloud-OK (whitelisted) | backend sim + web 2D legacy |
+| Game-Godot-v2 | PRIVATE | VIVO daily-ship | cloud-OK (whitelisted) | client; evo-tactics.com tunnel (vedi sotto) |
+| Game-Database | PUBLIC (no LICENSE) | Attivo (pipeline multi-AI) | cloud-OK; **no clone Lenovo** | n/a (CMS) |
+| evo-tactics-refs-meta | PRIVATE | IDLE (push 2026-04-29) | sovereign-default | n/a (asset) |
+| evo-swarm (Dafne) | PRIVATE | IDLE da ~2026-05-08 | sovereign | n/a (orchestratore) |
+| vault | PRIVATE | attivo | **sovereign-only** (aider-cloud=ABORT) | n/a (KB) |
+| codemasterdd | PRIVATE | attivo (SPRINT_02) | cloud-OK (whitelisted) | n/a (policy) |
+
+**Playable status**: `evo-tactics.com` = Cloudflare Named Tunnel verso
+`localhost:3334` (NON hosting cloud persistente -- live solo se backend
+Game gira + tunnel up sulla workstation). NON e' una release pubblica
+stabile. M6 Release Candidate "no Master DD approval" (sez. 12.2/11.8):
+nessun build shippato approvato. Playtest = tabletop-guided M1 (2026-04-17)
++ target 50 playtest M6 futuro. Pillar status tabella sez. 11.1 datata
+**2026-04-20** (~4 settimane fa, NON ri-verificata -- trattare come storica).
+
+**Testing/CI** (sparso nel doc, sintesi): Game ~150 AI test + 196 Python
+(`npm run test:stack`) | Game-Godot-v2 429 GUT (~56s headless) + CI
+gdformat/gdlint | Game-Database Vitest + Playwright E2E + 3 GitHub Action |
+codemasterdd governance-lint + promptfoo. Nessun repo ha CI cross-repo
+unificata.
+
+**Licensing**: Game/Game-Godot-v2 implicito (no LICENSE esplicito citato).
+**Game-Database = PUBLIC senza LICENSE = copyright strict de-facto**
+(rischio legale se open-source atteso; decisione MIT/Apache deferred
+Eduardo). Asset: 100% CC0/PD/Sonniss (sez. 11.6/12.1).
+
+**Ownership / approval**: progetto single-dev Eduardo Scarpelli
+("Master DD" = Eduardo nei doc design = autorita' approvazione finale
+gate M0-M6 + merge PR + Q-001 decision). Nessun team.
+
+---
+
+## Glossario acronimi
+
+| Sigla | Espansione | 1-line |
+|-------|-----------|--------|
+| d20 | dado 20 facce | core resolver tiro vs CD |
+| MoS | Margin of Success | ogni +5 sopra CD = +1 step danno (cap 6) |
+| AP | Action Points | budget azioni/turno (2 + reazioni) |
+| PT | Punti Tattici (PT spend) | risorsa tattica (perforazione/spinta), cap tuning |
+| PP | Punti Potere / combo meter | +hit/+kill/+assist -> sblocca ability |
+| SG | Stress / burst per-unit | risorsa stress combat |
+| PE | Punti Evoluzione | currency run (costo evoluzione forma ~8) |
+| PI | Punti Identita' / pacchetti | currency pack/job unlock |
+| Seed | currency meta | output mating/legacy |
+| VC | Vettori Comportamentali | metriche aggro/risk/cohesion/setup/explore/tilt |
+| MBTI | profilo 4-assi E/N/T/P | 16 forme, reveal diegetico (telemetria ludica) |
+| Ennea | Enneagramma | temi personalita' secondari (modulo non-core) |
+| NPG | NPC Generator (Director) | genera gruppi spawn per bioma |
+| QBN | Quality-Based Narrative | engine narrativo (briefing/debrief) |
+| DoD | Definition of Done | gate Godot (prettier+governance+test+smoke) |
+| ETL | Extract-Transform-Load | Game YAML -> Godot JSON (`tools/etl/*.py`) |
+| FD-ID | Final-Design ID | task backlog freeze (es. FD-006/050) |
+| OD | Open Decision | decisione pendente (es. OD-001/013) |
+| CAP | Capability (Sprint Impronta) | capability AA01 Game (CAP-11..15) |
+| TKT | Ticket sprint | unita' lavoro (es. TKT-P2 Brigandine) |
+| EA | Early Access | modello release (EA -> Premium 1.0) |
+| A0-A5 | Authority levels | gerarchia fonte verita' (vedi sopra) |
+| M0-M6 | Milestone freeze | Baseline->RC (vedi 11.8/12.2) |
+| Bundle A/B/C | gruppi feature deferred | scheduling indie-cluster (sez. 11.2D) |
+| D4/D5 | decision/writer gate | bottleneck narrativo/scope (sez. 11.2D) |
+
 ---
 
 ## 0. Mappa mentale corretta
@@ -477,8 +592,9 @@ Punti integrazione verificati (file-cited):
 >
 > - **(A) Game museum cards** -- `Game/docs/museum/cards/` (Dublin Core,
 >   alternative + ROI + reuse path, ~45 card, indice `docs/museum/MUSEUM.md`)
-> - **(B) vault pillars** -- `vault/Spaces/Dev/Evo-Tactics/core/` (fonte
->   verita' canonical, autorita' A1-A3, freeze A3)
+> - **(B) vault pillars** -- `vault/Spaces/Dev/Evo-Tactics/core/` (design
+>   narrative + ricerca; vedi front-matter "Autorita'": canonical
+>   runtime/scope = Game A0-A3, vault = A5/shadow reference)
 >
 > Weighting: internal>external, empirical>doc, multi-source-converge >
 > single-signal. Dove un'ispirazione appare in entrambi i layer = alta
@@ -634,7 +750,9 @@ Palette 4-layer: biome base (low sat) + unit identity (outline team + tint
 specie) + tactical overlay (cyan/amber/red/white) + ritual overlay (deep ink,
 warm bone text).
 
-**Creatura Skiv** (refs in `evo-tactics-refs-meta/SKIV_REFS_EXTRACTED.md`):
+**Archetipo Skiv -- asset refs** (`evo-tactics-refs-meta/SKIV_REFS_EXTRACTED.md`).
+NB: "Skiv" = archetipo/shorthand player-facing, NON specie letterale (vedi
+12.1 naming); qui = label sotto cui sono organizzati i ref asset:
 - 3D anatomia: Quaternius Animal Pack Vol.2 Wolf + Red Fox (CC0, rig posing),
   wolf-skiv-ref (Blender rigged + 3dwolf FBX PBR color/normal/rough/spec)
 - 2D sprite: HF OGA-CC0 Desert Kit Wild Animals (Fox/Wolf 36-40px, Wolf Howl
@@ -752,9 +870,8 @@ Resident Evil, nessun "Descent: Journeys" board game (solo Road to Legend).
 **Conteggio finale**: ~31 titoli unici citati positivamente (8 pillar-tier +
 1 creature museum + 1 quick-win + 11 indie-cluster + 10 core/GDD narrative+
 system) + 8 anti-reference esplicite + ~14 museum card senza gioco esterno
-(worldgen/genetics interni). Tutte le ~45 museum card lette.
-
----
+(worldgen/genetics interni). Scope audit: museum index + grep vault,
+2026-05-18 -- NON garanzia di completezza esaustiva.
 
 ---
 
@@ -1010,6 +1127,33 @@ agent (drift freeze/ADR/YAML/schema -> Q-001) + dual-track canonical/storico
    `catalog/trait_*.json` (derivato). No SSoT unico -- validare entrambi.
 5. **Cross-biome trait inheritance non documentato**:
    `global-trait-keeper.yaml` + per-biome keeper, merge strategy unclear.
+
+---
+
+## Coda -- Doc improvement backlog (harsh-review 2026-05-18)
+
+Harsh-review esterno (18 finding). **Risolti in questa revisione** (P0+P1
+cheap): #1 contraddizione autorita' (front-matter "Autorita'" unico) ·
+#2 TOC (Indice) · #3/#4/#12 staleness (tabella "Stato & attivita'"
+datata + playable status + pillar flagged storico) · #6 Skiv archetipo
+vs creatura (11.6 wording fix + cross-ref) · #8 glossario · #9 privacy
+per-repo · #10 testing/licensing/ownership (front-matter) · #11
+portabilita' (nota header) · #14 doppio `---` rimosso · #15 false
+precision "tutte le card lette" -> scope honest.
+
+**Deferred (documentati, non bloccanti)** -- richiedono decisione Eduardo
+o restructuring ampio:
+
+| # | Sev | Finding | Perche' deferred |
+|---|-----|---------|------------------|
+| 13 | P2 | Split file: sez. 0-10 (repo map) vs 11-12 (design digest) in 2 file | Restructuring strutturale -- decisione Eduardo (un file e' anche comodo per cold-start single-paste). Se split -> dedup #5/#7 segue |
+| 5 | P1 | Overlap 11.6 (art/refs) vs 12.1 (token canonici) | Mitigato (11.6 = provenance/refs, 12.1 = token); merge pieno legato a #13 |
+| 7 | P1 | Doppio data-flow diagram §8 vs §12.3 | §8 = sintetico cold-start, §12.3 = dettaglio. Indice ora segnala "dettaglio = 12.3". Merge legato a #13 |
+| 16/18 | P2 | Numeri ripetuti (trait 458, ADR 39/44/33) senza tabella unica | Cross-ref numerico unico = refactor; per ora numeri citati con fonte inline |
+| 17 | P2 | Forward-ref Bundle A/B/C, D4/D5, OD/TKT | Parzialmente coperti in Glossario; dettaglio scheduling vive in Game `docs/planning/` (volatile, non duplicare qui) |
+
+Verdetto harsh pre-fix: REWORK (bones solidi, P0 fuorvianti). Post-fix:
+P0 risolti -> SHIP-able come reference, #13 = miglioria opzionale.
 
 ---
 
