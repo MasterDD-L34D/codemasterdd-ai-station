@@ -44,15 +44,24 @@ R6 suggestions-gate · R7 audit-trail `logs/jules-autonomous-YYYY-MM.md`.
 | Azione | Autorizzata? | Pattern |
 |--------|--------------|---------|
 | API read (`GET sessions/sources/activities`) | ✅ sì (Bash curl generico) | nessuna modifica |
-| API `sendMessage` (respond/correct) | ✅ **già** | settings.json `autoMode.allow` riga 122 (esistente) |
-| API archive/complete sessione | ⚠️ da autorizzare | **Eduardo aggiunge** a `~/.claude/settings.json` `autoMode.allow` una entry analoga a riga 122, es: `"Bash curl/python POST to https://jules.googleapis.com/v1alpha/sessions/*:<archiveMethod> to close ground-truth-verified-already-shipped Jules sessions, ADR-0034 Option D batch-approved only, key from ~/.config/api-keys/keys.env"` (sostituire `<archiveMethod>` col metodo reale dopo verifica read-only endpoint) |
-| API create session (start da suggestion/task) | ⚠️ da autorizzare | analoga: `"... POST https://jules.googleapis.com/v1alpha/sessions to create Jules sessions for Eduardo-approved tasks, ADR-0034 Option D, ..."` |
-| Browser jules.google (suggestions discovery) | ❌ classifier-blocked | Eduardo aggiunge permission per `mcp__Claude_in_Chrome__*` su jules.google **OPPURE** suggestions restano azione manuale Eduardo (raccomandato: API non le copre, alto-rischio autonomo) |
-| Skill `update-config` (self-mod permessi) | ❌ barrato by-design | **SOLO Eduardo edita settings.json a mano** — l'agent NON può auto-concedersi guardrail (multi-layer, corretto, allineato SDMG/ADR-0034) |
+| API read (`GET sessions/sources/activities`) | ✅ sì (Bash curl generico) | nessuna modifica |
+| API `sendMessage` / archive / create (generativo) | 🔶 **per-ciclo, NON standing** | **Modello ADR-0034:15**: l'autorizzazione = **batch-approve esplicito Eduardo in chat per ciclo** (rende le azioni user-authorized → classifier OK), **NON** una standing entry in `settings.json`. Una standing `autoMode.allow` = la "broad-rule" che l'ADR ha **esplicitamente rigettato** (least-privilege: zero privilegio external-write permanente). |
+| Browser jules.google (suggestions discovery) | ❌ classifier-blocked | Suggestions **restano azione manuale Eduardo** (API non le copre; permission browser autonoma = start-from-suggestion generativo = SDMG-rejected, NON pre-staged qui). |
+| Skill `update-config` / edit `settings.json` (self-mod permessi) | ❌ barrato by-design | **SOLO Eduardo edita `settings.json` a mano** — l'agent NON può auto-concedersi guardrail (classifier blocca correttamente, allineato SDMG/ADR-0034). |
 
-**Principio**: l'agent documenta i pattern; Eduardo li applica. Il
-batch-approve Option D resta il controllo-policy anche con permessi
-tool-broadened (permesso = meccanismo harness; Option D = policy umana).
+> **⚠️ P0-3 (harsh-reviewer cluster 2026-05-18, adottato non difeso).** Le 2
+> standing entries archive/create aggiunte 2026-05-18 a `settings.json:123-124`
+> **contraddicono ADR-0034:15** ("NON standing permission-rule"). Vanno
+> **rimosse da Eduardo** (revert manuale; il classifier blocca il self-mod
+> dell'agent, correttamente). Anche riga 122 (sendMessage, standing) è stessa
+> classe → decisione consistenza Eduardo. Modello corretto = approve in chat
+> per ciclo. Finché non risolto: exec del batch = manuale Eduardo.
+
+**Principio**: l'agent **documenta** i pattern + **drafta** il batch; Eduardo
+**autorizza per ciclo in chat** (= il throttle generativo Option D). Nessun
+privilegio external-write standing. Permesso harness ≠ policy: la policy
+(batch-approve per ciclo) è l'unico controllo, e non va sostituita da una
+broad-rule in settings.json.
 
 ## 4. Modello operativo Option D (ciclo)
 
@@ -103,66 +112,43 @@ Automatizzabile: sessioni-API + ground-truth (scriptabile puro, no Claude/
 browser). NON automatizzabile: suggestions (browser-only) + verdict-sfumato
 (needs Claude) → il digest li FLAGGA manuali (no overclaim, lezione 69%-FP).
 
-### Script (Eduardo salva come `scripts/jules-daily-digest.ps1`)
+### Script — canonico: `scripts/jules-daily-digest.ps1` (v4.1, PR #172)
 
-> Agent NON crea il .ps1 (TDD-guard premature-impl + self-bootstrap-infra
-> barrato). Qui = documentato; Eduardo lo crea+installa. Read-only +
-> scrive solo digest .md locale. ZERO mutazione Jules (no archive/send).
+**NON incollare uno script inline qui.** Lo script canonico vive in
+`scripts/jules-daily-digest.ps1` (commit su PR #172), già installato
+(Windows ScheduledTask `jules-daily-digest`, daily 8am). Read-only:
+solo `GET` Jules API + `gh` + scrive `docs/jules-batch/<day>-digest.md`.
+ZERO mutazione Jules.
 
-```powershell
-# jules-daily-digest.ps1 -- READ-ONLY sessions digest (ADR-0034 Option D)
-$ErrorActionPreference='Stop'
-$env:JULES_API_KEY=(Get-Content "$HOME/.config/api-keys/keys.env" |
-  Where-Object {$_ -match '^JULES_API_KEY='}) -replace '^JULES_API_KEY=',''
-$repo='C:/dev/codemasterdd-ai-station'
-$day=Get-Date -Format 'yyyy-MM-dd'
-$out="$repo/docs/jules-batch/$day-digest.md"
-$api='https://jules.googleapis.com/v1alpha'
-$hdr=@{'x-goog-api-key'=$env:JULES_API_KEY}
-$sess=(Invoke-RestMethod -Headers $hdr "$api/sessions?pageSize=100").sessions |
-  Where-Object {$_.state -eq 'AWAITING_USER_FEEDBACK'}
-$lines=@("# Jules daily digest $day (ADR-0034 Option D, READ-ONLY)",
- "> Verdetti FIRST-PASS scriptabili. Generative=Eduardo batch-approve.",
- "> Suggestions NON incluse (browser-only). Ambigui=Claude-review.","")
-foreach($s in $sess){
-  $id=$s.name -replace 'sessions/',''
-  $src=$s.sourceContext.source -replace 'sources/github/',''
-  # heuristic ground-truth: estrai 'File: <path>' dal prompt + marker
-  $f=([regex]'File:\s*([^\s:]+)').Match($s.prompt).Groups[1].Value
-  $verdict='NEEDS-CLAUDE-EVAL'; $ev=''
-  if($f){
-    $c=(gh api "repos/$src/contents/$f" --jq '.content' 2>$null |
-        ForEach-Object {[Text.Encoding]::UTF8.GetString([Convert]::FromBase64String($_))})
-    # marker = prima riga commento-fix significativa nel prompt context
-    $mk=([regex]'(?m)^\s*//\s*(.{12,60})').Match($s.prompt).Groups[1].Value
-    if($mk -and $c -match [regex]::Escape($mk)){ $verdict='ARCHIVE? (marker gia su origin/main)'; $ev="$f :: $mk" }
-    elseif($f -match 'services/generation'){ $verdict='DEFER (services/generation = M1-freeze sensitive)' }
-    else { $verdict='NEEDS-CLAUDE-EVAL'; $ev="$f (no marker match -> ambiguo)" }
-  }
-  $lines+="- ``$id`` [$src] **$verdict** -- $($s.title.Split([char]10)[0].Substring(0,[Math]::Min(70,$s.title.Length)))  | $ev"
-}
-$lines+="","## Manuale (non scriptabile)","- Suggestions: apri jules.google dashboard per-repo, review.","- NEEDS-CLAUDE-EVAL sopra: ping Claude per ground-truth profondo.","","## Gate","Nessuna azione auto. Eduardo: review -> approva batch (archive/respond) -> Claude esegue via API (sendMessage pre-auth riga 122; archive post §3-permission)."
-Set-Content -Encoding utf8 $out ($lines -join "`n")
-# reminder toast
-[void][Windows.UI.Notifications.ToastNotificationManager,Windows.UI.Notifications,ContentType=WindowsRuntime]
-Write-Host "DIGEST -> $out ($($sess.Count) Awaiting)"
-```
+> **Storia euristica (SDMG/Protocol-7 — falsificata esternamente,
+> adottata-non-difesa; lezione, NON vittoria):**
+> - v1 prompt-marker `File:`+commento (era embeddata qui) / v2 substring →
+>   **FALSIFICATE**. harsh-reviewer REJECT-cluster 3×P0 + asse indipendente
+>   Jules-activities: i "marker" sono spesso il commento di **contesto
+>   pre-esistente** (dal Codex/PR originale), non prova che Jules abbia
+>   shippato. v3.1 sbagliava 4/8 incl. 3 false-ARCHIVE; "validated 8/8"
+>   era **circolare** (stessa fonte gh-api per euristica e ground-truth).
+> - **v4.1 (canonico)** = segnale **indipendente** a 2 fonti: Jules
+>   session → linked GitHub PR → `{merge-state, files}`. `MERGED` &
+>   nessun file freeze = ARCHIVE; `CLOSED`/`OPEN`/no-PR = ACTIONABLE
+>   (non shippato); qualunque file PR sotto `services/generation|
+>   services/rules|apps/backend/services/combat` = **DEFER**; no-PR +
+>   File-hint non-parsabile = **DEFER** (conservativo: il freeze-miss è
+>   la direzione pericolosa). false-ARCHIVE **strutturalmente impossibile**
+>   (richiede una PR davvero merged). API-fetch-fail = digest ERROR
+>   esplicito (non no-op silenzioso). 8/8 corretto vs ground-truth
+>   indipendente 2026-05-18.
+> - Vedi header dello script per il changelog completo v1→v4.1.
 
-### Scheduler (Eduardo one-time)
-
-```powershell
-$a=New-ScheduledTaskAction -Execute 'powershell' -Argument '-NoProfile -ExecutionPolicy Bypass -File C:\dev\codemasterdd-ai-station\scripts\jules-daily-digest.ps1'
-$t=New-ScheduledTaskTrigger -Daily -At 8am
-Register-ScheduledTask -TaskName 'jules-daily-digest' -Action $a -Trigger $t -Description 'ADR-0034 Option D daily Jules sessions digest (read-only)'
-```
-
-### Limiti onesti (encoded nel digest)
-- Verdetti = **FIRST-PASS euristici** (marker-match). ARCHIVE? col `?` =
-  candidato, NON auto-eseguito (Eduardo/Claude conferma — lezione 69%-FP).
-- Suggestions: NON nel digest (browser-only). Riga manuale.
-- Ambigui (no marker) → `NEEDS-CLAUDE-EVAL` → ping Claude per ground-truth.
-- Script READ-ONLY: solo `GET` API + `gh api` + scrive .md locale. ZERO
-  archive/sendMessage/start (quelli = Eduardo batch-approve → Claude API).
+### Limiti onesti
+- Il digest è un **ENUMERATORE advisory**, NON un motore di verdetti
+  auto-eseguiti. I verdetti alimentano il **batch Claude-drafted** che
+  Eduardo approva per ciclo (ADR-0034 Option D). Zero auto-exec.
+- Suggestions: NON nel digest (browser-only, no API). Riga manuale Eduardo.
+- ACTIONABLE / IN-PROGRESS / AMBIGUOUS → Claude ground-truth profondo
+  (activities/diff) in fase di batch-draft.
+- Generativo (archive/respond/start) = Eduardo approve in chat per ciclo,
+  **non** standing settings entry (P0-3, §3).
 
 ### Flusso risultante
 Daily 8am → script → `docs/jules-batch/<day>-digest.md` + toast → Eduardo
