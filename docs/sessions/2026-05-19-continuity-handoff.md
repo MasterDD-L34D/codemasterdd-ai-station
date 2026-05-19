@@ -80,3 +80,45 @@ reorg-collision file list: codemasterdd/docs/sessions/2026-05-19-
 continuity-handoff.md. La reorg DEVE consultare quel doc §Reorg-collision
 prima di spostare gli script/doc elencati (ScheduledTask path-dependent).
 ```
+
+## PENDING GOVERNANCE — Cross-machine parity audit (2026-05-19, Eduardo-confirmed)
+
+Owner override: AA01 + runtime NON sono "correttamente fuori-parity"
+(mio conflation error, ritirato). 2 conflation: (a) AA01 scope-separato
+≠ non-versionato; (b) runtime transiente ≠ recipe-provisioning. Audit
+ground-truth Lenovo↔Ryzen (read-only SSH) → gap:
+
+**🔴 CRITICO**: Ryzen **global git-hooks ASSENTI** (`git config --global
+core.hooksPath` UNSET + repo-local commit-msg assente). Ogni commit da
+Ryzen (Eduardo/Codex/Aider/Jules/Claude) **bypassa ADR-0011 (Conventional
++trailer cross-agent) + ADR-0008/0020 (silent-corruption/silent-fail
+pre-commit)**. Governance hole attivo finché Eduardo lavora da Ryzen.
+
+| Gap | Ryzen | Sev | Fix |
+|---|---|---|---|
+| global git-hooks commit-msg/pre-commit | ASSENTE | 🔴 | set core.hooksPath + deploy hook scripts repo-canonical |
+| `~/.local/bin` wrappers | ASSENTE | 🟠 | `scripts/setup/install-wrappers.ps1` su Ryzen |
+| `~/.aider.conf.yml` | ASSENTE | 🟠 | deploy conf |
+| AA01 + lessons (`~/aa01`,`/c/dev/AA01`) | ASSENTE | 🟠 | AA01 → repo git PRIVATO proprio (scope-separato MA versionato), clone Ryzen; learnings viaggiano con esso |
+| `.claude/settings.json` + global CLAUDE.md | esiste, content-parity NON verificata | 🟠 | `deploy_claude_global.ps1` parity (anti-pattern #9) |
+| Ollama Ryzen | ROTTO (init fail/timeout) | 🟠 | fix runtime separato (tier-1/2 local morto Ryzen) |
+| Runtime recipe (Godot pin/.dqlaunch/ScheduledTask/deploy-quick) | ad-hoc Ryzen, non-repo | 🟠 | infra-as-code `codemasterdd/scripts/ryzen/` + `bootstrap-ryzen.ps1` idempotente; transiente-live resta local rigenerabile |
+
+**Reverse-gap (Ryzen-only → Lenovo manca)**: Vault-ops Python tooling;
+repo `claude-supermemory-local`,`_workspace`. Lenovo-only: AA01,
+Game-aa01-cap14b/15b,Gpt. → repo-set reconcile.
+
+**Correttamente NON-parity**: keys.env *value* (procedura=code, valore=
+manuale-secure per-machine); runtime live-state (PID/URL ephemeral,
+rigenerabile da recipe); junk Lenovo `/c/dev/null`,`null'` (=cleanup).
+**Già OK Ryzen**: `.config/api-keys`✓ `aider-privacy-whitelist.txt`✓
+`.claude/commit-guard.js`✓ `skills/continuous-learning-v2`✓.
+
+**Governance change richiesto**: la regola "AA01 NON-git" (global
+CLAUDE.md + memory `project_aa01_studio`) = decisione documentata →
+override owner-mandato 2026-05-19, va in DECISIONS_LOG/ADR.
+
+### Next-session task (Eduardo-confirmed scope)
+1. ADR "cross-machine parity model" (AA01→git-privato · runtime→infra-as-code · git-hooks-parity CRITICO · wrappers/aider.conf/settings parity · ollama-fix · vault-ops reverse · repo-set reconcile · junk cleanup) + DECISIONS_LOG entry override AA01-non-git.
+2. `bootstrap-ryzen.ps1` idempotente (anti-pattern #9: test -Apply sandbox PRIMA del live, verify artefatto non solo log).
+3. Priority order: 🔴 git-hooks Ryzen FIRST (governance hole attivo).
