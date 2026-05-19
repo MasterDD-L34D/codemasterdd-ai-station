@@ -82,7 +82,7 @@ unrelated canonical-config drift (only L43/L44 + W-2 in scope).
 ### L2 -- custom-instructions path-scope for mixed ON repos (resolves M3)
 
 For ON repos that are mixed (codemasterdd; potentially others):
-- Maintain a TRACKED template `.claude/tdd-guard/instructions.template.md`
+- Maintain a TRACKED template `scripts/hooks/tddguard-instructions.template.md`
   in the repo with rules: "Edits to `**/*.md`, `scripts/**`, `docs/**`,
   `**/*.tmp*`, `.claude/**` are NOT TDD-relevant -> always PASS. Enforce
   test-first only on behavior-code (`src/**`, `apps/**`, package source)."
@@ -117,7 +117,7 @@ For ON repos that are mixed (codemasterdd; potentially others):
 |---|---|---|---|
 | tdd-guard hook | per-repo `.claude/settings.json` (ON-set only) | YES (repo) | fires tdd-guard only in ON-set; fresh/cross-PC safe |
 | canonical-config | vault `Vault-ops-remote/claude-global/canonical-config.json` | YES (vault) | NO LONGER carries user-global tdd-guard hook; documents policy |
-| instructions.template.md | per-repo `.claude/tdd-guard/instructions.template.md` (mixed ON) | YES (repo) | path-scope rules source |
+| instructions.template.md | per-repo `scripts/hooks/tddguard-instructions.template.md` (mixed ON) | YES (repo) | path-scope rules source |
 | instructions.md | `.claude/tdd-guard/data/instructions.md` | NO (gitignored) | runtime, seeded from template via SessionStart |
 | guard on/off state | `.claude/tdd-guard/data/` | NO (gitignored) | runtime only; NOT the control lever (structural hook-placement is) |
 | deploy script | `deploy_claude_global.ps1` | YES (vault) | must not re-inject user-global tdd-guard hook |

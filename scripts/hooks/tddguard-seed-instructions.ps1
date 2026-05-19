@@ -8,7 +8,7 @@ $ErrorActionPreference = 'SilentlyContinue'
 try {
   $root = $env:CLAUDE_PROJECT_DIR
   if (-not $root) { exit 0 }
-  $tpl  = Join-Path $root '.claude/tdd-guard/instructions.template.md'
+  $tpl  = Join-Path $root 'scripts/hooks/tddguard-instructions.template.md'
   $data = Join-Path $root '.claude/tdd-guard/data'
   $dst  = Join-Path $data 'instructions.md'
   if (-not (Test-Path $tpl)) { exit 0 }

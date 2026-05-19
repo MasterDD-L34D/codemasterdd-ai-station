@@ -33,7 +33,7 @@ canonical-config JSON, `deploy_claude_global.ps1` (PowerShell), git.
 | File | Responsibility | Repo | GATE? |
 |---|---|---|---|
 | `.claude/settings.json` (per ON repo) | register tdd-guard hook, tracked | codemasterdd, Game, Game-Godot-v2 (+M0 set) | no (feature-branch) |
-| `.claude/tdd-guard/instructions.template.md` | path-scope rules source (mixed ON) | codemasterdd | no |
+| `scripts/hooks/tddguard-instructions.template.md` | path-scope rules source (mixed ON) | codemasterdd | no |
 | `.claude/settings.json` SessionStart hook | seed instructions.md from template | codemasterdd (mixed ON) | no |
 | `Vault-ops-remote/claude-global/canonical-config.json` | remove user-global tdd-guard hook; W-2 arg; L43/L44; _INERTE resolved-ref | vault | **GATE** |
 | `Vault-ops-remote/claude-global/scripts/deploy_claude_global.ps1` | regression guard: never re-inject user-global tdd-guard hook | vault | **GATE** |
@@ -86,7 +86,7 @@ git -C ... commit -m "docs(od-050): ON-SET-FINAL derived list (M0)"
 
 **Files:**
 - Modify: `C:/dev/codemasterdd-ai-station/.claude/settings.json` (merge tdd-guard PreToolUse hook + SessionStart hook; do NOT replace existing hooks)
-- Create: `C:/dev/codemasterdd-ai-station/.claude/tdd-guard/instructions.template.md`
+- Create: `C:/dev/codemasterdd-ai-station/scripts/hooks/tddguard-instructions.template.md`
 - Test: live-firing manual matrix (no unit harness for hooks)
 
 - [ ] **Step 1: Write the verification check (expected: fails pre-change)**
@@ -94,14 +94,14 @@ git -C ... commit -m "docs(od-050): ON-SET-FINAL derived list (M0)"
 Run (records current behavior — tdd-guard fires via user-global, no path-scope):
 ```bash
 grep -c 'tdd-guard' C:/dev/codemasterdd-ai-station/.claude/settings.json 2>/dev/null || echo 0
-ls C:/dev/codemasterdd-ai-station/.claude/tdd-guard/instructions.template.md 2>/dev/null || echo "NO template"
+ls C:/dev/codemasterdd-ai-station/scripts/hooks/tddguard-instructions.template.md 2>/dev/null || echo "NO template"
 ```
 Expected PRE: `0` + `NO template` (hook only user-global; no path-scope) =
 the defect state.
 
 - [ ] **Step 2: Create the path-scope instructions template**
 
-Create `C:/dev/codemasterdd-ai-station/.claude/tdd-guard/instructions.template.md`:
+Create `C:/dev/codemasterdd-ai-station/scripts/hooks/tddguard-instructions.template.md`:
 ```markdown
 # TDD Guard custom rules — codemasterdd (mixed repo)
 
@@ -146,14 +146,14 @@ project hooks. If present, JSON-merge arrays, do not drop existing.)
 Run:
 ```bash
 python -c "import json;d=json.load(open(r'C:/dev/codemasterdd-ai-station/.claude/settings.json'));print('tddguard-pre',any('tdd-guard' in h.get('command','') for b in d.get('hooks',{}).get('PreToolUse',[]) for h in b.get('hooks',[])));print('sessionstart',any('tdd-guard' in h.get('command','') for b in d.get('hooks',{}).get('SessionStart',[]) for h in b.get('hooks',[])))"
-ls C:/dev/codemasterdd-ai-station/.claude/tdd-guard/instructions.template.md
+ls C:/dev/codemasterdd-ai-station/scripts/hooks/tddguard-instructions.template.md
 ```
 Expected POST: `tddguard-pre True` + `sessionstart True` + template exists.
 
 - [ ] **Step 5: Commit (codemasterdd feature branch — NOT gated)**
 
 ```bash
-git add .claude/settings.json .claude/tdd-guard/instructions.template.md
+git add .claude/settings.json scripts/hooks/tddguard-instructions.template.md
 git commit -m "feat(tddguard): codemasterdd per-repo hook + path-scope template (OD-050 L1/L2)"
 ```
 
@@ -200,7 +200,7 @@ Run the Step-1 command. Expected POST: `>=1` each.
 - [ ] **Step 4: Commit (each repo, feature branch — NOT gated)**
 
 ```bash
-git -C C:/dev/Game add .claude/settings.json [.claude/tdd-guard/instructions.template.md]
+git -C C:/dev/Game add .claude/settings.json [scripts/hooks/tddguard-instructions.template.md]
 git -C C:/dev/Game commit -m "feat(tddguard): Game per-repo hook (OD-050 L1)"
 # repeat Game-Godot-v2
 ```
@@ -391,7 +391,7 @@ investigation output, not placeholder).
 
 **Type/name consistency:** hook matcher `Write|Edit|MultiEdit|TodoWrite`,
 command `npx tdd-guard@latest`, SessionStart `tdd-guard`, template path
-`.claude/tdd-guard/instructions.template.md` — consistent across Tasks
+`scripts/hooks/tddguard-instructions.template.md` — consistent across Tasks
 1/2/3.
 
 **Open mechanism (Task 3 Step 2) is the highest-risk unknown** — recommend
