@@ -101,24 +101,15 @@ the defect state.
 
 - [ ] **Step 2: Create the path-scope instructions template**
 
-Create `C:/dev/codemasterdd-ai-station/scripts/hooks/tddguard-instructions.template.md`:
-```markdown
-# TDD Guard custom rules — codemasterdd (mixed repo)
-
-This repo mixes behavior-code (pytest under `scripts/` modules with tests),
-ops scripts, and docs/governance. Apply test-first ONLY to behavior-code.
-
-ALWAYS PASS (not TDD-relevant) — return valid, do not block:
-- Any path matching: `**/*.md`, `docs/**`, `**/*.tmp*`, `.claude/**`,
-  `Archivio_*/**`, `*.json` governance files, one-off ops scripts under
-  `scripts/` that have no co-located `test_*.py`
-ENFORCE test-first ONLY on:
-- Python modules with an existing co-located `tests/` or `test_*.py`
-  (behavior-code). Edits adding logic without a failing test first -> block.
-
-When uncertain whether a file is behavior-code vs ops/doc: PASS (favor
-non-blocking; this repo's value is coordination, not test-coverage).
-```
+Create `scripts/hooks/tddguard-instructions.template.md` with
+**path-ROLE-based** scope (NOT presence-of-tests; presence-based is
+circular -> a new module has no test -> exempt -> never gets test ->
+TDD defeated). ENFORCE = explicit behavior-code allowlist
+(`apps/**/src/**`, `apps/**/*.py` excl tests, `scripts/lib/**`); PASS =
+everything else (`**/*.md`, `docs/**`, `.claude/**`, ops scripts under
+`scripts/hooks|setup|wrappers`, `*.json`/`*.yml`, test files). Tie-break:
+not in ENFORCE allowlist -> PASS. (Exact content = the committed
+template file.)
 
 - [ ] **Step 3: Merge hooks into codemasterdd `.claude/settings.json`**
 
@@ -133,13 +124,18 @@ hooks — MERGE not replace, per spec R3) adding:
     ],
     "SessionStart": [
       { "matcher": "startup|resume|clear",
-        "hooks": [ { "type": "command", "command": "tdd-guard" } ] }
+        "hooks": [ { "type": "command", "command": "powershell -NoProfile -ExecutionPolicy Bypass -File \"${CLAUDE_PROJECT_DIR}/scripts/hooks/tddguard-seed-instructions.ps1\"", "timeout": 5 } ] }
     ]
   }
 }
 ```
+SessionStart = dedicated idempotent seeder PS1 (NOT bare `tdd-guard`,
+which writes tdd-guard DEFAULT rules not our path-scope). Seeder copies
+template -> `.claude/tdd-guard/data/instructions.md` only-if-absent
+(no-clobber Test-Path guard, fail-safe non-blocking).
 (If `.claude/settings.json` absent, create with only these + keep any
-project hooks. If present, JSON-merge arrays, do not drop existing.)
+project hooks. If present, JSON-merge arrays, do not drop existing —
+preserve existing session-start-marker SessionStart + journal Stop.)
 
 - [ ] **Step 4: Verify static (expected: passes post-change)**
 

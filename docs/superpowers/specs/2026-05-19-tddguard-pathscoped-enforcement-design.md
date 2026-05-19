@@ -83,12 +83,18 @@ unrelated canonical-config drift (only L43/L44 + W-2 in scope).
 
 For ON repos that are mixed (codemasterdd; potentially others):
 - Maintain a TRACKED template `scripts/hooks/tddguard-instructions.template.md`
-  in the repo with rules: "Edits to `**/*.md`, `scripts/**`, `docs/**`,
-  `**/*.tmp*`, `.claude/**` are NOT TDD-relevant -> always PASS. Enforce
-  test-first only on behavior-code (`src/**`, `apps/**`, package source)."
-- SessionStart hook copies template -> `.claude/tdd-guard/data/
-  instructions.md` if absent (tdd-guard creates-if-absent + never
-  overwrites; supplying our template pre-empts the default rules).
+  with **path-ROLE-based** scope (NOT presence-of-tests, which is
+  circular): ENFORCE = explicit behavior-code allowlist
+  (`apps/**/src/**`, `apps/**/*.py`, `scripts/lib/**`); PASS = everything
+  else (`**/*.md`, `docs/**`, `.claude/**`, ops scripts under
+  `scripts/hooks|setup|wrappers`, config, test files).
+- SessionStart seeder = a dedicated tracked idempotent script
+  `scripts/hooks/tddguard-seed-instructions.ps1` (NOT a bare `tdd-guard`
+  command): copies template -> `.claude/tdd-guard/data/instructions.md`
+  only if absent (no-clobber `Test-Path` guard; fail-safe non-blocking).
+  Chosen over relying on tdd-guard's own create-if-absent because the
+  latter would write tdd-guard DEFAULT strict rules, not our path-scope.
+  Registered with `matcher: startup|resume|clear`.
 - Net: codemasterdd ON, behavior-code guarded, ops/docs/.py-glue exempt =
   zero recurring friction (the OD-049 pain class).
 - Fallback if custom-instructions proves insufficient against the
