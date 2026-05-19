@@ -55,7 +55,7 @@ Applicata in concreto:
 ### Accessi disponibili
 - [x] Locale puro (Ollama + Claude Code senza cloud)
 - [x] Cloud integrato (Claude Code via Max OAuth)
-- [x] API provider esterni (4 keys in `~/.config/api-keys/keys.env`)
+- [x] API provider esterni (keys [conteggio NON hardcodato: leggi il file - anti-rot stale-claim, lezione OD-048] in `~/.config/api-keys/keys.env`)
 - [x] Repo aperto in Claude Code + Aider
 - [ ] Fonti documentali caricate (es. NotebookLM): **no**, docs vivono nel repo
 
