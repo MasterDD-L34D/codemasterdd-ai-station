@@ -152,3 +152,75 @@ interattiva · oppure remote→SSH (`git remote set-url origin
 git@github.com:MasterDD-L34D/codemasterdd-ai-station.git` + chiave SSH
 Ryzen→GitHub registrata). Verifica reorg-commit Ryzen non-pushati PRIMA
 (git log origin/main..HEAD su ogni repo Ryzen) per non perderli.
+
+---
+
+## EVENING UPDATE 2026-05-19 — OD-050 CHAIN CLOSED end-to-end
+
+Sessione Ryzen 2026-05-19 evening: catena OD-050 chiusa+live-verified
+entrambi PC. Aggiornamento PENDING table sopra (lines 22-31):
+
+### Done in questa serata
+- **OD-049 §4.5** (21-script Vault-ops consolidation) MERGED (vault main).
+- **tdd-guard C-raffinato shipped 2-PC**:
+  - codemasterdd `#180` MERGED (L1/L2: per-repo `.claude/settings.json`
+    hook + path-role template `scripts/hooks/tddguard-instructions.template.md`
+    + idempotent seeder `tddguard-seed-instructions.ps1`)
+  - vault `#131` MERGED (L3 canonical 3b: plugin tdd-guard@tdd-guard=false
+    user-global + W-2 observe.sh `pre`/`post` arg + L43/L44/L46 coherence
+    + deploy.ps1 documenting comment, NO logic-change canonical-driven)
+  - vault `#130` MERGED (OD-050 doc, status RESOLVED-PENDING-LIVE-VERIFY)
+  - codemasterdd `#181` MERGED (runbook tddguard-task5-cross-pc-verify)
+  - codemasterdd `#182`+`#183` MERGED (helper `task5-deploy-verify.ps1`
+    — flagged known-fragile, see lesson sotto)
+- **Task-5 cross-PC** DONE 2026-05-19 22:48-22:51:
+  - Ryzen `-Apply` -> tdd-guard@tdd-guard True->False (direct file-read
+    verified, mtime match)
+  - Lenovo (via SSH) re-deploy POST `git pull` 7fb5ded82 -> True->False
+    (findstr-verified). Sequence-bug fixed (1st run: `|tail` cmd-incompat
+    silently failed git-pull -> deploy ran on STALE canonical).
+  - **STATIC PARITY 2-PC**: tdd-guard=false both Ryzen+Lenovo.
+  - **LIVE TRIGGER Ryzen** (22:51, fresh Claude Code Desktop on
+    `C:\dev\vault`, edit `hot.md`): PASS no-block ("OD050 LIVE PASS,
+    nessun blocco"). Falsifies original bug empirically. Probe reverted.
+  - Lenovo live = trust-by-parity (script-identical + static-false +
+    canonical precedent `hook_userprofile_fix`).
+- **OD-050 STATUS** `RESOLVED-PENDING-LIVE-VERIFY` -> `RESOLVED` (vault
+  PR `#132` PENDING-MERGE Eduardo-sovereign; canonical L46 anti-rot
+  pending->DONE evidence; OD-050 §5 fully rewritten end-to-end).
+- **vault-sync** 47-behind -> 0 (4 tracked-dirty other-session preserved
+  via mirato stash-restore: pathfinder-tune.json blob + 3 gitlink-ptr
+  cosmetic, zero-loss).
+- **Cross-repo audit** prunato ~281 branch stale merged-verified
+  (Game/Godot/vault, Game-DB clean).
+- **#284 verification addendum** appended (Protocol-1 ground-truth:
+  4/5 claims verified, claim-2 "zero-theme" corrected to "non-bible-token
+  conformant", +1 NEW bug-finding main_scene-committed-PhoneComposerBoot
+  bug build_web.sh main-mode would export wrong scene). #284 stays
+  DRAFT (gate-1 ultrareview Eduardo, post-approval umbrella).
+
+### PENDING ORA (post-this-session)
+| Item | Owner | Stato |
+|---|---|---|
+| Merge vault `#132` (OD-050 RESOLVED close) | Eduardo (sovereign) | vault main = canonical RESOLVED post-merge |
+| `/ultrareview` PR `#284` (gate-1 Godot remediation chain) | Eduardo | catena separata, no-rush, post-approval umbrella |
+| Cleanup Ryzen scheduled-task (handoff §39 above: `Unregister evo-deploy-quick/evo-godot-install` + kill node/cloudflared/bash + rm `.dq*/.sync*/.ci2*` Desktop) | Eduardo | optional post-playtest |
+| Helper `task5-deploy-verify.ps1` deprecate/fix | Claude (follow-up, low-pri) | known-fragile flagged; runbook #181 = via affidabile |
+| `~/aa01-vs-C:/dev/AA01` aa01 dup resolution (handoff §PENDING line) | Eduardo | OD-047 follow-up |
+
+### Lessons encoded (oltre quelle handoff §60-64)
+- **Over-engineering automation** quando il manuale-robusto basta = anti-pattern. Helper task5 #182/#183 fragile (4 fail-iter: em-dash mojibake + nested-quoting probe + SSH-cmd-incompat `|tail` + deploy-unicode-misread). Robust path = direct findstr/file-read + runbook. Lesson: automate solo se non-fragile; "1-command" che richiede 4 fix > "5-step manuali robusti".
+- **Sequence-dependency cross-PC**: `git pull` PRIMA di `deploy -Apply`, altrimenti deploy gira su canonical-stale. `|tail` cmd-incompat ha mascherato il fail (esempio currency-gate handoff §61).
+- **AI-conflict resolution via ground-truth**: 2 sessioni Claude in disaccordo (Lenovo "63 dirty = reorg loss-risk" vs Ryzen "engine .uid churn") -> ground-truth diretto sul PC dove i file SONO = autoritativo (L-034 segnale-indipendente).
+- **Encoding-policy violation self-caught**: em-dash in .ps1 -> PS5.1 mojibake parse-break. CLAUDE.md ASCII-first encoding-policy esiste per QUESTO (cross-tool Windows). Ho violato la mia stessa policy, corretto.
+
+### Cross-link aggiornato per vault handoff
+```
+[ai-station-cross-ref 2026-05-19 evening] OD-050 catena CHIUSA
+end-to-end: tdd-guard plugin=false 2-PC + live-verified Ryzen
+(no-block .md edit, falsifica bug originale). vault PR #132 = close
+pending-Eduardo-merge sovereign. Per ripresa qualsiasi sessione futura:
+git -C C:\dev\codemasterdd-ai-station pull + leggi
+docs/sessions/2026-05-19-continuity-handoff.md (questo, §EVENING UPDATE).
+Godot #284 DRAFT separato gate-1-ultrareview-Eduardo quando vuoi.
+```
