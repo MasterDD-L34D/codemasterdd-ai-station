@@ -122,3 +122,33 @@ override owner-mandato 2026-05-19, va in DECISIONS_LOG/ADR.
 1. ADR "cross-machine parity model" (AA01→git-privato · runtime→infra-as-code · git-hooks-parity CRITICO · wrappers/aider.conf/settings parity · ollama-fix · vault-ops reverse · repo-set reconcile · junk cleanup) + DECISIONS_LOG entry override AA01-non-git.
 2. `bootstrap-ryzen.ps1` idempotente (anti-pattern #9: test -Apply sandbox PRIMA del live, verify artefatto non solo log).
 3. Priority order: 🔴 git-hooks Ryzen FIRST (governance hole attivo).
+
+## 🔴🔴 #0 BLOCKER (2026-05-19) — Ryzen git-auth GitHub ROTTO
+
+Ground-truth: Ryzen `git fetch/pull/push origin` FALLISCE →
+`fatal: Unable to persist credentials with the 'wincredman' credential
+store` + `bash: /dev/tty: No such device` + `exit 1`. Git Credential
+Manager Ryzen non autentica (non-interactive + store rotto). Conseguenza:
+- Ryzen `origin/main` CONGELATO a `212be6c` (ultimo fetch ok, pre-#177).
+- Ryzen ha doc continuity VECCHIO (#175, senza §parity-scope) → "non lo
+  trovo aggiornato" spiegato.
+- Ryzen NON pusha → reorg/commit fatti da Ryzen NON arrivano a GitHub
+  via questo path (rischio lavoro Ryzen isolato/perso).
+- Precede ogni altro gap parity: senza git-auth Ryzen non sincronizza
+  nulla. **Priority #0, prima di git-hooks**.
+
+Stato 3-way 2026-05-19: GitHub origin/main `058bfa8` (canonical, doc
+parity-scope ✓) · Lenovo `058bfa8` ALIGNED ✓ · Ryzen `212be6c` STUCK.
+
+### Fix (Eduardo, Ryzen interattivo — auth=owner-action, NON Claude)
+Opzione consigliata (gh ecosystem):
+```
+gh auth login           # su Ryzen, interattivo, scegli GitHub.com + HTTPS
+gh auth setup-git       # gh diventa credential helper, bypassa wincredman rotto
+cd C:\dev\codemasterdd-ai-station && git pull --ff-only origin main
+```
+Alternative: `git config --global credential.helper store` + 1 auth
+interattiva · oppure remote→SSH (`git remote set-url origin
+git@github.com:MasterDD-L34D/codemasterdd-ai-station.git` + chiave SSH
+Ryzen→GitHub registrata). Verifica reorg-commit Ryzen non-pushati PRIMA
+(git log origin/main..HEAD su ogni repo Ryzen) per non perderli.
