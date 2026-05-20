@@ -336,3 +336,4 @@ Quando convenient (Lenovo accesso), promuovi 5 lessons -> aa01
 encoding-policy-enforcement, ssh-cmd-cross-shell, ai-conflict-ground-truth).
 Anti-Pattern-Catalogue update global CLAUDE.md (Eduardo gate, sovereign).
 - `[parallel-#2 MERGED PR-δ #122 squash 91d5007 finish 2026-05-20T17:15:12Z]` (Fase 1 PR 4/5 done; 4 commits +548/-0 in 9 file; GET /api/audit + composite migration + 12 test + research; full suite 153→165 verde; CI 8/8 pass incl. schema-doc-check 5s; next PR-ε import validator STRICT)
+- `[parallel-#2 DONE FIX-#123 https://github.com/MasterDD-L34D/Game-Database/pull/124 finish 2026-05-20T17:22Z]` (a11y MUI TablePagination i18n fix; aria-label English defaults overridden con t() helper italiano; 4 file +84/-4; +3 test PaginationBar.test.tsx + 1 update DataTable.test.tsx; chiude #123 OD-053 browser-use finding; CI pending)
