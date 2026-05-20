@@ -224,3 +224,6 @@ git -C C:\dev\codemasterdd-ai-station pull + leggi
 docs/sessions/2026-05-19-continuity-handoff.md (questo, §EVENING UPDATE).
 Godot #284 DRAFT separato gate-1-ultrareview-Eduardo quando vuoi.
 ```
+
+### Parallel-session log 2026-05-20
+- `[parallel-A6 OWNING Game Vue3 branch claude/parallel-game-a6-frontend-2026-05-20 start 2026-05-20T01:33Z]` (Lenovo, scope: A6 starter_bioma frontend label gap ~30 LOC; backend chain ✅ già shipped; no-touch Godot v2 / vault / codemasterdd governance)
