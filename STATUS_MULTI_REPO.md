@@ -596,6 +596,7 @@ Audit 34 ADR. **17 HELD / 8 DRIFTED / 3 FALSIFIED / 6 STALE-STATUS**.
 | **2026-05-14** | **Phase B Day 7 formal closure** (Game ADR-2026-05-05 §13.4 cascade actions: web-v1-final tag + apps/play/ archive + README banner) | Game (Vue3) | Eduardo direct. **Sub-event di** ADR-0024 codemasterdd (NON archive Vue3 codebase-wide). Canonical execution checklist gia' preparato in Game `docs/planning/2026-05-14-phase-b-cutover-canonical-execution.md`. |
 | **2026-05-19** | Claude Max expiration | codemasterdd | **7gg residui al 12/5 mattina**. Transizione sovereign (wrapper + Ollama). H7 ANTHROPIC_API_KEY MISSING (Eduardo direct ~5min). |
 | **2026-05-20+** | SPRINT_02 prima sessione | codemasterdd | Scenario A operativo, smoke test sovereign confermato |
+| ~~2026-05-20~~ | **D-sequence closure** (browser-agentic-loop OD-051+OD-052+OD-053 -> 9 PR merged; 5 L-DRAFT-A..E promossi vault L-2026-05-034..038 PR #139; Anti-Pattern Catalogue #10-#13 PR #140; canonical CLAUDE.md propagated Ryzen, Lenovo PENDING) | vault + codemasterdd | DONE 2026-05-20. Dettaglio: `docs/sessions/2026-05-19-continuity-handoff.md` §LESSONS-PROMOTED 2026-05-20 |
 | **~giugno-agosto 2026** | Synesthesia riattivazione | Synesthesia | Privacy validation 2/3 + esame prep |
 
 ---
