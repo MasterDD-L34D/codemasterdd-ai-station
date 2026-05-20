@@ -197,6 +197,34 @@ def stats_view():
         sparkline_cost=sparkline_cost,
     )
 
+@main_bp.route("/monitor")
+def monitor_view():
+    """Cross-repo drift-monitor feed: tail JSONL from codemasterdd/logs/monitor-feed.jsonl."""
+    repo_root = Path(current_app.root_path).resolve().parent.parent
+    feed_path = repo_root / "logs" / "monitor-feed.jsonl"
+    iterations = []
+    if feed_path.exists():
+        try:
+            with feed_path.open("r", encoding="utf-8") as f:
+                lines = f.readlines()[-50:]
+            for line in reversed(lines):
+                line = line.strip()
+                if not line:
+                    continue
+                try:
+                    iterations.append(json.loads(line))
+                except json.JSONDecodeError:
+                    continue
+        except OSError:
+            pass
+    return render_template(
+        "monitor.html",
+        iterations=iterations,
+        feed_path=str(feed_path),
+        feed_exists=feed_path.exists(),
+    )
+
+
 @main_bp.route("/bench")
 def bench_view():
     bench = None
