@@ -336,7 +336,6 @@ Quando convenient (Lenovo accesso), promuovi 5 lessons -> aa01
 encoding-policy-enforcement, ssh-cmd-cross-shell, ai-conflict-ground-truth).
 Anti-Pattern-Catalogue update global CLAUDE.md (Eduardo gate, sovereign).
 
-<<<<<<< HEAD
 ## LESSONS-PROMOTED 2026-05-20 (D-sequence closure)
 
 L-DRAFT-A..E promossi a canonical vault learnings + Anti-Pattern Catalogue
@@ -411,7 +410,7 @@ globale aggiornato (Ryzen-side deploy done, Lenovo deploy deferred next-session)
 - `[parallel-#2 DONE FASE2-13 https://github.com/MasterDD-L34D/Game-Database/pull/141 finish 2026-05-20T21:47Z]` (bulk revert multi-select DELETE entries: Checkbox per row + Ripristina selezionati button + bulk-confirm dialog + Promise.allSettled + success/partial-failure toast; +6 i18n key; +4 vitest 28→32; pre-merge protocol active)
 - `[parallel-#2 MERGED FASE2-13 #141 squash 69d7c05e86a6642d26295b84cb306adb7dea2fd3 finish 2026-05-20T22:00Z]` (bulk revert multi-select DELETE + Codex P2 stale-selection fix incorporated; 4 nuovi vitest 28→33 + 1 regression caught Codex; CI 4/4 + stale Codex; pre-merge protocol caught 4° finding sessione)
 - `[parallel-#2 OWNING Game-Database branch claude/parallel-gamedb-fase2-select-all-2026-05-20 start 2026-05-20T22:00Z]` (Ryzen, scope: Fase 2 14/N master checkbox Seleziona tutte le DELETE visibili — completa bulk-revert UX, follow-up #141)
-=======
+
 
 ---
 
@@ -611,5 +610,4 @@ CROSS-REPO open PR snapshot 2026-05-20 19:30:
 
 Inizia con: ls vault/learnings/L-2026-05-* per next-NNN, poi crea 5 L-NNN files in vault feature branch.
 ```
->>>>>>> 184e843d88be442bdddbd1f7cc174d33b66795c1
 - `[parallel-#2 DONE FASE2-14 https://github.com/MasterDD-L34D/Game-Database/pull/142 finish 2026-05-20T22:04Z]` (master select-all visible DELETE checkbox; indeterminate when partial; +4 nuovi vitest + 4 refactor = 33→37 AuditHistoryPanel verde; pre-merge protocol active)
