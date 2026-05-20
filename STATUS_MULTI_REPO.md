@@ -597,7 +597,9 @@ Audit 34 ADR. **17 HELD / 8 DRIFTED / 3 FALSIFIED / 6 STALE-STATUS**.
 | **2026-05-19** | Claude Max expiration | codemasterdd | **7gg residui al 12/5 mattina**. Transizione sovereign (wrapper + Ollama). H7 ANTHROPIC_API_KEY MISSING (Eduardo direct ~5min). |
 | **2026-05-20+** | SPRINT_02 prima sessione | codemasterdd | Scenario A operativo, smoke test sovereign confermato |
 | ~~2026-05-20~~ | **D-sequence closure** (browser-agentic-loop OD-051+OD-052+OD-053 -> 9 PR merged; 5 L-DRAFT-A..E promossi vault L-2026-05-034..038 PR #139; Anti-Pattern Catalogue #10-#13 PR #140; canonical CLAUDE.md propagated Ryzen, Lenovo PENDING) | vault + codemasterdd | DONE 2026-05-20. Dettaglio: `docs/sessions/2026-05-19-continuity-handoff.md` §LESSONS-PROMOTED 2026-05-20 |
+| ~~2026-05-20/21~~ | **Harsh-review + narrow-pick** (HSGF F-FULL fusion design proposed -> harsh-reviewer RETHINK-FUNDAMENTAL verdict -> pivot Protocol 7 narrow-adoption. Shipped: vault #141 supermemory canonical fix + vault #142 PC identity mechanism + codemasterdd #193 parallel-session collision resolve + codemasterdd #194 sdmg-gate narrow-pick. ~$0.40 harsh-reviewer cost saved ~127h F-FULL waste) | vault + codemasterdd | DONE 2026-05-21. Dettaglio: `docs/sessions/2026-05-20-evening-harsh-narrow-pick.md` |
 | **~giugno-agosto 2026** | Synesthesia riattivazione | Synesthesia | Privacy validation 2/3 + esame prep |
+| **~2026-08-01** | **SDMG-gate quarterly review** (codemasterdd PR #194 narrow-pick 2-week empirical period -> 3 month review) | codemasterdd | Trigger: adoption rate < 30% qualifying decisions OR ADOPT-rate without executed experiment > 0 -> ADR-0026 amendment B/C |
 
 ---
 
