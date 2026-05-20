@@ -73,3 +73,4 @@ backup/*
 # === Quality bench results (framework tracked, run outputs ignored) ===
 scripts/quality-bench/results/
 monitor-feed.jsonl
+logs/sdmg-invocations-*.jsonl
