@@ -611,3 +611,4 @@ CROSS-REPO open PR snapshot 2026-05-20 19:30:
 Inizia con: ls vault/learnings/L-2026-05-* per next-NNN, poi crea 5 L-NNN files in vault feature branch.
 ```
 - `[parallel-#2 DONE FASE2-14 https://github.com/MasterDD-L34D/Game-Database/pull/142 finish 2026-05-20T22:04Z]` (master select-all visible DELETE checkbox; indeterminate when partial; +4 nuovi vitest + 4 refactor = 33→37 AuditHistoryPanel verde; pre-merge protocol active)
+- `[parallel-#2 MERGED FASE2-15 #144 squash ade9bc750554c369448a21434eae0a14c3e7f844 finish 2026-05-21T00:45Z]` (active preset highlighting + Codex P2 time-passage tick refresh fix; 39/39 verde; CI 4/4 + stale Codex; 6° catch sessione)
