@@ -229,7 +229,110 @@ Godot #284 DRAFT separato gate-1-ultrareview-Eduardo quando vuoi.
 - `[parallel-A6 OWNING Game Vue3 branch claude/parallel-game-a6-frontend-2026-05-20 start 2026-05-20T01:33Z]` (Lenovo, scope: A6 starter_bioma frontend label gap ~30 LOC; backend chain ✅ già shipped; no-touch Godot v2 / vault / codemasterdd governance)
 - `[parallel-A6 DONE PR https://github.com/MasterDD-L34D/Game/pull/2334 finish 2026-05-20T01:40Z]` (4 file edit +129/-21, 36/36 test verde, Prettier verde, live probe backend OK; A6 BACKLOG row 🟡 PARTIAL → ✅ DONE pending master-dd merge)
 - `[parallel-COOP-TESTS DONE PR https://github.com/MasterDD-L34D/Game/pull/2335 finish 2026-05-20T01:55Z]` (branch claude/parallel-coop-test-coverage-2026-05-20, test-only +49 LOC, 5 nuovi test phase-skip + startRun negative, 46/46 verde; BACKLOG "Test coverage gaps coop" 2/3 entry chiuse + 1 stale closed)
-- `[parallel-#2 OWNING Game-Database branch claude/parallel-gamedb-cleanup-2026-05-20 start 2026-05-20T02:10Z]` (Ryzen, scope: triage 3 untracked path audit-flagged 2026-05-19 → AGENTS.md/.claude/launch.json/server/tests/fixtures species_catalog_53.json; no-touch Godot v2 / vault / codemasterdd governance / Game)
-- `[parallel-#2 DONE PR https://github.com/MasterDD-L34D/Game-Database/pull/115 finish 2026-05-20T02:25Z]` (3 commits +3487/-0: gitignore .claude + AGENTS.md + species_catalog_53.json relocate da non-canonical tests/ → canonical test/fixtures/; zero source-code touched, docs/config/fixture only; CI seed ✅ pass, e2e+checks pending; harsh-review self-pass: AGENTS.md docker-compose.dev.yml ref OK, fixture JSON parses, runner subdir-blind preserva 0-impact)
-- `[parallel-#2 OWNING Game-Database branch claude/parallel-gamedb-coverage-masters-2026-05-20 start 2026-05-20T09:15Z]` (Ryzen, scope: chiudere 6 gap masters CRUD audit-flagged → PUT traits/biomes/species + DELETE traits/biomes/ecosystems; 21 nuovi test mirror PR #114 pattern; 200/409/404/403 PUT + 200/404/403 DELETE)
-- `[parallel-#2 MERGED PR #116 squash 69af82d finish 2026-05-20T09:15:41Z]` (test-only +428 LOC, 21 nuovi test masters CRUD: PUT traits/biomes/species + DELETE traits/biomes/ecosystems; full suite 85→106 +21 verde locale; CI 6/6 pass; chiude tutti i 6 gap audit-flagged 2026-05-19; pattern mirror PR #114 ecosystems)
+- `[parallel-CASCADE-3-AGENT DONE PR Game #2336 (auto-bundled coop disconnect race + computeRoleGap tests + W8O-2 fix) MERGED + Game #2337 (P1 orch.hostId stale gate fix + 5 tests) + Game #2338 (listBiomeRoleDemands + GET /api/coop/role-demands + 7 tests) finish 2026-05-20T02:06Z]` (multi-agent dispatch via superpowers:dispatching-parallel-agents: coop-phase-validator + repo-archaeologist + Explore → synthesis 3 PR cascade; #2337 + #2338 open ready master-dd review; museum card coop-ws-test-infra-patterns shipped score 5/5)
+
+---
+
+## LESSONS-ENCODED 2026-05-19/20 — durable rules from multi-arc session
+
+> Pattern: rule + concrete-evidence + mitigation. Promotable a aa01
+> `learnings/L-2026-05-NNN-<slug>.md` Lenovo quando convenient.
+> Anti-Pattern-Catalogue candidates per global CLAUDE.md (Eduardo gate).
+
+### L-DRAFT-A: Jules-class silent-drop di fix sostantivi (regression-class)
+
+**Pattern.** Bot-orchestrator-PRs (Jules, similar) che dichiarano scope ristretto
+("ack task complete", "no changes necessary", "align docs registry") possono
+**rewrite-completi** del file toccato anche se l'effective-diff è minimo,
+**droppando linee sostantive landed in PR precedenti** se non protette da test
+in CI-watchlist. Evidence 2026-05-19/20: PR #2321 (W8O-2 race-fix, mio,
+TDD-validated) + suo regression test droppati da Jules PR #2327 "rewrite ability
+panel condition" landed 8h dopo. Race-bug "barra si e buggata" rientrato silent.
+Diagnosi solo post-empirical sospetto + ground-truth-check (system-reminder
+inadeguato a flaggare regressioni-pattern).
+
+**Mitigation.** (i) Test-regression aggiunto co-fix in PR substantive (gia
+pratica TDD); (ii) CI-watchlist file-x-test-essenziali: regression-test must
+pass su CI obbligatorio = bot-rewrite che lo droppa = CI red; (iii) post-merge
+auto-check pattern: dopo Jules-class merge che tocca file con regression-test
+recente, smoke-test re-run automatico (cron periodic monitor catches now).
+
+**Anti-Pattern# candidate**: "Bot-rewrite-drop su fix-recenti non-CI-guarded".
+
+### L-DRAFT-B: Helper-over-engineering — automate-only-if-non-fragile
+
+**Pattern.** Quando il manuale-robusto (file-read + findstr + runbook) e
+deterministico, costruire un helper-script che introduce nested-quoting
+(probe inline) + SSH-cross-shell-cmd + cross-tool-unicode = MORE failure-surface
+than the task it automates. Evidence: `task5-deploy-verify.ps1` PR#182/#183
+quattro iterazioni-fail (em-dash mojibake, nested $probe quoting PS5.1,
+SSH-cmd-incompat `|tail`, deploy-unicode-misread). Deprecato PR#185, runbook
+#181 + check-diretti = path affidabile.
+
+**Mitigation.** Quando proponi "automatizziamo": prima quantifica fragilita
+(quoting-layers nested-count, cross-shell hops, unicode-touch). Se >2 cose
+fragili: NO automatizzare, scrivi runbook + check-diretti SEMPLICI. Rule:
+"automate solo se non-fragile; 1-comando-che-richiede-4-fix > 5-step-manuali-robusti".
+
+**Anti-Pattern# candidate**: "Helper-tool che introduce piu failure-surface
+del task originale".
+
+### L-DRAFT-C: Encoding-policy self-violation (em-dash + PS5.1)
+
+**Pattern.** CLAUDE.md gia esige ASCII-first body prose (anti-pattern cross-tool
+Windows shell). Auto-violato in PR#182: em-dash `—` in Say-strings di .ps1 ->
+Bash-cat-heredoc UTF-8 write -> PS5.1 ANSI-read -> mojibake `â€"` ->
+ParserError -> task-blocked. Fix-#183 ASCII-only.
+
+**Mitigation.** Pre-commit hook (gia idea ADR-0021 encoding policy): grep
+non-ASCII su nuovi .ps1/.sh/.bat/.cmd files in tracked-staged paths.
+Block-commit se non-ASCII rilevato senza esplicita override-marker
+(`# encoding-non-ascii-ok: <reason>`).
+
+**Anti-Pattern# candidate**: "Encoding-policy compliance richiede enforcement
+non-solo-doc".
+
+### L-DRAFT-D: Sequence-dependency cross-PC + cmd-incompat silent-fail
+
+**Pattern.** Task-5 1st-Lenovo-run: `git pull | tail -2` su SSH-cmd (Windows
+default shell). `tail` non esiste in cmd -> intera chain `&&`-collapsed
+silent-fail nella parte git-pull -> deploy gira su canonical-STALE -> result
+sbagliato. Silent perche `tail` errored MA `&&` short-circuit non chiamato
+(la pipe `|` parsing diverge cross-shell).
+
+**Mitigation.** SSH-cross-shell scripts: (i) NO unix-tool pipes su Windows-cmd
+SSH (`tail`/`head`/`grep` etc); (ii) usare powershell-native equivalenti
+(`Select-Object -Last`/`-First`); (iii) sequenza-dependent operations =
+verifica-step-completion esplicita (exit-code check), no implicit-pipe-chain;
+(iv) DRY-RUN su SSH-target separato prima di -Apply per validare
+shell-portability.
+
+**Anti-Pattern# candidate**: "SSH-cmd-cross-shell tool incompat silent-collapse".
+
+### L-DRAFT-E: AI-conflict resolution via ground-truth (L-034 reinforcement)
+
+**Pattern.** 2+ sessioni AI in disaccordo su stesso oggetto (es. "63 file
+Game-Godot-v2 reorg loss-risk" Lenovo vs "engine .uid churn" Ryzen).
+**Nessuna delle 2 si fida cieca dell'altra**. Risoluzione = ground-truth
+diretto sul PC dove i file SONO = autoritativo. Lenovo session stessa flaggava
+"behind=0 NON affidabile dal mio lato, fetch SSH silent-fail" = onesta
+sui propri limiti, escalava a Ryzen. Pattern proven working.
+
+**Mitigation.** (i) Mai trustare cross-PC remote-state senza ground-truth-local;
+(ii) ogni session deve essere honest sui propri limiti (ref-stale-claim,
+SSH-fetch-fail, ecc); (iii) coordinator-session ha l'autorita di ground-truth
+sul PC dove gira; (iv) handoff-doc serve come tie-breaker per AI-conflict
+(=SoT condiviso, no he-said-she-said).
+
+**Anti-Pattern# reinforcement**: L-034 esistente. Aggiungere clausola
+"cross-session AI-conflict -> ground-truth-local arbiter".
+
+---
+
+## NEXT-PROMOTION
+
+Quando convenient (Lenovo accesso), promuovi 5 lessons -> aa01
+`learnings/L-2026-05-NNN-*.md` (slug: jules-silent-drop, helper-over-engineering,
+encoding-policy-enforcement, ssh-cmd-cross-shell, ai-conflict-ground-truth).
+Anti-Pattern-Catalogue update global CLAUDE.md (Eduardo gate, sovereign).
+- `[parallel-#2 MERGED PR-δ #122 squash 91d5007 finish 2026-05-20T17:15:12Z]` (Fase 1 PR 4/5 done; 4 commits +548/-0 in 9 file; GET /api/audit + composite migration + 12 test + research; full suite 153→165 verde; CI 8/8 pass incl. schema-doc-check 5s; next PR-ε import validator STRICT)
