@@ -644,3 +644,46 @@ Audit 34 ADR. **17 HELD / 8 DRIFTED / 3 FALSIFIED / 6 STALE-STATUS**.
 - Pre-merge `harsh-reviewer` subagent on governance-critical/cluster PRs (Protocol-5)
 - Pull-before-touch, push-after-commit on shared docs
 - Background `repo-health-auditor` snapshot per drift/collision detection
+
+
+---
+
+## D-SEQUENCE 2026-05-20 — browser-agentic-loop E to A to B end-to-end
+
+Single afternoon session, ~$0.40 total spend, all three phases empirically validated + adopted NARROW.
+
+### Phase summary
+
+| Phase | OD | PR(s) merged | Adoption |
+|---|---|---|---|
+| E Playwright-direct | OD-051 RESOLVED-FE1-PASS | vault #134 + codemasterdd #190 | scripts/quality-bench/playwright-monitor-regression.py |
+| A Chrome MCP interactive-codev | OD-052 RESOLVED-FE2-CAPABILITY-PASS-SPEC-DRIFT | vault #135 | empirical pattern documented (5 spec-drifts as lessons) |
+| B browser-use exploratory | OD-053 RESOLVED-FE3-PASS | vault #136 + #137 + #138 | 4-step throwaway-venv recipe, NOT permanent |
+
+### Cross-repo touch
+
+- codemasterdd: PR #189 dashboard /monitor route wire + PR #190 Playwright regression script (both MERGED)
+- vault: 5 PR merged (#134 OD-051, #135 OD-052, #136 OD-053 DRAFT-v1, #137 OD-053 v3 Q1-Q4 answers, #138 OD-053 RESOLVED-FE3-PASS)
+- Game-Database: issue #123 opened (a11y mixed Italian/English aria-labels, P2 from OD-053 FE3 T2 finding #4)
+
+### Cron monitor durable promoted
+
+Session-only cron `e8e94a27`+`af96f168` (CronCreate) replaced by `mcp__scheduled-tasks__cross-repo-drift-monitor` (cross-session durable). File: `C:/Users/VGit/.claude/scheduled-tasks/cross-repo-drift-monitor/SKILL.md`. Schedule `7,37 * * * *` (off-minute). 7-day auto-expire.
+
+Empirical confirmation: iter-2 (12:12), iter-3 (12:18), iter-4 (12:42) fired during D-sequence execution, JSONL feed at `logs/monitor-feed.jsonl` (gitignored) populated correctly, dashboard `/monitor` renders.
+
+### Outstanding from D-sequence
+
+- Venv left at `C:/Users/VGit/AppData/Local/Temp/browser-use-fe3-venv` (classifier denied rm-rf scope-escalation, Eduardo manual cleanup)
+- 5 L-DRAFT-F..J lessons in continuity-handoff for promotion to canonical L-2026-05-NNN next session
+- D-sequence pattern reusable: anti-creep gate + harsh-review per phase + autoresearch for blocking Q's. Document as `docs/patterns/multi-phase-d-sequence.md` if applied again.
+
+### Status post-D-sequence cross-repo (open PR snapshot 13:00)
+
+- codemasterdd: 0 open PR (clean)
+- Game: 0 open PR
+- Game-Database: 2 open (Jules #118 docs spec, #122 feat audit) + issue #123 just opened
+- Game-Godot-v2: 1 open (#314 feat cronaca TKT-P4)
+- vault: 1 open (#133 coherence-backstop from another session)
+
+Coordinator-lane: clean. Parallel-session work distinct branch-names, no collision detected per monitor iter-4.
