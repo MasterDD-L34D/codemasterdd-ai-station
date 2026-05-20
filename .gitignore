@@ -72,3 +72,4 @@ backup/*
 
 # === Quality bench results (framework tracked, run outputs ignored) ===
 scripts/quality-bench/results/
+monitor-feed.jsonl
