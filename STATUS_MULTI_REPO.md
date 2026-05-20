@@ -608,3 +608,83 @@ Audit 34 ADR. **17 HELD / 8 DRIFTED / 3 FALSIFIED / 6 STALE-STATUS**.
 **Quando cambia stato di un repo**: aggiorna la riga corrispondente in questo file (+ ADR/BACKLOG/JOURNAL del repo specifico se necessario).
 
 **Quando emerge decisione multi-repo**: ADR dedicato in codemasterdd `docs/adr/` con scope esplicito cross-repo.
+
+---
+
+## 2026-05-19 evening + 2026-05-20 EVENING UPDATE — multi-session orchestration
+
+> Tight delta summary. Per-row refresh sopra (rows 1-N) = follow-up se serve.
+> Full context: `docs/sessions/2026-05-19-continuity-handoff.md` §EVENING UPDATE.
+
+### Closed today end-to-end
+- **OD-050 tdd-guard C-raffinato** RESOLVED full chain: codemasterdd PR#178/#180/#181/#182/#183/#184/#185 + vault PR#126/#127/#128/#129/#130/#131/#132 + Task-5 deploy-Apply 2-PC (Ryzen+Lenovo) + static-assert parity tdd-guard@tdd-guard=false + LIVE TRIGGER Ryzen PASS (hot.md edit no-block). Lenovo trust-by-parity (precedent hook_userprofile_fix). `task5-deploy-verify.ps1` helper deprecated (over-engineered fragile); runbook `docs/runbook/tddguard-task5-cross-pc-verify.md` = via affidabile.
+- **OD-049 §4.5** (21 Vault-ops scripts -> vault SoT path-portable) MERGED vault main earlier.
+- **Game (Vue3)**: 7 PR shipped today across multiple parallel sessions:
+  - `#2316` (Jules test optimize) + `#2318` (Jules tooltip fix) + `#2321` (W8O-2 race fix — me)
+  - `#2327` (Jules ack — note: dropped W8O-2 + its regression test, requiring re-fix)
+  - `#2334` (A6 starter_bioma frontend — parallel-A6 Eduardo Desktop) + `#2335` (coop-tests gap-fill — parallel-coop) + `#2336` (W8O-2 RESTORE + regression test — me)
+  - Regression-class observed: Jules-bot rewrites can silently drop substantive fixes if test not in CI-guard. PR#2336 body recommends watchlist.
+
+### Active threads (open-ended)
+- **Game-Godot-v2** = 🔴 ZONA-HOT subagent orchestrator: branch `claude/p2-4-phone-lobby-identity-first-2026-05-20`, 4 worktree LOCKED (`agent-a*`), PR#284 DRAFT (gate-1 Eduardo `/ultrareview` deferred), recent merges #291/#292/#293/#298/#299 (P0-3/P1/P2 remediation lineage from #284 spec).
+- **Game (Vue3) parallel sessions**: at least 3 spawned by Eduardo Desktop today (A6 frontend / coop-tests / disc-race-roledemands-v2). Branch-prefix convention `claude/parallel-*` working.
+- **vault** = clean main 7fb5ded82 -> 57f54cea3 (post-#132 OD-050 RESOLVED). PR #133 DRAFT (coherence-backstop sibling sessione, doc-only).
+
+### Pending owner
+| Item | Owner | Note |
+|---|---|---|
+| `/ultrareview` PR#284 (gate-1 Godot remediation chain) | Eduardo | when ready, no-rush, post-approval umbrella |
+| Cleanup Ryzen scheduled-task (continuity-handoff §39) | Eduardo | post-playtest optional |
+| W8O-2 CI-watchlist (prevenire future Jules silent-drop) | follow-up | low-pri, considered post-#2336 |
+| Game-Database parallel-#2 cleanup (`server/tests`+`AGENTS.md`+`.claude/` untracked) | TBD | paste-block on-offer in handoff |
+
+### Multi-session orchestration pattern (proven today)
+- Branch-prefix `claude/parallel-<scope>-<date>` = visibility on who-does-what
+- Mutex via `docs/sessions/2026-05-19-continuity-handoff.md` append-only stamps ("OWNING X branch Y") — used by parallel-coop session
+- Repo-split: coordinator (this Ryzen Bash) owns governance/meta-cross-repo; parallels own ONE repo each; subagent-orchestrator (Godot) self-contained in `.claude/worktrees/agent-*` LOCKED
+- Pre-merge `harsh-reviewer` subagent on governance-critical/cluster PRs (Protocol-5)
+- Pull-before-touch, push-after-commit on shared docs
+- Background `repo-health-auditor` snapshot per drift/collision detection
+
+
+---
+
+## D-SEQUENCE 2026-05-20 — browser-agentic-loop E to A to B end-to-end
+
+Single afternoon session, ~$0.40 total spend, all three phases empirically validated + adopted NARROW.
+
+### Phase summary
+
+| Phase | OD | PR(s) merged | Adoption |
+|---|---|---|---|
+| E Playwright-direct | OD-051 RESOLVED-FE1-PASS | vault #134 + codemasterdd #190 | scripts/quality-bench/playwright-monitor-regression.py |
+| A Chrome MCP interactive-codev | OD-052 RESOLVED-FE2-CAPABILITY-PASS-SPEC-DRIFT | vault #135 | empirical pattern documented (5 spec-drifts as lessons) |
+| B browser-use exploratory | OD-053 RESOLVED-FE3-PASS | vault #136 + #137 + #138 | 4-step throwaway-venv recipe, NOT permanent |
+
+### Cross-repo touch
+
+- codemasterdd: PR #189 dashboard /monitor route wire + PR #190 Playwright regression script (both MERGED)
+- vault: 5 PR merged (#134 OD-051, #135 OD-052, #136 OD-053 DRAFT-v1, #137 OD-053 v3 Q1-Q4 answers, #138 OD-053 RESOLVED-FE3-PASS)
+- Game-Database: issue #123 opened (a11y mixed Italian/English aria-labels, P2 from OD-053 FE3 T2 finding #4)
+
+### Cron monitor durable promoted
+
+Session-only cron `e8e94a27`+`af96f168` (CronCreate) replaced by `mcp__scheduled-tasks__cross-repo-drift-monitor` (cross-session durable). File: `C:/Users/VGit/.claude/scheduled-tasks/cross-repo-drift-monitor/SKILL.md`. Schedule `7,37 * * * *` (off-minute). 7-day auto-expire.
+
+Empirical confirmation: iter-2 (12:12), iter-3 (12:18), iter-4 (12:42) fired during D-sequence execution, JSONL feed at `logs/monitor-feed.jsonl` (gitignored) populated correctly, dashboard `/monitor` renders.
+
+### Outstanding from D-sequence
+
+- Venv left at `C:/Users/VGit/AppData/Local/Temp/browser-use-fe3-venv` (classifier denied rm-rf scope-escalation, Eduardo manual cleanup)
+- 5 L-DRAFT-F..J lessons in continuity-handoff for promotion to canonical L-2026-05-NNN next session
+- D-sequence pattern reusable: anti-creep gate + harsh-review per phase + autoresearch for blocking Q's. Document as `docs/patterns/multi-phase-d-sequence.md` if applied again.
+
+### Status post-D-sequence cross-repo (open PR snapshot 13:00)
+
+- codemasterdd: 0 open PR (clean)
+- Game: 0 open PR
+- Game-Database: 2 open (Jules #118 docs spec, #122 feat audit) + issue #123 just opened
+- Game-Godot-v2: 1 open (#314 feat cronaca TKT-P4)
+- vault: 1 open (#133 coherence-backstop from another session)
+
+Coordinator-lane: clean. Parallel-session work distinct branch-names, no collision detected per monitor iter-4.
