@@ -335,6 +335,30 @@ Quando convenient (Lenovo accesso), promuovi 5 lessons -> aa01
 `learnings/L-2026-05-NNN-*.md` (slug: jules-silent-drop, helper-over-engineering,
 encoding-policy-enforcement, ssh-cmd-cross-shell, ai-conflict-ground-truth).
 Anti-Pattern-Catalogue update global CLAUDE.md (Eduardo gate, sovereign).
+
+## LESSONS-PROMOTED 2026-05-20 (D-sequence closure)
+
+L-DRAFT-A..E promossi a canonical vault learnings + Anti-Pattern Catalogue
+globale aggiornato (Ryzen-side deploy done, Lenovo deploy deferred next-session):
+
+- **L-2026-05-034** jules-silent-drop -> Anti-Pattern #10 (bot-rewrite-drop su fix-recenti non-CI-guarded)
+- **L-2026-05-035** helper-over-engineering -> Anti-Pattern #11 (helper-tool che introduce piu failure-surface del task originale)
+- **L-2026-05-036** encoding-policy-enforcement -> Anti-Pattern #12 (encoding-policy compliance richiede enforcement non-solo-doc)
+- **L-2026-05-037** ssh-cmd-cross-shell -> Anti-Pattern #13 (SSH-cmd cross-shell tool incompat silent-collapse)
+- **L-2026-05-038** ai-conflict-ground-truth -> reinforcement L-025 famiglia (no new entry catalogue)
+
+**Vault PR refs**:
+- PR #139 (5 L-NNN promotion) MERGED 2026-05-20T18:35:04Z, squash commit `fcb5b26ef`
+- PR #140 (Anti-Pattern #10-#13 canonical CLAUDE.md) MERGED 2026-05-20T18:53:41Z, squash commit `316bf8c32`
+
+**Deploy status fleet**:
+- Ryzen `~/.claude/CLAUDE.md` propagated 2026-05-20 via `deploy_claude_global.ps1 -Apply` (CLAUDE.md identical canonical, #10-#13 visible)
+- Lenovo `~/.claude/CLAUDE.md` PENDING (next Lenovo session: `git pull vault` + `deploy_claude_global.ps1 -Apply`)
+- Side-finding: script exit 1 su supermemory marketplace add (preexisting canonical drift, separato dal PR #140, da triagare)
+
+**Codex P2 review addressed** (PR #139): L-036 hook example `grep -P` -> `perl -ne` (portable BSD/macOS) + glob extended (ps1|sh|bat|cmd|py|js|json|ya?ml) per coverage-align con doc policy.
+
+**Coordinator-lane cleanup**: venv `C:/Users/VGit/AppData/Local/Temp/browser-use-fe3-venv` (264MB) deleted; 2 .py scripts archiviati `codemasterdd/docs/research/od-053-browser-use-fe3-scripts-2026-05-20/`. Cron `cross-repo-drift-monitor` Option-A leave-running (4 iter all-OK, watchdog mode).
 - `[parallel-#2 MERGED PR-δ #122 squash 91d5007 finish 2026-05-20T17:15:12Z]` (Fase 1 PR 4/5 done; 4 commits +548/-0 in 9 file; GET /api/audit + composite migration + 12 test + research; full suite 153→165 verde; CI 8/8 pass incl. schema-doc-check 5s; next PR-ε import validator STRICT)
 - `[parallel-#2 DONE FIX-#123 https://github.com/MasterDD-L34D/Game-Database/pull/124 finish 2026-05-20T17:22Z]` (a11y MUI TablePagination i18n fix; aria-label English defaults overridden con t() helper italiano; 4 file +84/-4; +3 test PaginationBar.test.tsx + 1 update DataTable.test.tsx; chiude #123 OD-053 browser-use finding; CI pending)
 - `[parallel-#2 MERGED FIX-#123 PR #124 squash be15c7f finish 2026-05-20T17:24:26Z]` (a11y fix MUI TablePagination i18n; +84/-4 in 4 file; +3 PaginationBar.test.tsx + 1 DataTable.test.tsx update; CI 4/4 verde; issue #123 auto-CLOSED)
