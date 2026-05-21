@@ -1,5 +1,7 @@
 # STATUS_MULTI_REPO — Dashboard operativa cross-repo
 
+> Direction layer: vedi [`GOALS.md`](GOALS.md) per goal cross-repo Short/Mid/Long.
+>
 > Vista consolidata progetti. Aggiornare quando cambia stato significativo o al massimo settimanalmente.
 >
 > ⚠️ **Insight strutturale 2026-05-16 (reconcile 43% stale)**: HEAD/PR puntuali in §Snapshot/§1-7 **NON sono git-truth** — repo daily-ship (Game/Godot) li rendono stale in ~2gg. **Stato verificato = §Ecosystem-audit 15-repo** (git-truth, ri-derivato da audit). §1-7 = contesto operativo narrativo. NON ri-hardcodare HEAD qui (rot garantito); aggiorna §Ecosystem-audit con audit fresco.
