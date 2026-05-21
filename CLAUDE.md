@@ -163,7 +163,7 @@ _(completato il 2026-04-19 — vedi "Stack installato")_
 
 - **Game-Database** — Taxonomy CMS per Evo-Tactics (promoted da Ryzen-only minimal monitoring 2026-05-15 sera, post Jules audit L-025)
   - GitHub: `github.com/MasterDD-L34D/Game-Database` (PUBLIC, no LICENSE)
-  - Path Ryzen: `C:/Users/VGit/Documents/GitHub/Game-Database/` (no clone Lenovo current, scope monitor remote)
+  - Path Ryzen: `C:\dev\Game-Database` (consolidato in C:\dev 2026-05-21; era `C:/Users/VGit/Documents/GitHub/Game-Database/`. Clone attivo Ryzen-side, NON remote-only -- aggiornamento drift-fix path. no clone Lenovo current)
   - Stack: Express 4 + Prisma 5 + PostgreSQL 16 + React (MUI + TanStack Table + i18n + Vite)
   - **Ruolo**: glossary canonical trait/biome/specie/ecosistemi per Evo-Tactics. Upstream content provider per Game (Vue3) via `npm run evo:import` + HTTP runtime API (`GAME_DATABASE_ENABLED=true` flag su Game backend, ADR-2026-04-14 game-side)
   - **Status 2026-05-15 sera**: HEAD main `91f5468` PR #105 + 7 PR Jules OPEN today (#107..#113: 1 security basicAuth + 2 perf optimize + 3 tests coverage + 1 refactor code health) -> Jules e' aggressive maintenance/improvement source su questo repo (7 sessioni cumulative cross-day, il repo con piu' attivita Jules nell'ecosystem)
@@ -185,7 +185,7 @@ _(completato il 2026-04-19 — vedi "Stack installato")_
 - **Synesthesia** — web app esame UniUPO
   - GitHub: `github.com/MasterDD-L34D/synesthesia`
   - Path Lenovo: `C:\dev\synesthesia` (dormant per Sprint plan UniUPO esame ~ago 2026)
-  - **Path Ryzen**: `C:\Users\VGit\Desktop\repos\synesthesia` (HEAD `05f8a92` Batch D /about + image zoom + notification — discovered 2026-05-12). Dormant Sprint-track (UniUPO ago 2026); Ryzen-side personal-work attivo. Coexistence non oxymoronic: dormancy è scope-level codemasterdd governance, NON ban totale Eduardo. Clarify SPRINT_02.
+  - **Path Ryzen**: `C:\dev\synesthesia` (consolidato in C:\dev 2026-05-21; era `C:\Users\VGit\Desktop\repos\synesthesia`. HEAD `05f8a92` Batch D /about + image zoom + notification — discovered 2026-05-12). Dormant Sprint-track (UniUPO ago 2026); Ryzen-side personal-work attivo. Coexistence non oxymoronic: dormancy è scope-level codemasterdd governance, NON ban totale Eduardo. Clarify SPRINT_02.
   - Stack: Node 20 ESM, Express, EJS, SQLite, Passport
   - Status: MVP funzionante
   - Privacy policy per-repo: `controllers/`/`routes/`/`middlewares/` sovereign-only; `views/`/`public/` cloud OK
@@ -193,6 +193,7 @@ _(completato il 2026-04-19 — vedi "Stack installato")_
 - **Dafne swarm (evo-swarm)** — orchestratore AI agentic per Evo-Tactics, multi-agent sistema custom
   - GitHub: `github.com/MasterDD-L34D/evo-swarm`
   - Path Lenovo: `C:\Users\edusc\Dafne\workspace\swarm` (repo git separato, NOT in `C:\dev\`)
+  - Path Ryzen: `C:\dev\evo-swarm` (clone Ryzen-side, verificato 2026-05-21; branch attivo `dafne/portability-fix`)
   - Home Dafne: `C:\Users\edusc\Dafne\` (start-dafne.cmd + agent/ config + desktop shortcut)
   - Stack: Python 3.12 + Flask + Ollama (qwen3:8b governance + nomic-embed-text per H5 gate)
   - Status 2026-04-24 notte: Atto 1 day-3/10. Server Flask UP idle su `:5000` per day-5 (26/04). 20 commit pushati. 11 agent runtime. Pilastro 2 evoluzione 🔴→🟡 (6 lezioni empirical).
@@ -205,7 +206,7 @@ _(completato il 2026-04-19 — vedi "Stack installato")_
 
 - **Vault (vault-shared)** — knowledge management LLM-wiki personale Eduardo, **sibling-peer monitored** (added 2026-05-10; **origin lineage reframe 2026-05-12: Ryzen è la fonte originale, Lenovo è clone downstream**)
   - GitHub: `github.com/MasterDD-L34D/vault`
-  - **Origin Ryzen**: `C:\Users\VGit\Vault\` (clone originario, creato Ryzen-side; user Vgit; sync via origin/main)
+  - **Origin Ryzen**: `C:\dev\vault` (consolidato in C:\dev 2026-05-21; era `C:\Users\VGit\Vault\`. clone originario, creato Ryzen-side; user Vgit; sync via origin/main)
   - Path Lenovo (clone downstream): `C:\dev\vault-shared\`
   - **Vault-ops Python tooling layer** (ingest/normalize/tune scripts + 3 SQLite DBs `qmd.db`/`qmd-v2.db`/`vault-search.db` + venv): **EXISTS ONLY Ryzen-side** in `C:\Users\VGit\Vault-ops\`. NON replicato Lenovo (operational tooling Ryzen-bound).
   - Sync state 2026-05-12 sera: entrambi cloni a HEAD `67c3bb28` (M14 Cards wave), ahead/behind origin `0/0`. Push claim "deferred Eduardo-direct" in memory `project_vault_shared.md` linea 18 era OBSOLETE — push avvenuto, drift fixato 2026-05-12.
