@@ -57,6 +57,14 @@ Genera draft aggiornato di snapshot 1-riga per repo:
 | Dafne swarm | Day-3/10, Flask :5000 UP/DOWN | Day-5 26/04 | (se server status cambia) |
 ```
 
+## GOALS.md refresh (opzionale, su audit cross-repo)
+
+Quando fai audit cross-repo, puoi proporre un refresh della tabella Snapshot in `GOALS.md` (root codemasterdd): aggrega le sezioni `## Goals (S/M/L)` per-repo + i temi dei PR recenti nella tabella hub. Sintesi **read-only**, stesso pattern di STATUS_MULTI_REPO.
+
+- **MAI** scrivere goal indietro negli altri repo (self-gov rispettato).
+- **MAI** auto-triggerare lavoro dai goal (D2 auto-coord = gated, vedi `docs/superpowers/specs/2026-05-21-cross-repo-goals-coordination-design.md` §6).
+- Proponi draft, user committa (come STATUS).
+
 ## Modalità 2 — Deep dependency check
 
 Input: "verifica se le dependencies cross-repo sono OK"
