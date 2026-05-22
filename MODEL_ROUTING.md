@@ -193,6 +193,7 @@ Applicata in concreto:
 | `qwen3-coder:30b` (MoE) | Ollama locale | tier 2 escalation Aider + tier 1 default OpenCode | Aider: quando 14B Q2 safe-fails. OpenCode: default agentic single-shot (ADR-0022 Accepted, 3/3 PASS validati) | single-file semplice via Aider (overhead); task >70B capability needed; cloud free OpenCode (NON viable per OpenCode default context) |
 | `deepseek-r1:8b` | Ollama locale | tier reasoning | chain-of-thought esplicito, debug logico, math/proof | coding standard (Qwen domina); batch/iterazione (thinking verbose) |
 | `gemma4:latest` | Ollama locale | tier multimodal | OCR screenshot, audio dictation, vision analysis | coding (non coder-specialist); task text-only |
+| `deepseek-coder-v2:16b` (MoE A2.4B) | Ollama locale **Ryzen** `.11` | speed-first non-constraint | chat/draft/quick coding speed-first su Ryzen (~34% più veloce di qwen-14b su task semplici) | **behavior-critical / constraint-following** (task-eval 50% su 5-constraint vs qwen-14b 90% -- `docs/research/llmfit-task-eval-deepseek-2026-05-22.md`); output-strutturato / rule-following |
 | `groq/llama-3.3-70b-versatile` | Cloud free (6k tok/min) | tier 3 behavior cloud | Online, privacy OK, capability 70B needed | repo sensitive, quota limit, offline |
 | `cerebras/llama3.1-8b` | Cloud free | tier 3 cosmetic cloud fast | Online, cosmetic batch veloce | behavior complesso (8B capability limit possibile) |
 | `gemini/gemini-2.5-flash` | Cloud 60 req/min | tier 3 quick query | fast explain / translate / summarize | coding edit (richiede `thinkingBudget=0` esplicito) |
