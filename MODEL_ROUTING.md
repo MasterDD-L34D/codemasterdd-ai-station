@@ -4,6 +4,32 @@
 >
 > Source-of-truth per routing strategico. Per istruzioni operative in-session vedi `CLAUDE.md` "Priorità modelli AI". Questo file è il **perché** strategico, CLAUDE.md è il **come** operativo.
 
+## Fleet 2-machine routing (llmfit standard, 2026-05-22)
+
+> **AUTHORITY**: `C:\dev\tools\llmfit\LOCAL-LLM-STANDARD.md` (+ vault claude-global
+> CLAUDE.md sezione "LLM locali"). Liste HW-fit: Ryzen `C:\dev\tools\llmfit\ryzen-llm-fit.{json,md}`,
+> Lenovo `lenovo-llm-fit.md` (raw su .10 `C:\Users\edusc\llmfit-lenovo-*.json`).
+> Refresh mensile auto (Ryzen, Windows Task Scheduler `llmfit-ryzen-refresh`).
+
+Lo stack locale NON è più single-machine. Fleet = 2 macchine a profilo OPPOSTO:
+
+| Macchina | host | VRAM / RAM | Profilo | Ruolo locale |
+|----------|------|------------|---------|--------------|
+| **Ryzen** | `.11` DESKTOP-T77TMKT | RTX 4070S **12GB** / 31GB | VRAM-rich | dense fit-in-VRAM (≤14B q4), veloce |
+| **Lenovo** | `.10` CodeMasterDD (edusc) | RTX 5060 8GB / **63GB** | RAM-rich | MoE/grandi/120B (expert-offload), host Ollama primario |
+
+**Machine-routing** (ortogonale al tier-by-capability sotto -- aggiunge SU QUALE macchina + parallelo):
+- small-instruct ≤8B (judgment, cosmetic, tagging) → **Ryzen** se `ollama serve` su (full-VRAM), else Lenovo `mistral:latest`.
+- mid dense 13-14B → **Ryzen** (12GB tiene 14B q4 full-quality). **SUPERSEDES** il workaround storico "14B-Q2 su Lenovo": il Q2 era compromesso VRAM-8GB-bound; su Ryzen q4-full è più veloce E più fedele (no spill CPU). Validare tok/s con task-eval.
+- MoE 30-35B-A3B (`qwen3-coder:30b`) / 120B (`gpt-oss:120b`) → **Lenovo** (RAM-offload 63GB). Lo swarm Dafne gira correttamente qui.
+- embedding → entrambe (cheap).
+
+**llmfit = 2-stage, NON 1** (caveat load-bearing OD-056 S4): la lista llmfit risponde a "cosa gira bene sul mio HW + qualità generale di categoria", NON "quale modello fa meglio il MIO task". Pipeline: **llmfit shortlist-by-HW → task-eval N≥10 sul prompt reale** (anti lucky-sample, anti-pattern #14). HW-fit ≠ task-fit. Per output-strutturato/rule-following preferire **clean-instruct** (mistral, qwen-instruct), NON reasoning/think (deepseek-r1 think-block flaky/vuoto).
+
+**Parallelo ~2x (VALIDATED 2026-05-22)**: batch indipendenti (synthesis, calibration N-run, bulk tagging, swarm specialist batch) → shard su 2 endpoint Ollama (`.10:11434` + Ryzen `localhost:11434`), 1 worker/macchina, `OLLAMA_HOST` pinned per worker. Precedente: `Game/tools/py/calibrate_parallel.py`. Gotcha port-bind: anti-pattern #16 / L-071. NON mettere 2 job VRAM-heavy sulla stessa GPU (contention → più lento del seriale).
+
+La matrice tier sotto (7B/14B/30B + constraint-count ADR-0016) resta valida per QUALE modello/quant; questa sezione aggiunge la dimensione macchina. Scelta finale task concreto: **llmfit shortlist → tier rule → task-eval N-sample**.
+
 ## Scopo
 
 Definire quale strumento / modello / accesso usare per ogni fase del progetto.
@@ -35,7 +61,7 @@ Applicata in concreto:
 - **Contesto principale**: repo infrastructure + documentazione (ADR/patterns) + log operativi
 - **Vincoli privacy**: repo personale OK cloud; progetti dipendenti hanno policy per-repo separata
 - **Vincoli costo**: Claude Max fino 19/05 ($0 marginale); post-Max target <$20/mese
-- **Vincoli hardware**: RTX 5060 8GB VRAM (full-GPU solo 7B) + 64GB RAM + Arrow Lake CPU
+- **Vincoli hardware**: fleet 2-macchine (vedi "Fleet 2-machine routing" sopra) -- Lenovo `.10` RTX 5060 8GB / 63GB RAM (RAM-rich, host Ollama primario) + Ryzen `.11` RTX 4070S 12GB / 31GB (VRAM-rich, dense ≤14B q4 full-VRAM). NON più single-machine 8GB-bound: il 7B-only/14B-Q2 era framing Lenovo-solo.
 - **Vincoli velocità**: daily-driver 8-10h/giorno, iterazione rapida essenziale
 - **Priorità principale**: **privacy + costo** (≥ qualità) in stato sovereign. Durante Max: qualità+velocità primarie.
 
