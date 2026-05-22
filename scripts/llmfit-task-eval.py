@@ -101,11 +101,33 @@ def call_ollama(host: str, model: str, prompt: str):
     return d.get("response", ""), (time.time() - t0) * 1000.0
 
 
+def _eval_model(host: str, model: str, n: int):
+    """Run the task N times for one model on one endpoint. Returns
+    (model, passes, n, median_ms). Used both serial and concurrent."""
+    passes, lats = 0, []
+    for i in range(n):
+        try:
+            resp, lat = call_ollama(host, model, PROMPT)
+            ok = run_test(extract_code(resp))
+        except Exception as exc:
+            ok, lat = False, 0.0
+            print(f"  {model} run{i+1}: ERROR {exc}", flush=True)
+        passes += int(ok)
+        lats.append(lat)
+        print(f"  {model} run{i+1}: {'PASS' if ok else 'FAIL'} {lat:.0f}ms", flush=True)
+    med = statistics.median(lats) if lats else 0.0
+    return model, passes, n, med
+
+
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("models", nargs="*")
     ap.add_argument("--n", type=int, default=10)
     ap.add_argument("--host", default="http://127.0.0.1:11434/api/generate")
+    ap.add_argument("--hosts", default="",
+                    help="comma-separated endpoints; models assigned round-robin "
+                         "and run CONCURRENTLY (fleet pattern-1 shard + pattern-3 "
+                         "model-affinity ~2x). Empty = single --host serial.")
     ap.add_argument("--selftest", action="store_true")
     args = ap.parse_args(argv)
 
@@ -119,24 +141,24 @@ def main(argv=None) -> int:
     if not args.models:
         ap.error("provide model tags or --selftest")
 
+    from concurrent.futures import ThreadPoolExecutor
+    hosts = [h.strip() for h in args.hosts.split(",") if h.strip()] or [args.host]
+    # model -> host affinity (round-robin); concurrent across distinct endpoints.
+    # Standard caveat: 2 VRAM-heavy models on the SAME GPU contend -> use >=2
+    # distinct hosts for real ~2x, not 2 models on one endpoint.
+    assign = [(m, hosts[i % len(hosts)]) for i, m in enumerate(args.models)]
+    print(f"hosts={hosts} | assignment={assign}", flush=True)
+    t0 = time.time()
     results = {}
-    for model in args.models:
-        passes, lats = 0, []
-        for i in range(args.n):
-            try:
-                resp, lat = call_ollama(args.host, model, PROMPT)
-                ok = run_test(extract_code(resp))
-            except Exception as exc:
-                ok, lat = False, 0.0
-                print(f"  {model} run{i+1}: ERROR {exc}", flush=True)
-            passes += int(ok)
-            lats.append(lat)
-            print(f"  {model} run{i+1}: {'PASS' if ok else 'FAIL'} {lat:.0f}ms", flush=True)
-        med = statistics.median(lats) if lats else 0.0
-        results[model] = (passes, args.n, med)
-        print(f"=== {model}: {passes}/{args.n} pass | median {med:.0f}ms ===", flush=True)
-
-    print("\n## Summary (task-eval stage-2)")
+    with ThreadPoolExecutor(max_workers=len(assign)) as ex:
+        futs = [ex.submit(_eval_model, h, m, args.n) for m, h in assign]
+        for f in futs:
+            model, passes, n, med = f.result()
+            results[model] = (passes, n, med)
+    wall = time.time() - t0
+    for model, (p, n, med) in results.items():
+        print(f"=== {model}: {p}/{n} pass | median {med:.0f}ms ===", flush=True)
+    print(f"\n## Summary (task-eval stage-2) | wall {wall:.1f}s, {len(hosts)} endpoint(s)")
     for model, (p, n, med) in results.items():
         print(f"- {model}: {p}/{n} ({100*p/n:.0f}%) pass | {med:.0f}ms median")
     return 0
