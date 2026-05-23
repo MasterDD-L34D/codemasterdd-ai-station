@@ -20,7 +20,7 @@ ACL hardened: `CODEMASTERDD\edusc:(F) + NT AUTHORITY\SYSTEM:(F)`, inheritance di
 | `GOOGLE_GENERATIVE_AI_API_KEY` | Google AI Studio | 3 free | $0 | OpenCode native `google` provider (dual-name necessario) | Attivo (added 2026-05-15) |
 | `OPENAI_API_KEY` | OpenAI | 4 paid | $5/mese cap consigliato | aider-openai, OpenCode `openai` provider | Attivo |
 | `ANTHROPIC_API_KEY` | Anthropic | 0 strategic | $10-20/mese cap (ADR-0023) | Pay-per-use post-Max on-demand | Dormant durante Max |
-| `TAVILY_API_KEY` | Tavily (search) | utility | $0 free tier | **Dafne swarm only** (Flask backend) | Isolato dal dispatcher codemasterdd |
+| `TAVILY_API_KEY` | Tavily (search) | utility | $0 free tier | Dafne swarm + dogfood-ui health integration | Attivo (health visibility added) |
 | `HUGGINGFACE_API_KEY` | HuggingFace Inference Providers | 3 free | $0 (100K credit/mese) | `aider-hf` wrapper + OpenCode `huggingface` provider | **Setup pending Eduardo signup** (vedi sezione 6.4) |
 | `JULES_API_KEY` | Google Jules (autonomous coding agent) | cloud free alpha | $0 (no rate limit/cost documented) | Jules CLI (`@google/jules`) + REST `jules.googleapis.com/v1alpha/` | Attivo (added 2026-05-15, audit empirical 15 repo installed) |
 
@@ -35,8 +35,22 @@ ACL hardened: `CODEMASTERDD\edusc:(F) + NT AUTHORITY\SYSTEM:(F)`, inheritance di
 **Gap pending (non bloccanti)**:
 - ⏸️ `OPENROUTER_API_KEY` (Hybrid A1 emergency overflow Pro 5h rate-limit) — Eduardo manual signup quando senti il bisogno
 - ⏸️ `HUGGINGFACE_API_KEY` — Eduardo signup huggingface.co + token (vedi sezione 6.4 step-by-step)
-- ⏸️ NotebookLM auth — Eduardo `notebooklm login` (browser OAuth interactive, vedi sezione 6.5)
+- ⏸️ NotebookLM auth — Eduardo `notebooklm login` (browser OAuth interactive, vedi sezione 6.5). Setup script creato: `scripts/setup/setup-notebooklm-auth.ps1` (eseguire su Lenovo .10)
 - ⏸️ Claude Code MCP server config notebooklm-mcp — Eduardo aggiunge a `~/.claude.json` projects.<repo>.mcpServers (richiede CC restart)
+
+### 1.1 Quick check OpenCode keys
+
+Per verificare che il file chiavi centralizzato contenga le chiavi utili a OpenCode:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/setup/sync-opencode-api-env.ps1
+```
+
+Comportamento script:
+- legge `~/.config/api-keys/keys.env`
+- valida presenza chiavi core (Groq/Cerebras/Gemini/OpenAI/Anthropic/HF/GitHub/Tavily)
+- non modifica `~/.config/opencode/opencode.json(c)`: OpenCode 1.15.x non supporta un binding top-level `env`
+- per usare le chiavi con OpenCode CLI, avviare OpenCode da un processo che le ha gia' caricate come variabili ambiente
 
 ---
 
