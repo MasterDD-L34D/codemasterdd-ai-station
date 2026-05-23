@@ -1,13 +1,15 @@
-"""Unit tests for langfuse_client.extract_trace_metadata.
+"""Unit tests for langfuse_client.
 
-Covers the two main shapes the helper must tolerate:
-  - trace-level usage/cost/latency fields
-  - usage/cost aggregated from observations[]
-  - latency in seconds vs milliseconds
+Covers:
+  - extract_trace_metadata (trace shapes, observations, legacy keys, empty/zero)
+  - health() vs ping() contracts (different endpoints, auth handling)
 """
 from __future__ import annotations
 
-from langfuse_client import extract_trace_metadata
+from unittest.mock import patch
+
+import requests
+from langfuse_client import LangfuseClient, extract_trace_metadata
 
 
 def test_trace_level_fields():
@@ -61,3 +63,69 @@ def test_zero_values_are_skipped():
         "latencyMs": 0,
     })
     assert m == {}
+
+
+class TestLangfuseClientHealthPing:
+    """Verify health() vs ping() have different contracts.
+
+    - health(): no auth required, calls /api/public/health
+    - ping():   requires auth keys, calls /api/public/traces
+    """
+
+    def test_health_calls_public_endpoint_without_auth(self):
+        client = LangfuseClient(
+            host="http://lf.example.com",
+            public_key="pk-test", secret_key="sk-test",
+        )
+        with patch.object(client, "_auth_header", return_value={"Authorization": "Basic dGVzdA=="}) as mock_auth:
+            with patch("langfuse_client.requests.get") as mock_get:
+                mock_get.return_value.status_code = 200
+                result = client.health()
+                assert result is True
+                mock_get.assert_called_once_with(
+                    "http://lf.example.com/api/public/health",
+                    timeout=3.0,
+                )
+                mock_auth.assert_not_called()
+
+    def test_health_returns_false_on_connection_error(self):
+        client = LangfuseClient(
+            host="http://lf.example.com",
+            public_key="", secret_key="",
+        )
+        with patch("langfuse_client.requests.get", side_effect=requests.exceptions.ConnectionError):
+            assert client.health() is False
+
+    def test_ping_calls_traces_endpoint_with_auth(self):
+        client = LangfuseClient(
+            host="http://lf.example.com",
+            public_key="pk-test", secret_key="sk-test",
+        )
+        with patch("langfuse_client.requests.get") as mock_get:
+            mock_get.return_value.status_code = 200
+            result = client.ping()
+            assert result is True
+            mock_get.assert_called_once_with(
+                "http://lf.example.com/api/public/traces?limit=1",
+                headers={"Authorization": "Basic cGstdGVzdDpzay10ZXN0"},
+                timeout=3.0,
+            )
+
+    def test_ping_returns_false_when_keys_missing(self):
+        client = LangfuseClient(
+            host="http://lf.example.com",
+            public_key="", secret_key="",
+        )
+        with patch("langfuse_client.requests.get") as mock_get:
+            result = client.ping()
+            assert result is False
+            mock_get.assert_not_called()
+
+    def test_ping_returns_false_on_401(self):
+        client = LangfuseClient(
+            host="http://lf.example.com",
+            public_key="pk-bad", secret_key="sk-bad",
+        )
+        with patch("langfuse_client.requests.get") as mock_get:
+            mock_get.return_value.status_code = 401
+            assert client.ping() is False
