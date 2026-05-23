@@ -16,12 +16,19 @@ param(
     [ValidateSet("start", "stop", "restart", "status")]
     [string]$Action = "start",
     [int]$Port = 8080,
-    [string]$EnvFile = "$env:USERPROFILE\.config\api-keys\keys.env"
+    [string]$EnvFile = "$env:USERPROFILE\.config\api-keys\keys.env",
+    [string]$FlaskSecret = $env:FLASK_SECRET
 )
 
-$AppDir = "C:\dev\codemasterdd-ai-station\apps\dogfood-ui"
-$LogDir = "C:\dev\codemasterdd-ai-station\Extras\dashboard-logs"
+$RepoRoot = (Resolve-Path -LiteralPath (Join-Path -Path $PSScriptRoot -ChildPath "..\..")).Path
+$AppDir = Join-Path -Path $RepoRoot -ChildPath "apps\dogfood-ui"
+$LogDir = Join-Path -Path $RepoRoot -ChildPath "Extras\dashboard-logs"
 $PidFile = "$env:TEMP\dogfood-dashboard.pid"
+
+if (-not (Test-Path -LiteralPath $AppDir)) {
+    Write-Error "AppDir non trovato: $AppDir"
+    exit 1
+}
 
 if (-not (Test-Path -LiteralPath $LogDir)) {
     New-Item -ItemType Directory -Path $LogDir -Force | Out-Null
@@ -64,7 +71,11 @@ switch ($Action) {
             }
             Write-Host "[OK] API keys caricati da $EnvFile" -ForegroundColor Green
         }
-        [Environment]::SetEnvironmentVariable("FLASK_SECRET", "smoke-secret", 'Process')
+        if ([string]::IsNullOrWhiteSpace($FlaskSecret)) {
+            $FlaskSecret = [Guid]::NewGuid().ToString("N")
+            Write-Host "[WARN] FLASK_SECRET non definito: uso secret effimero per questa sessione." -ForegroundColor Yellow
+        }
+        [Environment]::SetEnvironmentVariable("FLASK_SECRET", $FlaskSecret, 'Process')
         [Environment]::SetEnvironmentVariable("PORT", "$Port", 'Process')
 
         $timestamp = Get-Date -Format "yyyyMMdd-HHmmss"

@@ -24,10 +24,31 @@ function Write-OK($s)  { Write-Host "[OK] $s" -ForegroundColor Green }
 function Write-Warn($s) { Write-Host "[WARN] $s" -ForegroundColor Yellow }
 function Write-Fail($s) { Write-Host "[FAIL] $s" -ForegroundColor Red }
 
+function Resolve-CommandPath([string]$name) {
+    $cmd = Get-Command $name -ErrorAction SilentlyContinue
+    if ($cmd) { return $cmd }
+    $candidates = @(
+        (Join-Path -Path $env:APPDATA -ChildPath "Python\\Python313\\Scripts\\$name.exe"),
+        (Join-Path -Path $env:APPDATA -ChildPath "Python\\Python314\\Scripts\\$name.exe")
+    )
+    foreach ($p in $candidates) {
+        if (Test-Path -LiteralPath $p) {
+            return [pscustomobject]@{ Source = $p }
+        }
+    }
+    return $null
+}
+
+function Write-JsonUtf8NoBom([string]$Path, $Object) {
+    $json = $Object | ConvertTo-Json -Depth 10
+    $utf8NoBom = New-Object System.Text.UTF8Encoding($false)
+    [System.IO.File]::WriteAllText($Path, $json, $utf8NoBom)
+}
+
 Write-Step "1/5 -- Verifica tool NotebookLM"
 
-$nlm = Get-Command "nlm" -ErrorAction SilentlyContinue
-$notebooklm = Get-Command "notebooklm" -ErrorAction SilentlyContinue
+$nlm = Resolve-CommandPath "nlm"
+$notebooklm = Resolve-CommandPath "notebooklm"
 
 if (-not $nlm) {
     Write-Warn "nlm.exe (MCP server) non trovato. Installalo con: uv tool install notebooklm-mcp-cli"
@@ -69,11 +90,12 @@ if ($SkipLogin) {
 Write-Step "3/5 -- Verifica auth"
 
 if ($notebooklm) {
+    $storageState = Join-Path -Path $env:USERPROFILE -ChildPath ".notebooklm\\profiles\\default\\storage_state.json"
     & $notebooklm.Source auth check --test 2>&1
-    if ($LASTEXITCODE -eq 0) {
+    if (Test-Path -LiteralPath $storageState) {
         Write-OK "Auth valida!"
     } else {
-        Write-Warn "Auth non valida. Esegui: notebooklm login"
+        Write-Warn "Auth non valida (storage_state assente). Esegui: notebooklm login"
     }
 } else {
     Write-Warn "Impossibile verificare auth (CLI non installata)."
@@ -108,7 +130,7 @@ if (-not $finalConfig) {
             }
         }
     }
-    $cfg | ConvertTo-Json -Depth 10 | Set-Content -LiteralPath $finalConfig -Encoding utf8NoBOM
+    Write-JsonUtf8NoBom -Path $finalConfig -Object $cfg
     Write-OK "Creato OpenCode config con MCP NotebookLM: $finalConfig"
 } else {
     $cfg = Get-Content -LiteralPath $finalConfig -Raw | ConvertFrom-Json
@@ -123,7 +145,7 @@ if (-not $finalConfig) {
             command = "nlm"
             args = @("--transport", "stdio")
         }
-        $cfg | ConvertTo-Json -Depth 10 | Set-Content -LiteralPath $finalConfig -Encoding utf8NoBOM
+        Write-JsonUtf8NoBom -Path $finalConfig -Object $cfg
         Write-OK "Aggiunto MCP NotebookLM a $finalConfig"
     }
 }

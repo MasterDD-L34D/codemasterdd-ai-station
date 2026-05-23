@@ -6,6 +6,11 @@
     Exit code 0 = tutto ok, 1 = uno o piu' test falliti.
 #>
 
+param(
+    [string]$EnvFile = "$env:USERPROFILE\.config\api-keys\keys.env",
+    [string]$LiteLLMMasterKey
+)
+
 $ErrorActionPreference = "Continue"
 $passed = 0
 $failed = 0
@@ -27,12 +32,29 @@ function Test-Step($name, $script) {
     }
 }
 
-# Source keys.env for Tavily check
-$KeysFile = "$env:USERPROFILE\.config\api-keys\keys.env"
-if (Test-Path $KeysFile) {
-    Get-Content $KeysFile | ForEach-Object {
+# Source keys.env for Tavily/LiteLLM checks
+if (Test-Path -LiteralPath $EnvFile) {
+    Get-Content -LiteralPath $EnvFile | ForEach-Object {
         if ($_ -match '^([A-Z_][A-Z0-9_]*)=(.*)$') {
             [Environment]::SetEnvironmentVariable($matches[1], $matches[2], 'Process')
+        }
+    }
+}
+
+if ([string]::IsNullOrWhiteSpace($LiteLLMMasterKey)) {
+    $LiteLLMMasterKey = $env:LITELLM_MASTER_KEY
+}
+if ([string]::IsNullOrWhiteSpace($LiteLLMMasterKey)) {
+    $LiteLLMMasterKey = $env:MASTER_KEY
+}
+if ([string]::IsNullOrWhiteSpace($LiteLLMMasterKey)) {
+    $dockerEnv = docker inspect -f "{{range .Config.Env}}{{println .}}{{end}}" codemasterdd-litellm 2>$null
+    if ($LASTEXITCODE -eq 0 -and $dockerEnv) {
+        foreach ($line in $dockerEnv) {
+            if ($line -match '^LITELLM_MASTER_KEY=(.+)$') {
+                $LiteLLMMasterKey = $matches[1]
+                break
+            }
         }
     }
 }
@@ -90,14 +112,20 @@ Test-Step "Langfuse /api/public/health" {
 
 # 9. LiteLLM proxy test -- list models (richiede virtual key o master key)
 Test-Step "LiteLLM proxy - model list" {
-    $headers = @{ Authorization = "Bearer sk-local-masterkey-change-me" }
+    if ([string]::IsNullOrWhiteSpace($LiteLLMMasterKey)) {
+        throw "LiteLLM master key non trovata. Passa -LiteLLMMasterKey o imposta LITELLM_MASTER_KEY in keys.env."
+    }
+    $headers = @{ Authorization = "Bearer $LiteLLMMasterKey" }
     $r = Invoke-RestMethod -Uri "http://localhost:4000/models" -Headers $headers -ErrorAction Stop
     ($r.data -and $r.data.Count -ge 1)
 }
 
 # 10. LiteLLM proxy -- chat completion via Ollama (richiede master key)
 Test-Step "LiteLLM proxy - chat completion (ollama-cosmetic-7b)" {
-    $headers = @{ Authorization = "Bearer sk-local-masterkey-change-me" }
+    if ([string]::IsNullOrWhiteSpace($LiteLLMMasterKey)) {
+        throw "LiteLLM master key non trovata. Passa -LiteLLMMasterKey o imposta LITELLM_MASTER_KEY in keys.env."
+    }
+    $headers = @{ Authorization = "Bearer $LiteLLMMasterKey" }
     $body = @{
         model = "ollama-cosmetic-7b"
         messages = @(@{ role = "user"; content = "Rispondi solo 'ok'." })
