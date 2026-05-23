@@ -18,6 +18,8 @@ def test_health_endpoint(client):
     body = r.get_json()
     assert body["status"] == "ok"
     assert body["app"] == "dogfood-ui"
+    assert "tavily" in body
+    assert "opencode" in body
 
 
 def test_create_entry_via_form_persists_trace_id(client):
