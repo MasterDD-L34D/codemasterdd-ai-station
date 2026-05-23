@@ -29,6 +29,8 @@ def app_factory(tmp_path, monkeypatch):
     HERMETIC_VARS = (
         "LANGFUSE_HOST", "LANGFUSE_PUBLIC_KEY", "LANGFUSE_SECRET_KEY",
         "LANGFUSE_PROJECT_ID", "DAFNE_HOST", "LITELLM_ENDPOINT",
+        "TAVILY_API_KEY", "TAVILY_ENDPOINT", "OPENCODE_CONFIG_PATH",
+        "API_KEYS_FILE",
         "FLASK_SECRET", "API_SECRET",
     )
 

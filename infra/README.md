@@ -144,6 +144,7 @@ model_list:
 Verifica:
 1. `~/.config/api-keys/keys.env` esiste e ha permessi `CODEMASTERDD\edusc:(F)` only
 2. `infra/litellm/.env` riferisce correttamente le keys (format `GROQ_API_KEY=$GROQ_API_KEY` OR hardcode per test)
+3. Se usi Tavily in agent workflow, esporta anche `TAVILY_API_KEY` (il compose la propaga al container LiteLLM per tooling custom)
 
 ### Stack consuma troppa RAM
 

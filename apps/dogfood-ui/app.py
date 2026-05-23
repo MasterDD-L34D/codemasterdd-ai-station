@@ -42,6 +42,24 @@ LANGFUSE_PUBLIC_KEY = os.environ.get("LANGFUSE_PUBLIC_KEY", "")
 LANGFUSE_SECRET_KEY = os.environ.get("LANGFUSE_SECRET_KEY", "")
 LANGFUSE_PROJECT_ID = os.environ.get("LANGFUSE_PROJECT_ID", "")
 DAFNE_HOST = os.environ.get("DAFNE_HOST", "http://localhost:5000")
+TAVILY_API_KEY = os.environ.get("TAVILY_API_KEY", "")
+TAVILY_ENDPOINT = os.environ.get("TAVILY_ENDPOINT", "https://api.tavily.com")
+OPENCODE_CONFIG_PATH = Path(
+    os.environ.get(
+        "OPENCODE_CONFIG_PATH",
+        str(Path.home() / ".config" / "opencode" / "opencode.json"),
+    )
+)
+OPENCODE_CONFIG_PATH_JSONC = Path.home() / ".config" / "opencode" / "opencode.jsonc"
+# Centralized API keys file (sovereign policy, ACL-hardened).
+# NOTE: OpenCode 1.15.x schema does NOT support a top-level `env` binding,
+# so we read keys.env directly from this path instead of relying on OpenCode.
+API_KEYS_FILE = Path(
+    os.environ.get(
+        "API_KEYS_FILE",
+        str(Path.home() / ".config" / "api-keys" / "keys.env"),
+    )
+)
 
 # ---------------------------------------------------------------------------
 # Routes Blueprint
@@ -283,17 +301,26 @@ def api_health():
     data = {
         "status": "ok",
         "app": "dogfood-ui",
-        "version": "0.2.1",
+        "version": "0.2.2",
         "db": current_app.db.health(),
         "langfuse": {
             "configured": bool(LANGFUSE_PUBLIC_KEY),
-            "reachable": current_app.lf.ping() if LANGFUSE_PUBLIC_KEY else None,
+            "reachable": current_app.lf.health(),
+            "host": LANGFUSE_HOST,
         },
-        "litellm_endpoint": LITELLM_ENDPOINT,
+        "litellm": {
+            "endpoint": LITELLM_ENDPOINT,
+            "reachable": _probe_url(LITELLM_ENDPOINT + "/health/readiness"),
+        },
         "dafne": {
             "host": DAFNE_HOST,
             "reachable": current_app.dafne.ping(),
         },
+        "tavily": {
+            "configured": bool(TAVILY_API_KEY) or bool(_tavily_key_from_env_file()),
+            "endpoint": TAVILY_ENDPOINT,
+        },
+        "opencode": opencode_status(),
         "promptfoo_results_available": PROMPTFOO_LATEST.exists(),
         "cache_age_sec": 0,
     }
@@ -391,6 +418,97 @@ def validate_entry(payload: dict[str, Any]) -> list[str]:
     if payload.get("outcome") not in VALID_OUTCOMES:
         errors.append(f"outcome must be one of {sorted(VALID_OUTCOMES)}")
     return errors
+
+
+def _probe_url(url: str, timeout: float = 3.0) -> bool:
+    """Quick HTTP GET probe returning True if server responds <500."""
+    import requests as _requests
+    try:
+        r = _requests.get(url, timeout=timeout)
+        return r.status_code < 500
+    except Exception:
+        return False
+
+
+def _tavily_key_from_env_file() -> str:
+    """Try to read TAVILY_API_KEY from the centralized keys.env file."""
+    if not API_KEYS_FILE.exists():
+        return ""
+    try:
+        for line in API_KEYS_FILE.read_text(encoding="utf-8").splitlines():
+            if line.strip().startswith("TAVILY_API_KEY="):
+                return line.split("=", 1)[1].strip().strip('"').strip("'")
+    except (OSError, UnicodeDecodeError):
+        pass
+    return ""
+
+
+_KEYS_TO_PROVIDER: dict[str, str] = {
+    "GROQ_API_KEY": "groq",
+    "CEREBRAS_API_KEY": "cerebras",
+    "GEMINI_API_KEY": "gemini",
+    "OPENAI_API_KEY": "openai",
+    "ANTHROPIC_API_KEY": "anthropic",
+    "HUGGINGFACE_API_KEY": "huggingface",
+    "GITHUB_MODELS_API_KEY": "github",
+    "TAVILY_API_KEY": "tavily",
+    "JULES_API_KEY": "jules",
+}
+
+
+def _detect_providers_from_keys_file(env_file: Path) -> list[str]:
+    """Read a .env file and return sorted provider names for detected API keys."""
+    try:
+        text = env_file.read_text(encoding="utf-8")
+    except (OSError, UnicodeDecodeError):
+        return []
+    found: set[str] = set()
+    for line in text.splitlines():
+        key = line.split("=", 1)[0].strip()
+        if key in _KEYS_TO_PROVIDER:
+            found.add(_KEYS_TO_PROVIDER[key])
+    return sorted(found)
+
+
+def opencode_status() -> dict[str, Any]:
+    """Returns best-effort status for local OpenCode config + centralized keys.env.
+
+    Note: OpenCode 1.15.x schema does NOT support a top-level `env` field, so we
+    do not read it from the OpenCode config. We detect available providers by
+    scanning the centralized keys.env file directly (sovereign-policy path).
+    """
+    cfg_path = OPENCODE_CONFIG_PATH
+    if not cfg_path.exists() and OPENCODE_CONFIG_PATH_JSONC.exists():
+        cfg_path = OPENCODE_CONFIG_PATH_JSONC
+
+    status: dict[str, Any] = {
+        "config_path": str(cfg_path),
+        "config_exists": cfg_path.exists(),
+        "api_keys_file": str(API_KEYS_FILE),
+        "api_keys_file_present": API_KEYS_FILE.exists(),
+        "providers": [],
+        "providers_count": 0,
+    }
+
+    # 1. Try OpenCode config explicit `provider` block (rare but supported).
+    if cfg_path.exists():
+        try:
+            cfg = json.loads(cfg_path.read_text(encoding="utf-8"))
+            providers = cfg.get("provider", {}) if isinstance(cfg, dict) else {}
+            if isinstance(providers, dict) and providers:
+                provider_names = sorted(list(providers.keys()))
+                status["providers"] = provider_names
+                status["providers_count"] = len(provider_names)
+        except (OSError, json.JSONDecodeError):
+            status["parse_error"] = True
+
+    # 2. Fallback to scanning keys.env directly (independent of OpenCode config).
+    if not status["providers"] and API_KEYS_FILE.exists():
+        key_providers = _detect_providers_from_keys_file(API_KEYS_FILE)
+        status["providers"] = key_providers
+        status["providers_count"] = len(key_providers)
+
+    return status
 
 
 def entry_to_dict(row: sqlite3.Row) -> dict[str, Any]:

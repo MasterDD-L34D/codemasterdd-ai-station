@@ -19,6 +19,68 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-05-22/23 (Observability stack integration + dashboard health enrichment, Ryzen .11)
+
+Sessione cross-day Ryzen .11 (VGit). Branch `claude/observability-dashboard-integration-2026-05-23`, 4 commit, 34/34 test pass, smoke integration 10/10 pass.
+
+### Completato
+
+**Integrazione 5 componenti incompleti del dogfood stack**:
+- Dashboard dogfood-ui (`apps/dogfood-ui/`) -- health endpoint v0.2.2 arricchito con `litellm` (reachable probe), `langfuse` (host + reachable), `tavily` (configured con fallback da keys.env), `opencode` (config_path, api_keys_file_present, providers[] auto-detected dalle chiavi). Version bump 0.2.1 -> 0.2.2.
+- Stack Docker observability (`infra/`) -- LiteLLM v1.82.6 + Langfuse v2.95.11 + Postgres-15 up, callback Langfuse attivo (verified end-to-end con trace `dashboard-smoke-test-2026-05-23`).
+- Tavily -- env propagation rimossa da litellm container (dead env, non referenced in config.yaml); detection ora 100% da keys.env standard path.
+- OpenCode env-binding -- bug critico identificato + fixato (vedi post-mortem sotto).
+- NotebookLM setup -- script bootstrap creato (`scripts/setup/setup-notebooklm-auth.ps1`), execution pending Eduardo OAuth Lenovo .10.
+
+**Refactor langfuse_client** (`langfuse_client.py`): `health()` (public, no auth, /api/public/health) e `ping()` (authenticated, /api/public/traces?limit=1) ora hanno contratti distinti. Test coverage +5 (TestLangfuseClientHealthPing).
+
+**Scripts ops + smoke** (`scripts/setup/`, `scripts/smoke/`):
+- `start-infra.ps1` -- sources keys.env -> `docker compose up`, no .env in repo
+- `start-dashboard.ps1` -- waitress production WSGI, PID file, log timestamped in `Extras/dashboard-logs/`
+- `setup-notebooklm-auth.ps1` -- guida OAuth interattiva per Eduardo su Lenovo
+- `sync-opencode-api-env.ps1` -- DRY-RUN ONLY, -Apply rifiuta (post-bug, vedi sotto)
+- `infra-smoke.ps1` -- 10-step end-to-end test, ultimo run 10/10 PASS
+
+**Bug fix series**:
+1. **OpenCode `env` top-level rotto la config (severity HIGH)** -- Codex intervento 2026-05-23 01:33. Mio script `sync-opencode-api-env.ps1 -Apply` aveva scritto `"env": "...keys.env"` in `opencode.jsonc`, ma schema OpenCode 1.15.x non riconosce `env`. `opencode debug config` -> "Unrecognized key: env", Desktop crashava al model picker. Anti-pattern #9 attivato: DRY-RUN script non eseguiva `opencode debug config` per validare il file scritto. Fix: config ripristinata da backup, file rotto isolato come `opencode.jsonc.bad-...`, script neutralizzato (validate-only).
+2. **`uses_api_keys_env_file` sempre False su Windows** (app.py:453) -- `str.endswith("api-keys/keys.env")` fallisce con backslash path. Refactorato a `Path(env_file).parts` cross-platform. Anche `_tavily_key_from_env_file()` ora legge direttamente da `API_KEYS_FILE` invece che via OpenCode `env` campo (che non esiste).
+3. **`ping()` semantica persa nel refactor** -- Inizialmente `ping()` delegava a `health()` perdendo auth validation. Restorato con endpoint autenticato + status_code==200 strict (era <500 = accettava 401).
+4. **`status_code < 500` includeva 401** -- Cambiato a `== 200` su entrambi i metodi per onesta semantica reachable.
+5. **Waitress arg `app:create_app()`** -- Corretto a `--call app:create_app` (waitress 3.0.2 syntax).
+6. **PowerShell `$pid` automatic variable conflict** -- Rinominato `Get-PidValue` per evitare collision.
+7. **Em-dash unicode in smoke script rompeva parser PS5.1** -- Sostituito con `$_.Exception.Message` ASCII-safe.
+
+**Config OpenCode Ryzen `.11`** -- Applicato ADR-0022 minimal config: `model: ollama/qwen3-coder:30b`, `small_model` idem. Backup pre-write `opencode.jsonc.bak-pre-adr0022-20260523112022`. NB: il modello 30B MoE non e' ancora pullato su Ryzen Ollama; al primo lancio OpenCode richiedera' `ollama pull qwen3-coder:30b` (~18GB).
+
+**Smoke verification 3B** (questa sessione, 2026-05-23 11:23):
+- LiteLLM proxy chat completion via `ollama-cosmetic-7b` (qwen2.5-coder:7b, Ryzen Ollama) -> response "okay" in 4.36s
+- Langfuse trace `dashboard-smoke-test-2026-05-23` visible in /api/public/traces immediatamente (tags `smoke`, `ryzen-ollama`, observation con usage tokens 46+2)
+- Pipeline end-to-end: PowerShell -> LiteLLM master key -> host.docker.internal:11434 -> Ollama -> response + async Langfuse callback. VALIDATED.
+
+### Da fare
+
+- Eduardo: verificare apertura OpenCode Desktop Ryzen non crasha al model picker (`debug config` CLI non installata qui, validation 2b finale è empirica)
+- Eduardo: `git push -u origin claude/observability-dashboard-integration-2026-05-23` + `gh pr create` quando review è OK
+- Lenovo .10: SSH offline at session time -- verificare quando torna online che `opencode.jsonc` su `.10` non sia stato anche lui sovrascritto invalido dallo script `-Apply`. Se si, stesso ripristino di Codex.
+- NotebookLM: OAuth interactive Eduardo su Lenovo (`notebooklm login`), poi MCP server config in `~/.claude.json`
+- Tuning #8 deferred: Ollama Windows host-binding (`OLLAMA_HOST=0.0.0.0:11434`) per smoke da container LiteLLM senza spill via `host.docker.internal` gateway
+
+### Note
+
+- **Eduardo non aveva un account OpenRouter**: cercato in vault `C:\dev\vault` e `C:\Users\VGit\aa01`, trovati solo riferimenti ADR-0029/0030 (decisione architetturale, non setup attivo). OpenRouter resta `OPENROUTER_API_KEY` pending in matrix `key-and-task-routing-matrix.md`. Out-of-scope sessione.
+- **Codex intervention pattern**: Codex (parallel session) ha trovato e fixato il bug `env` mentre Claude era in scrittura. Cleanup e' stato chirurgico (config ripristinata + file rotto isolato + script neutralizzato). Le sue 3 azioni hanno coperto esattamente il blast radius corretto del bug -- riferimento da seguire per future intervention multi-agent simili. Lezione: lo script `sync-opencode-api-env.ps1` ora ha `-Apply refused` permanente, NON `-Apply re-enabled with fix`. Schema-incompatibility e' root cause, fix e' "non scrivere niente in quel file", non "scrivere correttamente".
+- **Anti-pattern #9 evidence rinforzata**: DRY-RUN non equivale a smoke quando lo script scrive config consumata da un altro tool con propria schema-validation. Per future automate-write-to-tool-config: dopo `-Apply` su sandbox config dir, eseguire validator nativo del tool (`opencode debug config`, `aider --verify-config`, `litellm --validate`, ecc) prima di scrivere `~/.config/`. Aggiunto come catalogo aspirational ma load-bearing.
+
+### Riferimenti
+
+- Branch: `claude/observability-dashboard-integration-2026-05-23`
+- Commits: `ba4e27f` (gitignore) + `5e1314b` (dashboard health) + `cb81594` (langfuse client) + `9603476` (scripts+docs)
+- Doc post-mortem: `docs/research/2026-05-22-integration-tune-review.md`
+- Smoke 10/10 evidence: `scripts/smoke/infra-smoke.ps1` last run 2026-05-23 00:29
+- ADR-0022 applied: `docs/adr/0022-opencode-tooluse-model-routing.md`
+
+---
+
 ## 2026-05-16 (ChatGPT Business workspace recovery COMPLETE + governance commit)
 
 ### Completato

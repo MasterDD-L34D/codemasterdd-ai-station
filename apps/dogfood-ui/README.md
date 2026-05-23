@@ -78,6 +78,10 @@ Default porta: 8080. Cambia con `PORT=9090 python app.py`.
 | `LANGFUSE_PUBLIC_KEY` | — | Per ping + trace lookup (opzionale) |
 | `LANGFUSE_SECRET_KEY` | — | Per ping + trace lookup (opzionale) |
 | `DAFNE_HOST` | http://localhost:5000 | Dafne swarm API URL (per panel `/dafne`) |
+| `TAVILY_API_KEY` | — | Stato integrazione Tavily in `/api/health` |
+| `TAVILY_ENDPOINT` | https://api.tavily.com | Endpoint Tavily mostrato in health |
+| `OPENCODE_CONFIG_PATH` | `~/.config/opencode/opencode.json` | Path config OpenCode (per `config_exists` check) |
+| `API_KEYS_FILE` | `~/.config/api-keys/keys.env` | Path centralizzato keys.env (provider/tavily detection). OpenCode 1.15.x non supporta `env` top-level → leggiamo direttamente dal file standard. |
 
 Windows PowerShell (pre-carica da ~/.config/api-keys/keys.env):
 
@@ -178,6 +182,9 @@ python app.py &
 
 # 2. Health check
 curl http://localhost:8080/api/health | jq .
+
+# 2b. Focus integrations (Tavily/OpenCode)
+curl http://localhost:8080/api/health | jq '.tavily,.opencode'
 
 # 3. Create test entry
 curl -X POST http://localhost:8080/api/entries -H "Content-Type: application/json" -d '{

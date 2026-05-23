@@ -21,15 +21,33 @@ class LangfuseClient:
         token = base64.b64encode(f"{self.public_key}:{self.secret_key}".encode("utf-8")).decode("ascii")
         return {"Authorization": f"Basic {token}"}
 
-    def ping(self) -> bool:
-        """True if Langfuse reachable with valid keys."""
+    def health(self) -> bool:
+        """True if Langfuse /api/public/health responds (no auth required)."""
         try:
             r = requests.get(
                 f"{self.host}/api/public/health",
+                timeout=self.timeout,
+            )
+            return r.status_code == 200
+        except (requests.ConnectionError, requests.Timeout):
+            return False
+
+    def ping(self) -> bool:
+        """True if Langfuse reachable AND auth keys are valid.
+
+        Uses an authenticated endpoint (traces list) to verify the configured
+        public/secret key pair works. Returns False if keys are missing,
+        server is unreachable, or credentials are rejected (401/403).
+        """
+        if not (self.public_key and self.secret_key):
+            return False
+        try:
+            r = requests.get(
+                f"{self.host}/api/public/traces?limit=1",
                 headers=self._auth_header(),
                 timeout=self.timeout,
             )
-            return r.status_code < 500
+            return r.status_code == 200
         except (requests.ConnectionError, requests.Timeout):
             return False
 
