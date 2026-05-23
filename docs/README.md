@@ -16,12 +16,23 @@ Obiettivo: **me stesso del passato è gentile con me stesso del futuro**.
 
 ```
 docs/
-├── sessions/         # Narrative sessioni operative (journal esteso)
-├── adr/              # Architecture Decision Records (decisioni strategiche)
-├── research/         # Ricerche svolte durante le decisioni
-├── patterns/         # Pattern operativi emersi (riutilizzabili)
-├── lessons-learned/  # Cosa ho imparato dai trauma/successi
-└── reference/        # Cheatsheet tecnici pronto-uso
+├── sessions/           # Narrative sessioni operative (journal esteso)
+├── adr/                # Architecture Decision Records (34)
+├── research/           # Ricerche svolte durante le decisioni
+├── patterns/           # Pattern operativi emersi (riutilizzabili)
+├── lessons-learned/    # Cosa ho imparato dai trauma/successi
+├── reference/          # Cheatsheet tecnici pronto-uso
+├── runbook/            # Runbook operativi (setup, deploy, recovery)
+├── operations/         # Matrici operative (key routing, task routing)
+├── reviews/            # Processi di review (harsh review flow)
+├── strategy/           # Strategie di esecuzione (parallel execution)
+├── plans/              # Piani di integrazione
+├── cross-repo/         # Coordinamento cross-repo (PR, escalation)
+├── agent-smoke-tests/  # Smoke test per agent AI
+├── aa01-handoff/       # Handoff AA01 (workspace personale)
+├── jules/              # Jules capabilities master
+├── jules-batch/        # Jules batch records
+└── superpowers/        # Design specs e implementation plans
 ```
 
 ## Cronologia temporale
@@ -59,19 +70,31 @@ docs/
 ## Note sui file
 
 - Tutti i file sono `.md` standard compatibile GitHub + VS Code preview
-- Dimensioni variabili (1.200-3.000 parole per file)
-- Conteggio totale archivio: ~28.000 parole
-- Possono essere espansi in future sessioni se emergono gap
+- Dimensioni variabili (da 200 a 8.000+ parole per file)
+- Conteggio totale archivio (2026-05-24): ~171.000 parole
+- I subdirectory aggiuntivi riflettono l'espansione del repository
 
-## File count
+## File count (2026-05-24)
 
 ```
-sessions/           2 file
-adr/                5 file
-research/           3 file
-patterns/           3 file
-lessons-learned/    2 file
-reference/          1 file
-README.md           1 file (questo)
-TOTALE             17 file
+sessions/            7 file
+adr/                34 file
+research/           21 file
+patterns/            7 file
+lessons-learned/     3 file
+reference/           5 file
+runbook/             7 file
+operations/          1 file
+reviews/             1 file
+strategy/            1 file
+plans/               1 file
+cross-repo/          5 file
+agent-smoke-tests/   9 file
+aa01-handoff/        2 file
+jules/               1 file
+jules-batch/         2 file
+superpowers/plans/   4 file
+superpowers/specs/   8 file
+README.md            1 file (questo)
+TOTALE             119 file
 ```
