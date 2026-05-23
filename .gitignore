@@ -74,3 +74,8 @@ backup/*
 scripts/quality-bench/results/
 monitor-feed.jsonl
 logs/sdmg-invocations-*.jsonl
+
+# === Dashboard runtime artifacts (logs, pid files, sqlite) ===
+Extras/dashboard-logs/
+apps/dogfood-ui/data/*.sqlite
+apps/dogfood-ui/data/*.sqlite-journal
