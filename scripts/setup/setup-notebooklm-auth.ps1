@@ -3,10 +3,10 @@
     Setup NotebookLM auth + MCP bridge per CodeMasterDD
 .DESCRIPTION
     Guida Eduardo attraverso il setup NotebookLM su Lenovo (.10):
-    1. Verifica tool installati (nlm.exe / notebooklm.exe)
-    2. Lancia `notebooklm login` (browser OAuth interattivo -- richiede input Eduardo)
+    1. Verifica tool installati (nlm.exe / notebooklm.exe / notebooklm-mcp.exe)
+    2. Lancia `nlm login` (browser OAuth interattivo -- richiede input Eduardo)
     3. Dopo auth: aggiunge MCP server a opencode.json (Lenovo) e mostra istruzioni per ~/.claude.json
-    4. Verifica auth con `notebooklm auth check`
+    4. Verifica auth con `nlm login --check`
 .NOTES
     Auth OAuth e' INTERATTIVO (browser). Questo script prepara tutto, ma Eduardo
     deve completare il login manualmente. Eseguire SU LENOVO (edusc@.10), non su Ryzen.
@@ -48,12 +48,19 @@ function Write-JsonUtf8NoBom([string]$Path, $Object) {
 Write-Step "1/5 -- Verifica tool NotebookLM"
 
 $nlm = Resolve-CommandPath "nlm"
+$notebooklmMcp = Resolve-CommandPath "notebooklm-mcp"
 $notebooklm = Resolve-CommandPath "notebooklm"
 
 if (-not $nlm) {
-    Write-Warn "nlm.exe (MCP server) non trovato. Installalo con: uv tool install notebooklm-mcp-cli"
+    Write-Warn "nlm.exe non trovato. Installalo con: uv tool install notebooklm-mcp-cli"
 } else {
     Write-OK "nlm.exe trovato: $($nlm.Source)"
+}
+
+if (-not $notebooklmMcp) {
+    Write-Warn "notebooklm-mcp.exe (MCP server) non trovato. Installalo con: uv tool install notebooklm-mcp-cli"
+} else {
+    Write-OK "notebooklm-mcp.exe trovato: $($notebooklmMcp.Source)"
 }
 
 if (-not $notebooklm) {
@@ -62,7 +69,7 @@ if (-not $notebooklm) {
     Write-OK "notebooklm.exe trovato: $($notebooklm.Source)"
 }
 
-if (-not $nlm -and -not $notebooklm) {
+if (-not $nlm -and -not $notebooklm -and -not $notebooklmMcp) {
     Write-Fail "Nessun tool NotebookLM installato. Impossibile procedere."
     exit 1
 }
@@ -71,37 +78,59 @@ Write-Step "2/5 -- Auth OAuth (richiede browser interattivo)"
 
 if ($SkipLogin) {
     Write-OK "Saltato login (flag -SkipLogin)"
-} elseif ($notebooklm) {
+} elseif ($nlm) {
     Write-Warn "Sto per aprire browser per OAuth login Google NotebookLM."
     Write-Warn "Eduardo: completa l'auth nel browser, poi torna qui."
+    Write-Host "Comando: nlm login" -ForegroundColor Yellow
+    Start-Sleep -Seconds 2
+    & $nlm.Source login
+    if ($LASTEXITCODE -ne 0) {
+        Write-Warn "Auth non completata o fallita. Puoi ritentare con: nlm login"
+    } else {
+        Write-OK "Auth NotebookLM completata!"
+    }
+} elseif ($notebooklm) {
+    Write-Warn "nlm.exe non installato. Fallback a notebooklm login (solo verifica account)."
     Write-Host "Comando: notebooklm login" -ForegroundColor Yellow
     Start-Sleep -Seconds 2
     & $notebooklm.Source login
     if ($LASTEXITCODE -ne 0) {
-        Write-Warn "Auth non completata o fallita. Puoi ritentare con: notebooklm login"
+        Write-Warn "Auth fallback non completata. Installa nlm e riesegui: nlm login"
     } else {
-        Write-OK "Auth NotebookLM completata!"
+        Write-OK "Auth fallback completata (notebooklm)."
     }
 } else {
-    Write-Warn "notebooklm.exe non installato. Salto auth interattiva."
-    Write-Warn "Installa prima: pip install --user notebooklm-py[browser]"
+    Write-Warn "Nessun client auth disponibile. Installa nlm: pip install --user notebooklm-mcp-cli"
 }
 
 Write-Step "3/5 -- Verifica auth"
 
-if ($notebooklm) {
+if ($nlm) {
+    & $nlm.Source login --check 2>&1
+    if ($LASTEXITCODE -eq 0) {
+        Write-OK "Auth valida!"
+    } else {
+        Write-Warn "Auth non valida. Esegui: nlm login"
+    }
+} elseif ($notebooklm) {
     $storageState = Join-Path -Path $env:USERPROFILE -ChildPath ".notebooklm\\profiles\\default\\storage_state.json"
     & $notebooklm.Source auth check --test 2>&1
     if (Test-Path -LiteralPath $storageState) {
-        Write-OK "Auth valida!"
+        Write-Warn "Auth notebooklm valida, ma MCP usa nlm. Esegui anche: nlm login"
     } else {
-        Write-Warn "Auth non valida (storage_state assente). Esegui: notebooklm login"
+        Write-Warn "Auth non valida. Esegui: notebooklm login"
     }
 } else {
     Write-Warn "Impossibile verificare auth (CLI non installata)."
 }
 
 Write-Step "4/5 -- Configura MCP server in OpenCode (jsonc)"
+
+if (-not $notebooklmMcp) {
+    Write-Warn "Salto configurazione OpenCode MCP: notebooklm-mcp.exe non e' disponibile."
+    Write-Warn "Installa notebooklm-mcp-cli e riesegui questo script."
+    exit 0
+}
 
 $configDir = Split-Path -Parent $OpencodeConfig
 if (-not (Test-Path -LiteralPath $configDir)) {
@@ -123,10 +152,10 @@ if (-not $finalConfig) {
     $finalConfig = [System.IO.Path]::ChangeExtension($OpencodeConfig, ".jsonc")
     $cfg = @{
         '$schema' = "https://opencode.ai/config.json"
-        mcpServers = @{
+        mcp = @{
             notebooklm = @{
-                command = "nlm"
-                args = @("--transport", "stdio")
+                type = "local"
+                command = @($notebooklmMcp.Source, "--transport", "stdio")
             }
         }
     }
@@ -134,16 +163,21 @@ if (-not $finalConfig) {
     Write-OK "Creato OpenCode config con MCP NotebookLM: $finalConfig"
 } else {
     $cfg = Get-Content -LiteralPath $finalConfig -Raw | ConvertFrom-Json
-    if ($cfg.mcpServers -and $cfg.mcpServers.notebooklm) {
+    if ($cfg.PSObject.Properties.Name -contains "mcpServers") {
+        Write-Warn "Rimuovo mcpServers da OpenCode config: e' formato Claude Code, non OpenCode."
+        $cfg.PSObject.Properties.Remove("mcpServers")
+    }
+
+    if ($cfg.mcp -and $cfg.mcp.notebooklm) {
         Write-OK "MCP NotebookLM gia configurato in $finalConfig"
     } else {
-        # Aggiungi mcpServers.notebooklm
-        if (-not $cfg.mcpServers) {
-            $cfg | Add-Member -NotePropertyName "mcpServers" -NotePropertyValue @{}
+        # Aggiungi mcp.notebooklm (OpenCode 1.15.x schema)
+        if (-not $cfg.mcp) {
+            $cfg | Add-Member -NotePropertyName "mcp" -NotePropertyValue @{}
         }
-        $cfg.mcpServers | Add-Member -NotePropertyName "notebooklm" -NotePropertyValue @{
-            command = "nlm"
-            args = @("--transport", "stdio")
+        $cfg.mcp | Add-Member -NotePropertyName "notebooklm" -NotePropertyValue @{
+            type = "local"
+            command = @($notebooklmMcp.Source, "--transport", "stdio")
         }
         Write-JsonUtf8NoBom -Path $finalConfig -Object $cfg
         Write-OK "Aggiunto MCP NotebookLM a $finalConfig"
@@ -163,6 +197,6 @@ if (Test-Path -LiteralPath $claudeJson) {
 }
 
 Write-Host "`n=== Setup NotebookLM completato ===" -ForegroundColor Cyan
-Write-Host "Auth ancora da fare: notebooklm login (se saltato sopra)" -ForegroundColor Yellow
-Write-Host "Auth check: notebooklm auth check --test" -ForegroundColor Yellow
-Write-Host "Lista notebook: notebooklm list" -ForegroundColor Yellow
+Write-Host "Auth ancora da fare: nlm login (se saltato sopra)" -ForegroundColor Yellow
+Write-Host "Auth check: nlm login --check" -ForegroundColor Yellow
+Write-Host "Lista notebook: nlm list notebooks" -ForegroundColor Yellow
