@@ -16,6 +16,7 @@ import io
 import json
 import sqlite3
 import hmac
+import sys as _sys
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -77,6 +78,9 @@ def inject_langfuse_ctx() -> dict[str, Any]:
 
     api_secret = os.environ.get("API_SECRET")
     auth = session.get("authenticated", False) if api_secret else True
+
+    cr_state = _fetch_cross_repo_summary()
+
     return {
         "langfuse_host": host,
         "langfuse_project_id": LANGFUSE_PROJECT_ID,
@@ -84,6 +88,8 @@ def inject_langfuse_ctx() -> dict[str, Any]:
         "langfuse_configured": bool(LANGFUSE_PUBLIC_KEY),
         "authenticated": auth,
         "api_secret_configured": bool(api_secret),
+        "cross_repo_available": bool(cr_state),
+        "cr_summary": cr_state,
     }
 
 # -----------------------------------------------------------------------
@@ -301,8 +307,9 @@ def api_health():
     data = {
         "status": "ok",
         "app": "dogfood-ui",
-        "version": "0.2.2",
+        "version": "0.3.0",
         "db": current_app.db.health(),
+        "cross_repo": _fetch_cross_repo_summary(),
         "langfuse": {
             "configured": bool(LANGFUSE_PUBLIC_KEY),
             "reachable": current_app.lf.health(),
@@ -362,7 +369,95 @@ def create_app() -> Flask:
 
     app.register_blueprint(main_bp)
 
+    # Mount cross-repo dashboard blueprint (opt-in, graceful if unavailable)
+    # Note: dir name has hyphen ("cross-repo-dashboard"), so we load via
+    # importlib.util from the full file path to avoid name collision with app.py.
+    # Must register in sys.modules so Flask's get_root_path() resolves correctly.
+    try:
+        import importlib.util as _iu
+        _cr_path = str(Path(__file__).resolve().parent.parent
+                       / 'cross-repo-dashboard' / 'app.py')
+        _spec = _iu.spec_from_file_location('cross_repo_app', _cr_path)
+        if _spec and _spec.loader:
+            _cr_mod = _iu.module_from_spec(_spec)
+            _sys.modules['cross_repo_app'] = _cr_mod
+            _spec.loader.exec_module(_cr_mod)
+            _bp = _cr_mod.cross_repo_bp
+            _fetch = _cr_mod.fetch_all_state
+            app.register_blueprint(_bp, url_prefix='/cross-repo')
+            app.config['cross_repo_available'] = True
+            app.cr_fetch = _fetch
+        else:
+            app.config['cross_repo_available'] = False
+            app.cr_fetch = None
+    except Exception:
+        app.config['cross_repo_available'] = False
+        app.cr_fetch = None
+
     return app
+
+
+# ---------------------------------------------------------------------------
+# Cross-repo integration helpers
+# ---------------------------------------------------------------------------
+
+_cr_summary_cache: dict[str, Any] = {"ts": 0.0, "data": None}
+_CR_CACHE_TTL = 60.0  # seconds (separate from cross-repo's own 5min cache)
+
+def _fetch_cross_repo_summary() -> dict[str, Any] | None:
+    """Calls into cross-repo dashboard for repo state summary.
+
+    Returns None if cross-repo not available or fetch fails.
+    Cached internally by cross-repo module (5min TTL) + local cache (60s).
+    """
+    import time as _t
+    now = _t.time()
+    if now - _cr_summary_cache["ts"] < _CR_CACHE_TTL:
+        return _cr_summary_cache["data"]
+
+    try:
+        from flask import current_app as _ca
+        cr_fetch = getattr(_ca, 'cr_fetch', None)
+        if not cr_fetch:
+            return None
+        state = cr_fetch()
+        repos = state.get('repos', {})
+        healthchecks = state.get('healthchecks', [])
+        total_prs = sum(r.get('pr_count', 0) for r in repos.values())
+        total_repos = len(repos)
+        synced = sum(1 for r in repos.values()
+                     if r.get('git_local', {}).get('available')
+                     and r.get('git_local', {}).get('ahead', 1) == 0
+                     and r.get('git_local', {}).get('behind', 1) == 0)
+        up_services = sum(1 for h in healthchecks if h.get('status') == 'up')
+        repos_snapshot = {}
+        for name, r in repos.items():
+            repos_snapshot[name] = {
+                'pr_count': r.get('pr_count', 0),
+                'dormant': r.get('dormant', False),
+                'git_head': r.get('git_local', {}).get('head_short', '?'),
+                'git_branch': r.get('git_local', {}).get('branch', '?'),
+                'divergence': (
+                    f"+{r['git_local']['ahead']}/-{r['git_local']['behind']}"
+                    if r.get('git_local', {}).get('available')
+                    else 'n/a'
+                ),
+            }
+        result = {
+            'total_repos': total_repos,
+            'total_prs': total_prs,
+            'synced_repos': synced,
+            'up_services': up_services,
+            'total_services': len(healthchecks),
+            'repos': repos_snapshot,
+        }
+        _cr_summary_cache["ts"] = now
+        _cr_summary_cache["data"] = result
+        return result
+    except Exception:
+        _cr_summary_cache["ts"] = now
+        _cr_summary_cache["data"] = None
+        return None
 
 
 # ---------------------------------------------------------------------------

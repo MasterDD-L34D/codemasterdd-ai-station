@@ -18,6 +18,7 @@ def test_health_endpoint(client):
     body = r.get_json()
     assert body["status"] == "ok"
     assert body["app"] == "dogfood-ui"
+    assert "db" in body  # regression guard: db probe dropped silently in 0.3.0 WIP
     assert "tavily" in body
     assert "opencode" in body
 

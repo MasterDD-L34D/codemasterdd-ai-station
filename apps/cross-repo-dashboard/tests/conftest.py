@@ -35,8 +35,12 @@ _DEPS_TO_MOCK = ("requests", "flask", "waitress", "pystray", "PIL")
 # Inject app dir into sys.path so `from app import ...` (inside test functions)
 # resolves. This is safe at module level since it only adds a path entry.
 _APP_DIR = Path(__file__).resolve().parent.parent
-if str(_APP_DIR) not in sys.path:
-    sys.path.insert(0, str(_APP_DIR))
+# Ensure app dir is FIRST in sys.path (before repo root) to avoid name collision
+# with other apps/app.py modules in the monorepo.
+_APP_DIR_STR = str(_APP_DIR)
+if _APP_DIR_STR in sys.path:
+    sys.path.remove(_APP_DIR_STR)
+sys.path.insert(0, _APP_DIR_STR)
 
 
 @pytest.fixture

@@ -17,6 +17,7 @@
                 <a href="{{ url_for('main.stats_view') }}">Stats</a>
                 <a href="{{ url_for('main.monitor_view') }}">Monitor</a>
                 <a href="{{ url_for('main.bench_view') }}">Bench</a>
+                {% if config.get('cross_repo_available') %}<a href="{{ url_for('cross_repo.index') }}">Cross-Repo</a>{% endif %}
                 <a href="{{ url_for('main.dafne_view') }}">Dafne</a>
                 <a href="{{ url_for('main.api_health') }}" target="_blank">Health</a>
                 {% if api_secret_configured %}

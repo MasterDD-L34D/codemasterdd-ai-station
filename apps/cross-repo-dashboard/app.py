@@ -29,9 +29,14 @@ from pathlib import Path
 from typing import Any
 
 import requests
-from flask import Flask, jsonify, render_template, request
+from flask import Flask, Blueprint, jsonify, render_template, request
 
-app = Flask(__name__)
+cross_repo_bp = Blueprint(
+    'cross_repo', __name__,
+    template_folder='templates',
+    static_folder='static',
+    static_url_path='/static',
+)
 
 # P0 console-flash fix 2026-05-14 sera-tardi-ultra-2: every subprocess on Windows
 # flashes brief console window unless CREATE_NO_WINDOW flag (0x08000000) is set.
@@ -652,7 +657,7 @@ def fetch_activity_feed(repos_state: dict[str, Any], limit: int = 10) -> list[di
 # Routes
 # ====================================================================== #
 
-@app.route("/")
+@cross_repo_bp.route("/")
 def index() -> Any:
     force = request.args.get("refresh") == "1"
     state = fetch_all_state(force_refresh=force)
@@ -660,17 +665,17 @@ def index() -> Any:
     # to /api/draft-pr. Localhost-only single-user tool: same-origin JS holding
     # the token is acceptable (Codex P2 #111 fix -- supported credential path).
     return render_template(
-        "index.html", state=state, api_secret=os.environ.get("API_SECRET", "")
+        "cr_index.html", state=state, api_secret=os.environ.get("API_SECRET", "")
     )
 
 
-@app.route("/api/state")
+@cross_repo_bp.route("/api/state")
 def api_state() -> Any:
     force = request.args.get("refresh") == "1"
     return jsonify(fetch_all_state(force_refresh=force))
 
 
-@app.route("/cross-repo/<repo>")
+@cross_repo_bp.route("/<repo>")
 def drill_down(repo: str) -> Any:
     """v0.3 NEW: per-repo detail view."""
     if repo not in REPOS:
@@ -680,10 +685,10 @@ def drill_down(repo: str) -> Any:
     repo_state = state["repos"].get(repo)
     if not repo_state:
         return jsonify({"error": f"no state for repo: {repo}"}), 500
-    return render_template("drill_down.html", repo=repo_state, all_state=state)
+    return render_template("cr_drill_down.html", repo=repo_state, all_state=state)
 
 
-@app.route("/health")
+@cross_repo_bp.route("/health")
 def health() -> Any:
     return jsonify({"status": "ok", "version": "0.3.0-daily-use-features", "timestamp": now_iso()})
 
@@ -691,7 +696,7 @@ def health() -> Any:
 _NOTES_SAFE_REGEX = re.compile(r"^[A-Za-z0-9 .,_/:#\-+()=]{1,200}$")
 
 
-@app.route("/api/coord-event", methods=["POST"])
+@cross_repo_bp.route("/api/coord-event", methods=["POST"])
 def coord_event_log() -> Any:
     """B1: Invoca scripts/cross-repo/coord-event-log.ps1 -Quiet -NotesQuick <notes>.
 
@@ -733,7 +738,7 @@ def coord_event_log() -> Any:
         return jsonify({"ok": False, "error": f"{type(e).__name__}: {str(e)[:200]}"}), 500
 
 
-@app.route("/api/draft-pr", methods=["POST"])
+@cross_repo_bp.route("/api/draft-pr", methods=["POST"])
 def draft_pr() -> Any:
     """B2: Invoca scripts/cross-repo/dry-run-pr.ps1 con parametri form.
 
@@ -783,7 +788,7 @@ def draft_pr() -> Any:
         return jsonify({"ok": False, "error": f"{type(e).__name__}: {str(e)[:200]}"}), 500
 
 
-@app.route("/api/open-vscode")
+@cross_repo_bp.route("/api/open-vscode")
 def open_vscode() -> Any:
     """B3: Launch VS Code at given path (validated whitelist).
 
@@ -809,9 +814,17 @@ def open_vscode() -> Any:
         return jsonify({"ok": False, "error": f"{type(e).__name__}: {str(e)[:200]}"}), 500
 
 
+def create_app() -> Flask:
+    """App factory: creates Flask instance and registers the cross-repo blueprint."""
+    _app = Flask(__name__)
+    _app.register_blueprint(cross_repo_bp, url_prefix='/cross-repo')
+    return _app
+
+
 def run_dev() -> None:
     """Werkzeug dev server (threaded=False per Windows subprocess fix)."""
-    app.run(host="127.0.0.1", port=8081, debug=False, threaded=False)
+    _app = create_app()
+    _app.run(host="127.0.0.1", port=8081, debug=False, threaded=False)
 
 
 def run_prod() -> None:
@@ -821,8 +834,8 @@ def run_prod() -> None:
     except ImportError:
         print("waitress not installed. Install: pip install waitress")
         sys.exit(1)
-    print("Cross-repo Dashboard v0.2.0 running on http://127.0.0.1:8081 (waitress production)")
-    serve(app, host="127.0.0.1", port=8081, threads=4)
+    print("Cross-repo Dashboard v0.2.0 running on http://127.0.0.1:8081/cross-repo/ (waitress production)")
+    serve(create_app(), host="127.0.0.1", port=8081, threads=4)
 
 
 if __name__ == "__main__":

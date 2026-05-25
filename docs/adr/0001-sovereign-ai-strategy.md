@@ -269,39 +269,45 @@ non sostituzione. **Mac mini ≠ dependency**.
 
 ## Piano implementativo
 
+> **Nota storica (2026-05-24)**: questo piano e' stato scritto il 20 aprile 2026.
+> Le milestone 1-4 sono state parzialmente eseguite e poi **sostituite da decisioni successive**:
+> vedi ADR-0014 (timeline compression), ADR-0023 (strategic tier post-Max),
+> ADR-0029 (OpenRouter declined), ADR-0030 (Hybrid A1 orchestration).
+> Le voci qui sotto sono mantenute come documento storico, non come piano attivo.
+
 ### Milestone 0 (19-20 aprile 2026) — DONE ✅
 - [x] Setup Lenovo security (BitLocker off, OneDrive off, bloatware)
 - [x] Install Git + Claude Code + dev stack
 - [x] Ollama + Qwen 2.5 Coder 7B installato (benchmark 93 tok/s)
 - [x] Repo GitHub `codemasterdd-ai-station` (infrastructure-as-code)
 
-### Milestone 1 (settimana 21-27 aprile) — TODO
-- [ ] Migrare Evo-Tactics + Synesthesia dal Ryzen al Lenovo
-- [ ] Verificare che test passino (710+ test Evo)
-- [ ] Prime comparazioni Opus 4.7 vs Qwen 7B su task reali
-- [ ] Documentare gap quality
+### Milestone 1 (settimana 21-27 aprile) — SUPERSEDED
+- [~] Migrare Evo-Tactics + Synesthesia dal Ryzen al Lenovo → **non eseguito**: Synesthesia intenzionalmente sospesa fino ago 2026 (AGENTS.md), Evo-Tactics rimasto su repo esterno `MasterDD-L34D/Game`
+- [~] Verificare che test passino (710+ test Evo) → **non pertinente** senza migrazione
+- [x] Prime comparazioni Opus 4.7 vs Qwen 7B su task reali → **fatto** (documentato in docs/research/)
+- [x] Documentare gap quality → **fatto** (ADR-0016, ADR-0028)
 
-### Milestone 2 (settimana 28 aprile - 4 maggio) — TODO
-- [ ] Install VS Code + Cline extension
-- [ ] Configurare Cline con Ollama locale
-- [ ] Workflow parallelo: Opus per task critici, Qwen per routine
-- [ ] Eventuale install nvm-windows se Evo-Tactics ha conflitti Node 22/24
+### Milestone 2 (settimana 28 aprile - 4 maggio) — SUPERSEDED
+- [x] Install VS Code → **fatto**
+- [~] Configurare Cline con Ollama locale → **non adottato**: stack evoluto verso OpenCode (ADR-0022, ADR-0030)
+- [x] Workflow parallelo: Opus per task critici, Qwen per routine → **fatto**, ma con Claude Code + OpenCode anziche' Cline
+- [~] Eventuale install nvm-windows se Evo-Tactics ha conflitti Node 22/24 → **deferito** (YAGNI, mai servito)
 
-### Milestone 3 (settimana 5-11 maggio) — TODO
-- [ ] Rush finale Claude Max: task più complessi da salvare memoria
-- [ ] Prep OpenRouter account ($10-20 credito)
-- [ ] Subagent critical ready (rules-engineer Evo, passport-auth Synesthesia)
+### Milestone 3 (settimana 5-11 maggio) — SUPERSEDED
+- [x] Rush finale Claude Max: task piu' complessi da salvare memoria → **fatto**
+- [~] Prep OpenRouter account ($10-20 credito) → **valutato e rifiutato**: ADR-0029 sceglie sovereign-first BYOK
+- [~] Subagent critical ready (rules-engineer Evo, passport-auth Synesthesia) → **parziale**: Jules PR governance (ADR-0032/0033/0034) ma non come subagent dedicati
 
-### Milestone 4 (19-25 maggio) — TRANSITION
-- [ ] Rinuncia rinnovo Claude Max
-- [ ] Switch workflow primario a Ollama + Cline
-- [ ] Claude Code in modalità pay-per-use (API key)
-- [ ] Test completo: workflow dev sul Lenovo senza Max
+### Milestone 4 (19-25 maggio) — DONE (parziale)
+- [x] Rinuncia rinnovo Claude Max → **fatto**: Claude Max scaduto, non rinnovato
+- [~] Switch workflow primario a Ollama + Cline → **fatto parziale**: Ollama usato (qwen3-coder:30b), ma con OpenCode, non Cline
+- [x] Claude Code in modalita' pay-per-use (API key) → **fatto**
+- [~] Test completo: workflow dev sul Lenovo senza Max → **in corso**: smoke test integrati (10/10), ma tuning continuo
 
-### Milestone 5 (da giugno) — STEADY STATE
-- [ ] Validazione continua: è sostenibile?
-- [ ] Se qualità insufficiente: Plan B (Claude Pro $20/mese)
-- [ ] Se qualità ok: mantieni, valuta Mac mini futuro
+### Milestone 5 (da giugno) — STEADY STATE (futuro)
+- [ ] Validazione continua: e' sostenibile?
+- [ ] Se qualita' insufficiente: Plan B (Claude Pro $20/mese)
+- [ ] Se qualita' ok: mantieni, valuta Mac mini futuro
 
 ## Metriche di successo
 
