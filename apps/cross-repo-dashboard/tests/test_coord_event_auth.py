@@ -11,14 +11,15 @@ def test_coord_event_auth(monkeypatch):
         del sys.modules['app']
 
     mock_flask = sys.modules['flask']
-    # The route decorator is used like @app.route(...)
-    # so app.route(...) returns a decorator function
+    # The route decorator is used like @cross_repo_bp.route(...)
+    # so Blueprint(...).route(...) returns a decorator function
     def mock_route(*args, **kwargs):
         def decorator(f):
             return f
         return decorator
 
     mock_flask.Flask.return_value.route = mock_route
+    mock_flask.Blueprint.return_value.route = mock_route
 
     import app
     # Now app.coord_event_log is the real function!

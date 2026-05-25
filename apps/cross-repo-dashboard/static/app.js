@@ -18,7 +18,7 @@ async function submitCoord() {
     if (window.__API_SECRET__) {
       headers['Authorization'] = `Bearer ${window.__API_SECRET__}`;
     }
-    const res = await fetch('/api/coord-event', {
+    const res = await fetch(window.__CROSS_REPO_PREFIX__ + '/api/coord-event', {
       method: 'POST',
       headers,
       body: JSON.stringify({notes}),
@@ -58,7 +58,7 @@ async function submitPr() {
     if (window.__API_SECRET__) {
       headers['Authorization'] = `Bearer ${window.__API_SECRET__}`;
     }
-    const res = await fetch('/api/draft-pr', {
+    const res = await fetch(window.__CROSS_REPO_PREFIX__ + '/api/draft-pr', {
       method: 'POST',
       headers,
       body: JSON.stringify({repo_target, type, preview_files, summary}),
@@ -76,7 +76,7 @@ async function submitPr() {
 
 async function openVSCode(path) {
   try {
-    const res = await fetch('/api/open-vscode?path=' + encodeURIComponent(path));
+    const res = await fetch(window.__CROSS_REPO_PREFIX__ + '/api/open-vscode?path=' + encodeURIComponent(path));
     const data = await res.json();
     if (!data.ok) alert('VS Code launch failed: ' + (data.error || 'unknown'));
   } catch (e) {

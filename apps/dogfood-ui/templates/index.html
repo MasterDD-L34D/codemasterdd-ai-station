@@ -79,6 +79,47 @@
     <p><a href="{{ url_for('main.list_entries') }}">Vedi tutte →</a></p>
 </section>
 
+{% if cr_summary %}
+<section class="panel">
+    <h2>Cross-repo status</h2>
+    <div class="kpi-row" style="margin-bottom:1rem">
+        <div class="kpi">
+            <div class="kpi-value">{{ cr_summary.total_repos }}</div>
+            <div class="kpi-label">Monitored repos</div>
+        </div>
+        <div class="kpi">
+            <div class="kpi-value">{{ cr_summary.total_prs }}</div>
+            <div class="kpi-label">Open PRs</div>
+        </div>
+        <div class="kpi">
+            <div class="kpi-value">{{ cr_summary.synced_repos }}/{{ cr_summary.total_repos }}</div>
+            <div class="kpi-label">Repos in sync</div>
+        </div>
+        <div class="kpi">
+            <div class="kpi-value">{{ cr_summary.up_services }}/{{ cr_summary.total_services }}</div>
+            <div class="kpi-label">Services UP</div>
+        </div>
+    </div>
+    <table class="data-table">
+        <thead>
+            <tr><th>Repo</th><th>PRs</th><th>HEAD</th><th>Branch</th><th>Divergence</th></tr>
+        </thead>
+        <tbody>
+            {% for name, r in cr_summary.repos.items() %}
+            <tr class="{% if r.dormant %}dormant-row{% endif %}">
+                <td><strong>{{ name }}</strong>{% if r.dormant %} <span class="badge-dormant">dormant</span>{% endif %}</td>
+                <td>{{ r.pr_count }}</td>
+                <td><code>{{ r.git_head }}</code></td>
+                <td><code>{{ r.git_branch }}</code></td>
+                <td>{{ r.divergence }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <p class="hint"><a href="{{ url_for('cross_repo.index') }}">Cross-Repo Dashboard &rarr;</a></p>
+</section>
+{% endif %}
+
 {% if not langfuse_configured %}
 <section class="warning">
     <strong>Langfuse non configurato.</strong> Trace correlation + advanced evals disabilitati. Vedi <code>infra/README.md</code> per setup.
