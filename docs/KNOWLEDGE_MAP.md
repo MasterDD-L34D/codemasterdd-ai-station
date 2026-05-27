@@ -125,3 +125,20 @@ Poi `git add docs/ryzen-memory-archive` + commit se ci sono diff. Worktree effim
 - **Memory split** Game (`Game-Desktop-old` 84 file storici vs `C--dev-Game` 3 file nuovi) -- ✅ RESOLVED-as-preserved: NON mergeati di proposito (ere diverse, zero overlap-loss). Entrambi archiviati. **Active going-forward = chiave `C--dev-Game`** (Game vive in `C:/dev/Game`); `Game-Desktop-old` = archivio storico read-only.
 - **Local Game stale** -- ⏳ DEFERRED (Eduardo-gated): `C:/dev/Game` Lenovo HEAD `196a63a4`, **71 commit behind** origin/main (`637b3dc0`, verificato 2026-05-27). FF-pull **bloccato** da `.husky/pre-commit` (skip-worktree wrapper, mirror-dance Evo-Tactics). Origin = canonical, local = sandbox (no harm). Sync safe (da Eduardo): `git -C C:/dev/Game update-index --no-skip-worktree .husky/pre-commit; git checkout -- .husky/pre-commit; git pull --ff-only origin main; git update-index --skip-worktree .husky/pre-commit`.
 - **Privacy** -- ✅ repo codemasterdd confermato **PRIVATE** (no leak). Caveat residuo: e' cloud-whitelisted per delega aider; se contenuto archivio non deve toccare cloud LLM, escludere `docs/ryzen-memory-archive/` via path-check nei wrapper cloud.
+
+---
+
+## 7. Reuse queue (anti-cimitero) -- triage 2026-05-28
+
+Prova-di-eliminazione su 11 reference archiviati + 3 gap. **Onesto**: dei 11 ref, solo `classification_4d` e' genuinamente orfano-high-value; il resto = backup (contenuto gia assorbito in SoT/DIGEST/code). Dei "gap", 1 era stale-shipped, 1 e' defer-intenzionale gia tracked, 2 sono lavoro reale fresco.
+
+| Item | Azione riuso | Stato |
+|------|--------------|-------|
+| `reference_classification_4d` (framework 4-axis keep/kill/archive, meta-tool unico, non in SoT) | PROMOTE → vault Card (A5 curated) | TODO -- branch+PR, Eduardo-merge-gate |
+| Encounter-authoring CLI (da `reference_tactical_postmortems` / Fallout Tactics: `game_cli.py author-encounter`) | OPEN ticket Game backlog -- unblocks M3 content-slice volume | TODO -- Game (auth Eduardo) |
+| `games-source-index.md:248` backlink rotto (dead Ryzen path) | repoint → `codemasterdd/docs/ryzen-memory-archive/Game-Desktop-old/` | TODO -- Game (FF-pull husky-blocked, vedi §6) |
+| Genetics epigenome/Lamarck-lite + genealogie profonde + eco-repro | Fase-3 build (gate params) | TRACKED -- SoT §24.6 DEFERRED, gia in roadmap |
+| Voidling Pattern 6 visual_swap | -- | DONE (shipped 2026-05-05; claim "P0 gap" era stale, corretto DIGEST §11.5) |
+| Altri 10 `reference_*` (tactical_postmortems, voidling, tier0, gdd_audit, deep_dive_phase2, flint, skiv_online, asset_workspace, prisma_adapter, external_repos) | LINK-from-DIGEST dove utile; contenuto gia in SoT/DIGEST/code | BACKUP -- no action (riviverli non cambia il gioco = backup, non riuso) |
+
+**High-leverage reale** (muove il gioco): (1) repoint backlink games-index (~5min, Game), (2) encounter-authoring CLI (ticket M3), (3) classification_4d → vault Card. Il resto = preservato come backup, discoverable via cross-ref esistenti.
