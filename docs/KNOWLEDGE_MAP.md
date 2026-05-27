@@ -142,4 +142,18 @@ Prova-di-eliminazione su 11 reference archiviati + 3 gap. **Onesto**: dei 11 ref
 | Voidling Pattern 6 visual_swap | -- | DONE (shipped 2026-05-05; claim "P0 gap" era stale, corretto DIGEST §11.5) |
 | Altri 10 `reference_*` (tactical_postmortems, voidling, tier0, gdd_audit, deep_dive_phase2, flint, skiv_online, asset_workspace, prisma_adapter, external_repos) | LINK-from-DIGEST dove utile; contenuto gia in SoT/DIGEST/code | BACKUP -- no action (riviverli non cambia il gioco = backup, non riuso) |
 
-**High-leverage reale** (muove il gioco): (1) repoint backlink games-index (~5min, Game), (2) encounter-authoring CLI (ticket M3), (3) classification_4d → vault Card. Il resto = preservato come backup, discoverable via cross-ref esistenti.
+**High-leverage reale** (muove il gioco): (1) repoint backlink games-index ✅ Game #2403 merged, (2) encounter-authoring CLI ✅ TKT-ENCOUNTER-CLI in BACKLOG (#2403), (3) classification_4d → vault Card ✅ #202 merged. Il resto = preservato come backup, discoverable via cross-ref esistenti.
+
+---
+
+## 8. Drift automation -- SoT Drift Sentinel (2026-05-28)
+
+Mitigazione anti-pattern #19 (SoT lag runtime): Game Action `sot-drift-sentinel` flagga
+candidate-drift runtime-vs-SoT (issue Game `sot-drift-candidate`, detection deterministica
+path-glob); subagent sovereign `sot-drift-verifier` (codemasterdd `.claude/agents/`) fa il
+verdetto semantico multi-signal + propone reconcile vault branch+PR (gated, mai auto-merge).
+
+- Spec: `docs/superpowers/specs/2026-05-28-sot-drift-sentinel-design.md`
+- Plan: `docs/superpowers/plans/2026-05-28-sot-drift-sentinel.md`
+- watch-map (Game): `.github/sot-drift/watch-map.yml`
+- Research-grounded: doc-drift CI (mapping deterministico) + LLM-as-judge gated (TrustJudge 2026).
