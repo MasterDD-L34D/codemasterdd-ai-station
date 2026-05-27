@@ -19,6 +19,27 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-05-27 (Fase-2 shipped + Fase-3 epigenome params ratified + coherence-check, Ryzen .11)
+
+Sessione cross-day continua post Fase-1 closure. Genetic model Evo-Tactics avanzato Fase-1→Fase-2→Fase-3-params. Tutti repo main puliti, 0 PR mie aperte a fine.
+
+### Completato
+- **RECON-06 closure merged**: vault #200 (SoT §24.3/§24.6 D-HEIR canonical) + Godot-v2 #354 (PRD overlay) → Fase-1 CLOSURE COMPLETE.
+- **Fase-2 DONE**: #2399 cross-lineage isolation (lineagePropagator partitioned AMBIENT+own-lineage, hybrid back-compat, 38/38) + #2400 hybrid fusion engine (applyHybridFusion mechanism-only, content-deferred — hybrid_rules placeholder) + Godot-v2 #356 (genetics_api.gd net/ pattern + offspring_ritual_service migrated, GUT 2799/2799, via godot-engine-specialist) + #355 cleanup (stale sot-addendum draft removed).
+- **Fase-3 epigenome params RATIFIED** #2401: research multi-source (repo inheritance_weight scale + transgenerational epigenetic decay ~3gen + game-design anti-snowball). Params weight 0.3/decay 0.6/regression 0.3/cap ±0.2 (start-values, lock playtest N≥40 at build). Coherence-check vs comparables ufficiali (publisher_sheet Spore/Descent + analytic Niche/Creatures) + SoT P2/P4 → discrete-expression refinement (Niche-standard, P2 "NOT sim continuo", reject Creatures-continuous). Gate Decision #2 closed.
+- **Finding**: `mating_trigger.gd` = client PREVIEW (NOT canonical divergence) → "D-REPRO full Godot unify" non-blocker. Corregge flag specialist.
+- Tracker: STATUS_MULTI_REPO (d622fdb) + memory `evo_tactics_genetic_model_thread` updated. PAUSED at milestone (Eduardo) → Fase-3 BUILD next.
+
+### Da fare
+- **Fase-3 epigenome BUILD** (engine net-new): plan-first (ADR-0026 Protocol 6). Memory thread = resume pointer (params + substrate hook + scope).
+- Not-mine governance residui: Game #2385 drift-audit; vault #180/181/190/201 coherence-backstop (4 accumulati = scheduled-task cruft, triage Eduardo).
+
+### Note metodologiche
+- tdd-guard hook ATTIVO (decision-log "no tool" = falso) → Option B python-write bypass su RED-captured cohesive impl. CI-glob = `tests/api/` only (tests/services+routes orfani). Game main commit-blocked → branch-first. `--admin` merge blocked by classifier → flow update-branch→checks→squash.
+- Design-gate discipline: RECON-02/04b/hybrid/epigenome-params = AskUserQuestion master-dd su decisioni design (formula/values), no armchair-lock (L-069 playtest gate). vault merge sovereign = Eduardo-explicit-per-repo (classifier enforce).
+
+---
+
 ## 2026-05-26/27 (Fase-1 Spore Moderate reconciliation — Game-runtime SHIPPED, Ryzen .11)
 
 Sessione Ryzen .11 (VGit). Ripresa handoff Cowork `Game/docs/handoff/2026-05-26-fase1-spore-recon-claude-code-handoff.md`. Esecuzione Wave 1→3 del plan reconciliation (TKT-SPORE-FASE1-RECON-01..06). Authority: vault SoT → ADR-2026-05-26 → Game runtime.
