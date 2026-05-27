@@ -137,7 +137,8 @@ Prova-di-eliminazione su 11 reference archiviati + 3 gap. **Onesto**: dei 11 ref
 | `reference_classification_4d` (framework 4-axis keep/kill/archive, meta-tool unico, non in SoT) | PROMOTE → vault Card (A5 curated) | TODO -- branch+PR, Eduardo-merge-gate |
 | Encounter-authoring CLI (da `reference_tactical_postmortems` / Fallout Tactics: `game_cli.py author-encounter`) | OPEN ticket Game backlog -- unblocks M3 content-slice volume | TODO -- Game (auth Eduardo) |
 | `games-source-index.md:248` backlink rotto (dead Ryzen path) | repoint → `codemasterdd/docs/ryzen-memory-archive/Game-Desktop-old/` | TODO -- Game (FF-pull husky-blocked, vedi §6) |
-| Genetics epigenome/Lamarck-lite + genealogie profonde + eco-repro | Fase-3 build (gate params) | TRACKED -- SoT §24.6 DEFERRED, gia in roadmap |
+| Genetics epigenome/Lamarck-lite (engine) | -- | **SHIPPED Fase-3** (Game #2402 `c359b576`, 2026-05-28: engine + mating wire + speciation + Frammenti). ⚠️ vault SoT §24.6 doc lagga (dice ancora "DEFERRED" -- riconciliazione vault pending; authority runtime = Game backend) |
+| Genetics genealogie profonde + eco-repro lungo-termine | Fase-3+ build | TRACKED -- DEFERRED (non in #2402) |
 | Voidling Pattern 6 visual_swap | -- | DONE (shipped 2026-05-05; claim "P0 gap" era stale, corretto DIGEST §11.5) |
 | Altri 10 `reference_*` (tactical_postmortems, voidling, tier0, gdd_audit, deep_dive_phase2, flint, skiv_online, asset_workspace, prisma_adapter, external_repos) | LINK-from-DIGEST dove utile; contenuto gia in SoT/DIGEST/code | BACKUP -- no action (riviverli non cambia il gioco = backup, non riuso) |
 
