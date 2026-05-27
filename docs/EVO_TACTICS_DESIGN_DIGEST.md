@@ -1,6 +1,6 @@
 # Evo-Tactics — Design Digest (ispirazioni, stile, contenuti)
 
-> Companion di [EVO_TACTICS_ECOSYSTEM_GUIDE.md](EVO_TACTICS_ECOSYSTEM_GUIDE.md).
+> Companion di [EVO_TACTICS_ECOSYSTEM_GUIDE.md](EVO_TACTICS_ECOSYSTEM_GUIDE.md) + [KNOWLEDGE_MAP.md](KNOWLEDGE_MAP.md) (dove-vive cross-repo + SoT-vs-reference + git-safety).
 > Split 2026-05-18 (harsh-review #13). La **GUIDE** = mappa 7-repo + front-matter
 > condiviso (Autorita' / Stato / Glossario / Numeri canonici). Questo **DIGEST**
 > = ispirazioni design + stile distillato + sistema design/contenuti.
@@ -68,7 +68,7 @@ preservato ma non shippato (alternativa o forgotten).
 | Gioco / Sistema | Cosa ci piaceva | Come intendiamo farlo | Fonte (file) | Stato |
 |-----------------|-----------------|------------------------|--------------|-------|
 | **Final Fantasy Tactics** (1997) | CT bar charge-time, Wait action, facing crit (rear+50%/side+25%), JP cross-job inheritance | Adotta legibilita' temporale (init + action_speed + wait) RIFIUTA crit Zodiac opaco. Wait shipped PR#1896. CT bar+facing 3-zone ~8h. JP cross-job M14+ | museum `combat-fft-ct-bar-wait-facing-crit.md` (4/5); vault `core/02-PILASTRI.md`,`10-SISTEMA_TATTICO.md` | SHIPPED (wait) + DEFERRED (CT/facing) |
-| **Spore** (2008) | Part-pack assembly, ability auto-derivata da parti, mutazione morfologica runtime | RIFIUTA sandbox real-time; 6-pattern stack: slot morfologia, ability auto-derive, DNA budget, visual swap obbligatorio, ereditarieta' generazionale, part-bingo. Path moderato ~21h chiude P2 | museum `spore-part-pack-runtime-stack.md` (5/5); vault `core/20-SPECIE_E_PARTI.md`,`00-SOURCE-OF-TRUTH.md` §20 | IN-DESIGN (engine mating shipped, runtime M12+) |
+| **Spore** (2008) | Part-pack assembly, ability auto-derivata da parti, mutazione morfologica runtime | RIFIUTA sandbox real-time; 6-pattern stack: slot morfologia, ability auto-derive, DNA budget, visual swap obbligatorio, ereditarieta' generazionale, part-bingo. Path moderato ~21h chiude P2 | museum `spore-part-pack-runtime-stack.md` (5/5); vault `core/20-SPECIE_E_PARTI.md`,`00-SOURCE-OF-TRUTH.md` §20+§24.6 D-HEIR/D-REPRO | **CANONICAL Fase-1** (part-pack sbloccato 2026-05-26: SoT §24.6 + ADR-2026-05-26 scoped-supersede freeze §21.3) + DEFERRED (epigenome/Lamarck + genealogie profonde M12+) |
 | **Disco Elysium** (2019) | Thought Cabinet slots, voce interna 4-MBTI assi, skill-check passive->active popup, reveal diegetico MBTI color-coded | MBTI tag debrief shipped PR#1897. Thought Cabinet UI ~8h (P0 residuo). Voce interna ~10h. "Fonte calore" per P4 (pilastro piu' freddo) | museum `narrative-disco-thought-cabinet-diegetic.md` (5/5); vault `core/02-PILASTRI.md` P4 | SHIPPED (MBTI debrief) + DEFERRED (Cabinet/voce) |
 | **AI War** (2009) | Antagonista data-driven persistente (Sistema), pack-unlock progression (no power-creep grind), progress meter chosen-escalation, multi-profile narrative voice | Pattern A Sistema-centric Fase 1. aiProgressMeter.js shipped #1898. `ai_profiles.yaml` narrative_voice per tier. 4-8 player co-op vs AI | vault `core/00F-ART_AUDIO_BUSINESS.md` §4.1,`00-SOURCE-OF-TRUTH.md`; museum `economy-hades-multi-currency-pact-menu.md` §convergenza | SHIPPED (progress meter, Fase 1) + IN-DESIGN (co-op net M11) |
 | **Into the Breach** (2018) | Telegraph rule (tutto visibile pre-commit), push/pull arrows, kill-probability badge, zero RNG nascosto | "Sacrifice cool for clarity, every time". Threat tile overlay shipped PR#1884. Push/pull+kill badge ~3h. Determinismo = zero RNG post-decisione. Hand-curate maps ~10h | museum `ui-itb-telegraph-deterministic.md` (4/5); vault `core/41-ART-DIRECTION.md` | SHIPPED (threat overlay) + DEFERRED (arrows/badge) |
@@ -170,7 +170,7 @@ Dublin Core (31 con citazione gioco esterno, 14 worldgen/genetics interni),
 | Sentience Tiers v1.0 (5/5) | Interocezione T0-T6 + 22 Self-Control trigger | Non integrato ma high-ROI. Skiv Sprint C unblock (290/297 trait live) |
 | Worldgen 4-level stack (5/5) | Bioma->Ecosistema->Foodweb->Network | Infra completa MA zero runtime consumption. Revive ~3-6h quick win |
 | Enneagramma Registry (5/5) | 16 hook stub Ennea effect injection | Non integrato, ready-to-wire. 93 LOC orphan ~3h |
-| Voidling Bound 6 Patterns (4/5) | Genetics: rarity-gate, path-lock, Apex terminal, visual_swap | Pattern 6 (visual swap) non integrato, P0 gap |
+| Voidling Bound 6 Patterns (4/5) | Genetics: rarity-gate, path-lock, Apex terminal, visual_swap | Pattern 6 (visual swap) non integrato, P0 gap. Ref archiviato: codemasterdd `ryzen-memory-archive/Game-Desktop-old/reference_voidling_bound_research.md` |
 | Triangle Strategy Transfer (5/5) | 3 proposte P4-closure A/B/C | Dimenticato, mai in BACKLOG/OD. Cross-validate quando Thought Cabinet wiring |
 | Mating Engine D1+D2 (5/5) | 1053 LOC engine + 7 REST, zero frontend | **REVIVED 2026-04-27**: PR#1876/1879/1911 shipped. OD-001 era disinfo |
 
@@ -235,11 +235,12 @@ CREDITS.md provenance.
 | Roadmap index | Game `docs/planning/EVO_FINAL_DESIGN_ROADMAPS_INDEX.md` | M0-M6 + FD-ID backlog |
 | Combat canon | Game `docs/combat/combat-canon.md` + `round-loop.md` | d20 + status + economy frozen |
 | Design audit | Game `docs/planning/2026-04-20-design-audit-consolidated.md` + `pilastri-reality-audit.md` | Pillar audit post-M1 |
-| ADR game-design | vault `Spaces/Dev/Evo-Tactics/adr/` (39) + Game `docs/adr/` (date-named) | Decisioni architetturali |
+| ADR game-design | vault `Spaces/Dev/Evo-Tactics/adr/` (42) + Game `docs/adr/` (date-named) | Decisioni architetturali |
 | Design watcher | vault `production/agents/evo-tactics-design-watcher.md` | Agent flag contraddizioni |
 | Asset refs | `evo-tactics-refs-meta/` (SKIV_REFS, CATALOG, CC0_SOURCES, HANDOFF) | Provenance asset 100% classificata |
 | Art Godot | Game-Godot-v2 `docs/godot-v2/visual-screen-bible.md` + `visual-design-research.md` | Bibbia visiva 3-modi |
-| External repos | vault `memory/reference_external_repos.md` | Repo tracciati Fase 2 (non letto in audit) |
+| External repos | codemasterdd `docs/ryzen-memory-archive/Game-Desktop-old/reference_external_repos.md` (37 repo OSS, captured 2026-05-27) + inlined in Game `games-source-index.md` righe 246-324 | Repo tracciati Fase 2 |
+| Knowledge map | codemasterdd `docs/KNOWLEDGE_MAP.md` | Dove-vive cross-repo + SoT-vs-reference (A0-A5) + git-safety per artifact |
 
 ### 11.8 A che punto siamo (roadmap M0-M6)
 
@@ -260,7 +261,7 @@ successivo + richiede approvazione Master DD.
 **Deferred / cut espliciti** (con motivazione):
 - XP Cipher: parked redundant (ADR-2026-04-17; coperto da job/mating/VC economy)
 - Tabletop DM mode: killed digital-only (ADR-2026-04-19; "1 gioco online no master")
-- Genetics mating complesse: M5 slice minima (genealogy/multi-gen deferred post-freeze)
+- Genetics: Fase-1 part-pack **sbloccata** (ADR-2026-05-26 scoped-supersede §21.3, canonical SoT §24.6 D-HEIR/D-REPRO); restano deferred epigenome/Lamarck-lite + genealogie profonde + eco-repro lungo-termine
 - Game-Database HTTP runtime: out-of-scope freeze (solo Game->DB import unidirezionale)
 - Enneagram deep tuning: modulo secondario (ADR-2026-04-23; non asse design core)
 - Burnout/sentiment detection + Rust CLI rewrite: won't (RESEARCH_TODO W3/W6, no perf problem)
@@ -269,7 +270,9 @@ successivo + richiede approvazione Master DD.
 
 1. **Spore ibrido**: vault dice "Spore-like" poi chiarisce "NON sandbox,
    pattern = Wesnoth advancement tree + AI War pack-unlock". Nome ref corretto,
-   adozione meccanica ibrida (concetto non meccanica diretta).
+   adozione meccanica ibrida (concetto non meccanica diretta). **Update 2026-05-26**:
+   modello genetico Fase-1 ora CANONICAL (SoT §24.6 D-HEIR/D-REPRO + ADR-2026-05-26);
+   part-pack non piu solo IN-DESIGN.
 2. **FFT grid-agnostic**: ADR-2026-04-16 accetta hex-axial citando FFT, ma
    pathfinding/FOV non implementati (TV-first shared-screen). Borrow UX FFT
    senza richiederne complessita' grid. Accettabile MVP.

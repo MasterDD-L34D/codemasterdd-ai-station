@@ -16,7 +16,7 @@
 ## Indice
 
 **Questo file (GUIDE)** = mappa 7-repo + front-matter condiviso canonico.
-Design (ispirazioni/stile/contenuti) = file companion **[DESIGN_DIGEST](EVO_TACTICS_DESIGN_DIGEST.md)**.
+Design (ispirazioni/stile/contenuti) = file companion **[DESIGN_DIGEST](EVO_TACTICS_DESIGN_DIGEST.md)**. Mappa cross-repo dove-vive + SoT-vs-reference (A0-A5) + git-safety = **[KNOWLEDGE_MAP](KNOWLEDGE_MAP.md)**.
 
 - **Front matter**: Autorita' & fonte verita' | Stato & attivita' | Testing/Licensing/Ownership | Numeri canonici | Glossario
 - **0** Mappa mentale corretta
@@ -462,7 +462,7 @@ NO auto-merge: review Eduardo manuale.
 | Campo | Valore |
 |-------|--------|
 | Remote | `github.com/MasterDD-L34D/vault` (PRIVATE) |
-| Path | `C:\dev\vault-shared` (clone downstream; origin Ryzen `C:\Users\VGit\Vault`) |
+| Path | `C:\dev\vault` (clone downstream, rinominato da `vault-shared` 2026-05-21; origin Ryzen `C:\dev\vault`) |
 | Stack | Obsidian ACCESS + Karpathy LLM-wiki + Ollama LAN + 7 production agent |
 | Ruolo | Knowledge base + archivio ricerca + design narrative (layer A5/shadow -- canonical runtime/scope = Game, vedi front-matter "Autorita'") |
 | Privacy | **sovereign-only** (NON in aider-privacy-whitelist, aider-cloud = ABORT) |

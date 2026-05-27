@@ -38,7 +38,8 @@ Principio: *governance colleziona, ADR delimita, YAML prova, freeze decide, agen
 | Verita meccanica/numerica | Game `data/core/*` (species/traits/biomes YAML) | A2 | OK (public) |
 | Governance machinery | Game `docs/governance/docs_registry.json` + vault `governance/` | A0 | OK |
 | Serie core numerata 00-90 | Game `docs/core/NN-*.md` (canonical) + vault shadow | A1-A3 | OK |
-| ADR game-design | vault `Spaces/Dev/Evo-Tactics/adr/` (~44) + Game `docs/adr/` (date-named) | A1 | OK |
+| ADR game-design | vault `Spaces/Dev/Evo-Tactics/adr/` (~42) + Game `docs/adr/` (date-named) | A1 | OK |
+| Modello genetico Fase-1 (D-HEIR/D-REPRO) | vault `core/00-SOURCE-OF-TRUTH.md` §24.6 + `90-FINAL-DESIGN-FREEZE.md` §21.3 (scoped-supersede 2026-05-26) + Game `docs/adr/ADR-2026-05-26-deep-genetics-phase1-supersede-freeze.md` + spec `docs/superpowers/specs/2026-05-26-repro-heir-genetic-model-design.md` | A2-A3 | OK (vault sovereign; Game-side **solo origin**, local 71-behind -- vedi §6) |
 
 **Regola confronto**: in caso di divergenza reference-vs-SoT, vince A0-A4. vault `core/` (freeze A3) vince per scope-shipping; museum/digest = catalogo alternative + ROI. Drift reference-vs-SoT lo flagga l'agent `evo-tactics-design-watcher` (vault `production/agents/`).
 
