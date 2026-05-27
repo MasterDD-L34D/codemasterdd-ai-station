@@ -1,0 +1,3 @@
+- [Agents+tools discipline](feedback_agents_tools.md) — caveman ≠ skip skill-invocation/agent-delegation; always pair with right skills/agents
+- [eng-graph MCP registration](project_eng_graph_mcp.md) — eng-graph in vault .mcp.json on Ryzen, uncommitted by design (machine-specific paths); in-process fix prod 2026-05-27; Q2 OD↔pillar gap = edge-layer cross-doc extraction (NOT retrieval/entity)
+- [evo-roadmap 2026-05-26 stale](project_evo_roadmap_2026_05_26_stale.md) — roadmap's surface-dead inventory ~1mo stale (7/8 wired); ground-truth C:/dev/Game git before acting

@@ -1,0 +1,1 @@
+- [Compass plugin install state (evo-swarm)](compass_install_state.md) — v0.4.2 installato user scope con workaround locale; fix v0.4.3 PR aperto upstream

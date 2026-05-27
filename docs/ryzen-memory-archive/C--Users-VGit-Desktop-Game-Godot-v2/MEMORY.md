@@ -1,0 +1,14 @@
+- [User profile](user_profile.md) — solo dev MasterDD-L34D porting Evo-Tactics web → Godot
+- [Caveman mode default](feedback_caveman.md) — terse output expected on coding tasks
+- [Sweep workflow](feedback_sweep.md) — pre-step routine memorized supermemory f1729730
+- [Sprint plan v3 reference](reference_plan_v3.md) — canonical execution plan path
+- [Cross-repo discipline](feedback_cross_repo.md) — Game/ canonical, no duplicate logic
+- [Vault sweep workflow](feedback_vault_sweep.md) — periodic `MasterDD-L34D/vault` check vs CLAUDE.md → museum cards (sweep 2026-05-11 found 4 items)
+- [Codex review patterns](feedback_codex_reviews.md) — bundle codex P1/P2 fixes into next sprint PR
+- [Test file split rule](feedback_test_split.md) — gdlint max-public-methods=20 → split test files
+- [Sprint P state](project_sprint_p.md) — Sprint P CLOSED (P.onset → P.4 + P.4.1 audit shipped)
+- [Path A parallel W + Q](project_path_a.md) — Sessione 2026-05-04 second wave 19 PR mergiati (cleanup 2 + chip 9 + Ferrospora 5 + docs sync 1 + caller-wire 1 + lint inline 3). Ferrospora UI Art Pass v1 SEQUENCE FULL CLOSURE 5/5. Stub registry 14→1 (only SistemaTurnRunner SUBSUMED design). GUT ~1399/1399 (~3279 asserts). Codex 0 inline findings #126-#158.
+- [W7-Ferrospora design decisions](project_design_decisions_w7.md) — 7 decisioni master-dd 2026-05-04: A1-b 9 personalità (3×3 ruoli) / A2-a code-first / A3-b narrative naming / A4-b random spawn / B1-a XCOM sticky selection / C1-b per-encounter profile pool. Sprint priorità: 1=caller-wire #2-#4 sticky / 2=Beehave 9 trees / 3=AI loaders per-encounter wire.
+- [Cross-stack wave 2026-05-11](project_cross_stack_wave_2026_05_11.md) — 9 PR shipped session (#221+#223+#224+#225+#226+#227+#228+#229+#230) + 130 GUT. 8/8 Game/ tickets ported. Pillar P2+P6 flip 🟡→⚪. 3-layer profilo psicologico LIVE (MBTI+Ennea+Conviction).
+- [Schema-wire wave 2026-05-11](project_schema_wire_wave_2026_05_11.md) — 4 PR post-verdict (#233+#234+#235+#236, #232 closed). TKT-P6 FULL CLOSURE (engine+adapter+Main wire+public trigger). TKT-M14-A engine wire LIVE. 3-layer psicologico fully wired vc_scoring. main.gd 999/1000 LOC. +31 GUT.
+- [Checkpoint execution wave 2026-05-12](project_checkpoint_execution_wave_2026_05_12.md) — 9 PR (#238-#246) post 10-decision master-dd verdict (A/A/B/B/B/B/C+pw/B+C/C/B). Pillars ALL LIVE engine+content+UI+wire. Promotion pipeline FULL ASSEMBLY. +64 GUT. D2-C Prisma Game/-side deferred.

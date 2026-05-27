@@ -208,7 +208,7 @@ _(completato il 2026-04-19 — vedi "Stack installato")_
 - **Vault (vault-shared)** — knowledge management LLM-wiki personale Eduardo, **sibling-peer monitored** (added 2026-05-10; **origin lineage reframe 2026-05-12: Ryzen è la fonte originale, Lenovo è clone downstream**)
   - GitHub: `github.com/MasterDD-L34D/vault`
   - **Origin Ryzen**: `C:\dev\vault` (consolidato in C:\dev 2026-05-21; era `C:\Users\VGit\Vault\`. clone originario, creato Ryzen-side; user Vgit; sync via origin/main)
-  - Path Lenovo (clone downstream): `C:\dev\vault-shared\`
+  - Path Lenovo (clone downstream): `C:\dev\vault\` (rinominato da `C:\dev\vault-shared\` 2026-05-21; backup pre-reconcile `C:\dev\_vault-shared-prereconcile-2026-05-17`)
   - **Vault-ops Python tooling layer** (ingest/normalize/tune scripts + 3 SQLite DBs `qmd.db`/`qmd-v2.db`/`vault-search.db` + venv): **EXISTS ONLY Ryzen-side** in `C:\Users\VGit\Vault-ops\`. NON replicato Lenovo (operational tooling Ryzen-bound).
   - Sync state 2026-05-12 sera: entrambi cloni a HEAD `67c3bb28` (M14 Cards wave), ahead/behind origin `0/0`. Push claim "deferred Eduardo-direct" in memory `project_vault_shared.md` linea 18 era OBSOLETE — push avvenuto, drift fixato 2026-05-12.
   - Stack: Karpathy LLM-wiki + ACCESS structure (Atlas/Cards/Sources/Spaces) + 7 production agent (Quality Gate workflow smoke->draft->production 3-gate) + Ollama LAN (Qwen + deepseek-r1) + Claude variants
@@ -242,7 +242,7 @@ codemasterdd-ai-station (policy + infrastruttura)
 **Sibling-peer disjoint** (sovereign-only, branch+PR write-path OK / merge Eduardo-only, cross-reference one-way):
 
 ```
-vault-shared (C:\dev\vault-shared)
+vault-shared (C:\dev\vault)
        │ Knowledge management LLM-wiki Karpathy + 7 production agents
        │ Stack overlap: Ollama LAN + Qwen + deepseek-r1 + Claude variants
        │ Cross-pattern reference one-way -> codemasterdd MODEL_ROUTING addendum
