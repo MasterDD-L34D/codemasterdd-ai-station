@@ -42,4 +42,4 @@ Input: a fixture where Game shipped concept X (commit msg "feat: X shipped") and
 fixture says "X -- DEFERRED".
 Expected: verdict STALE (high confidence) + proposed reconcile diff (DEFERRED->SHIPPED) + NO
 auto-merge. Negative fixture (SoT says SHIPPED) -> NO-DRIFT.
-Status: [x] logic-smoke PASS 2026-05-28 (stale fixture -> STALE high + reconcile proposal; current fixture -> NO-DRIFT, no PR). Live subagent-dispatch smoke PENDING agent registration (next session reload) before production-marking.
+Status: [x] PASS 2026-05-28 -- live subagent-dispatch smoke (agent registered, dispatched via Agent tool). Stale fixture -> verdict STALE (high) + proposed DEFERRED->SHIPPED reconcile diff + explicit branch+PR-not-auto-merge; current fixture -> verdict NO-DRIFT (high), no PR. Both runs read-only, zero write operations (boundaries respected). Production-ready.
