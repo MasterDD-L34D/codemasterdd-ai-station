@@ -98,7 +98,10 @@ $map  = [ordered]@{
   "C--dev-codemasterdd-ai-station"="C--dev-codemasterdd-ai-station"; "C--Users-VGit"="C--Users-VGit";
   "C--Users-VGit-Desktop-pathfinder-master-dd-repo-evo-swarm"="C--Users-VGit-Desktop-pathfinder-master-dd-repo-evo-swarm"
 }
-foreach ($f in $map.Keys) { scp -r -q "$base/$($map[$f])/memory" "$dst/$f" 2>$null }
+foreach ($f in $map.Keys) {
+  Remove-Item "$dst/$f" -Recurse -Force -ErrorAction SilentlyContinue   # idempotente: evita nesting su re-run
+  scp -r -q "$base/$($map[$f])/memory" "$dst/$f"                        # niente 2>$null: i fail scp restano visibili
+}
 ```
 
 Poi `git add docs/ryzen-memory-archive` + commit se ci sono diff. Worktree effimere escluse (0 file, verificato 2026-05-27).
@@ -119,5 +122,5 @@ Poi `git add docs/ryzen-memory-archive` + commit se ci sono diff. Worktree effim
 - **Re-pull manuale** -- ✅ RESOLVED: runbook idempotente §4.1.
 - **Worktree memory** (`*--claude-worktrees-*`, ~40 chiavi) -- ✅ RESOLVED: verificato 2026-05-27, **0 file memory** nelle worktree (niente di unico). Safe da ignorare.
 - **Memory split** Game (`Game-Desktop-old` 84 file storici vs `C--dev-Game` 3 file nuovi) -- ✅ RESOLVED-as-preserved: NON mergeati di proposito (ere diverse, zero overlap-loss). Entrambi archiviati. **Active going-forward = chiave `C--dev-Game`** (Game vive in `C:/dev/Game`); `Game-Desktop-old` = archivio storico read-only.
-- **Local Game stale** -- ⏳ DEFERRED (Eduardo-gated): `C:/dev/Game` Lenovo fermo a PR #2327. FF-pull **bloccato** da `.husky/pre-commit` (skip-worktree wrapper, mirror-dance Evo-Tactics). Origin = canonical, local = sandbox (no harm). Sync safe (da Eduardo): `git -C C:/dev/Game update-index --no-skip-worktree .husky/pre-commit; git checkout -- .husky/pre-commit; git pull --ff-only origin main; git update-index --skip-worktree .husky/pre-commit`.
+- **Local Game stale** -- ⏳ DEFERRED (Eduardo-gated): `C:/dev/Game` Lenovo HEAD `196a63a4`, **71 commit behind** origin/main (`637b3dc0`, verificato 2026-05-27). FF-pull **bloccato** da `.husky/pre-commit` (skip-worktree wrapper, mirror-dance Evo-Tactics). Origin = canonical, local = sandbox (no harm). Sync safe (da Eduardo): `git -C C:/dev/Game update-index --no-skip-worktree .husky/pre-commit; git checkout -- .husky/pre-commit; git pull --ff-only origin main; git update-index --skip-worktree .husky/pre-commit`.
 - **Privacy** -- ✅ repo codemasterdd confermato **PRIVATE** (no leak). Caveat residuo: e' cloud-whitelisted per delega aider; se contenuto archivio non deve toccare cloud LLM, escludere `docs/ryzen-memory-archive/` via path-check nei wrapper cloud.
