@@ -65,6 +65,8 @@ backup/*
 !.claude/agents/**
 !.claude/global-skills/
 !.claude/global-skills/**
+!.claude/global-claude-md-fragments/
+!.claude/global-claude-md-fragments/**
 !.claude/settings.json
 .claude/worktrees/
 .claude/scheduled_tasks.lock
