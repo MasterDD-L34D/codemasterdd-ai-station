@@ -110,12 +110,21 @@ Expected:
 - **#11 fragile helper**: counting nested-quoting + cross-shell + unicode-touch + cross-tool-incompat layers >= 2 -> STOP scripting, runbook diretto.
 - **#12 non-ASCII enforcement**: ASCII-first body prose per ADR-0021 nuovi file (`ps1|sh|bat|cmd|py|js|json|ya?ml` hook block).
 
-## Per chiudere il giro
+## Per chiudere il giro -- auto-orient via compass
 
-Stato attuale = sistema in punto stabile + tutte le decisioni operative chiuse. Prossima sessione = work-mode non cleanup-mode. Suggestione:
+**`.compass.toml` configurato 2026-05-28 sera** (5 pillars: governance / agentic-tooling / cross-fleet-reproducibility / research-and-design / knowledge-preservation). Baseline Direction Index = 81/100 (rotta coerente).
 
-- Se tempo limitato: **fai T13 Ryzen + T12 smoke** (~15min totale). Chiude completamente la deploy cross-fleet validation.
-- Se sessione di lavoro reale: scegli tra Game backend feature (epigenome Fase-4 follow-on?), AA01 task nuovo, vault knowledge wave, o altro che hai in testa.
-- Se rabbia da affrontare specifica problema: usa `agent-scanner` skill (ora always-discoverable) + invoca agent specialist + chiudi con harsh-reviewer pre-merge.
+**Workflow session-start ideale**:
+
+1. **Invoca `/compass:boot`** -> auto-mini-brief 3-5 righe (Direction Index + top drift + next-smallest-step CONCRETO).
+2. **Se Direction Index >= 75 + suggerimento concreto**: vai direttamente sul next-smallest-step suggerito (work alignment-coerente con pillars).
+3. **Se Direction Index < 75 OR drift significativo**: invoca `/compass:drift` per dettaglio top-5 drift signals + threshold warning.
+4. **Override manuale** (solo se compass non dà signal utile O hai priorità diversa): scegli tra Eduardo-manual residui (T13 Ryzen / T12 smoke / U0-test / opportunistic items).
+
+**Combo cross-verify** post-compass-boot se serve diagnosi profonda:
+- `agent-scanner` skill (LIVE post-deploy): "scan agents" -> inventario per anti-shadow-duplicate prima di selezionare specialist.
+- `repo-health-auditor` subagent: cross-repo state audit on-demand quando il check fleet emerge dubbio.
+
+**Se l'unico drift attuale (`knowledge-preservation` pillar)** suggerisce next-smallest-step su `docs/ryzen-memory-archive/**`, NON forzare un commit cerimoniale solo per "alzare il numero". Il drift e' atteso (layer reference, non daily-touched). Tunabile via `/compass:evolve` se emerge pattern stabile.
 
 Buona sessione.
