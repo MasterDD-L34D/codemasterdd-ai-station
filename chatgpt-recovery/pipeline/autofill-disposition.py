@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 """
+Script for rule-based disposition and target_space autofill for review-card YAML blocks.
+
 autofill-disposition.py -- Auto-fill review-sample.md disposition YAML blocks
 based on topic-label keyword -> vault Space mapping rules.
 
