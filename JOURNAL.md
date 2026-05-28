@@ -19,6 +19,32 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-05-28 (Fase-3 epigenome BUILD + LIVE LOOP + sim + weight-tune + hardening — 7 PR shipped, Ryzen .11)
+
+Sessione lunga continua. Fase-3 epigenome: da params-ratified → fully BUILT + live + tuned + production-hardened. Tutto subagent-driven (plan → impl → spec+quality review → fix → merge). 7 PR mergeate su Game main. Suite 1333/0-fail a fine. Tutti repo main puliti, 0 PR mie aperte.
+
+### Completato
+- **#2402 Epigenome engine** (Fase-3 net-new): `apps/backend/services/genetics/epigenome.js` puro (EMA accumulate / deviation-cap offspring formula / discrete memoria_ambientale expression / bias strength / fragment grant / species mean / config loader) + mating.yaml `epigenome:` block + wire rollMatingOffspring (opt-in/back-compat) + recordOffspring persist + getTribesEmergent epigenetic_divergence/is_distinct_form + route Frammenti grant. Design-gate (master-dd): axes=Conviction(utility/liberty/morality 0-100→/100) / expression=memoria_ambientale discrete / accumulation=EMA(α0.4) / frammenti=grant-at-birth. Code-review colse 2 bug (float tie-break, shared-mutable AXES). Formula = deviation-cap reading (clamp deviazione-da-species_mean).
+- **#2404 Live loop**: `CreatureEpigenome` Prisma store dedicato (migration 0015, keyed campaignId+unitId, Prisma-gated best-effort) — PartyRoster trovato UNUSED a runtime (M10 Phase D deferred) → ground-truth pivot a store dedicato (master-dd decision, no armchair-lock DB). Session-end accumulation (survivors conviction_axis→epigenome EMA) + /mating/roll parent-hydration + recordOffspring lineage bridge + /tribes real species-mean. Loop closure verified (write-key (campaign_id,unit.id) == read-key).
+- **#2405 games-index**: Niche (Tier S P2, Mendeliano discreto) + Creatures (anti-reference, sim-continuo rifiutato) — comparables genetici load-bearing mancanti dall'indice. last_verified refresh.
+- **#2407 lineage sim**: `tools/sim/epigenome_lineage_sim.js` — sim multi-gen breeding sul motore shipped (pure, no DB/backend), misura gen-1 perceptibility + anti-snowball convergence. FINDING: anti-snowball SOLIDO (plateau converge gen-2 ≪ cap), perceptibility THIN a weight 0.3 (~5% axis shift).
+- **#2408 sim paramOverrides** + CLI --weight/--alpha (tuning sweep, no edit yaml).
+- **#2409 weight 0.3→0.45 RATIFIED** (master-dd via curva sim): gen-1 felt-shift ~5%→~8%, anti-snowball intatto (plateau 0.080 ≪ cap 0.2), low-end gene-slot. Test ripple (loadEpigenomeConfig 0.45, mating-wire 0.5945, sim base pinned 0.3). Spec §Layer-3 + research doc nota SUPERSEDED. **NOTA: vault SoT §24 può ancora dire 0.3 → Eduardo allinea sovereign.**
+- **#2412 hardening**: registry per-campaign scoping (recordOffspring campaign_id+created_at; readers filtro campaignId opzionale = back-compat; getTribeForUnit scopes; /tribes+/lineage `?campaign_id`) + FIFO per-campaign prune (cap 1000) + prisma DI seam (opts.prisma||require su /mating/roll + session-end) + route-level e2e (epigenomeRouteE2E prova hydration da prisma live). Chiude i 2 deferred robustness gap di #2404.
+- **Cross-repo reconcile**: codemasterdd synced (+6 KM commits fatti su Lenovo). Lenovo checked via SSH read-only (4 clone game stale Game-76/Godot-107/DB-50/swarm-24 → Eduardo pulls; vault+Dafne = suo lavoro attivo). **Auto-playtest tooling RECUPERATO + verificato**: `tools/py/calibrate_parallel.py` (+ calibrate_drift_verify/sprt/optuna/map_elites, restricted_play, analyze_telemetry) + policy `docs/process/2026-04-26-calibration-harness-policy.md` + boot PG17 (memory ryzen_game_backend_boot); prereqs vivi (PG17 Running, @game junctions OK), smoke N=4 PASS.
+
+### Da fare (next session)
+- **Playtest live umano (THE NORD, L-069)**: oracolo vero per il FEEL epigenome (sim dà magnitudo, non "si sente"). Anche difficulty calibration (gap storico "nessun playtest documentato").
+- **vault SoT §24**: allinea weight 0.45 (sovereign, Eduardo — drift doc-vs-runtime altrimenti).
+- **Lenovo**: pull 4 clone game stale.
+- Deferred non-blocking: session-lifecycle e2e full, /mating/roll preview-guard (commit:false).
+- Bivi opzionali: pillar gap P3 Specie×Job / P5 Co-op; pivot repo (Godot-v2 port / Synesthesia / Dafne).
+
+### Note
+- 7 PR Game: #2402 #2404 #2405 #2407 #2408 #2409 #2412. Suite 1333/0-fail. Game main HEAD `05af47e9`.
+- Memory `evo_tactics_genetic_model_thread` aggiornata throughout (resume-ready).
+- Doctrine consolidata: subagent-driven (plan → impl → spec-review → quality-review → fix → merge) + ground-truth-before-build (PartyRoster-unused catch) + design-gate AskUserQuestion su formula/valori (no armchair-lock).
+
 ## 2026-05-27 (Fase-2 shipped + Fase-3 epigenome params ratified + coherence-check, Ryzen .11)
 
 Sessione cross-day continua post Fase-1 closure. Genetic model Evo-Tactics avanzato Fase-1→Fase-2→Fase-3-params. Tutti repo main puliti, 0 PR mie aperte a fine.
