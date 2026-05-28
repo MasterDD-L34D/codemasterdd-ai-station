@@ -3785,3 +3785,16 @@ Mitigation L-002 attiva. Restoration cognitive prioritized vs compound execution
 - **Footgun risolto**: tooling/CI-only PR ora CLEAN senza admin-override (provato dall'esperimento naturale #2413: era tooling-only, ci-gate+governance verdi, BLOCKED solo per la vecchia required-set). #2410 CLOSED. Ultimo admin-merge = #2413 stesso (pre-fix).
 - Memory `reference_game_branch_protection.md` aggiornata (era stale "serve admin-merge").
 - **Cognitive protocols**: P1 (worktree+origin verify) · P5 harsh-reviewer pre-merge (CI public blast-radius) -> 1 minor applicato (maintenance comment) · classifier-aware: branch-protection flip = shared-state irreversibile -> OK esplicito Eduardo PRIMA (auth via AskUserQuestion).
+
+
+## 2026-05-28 (notte) -- Cross-fleet agent-scanner deploy live Lenovo
+
+### Completato
+- Live -Apply of scripts/setup/deploy-global-skills.ps1 on Lenovo: sandbox QG OK -> Phase 1 skill copy OK -> Phase 2 CLAUDE.md merge OK (line delta +38) -> Phase 3 verify OK.
+- 2nd -Apply = idempotent (file hash equal pre/post).
+- 19/19 unit tests pass (Tests.ps1).
+
+### Da fare
+- Ryzen mirror: git pull origin main + .\scripts\setup\deploy-global-skills.ps1 -Apply Eduardo-direct.
+- Behavioral smoke 3-prompt test (Task 12 plan).
+- Token cost baseline capture post first 5 real invocations (Task 15 plan).
