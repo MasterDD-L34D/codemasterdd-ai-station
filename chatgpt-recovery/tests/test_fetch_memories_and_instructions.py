@@ -49,12 +49,11 @@ def test_memory_to_md_happy_path(fetch_script, monkeypatch):
 
     assert "### 1. (id `mem_123`)" in result
     assert "User prefers Markdown formatting." in result
-    assert "created: 2024-01-01T00:00:00" in result
-    assert "updated: 2024-01-02T00:00:00" in result
+    assert "_created: 2024-01-01T00:00:00 | updated: 2024-01-02T00:00:00_" in result
 
     assert "### 2. (id `mem_456`)" in result
     assert "User is from Italy." in result
-    assert "created: 2024-01-01T00:00:00" in result
+    assert "_created: 2024-01-01T00:00:00_" in result
 
     assert "### 3. (id `mem_789`)" in result
     assert "No timestamps." in result
