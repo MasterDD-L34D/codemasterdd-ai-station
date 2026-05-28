@@ -1,6 +1,8 @@
 # Runbook -- ADR-0017 stack hot-restart
 
-> Procedure operative per riavviare lo stack observability self-hosted (LiteLLM + Langfuse + Postgres) dopo periodo di down. Generato da edge case rilevati durante T3 SPRINT_02 pre-validation 2026-05-10.
+> **DEPRECATED 2026-05-28 sera**: ADR-0017 SUPERSEDED-by-ADR-0030 (Hybrid A1 pivot). Stack codice rimosso (`infra/` + `apps/dogfood-ui/` deleted via OD-009 decommission). Questo runbook resta come **reference storica** per future archeologia: se mai serve riattivare promptfoo eval o dashboard cross-provider, `git checkout <pre-2026-05-28-decommission> -- infra/ apps/dogfood-ui/` restore + segui le procedure sotto. Spend cap virtual key (~$5/30d) era utile per eval-time budget enforcement ma overhead admin per single-user solo-dev sub-$100/mo non giustifica (online consensus: TrueFoundry LiteLLM review 2026; Langfuse pricing 2026).
+
+> Procedure operative per riavviare lo stack observability self-hosted (LiteLLM + Langfuse + Postgres) dopo periodo di down. Generato da edge case rilevati durante T3 SPRINT_02 pre-validation 2026-05-10. **STORICO post-decommission OD-009 2026-05-28**.
 
 ## Quando usare
 

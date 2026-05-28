@@ -8,7 +8,7 @@
 
 ## Snapshot 2026-05-28 (player-recap)
 
-**Stato**: 8 OD CLOSED (001-008 tutti), **1 OD APERTA** (009 stack ADR-0017 post-Hybrid-A1 review, raised 2026-05-28 sera post first-principles audit). Le decisioni vision/architettura vivono in `docs/adr/` (34 ADR). Cose che impattano cross-repo o l'utente sono tracciate nei `BACKLOG.md` / `STATUS_MULTI_REPO.md` / `JOURNAL.md` corrispondenti.
+**Stato**: 9 OD CLOSED (001-009 tutti). OD-009 closure via opzione B Decommission codice (stack ADR-0017 rimosso 2026-05-28 sera). Le decisioni vision/architettura vivono in `docs/adr/` (34 ADR, di cui 6 SUPERSEDED inline). Cose che impattano cross-repo o l'utente sono tracciate nei `BACKLOG.md` / `STATUS_MULTI_REPO.md` / `JOURNAL.md` corrispondenti.
 
 **Amendment 2026-05-28 pomeriggio**: chiusura iniziale di OD-005 + OD-007 (commit `93b4810`) era una scorciatoia ("zero friction = chiudo") senza valutare se applicare la proposta originale. Eduardo ha segnalato il pattern. Le due OD sono state riaperte come EVALUATING: metodo corretto = autoresearch + decision build vs strong-skip-with-rationale, non solo conteggio assenza di friction. Le 4 chiusure genuine (001/002/003/004/006/008) restano valide perche' o gia' implementate o decise con metodo all'epoca.
 
@@ -22,7 +22,7 @@
 | OD-006 | Constraint-count come 2a dimensione routing? | ✅ CLOSED (ADR-0016 Proposed n=11 data points) | Niente |
 | OD-007 | AA01 capability registry / scan automatico? | ✅ CLOSED 2026-05-28 sera (3-layer cross-fleet shipped: L1 drill-down link + L2 LITE skill global discoverable + L3 STRONG-PURE directive auto-appended via deploy script. Lenovo live; Ryzen + behavioral smoke pending Eduardo) | Eduardo-manual: open fresh Claude Code session per 3-prompt behavioral smoke (T12); Ryzen `git pull origin main` + `.\scripts\setup\deploy-global-skills.ps1 -Apply` (T13) |
 | OD-008 | Cross-repo Phase B Day 7 closure tracking? | ✅ CLOSED 2026-05-28 (codemasterdd-side: Phase B closure 2026-05-14 confermata in STATUS_MULTI_REPO + Game [OD-024..031] post-cutover audit ✅ SHIPPED + ADR-0024 addendum shipped PR #55) | **Lato codemasterdd niente**. Side-note opzionale: Game `OPEN_DECISIONS.md` ha ancora OD-023 marcata "APERTA 2026-05-12" -- housekeeping Game-side quando vuoi (non blocca nulla) |
-| OD-009 | Stack ADR-0017 (LiteLLM+Langfuse+Postgres+dogfood-ui) post-Hybrid-A1 value review? | 🔄 APERTA 2026-05-28 (raised post first-principles audit codemasterdd; docker DOWN attualmente; Hybrid A1 routing primario non passa per LiteLLM proxy) | Decisione tua: Keep+amendment vs Decommission codice vs Defer. Default proposto = Keep+amendment (opt-in hot-restart, deemphasize default observability path) |
+| OD-009 | Stack ADR-0017 (LiteLLM+Langfuse+Postgres+dogfood-ui) post-Hybrid-A1 value review? | ✅ CLOSED 2026-05-28 sera (Decommission codice shipped: `git rm -r infra/ apps/dogfood-ui/` + ADR-0017 status SUPERSEDED-by-ADR-0030 + runbook hot-restart DEPRECATED) | Nessuna. Reversibile via git history se future need emerge |
 
 **Decisioni vision/architettura**: vivono in `docs/adr/` (24+ ADR Accepted). Per cose nuove rilevanti usa ADR-NNNN MADR format (vedi `docs/adr/0000-template.md` se esiste oppure copia struttura ADR esistente).
 
@@ -158,10 +158,10 @@
 
 ---
 
-### [OD-009] Stack ADR-0017 (LiteLLM + Langfuse + Postgres + dogfood-ui) -- post-Hybrid-A1 value review
+### [OD-009] ~~Stack ADR-0017 (LiteLLM + Langfuse + Postgres + dogfood-ui) -- post-Hybrid-A1 value review~~ **CLOSED 2026-05-28 sera (Decommission shipped)**
 
 - **Livello**: infrastructure / strategic
-- **Stato**: **APERTA 2026-05-28** -- raised post first-principles audit codemasterdd (`docs/research/2026-05-28-codemasterdd-first-principles-audit.md`).
+- **Stato**: **CLOSED-DECOMMISSIONED** 2026-05-28 sera. Decisione Eduardo post autoresearch online (TrueFoundry LiteLLM review 2026, Langfuse pricing 2026): opzione **B Decommission codice**. `git rm -r infra/ apps/dogfood-ui/` eseguito (~20 file tracked rimossi). ADR-0017 status -> SUPERSEDED-by-ADR-0030. Runbook hot-restart marcato DEPRECATED ma retained per future archeologia. `scripts/quality-bench/` retained standalone (no LiteLLM dep). Reversibile via `git revert` o `git checkout <pre-commit> -- infra/ apps/dogfood-ui/` -- git history preserves everything. Razionale: solo-dev profile + Hybrid A1 spend < $100/mo + routing reale via Pro+Meridian+wrapper direct = LiteLLM proxy + Langfuse self-host = task admin overhead senza valore proporzionato. Online sources convergent.
 - **Ambiguita'**: ADR-0017 (UI + observability stack) Accepted 2026-05-07 PRE-pivot. ADR-0030 Hybrid A1 (Accepted 2026-05-18) ha cambiato routing primario a Pro+Meridian+OpenCode+Gemini-CLI direct, NON LiteLLM proxy. Ground-truth 2026-05-28: docker daemon DOWN su Lenovo -> stack containers OFF. Stack vivo come "hot-restart capability" + promptfoo eval ad-hoc (U3 virtual key budget). Cerimony ratio stimato 70-80%.
 - **Perche' conta**: 4 container (LiteLLM + Langfuse-web + Postgres + dogfood-ui) + 1 Flask app + scaffolding apps/dogfood-ui consumano superficie repo + disk + memoria quando attivi. Se hanno valore marginale, sono cerimony pesante. Se hanno valore (es. promptfoo eval futuro + osservabilita' Pro-usage), keep + documenta come opt-in.
 - **Miglior default proposto**: **opt-in hot-restart mantained MA deemphasize default observability path**. Concretamente: (a) ADR-0017 amendment "post-ADR-0030 status: stack opt-in per promptfoo eval / regression check; routing primario via wrapper aider-* + opencode + Pro+Meridian"; (b) `docs/runbook/stack-hot-restart.md` se non esiste gia' (vedi `docs/research/` per ADR-0017 closure doc); (c) NO codice cuts.
