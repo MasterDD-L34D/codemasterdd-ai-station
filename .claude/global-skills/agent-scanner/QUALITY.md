@@ -11,6 +11,8 @@
 | Live `-Apply` Lenovo | `.\scripts\setup\deploy-global-skills.ps1 -Apply` (real) | All 3 phases green + `DONE` | PASS (commit 0c6b405) | 2026-05-28 |
 | Idempotency live | 2nd `-Apply` | hash pre == hash post | PASS | 2026-05-28 (T11 Step 4) |
 | -Remove rollback sandbox | -Apply then -Remove against throwaway | bounded strip, user content preserved | PASS (T14) | 2026-05-28 |
+| Source 5b re-deploy (cavecrew fix) | `.\scripts\setup\deploy-global-skills.ps1 -Apply` post 5b edit | sandbox QG OK + 3 phases green + ASCII clean + DONE exit 0 | PASS | 2026-05-28 |
+| 5b behavioral capture | `find "$HOME/.claude/plugins" ... \| grep cavecrew` | cavecrew-investigator/builder/reviewer enumerated | PASS | 2026-05-28 |
 
 ## Step 2 -- Indagine di Ricerca (>=3 edge case)
 
@@ -24,6 +26,7 @@
 | -Remove with user content post-directive | User content survives (P0#3 harsh) | Test 5 PASS + T14 sandbox smoke |
 | -Remove with end sentinel missing (legacy) | Falls back to latest `.bak` restore | Implemented in `Invoke-Rollback`; smoke required |
 | Sandbox idempotency violation | Sandbox fails red, exit 5, NO live write | Implemented in Invoke-SandboxQG run-2 diff check |
+| Plugin marketplace mirror dupes (source 5b) | Same agent `name:` appears across `cache/<plugin>/...` (active) AND `marketplaces/<plugin>/...` mirror subpaths -> Step 4 `SILENT OVERRIDE` warning fires for benign plugin-internal mirrors (e.g. cavecrew x4+ paths), inflating inventory toward hard-50 cap | Known limitation 2026-05-28 (5b deploy). Mitigation: Step 4 already mandates manual review post-report; treat same-name within one plugin tree as benign mirror, not real override. Refinement candidate if cap pressure observed: dedup by `name:` keeping highest source-priority path (cache > marketplaces) |
 
 ## Step 3 -- Tuning & Ottimizzazione
 
@@ -43,7 +46,7 @@
 | FIRE-C | `fix typo at line 42 in foo.js` | STRONG-PURE fires (no triviality bypass) | PASS -- fires, raccomanda cavecrew-builder / inline Edit, no new agent |
 
 **Findings (non-blocking):**
-- Scanner source 5 (`.claude/plugins` project-local) NON copre user plugin cache `~/.claude/plugins` -> caveman cavecrew agents non enumerati da find (recuperati manualmente da harness subagent-list). Candidate scanner refinement: aggiungere source 5b `$HOME/.claude/plugins`.
+- Scanner source 5 (`.claude/plugins` project-local) NON copre user plugin cache `~/.claude/plugins` -> caveman cavecrew agents non enumerati da find (recuperati manualmente da harness subagent-list). Candidate scanner refinement: aggiungere source 5b `$HOME/.claude/plugins`. **RESOLVED 2026-05-28**: source 5b added (parallel to 5, maxdepth 6, `2>/dev/null`, grep `(agents|skills)/`); behavioral test confirms cavecrew-investigator/builder/reviewer now enumerated. New edge case surfaced (marketplace mirror dupes) -> Step 2 table.
 - 5 dormant agents in `_dormant/` ancora esposti come `subagent_type` dall'harness (a11y/dafne/database/game-design-validator/lore-consistency) mentre disk-state = dormant. Coherence note.
 
 Step 3 baseline captured. Iteration deferred to post-deploy first 5 sessions each PC (per spec sec 10 R1 trigger).
