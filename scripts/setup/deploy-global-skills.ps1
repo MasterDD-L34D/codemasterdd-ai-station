@@ -364,6 +364,62 @@ function Invoke-SandboxQG {
   return $true
 }
 
+function Test-DeployedState {
+  param(
+    [string]$TargetSkillDir,
+    [string]$ClaudeMdPath,
+    [string]$StartSentinel,
+    [string]$EndSentinel
+  )
+
+  $ok = $true
+
+  # 1. Skill file present + frontmatter parses.
+  $skillFile = Join-Path $TargetSkillDir 'SKILL.md'
+  if (-not (Test-Path $skillFile)) {
+    Write-Host "  [VERIFY FAIL] SKILL.md missing: $skillFile"
+    $ok = $false
+  } else {
+    $sc = Read-FileUtf8NoBom -Path $skillFile
+    if ($sc -notmatch '(?ms)^---\s*$.*?name:\s*agent-scanner.*?^---\s*$') {
+      Write-Host "  [VERIFY FAIL] SKILL.md frontmatter does not parse"
+      $ok = $false
+    } else {
+      Write-Host "  [VERIFY OK] SKILL.md present + frontmatter parses"
+    }
+  }
+
+  # 2. CLAUDE.md sentinel present (start + end both).
+  if (Test-Path $ClaudeMdPath) {
+    $cm = Read-FileUtf8NoBom -Path $ClaudeMdPath
+    if ($cm -notmatch [Regex]::Escape($StartSentinel)) {
+      Write-Host "  [VERIFY FAIL] start sentinel missing in CLAUDE.md"
+      $ok = $false
+    } elseif ($cm -notmatch [Regex]::Escape($EndSentinel)) {
+      Write-Host "  [VERIFY FAIL] END sentinel missing in CLAUDE.md"
+      $ok = $false
+    } else {
+      Write-Host "  [VERIFY OK] CLAUDE.md has start + END sentinel"
+    }
+  } else {
+    Write-Host "  [VERIFY FAIL] CLAUDE.md missing post-deploy"
+    $ok = $false
+  }
+
+  # 3. ASCII check on deployed SKILL.md body.
+  if (Test-Path $skillFile) {
+    $nonAscii = (Get-Content -Raw $skillFile) -match '[^\x00-\x7F]'
+    if ($nonAscii) {
+      Write-Host "  [VERIFY FAIL] non-ASCII chars in deployed SKILL.md"
+      $ok = $false
+    } else {
+      Write-Host "  [VERIFY OK] SKILL.md ASCII clean"
+    }
+  }
+
+  return $ok
+}
+
 # Dispatch by mode (Apply / Remove / DryRun).
 switch ($PSCmdlet.ParameterSetName) {
   'Apply' {
@@ -395,7 +451,15 @@ switch ($PSCmdlet.ParameterSetName) {
     }
 
     Write-Output ""
-    Write-Output "(Phase 3 verify added in Task 9)"
+    Write-Output "=== Phase 3: post-deploy verify ==="
+    $verifyOk = Test-DeployedState -TargetSkillDir $targetSkillDir -ClaudeMdPath $targetClaudeMd `
+                                     -StartSentinel $startSentinel -EndSentinel $endSentinel
+    if (-not $verifyOk) {
+      Write-Error "Post-deploy verify failed. Exit 1."
+      exit $EXIT_FAIL
+    }
+    Write-Output ""
+    Write-Output "DONE. Deploy successful."
     exit $EXIT_OK
   }
   'Remove' {
