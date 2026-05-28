@@ -3730,3 +3730,25 @@ Mitigation L-002 attiva. Restoration cognitive prioritized vs compound execution
 - **QG Step-1 verifica OUTPUT, non exit-code**: il guard CLI POSIX-only usciva 0 senza output su Windows; solo l'assenza del JSON atteso ha smascherato il bug (L-038). "exit 0" != smoke superato.
 - **--admin merge = azione governance forte**: "se ok merge" autorizza merge normale, non override branch-protection -> chiesta auth esplicita prima di `--admin` (boundary external-repo).
 - **Cognitive protocols applied**: P1 Refresh-verify (state worktree + origin/main + tdd-guard + agent registration); P5 harsh-reviewer pre-merge (file CI/governance-critical su repo PUBLIC) -> P1 finding catturato e fixato pre-merge. P6 NO (no design generative, plan gia esistente). tdd-guard hook ancora attivo post-restart -> disabilitato via config.json come da handoff.
+
+
+
+## 2026-05-28 (sera) — VC governance review + hardening + privacy guard
+
+### Completato
+- **Privacy guard KNOWLEDGE_MAP §6**: `.aiderignore` esclude `docs/ryzen-memory-archive/` (memory sovereign in repo cloud-whitelisted); esentato da `.aider*` ignore -> propaga ai cloni; smoke PASS. Recap doc per Ryzen (`docs/sessions/2026-05-28-recap-sot-drift-sentinel.md`).
+- **VC governance review** (Eduardo: "perche' push diretti su repo privati anche se coordinati? rivedi vs fonti autorevoli"): autoresearch multi-source (DORA, Fowler, trunkbaseddevelopment, GitHub docs/Well-Architected) -> `docs/research/2026-05-28-vc-governance-review.md`. **Verdetto: struttura sana**, modelli per-ruolo (codemasterdd direct-push trunk-based / vault PR-gate Ask / Game branch-protection public) matchano pattern riconosciuti. Chiarito: **sync (pull) e review-gate (PR) sono ortogonali** -- "coordinato" non implica PR.
+- **4 hardening azionati**: (P1) `.github/workflows/ci.yml` safety-net non-bloccante (ASCII guard ADR-0021 + pytest scripts/tests, primo run verde); (P2) Game issue #2410 (footgun required-check path-filtered "skipping" + fix aggregator-gate raccomandato); (P2) `scripts/backup/mirror-repos.ps1` bare-mirror idempotente + Task Scheduler settimanale (Ready, NextRun Dom 10:00) + **7/7 repo mirrorati** locale; (P3) backup-reviewer agent = opzionale.
+- **Bug mirror trovato+fixato in verify** (`db5c266`): PS5.1 `ErrorActionPreference=Stop` + git stderr "Cloning into" = NativeCommandError terminante -> clone riusciti (exit 0) marcati FAIL. Fix: `Continue` + gate su `$LASTEXITCODE`. Lesson L-040 (famiglia L-038).
+- **Reconcile vault epigenome §24.6** (primo uso reale `sot-drift-verifier`): verdetto **NO-DRIFT** -- il SoT era gia' riconciliato (vault `40992953` DEFERRED->SHIPPED, 00:59); il sentinel ha beccato il **marker KNOWLEDGE_MAP stale**, non il SoT (anti-pattern #19 ironico). KM §7 corretto. Nessun PR vault necessario.
+- **Lessons AA01**: L-038 (ESM CLI pathToFileURL), L-039 (Game branch-protection pitfall), L-040 (PS native-stderr-under-Stop false-fail).
+
+### Da fare (residuo, non bloccante)
+- Game #2410 aggregator-gate fix = Game governance/Eduardo (tocca CI + branch-protection settings).
+- Off-site disk-loss insurance: copia manuale `C:\dev\_mirror-backup` su drive esterno (lo schedule copre solo account-loss locale).
+- Decisioni infra gia' prese (vault keep, CI non-blocking, mirror weekly).
+
+### Note metodologiche
+- **Classifier-block = safety net (non bug)**: auto-mode ha bloccato `Register-ScheduledTask` come Unauthorized Persistence -> chiesto OK esplicito + timing a Eduardo prima di registrare. Non aggirato (L-030 doctrine).
+- **Verify trova bug reali**: la QG verify del mirror (controllo bare, non exit-code script) ha smascherato il false-fail. "Trust the artifact, not the claim" (L-038/L-040).
+- **Cognitive protocols applied**: P1 Refresh-verify (PC identity + git state); P2 autoresearch multi-source (governance review, internal+external weighted); P5 harsh-reviewer (delegato research esterna). Sentinel B esercitato end-to-end su caso reale (NO-DRIFT corretto).
