@@ -213,6 +213,30 @@ Assert-True -Condition ($after -match '## Section B') -Name "user content sectio
 Remove-Item -Recurse -Force $tmpRoot
 
 # ----------------------------------------------------------------------
+# Test 6: canonical assets must be ASCII-clean (ADR-0021 body prose policy)
+# ----------------------------------------------------------------------
+Write-Host ""
+Write-Host "Test 6: canonical assets ASCII clean"
+
+$canonicalSkillFile = Join-Path $repoRoot '.claude\global-skills\agent-scanner\SKILL.md'
+$canonicalFragmentFile = Join-Path $repoRoot '.claude\global-claude-md-fragments\agent-scanner-directive.md'
+
+$skillContent = Get-Content -Raw $canonicalSkillFile
+Assert-True -Condition (-not ($skillContent -match '[^\x00-\x7F]')) -Name "canonical SKILL.md ASCII"
+
+$fragContent = Get-Content -Raw $canonicalFragmentFile
+Assert-True -Condition (-not ($fragContent -match '[^\x00-\x7F]')) -Name "canonical fragment ASCII"
+
+# ----------------------------------------------------------------------
+# Test 7: scope-7 ARCHON degradation (P1#6 -- Lenovo only, Ryzen ok absent)
+# ----------------------------------------------------------------------
+Write-Host ""
+Write-Host "Test 7: ARCHON source absent != enumeration failure"
+
+Assert-True -Condition ($skillContent -match 'AA01.*Lenovo.*only.*by design') -Name "SKILL.md documents AA01 Lenovo-only"
+Assert-True -Condition ($skillContent -match 'NON e.*errore') -Name "SKILL.md says missing source 7 not an error"
+
+# ----------------------------------------------------------------------
 # Summary
 # ----------------------------------------------------------------------
 Write-Host ""
