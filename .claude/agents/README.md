@@ -2,6 +2,8 @@
 
 Agent definition files per Claude Code. Invocati tramite `Agent` tool con `subagent_type: <name>`.
 
+> **Update 2026-05-28 post first-principles audit**: 5 sub-agent draft never-fired (5+ settimane, zero invocation) sono stati **moved a `_dormant/` subdir** -> effective deregister dal Claude Code skill loader (discovery non-recursive). Le tabelle sotto mostrano ancora i 21 sub-agent storici per traceability con marker DORMANT inline. Reactivation = `git mv .claude/agents/_dormant/<name>.md .claude/agents/<name>.md`. Lista dormant: `a11y-wcag-reviewer`, `database-schema-designer`, `dafne-proposal-triager`, `lore-consistency-checker`, `game-design-validator`. Audit ref: `docs/research/2026-05-28-codemasterdd-first-principles-audit.md`.
+
 ## ⚠️ Readiness protocol (ADR-0018)
 
 Ogni agent ha status visibile in tabelle sotto:
