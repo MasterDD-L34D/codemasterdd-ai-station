@@ -3918,3 +3918,4 @@ Pipeline ora diagnostic-end-to-end: A scorer -> B per-tick -> C+E baseline -> D 
 - T2/T4 caller wire auto-fetch (richiede WS surface decision: phase_change payload extension OR new broadcast type).
 - Enforcement ALIENA layer (data-driven post-collection via D endpoint).
 - Token cost baseline capture post first 5 real invocations (Task 15 plan).
+- **Cross-fleet pull ff-clean Eduardo-side Lenovo**: Game (`31250b5d` -> `3d298f32`, +5 mine incl ALIENA-E), Game-Godot-v2 (`efd5bf6` -> `41bac36`, +6 mine incl §22-C nest), codemasterdd (`af851b67f` not vault — codemasterdd HEAD pre-session vs `52bf929`, +governance refresh+knowledge-archive). vault HEAD `0159c183d` LOCAL Lenovo (eng-graph C3 spec NON-pushed Eduardo) DIVERGED da origin `15887c7da` (mio v7.2 squash-merge): Eduardo rebase suo C3 commit onto origin/main + push (mantiene C3 + integra v7.2). Tutti gli altri pull = ff-clean diretti.
