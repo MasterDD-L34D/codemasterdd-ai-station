@@ -63,6 +63,8 @@ backup/*
 .claude/*
 !.claude/agents/
 !.claude/agents/**
+!.claude/global-skills/
+!.claude/global-skills/**
 !.claude/settings.json
 .claude/worktrees/
 .claude/scheduled_tasks.lock
