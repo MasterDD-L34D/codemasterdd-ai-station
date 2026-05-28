@@ -38,7 +38,11 @@ param(
   [string]$Org = "MasterDD-L34D"
 )
 
-$ErrorActionPreference = "Stop"
+# Do NOT use ErrorActionPreference=Stop here: git writes progress ("Cloning
+# into...") to stderr, which PowerShell 5.1 turns into a terminating
+# NativeCommandError under Stop -- falsely failing a clone that exited 0.
+# Rely on $LASTEXITCODE only (the authoritative success signal for a native exe).
+$ErrorActionPreference = "Continue"
 
 if (-not (Test-Path $Dest)) {
   New-Item -ItemType Directory -Force -Path $Dest | Out-Null
@@ -48,18 +52,18 @@ $failed = @()
 foreach ($r in $Repos) {
   $bare = Join-Path $Dest "$r.git"
   $url  = "git@github.com:$Org/$r.git"
-  try {
-    if (Test-Path $bare) {
-      Write-Output "[update]  $r"
-      git -C $bare remote update --prune
-    } else {
-      Write-Output "[mirror]  $r -> $bare"
-      git clone --mirror $url $bare
-    }
-    if ($LASTEXITCODE -ne 0) { throw "git exited $LASTEXITCODE" }
-  } catch {
-    Write-Output "[FAIL]    $r -- $($_.Exception.Message)"
+  if (Test-Path $bare) {
+    Write-Output "[update]  $r"
+    git -C $bare remote update --prune
+  } else {
+    Write-Output "[mirror]  $r -> $bare"
+    git clone --mirror $url $bare
+  }
+  if ($LASTEXITCODE -ne 0) {
+    Write-Output "[FAIL]    $r -- git exit $LASTEXITCODE"
     $failed += $r
+  } else {
+    Write-Output "[ok]      $r"
   }
 }
 
