@@ -4,18 +4,40 @@
 >
 > Normalizzato da: follow-up ADR non chiusi + "Da fare" JOURNAL recenti + criteri closure ADR-0014 + bug noti aperti.
 
+## Snapshot 2026-05-28 (player-recap)
+
+**Stato sezioni**:
+- **Priorita' alta**: H1-H12 chiuse (12/12 ✅). 4 item "open" -> **TUTTI superseded/satisfied** 2026-05-28 (H2 dogfood n=36 surpasses n>=10 target; H3 cp1252 satisfied empirical n=36 zero retry-loop > n=15 threshold; H7 ADR-0023 superseded by ADR-0030 Hybrid A1).
+- **Priorita' media**: M1-M14 mostly chiusi. Residui = **M3 closed-never-triggered** (H3 satisfied), **M5 dormant** (Synesthesia UniUPO ago 2026), **M14 deferred** Eduardo-direct.
+- **Priorita' bassa**: L1-L5 opportunistic, keep-with-trigger.
+- **ADR-0017 rollout**: 5/6 chiusi. **U0-test aider --browser** open.
+- **Bloccato da**: B1-B3 tutti chiusi 2026-05-28 (Fase 6 closure done 2026-05-07 + ADR-0030 pivot Accepted 2026-05-18 supersede Fase 7 budget transition).
+- **SPRINT_02**: T1/T3/T4/T8 ✅ done; T2 ✅ surpassed (n=36 vs target n>=20); T5/T6/T7 in-flight (sprint window 19/06).
+- **X cross-repo orchestrator**: X1/X2 ✅; X3/X4/X5 Gate E window post-Max (now Hybrid A1 covers strategic; window relevance to re-evaluate post-2026-06-17 Max-2 expiration).
+
+**Cose che devi fare adesso**:
+- **U0-test** (~10min): prova aider --browser per 1-2 dev-loop session. Gate UX accettabile -> ADR-0017 step 1+ deferred.
+- **M5 Synesthesia**: dormant UniUPO -- riapri ago 2026.
+- **M14 AA01 Task D**: Eduardo-direct, vault Card 3/4 (sibling-peer boundary, non codemasterdd action).
+- **L1-L5**: opportunistic, no action proattiva.
+- **SPRINT_02 T5/T7**: end-sprint review entro 19/06.
+
+Pattern di chiusura applicato post `superpowers:first-principles-infra-checklist` cleanup OPEN_DECISIONS: marker stale = anti-pattern #19 -> ground-truth verify (log conteggi + ADR status + sprint scope) prima di assumere "open".
+
+---
+
 ## Priorità alta
 
 - [x] ~~**H1** — Dogfood behavior-critical n+1 (target ≥5).~~ **DONE 2026-04-24 auto-mode**: #12 retry-logic parity bench-ollama (14B Q2 local), partial success con inherited-bug finding. Dataset behavior: 3 full + 1 partial + 1 reject = **5/5 target ✅**. Commit `dce8ee4`.
-- [ ] **H2** — Dogfood cosmetic fino n≥10 cumulativo (attuale 7 dopo #11). Gap 3. Mix local/cloud. Opportunistic batch.
-- [ ] **H3** — Monitoring empirico fix cp1252 durante retry loop naturale. **ANCORA PENDING**: 9 dogfood consecutivi (#4-#12) sono stati 1st-try o 2nd-try auto senza retry loop naturale. Soglia pazienza: se nessun trigger entro n=15, considerare test sintetico controllato.
+- [x] ~~**H2** — Dogfood cosmetic fino n≥10 cumulativo (attuale 7 dopo #11).~~ **DONE 2026-05-28 (SURPASSED empirical)**: dogfood cumulative n=36 (entries logs/aider-delegation-2026-04 + 2026-05). Target n>=10 cosmetic surpassed 3.6x via natural workflow accretion. SPRINT_02 T2 ratification (~13/5 notte).
+- [x] ~~**H3** — Monitoring empirico fix cp1252 durante retry loop naturale.~~ **DONE 2026-05-28 (SATISFIED empirical, threshold n=15 surpassed 2.4x)**: cumulative n=36 dogfood post-fix-deploy, zero UnicodeEncodeError crash, zero natural-retry-loop trigger osservato. Soglia pazienza ADR-0014 (n=15) surpassed -> fix `chcp 65001 + PYTHONIOENCODING=utf-8` ratified empirical. Closes OD-002 (gia' closed 2026-05-07) loop. Reactivation trigger: 1° crash UnicodeEncodeError post-deploy (none observed).
 - [x] ~~**H4** — Cost tracking cumulativo mensile `ccusage` + cloud logs.~~ **DONE 2026-04-24 auto-mode** (anticipato vs target fine-mese): sezione "Aggregati aprile 2026" popolata in `logs/aider-delegation-2026-04.md`. Cumulative cloud $0.0148 / 0.074% budget. ccusage Max $383.36 (non-OOP). Trigger ADR-0008 FULL-SOVEREIGN VIABLE confermato empiricamente. Refresh finale fine-mese (2026-04-30) residuo tracked.
 - [x] ~~**H5** — Review settimana 2 formale (~2026-05-07): count dogfood, fail rate, ETA chiusura. Decisione on-track / extension.~~ **DONE 2026-04-24 (anticipata)**: sprint 01 early-hit ha reso review immediata sensata. Esito: **on-track, no mid-course correction**. 2/4 criteri ADR-0014 PASS (quality, cost), 2/4 on-track (reliability 11/20, privacy 1/3). Next checkpoint settimana 4 (~2026-05-17). Dettaglio in JOURNAL entry `2026-04-24 (review settimana 2 anticipata)`.
 - [x] ~~**H6** — Validare empiricamente OD-006 (routing threshold constraint-count).~~ **DONE 2026-04-24**: n=6 data points cross-tier raccolti (dogfood #6/#7/#8/#9/#10/#11). OD-006 **chiuso via ADR-0016** (Proposed 2026-04-24). Follow-up: raccogliere n≥3 data points addizionali per gap (constraint=4, 2-transform LOCAL, 5-strict LOCAL) verso ADR-0016 Accepted.
 
 ### Task derivati da harsh review 2026-05-09 (Decisione 007)
 
-- [ ] **H7** -- ADR-0023 strategic tier post-Max API on-demand. Status: scaffold Proposed PR (questo PR). Action items: ~~verifica `ANTHROPIC_API_KEY` presente in `~/.config/api-keys/keys.env`~~ **VERIFIED PRESENT Ryzen 2026-05-21**, creare `logs/claude-api-spend-2026-05.md` (gitignored), CLAUDE.md + MODEL_ROUTING update post-merge. Trigger Accepted: n>=2 task strategic completati post-19/05 con cost <$20/mese.
+- [x] ~~**H7** -- ADR-0023 strategic tier post-Max API on-demand.~~ **DONE 2026-05-28 (SUPERSEDED by ADR-0030 Hybrid A1, Accepted 2026-05-18)**: ADR-0023 originale supposeva "senza Pro $240/anno"; ADR-0030 ha acquisito Pro $20/mo -> strategic tier ora covered by Pro subscription, NON pay-per-use API on-demand. ADR-0023 status = SUPERSEDED-by-ADR-0030. Action items chiusi: `logs/claude-api-spend-2026-05.md` esiste; CLAUDE.md aggiornato (sezione 6 + 16 cita Hybrid A1 + ADR-0030).
 - [x] ~~**H8** -- Privacy guard rail tecnico (V2 BLOCKING resolution).~~ **DONE 2026-05-09 mezzogiorno**: 4 wrapper cmd cloud (aider-groq/cerebras/gemini/openai) modificati con runtime check `git rev-parse --show-toplevel` + whitelist `~/.config/aider-privacy-whitelist.txt`. Test smoke: codemasterdd ALLOWED (exit 0) + synesthesia BLOCKED (exit 1) entrambi PASS. Setup script `scripts/setup/install-privacy-guard.ps1` (idempotente) + template wrapper `scripts/setup/aider-wrapper-template.txt`. CLAUDE.md aggiornato. **Effort reale: ~1h** (vs stima 1gg).
 - [x] ~~**H9** -- Bench mixed-workload pre-19/05 (C1 + V3 sample size).~~ **DONE 2026-05-09 mezzogiorno** (commits `cbdf2ed` + `11cac69`): bench n=4 per tier 7B/14B Q2/30B MoE con 11 swap forced. Risultati: workflow time 79.17s (11 swap), throughput per-tier 100.75 / 17.62 / 32.98 tok/s, swap overhead 3047ms/swap = 42.3% del workflow misto. **Discovery positiva**: qwen3-coder:30b MoE A3B 32.98 tok/s (+43% upside vs doc precedente), competitive con 14B Q2 in throughput + capability superiore. Mitigation batched (run [4x7B -> 4x14B Q2 -> 4x30B]) saving 37% (49.9s con 2 swap). Decisione `OLLAMA_MAX_LOADED_MODELS=1` confermata (validation contrarian `=2` non payoff). Doc: `docs/research/bench-mixed-workload-2026-05-09.md` + `bench-batched-2026-05-09.md`. CLAUDE.md aggiornato con tabella mixed-workload + raccomandazione batching. Effort reale: ~3-4h.
 - [x] ~~**H10** -- ADR status workflow update con flag "early-acceptance".~~ **DONE 2026-05-09 mezzogiorno**: ADR-0010 addendum (status workflow + early-acceptance flag spec + ratification check process). ADR-0021 + ADR-0022 retroactive flag applicato. DECISIONS_LOG ADR table sync. Ratification check date: ADR-0021 entro 2026-06-07 / ADR-0022 entro 2026-06-09. Effort reale: ~30min.
@@ -33,7 +55,7 @@
 
 - [x] ~~**M1** — JOURNAL entry 2026-04-23 documentando integrazione framework archivio + 11 file governance + rationale.~~ **DONE**: entry in JOURNAL `2026-04-23 (sera — integrazione framework archivio)` + follow-up `2026-04-24 notte` aggiunta.
 - [x] ~~**M2** — Memory refresh `project_session_resumption.md`.~~ **DONE 2026-04-24**: HEAD 9bcc2a4, tabella 11 dogfood, ADR-0016 reference, Sprint 01 early hit.
-- [ ] **M3** — Wrapper PowerShell alternative (`aider-groq.ps1` etc.) **se H3 fallisce**. Condizionale. Trigger: 1° crash cp1252 post-deploy fix. Finora nessun crash osservato (8 dogfood consecutivi clean).
+- [x] ~~**M3** — Wrapper PowerShell alternative (`aider-groq.ps1` etc.) **se H3 fallisce**.~~ **CLOSED-NEVER-TRIGGERED 2026-05-28**: H3 satisfied empirical (n=36 zero crash, threshold n=15 surpassed). Conditional trigger ("1° crash cp1252 post-deploy fix") MAI attivato. Closing definitively. Reactivation: solo se crash UnicodeEncodeError reale emerge in future workflow.
 - [x] ~~**M4** — Integrate bench framework ↔ dogfood tracking: colonna "quality pass" nel log.~~ **DONE 2026-04-24**: insight = "colonna per-entry" non ha senso (quality bench è per-modello fisso). Implementato come reference table aggregata: template esteso con sezione "Quality bench ↔ reliability correlation" + diagnostic patterns. Log reale popolato con snapshot (5 stack al 100% pass@1 vs reliability variabile → conferma constraint-specific fail mode ADR-0016). Commit `70f4f69`.
 - [ ] **M5** — Synesthesia privacy first-violation test: ≥1 sessione che tocchi `views/` (cloud OK) + `controllers/` (sovereign-only). Criterio 3 ADR-0014. **Priorità residua principale Sprint 01** (1/3 ancora).
 - [x] ~~**M6** — Commit delle 11 modifiche governance + entry JOURNAL.~~ **DONE 2026-04-23/24**: 11 commit sessione cumulative (sera + notte).
@@ -112,11 +134,11 @@ ADR-0026 Protocol 1 Refresh-verify ha SHORT-CIRCUITED Archon 7-step needs per Q1
 - [x] ~~**U5** — ADR-0017 ratification: se U0-U4 test completati entro ~2026-05-17 review settimana 4 senza blocker → Status → Accepted + update CLAUDE.md scope repo evolution.~~ **DONE 2026-05-07 anticipato**: ADR-0017 **Accepted** in sessione Fase 6 closure (PR #4 mergeato). 5/5 criteri ratification PASS. Stack scaffold opt-in (Docker Desktop manual start). U1/U2/U4 validated. U3 promptfoo smoke 4/4 PASS via virtual key Eduardo-created.
 - [x] ~~**U6** — Migrazione entries existing log → dogfood.sqlite~~ **SCRIPT READY 2026-04-25 auto-mode**: `scripts/migrate-log-to-sqlite.py` legge la cumulative table finale di `logs/aider-delegation-YYYY-MM.md` + enrichment dict hardcoded per cost/tokens/commit_hash dei 12 entries aprile. Parse validato dry-run: 12/12 entries mapped, outcomes/stack/constraint-count normalizzati. Supporta `--dry-run`, `--force` override, idempotency via duplicate check. **Esecuzione reale deferred**: DB canonical deve stare in main repo `C:/dev/codemasterdd-ai-station/apps/dogfood-ui/data/dogfood.sqlite`, non in worktree. Eduardo da main: `python scripts/migrate-log-to-sqlite.py --log logs/aider-delegation-2026-04.md --db apps/dogfood-ui/data/dogfood.sqlite`. Prerequisito: stop Flask `mystifying-keller-84cb03`, rilancia da main. Follow-up opzionale: secondary pass parser sezioni narrative per arricchire entries futuri senza manual enrichment dict update.
 
-## Bloccato da
+## Bloccato da (TUTTI RISOLTI 2026-05-28)
 
-- **B1** — ADR-0015 Budget decision: richiede chiusura Fase 6 (tutti 4 criteri ADR-0014). ETA sblocco ~2026-05-20.
-- **B2** — Fase 7 migration finalization (rinuncia Claude Max): dipende da 2026-05-19 (hard date) + B1.
-- **B3** — Extension Fase 6 mirata con ADR-0014 Addendum: dipende da review settimana 2+4.
+- [x] ~~**B1** — ADR-0015 Budget decision: richiede chiusura Fase 6 (tutti 4 criteri ADR-0014). ETA sblocco ~2026-05-20.~~ **DONE 2026-05-28 (stale-resolved)**: ADR-0015 **Accepted 2026-05-07** (Fase 6 closure anticipata, PR #4). Successivamente SUPERSEDED-by-ADR-0030 (Hybrid A1 pivot Accepted 2026-05-18). B1 unblock effettivo da 2026-05-07.
+- [x] ~~**B2** — Fase 7 migration finalization (rinuncia Claude Max): dipende da 2026-05-19 (hard date) + B1.~~ **DONE 2026-05-28 (PIVOT cambiato)**: rinuncia Claude Max non e' piu' la transition path -> ADR-0030 Hybrid A1 Accepted 2026-05-18 ha ri-acquistato Claude Max +1mo (deadline ~17/06) + Pro $20/mo + Meridian. Fase 7 originale (full-sovereign $0-50/anno) e' SUPERSEDED.
+- [x] ~~**B3** — Extension Fase 6 mirata con ADR-0014 Addendum: dipende da review settimana 2+4.~~ **DONE 2026-05-28 (no extension needed)**: review settimana 2 (H5) DONE 2026-04-24 + closure Fase 6 DONE 2026-05-07 senza extension. ADR-0014 closure verdict: on-track, no mid-course correction.
 
 ---
 
