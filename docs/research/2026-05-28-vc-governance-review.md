@@ -60,11 +60,18 @@ Per insurance anche contro disk-loss: sincronizza `$Dest` su disco esterno o clo
 (es. `robocopy` su drive esterno, oppure secondo `git push` verso altro remote).
 Schedulazione (Task Scheduler) = scelta infra di Eduardo, non forzata qui.
 
-## Decisioni aperte (Eduardo)
+## Decisioni risolte (2026-05-28, delega Eduardo "implementa le decisioni")
 
-- **vault PR-gate**: tenere (oversight knowledge vale) o downgrade a Show (push+PR informativa)? Default attuale = tenere.
-- **codemasterdd CI**: lasciata non-bloccante (alert su rosso, no branch-protection) -- coerente con trunk-based. Se in futuro vuoi un gate hard, si valuta allora.
-- **Mirror**: schedulare `mirror-repos.ps1` (es. settimanale) + scegliere target off-site.
+- **D1 vault PR-gate -> TENERE.** Vault = knowledge SoT sovereign; il merge-gate umano e' l'oversight value reale, costo basso (merge occasionali). Downgrade a Show scartato. No-change (gia' la policy attuale, CLAUDE.md vault boundary).
+- **D2 codemasterdd CI -> NON-bloccante (confermato).** Trunk-based + solo-owner. Il gap "commit non verificato" e' gia' coperto a 2 layer: pre-commit locale (ASCII/silent-fail/silent-corruption, ADR-0008/0020/0021) + CI server-side (`ci.yml`, ADR-0021 + pytest). Pre-push hook = ridondante col pre-commit -> niente gold-plating. No branch-protection (eviterebbe il direct-push che e' il punto). No-change.
+- **D3 mirror -> DECISO: settimanale, target local bare** (`C:\dev\_mirror-backup`) come GitHub-account-loss insurance sovereign; copia su drive esterno = step disk-loss manuale. Pre-req verificati: SSH key passphrase-less (run detached OK) + clone --mirror private (vault) OK non-interattivo. **Script + mirror locale FATTO** (codemasterdd + vault gia' mirrorati). **Registrazione Task Scheduler PENDING Eduardo**: il classifier auto-mode ha bloccato la creazione del task OS persistente (Unauthorized Persistence) -- corretto, e' azione di persistenza che richiede OK esplicito + timing scelto da Eduardo. Comando pronto:
+  ```powershell
+  $r="C:\dev\codemasterdd-ai-station"
+  $a=New-ScheduledTaskAction -Execute powershell.exe -Argument "-NoProfile -ExecutionPolicy Bypass -Command `"& '$r\scripts\backup\mirror-repos.ps1' *>> '$r\logs\mirror-backup.log'`""
+  $t=New-ScheduledTaskTrigger -Weekly -DaysOfWeek Sunday -At 10:00am
+  $s=New-ScheduledTaskSettingsSet -StartWhenAvailable -ExecutionTimeLimit (New-TimeSpan -Hours 1)
+  Register-ScheduledTask -TaskName "codemasterdd-mirror-backup" -Action $a -Trigger $t -Settings $s -Force
+  ```
 
 ## Sources
 
