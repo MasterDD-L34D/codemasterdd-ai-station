@@ -3778,3 +3778,10 @@ Mitigation L-002 attiva. Restoration cognitive prioritized vs compound execution
 - **Classifier-block = safety net (non bug)**: auto-mode ha bloccato `Register-ScheduledTask` come Unauthorized Persistence -> chiesto OK esplicito + timing a Eduardo prima di registrare. Non aggirato (L-030 doctrine).
 - **Verify trova bug reali**: la QG verify del mirror (controllo bare, non exit-code script) ha smascherato il false-fail. "Trust the artifact, not the claim" (L-038/L-040).
 - **Cognitive protocols applied**: P1 Refresh-verify (PC identity + git state); P2 autoresearch multi-source (governance review, internal+external weighted); P5 harsh-reviewer (delegato research esterna). Sentinel B esercitato end-to-end su caso reale (NO-DRIFT corretto).
+
+### Update (stessa sera): Game #2410 footgun FIXED end-to-end
+- **Fix A shipped**: PR #2413 (`9f918e26`) aggiunge job `ci-gate` a `ci.yml` (`always()` + `needs:` i 5 job ci.yml gia' required; passa su success-or-skipped, fallisce solo su failure/cancel). harsh-reviewer: SHIP IT (gate logic sound; il caso pericoloso paths-filter-fail e' coperto perche' paths-filter e' un need diretto). `ci-gate` verde sul PR (3s) + su main post-merge.
+- **Branch protection flippata**: required `[paths-filter,python-tests,stack-quality,cli-checks,dataset-checks,governance]` -> `[governance, ci-gate]` (strict=true, enforce_admins=false invariati). Revert data salvata in memory.
+- **Footgun risolto**: tooling/CI-only PR ora CLEAN senza admin-override (provato dall'esperimento naturale #2413: era tooling-only, ci-gate+governance verdi, BLOCKED solo per la vecchia required-set). #2410 CLOSED. Ultimo admin-merge = #2413 stesso (pre-fix).
+- Memory `reference_game_branch_protection.md` aggiornata (era stale "serve admin-merge").
+- **Cognitive protocols**: P1 (worktree+origin verify) · P5 harsh-reviewer pre-merge (CI public blast-radius) -> 1 minor applicato (maintenance comment) · classifier-aware: branch-protection flip = shared-state irreversibile -> OK esplicito Eduardo PRIMA (auth via AskUserQuestion).
