@@ -96,6 +96,76 @@ Assert-True -Condition ($canonicalHash -eq $targetHash2) -Name "hash-compare no 
 Remove-Item -Recurse -Force $tmpRoot
 
 # ----------------------------------------------------------------------
+# Test 3: CLAUDE.md merge -- absent then idempotent (P0#3 + idempotency)
+# ----------------------------------------------------------------------
+Write-Host ""
+Write-Host "Test 3: CLAUDE.md merge absent + idempotent"
+
+$scriptText = Get-Content -Raw $scriptPath
+# Find LAST switch (dispatch), not the early MODE switch.
+$lastCut = $scriptText.LastIndexOf('switch ($PSCmdlet')
+if ($lastCut -lt 0) { throw "Cannot find dispatch in deploy script" }
+$functionsOnly = $scriptText.Substring(0, $lastCut)
+. ([scriptblock]::Create($functionsOnly))
+
+# Ensure sentinel variables are in scope (fallback if dot-source did not expose them).
+if (-not (Get-Variable -Name 'startSentinel' -ErrorAction SilentlyContinue)) {
+  $startSentinel = '## Agent Scanner discipline (anti-shadow-duplicate, cross-fleet)'
+  $disambigRegex = '^\*\*Rule\*\* \(STRONG'
+}
+
+$tmpRoot = Join-Path $env:TEMP "merge-test-$([guid]::NewGuid())"
+New-Item -ItemType Directory -Force -Path $tmpRoot | Out-Null
+$claudeMd = Join-Path $tmpRoot 'CLAUDE.md'
+$fragment = Join-Path $tmpRoot 'directive.md'
+
+Set-Content -Path $claudeMd -Value "# Existing CLAUDE.md`r`n`r`n## Other section`r`n`r`nbody" -Encoding utf8
+$fragmentContent = @"
+## Agent Scanner discipline (anti-shadow-duplicate, cross-fleet)
+
+**Rule** (STRONG-PURE, no bypass): test directive body.
+
+<!-- END agent-scanner-directive -->
+"@
+Set-Content -Path $fragment -Value $fragmentContent -Encoding utf8
+
+$state1 = Test-DirectivePresent -ClaudeMdPath $claudeMd -StartSentinel $startSentinel -DisambigRegex $disambigRegex
+Assert-Eq -Expected 'absent' -Actual $state1 -Name "merge Test-DirectivePresent absent"
+
+$ok1 = Invoke-ClaudeMdMerge -ClaudeMdPath $claudeMd -FragmentPath $fragment `
+                              -StartSentinel $startSentinel -DisambigRegex $disambigRegex
+Assert-True -Condition $ok1 -Name "merge run-1 append ok"
+
+$state2 = Test-DirectivePresent -ClaudeMdPath $claudeMd -StartSentinel $startSentinel -DisambigRegex $disambigRegex
+Assert-Eq -Expected 'present-valid' -Actual $state2 -Name "merge post-append state present-valid"
+
+$contentBefore = Read-FileUtf8NoBom -Path $claudeMd
+$ok2 = Invoke-ClaudeMdMerge -ClaudeMdPath $claudeMd -FragmentPath $fragment `
+                              -StartSentinel $startSentinel -DisambigRegex $disambigRegex
+$contentAfter = Read-FileUtf8NoBom -Path $claudeMd
+Assert-True -Condition $ok2 -Name "merge run-2 ok"
+Assert-Eq -Expected $contentBefore -Actual $contentAfter -Name "merge run-2 idempotent (no diff)"
+
+Remove-Item -Recurse -Force $tmpRoot
+
+# ----------------------------------------------------------------------
+# Test 4: CLAUDE.md merge ambiguous sentinel (P1#4 distinct error)
+# ----------------------------------------------------------------------
+Write-Host ""
+Write-Host "Test 4: ambiguous sentinel rejected"
+
+$tmpRoot = Join-Path $env:TEMP "merge-test-$([guid]::NewGuid())"
+New-Item -ItemType Directory -Force -Path $tmpRoot | Out-Null
+$claudeMd = Join-Path $tmpRoot 'CLAUDE.md'
+
+Set-Content -Path $claudeMd -Value "## Agent Scanner discipline (anti-shadow-duplicate, cross-fleet)`r`n`r`nSomeone overwrote the rule with prose.`r`n" -Encoding utf8
+
+$state = Test-DirectivePresent -ClaudeMdPath $claudeMd -StartSentinel $startSentinel -DisambigRegex $disambigRegex
+Assert-Eq -Expected 'ambiguous' -Actual $state -Name "ambiguous sentinel detected"
+
+Remove-Item -Recurse -Force $tmpRoot
+
+# ----------------------------------------------------------------------
 # Summary
 # ----------------------------------------------------------------------
 Write-Host ""

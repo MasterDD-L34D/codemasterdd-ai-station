@@ -122,14 +122,122 @@ function Invoke-SkillDeploy {
   }
 }
 
+function Read-FileUtf8NoBom {
+  param([string]$Path)
+  if (-not (Test-Path $Path)) { return $null }
+  return [System.IO.File]::ReadAllText($Path)
+}
+
+function Write-FileUtf8NoBom {
+  param([string]$Path, [string]$Content)
+  # Normalize to CRLF on Windows write (P2#1 harsh: prevent mixed endings).
+  $content = $Content -replace '(?<!\r)\n', "`r`n"
+  $utf8NoBom = [System.Text.UTF8Encoding]::new($false)
+  [System.IO.File]::WriteAllText($Path, $content, $utf8NoBom)
+}
+
+function Test-DirectivePresent {
+  param([string]$ClaudeMdPath, [string]$StartSentinel, [string]$DisambigRegex)
+
+  # Returns: 'absent' / 'present-valid' / 'ambiguous'.
+  if (-not (Test-Path $ClaudeMdPath)) { return 'absent' }
+
+  $content = Read-FileUtf8NoBom -Path $ClaudeMdPath
+  $lines = $content -split "`r?`n"
+
+  $startIdx = -1
+  for ($i = 0; $i -lt $lines.Count; $i++) {
+    if ($lines[$i] -eq $StartSentinel) { $startIdx = $i; break }
+  }
+  if ($startIdx -lt 0) { return 'absent' }
+
+  # Scan first non-blank within next 5 lines after sentinel.
+  for ($j = $startIdx + 1; $j -le [Math]::Min($startIdx + 5, $lines.Count - 1); $j++) {
+    $line = $lines[$j].Trim()
+    if (-not [string]::IsNullOrEmpty($line)) {
+      if ($line -match $DisambigRegex) { return 'present-valid' }
+      return 'ambiguous'
+    }
+  }
+  return 'ambiguous'
+}
+
+function Invoke-ClaudeMdMerge {
+  param(
+    [string]$ClaudeMdPath,
+    [string]$FragmentPath,
+    [string]$StartSentinel,
+    [string]$DisambigRegex,
+    [switch]$DryRun
+  )
+
+  $state = Test-DirectivePresent -ClaudeMdPath $ClaudeMdPath -StartSentinel $StartSentinel -DisambigRegex $DisambigRegex
+
+  switch ($state) {
+    'present-valid' {
+      Write-Host "  [OK] directive already present and valid -- skip merge (idempotent)"
+      return $true
+    }
+    'ambiguous' {
+      $ts = Get-Date -Format 'yyyyMMdd-HHmmss'
+      $logPath = Join-Path $env:USERPROFILE ".claude\.apply-blocked-$ts.log"
+      $content = Read-FileUtf8NoBom -Path $ClaudeMdPath
+      $logContent = "Sentinel ambiguous on $ts`r`nClaudeMd: $ClaudeMdPath`r`nDump:`r`n$content"
+      if (-not $DryRun) {
+        if (-not (Test-Path (Split-Path $logPath -Parent))) {
+          New-Item -ItemType Directory -Force -Path (Split-Path $logPath -Parent) | Out-Null
+        }
+        Set-Content -Path $logPath -Value $logContent -Encoding utf8
+      }
+      Write-Host "  [FAIL] sentinel ambiguous (heading match but Rule (STRONG missing within 5 lines)"
+      Write-Host "         log: $logPath"
+      return $false
+    }
+    'absent' {
+      $fragmentContent = Read-FileUtf8NoBom -Path $FragmentPath
+      if ($null -eq $fragmentContent) {
+        Write-Error "Fragment file missing: $FragmentPath"
+        return $false
+      }
+      if ($DryRun) {
+        Write-Host "  [DRY] would append directive ($(($fragmentContent -split "`n").Count) lines) -> $ClaudeMdPath"
+        return $true
+      }
+      # Backup pre-modify.
+      $ts = Get-Date -Format 'yyyyMMdd-HHmmss'
+      if (Test-Path $ClaudeMdPath) {
+        $bakPath = "$ClaudeMdPath.bak-$ts"
+        Copy-Item -Path $ClaudeMdPath -Destination $bakPath -Force
+        Write-Host "  [OK] backup saved: $bakPath"
+      }
+      $existing = if (Test-Path $ClaudeMdPath) { Read-FileUtf8NoBom -Path $ClaudeMdPath } else { "" }
+      if (-not [string]::IsNullOrEmpty($existing) -and -not $existing.EndsWith("`n")) { $existing += "`n" }
+      $merged = $existing + "`n" + $fragmentContent
+      Write-FileUtf8NoBom -Path $ClaudeMdPath -Content $merged
+      Write-Host "  [OK] directive appended to: $ClaudeMdPath"
+      return $true
+    }
+  }
+}
+
 # Dispatch by mode (Apply / Remove / DryRun).
 switch ($PSCmdlet.ParameterSetName) {
   'Apply' {
     Write-Output ""
     Write-Output "=== Phase 1: skill deploy ==="
     Invoke-SkillDeploy -CanonicalDir $canonicalSkill -TargetDir $targetSkillDir
+
     Write-Output ""
-    Write-Output "(Phase 2 CLAUDE.md merge / Phase 3 verify / sandbox QG added in subsequent tasks)"
+    Write-Output "=== Phase 2: CLAUDE.md merge ==="
+    $ok = Invoke-ClaudeMdMerge -ClaudeMdPath $targetClaudeMd -FragmentPath $canonicalFragment `
+                                -StartSentinel $startSentinel -DisambigRegex $disambigRegex
+    if (-not $ok) {
+      Write-Error "CLAUDE.md merge failed (likely sentinel ambiguous). Exit 4."
+      exit $EXIT_SENTINEL_AMBIGUOUS
+    }
+
+    Write-Output ""
+    Write-Output "(Phase 3 verify / sandbox QG added in subsequent tasks)"
     exit $EXIT_OK
   }
   'Remove' {
@@ -137,12 +245,17 @@ switch ($PSCmdlet.ParameterSetName) {
     exit $EXIT_OK
   }
   default {
-    # DryRun
     Write-Output ""
     Write-Output "=== Phase 1 preview (skill deploy) ==="
     Invoke-SkillDeploy -CanonicalDir $canonicalSkill -TargetDir $targetSkillDir -DryRun
+
     Write-Output ""
-    Write-Output "(Phase 2 CLAUDE.md merge / Phase 3 verify / sandbox QG added in subsequent tasks)"
+    Write-Output "=== Phase 2 preview (CLAUDE.md merge) ==="
+    Invoke-ClaudeMdMerge -ClaudeMdPath $targetClaudeMd -FragmentPath $canonicalFragment `
+                          -StartSentinel $startSentinel -DisambigRegex $disambigRegex -DryRun | Out-Null
+
+    Write-Output ""
+    Write-Output "(Phase 3 verify / sandbox QG added in subsequent tasks)"
     exit $EXIT_OK
   }
 }
