@@ -10,11 +10,13 @@
 >
 > Riferimenti deep: CLAUDE.md sezione "Progetti monitorati" (descrittivo), memory `project_multi_repo_overview.md` (architetturale), questo file (operativo), vault `docs/decisions/ecosystem-state-audit-2026-05-16.md` (audit git fresco 15-repo 2026-05-16: 14/15 sani+synced, evidenza cross-stack esterna — ✅ **RATIFICATO master-dd 2026-05-16, integrato §Ecosystem audit 15-repo sotto**).
 
-**Ultimo refresh**: **2026-05-28** (epigenome Fase-3 session close + cross-repo reconcile). _Genetic model Evo-Tactics: Fase-3 epigenome BUILT + live loop + sim + weight-tune 0.45 + production-hardened — **7 PR Game shipped #2402/#2404/#2405/#2407/#2408/#2409/#2412**, suite 1333/0-fail. Dettaglio JOURNAL 2026-05-28 + memory `evo_tactics_genetic_model_thread`. Prev refresh 2026-05-27 (repo-health-auditor 8-repo audit)._
+**Ultimo refresh**: **2026-05-28 (notte)** (ALIENA diagnostic A->D pipeline + §22-A/C tribes+telemetry phone cross-repo, 14 PR session). _§21 ALIENA diagnostic runtime layer SHIPPED end-to-end Game (#2417 per-tick + #2418 baseline reinforcement_pool + #2419 scorer fix unit_id + #2420 D endpoint + #2421 baseline groups). §22-A tribes viewer end-to-end Godot (#357-360 widget+nest+composer auto-fetch). §22-C ALIENA chart Godot scaffolding (#361 widget+API + #362 nest+pure seam). vault SoT v6→v7→v7.1 (PR #209/#210). T2/T4 caller wire auto-fetch deferred (coop-WS session_id surface unknown). Dettaglio JOURNAL 2026-05-28 (notte). Prev refresh: 2026-05-28 (sera-notte governance cleanup + ADR-0017 decommission)._
 
 **Codemasterdd state**: HEAD main `4b40321` (docs(agent): repo-health-auditor refreshes GOALS.md). 3 untracked files local (docs/jules-batch/2026-05-22-digest.md, docs/jules-batch/2026-05-26-digest.md, scripts/godot-install-ryzen.ps1). 0 PR open. Stack ADR-0017 DOWN (scaffold opt-in, all services down). Ollama UP 16 models.
 
 **Cross-repo state 2026-05-27 (git-truth)**: Game Vue3 HEAD `196a63a4` + DRAFT PR #2385 open (weekly drift audit). Game-Godot-v2 HEAD `bc475bd` + 3 PR merged today (genetics Fase-2 active). Game-Database HEAD `13079e2` Phase C-Game versioning (2025-05-25). evo-swarm local branch `chore/weekly-digest-2026-05-27` + PR #123 OPEN. vault HEAD `9880f4da0` + 4 DRAFT PRs open (coherence-backstop daily series, needs triage). Synesthesia HEAD `05f8a92` (dormant, clean). evo-tactics-refs-meta single-commit idle.
+
+**Cross-repo state 2026-05-28 (notte, post-session 14-PR)**: Game HEAD `3d298f32` (ALIENA-E #2421). Game-Godot-v2 HEAD `41bac36` (§22-C nest #362). vault HEAD `172e100a2` (SoT v7.1 #210). codemasterdd: this PR pending merge. Other repos unchanged (Game-Database, Synesthesia, evo-swarm, evo-tactics-refs-meta). DRAFT PR open count: Game #2385 still open, vault 5 coherence-backstop daily DRAFTs.
 
 **Services (2026-05-27)**: Ollama UP (16 models). Flask :5000 DOWN. LiteLLM :4000 DOWN. Langfuse :3000 DOWN. Dogfood-UI :8080 DOWN. All scaffold opt-in services expected down.
 
