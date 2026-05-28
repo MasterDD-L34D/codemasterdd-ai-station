@@ -416,7 +416,7 @@ Reversibile completamente via `-Remove`:
 
 - **Placeholder scan**: zero TBD / TODO / FIXME residui post-cleanup.
 - **Internal consistency**: section 3 deploy flow + section 6.3 cross-PC flow allineate; section 5.3 directive content + section 6.2 merge logic consistente.
-- **Scope**: implementation plan fattibile in singolo plan (stimato 10-15 task post-amendments → harsh-reviewer ha alzato a 15-18, borderline split-acceptabile).
+- **Scope**: implementation plan fattibile in singolo plan (stimato 10-15 task post-amendments -> harsh-reviewer ha alzato a 15-18, borderline split-acceptabile).
 - **ASCII**: body verified clean (0 non-ASCII chars, `--` non em-dash).
 
 ### 12.2 Harsh-reviewer amendments (2026-05-28, post `3feef6a`)
