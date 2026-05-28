@@ -103,7 +103,7 @@ Priorita' decrescente, tutte graceful-missing (`2>/dev/null`):
 4. `~/.claude/skills/*/SKILL.md` (USER global skills)
 5. `.claude/plugins/cache/*/agents/*.md` + `plugins/.../skills/*/SKILL.md` (plugin agents+skills)
 6. `AGENTS.md` + `CLAUDE.md` inline mentions (grep estratto)
-7. Pointer ARCHON se `aa01/archon/` detected nel CWD o nei parent
+7. Pointer ARCHON se `aa01/archon/` detected nel CWD o nei parent. **Nota**: AA01 e' Lenovo-edusc-only per design (memory `project_aa01_studio`); sui PC senza AA01 (Ryzen e altri) source-7 e' assente, NON e' un errore -- il report omette il pointer ARCHON e la LITE opera solo sulle sources 1-6.
 
 ### 4.3 Output format
 
@@ -155,9 +155,9 @@ tools: [Bash, Glob, Grep, Read]
 
 ## 5. L3 directive (`~/.claude/CLAUDE.md`)
 
-### 5.1 Calibration: STRONG
+### 5.1 Calibration: STRONG-PURE (no eccezione)
 
-Eduardo decision 2026-05-28 (brainstorm L3-calibration question): scanner SEMPRE invoked before any subagent/skill/agent selection. Eccezione minima esplicita per task meccanici single-file senza selezione.
+Eduardo decision 2026-05-28 (brainstorm L3-calibration question + harsh-reviewer P0#1 amendment): scanner SEMPRE invoked before any subagent/skill/agent selection. **STRONG-PURE: nessuna eccezione**. La precedente formulazione ("eccezione minima per task meccanici single-file") e' stata rimossa perche' "meccanico" e "selezione agent" sono categorie di model-judgment vaghe, esposte a bypass involontario (es. aider-cosmetic / batch lint-fix / ADR drafting hanno de-facto routing senza prompt esplicito). Rule unica leggibile + bias false-positive accettato (cost ~2-5sec << cost shadow-duplicate).
 
 ### 5.2 Posizione nel file target
 
@@ -196,22 +196,29 @@ nuovo subagent / skill / agent specializzato, INVOCA la skill `agent-scanner`
   `aa01/archon/skills/agent-scanner/SKILL.md` (aggiunge overlap-calc 7 ruoli
   + REUSE_AUTO/CONFIRM/COMPLEMENT thresholds + registry persistence).
 
-**Anti-pattern bloccati**: Shadow duplication, Silent override, bias
-"chi-ho-piu-memoria-recente-vince" su selezione agent.
+**Anti-pattern bloccati**:
+- **Shadow duplication**: creo planner-v2 quando planner funziona (Ibrahim 2026).
+- **Silent override**: file con `name:` duplicato sovrascrive precedente senza warning -- scanner lo flagga in report.
+- Bias "chi-ho-piu-memoria-recente-vince" su selezione agent.
 
-**Eccezione minima**: task meccanici single-file senza selezione agent
-(typo fix, rename mechanical) -- scanner non si applica perche' non c'e'
-selezione da fare. NO altre eccezioni.
+**STRONG-PURE**: nessuna eccezione. Scanner fires anche su task apparentemente meccanici (typo fix / rename / batch lint) per evitare bypass involontario via "model-judgment di triviality". Cost overhead ~2-5sec/fire accettato come prezzo dell'assenza di ambiguity rule.
 
 **Reference**: OD-007 closure 2026-05-28 + first-principles application
 `docs/research/2026-05-28-od-007-first-principles-application.md` +
 deploy spec `docs/superpowers/specs/2026-05-28-archon-agent-scanner-
 cross-fleet-deploy-design.md`.
+
+<!-- END agent-scanner-directive -->
 ```
 
-### 5.4 Sentinel marker
+### 5.4 Sentinel markers (start + end, bounded)
 
-Sentinel di idempotency: `## Agent Scanner discipline (anti-shadow-duplicate, cross-fleet)` (heading completo, sufficientemente specifico). Verifica 2a riga "**Rule** (STRONG..." per disambiguare da heading omonimi (false-positive mitigation).
+Due sentinel separati per merge + rollback safe-bounded:
+
+- **Start sentinel**: heading `## Agent Scanner discipline (anti-shadow-duplicate, cross-fleet)` (sufficientemente specifico).
+- **Disambiguation**: scan **first non-blank line within next 5 lines after the start sentinel**, anchor regex `^\*\*Rule\*\* \(STRONG`. La canonical fragment ha una blank line tra heading e `**Rule**` -- detector deve skippare blank lines, NON leggere riga N+1 secca (P0#2 harsh-reviewer).
+- **End sentinel**: `<!-- END agent-scanner-directive -->` (HTML comment, invisible in rendered MD, univoco).
+- **Range bounded**: tutte le operazioni merge / rollback / re-apply usano `[start sentinel ... end sentinel]` come range esplicito. Mai "next `^## ` heading" come terminator (P0#3 harsh-reviewer footgun: user-added content tra directive e prossimo heading verrebbe mangiato dal -Remove).
 
 ## 6. Deploy mechanism
 
@@ -241,22 +248,27 @@ In ordine:
    - Re-run 2a volta in sandbox -> diff = none (idempotency).
    - Hard-fail se sandbox red -> NON procede a `~/.claude/` reale.
 3. **Skill deploy** (LITE):
+   - **Ensure target dir** (P1#5 harsh): `New-Item -ItemType Directory -Force $env:USERPROFILE\.claude\skills` (no-op if existe; necessario su Ryzen fresh / nuovo PC senza Claude Code mai aperto).
+   - **Pre-copy drift check** (P1#1 harsh): se `$env:USERPROFILE\.claude\skills\agent-scanner\SKILL.md` esiste, hash-compare contro canonical. Se hash diversi (drift = user edit locale) -> backup `agent-scanner\SKILL.md.bak-<ts>` PRIMA del Copy-Item + log "DRIFT DETECTED, .bak saved".
    - `Copy-Item -Recurse -Force $repoRoot\.claude\global-skills\agent-scanner $env:USERPROFILE\.claude\skills\agent-scanner`.
-   - Idempotente: re-run = overwrite from canonical = stesso contenuto.
-4. **CLAUDE.md merge** (sentinel-based, NO blind append):
-   - `Copy-Item ~/.claude/CLAUDE.md ~/.claude/CLAUDE.md.bak-<timestamp>` (backup).
-   - Check sentinel + 2a riga match -> se presente -> SKIP append.
-   - Se assente -> append fragment content.
-   - Encoding: `[System.IO.File]::ReadAllText/WriteAllText` con `[System.Text.UTF8Encoding]::new($false)` (UTF-8 no-BOM esplicito, evita PS5.1 BOM gotcha).
+   - Idempotente: re-run = overwrite from canonical = stesso contenuto (no .bak generato se hash uguale).
+4. **CLAUDE.md merge** (sentinel-based bounded, NO blind append):
+   - `Copy-Item ~/.claude/CLAUDE.md ~/.claude/CLAUDE.md.bak-<timestamp>` (backup pre-modify).
+   - Check **start sentinel** + scan first non-blank within next 5 lines per `^\*\*Rule\*\* \(STRONG` -> se entrambi match -> sentinel valido + SKIP append (idempotent).
+   - Se start sentinel match MA disambiguation fail -> warn + abort (exit 4, vedi sec 7.1).
+   - Se start sentinel assente -> append fragment content (start sentinel + body + END sentinel `<!-- END agent-scanner-directive -->`).
+   - **Encoding**: `[System.IO.File]::ReadAllText/WriteAllText` con `[System.Text.UTF8Encoding]::new($false)` (UTF-8 no-BOM esplicito, evita PS5.1 BOM gotcha).
+   - **Line-ending normalization** (P2#1 harsh): on Windows write, normalize content to CRLF prima del WriteAllText (evita mixed-endings se canonical fragment LF + target CLAUDE.md CRLF). Pattern: `$content = $content -replace "(?<!`r)`n", "`r`n"`.
 5. **Post-deploy verify**:
    - SKILL.md frontmatter parses (regex match).
    - CLAUDE.md sentinel present (Select-String).
    - ASCII check sul body deployato.
    - Exit 0 verde, 1 se qualcosa fallisce.
-6. **Rollback path** (`-Remove`):
+6. **Rollback path** (`-Remove`, bounded sentinel-to-end):
    - `Remove-Item -Recurse -Force ~/.claude/skills/agent-scanner`.
-   - CLAUDE.md: regex multiline replace tra sentinel `## Agent Scanner discipline` e prossimo `^## ` -> rimuovi.
-   - `.bak` preservato.
+   - CLAUDE.md: regex multiline replace bounded **tra start sentinel `## Agent Scanner discipline` e end sentinel `<!-- END agent-scanner-directive -->`** (inclusivi). Pattern: `(?ms)^## Agent Scanner discipline.*?<!-- END agent-scanner-directive -->\r?\n?`. NON usa "next `^## `" come terminator (P0#3 footgun mitigation: user-added content post-directive non viene mangiato).
+   - Fallback se end sentinel assente (directive shipped da una versione vecchia pre-P0#3 fix): restore da `.bak` piu' recente + warn user.
+   - `.bak` preservato (mai cancellato da -Remove).
 
 ### 6.3 Cross-PC flow
 
@@ -291,7 +303,7 @@ Risultato: entrambi i PC ~/.claude/skills/agent-scanner/SKILL.md identical +
 | `~/.claude/` permission denied | `Test-Path` + try-write to temp | hard-fail, exit 2 |
 | Canonical missing (codemasterdd path broken) | `Test-Path` pre-deploy | hard-fail, exit 3 |
 | `~/.claude/CLAUDE.md` non esiste | `Test-Path` | crea nuovo file con solo directive (+ comment auto-created) |
-| Sentinel false-positive | match heading + 2a riga "**Rule** (STRONG..." | warn + abort, manuale required |
+| Sentinel false-positive (start sentinel match ma disambiguation fail) | scan first non-blank within next 5 lines per `^\*\*Rule\*\* \(STRONG`, no match | warn + abort, **exit 4 (distinct da 2/3)** + scrive `~/.claude/.apply-blocked-<ts>.log` con dump CLAUDE.md heading-context circostante. Risoluzione manuale required (P1#4 harsh) |
 | Disk full / write fail mid-merge | try/catch su WriteAllText | restore da `.bak` + hard-fail |
 | Idempotency violation (2a run diff non-trivial) | sandbox diff check | hard-fail in sandbox, NON procede live |
 | `-Apply` non passato (dry-run default) | flag check | output preview + exit 0, NESSUN write |
@@ -304,7 +316,7 @@ Risultato: entrambi i PC ~/.claude/skills/agent-scanner/SKILL.md identical +
 | Permission denied su sorgente | exit code find + file empty | log "SOURCE UNREADABLE: <path>" nel report |
 | Frontmatter malformato | YAML parse exception per-file | log "MALFORMED FRONTMATTER: <file>", skip, continua |
 | Zero agenti totali | report vuoto | output esplicito "no agents discovered -- baseline: general-purpose only" |
-| Inventory >30 agenti (token cost) | count post-enum | group by source + top-N most-relevant via keyword match |
+| Inventory >50 agenti (token cost) | count post-enum | **hard cap 50** entries nel report; rank by source-priority order 1-7 (sez 4.2: PROJECT > USER > plugin > skills > AGENTS.md inline > ARCHON); footer "+N more in `<source>`" per le entries droppate. NO keyword-match (rimosso, dipendeva da context model-side non disponibile pre-render report) |
 | Skill assente pre-deploy su PC | Claude Code skill loader non la trova | degrade silent a baseline; post-pull reminder mitigation |
 
 ### 7.3 Distinzione esplicita
@@ -313,7 +325,7 @@ La LITE OUTPUT discrimina "no agents found" (legitimate) vs "enumeration failed"
 
 ### 7.4 L3 directive degradation
 
-- **Eccezione minima edge-case**: se prompt menziona ANY subagent/skill name -> auto-fire scanner (bias verso false-positive; cost 2-5sec << cost shadow-duplicate).
+- **STRONG-PURE applied**: nessuna eccezione attiva. Scanner fires anche su task apparentemente meccanici (no model-judgment di triviality). Cost overhead accettato come prezzo dell'assenza di ambiguity (vedi sec 5.1).
 - **Pre-deploy PC fresh**: directive assente, degrade silent a baseline. Mitigazione: workflow `git pull -> deploy.ps1 -Apply` documentato.
 - **Skill errore runtime**: report include fallback msg "scanner failed: <err>, manual review `.claude/agents/` + `~/.claude/agents/` raccomandato prima agent-selection".
 
@@ -377,9 +389,9 @@ Reversibile completamente via `-Remove`:
 
 ### Risks accettati
 
-- **R1: token cost cumulative** -- scanner fires su ogni sessione non-banale = ~2-5sec + ~500-2000 tok per fire. Su 10 sessioni/day = ~5-20k tok/day extra. Mitigation: token cost baseline (test layer 7) + tuning Step 3 se emerge.
-- **R2: false-positive auto-fire** -- prompt che menziona "agent" in senso non-tecnico potrebbe far fire spurio. Mitigation: trigger keywords specifici nel description; iterare se emerge noise.
-- **R3: cross-PC drift se Ryzen non runna `-Apply` post-pull** -- degrade silent. Mitigation: workflow documentato + reminder post-pull (futuro: git hook auto-deploy).
+- **R1: token cost cumulative** -- scanner STRONG-PURE fires su OGNI sessione (no eccezione) = ~2-5sec + ~500-2000 tok per fire. Stima 10 sessioni/day x 2 PC = ~5-20k tok/day extra. **Tuning trigger esplicito** (P1#3 harsh): post N=5 sessioni Lenovo + 5 Ryzen (baseline capture test layer 7), se **mean fire-rate >50% su prompt non-selection** OR **mean tokens-per-fire >2000** -> tune description keywords (riduci semantic surface) + considera plugin packaging (Q1) per gating piu' chirurgico. Misura prima, decidi dopo (anti-L-016 aspirational).
+- **R2: false-positive auto-fire** -- prompt che menziona "agent" in senso non-tecnico potrebbe far fire spurio. Mitigation: trigger keywords specifici nel description; con R1 threshold sopra, R2 rientra automaticamente nella misura (false-positive contano nel fire-rate).
+- **R3: cross-PC drift se Ryzen non runna `-Apply` post-pull** -- degrade silent. Mitigation: workflow documentato + reminder post-pull (futuro: git hook auto-deploy, Q2).
 
 ### Open questions
 
@@ -398,10 +410,32 @@ Reversibile completamente via `-Remove`:
 - Anti-pattern catalogue: #9 (sandbox QG), #11 (fragile helper), #12 (non-ASCII enforcement), #19 (stale marker family).
 - Lessons related: `aa01/learnings/L-2026-05-040-powershell-native-stderr-under-stop-false-fail.md`.
 
-## 12. Self-review notes (eseguito 2026-05-28 pre user-review)
+## 12. Self-review notes + harsh-reviewer amendment log
 
-- **Placeholder scan**: zero TBD / TODO / FIXME residui post-cleanup di questa sezione stessa.
-- **Internal consistency**: section 3 deploy flow + section 6.3 cross-PC flow allineate; section 5.3 directive content + section 6.2 merge logic consistente (stesso sentinel); section 8 testing copre ognuna delle goals G1-G5.
-- **Scope**: implementation plan fattibile in singolo plan (stimato 10-15 task: LITE SKILL.md write + directive fragment + deploy script + sandbox tests + QUALITY.md + commit + Apply Lenovo + verify behavioral smoke + Apply Ryzen + cross-PC diff hash verify + token cost baseline).
-- **Ambiguity check**: section 5.3 position ("subito DOPO Anti-Pattern Catalogue") esplicita; section 6.2 encoding ("UTF-8 no-BOM via [System.Text.UTF8Encoding]::new($false)") esplicita; section 7.4 eccezione-minima edge-case ("any subagent name mentioned -> auto-fire") esplicita. Nessuna ambiguita' residua.
+### 12.1 Self-review (pre harsh-reviewer)
+
+- **Placeholder scan**: zero TBD / TODO / FIXME residui post-cleanup.
+- **Internal consistency**: section 3 deploy flow + section 6.3 cross-PC flow allineate; section 5.3 directive content + section 6.2 merge logic consistente.
+- **Scope**: implementation plan fattibile in singolo plan (stimato 10-15 task post-amendments → harsh-reviewer ha alzato a 15-18, borderline split-acceptabile).
 - **ASCII**: body verified clean (0 non-ASCII chars, `--` non em-dash).
+
+### 12.2 Harsh-reviewer amendments (2026-05-28, post `3feef6a`)
+
+Verdetto harsh: REWORK (small). Applicati i 3 P0 + 5 P1 + 4 P2 + 2 Eduardo opinion-questions answered:
+
+| # | Severita | Issue | Fix applicato |
+|---|----------|-------|---------------|
+| P0#1 | block | "Eccezione minima" mechanical = model-judgment vago | Eduardo decision: **STRONG-PURE no eccezione** (sec 5.1 + 5.3 + 7.4 riscritti, false-positive bias accettato) |
+| P0#2 | block | Sentinel disambiguation legge riga N+1 (blank) | sec 5.4 + 6.2 step 4: scan first non-blank within next 5 lines, regex `^\*\*Rule\*\* \(STRONG` |
+| P0#3 | block | -Remove regex "between sentinel and next `^## `" eat user content | sec 5.4 + 5.3 + 6.2 step 6: aggiunto END sentinel `<!-- END agent-scanner-directive -->` + range bounded |
+| P1#1 | should | Copy-Item -Force silently overwrites user edits | sec 6.2 step 3: pre-copy hash-compare + `.bak-<ts>` se drift |
+| P1#2 | should | Inventory >30 "keyword match" undefined | sec 7.2: hard cap 50 + ranked by source-priority + "+N more" footer (no keyword match) |
+| P1#3 | should | R1 threshold aspirational | Eduardo decision: **define now** (sec 10 R1): post N=5+5 baseline, trigger = fire-rate >50% non-selection OR tokens-per-fire >2000 |
+| P1#4 | should | Sentinel false-positive silent abort | sec 7.1: exit 4 distinct + `~/.claude/.apply-blocked-<ts>.log` |
+| P1#5 | should | Skill dir potentially missing on fresh PC | sec 6.2 step 3: `New-Item -ItemType Directory -Force ~/.claude/skills` pre-Copy |
+| P1#6 | should | AA01 detection cross-PC implicit | sec 4.2 source 7: nota esplicita "AA01 Lenovo-only by design, Ryzen source-7 absent non e' errore" |
+| P2#1 | nice | CRLF normalize Windows write | sec 6.2 step 4: regex `(?<!\\r)\\n -> \\r\\n` pre WriteAllText |
+| P2#4 | nice | "Silent override" anti-pattern undefined | sec 5.3 anti-pattern list: definito inline "file con `name:` duplicato sovrascrive precedente senza warning" |
+| P2#3 | nice | Scope claim 10-15 task ottimistico | sec 12.1 aggiornato a 15-18 borderline-split-acceptabile |
+
+3 P0 chiusi + 5 P1 chiusi + 4 P2 chiusi. Spec ora ready per `superpowers:writing-plans`.
