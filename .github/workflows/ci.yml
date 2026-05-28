@@ -1,0 +1,80 @@
+name: CI
+# Server-side safety net for a direct-push (trunk-based) private repo: re-runs
+# the load-bearing invariants that the local pre-commit hooks enforce, so a bad
+# agent commit cannot land on main unverified (and cannot be bypassed with
+# --no-verify). Lightweight, no PR required. See docs/research/2026-05-28-vc-governance-review.md.
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  ascii-guard:
+    name: ASCII guard (ADR-0021)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Compute changed code files
+        id: changed
+        env:
+          BEFORE: ${{ github.event.before }}
+          SHA: ${{ github.sha }}
+          BASE: ${{ github.base_ref }}
+        run: |
+          if [ -n "$BASE" ]; then
+            git fetch origin "$BASE" --depth=1 >/dev/null 2>&1 || true
+            git diff --name-only "origin/$BASE...HEAD" > changed.txt
+          elif [ -n "$BEFORE" ] && [ "$BEFORE" != "0000000000000000000000000000000000000000" ] && git rev-parse --verify --quiet "$BEFORE^{commit}" >/dev/null; then
+            git diff --name-only "$BEFORE" "$SHA" > changed.txt
+          else
+            git diff-tree --no-commit-id --name-only -r "$SHA" > changed.txt
+          fi
+          echo "list<<EOF" >> "$GITHUB_OUTPUT"; cat changed.txt >> "$GITHUB_OUTPUT"; echo "EOF" >> "$GITHUB_OUTPUT"
+      - name: Scan changed code files for non-ASCII (ADR-0021)
+        run: |
+          # Only NEW/MODIFIED code files in this push; legacy mojibake files are
+          # frozen (CLAUDE.md), and the ryzen-memory-archive is excluded.
+          fail=0
+          while IFS= read -r f; do
+            [ -z "$f" ] && continue
+            case "$f" in
+              docs/ryzen-memory-archive/*) continue ;;
+            esac
+            case "$f" in
+              *.ps1|*.sh|*.bat|*.cmd|*.py|*.js|*.mjs|*.json|*.yml|*.yaml)
+                [ -f "$f" ] || continue
+                if ! perl -ne 'exit 1 if /[^\x00-\x7F]/' "$f"; then
+                  echo "::error file=$f::non-ASCII bytes in changed code file (ADR-0021 ASCII-first policy)"
+                  fail=1
+                fi ;;
+            esac
+          done < changed.txt
+          if [ "$fail" != 0 ]; then
+            echo "ADR-0021 violation: non-ASCII in changed code file(s). Use -- not em-dash, ASCII quotes, etc."
+            exit 1
+          fi
+          echo "ASCII guard OK"
+  pytest:
+    name: pytest
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Run pytest (dep-light stable set)
+        run: |
+          # Scoped to scripts/tests: stdlib-only, no app deps. The per-app suites
+          # (apps/*/tests) need their own deps and are out of scope for this
+          # lightweight safety-net gate; widen later if those apps grow CI of their own.
+          python -m pip install --quiet pytest
+          set +e
+          python -m pytest -q scripts/tests
+          code=$?
+          set -e
+          if [ "$code" = 5 ]; then echo "pytest: no tests collected (pass)"; exit 0; fi
+          exit "$code"
