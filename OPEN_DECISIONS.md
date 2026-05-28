@@ -18,7 +18,7 @@
 | OD-002 | Fix cp1252 Windows wrapper tiene? | ✅ CLOSED (n=15 dogfood clean) | Niente (re-trigger solo se crash UnicodeEncodeError in SPRINT_02) |
 | OD-003 | Default tier 3 cloud: Groq vs Cerebras? | ✅ CLOSED (Cerebras 8B cosmetic + Groq 70B behavior) | Niente |
 | OD-004 | Schema DECISIONS_LOG ibrido funziona? | ✅ CLOSED 2026-05-28 (ratificato empirico: 10 Decisioni in 5 settimane, zero confusione) | Niente. Continua schema attuale |
-| OD-005 | Serve FIRST_PRINCIPLES_INFRA_CHECKLIST? | 🔄 EVALUATING (chiusura iniziale scorciatoia, riaperta) | Autoresearch + decisione build vs strong-skip in arrivo |
+| OD-005 | Serve FIRST_PRINCIPLES_INFRA_CHECKLIST? | ✅ CLOSED 2026-05-28 (MINIMAL-BUILD shipped: `FIRST_PRINCIPLES_INFRA_CHECKLIST.md` root) | Usalo prima di refactor / reboot / "vale la pena tenere?" |
 | OD-006 | Constraint-count come 2a dimensione routing? | ✅ CLOSED (ADR-0016 Proposed n=11 data points) | Niente |
 | OD-007 | AA01 capability registry / scan automatico? | 🔄 EVALUATING (chiusura iniziale scorciatoia, riaperta) | Design evaluation + pilot vs strong-skip-with-method in arrivo |
 | OD-008 | Cross-repo Phase B Day 7 closure tracking? | ✅ CLOSED 2026-05-28 (codemasterdd-side: Phase B closure 2026-05-14 confermata in STATUS_MULTI_REPO + Game [OD-024..031] post-cutover audit ✅ SHIPPED + ADR-0024 addendum shipped PR #55) | **Lato codemasterdd niente**. Side-note opzionale: Game `OPEN_DECISIONS.md` ha ancora OD-023 marcata "APERTA 2026-05-12" -- housekeeping Game-side quando vuoi (non blocca nulla) |
@@ -91,14 +91,14 @@
 
 ---
 
-### [OD-005] `FIRST_PRINCIPLES_GAME_CHECKLIST` sostituito da cosa? -- **EVALUATING 2026-05-28 (re-opened post shortcut-closure)**
+### [OD-005] ~~`FIRST_PRINCIPLES_GAME_CHECKLIST` sostituito da cosa?~~ **CLOSED 2026-05-28 pomeriggio (BUILD shipped)**
 
 - **Livello**: workflow / documentation
-- **Stato**: **EVALUATING** — la chiusura precedente (2026-05-28 mattina, commit `93b4810`) si limitava a contare "zero usage del template" senza valutare se l'artefatto andasse costruito. Pattern stesso che il sentinel critica (closure != decisione). **Decisione DA prendere**: costruire un `FIRST_PRINCIPLES_INFRA_CHECKLIST.md` adattato, oppure skip-con-rationale-forte (linkare invece la skill `superpowers:first-principles-game` e/o sezioni CLAUDE.md sufficienti)?
-- **Ambiguità originale**: framework prescrive checklist first-principles per game repo. Questo repo è infrastructure-as-code. Skip era documentato in Decisione 002, ma vale la pena produrre un "First principles infrastructure checklist" adattato?
-- **Metodo evaluation (in corso)**: autoresearch su pattern first-principles applicati a infra-as-code (industria) + audit di cosa GIA' copre CLAUDE.md / ADR template / skill / agent inventory di codemasterdd. Verdict atteso = artifact concreto oppure pointer compatto a primitive esistenti.
-- **File coinvolti potenziali**: eventuale `FIRST_PRINCIPLES_INFRA_CHECKLIST.md` root.
-- **Prossima azione**: evaluation oggi, decisione build vs strong-skip con motivazione documentata.
+- **Stato**: **CLOSED -- BUILD**. Artefatto creato: `FIRST_PRINCIPLES_INFRA_CHECKLIST.md` root (~230 righe, adattato dal template game). Risolve la dipendenza circolare di `Archivio_Libreria_Operativa_Progetti/07_CLAUDE_CODE_OPERATING_PACKAGE/REPO_AUTONOMY_READINESS_CHECKLIST.md` sezione D ("Esiste una checklist first-principles compilabile") per repo infra-only.
+- **Metodo applicato**: (1) currency-gate interno -> mapping primitive esistenti (skill `superpowers:first-principles-game` = game-biased; `REPO_AUTONOMY_READINESS_CHECKLIST` sez D punta circolarmente al game-template; ADR-0005 YAGNI = ancora filosofica). (2) Autoresearch industria (WebSearch 2 query, 2026-05-28): SRE Workbook + AWS/Azure Well-Architected + ATAM + ADR best-practices = nessuno offre "test di cancellazione asset non-runtime" + "triade fondamentale + decision gate" in formato lean-checklist. Gap confermato reale.
+- **Decisione finale**: **MINIMAL-BUILD**. Adattamento drop-game-only (Rule of Threes / Player Dynamics game-specific) + keep-generic (test cancellazione / triade / rational design / decision gate) + add infra-framing (Operator dynamics = umano + agent multi-CLI; Bootstrap onboarding = nuova sessione/clone vs progressione apprendimento gameplay).
+- **File coinvolti (output)**: `FIRST_PRINCIPLES_INFRA_CHECKLIST.md` (nuovo, root). `DECISIONS_LOG.md` Decisione 002 amendment.
+- **Reactivation trigger**: se in futuro un altro repo infra-as-code (Synesthesia backend, repo cliente) ha bisogno della stessa checklist -> riutilizzo (artifact e generico).
 
 ---
 

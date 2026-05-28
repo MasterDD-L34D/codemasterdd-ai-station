@@ -91,6 +91,8 @@ Formato granulare per decisioni che non meritano ADR (reversibili, locali, non v
 - **Conseguenze**: zero.
 - **Azioni derivate**: nessuna. Se in futuro emerge bisogno analogo → ADR dedicato.
 
+**Amendment 2026-05-28 (chiude OD-005, supersede parziale)**: il punto "creare versione adattata = rimandato" e' stato ripreso oggi e risolto con BUILD. Trigger emerso: `REPO_AUTONOMY_READINESS_CHECKLIST.md` sezione D ("Esiste una checklist first-principles compilabile") ha dipendenza circolare per repo infra-only -> serviva l'asset. Autoresearch industria (SRE / AWS Well-Architected / ATAM / ADR best-practices) ha confermato gap reale (nessun framework off-the-shelf offre "test di cancellazione asset + triade fondamentale + decision gate" in formato lean-checklist). Output: `FIRST_PRINCIPLES_INFRA_CHECKLIST.md` root (~230 righe) adattato dal template game (drop game-only Rule of Threes + Player Dynamics; keep generic test cancellazione + triade + rational design + decision gate; add infra-framing Operator dynamics + Bootstrap onboarding). Decisione 002 originale (skip game-checklist) resta valida; questo amendment chiude il punto residuo della versione adattata.
+
 ### Decisione 003 — Regole Operating Package 07_ non clonate al root
 - **Data**: 2026-04-23
 - **Titolo**: Regole 07_CLAUDE_CODE_OPERATING_PACKAGE restano nell'archivio, non duplicate
