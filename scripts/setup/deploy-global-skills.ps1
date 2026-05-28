@@ -288,9 +288,99 @@ function Invoke-Rollback {
   return $true
 }
 
+function Invoke-SandboxQG {
+  param(
+    [string]$CanonicalSkill,
+    [string]$CanonicalFragment,
+    [string]$StartSentinel,
+    [string]$DisambigRegex,
+    [string]$EndSentinel
+  )
+
+  $sandboxRoot = Join-Path $env:TEMP "deploy-global-skills-sandbox-$([guid]::NewGuid())"
+  $sandboxClaudeDir = Join-Path $sandboxRoot '.claude'
+  $sandboxSkillsDir = Join-Path $sandboxClaudeDir 'skills'
+  $sandboxSkillDir = Join-Path $sandboxSkillsDir 'agent-scanner'
+  $sandboxClaudeMd = Join-Path $sandboxClaudeDir 'CLAUDE.md'
+
+  Write-Host "  [sandbox] root: $sandboxRoot"
+  New-Item -ItemType Directory -Force -Path $sandboxClaudeDir | Out-Null
+
+  Set-Content -Path $sandboxClaudeMd -Value "# Sandbox CLAUDE.md`r`n`r`n## Other section`r`n`r`nseed body" -Encoding utf8
+
+  Invoke-SkillDeploy -CanonicalDir $CanonicalSkill -TargetDir $sandboxSkillDir | Out-Null
+  $ok1 = Invoke-ClaudeMdMerge -ClaudeMdPath $sandboxClaudeMd -FragmentPath $CanonicalFragment `
+                                -StartSentinel $StartSentinel -DisambigRegex $DisambigRegex
+  if (-not $ok1) {
+    Write-Host "  [sandbox FAIL] run-1 merge returned false"
+    Remove-Item -Recurse -Force $sandboxRoot
+    return $false
+  }
+
+  $sandboxSkillFile = Join-Path $sandboxSkillDir 'SKILL.md'
+  if (-not (Test-Path $sandboxSkillFile)) {
+    Write-Host "  [sandbox FAIL] SKILL.md missing post-copy"
+    Remove-Item -Recurse -Force $sandboxRoot
+    return $false
+  }
+  $skillContent = Read-FileUtf8NoBom -Path $sandboxSkillFile
+  if ($skillContent -notmatch '(?ms)^---\s*$.*?name:\s*agent-scanner.*?^---\s*$') {
+    Write-Host "  [sandbox FAIL] SKILL.md frontmatter does not parse"
+    Remove-Item -Recurse -Force $sandboxRoot
+    return $false
+  }
+
+  $cmContent = Read-FileUtf8NoBom -Path $sandboxClaudeMd
+  if ($cmContent -notmatch [Regex]::Escape($StartSentinel)) {
+    Write-Host "  [sandbox FAIL] start sentinel missing from sandbox CLAUDE.md"
+    Remove-Item -Recurse -Force $sandboxRoot
+    return $false
+  }
+  if ($cmContent -notmatch [Regex]::Escape($EndSentinel)) {
+    Write-Host "  [sandbox FAIL] END sentinel missing from sandbox CLAUDE.md"
+    Remove-Item -Recurse -Force $sandboxRoot
+    return $false
+  }
+
+  $contentBeforeRun2 = Read-FileUtf8NoBom -Path $sandboxClaudeMd
+  Invoke-SkillDeploy -CanonicalDir $CanonicalSkill -TargetDir $sandboxSkillDir | Out-Null
+  $ok2 = Invoke-ClaudeMdMerge -ClaudeMdPath $sandboxClaudeMd -FragmentPath $CanonicalFragment `
+                                -StartSentinel $StartSentinel -DisambigRegex $DisambigRegex
+  $contentAfterRun2 = Read-FileUtf8NoBom -Path $sandboxClaudeMd
+
+  if (-not $ok2) {
+    Write-Host "  [sandbox FAIL] run-2 merge returned false"
+    Remove-Item -Recurse -Force $sandboxRoot
+    return $false
+  }
+  if ($contentBeforeRun2 -ne $contentAfterRun2) {
+    Write-Host "  [sandbox FAIL] idempotency violated: run-2 produced diff"
+    Remove-Item -Recurse -Force $sandboxRoot
+    return $false
+  }
+
+  Remove-Item -Recurse -Force $sandboxRoot
+  Write-Host "  [sandbox OK] all checks passed (artifact + sentinel + idempotency)"
+  return $true
+}
+
 # Dispatch by mode (Apply / Remove / DryRun).
 switch ($PSCmdlet.ParameterSetName) {
   'Apply' {
+    if (-not $SkipSandbox) {
+      Write-Output ""
+      Write-Output "=== Sandbox QG Step-1 (mandatory) ==="
+      $sandboxOk = Invoke-SandboxQG -CanonicalSkill $canonicalSkill -CanonicalFragment $canonicalFragment `
+                                     -StartSentinel $startSentinel -DisambigRegex $disambigRegex `
+                                     -EndSentinel $endSentinel
+      if (-not $sandboxOk) {
+        Write-Error "Sandbox QG failed. Aborting before any write to ~/.claude/. Exit 5."
+        exit $EXIT_SANDBOX_FAIL
+      }
+    } else {
+      Write-Output "  [WARN] -SkipSandbox specified; QG Step-1 bypassed (NOT recommended)."
+    }
+
     Write-Output ""
     Write-Output "=== Phase 1: skill deploy ==="
     Invoke-SkillDeploy -CanonicalDir $canonicalSkill -TargetDir $targetSkillDir
@@ -300,12 +390,12 @@ switch ($PSCmdlet.ParameterSetName) {
     $ok = Invoke-ClaudeMdMerge -ClaudeMdPath $targetClaudeMd -FragmentPath $canonicalFragment `
                                 -StartSentinel $startSentinel -DisambigRegex $disambigRegex
     if (-not $ok) {
-      Write-Error "CLAUDE.md merge failed (likely sentinel ambiguous). Exit 4."
+      Write-Error "CLAUDE.md merge failed. Exit 4."
       exit $EXIT_SENTINEL_AMBIGUOUS
     }
 
     Write-Output ""
-    Write-Output "(Phase 3 verify / sandbox QG added in subsequent tasks)"
+    Write-Output "(Phase 3 verify added in Task 9)"
     exit $EXIT_OK
   }
   'Remove' {
