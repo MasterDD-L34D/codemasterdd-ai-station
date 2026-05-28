@@ -53,7 +53,7 @@ def parse_review_md(md_path: Path):
     Disposition is normalized to UPPERCASE at parse time (fix harsh-reviewer P0 #3).
     """
     content = md_path.read_text(encoding='utf-8')
-    pattern = re.compile(r'```yaml\s*\n(.*?)\n```', re.DOTALL)
+    pattern = re.compile(r'^[ \t]*```yaml[ \t]*\n(.*?)\n[ \t]*```', re.DOTALL | re.MULTILINE)
     decisions = []
     for m in pattern.finditer(content):
         block = m.group(1)
