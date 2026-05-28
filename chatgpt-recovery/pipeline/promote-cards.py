@@ -53,7 +53,7 @@ def parse_review_md(md_path: Path):
     Disposition is normalized to UPPERCASE at parse time (fix harsh-reviewer P0 #3).
     """
     content = md_path.read_text(encoding='utf-8')
-    pattern = re.compile(r'```yaml\s*\n(.*?)\n```', re.DOTALL)
+    pattern = re.compile(r'^[ \t]*```yaml[ \t]*\n(.*?)\n[ \t]*```', re.DOTALL | re.MULTILINE)
     decisions = []
     for m in pattern.finditer(content):
         block = m.group(1)
@@ -77,7 +77,7 @@ def parse_review_md(md_path: Path):
 
 
 def load_cross_ref(path: Path):
-    """Parse minimal YAML — only project_to_space + tag_to_space sections.
+    """Parse minimal YAML -- only project_to_space + tag_to_space sections.
     Stdlib-only to avoid PyYAML dep (already transitive via BERTopic but kept light)."""
     content = path.read_text(encoding='utf-8')
     # Naive parser: look for "label:\n  space: \"X\"" patterns
@@ -250,7 +250,7 @@ def main():
     print(f'HOLD / DISCARD: {len(skipped_dispositions)} (no action)', file=sys.stderr)
 
     if args.dry_run:
-        print('\n=== DRY RUN — no files will be written ===', file=sys.stderr)
+        print('\n=== DRY RUN -- no files will be written ===', file=sys.stderr)
 
     results = []
     for d in promote_decisions:
