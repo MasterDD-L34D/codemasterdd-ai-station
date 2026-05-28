@@ -19,6 +19,25 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-05-28 (post-closure: T13 Ryzen cross-fleet deploy verified, Lenovo .10)
+
+Sessione breve next-session resumption post handoff `2026-05-28-handoff-closure.md`. Compass DI 81/100 (rotta coerente, drift `knowledge-preservation` non actionable per handoff). Next-smallest-step = T13 Ryzen deploy.
+
+### Completato
+- **T13 Ryzen cross-fleet deploy agent-scanner skill**: Ryzen behind 26 commit, GitHub auth scaduto (`gh auth token invalid` + nessuna SSH key registrata) → workaround LAN: git bundle Lenovo `^3feef6a main` (86KB) + scp via SSH bidirezionale → Ryzen `git fetch <bundle>` + `git merge --ff-only` clean. HEAD Ryzen ora `f416287` (synced Lenovo). `deploy-global-skills.ps1 -Apply` Ryzen: sandbox QG OK + Phase 1+2+3 OK + post-deploy verify OK. **Hash parity `6BAB7F1F037972C6...1015` Lenovo == Ryzen confirmata**.
+- Cleanup ad-hoc remote `lenovo` + bundle file su entrambi PC.
+
+### Da fare (next session)
+- **T12 behavioral smoke agent-scanner**: fresh Claude Code session (no context inherit) + 3 prompt FIRE-A/B/C → update `.claude/global-skills/agent-scanner/QUALITY.md` Step 3 con tokens + time. ~10min Eduardo-direct.
+- **Anti-pattern #13 SSH-cmd cross-shell**: Lenovo sshd default shell ancora `cmd.exe` → git-over-ssh path mangling osservato. Bundle+scp ha bypassato. Fix futuro opzionale: `HKLM:\SOFTWARE\OpenSSH\DefaultShell` → `powershell.exe` (fleet, registry mutating). Tracked anti-pattern #13, non blocking.
+- **Jules digest `2026-05-28-digest.md`** untracked: 0 awaiting sessions, advisory-only. Committare quando emerge cadenza.
+
+### Note
+- Bundle workaround tempo ~3min totale (vs gh auth refresh interactive ~10min). Eduardo-conferma esplicita per mutating remote.
+- Anti-pattern #13 manifest: SSH-cmd path mangling osservato in tutti i 3 tentativi `ssh://` + scp-style + cygwin-style → bundle alternative robusta cross-shell. Lesson candidate: bundle+scp pattern preferito a git-over-ssh-Windows finché default shell != PowerShell.
+
+---
+
 ## 2026-05-28 (Fase-3 epigenome BUILD + LIVE LOOP + sim + weight-tune + hardening — 7 PR shipped, Ryzen .11)
 
 Sessione lunga continua. Fase-3 epigenome: da params-ratified → fully BUILT + live + tuned + production-hardened. Tutto subagent-driven (plan → impl → spec+quality review → fix → merge). 7 PR mergeate su Game main. Suite 1333/0-fail a fine. Tutti repo main puliti, 0 PR mie aperte.
