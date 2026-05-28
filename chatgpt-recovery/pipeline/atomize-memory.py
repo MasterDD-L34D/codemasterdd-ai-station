@@ -71,10 +71,12 @@ def slugify(s, maxlen=60):
     return s[:maxlen] or 'untitled'
 
 
+COMPILED_TAG_RULES = [(re.compile(pattern, re.IGNORECASE), label) for pattern, label in TAG_RULES]
+
 def detect_tags(content):
     tags = set()
-    for pattern, label in TAG_RULES:
-        if re.search(pattern, content, re.IGNORECASE):
+    for compiled_pattern, label in COMPILED_TAG_RULES:
+        if compiled_pattern.search(content):
             tags.add(label)
     return sorted(tags)
 
