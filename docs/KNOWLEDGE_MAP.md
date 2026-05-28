@@ -134,9 +134,9 @@ Prova-di-eliminazione su 11 reference archiviati + 3 gap. **Onesto**: dei 11 ref
 
 | Item | Azione riuso | Stato |
 |------|--------------|-------|
-| `reference_classification_4d` (framework 4-axis keep/kill/archive, meta-tool unico, non in SoT) | PROMOTE → vault Card (A5 curated) | TODO -- branch+PR, Eduardo-merge-gate |
-| Encounter-authoring CLI (da `reference_tactical_postmortems` / Fallout Tactics: `game_cli.py author-encounter`) | OPEN ticket Game backlog -- unblocks M3 content-slice volume | TODO -- Game (auth Eduardo) |
-| `games-source-index.md:248` backlink rotto (dead Ryzen path) | repoint → `codemasterdd/docs/ryzen-memory-archive/Game-Desktop-old/` | TODO -- Game (FF-pull husky-blocked, vedi §6) |
+| `reference_classification_4d` (framework 4-axis keep/kill/archive, meta-tool unico, non in SoT) | PROMOTE → vault Card (A5 curated) | ✅ DONE -- vault PR #202 merged 2026-05-28 |
+| Encounter-authoring CLI (da `reference_tactical_postmortems` / Fallout Tactics: `game_cli.py author-encounter`) | OPEN ticket Game backlog -- unblocks M3 content-slice volume | ✅ DONE (raise-ticket scope) -- TKT-ENCOUNTER-CLI in Game BACKLOG via Game PR #2403. Implementazione = lavoro Game separato |
+| `games-source-index.md:248` backlink rotto (dead Ryzen path) | repoint → `codemasterdd/docs/ryzen-memory-archive/Game-Desktop-old/` | ✅ DONE -- Game PR #2403 merged 2026-05-28 (`Game/docs/guide/games-source-index.md` repointed) |
 | Genetics epigenome/Lamarck-lite (engine) | -- | **SHIPPED Fase-3** (Game #2402 `c359b576`, 2026-05-28: engine + mating wire + speciation + Frammenti). ✅ vault SoT §24.6 **RECONCILED** (vault `40992953` DEFERRED->SHIPPED, 2026-05-28 00:59; genealogie profonde + eco-repro lungo-termine restano DEFERRED, corretto). **NO-DRIFT** verificato 2026-05-28 via `sot-drift-verifier` (primo uso reale del sentinel: ha beccato il marker stale, non il SoT) |
 | Genetics genealogie profonde + eco-repro lungo-termine | Fase-3+ build | TRACKED -- DEFERRED (non in #2402) |
 | Voidling Pattern 6 visual_swap | -- | DONE (shipped 2026-05-05; claim "P0 gap" era stale, corretto DIGEST §11.5) |
