@@ -43,7 +43,7 @@ RULES = [
     # Worldbuilding / storyline
     (['beatrice', 'red-alfa', 'kalekot', 'cercatori-altare', 'mondo-fantasy',
       'syron'], 'PROMOTE', 'GDR/MondoFantasy'),
-    # Pathfinder generic (broad — keep after specific campaigns)
+    # Pathfinder generic (broad -- keep after specific campaigns)
     (['pathfinder', 'druidi', 'lich-filatterio', 'magus', 'armi-potenziamento',
       'item-craft', 'loot', 'antipaladino', 'dispel-magic', 'ap-companion',
       'bardo', 'attacchi-combattere', 'build-combattimento', 'build-personaggio',
@@ -59,6 +59,10 @@ RULES = [
 
 # Default for unmatched / mixed-misc / outliers
 DEFAULT = ('HOLD', '')
+
+LABEL_REGEX = re.compile(r'topic_label:\s*(.+)')
+DISPOSITION_REGEX = re.compile(r'disposition:\s*\S+.*')
+TARGET_SPACE_REGEX = re.compile(r'target_space:.*')
 
 
 def classify_topic(label):
@@ -94,7 +98,7 @@ def main():
     def replace_block(m):
         head, body, tail = m.group(1), m.group(2), m.group(3)
         # Extract topic_label
-        label_match = re.search(r'topic_label:\s*(.+)', body)
+        label_match = LABEL_REGEX.search(body)
         if not label_match:
             return m.group(0)
         label = label_match.group(1).strip()
@@ -105,8 +109,8 @@ def main():
 
         # Rewrite disposition + target_space lines
         new_body = body
-        new_body = re.sub(r'disposition:\s*\S+.*', f'disposition: {disp}', new_body)
-        new_body = re.sub(r'target_space:.*', f'target_space: {space}', new_body)
+        new_body = DISPOSITION_REGEX.sub(f'disposition: {disp}', new_body)
+        new_body = TARGET_SPACE_REGEX.sub(f'target_space: {space}', new_body)
         return head + new_body + tail
 
     new_content = yaml_pattern.sub(replace_block, content)
