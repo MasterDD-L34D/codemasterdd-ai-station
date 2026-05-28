@@ -8,6 +8,16 @@
 > coordinamento multi-repo/fleet + governance commit-agent. NON l'intera architettura
 > 7-repo (se vuoi quella, scope separato).
 
+## Repo legend (path nei backtick)
+
+I path nei `backtick` qui sotto sono relativi al repo di volta in volta nominato in prosa. Cross-fleet:
+
+- **codemasterdd** = `C:/dev/codemasterdd-ai-station/...` -- https://github.com/MasterDD-L34D/codemasterdd-ai-station (PRIVATE)
+- **Game** = `C:/dev/Game/...` (entrambi PC) -- https://github.com/MasterDD-L34D/Game (PUBLIC)
+- **vault** = `C:/dev/vault/Spaces/Dev/Evo-Tactics/...` -- https://github.com/MasterDD-L34D/vault (PRIVATE sovereign)
+
+Dove il contesto rende ambiguo (es. sia codemasterdd sia Game hanno un `.github/workflows/ci.yml`), il repo e' esplicitato in prosa.
+
 ## Verdetto
 
 **La struttura e' sana e ricalca pattern riconosciuti come buoni.** La variazione di
@@ -44,7 +54,7 @@ PR-flow su public = corretto; modelli diversi per ruolo = esplicitamente support
 | # | Flag | Severita' | Azione |
 |---|------|-----------|--------|
 | 1 | codemasterdd: push-diretto **senza CI server-side** -> commit-agent sbagliato atterra non-verificato (e i pre-commit hook locali sono bypassabili con --no-verify / assenti su clone fresco) | P1 | **FATTO**: `.github/workflows/ci.yml` -- safety-net non-bloccante: ASCII guard ADR-0021 su file changed + pytest (`scripts/tests`). No PR, nessun overhead |
-| 2 | Admin-override merge su Game = config-smell (required-check path-filtered "skipping" restano Pending = footgun GitHub noto) | P2 | **FATTO**: Game issue [#2410](https://github.com/MasterDD-L34D/Game/issues/2410) con fix raccomandato (aggregator-gate `ci-gate` always() come unico required). Implementazione = Game governance/Eduardo |
+| 2 | Admin-override merge su Game = config-smell (required-check path-filtered "skipping" restano Pending = footgun GitHub noto) | P2 | **FATTO + IMPLEMENTATO 2026-05-28 sera**: Game issue [#2410](https://github.com/MasterDD-L34D/Game/issues/2410) (CLOSED COMPLETED) -> [PR #2413](https://github.com/MasterDD-L34D/Game/pull/2413) MERGED (`9f918e26`) aggiunge job `ci-gate` aggregator + branch protection swap-pata a required `[governance, ci-gate]` (strict=true, enforce_admins=false invariati). Tooling-only PR ora CLEAN senza admin |
 | 3 | SPOF: origin GitHub = unica copia off-machine (i 2 PC clonano ma dipendono dall'account) | P2 | **FATTO**: `scripts/backup/mirror-repos.ps1` (bare-mirror idempotente). Smoke su codemasterdd (201 refs). Runbook sotto |
 | 4 | No backup-reviewer per commit-agent (inerente al solo-work) | P3 | Opzionale: Claude review non-bloccante anche su infra. Mitigato dai hook + harsh-reviewer on-demand (Protocol 5) |
 
@@ -64,7 +74,7 @@ Schedulazione (Task Scheduler) = scelta infra di Eduardo, non forzata qui.
 
 - **D1 vault PR-gate -> TENERE.** Vault = knowledge SoT sovereign; il merge-gate umano e' l'oversight value reale, costo basso (merge occasionali). Downgrade a Show scartato. No-change (gia' la policy attuale, CLAUDE.md vault boundary).
 - **D2 codemasterdd CI -> NON-bloccante (confermato).** Trunk-based + solo-owner. Il gap "commit non verificato" e' gia' coperto a 2 layer: pre-commit locale (ASCII/silent-fail/silent-corruption, ADR-0008/0020/0021) + CI server-side (`ci.yml`, ADR-0021 + pytest). Pre-push hook = ridondante col pre-commit -> niente gold-plating. No branch-protection (eviterebbe il direct-push che e' il punto). No-change.
-- **D3 mirror -> DECISO: settimanale, target local bare** (`C:\dev\_mirror-backup`) come GitHub-account-loss insurance sovereign; copia su drive esterno = step disk-loss manuale. Pre-req verificati: SSH key passphrase-less (run detached OK) + clone --mirror private (vault) OK non-interattivo. **Script + mirror locale FATTO** (codemasterdd + vault gia' mirrorati). **Registrazione Task Scheduler PENDING Eduardo**: il classifier auto-mode ha bloccato la creazione del task OS persistente (Unauthorized Persistence) -- corretto, e' azione di persistenza che richiede OK esplicito + timing scelto da Eduardo. Comando pronto:
+- **D3 mirror -> DECISO + REGISTRATO 2026-05-28 sera**: settimanale, target local bare (`C:\dev\_mirror-backup`) come GitHub-account-loss insurance sovereign; copia su drive esterno = step disk-loss manuale. Pre-req verificati: SSH key passphrase-less (run detached OK) + clone --mirror private (vault) OK non-interattivo. **7/7 repo mirrorati** localmente (Game 5689 commit / 2760 ref, vault 657, codemasterdd 733, ecc.). Task Scheduler **`codemasterdd-mirror-backup` registrato post-OK-esplicito Eduardo** (State=Ready, NextRun Dom 2026-05-31 10:00, ExecutionTimeLimit 1h, log -> `codemasterdd/logs/mirror-backup.log`). Caveat post-ship: script aveva un false-fail (`$ErrorActionPreference=Stop` + git stderr "Cloning into..." = NativeCommandError -> clone riusciti marcati FAIL); fix shipped in commit `db5c266` (`Continue` + gate solo su `$LASTEXITCODE`). Lesson `aa01/learnings/L-2026-05-040`. Comando di registrazione (per ri-creare il task se mai eliminato):
   ```powershell
   $r="C:\dev\codemasterdd-ai-station"
   $a=New-ScheduledTaskAction -Execute powershell.exe -Argument "-NoProfile -ExecutionPolicy Bypass -Command `"& '$r\scripts\backup\mirror-repos.ps1' *>> '$r\logs\mirror-backup.log'`""

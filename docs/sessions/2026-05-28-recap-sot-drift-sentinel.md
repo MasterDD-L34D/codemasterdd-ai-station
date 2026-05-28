@@ -3,7 +3,21 @@
 > **Authored-from**: Lenovo (CodeMasterDD / edusc / 192.168.1.10), 2026-05-28.
 > **For-use-on**: Ryzen (DESKTOP-T77TMKT / Vgit / 192.168.1.11) o qualsiasi PC fleet.
 > **Come arriva qui**: codemasterdd e' PRIVATE + synced -> su Ryzen `git -C C:/dev/codemasterdd-ai-station pull` (se clonato) e leggi questo file.
-> Companion: handoff originale `docs/sessions/2026-05-28-handoff-sot-drift-A.md` + spec/plan in `docs/superpowers/`.
+> Companion: handoff originale `docs/sessions/2026-05-28-handoff-sot-drift-A.md` + spec/plan in `docs/superpowers/` (entrambi codemasterdd).
+
+## Repo legend (necessaria per navigare i path qui sotto)
+
+I path nei `backtick` sono relativi al repo qualificato in chiaro. Aprili in editor con quel repo come root, oppure clicca i link GitHub forniti per i casi cross-repo critici.
+
+| Tag | Path locale (fleet) | GitHub URL |
+|-----|---------------------|------------|
+| **`codemasterdd/...`** | `C:/dev/codemasterdd-ai-station/...` | https://github.com/MasterDD-L34D/codemasterdd-ai-station (PRIVATE) |
+| **`Game/...`** | `C:/dev/Game/...` (Ryzen + Lenovo) | https://github.com/MasterDD-L34D/Game (PUBLIC) |
+| **`vault/...`** | `C:/dev/vault/Spaces/Dev/Evo-Tactics/...` | https://github.com/MasterDD-L34D/vault (PRIVATE sovereign) |
+| **`memory/...`** | `C:/Users/<user>/.claude/projects/C--dev-codemasterdd-ai-station/memory/...` | NON in git -- per-PC, non navigabile cross-fleet |
+| **`aa01/...`** | `C:/Users/<user>/aa01/...` | NON in git (Personal Cognitive Studio) |
+
+Cross-repo gotcha: il Game local sui due PC e' tipicamente stale (husky skip-worktree blocca FF-pull su main). Se un Game path qui non si apre, applica il runbook KM section 6 (`update-index --no-skip-worktree .husky/pre-commit` -> `git checkout -- .husky/pre-commit` -> `git pull --ff-only origin main` -> `update-index --skip-worktree .husky/pre-commit`). Sperimentato in sessione 2026-05-28: pull 91 commit, file `Game/docs/guide/games-source-index.md` poi apribile.
 
 ## TL;DR
 
@@ -33,9 +47,11 @@ Stato: **A merged + primo CI run verde**; **B QG full-PASS**; privacy gap chiuso
 
 Boundary subagent: mai direct-push vault main, mai merge, mai edit Game oltre il commento issue. Confidence low/ambiguo -> report a Eduardo, no PR.
 
-## Primo caso d'uso reale candidato
+## Primo caso d'uso reale (eseguito 2026-05-28: NO-DRIFT)
 
-vault SoT `core/00-SOURCE-OF-TRUTH.md` section 24.6 (epigenome) dice ancora **DEFERRED**, ma il runtime ha shippato Fase-3 (Game #2402). Riconciliazione vault pending (reuse-queue KNOWLEDGE_MAP section 7). Quando vuoi: invoca `sot-drift-verifier` su quel ref -> dovrebbe dare STALE + proporre il reconcile.
+`sot-drift-verifier` invocato live su `vault/core/00-SOURCE-OF-TRUTH.md` section 24.6 (epigenome) vs [Game #2402](https://github.com/MasterDD-L34D/Game/pull/2402). Pre-check: `git -C C:/dev/vault fetch` -> local == origin (`553b56c6`). Verdetto: **NO-DRIFT (high confidence)**. Il SoT era gia' stato riconciliato dal vault commit `40992953e` ("docs(sot): reconcile epigenome DEFERRED -> SHIPPED (Fase-3)", 2026-05-28 00:59) da un'altra sessione (Ryzen .11) PRIMA del verdict: linee `Epigenome ... SHIPPED Fase-3 (2026-05-28)` con citazione #2401/#2402/#2404; `genealogie profonde + ambient-drift S5 + hybrid genuino` correttamente lasciate DEFERRED.
+
+**Meta-lezione del primo run**: il sentinel ha beccato il marker stale in `codemasterdd/docs/KNOWLEDGE_MAP.md` section 7 (diceva "vault SoT lagga, riconciliazione pending"), NON il SoT. Anti-pattern #19 *ironico*: il proprio tracker era piu' stale del SoT che doveva monitorare. KM corretto in commit `1319428` ("docs(session): governance journal + epigenome no-drift verdict").
 
 ## Sync su Ryzen (note fleet)
 
@@ -49,7 +65,7 @@ vault SoT `core/00-SOURCE-OF-TRUTH.md` section 24.6 (epigenome) dice ancora **DE
 
 ## Gotchas (non ri-scoprire)
 
-1. **Game branch-protection pitfall** (memory `reference_game_branch_protection.md` + L-039): un PR che tocca solo `.github/**`+`tools/**` fa "skipping" i required check path-filtered (`python-tests`/`stack-quality`/`cli-checks`/`dataset-checks`) -> `mergeStateStatus: BLOCKED` anche se il codice e' OK. NON e' un problema di codice. Risoluzione: `gh pr merge <n> --admin --merge` (lecito, `enforce_admins:false`) MA = bypass governance -> **auth esplicita Eduardo prima**. Inoltre `strict:true` -> aggiorna il branch (`git merge origin/main`) prima del merge.
+1. **Game branch-protection footgun** -- **FIXED 2026-05-28** (memory `memory/reference_game_branch_protection.md` + `aa01/learnings/L-2026-05-039`). **Storia**: un PR che toccava solo `Game/.github/**`+`Game/tools/**` faceva "skipping" i required check path-filtered (`python-tests`/`stack-quality`/`cli-checks`/`dataset-checks`) -> `mergeStateStatus: BLOCKED` anche se il codice era OK. Workaround era `gh pr merge <n> --admin --merge` (bypass governance, auth esplicita Eduardo). **Fix shipped**: [PR #2413](https://github.com/MasterDD-L34D/Game/pull/2413) ha aggiunto un job `ci-gate` aggregator (`always()` + `needs:` i 5 job required, passa su success-or-skipped); branch protection swap-pata a required `[governance, ci-gate]`. Da ora i PR tooling-only mergiano CLEAN senza admin. `strict:true` invariato -> aggiorna il branch (worktree `git merge origin/main`) se BEHIND.
 2. **ESM CLI entry-point** (L-038): in Node ESM usa `import.meta.url === pathToFileURL(process.argv[1]).href`, MAI il literal `file://${process.argv[1]}` (POSIX-only -> su Windows il CLI esce 0 senza output = smoke locale silently rotto mentre CI Linux e' verde). QG Step-1 di un CLI verifica l'OUTPUT, non l'exit code.
 3. **tdd-guard**: se attivo blocca i Write `.mjs/.sh` ("Premature implementation") anche con plugin disabilitato. Fix: `.claude/tdd-guard/data/config.json` = `{"guardEnabled": false}` (gitignored, per-PC).
 4. **gh CLI path** (Windows fleet): `"/c/Program Files/GitHub CLI/gh.exe"`.
