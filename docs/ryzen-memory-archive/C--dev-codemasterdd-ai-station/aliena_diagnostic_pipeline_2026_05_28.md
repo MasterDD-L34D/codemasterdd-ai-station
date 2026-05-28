@@ -66,11 +66,18 @@ metadata:
 - **Codex P2 caught**: PR #2418 review flagged real bug → fix #2419 mid-session.
 
 ## Lenovo state at close (SSH read-only check)
-Pre-session HEADs su tutti 3 repo Eduardo's:
-- Game `31250b5d` (-14 behind incl 5 mine)
-- Godot `efd5bf6` (-6 behind incl 4 mine)
-- vault `af851b67f` (-2 behind incl 2 mine)
-- Working tree pulito. Pull ff-clean ready.
+Pre-session HEADs su tutti 3 repo Eduardo's. Final post-session 17 PR origin HEADs:
+- Game Lenovo `31250b5d` → origin `3d298f32` (+5 mine: ALIENA-B/C/fix/D/E). **Pull ff-clean.**
+- Godot Lenovo `efd5bf6` → origin `41bac36` (+6 mine: §22-A nest+composer + §22-C scaffold+nest, plus pre-existing gdformat #358 + #357 base). **Pull ff-clean.**
+- codemasterdd Lenovo `4b40321` (pre-session) → origin `52bf929` (+T5 governance + T6 archive). **Pull ff-clean.**
+- vault Lenovo `0159c183d` LOCAL (eng-graph C3 spec, NON-pushed da Eduardo) DIVERGED da origin `15887c7da` (mio SoT v7.2 squash-merge #211). **Eduardo rebase**: `git fetch origin && git rebase origin/main` su vault main (mantiene suo C3 commit + integra v7.2 in cima), poi `git push`.
+- Working tree pulito su tutti, no in-progress branch.
+
+## Da-fare Eduardo personal queue
+- **Cross-fleet pull ff-clean (Eduardo-side Lenovo)**: Game + Game-Godot-v2 + codemasterdd diretti. vault con rebase strategy sopra.
+- §22-B mating roll initiator (design-call, NON auto-execute).
+- T2/T4 caller wire decision: estendere `phase_change` payload con `session_id` OR new broadcast type? Apre `coop.js broadcastCoopState` + `phone_composer_view._on_state` + `coop_ws_peer` extraction surface.
+- Enforcement ALIENA layer: data-driven post-collection via D endpoint. Run real session w/ flag on, collect telemetry, decide thresholds.
 
 ## Refs cross-link
 - vault: `Spaces/Dev/Evo-Tactics/core/00-SOURCE-OF-TRUTH.md` v7.1 §21+§22
