@@ -3797,4 +3797,51 @@ Mitigation L-002 attiva. Restoration cognitive prioritized vs compound execution
 ### Da fare
 - Ryzen mirror: git pull origin main + .\scripts\setup\deploy-global-skills.ps1 -Apply Eduardo-direct.
 - Behavioral smoke 3-prompt test (Task 12 plan).
+
+
+
+## 2026-05-28 (sera-notte) -- governance cleanup massivo + audit + decommission + closing cross-fleet
+
+### Completato (continuazione mattina post-T11)
+- **OPEN_DECISIONS 9/9 CLOSED**:
+  - OD-004 schema DECISIONS_LOG ratificato (10 Decisioni 5 settimane zero confusione)
+  - OD-005 BUILD: `FIRST_PRINCIPLES_INFRA_CHECKLIST.md` (~230 righe, adattato game-template, autoresearch industria 2 query a validare gap)
+  - OD-007 BUILD: 3-layer cross-fleet agent-scanner deploy (LITE skill global + L3 STRONG-PURE directive + deploy script idempotente sandbox QG; 19/19 unit test PASS; live -Apply Lenovo `0c6b405` green)
+  - OD-008 codemasterdd-side (Phase B closure done 2026-05-14 confermata)
+  - OD-009 NEW + CLOSED-DECOMMISSIONED: stack ADR-0017 (LiteLLM+Langfuse+Postgres+dogfood-ui) rimosso post-Hybrid-A1 (online sources convergent: solo-dev <\$100/mo = SDK/no-proxy; Langfuse self-host = task admin)
+- **BACKLOG cleanup** post-Hybrid-A1 + dogfood-surpass: H2/H3/H7 SURPASSED/SUPERSEDED (n=36 dogfood >> targets), M3 NEVER-TRIGGERED, B1/B2/B3 SUPERSEDED. Snapshot 2026-05-28 player-recap aggiunto.
+- **First-principles audit codemasterdd** (dogfood checklist): `docs/research/2026-05-28-codemasterdd-first-principles-audit.md` (~206 righe). Verdict = freeze-in-place via subdir conventions, NO delete massive. Cuts eseguiti:
+  - `final-research-and-snippets-2026-04-21-v3.md` DELETED (untracked dead-weight).
+  - `scripts/README.md` NEW: 30+ script categorization (core/setup/wrappers/backup/bench/cross-repo/smoke/one-time).
+  - 5 sub-agent draft never-fired MOVED `.claude/agents/_dormant/` (a11y/db-schema/dafne-triager/lore-checker/game-validator). Reversibile via `git mv`.
+- **ADR-0017 decommission** (OD-009 esecuzione opzione B):
+  - `git rm -r infra/` (docker-compose + LiteLLM + Postgres init).
+  - `git rm -r apps/dogfood-ui/` (Flask app).
+  - ADR-0017 status Accepted -> SUPERSEDED-by-ADR-0030.
+  - Runbook hot-restart DEPRECATED (retained archeology).
+  - `scripts/quality-bench/` retained standalone.
+- **Cross-fleet closing pull-pass**:
+  - codemasterdd: `416ee55`
+  - Game: husky-dance pull `31250b5d` (+1 mating.yaml)
+  - Game-Godot-v2: pull `efd5bf6` (+107)
+  - Game-Database: pull `13079e2` (+50) - **drift fix CLAUDE.md + memory "Lenovo clone presente"**
+  - vault: pull `af851b67f` (+15 + #208 SoT demote); `git gc --prune=now` 99.93% orphan removal (37542 -> 27)
+  - evo-swarm: PR #123 weekly-digest merged `10a40ba`, branch deleted, Dafne dormant per design
+  - synesthesia: invariata dormant
+- **Game #2410 footgun fix** (mattina): PR #2413 merged + branch protection swap `[governance, ci-gate]`. Lesson L-039.
+- **Privacy guard** `.aiderignore` per `docs/ryzen-memory-archive/`.
+- **Mirror infra** completa: scheduled task Dom 10:00 + helper external-drive + runbook.
+- **VC governance review** completo: autoresearch DORA/Fowler/Well-Architected; verdict struttura sana + 4 hardening azionati.
+- **Lessons AA01**: L-038 (ESM CLI pathToFileURL), L-039 (Game branch-protection footgun), L-040 (PowerShell native-stderr-under-Stop).
+
+### Da fare (residuo Eduardo-manual)
+- **T12 behavioral smoke** agent-scanner (fresh CC session, 3-prompt FIRE-A/B/C).
+- **T13 Ryzen cross-fleet deploy**: pull (~12 commit) + `.\scripts\setup\deploy-global-skills.ps1 -Apply`.
+- **External-drive mirror** opportunistic.
+- **U0-test** ADR-0017 aider --browser.
+
+### Note metodologiche
+- **Honest accounting** (post-feedback Eduardo): distinto "lavoro reale shippato" vs "marker-update / doc-hygiene". Pattern anti-pattern #19 consistent.
+- **Cognitive protocols applied**: P1 refresh-verify (pull pass), P2 autoresearch (governance + decommission), P5 harsh-reviewer (spec + PR #2413), P6 brainstorming, P7 SDMG.
+- **Auto-mode classifier**: 4 warnings + 1 hard block (T15) -> main-thread direct con plan-approval.
 - Token cost baseline capture post first 5 real invocations (Task 15 plan).
