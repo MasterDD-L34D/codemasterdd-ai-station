@@ -29,18 +29,31 @@
 
 | Iter | Misurazione | Before | After | Delta |
 |------|-------------|--------|-------|-------|
-| Baseline | Token cost per invocation (T12 plan: behavioral smoke 3-prompt) | pending | pending | pending |
-| Baseline | Time-to-output | pending | pending | pending |
-| Tuning trigger | Per spec sec 10 R1: post N=5 sessions Lenovo + N=5 Ryzen, if mean fire-rate >50% on non-selection OR mean tokens-per-fire >2000 -> tune description keywords | -- | -- | -- |
+| Baseline (T12 2026-05-28) | Token cost full ON_DEMAND fire (skill-load 1.3k + enum 0.5k + report 0.7k) | n/a | ~2.5k tokens (estimate, no exact telemetry) | -- |
+| Baseline (T12 2026-05-28) | Token cost auto-fire on task w/ inventory cached in-session (FIRE-A/C) | n/a | ~0.4k incremental each (estimate) | -- |
+| Baseline (T12 2026-05-28) | Time-to-output (source enumeration, 7 sources, 25 entries) | n/a | 223ms wall | -- |
+| Tuning trigger | Per spec sec 10 R1: post N=5 sessions Lenovo + N=5 Ryzen, if mean fire-rate >50% on non-selection OR mean tokens-per-fire >2000 -> tune description keywords | -- | NOT triggered (auto-fire ~0.4k << 2000; ON_DEMAND 2.5k is explicit-request not auto-fire) | -- |
 
-Iteration deferred until baseline data captured (T12 behavioral smoke + post-deploy first 5 sessions each PC).
+### T12 behavioral smoke 2026-05-28 (Lenovo, fresh session) -- 3 FIRE prompts
+
+| FIRE | Prompt | Expected | Result |
+|------|--------|----------|--------|
+| FIRE-A | `che agent uso per code review?` | scanner fires (TEAM_FORMATION), raccomanda agent esistente | PASS -- REUSE harsh-reviewer / /code-review / owasp / cavecrew-reviewer, 0 shadow-duplicate |
+| FIRE-B | `scan agents` | ON_DEMAND full report | PASS -- 25-entry report (20 active + 5 dormant + 2 user skill), anti-pattern check clean |
+| FIRE-C | `fix typo at line 42 in foo.js` | STRONG-PURE fires (no triviality bypass) | PASS -- fires, raccomanda cavecrew-builder / inline Edit, no new agent |
+
+**Findings (non-blocking):**
+- Scanner source 5 (`.claude/plugins` project-local) NON copre user plugin cache `~/.claude/plugins` -> caveman cavecrew agents non enumerati da find (recuperati manualmente da harness subagent-list). Candidate scanner refinement: aggiungere source 5b `$HOME/.claude/plugins`.
+- 5 dormant agents in `_dormant/` ancora esposti come `subagent_type` dall'harness (a11y/dafne/database/game-design-validator/lore-consistency) mentre disk-state = dormant. Coherence note.
+
+Step 3 baseline captured. Iteration deferred to post-deploy first 5 sessions each PC (per spec sec 10 R1 trigger).
 
 ## Step 4 -- Released
 
 - [x] Step 1 smoke complete (5/5 PASS).
 - [x] Step 2 research (8 edge cases documented; 4 verified via tests, 4 documented in SKILL.md + smoke required as inventory/conditions emerge).
-- [ ] Step 3 tuning -- pending baseline capture (T12 plan).
+- [x] Step 3 tuning baseline captured (T12 2026-05-28: 3-prompt behavioral smoke 3/3 PASS + token/time baseline). Iteration deferred to post-deploy 5-session sample/PC.
 - [x] Lenovo live deploy green (T11 `0c6b405`).
-- [ ] Ryzen cross-fleet deploy (T13 plan: Eduardo-direct).
+- [x] Ryzen cross-fleet deploy (T13 verified post-closure, journal `9ed9231`).
 
-Production status: **LIVE on Lenovo**. Cross-fleet mirror (Ryzen) pending Eduardo execution of T13.
+Production status: **LIVE cross-fleet (Lenovo + Ryzen)**. All 3 QG steps complete.
