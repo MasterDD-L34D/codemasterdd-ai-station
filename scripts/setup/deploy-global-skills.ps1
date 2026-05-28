@@ -220,6 +220,74 @@ function Invoke-ClaudeMdMerge {
   }
 }
 
+function Invoke-Rollback {
+  param(
+    [string]$TargetSkillDir,
+    [string]$ClaudeMdPath,
+    [string]$StartSentinel,
+    [string]$EndSentinel,
+    [switch]$DryRun
+  )
+
+  # 1. Remove skill dir.
+  if (Test-Path $TargetSkillDir) {
+    if ($DryRun) {
+      Write-Host "  [DRY] would remove dir: $TargetSkillDir"
+    } else {
+      Remove-Item -Recurse -Force $TargetSkillDir
+      Write-Host "  [OK] removed dir: $TargetSkillDir"
+    }
+  } else {
+    Write-Host "  [SKIP] skill dir already absent: $TargetSkillDir"
+  }
+
+  # 2. Strip directive from CLAUDE.md (bounded by start + END sentinel).
+  if (-not (Test-Path $ClaudeMdPath)) {
+    Write-Host "  [SKIP] CLAUDE.md absent: $ClaudeMdPath"
+    return $true
+  }
+
+  $content = Read-FileUtf8NoBom -Path $ClaudeMdPath
+  $startEsc = [Regex]::Escape($StartSentinel)
+  $endEsc = [Regex]::Escape($EndSentinel)
+  $pattern = "(?ms)^$startEsc.*?$endEsc`r?`n?"
+
+  if ($content -notmatch $pattern) {
+    Write-Host "  [WARN] start+END sentinel pair not found. Falling back to .bak restore if available."
+    $bakFiles = Get-ChildItem -Path (Split-Path $ClaudeMdPath -Parent) -Filter "$(Split-Path $ClaudeMdPath -Leaf).bak-*" -ErrorAction SilentlyContinue
+    if ($bakFiles) {
+      $latestBak = $bakFiles | Sort-Object Name -Descending | Select-Object -First 1
+      if ($DryRun) {
+        Write-Host "  [DRY] would restore from: $($latestBak.FullName)"
+      } else {
+        Copy-Item -Path $latestBak.FullName -Destination $ClaudeMdPath -Force
+        Write-Host "  [OK] restored from latest .bak: $($latestBak.FullName)"
+      }
+    } else {
+      Write-Host "  [SKIP] no .bak file found; nothing to do."
+    }
+    return $true
+  }
+
+  if (-not $DryRun) {
+    $ts = Get-Date -Format 'yyyyMMdd-HHmmss'
+    $bakPath = "$ClaudeMdPath.bak-remove-$ts"
+    Copy-Item -Path $ClaudeMdPath -Destination $bakPath -Force
+    Write-Host "  [OK] pre-remove backup: $bakPath"
+  }
+
+  $stripped = [Regex]::Replace($content, $pattern, '')
+
+  if ($DryRun) {
+    $matchCount = ([Regex]::Matches($content, $pattern)).Count
+    Write-Host "  [DRY] would strip $matchCount directive section(s) from CLAUDE.md"
+  } else {
+    Write-FileUtf8NoBom -Path $ClaudeMdPath -Content $stripped
+    Write-Host "  [OK] directive stripped from CLAUDE.md (bounded start..end sentinel)"
+  }
+  return $true
+}
+
 # Dispatch by mode (Apply / Remove / DryRun).
 switch ($PSCmdlet.ParameterSetName) {
   'Apply' {
@@ -241,7 +309,10 @@ switch ($PSCmdlet.ParameterSetName) {
     exit $EXIT_OK
   }
   'Remove' {
-    Write-Output "Remove path not yet implemented (added in Task 7)."
+    Write-Output ""
+    Write-Output "=== Rollback ==="
+    Invoke-Rollback -TargetSkillDir $targetSkillDir -ClaudeMdPath $targetClaudeMd `
+                    -StartSentinel $startSentinel -EndSentinel $endSentinel | Out-Null
     exit $EXIT_OK
   }
   default {

@@ -166,6 +166,53 @@ Assert-Eq -Expected 'ambiguous' -Actual $state -Name "ambiguous sentinel detecte
 Remove-Item -Recurse -Force $tmpRoot
 
 # ----------------------------------------------------------------------
+# Test 5: Remove strips bounded directive without eating user content (P0#3)
+# ----------------------------------------------------------------------
+Write-Host ""
+Write-Host "Test 5: Remove bounded -- user content preserved"
+
+$tmpRoot = Join-Path $env:TEMP "remove-test-$([guid]::NewGuid())"
+New-Item -ItemType Directory -Force -Path $tmpRoot | Out-Null
+$claudeMd = Join-Path $tmpRoot 'CLAUDE.md'
+
+$initial = @"
+# CLAUDE.md
+
+## Section A
+
+User content A.
+
+## Agent Scanner discipline (anti-shadow-duplicate, cross-fleet)
+
+**Rule** (STRONG-PURE): directive body.
+
+<!-- END agent-scanner-directive -->
+
+This user line MUST survive Remove (P0#3 footgun).
+
+## Section B (post-directive)
+
+User content B.
+"@
+Set-Content -Path $claudeMd -Value $initial -Encoding utf8
+
+if (-not (Get-Variable -Name 'endSentinel' -ErrorAction SilentlyContinue)) {
+  $endSentinel = '<!-- END agent-scanner-directive -->'
+}
+
+Invoke-Rollback -TargetSkillDir "$tmpRoot\nonexistent-skill" -ClaudeMdPath $claudeMd `
+                -StartSentinel $startSentinel -EndSentinel $endSentinel | Out-Null
+
+$after = Read-FileUtf8NoBom -Path $claudeMd
+Assert-True -Condition (-not ($after -match 'Agent Scanner discipline')) -Name "start sentinel removed"
+Assert-True -Condition (-not ($after -match 'END agent-scanner-directive')) -Name "END sentinel removed"
+Assert-True -Condition ($after -match 'This user line MUST survive') -Name "user content post-directive preserved (P0#3)"
+Assert-True -Condition ($after -match '## Section A') -Name "user content pre-directive preserved"
+Assert-True -Condition ($after -match '## Section B') -Name "user content section-B preserved"
+
+Remove-Item -Recurse -Force $tmpRoot
+
+# ----------------------------------------------------------------------
 # Summary
 # ----------------------------------------------------------------------
 Write-Host ""
