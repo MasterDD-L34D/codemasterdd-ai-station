@@ -164,7 +164,8 @@ _(completato il 2026-04-19 — vedi "Stack installato")_
 
 - **Game-Database** — Taxonomy CMS per Evo-Tactics (promoted da Ryzen-only minimal monitoring 2026-05-15 sera, post Jules audit L-025)
   - GitHub: `github.com/MasterDD-L34D/Game-Database` (PUBLIC, no LICENSE)
-  - Path Ryzen: `C:\dev\Game-Database` (consolidato in C:\dev 2026-05-21; era `C:/Users/VGit/Documents/GitHub/Game-Database/`. Clone attivo Ryzen-side, NON remote-only -- aggiornamento drift-fix path. no clone Lenovo current)
+  - Path Ryzen: `C:\dev\Game-Database` (consolidato in C:\dev 2026-05-21; era `C:/Users/VGit/Documents/GitHub/Game-Database/`. Clone attivo Ryzen-side, NON remote-only -- aggiornamento drift-fix path)
+  - Path Lenovo: `C:\dev\Game-Database` (clone presente verificato 2026-05-28 sera post pull-pass cross-fleet; +50 commit pulled clean. Claim originale "no clone Lenovo current" era stale, anti-pattern #19 corretto 2026-05-28)
   - Stack: Express 4 + Prisma 5 + PostgreSQL 16 + React (MUI + TanStack Table + i18n + Vite)
   - **Ruolo**: glossary canonical trait/biome/specie/ecosistemi per Evo-Tactics. Upstream content provider per Game (Vue3) via `npm run evo:import` + HTTP runtime API (`GAME_DATABASE_ENABLED=true` flag su Game backend, ADR-2026-04-14 game-side)
   - **Status 2026-05-15 sera**: HEAD main `91f5468` PR #105 + 7 PR Jules OPEN today (#107..#113: 1 security basicAuth + 2 perf optimize + 3 tests coverage + 1 refactor code health) -> Jules e' aggressive maintenance/improvement source su questo repo (7 sessioni cumulative cross-day, il repo con piu' attivita Jules nell'ecosystem)
