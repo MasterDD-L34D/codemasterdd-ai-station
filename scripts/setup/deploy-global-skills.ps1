@@ -73,6 +73,76 @@ if (-not (Test-Path $canonicalSkill) -or -not (Test-Path $canonicalFragment)) {
   exit $EXIT_NO_CANONICAL
 }
 
-# Skeleton ends here. Subsequent tasks fill in the real logic.
-Write-Output "(skeleton only -- merge/copy/sandbox logic added in later tasks)"
-exit $EXIT_OK
+function Get-FileSha256 {
+  param([string]$Path)
+  if (-not (Test-Path $Path)) { return $null }
+  return (Get-FileHash -Algorithm SHA256 -Path $Path).Hash
+}
+
+function Invoke-SkillDeploy {
+  param([string]$CanonicalDir, [string]$TargetDir, [switch]$DryRun)
+
+  # Ensure parent dir exists (P1#5 harsh: fresh PC case).
+  $skillsParent = Split-Path -Parent $TargetDir
+  if (-not (Test-Path $skillsParent)) {
+    if ($DryRun) {
+      Write-Output "  [DRY] would mkdir: $skillsParent"
+    } else {
+      New-Item -ItemType Directory -Force -Path $skillsParent | Out-Null
+      Write-Output "  [OK] created: $skillsParent"
+    }
+  }
+
+  # Pre-copy drift check (P1#1 harsh).
+  $canonicalSkillFile = Join-Path $CanonicalDir 'SKILL.md'
+  $targetSkillFile = Join-Path $TargetDir 'SKILL.md'
+
+  if (Test-Path $targetSkillFile) {
+    $canonicalHash = Get-FileSha256 -Path $canonicalSkillFile
+    $targetHash = Get-FileSha256 -Path $targetSkillFile
+    if ($canonicalHash -ne $targetHash) {
+      $ts = Get-Date -Format 'yyyyMMdd-HHmmss'
+      $bakPath = "$targetSkillFile.bak-$ts"
+      if ($DryRun) {
+        Write-Output "  [DRY] DRIFT detected (target hash != canonical). Would backup -> $bakPath"
+      } else {
+        Copy-Item -Path $targetSkillFile -Destination $bakPath -Force
+        Write-Output "  [OK] DRIFT detected. .bak saved: $bakPath"
+      }
+    }
+  }
+
+  # Copy from canonical.
+  if ($DryRun) {
+    Write-Output "  [DRY] would copy: $CanonicalDir\* -> $TargetDir\"
+  } else {
+    if (-not (Test-Path $TargetDir)) { New-Item -ItemType Directory -Force -Path $TargetDir | Out-Null }
+    Copy-Item -Path "$CanonicalDir\*" -Destination $TargetDir -Recurse -Force
+    Write-Output "  [OK] skill copied: $CanonicalDir -> $TargetDir"
+  }
+}
+
+# Dispatch by mode (Apply / Remove / DryRun).
+switch ($PSCmdlet.ParameterSetName) {
+  'Apply' {
+    Write-Output ""
+    Write-Output "=== Phase 1: skill deploy ==="
+    Invoke-SkillDeploy -CanonicalDir $canonicalSkill -TargetDir $targetSkillDir
+    Write-Output ""
+    Write-Output "(Phase 2 CLAUDE.md merge / Phase 3 verify / sandbox QG added in subsequent tasks)"
+    exit $EXIT_OK
+  }
+  'Remove' {
+    Write-Output "Remove path not yet implemented (added in Task 7)."
+    exit $EXIT_OK
+  }
+  default {
+    # DryRun
+    Write-Output ""
+    Write-Output "=== Phase 1 preview (skill deploy) ==="
+    Invoke-SkillDeploy -CanonicalDir $canonicalSkill -TargetDir $targetSkillDir -DryRun
+    Write-Output ""
+    Write-Output "(Phase 2 CLAUDE.md merge / Phase 3 verify / sandbox QG added in subsequent tasks)"
+    exit $EXIT_OK
+  }
+}

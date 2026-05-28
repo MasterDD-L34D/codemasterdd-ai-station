@@ -71,6 +71,31 @@ for ($j = $startIdx + 1; $j -le [Math]::Min($startIdx + 5, $lines.Count - 1); $j
 Assert-True -Condition $foundRule -Name "disambiguation: first non-blank within 5 lines matches Rule (STRONG"
 
 # ----------------------------------------------------------------------
+# Test 2: skill deploy hash-compare detects drift (P1#1 harsh)
+# ----------------------------------------------------------------------
+Write-Host ""
+Write-Host "Test 2: skill deploy hash-compare drift detection"
+
+$tmpRoot = Join-Path $env:TEMP "deploy-test-$([guid]::NewGuid())"
+$canonDir = Join-Path $tmpRoot 'canonical'
+$targetDir = Join-Path $tmpRoot 'target'
+New-Item -ItemType Directory -Force -Path $canonDir | Out-Null
+New-Item -ItemType Directory -Force -Path $targetDir | Out-Null
+
+Set-Content -Path (Join-Path $canonDir 'SKILL.md') -Value "canonical content v1" -Encoding utf8
+Set-Content -Path (Join-Path $targetDir 'SKILL.md') -Value "user-edited content drift" -Encoding utf8
+
+$canonicalHash = (Get-FileHash -Algorithm SHA256 -Path (Join-Path $canonDir 'SKILL.md')).Hash
+$targetHash = (Get-FileHash -Algorithm SHA256 -Path (Join-Path $targetDir 'SKILL.md')).Hash
+Assert-True -Condition ($canonicalHash -ne $targetHash) -Name "hash-compare flags drift"
+
+Set-Content -Path (Join-Path $targetDir 'SKILL.md') -Value "canonical content v1" -Encoding utf8
+$targetHash2 = (Get-FileHash -Algorithm SHA256 -Path (Join-Path $targetDir 'SKILL.md')).Hash
+Assert-True -Condition ($canonicalHash -eq $targetHash2) -Name "hash-compare no false-drift when content equal"
+
+Remove-Item -Recurse -Force $tmpRoot
+
+# ----------------------------------------------------------------------
 # Summary
 # ----------------------------------------------------------------------
 Write-Host ""
