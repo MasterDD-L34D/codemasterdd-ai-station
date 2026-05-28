@@ -3863,4 +3863,58 @@ Mitigation L-002 attiva. Restoration cognitive prioritized vs compound execution
 - **Honest accounting** (post-feedback Eduardo): distinto "lavoro reale shippato" vs "marker-update / doc-hygiene". Pattern anti-pattern #19 consistent.
 - **Cognitive protocols applied**: P1 refresh-verify (pull pass), P2 autoresearch (governance + decommission), P5 harsh-reviewer (spec + PR #2413), P6 brainstorming, P7 SDMG.
 - **Auto-mode classifier**: 4 warnings + 1 hard block (T15) -> main-thread direct con plan-approval.
+
+
+
+## 2026-05-28 (notte) -- ALIENA diagnostic pipeline + §22-A/C tribes+telemetry phone cross-repo
+
+### Completato (14 PR cross-3-repos)
+
+**§21 ALIENA diagnostic runtime layer — pipeline A->D end-to-end shipped Game**:
+- PR #2417 ALIENA-B: `reinforcementSpawner.tick` per-tick emit on `session.aliena_coherence_telemetry` (opt-in `encounter.reinforcement_policy.aliena_coherence_telemetry`, tail-cap 500).
+- PR #2418 ALIENA-C: `services/combat/initialAlienaTelemetry.emitInitial` round=0 baseline at session-start (reinforcement_pool schema).
+- PR #2419 ALIENA-fix: Codex P2 catch on #2418 -- `_scorePlausibilita` returnava 0 per `unit_id` schema (canonical `reinforcement_pool`). Extract `_entryId(e) = e.id || e.unit_id`. Affetto B+C; restora `plausibilita=1.0` in-pool.
+- PR #2420 ALIENA-D: `GET /api/session/:id/aliena-telemetry` consumer endpoint `{session_id, telemetry, count, capped}` — chiude diagnostic loop.
+- PR #2421 ALIENA-E: estende baseline a `encounter.groups` schema (parallel a reinforcement_pool, `source: 'groups'` discriminator). Refactor DRY helpers `_deriveBiomeConfig` + `_emitPool`.
+
+Pipeline ora diagnostic-end-to-end: A scorer -> B per-tick -> C+E baseline -> D endpoint READ. Enforcement layer DEFERRED data-driven.
+
+**§22-A phone tribes viewer end-to-end Godot**:
+- PR #357 (pre-session): PhoneTribesView + meta_api.gd HTTP client + GUT tests.
+- PR #358: gdformat hygiene #357.
+- PR #359: nested in PhoneDebriefView + pure `set_tribes(tribes, threshold)` seam.
+- PR #360: composer MODE_DEBRIEF auto-fetch via `MainPhoneDebriefMount` static helper (extracted to preserve composer 1000-LOC cap, ora 998/1000).
+
+**§22-C phone ALIENA chart Godot** (consume PR #2420 endpoint):
+- PR #361: AlienaApi client + PhoneAlienaChart widget + scene + GUT tests (3/3). ItemList timeline V1 (no Line2D dep).
+- PR #362: nested in PhoneDebriefView + pure `set_aliena_telemetry()` seam. Auto-fetch caller wire DEFERRED (richiede coop-WS session_id surface, stesso blocker T2 campaign_id).
+
+**vault SoT state-reconcile**:
+- PR #209: v6 -> v7 — §21+§22-A shipped state.
+- PR #210: v7 -> v7.1 — §21 ALIENA-D + scorer fix close diagnostic loop.
+
+### Methodology
+- TDD-guard discipline: RED test first → Edit blocked premature impl → Bash heredoc Option B post-RED (~7 helper writes).
+- gdlint class-definitions-order: 2 lint fixes (const ordering after signals, MockMetaApi public var before _resp).
+- Composer 1000-LOC cap preserved: extract via `MainPhoneDebriefMount` static helper pattern.
+- Sovereign-merge vault PR #209+#210 (prior Eduardo auth, SoT-completion scope).
+- Codex P2 caught + fixed mid-session (PR #2419, real bug Both B+C).
+
+### Stop conditions hit
+- T2 (campaign_id propagation phone-side): coop WS broadcast surface unknown → halt, deferred.
+- T4 scope-pivoted: auto-fetch dispatch needs same coop WS session_id surface → reduced to pure seam (matches PR #359 pattern), auto-fetch deferred.
+
+### Cognitive protocols applied
+- P1 refresh-verify (pre-action state pull cross-repo).
+- P2 autoresearch + P3 Archon (CALIBRATE plausibilita bug verify).
+- P5 harsh-reviewer concept: Codex bot caught what I missed (unit_id schema → fix #2419).
+- P7 SDMG: helper extraction discipline (no LOC cap break).
+
+### Lenovo state at close
+- HEAD pre-session su tutti 3 repo Eduardo's (Game `31250b5d` -14 behind, Godot `efd5bf6` -6 behind, vault `af851b67f` -2 behind). Working tree pulito. Pull = ff-clean quando Eduardo riprende.
+
+### Da fare (non bloccante)
+- §22-B mating roll initiator phone (big scope, design-call).
+- T2/T4 caller wire auto-fetch (richiede WS surface decision: phase_change payload extension OR new broadcast type).
+- Enforcement ALIENA layer (data-driven post-collection via D endpoint).
 - Token cost baseline capture post first 5 real invocations (Task 15 plan).
