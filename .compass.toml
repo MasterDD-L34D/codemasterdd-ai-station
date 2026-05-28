@@ -1,0 +1,40 @@
+version = 1
+
+[project]
+name = "codemasterdd-ai-station"
+type = "other"
+
+[[pillars]]
+id = "governance"
+name = "Governance + decision artifacts"
+description = "ADR + DECISIONS_LOG + OPEN_DECISIONS + BACKLOG + JOURNAL + COMPACT + STATUS + GOALS + CLAUDE.md"
+paths = ["docs/adr/**", "DECISIONS_LOG.md", "OPEN_DECISIONS.md", "BACKLOG.md", "JOURNAL.md", "STATUS_MULTI_REPO.md", "COMPACT_CONTEXT.md", "GOALS.md", "ROADMAP.md", "CLAUDE.md", "AGENTS.md", "PROJECT_BRIEF.md"]
+weight = 1.0
+
+[[pillars]]
+id = "agentic-tooling"
+name = "Delegation wrappers + agents + skills (sovereign-first)"
+description = "Aider wrappers + sub-agents + global skills + L3 directive fragments"
+paths = ["scripts/wrappers/**", "scripts/setup/**", ".claude/agents/**", ".claude/global-skills/**", ".claude/global-claude-md-fragments/**"]
+weight = 1.0
+
+[[pillars]]
+id = "cross-fleet-reproducibility"
+name = "Cross-PC fleet sync + backup + hooks"
+description = "Mirror infra + backup-api-keys + hooks chain + cross-repo orchestrator"
+paths = ["scripts/backup/**", "scripts/hooks/**", "scripts/cross-repo/**"]
+weight = 1.0
+
+[[pillars]]
+id = "research-and-design"
+name = "Research + specs + plans + patterns + sessions"
+description = "Architettura + brainstorm + audit + sessions handoff"
+paths = ["docs/research/**", "docs/superpowers/**", "docs/patterns/**", "docs/sessions/**", "docs/runbook/**", "FIRST_PRINCIPLES_INFRA_CHECKLIST.md"]
+weight = 1.0
+
+[[pillars]]
+id = "knowledge-preservation"
+name = "Knowledge archive + reference library"
+description = "Ryzen memory archive + reference index + Archivio framework + routing/prompt libraries"
+paths = ["docs/ryzen-memory-archive/**", "docs/reference/**", "Archivio_Libreria_Operativa_Progetti/**", "REFERENCE_INDEX.md", "MODEL_ROUTING.md", "PROMPT_LIBRARY.md", "MASTER_PROMPT.md"]
+weight = 1.0
