@@ -6,6 +6,29 @@
 
 ---
 
+## Snapshot 2026-05-28 (player-recap)
+
+**Stato**: zero decisioni operative aperte su codemasterdd. Tutte le 8 OD storiche (OD-001..008) sono CLOSED. Le decisioni vision/architettura vivono in `docs/adr/` (24+ ADR). Cose che impattano cross-repo o l'utente sono tracciate nei `BACKLOG.md` / `STATUS_MULTI_REPO.md` / `JOURNAL.md` corrispondenti.
+
+Le ultime 4 chiusure (OD-004/005/007/008) erano marker stale (anti-pattern #19): le decisioni erano già operative, mancava solo la chiusura formale. Verificate via currency-gate 2026-05-28 + ground-truth file (`DECISIONS_LOG.md`, `STATUS_MULTI_REPO.md`, AA01 archive, Game `OPEN_DECISIONS.md`).
+
+| OD | Domanda originale (in italiano) | Verdict | Cosa devi fare adesso |
+|----|----------------------------------|---------|------------------------|
+| OD-001 | Quale scenario budget post-Claude-Max? | ✅ CLOSED (A full-sovereign, ADR-0015 Accepted) | Niente |
+| OD-002 | Fix cp1252 Windows wrapper tiene? | ✅ CLOSED (n=15 dogfood clean) | Niente (re-trigger solo se crash UnicodeEncodeError in SPRINT_02) |
+| OD-003 | Default tier 3 cloud: Groq vs Cerebras? | ✅ CLOSED (Cerebras 8B cosmetic + Groq 70B behavior) | Niente |
+| OD-004 | Schema DECISIONS_LOG ibrido funziona? | ✅ CLOSED 2026-05-28 (ratificato empirico: 10 Decisioni in 5 settimane, zero confusione) | Niente. Continua schema attuale |
+| OD-005 | Serve FIRST_PRINCIPLES_INFRA_CHECKLIST? | ✅ CLOSED 2026-05-28 (YAGNI ratificato: zero usi del template `FIRST_PRINCIPLES_*` fuori Archivio_Libreria in 5 settimane) | Niente. Crealo solo se repo scope si espande oltre infra |
+| OD-006 | Constraint-count come 2a dimensione routing? | ✅ CLOSED (ADR-0016 Proposed n=11 data points) | Niente |
+| OD-007 | AA01 capability registry / scan automatico? | ✅ CLOSED 2026-05-28 (DEFER ratificato: 18+ task AA01 completati zero friction, Three Strikes mai attivato) | Niente. Riapri solo se emerge friction reale tool-selection in AA01 |
+| OD-008 | Cross-repo Phase B Day 7 closure tracking? | ✅ CLOSED 2026-05-28 (codemasterdd-side: Phase B closure 2026-05-14 confermata in STATUS_MULTI_REPO + Game [OD-024..031] post-cutover audit ✅ SHIPPED + ADR-0024 addendum shipped PR #55) | **Lato codemasterdd niente**. Side-note opzionale: Game `OPEN_DECISIONS.md` ha ancora OD-023 marcata "APERTA 2026-05-12" -- housekeeping Game-side quando vuoi (non blocca nulla) |
+
+**Decisioni vision/architettura**: vivono in `docs/adr/` (24+ ADR Accepted). Per cose nuove rilevanti usa ADR-NNNN MADR format (vedi `docs/adr/0000-template.md` se esiste oppure copia struttura ADR esistente).
+
+**Pattern operativo non-ADR** (per future cose minori): apri una nuova OD-NNN qui sotto con i campi standard (Livello / Stato / Ambiguità / Perché conta / Miglior default proposto / Rischio / File / Prossima azione + Trigger reactivation se applicabile).
+
+---
+
 ### [OD-001] ~~Scenario Budget Fase 7 (ADR-0015)~~ **CLOSED 2026-04-24 (Proposed) → ratificato 2026-05-07 (Accepted)**
 
 - **Livello**: system / workflow / budget
@@ -41,16 +64,14 @@
 
 ---
 
-### [OD-004] Schema `DECISIONS_LOG` — indice ADR vs lista Decisione NNN
+### [OD-004] ~~Schema `DECISIONS_LOG` — indice ADR vs lista Decisione NNN~~ **CLOSED 2026-05-28 (proposta ratificata empirica)**
 
 - **Livello**: repo / documentation
-- **Stato**: proposta applicata provvisoria
-- **Ambiguità**: il framework archivio prescrive formato "Decisione NNN numerata". Il progetto ha già 14 ADR MADR più ricchi. Come riconciliare?
-- **Perché conta**: consistency con framework universale multi-progetto vs preservazione asset ADR.
-- **Miglior default proposto**: **ibrido attuale** — ADR index + sezione "Decisioni non-ADR" con formato Decisione NNN per operative minori. Mantiene entrambi i contratti.
-- **Rischio se ignorata**: drift latente — future sessioni che seguono template archivio potrebbero scrivere in sezione sbagliata.
-- **File o moduli coinvolti**: `DECISIONS_LOG.md`, `CLAUDE.md`.
-- **Prossima azione consigliata**: se dopo 2+ sessioni il formato ibrido genera confusione → riconsiderare con ADR dedicato. Finora funziona.
+- **Stato**: **CLOSED** — schema ibrido confermato dall'uso reale. Ground-truth `DECISIONS_LOG.md` (2026-05-28): sezioni `## ADR index (strategiche)` + `## Decisioni non-ADR (operative minori)` coesistono pulite; n=10 Decisioni (001..010) raccolte tra 2026-04-23 e 2026-05-18, zero confusione signal cross-sessione, zero misclassification. Trigger "se dopo 2+ sessioni il formato ibrido genera confusione" mai attivato in 5 settimane / decine di sessioni.
+- **Ambiguità originale**: il framework archivio prescrive formato "Decisione NNN numerata". Il progetto ha già 14 ADR MADR più ricchi. Come riconciliare?
+- **Decisione finale**: **ibrido confermato** — ADR index + sezione "Decisioni non-ADR" con formato Decisione NNN per operative minori. Mantiene entrambi i contratti.
+- **File coinvolti**: `DECISIONS_LOG.md` (sezioni live), `CLAUDE.md`.
+- **Reactivation trigger**: se in futuro una sessione legge il file + classifica wrong-section una nuova decisione → ADR dedicato per formalizzare convention. Finora N/A.
 
 ---
 
@@ -70,23 +91,21 @@
 
 ---
 
-### [OD-005] `FIRST_PRINCIPLES_GAME_CHECKLIST` sostituito da cosa?
+### [OD-005] ~~`FIRST_PRINCIPLES_GAME_CHECKLIST` sostituito da cosa?~~ **CLOSED 2026-05-28 (YAGNI ratificato)**
 
 - **Livello**: workflow / documentation
-- **Stato**: aperta (N/A attuale)
-- **Ambiguità**: framework prescrive checklist first-principles per game repo. Questo repo è infrastructure-as-code. Skip è documentato in Decisione 002, ma vale la pena produrre un "First principles infrastructure checklist" adattato?
-- **Perché conta**: se in futuro Evo-Tactics torna qui come subdirectory o se mi serve first-principles applicato a infrastruttura, il template non esiste.
-- **Miglior default proposto**: **skip per ora**. Se emerge necessità concreta → adatta template. Non pre-costruire (YAGNI, ADR-0005).
-- **Rischio se ignorata**: zero finché repo resta infrastructure-only.
-- **File o moduli coinvolti**: eventuale futuro `FIRST_PRINCIPLES_INFRA_CHECKLIST.md`.
-- **Prossima azione consigliata**: nessuna. Rivalutare se repo espande scope.
+- **Stato**: **CLOSED** — YAGNI confermato. Ground-truth: repo resta infrastructure-only (nessuna dir di gameplay sotto root); zero uso/riferimento del template `FIRST_PRINCIPLES_*` fuori da `Archivio_Libreria_Operativa_Progetti/` in 5 settimane; zero friction emerso che richiedesse il template adattato.
+- **Ambiguità originale**: framework prescrive checklist first-principles per game repo. Questo repo è infrastructure-as-code. Skip è documentato in Decisione 002, ma valeva la pena produrre un "First principles infrastructure checklist" adattato?
+- **Decisione finale**: **skip confermato**. Non si pre-costruisce (YAGNI, ADR-0005). Per first-principles applicato al codice/design vivente si usa skill `superpowers:first-principles-game` o agent `game-design-validator` quando serve in Game repo.
+- **File coinvolti**: nessuno (template non creato di proposito).
+- **Reactivation trigger**: se il repo espande scope per ospitare game-source o se emerge necessità concreta di first-principles su infra → adatta template allora, non prima.
 
 ---
 
-### [OD-008] Cross-repo dependency Game OD-023 -- Phase B Day 7 closure 2026-05-14 sub-event di ADR-0024
+### [OD-008] ~~Cross-repo dependency Game OD-023 -- Phase B Day 7 closure 2026-05-14 sub-event di ADR-0024~~ **CLOSED 2026-05-28 (codemasterdd-side)**
 
 - **Livello**: cross-repo strategic (codemasterdd <-> Game)
-- **Stato**: **TRACKED 2026-05-12** -- ADR-0024 addendum "Sub-events timeline" shipped questa PR risolve raccomandazione Game OD-023. Cross-repo dependency formalizzata.
+- **Stato**: **CLOSED codemasterdd-side**. Ground-truth 2026-05-28: (a) `STATUS_MULTI_REPO.md` riga 603 conferma Phase B Day 7 formal closure eseguita 2026-05-14 come sub-event di ADR-0024; (b) Game `OPEN_DECISIONS.md` cluster `[OD-024..031] ai-station ecosystem audit verdicts` = ✅ 8/8 SHIPPED cross-stack 2026-05-14 (downstream del cutover); (c) codemasterdd ADR-0024 addendum "Sub-events timeline" + scope-disjoint clarification shipped PR #55. **Caveat residuo, NON codemasterdd**: Game `OPEN_DECISIONS.md` OD-023 header marca ancora "APERTA 2026-05-12" -- marker stale Game-side, housekeeping Eduardo opzionale, non blocca nulla. Pregresso Phase B archive riconciliato, codemasterdd dependency tracking completo.
 - **Ambiguita originale**: Game `OPEN_DECISIONS.md` OD-023 (APERTA 2026-05-12) cita esplicitamente codemasterdd ADR-0024:
   > "Cross-repo ai-station alignment: ADR-0024 Proposed 2026-05-09 = Vue3 archive soft-deadline 2026-09-30 (4 mesi). Conflict apparente con Game/ ADR-2026-05-05 (7gg grace). Risolto via Opt B+C combined: scope disjoint (Game = FE apps/play/ only, ai-station = Vue3 repo-wide). Amendment ai-station ADR-0024 § Sub-events timeline raccomandato Sprint Q+ NON oggi."
 - **Decisione codemasterdd-side**: ADR-0024 addendum shipped questa PR chiarisce scope disjoint senza alterare original decision (soft-deadline 2026-09-30 invariata). Phase B web archive 2026-05-14 = **sub-event** di Vue3 codebase-wide archive 2026-09-30.
@@ -104,10 +123,10 @@
 
 ---
 
-### [OD-007] AA01 capability registry / scan function -- deferred Three Strikes
+### [OD-007] ~~AA01 capability registry / scan function -- deferred Three Strikes~~ **CLOSED 2026-05-28 (DEFER ratificato N=18)**
 
 - **Livello**: workflow / tooling (AA01-side, esterno a codemasterdd)
-- **Stato**: **DEFERRED 2026-05-11** -- pattern Three Strikes applicato a feature-internal AA01 (non solo preset/rule come documentato in AGENTS.md AA01).
+- **Stato**: **CLOSED** — Three Strikes confermato YAGNI. Ground-truth 2026-05-28: 18+ task AA01 completati (dir `C:/Users/edusc/aa01/archive/`), zero learning friction-related promossi (pattern `tool-select|capabil|fricti|registry|scan` in `~/aa01/learnings/` = vuoto), counter Three-Strikes mai attivato. Disciplina (sapere quali tool esistono) ha continuato a funzionare meglio della feature (registry automatico).
 - **Ambiguita' originale**: AA01 oggi sceglie tool (sub-agent codemasterdd, skill, plugin, MCP, wrapper aider) a discrezione dell'agent-in-sessione. Es. PR #39 ho usato harsh-reviewer perche' lo sapevo io, non perche' AA01 me l'abbia suggerito. Una funzione `scan-capabilities` che inventaria `.claude/agents/` (18 sub-agent codemasterdd) + skill + plugin + MCP + wrapper aider e mappa per preset/phase ridurrebbe il bias di "chi ha piu' memoria recente vince".
 - **Perche' conta**: scaling oltre 1-2 agent-in-sessione, eventuale handoff cross-CLI (Claude Code / Codex / Cursor / Gemini / Cline tutti citati in AA01 AGENTS.md come master entry point), e drift di tool selection task-by-task.
 - **Decisione attuale**: **opzione C aspettare 2-3 task AA01 in piu'**. Three Strikes: feature esiste solo dopo 3 task la richiedono. Counter al 11/5: **1 completed + 1 in progress** (`aa01-001` two-repos-analysis SHIP via PR #39; `aa01-002` fleet-discovery-pod-design Phase 1+2 via PR #40 in coda). Nessuna frizione tool-selection osservata in entrambi -> trigger NON ancora attivato (counter task != count frizione). Disciplina, non feature.
