@@ -3708,3 +3708,25 @@ Mitigation L-002 attiva. Restoration cognitive prioritized vs compound execution
 - **n=7 auto-correzioni in sessione**: ogni mia conclusione/design NON falsificato esternamente era errato (gitpatch / governance-attribution / corrective-safe / F4 / A8-method / triager-contradiction / tuning-#2314). L'arbitro esterno + ground-truth + specialista li hanno corretti tutti, **incluso fermare me** quando "B+C" ri-autorizzava il relaunch che il metodo aveva rifiutato. Protocol 7 nasce da questo: il gate disciplinare regge alla pressione di ri-autorizzazione.
 - **Serialize-not-parallelize**: orchestratori-merge paralleli causano livelock BEHIND-starvation (#2311). Serializzati = throughput pulito. Finding operativo.
 - **Cognitive protocols applied**: P1 sempre; P3 Archon 7-step (decisione ADR); P5 harsh-reviewer arbitro esterno ×3 (cluster + decisione + metodo); P7 SDMG nato e applicato a se stesso.
+
+
+
+## 2026-05-28 — SoT Drift Sentinel Component A shipped + live
+
+### Completato
+- **Component A LIVE su Game** (PR #2406 MERGED, commit `29ac9102`): GitHub Action `sot-drift-sentinel` (trigger push:main) -> matcher Node dep-free `detect.mjs` (globToRegex/matchChanges/parseWatchMap + 6/6 `node:test`, TDD red-green) su `watch-map.yml` (4 concetti: genetics/combat/economy/biomi) -> issue idempotente `sot-drift-candidate` via `flag-issue.sh`. Build via worktree fresco da origin/main (Game local 76+ behind + husky skip-worktree); 4 commit + trailers ADR-0011. Label creata one-time.
+- **Component B QG full-PASS**: live subagent-dispatch smoke di `sot-drift-verifier` (registrato post-restart) -> stale fixture = STALE/high + reconcile diff DEFERRED->SHIPPED + branch+PR-not-auto-merge; negative fixture = NO-DRIFT/high. Entrambi read-only zero-write (boundaries OK). Status flipped a PASS (codemasterdd `5d8b36c`).
+- **Review pre-merge (P5 harsh-reviewer)**: no P0; 1 P1 (diff perdeva i file watched nei commit precedenti di push multi-commit + fail su first-push zero-SHA) FIXATO (`7774e13e`: range `before..sha` con fetch-depth 0 + fallback diff-tree; SHA via env; trap cleanup). P2 residui deferred documentati.
+- **Live CI smoke**: primo run sentinel sul merge commit = `success` (14s), 0 issue spurie (path del merge non matchano watch-map). End-to-end validato in produzione.
+- **Privacy gap KNOWLEDGE_MAP §6 RESOLVED**: `.aiderignore` (`docs/ryzen-memory-archive/`) -- archivio contiene memory sovereign (vault + personali) dentro repo cloud-whitelisted. aider lo onora per auto-context E add esplicito, copre TUTTI i wrapper local+cloud (preferito a path-check fragile nei 6 .cmd, anti-pattern #11). Smoke PASS ("Skipping ... matches aiderignore spec").
+- **2 lessons AA01**: L-038 (ESM CLI entry-point guard pathToFileURL, non `file://` literal -- POSIX-only, smoke locale Windows silently rotto vs CI verde) + L-039 (required-check + path-filter "skipping" blocca merge -> admin-merge, governance-gated).
+
+### Da fare (residuo)
+- **Merge governance Game**: usato `--admin` (branch-protection pitfall, autorizzato Eduardo). Pattern salvato (memory `reference_game_branch_protection.md` + L-039) per futuri PR Game tooling-only.
+- Sentinel ora osserva Game main: alla prima drift reale -> issue `sot-drift-candidate` -> invocare `sot-drift-verifier` on-demand per verdetto.
+- Reconcile vault SoT §24.6 epigenome (dice ancora "DEFERRED", runtime shipped #2402) = primo caso d'uso reale candidato del sentinel (reuse-queue §7).
+
+### Note metodologiche
+- **QG Step-1 verifica OUTPUT, non exit-code**: il guard CLI POSIX-only usciva 0 senza output su Windows; solo l'assenza del JSON atteso ha smascherato il bug (L-038). "exit 0" != smoke superato.
+- **--admin merge = azione governance forte**: "se ok merge" autorizza merge normale, non override branch-protection -> chiesta auth esplicita prima di `--admin` (boundary external-repo).
+- **Cognitive protocols applied**: P1 Refresh-verify (state worktree + origin/main + tdd-guard + agent registration); P5 harsh-reviewer pre-merge (file CI/governance-critical su repo PUBLIC) -> P1 finding catturato e fixato pre-merge. P6 NO (no design generative, plan gia esistente). tdd-guard hook ancora attivo post-restart -> disabilitato via config.json come da handoff.
