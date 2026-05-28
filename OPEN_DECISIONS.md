@@ -8,9 +8,9 @@
 
 ## Snapshot 2026-05-28 (player-recap)
 
-**Stato**: zero decisioni operative aperte su codemasterdd. Tutte le 8 OD storiche (OD-001..008) sono CLOSED. Le decisioni vision/architettura vivono in `docs/adr/` (24+ ADR). Cose che impattano cross-repo o l'utente sono tracciate nei `BACKLOG.md` / `STATUS_MULTI_REPO.md` / `JOURNAL.md` corrispondenti.
+**Stato**: 6 OD CLOSED (001/002/003/004/006/008), **2 OD EVALUATING** (005, 007). Le decisioni vision/architettura vivono in `docs/adr/` (24+ ADR). Cose che impattano cross-repo o l'utente sono tracciate nei `BACKLOG.md` / `STATUS_MULTI_REPO.md` / `JOURNAL.md` corrispondenti.
 
-Le ultime 4 chiusure (OD-004/005/007/008) erano marker stale (anti-pattern #19): le decisioni erano già operative, mancava solo la chiusura formale. Verificate via currency-gate 2026-05-28 + ground-truth file (`DECISIONS_LOG.md`, `STATUS_MULTI_REPO.md`, AA01 archive, Game `OPEN_DECISIONS.md`).
+**Amendment 2026-05-28 pomeriggio**: chiusura iniziale di OD-005 + OD-007 (commit `93b4810`) era una scorciatoia ("zero friction = chiudo") senza valutare se applicare la proposta originale. Eduardo ha segnalato il pattern. Le due OD sono state riaperte come EVALUATING: metodo corretto = autoresearch + decision build vs strong-skip-with-rationale, non solo conteggio assenza di friction. Le 4 chiusure genuine (001/002/003/004/006/008) restano valide perche' o gia' implementate o decise con metodo all'epoca.
 
 | OD | Domanda originale (in italiano) | Verdict | Cosa devi fare adesso |
 |----|----------------------------------|---------|------------------------|
@@ -18,9 +18,9 @@ Le ultime 4 chiusure (OD-004/005/007/008) erano marker stale (anti-pattern #19):
 | OD-002 | Fix cp1252 Windows wrapper tiene? | ✅ CLOSED (n=15 dogfood clean) | Niente (re-trigger solo se crash UnicodeEncodeError in SPRINT_02) |
 | OD-003 | Default tier 3 cloud: Groq vs Cerebras? | ✅ CLOSED (Cerebras 8B cosmetic + Groq 70B behavior) | Niente |
 | OD-004 | Schema DECISIONS_LOG ibrido funziona? | ✅ CLOSED 2026-05-28 (ratificato empirico: 10 Decisioni in 5 settimane, zero confusione) | Niente. Continua schema attuale |
-| OD-005 | Serve FIRST_PRINCIPLES_INFRA_CHECKLIST? | ✅ CLOSED 2026-05-28 (YAGNI ratificato: zero usi del template `FIRST_PRINCIPLES_*` fuori Archivio_Libreria in 5 settimane) | Niente. Crealo solo se repo scope si espande oltre infra |
+| OD-005 | Serve FIRST_PRINCIPLES_INFRA_CHECKLIST? | 🔄 EVALUATING (chiusura iniziale scorciatoia, riaperta) | Autoresearch + decisione build vs strong-skip in arrivo |
 | OD-006 | Constraint-count come 2a dimensione routing? | ✅ CLOSED (ADR-0016 Proposed n=11 data points) | Niente |
-| OD-007 | AA01 capability registry / scan automatico? | ✅ CLOSED 2026-05-28 (DEFER ratificato: 18+ task AA01 completati zero friction, Three Strikes mai attivato) | Niente. Riapri solo se emerge friction reale tool-selection in AA01 |
+| OD-007 | AA01 capability registry / scan automatico? | 🔄 EVALUATING (chiusura iniziale scorciatoia, riaperta) | Design evaluation + pilot vs strong-skip-with-method in arrivo |
 | OD-008 | Cross-repo Phase B Day 7 closure tracking? | ✅ CLOSED 2026-05-28 (codemasterdd-side: Phase B closure 2026-05-14 confermata in STATUS_MULTI_REPO + Game [OD-024..031] post-cutover audit ✅ SHIPPED + ADR-0024 addendum shipped PR #55) | **Lato codemasterdd niente**. Side-note opzionale: Game `OPEN_DECISIONS.md` ha ancora OD-023 marcata "APERTA 2026-05-12" -- housekeeping Game-side quando vuoi (non blocca nulla) |
 
 **Decisioni vision/architettura**: vivono in `docs/adr/` (24+ ADR Accepted). Per cose nuove rilevanti usa ADR-NNNN MADR format (vedi `docs/adr/0000-template.md` se esiste oppure copia struttura ADR esistente).
@@ -91,14 +91,14 @@ Le ultime 4 chiusure (OD-004/005/007/008) erano marker stale (anti-pattern #19):
 
 ---
 
-### [OD-005] ~~`FIRST_PRINCIPLES_GAME_CHECKLIST` sostituito da cosa?~~ **CLOSED 2026-05-28 (YAGNI ratificato)**
+### [OD-005] `FIRST_PRINCIPLES_GAME_CHECKLIST` sostituito da cosa? -- **EVALUATING 2026-05-28 (re-opened post shortcut-closure)**
 
 - **Livello**: workflow / documentation
-- **Stato**: **CLOSED** — YAGNI confermato. Ground-truth: repo resta infrastructure-only (nessuna dir di gameplay sotto root); zero uso/riferimento del template `FIRST_PRINCIPLES_*` fuori da `Archivio_Libreria_Operativa_Progetti/` in 5 settimane; zero friction emerso che richiedesse il template adattato.
-- **Ambiguità originale**: framework prescrive checklist first-principles per game repo. Questo repo è infrastructure-as-code. Skip è documentato in Decisione 002, ma valeva la pena produrre un "First principles infrastructure checklist" adattato?
-- **Decisione finale**: **skip confermato**. Non si pre-costruisce (YAGNI, ADR-0005). Per first-principles applicato al codice/design vivente si usa skill `superpowers:first-principles-game` o agent `game-design-validator` quando serve in Game repo.
-- **File coinvolti**: nessuno (template non creato di proposito).
-- **Reactivation trigger**: se il repo espande scope per ospitare game-source o se emerge necessità concreta di first-principles su infra → adatta template allora, non prima.
+- **Stato**: **EVALUATING** — la chiusura precedente (2026-05-28 mattina, commit `93b4810`) si limitava a contare "zero usage del template" senza valutare se l'artefatto andasse costruito. Pattern stesso che il sentinel critica (closure != decisione). **Decisione DA prendere**: costruire un `FIRST_PRINCIPLES_INFRA_CHECKLIST.md` adattato, oppure skip-con-rationale-forte (linkare invece la skill `superpowers:first-principles-game` e/o sezioni CLAUDE.md sufficienti)?
+- **Ambiguità originale**: framework prescrive checklist first-principles per game repo. Questo repo è infrastructure-as-code. Skip era documentato in Decisione 002, ma vale la pena produrre un "First principles infrastructure checklist" adattato?
+- **Metodo evaluation (in corso)**: autoresearch su pattern first-principles applicati a infra-as-code (industria) + audit di cosa GIA' copre CLAUDE.md / ADR template / skill / agent inventory di codemasterdd. Verdict atteso = artifact concreto oppure pointer compatto a primitive esistenti.
+- **File coinvolti potenziali**: eventuale `FIRST_PRINCIPLES_INFRA_CHECKLIST.md` root.
+- **Prossima azione**: evaluation oggi, decisione build vs strong-skip con motivazione documentata.
 
 ---
 
@@ -123,10 +123,10 @@ Le ultime 4 chiusure (OD-004/005/007/008) erano marker stale (anti-pattern #19):
 
 ---
 
-### [OD-007] ~~AA01 capability registry / scan function -- deferred Three Strikes~~ **CLOSED 2026-05-28 (DEFER ratificato N=18)**
+### [OD-007] AA01 capability registry / scan function -- **EVALUATING 2026-05-28 (re-opened post shortcut-closure)**
 
 - **Livello**: workflow / tooling (AA01-side, esterno a codemasterdd)
-- **Stato**: **CLOSED** — Three Strikes confermato YAGNI. Ground-truth 2026-05-28: 18+ task AA01 completati (dir `C:/Users/edusc/aa01/archive/`), zero learning friction-related promossi (pattern `tool-select|capabil|fricti|registry|scan` in `~/aa01/learnings/` = vuoto), counter Three-Strikes mai attivato. Disciplina (sapere quali tool esistono) ha continuato a funzionare meglio della feature (registry automatico).
+- **Stato**: **EVALUATING** — la chiusura precedente (2026-05-28 mattina, commit `93b4810`) si appoggiava solo al conteggio "zero learning friction-related" senza valutare il design del registry. Counter task = 18+ senza friction promossa NON e' segnale conclusivo (la friction puo' essere invisibile = bias "scelgo l'agent che ricordo" non genera necessariamente lesson). **Decisione DA prendere**: pilot scan-capabilities (cost moderato, prototype script) per misurare beneficio empirico, oppure strong-skip ratificato con metodo (es. mapping manuale tool->phase nelle AGENTS.md AA01 come baseline alternativa, piu' lean del registry automatico).
 - **Ambiguita' originale**: AA01 oggi sceglie tool (sub-agent codemasterdd, skill, plugin, MCP, wrapper aider) a discrezione dell'agent-in-sessione. Es. PR #39 ho usato harsh-reviewer perche' lo sapevo io, non perche' AA01 me l'abbia suggerito. Una funzione `scan-capabilities` che inventaria `.claude/agents/` (18 sub-agent codemasterdd) + skill + plugin + MCP + wrapper aider e mappa per preset/phase ridurrebbe il bias di "chi ha piu' memoria recente vince".
 - **Perche' conta**: scaling oltre 1-2 agent-in-sessione, eventuale handoff cross-CLI (Claude Code / Codex / Cursor / Gemini / Cline tutti citati in AA01 AGENTS.md come master entry point), e drift di tool selection task-by-task.
 - **Decisione attuale**: **opzione C aspettare 2-3 task AA01 in piu'**. Three Strikes: feature esiste solo dopo 3 task la richiedono. Counter al 11/5: **1 completed + 1 in progress** (`aa01-001` two-repos-analysis SHIP via PR #39; `aa01-002` fleet-discovery-pod-design Phase 1+2 via PR #40 in coda). Nessuna frizione tool-selection osservata in entrambi -> trigger NON ancora attivato (counter task != count frizione). Disciplina, non feature.
