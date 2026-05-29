@@ -19,6 +19,33 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-05-29 (coop-WS session_id/campaign_id surface -- 3 PR Opt A + Lenovo pull)
+
+Next-session resumption post handoff `2026-05-28 notte`. Items 1-3 handoff DONE da Ryzen (`DESKTOP-T77TMKT`).
+
+### Completato
+- **Cross-fleet pull Lenovo** (item 1): Game/Godot/vault ff-pulled via SSH da Ryzen (read+pull = libero). Lenovo full-synced (Game `3d298f32`, Godot `41bac36`, vault `15887c7da`, codemasterdd gia' `3104d1c`). vault Lenovo-side = ff puro (eng-graph divergence vive solo Ryzen).
+- **Coop-WS surface decision** (item 2): **Opt A** (estendi `phase_change` payload). Grounding: orch non conosce `session_id` (host chiama `/session/start`), `campaign_id == run.id`.
+- **T2/T4 implement** (item 3) -- 3 PR TDD:
+  - **Game #2422** PR-0: extract `buildPhaseChangePayload` helper (no-behavior, 24 test).
+  - **Game #2423** PR-1: `session_id`+`campaign_id` su **VERSIONED** `Room.publishPhaseChange` + `coopStore.linkSession` + `/session/start` link (270 coop+net test). *Course-correction mid-PR*: peer `coop_ws_peer.gd:655` droppa plain version-less `phase_change` -> surface = canale versioned Room.
+  - **Godot #366** PR-2: `PhoneCoopIds` cache + `PhoneAlienaLoader` + mount dispatch (2818 GUT pass, gdformat+gdlint clean, composer 999<1000 cap).
+  - Chiude **T4** (ALIENA chart auto-fetch) + **T2** (tribes campaign_id), i 2 stop-condition deferred handoff.
+
+### Da fare (next session)
+- **Merge order Eduardo**: #2422 -> #2423 -> #366 (PR-2 mergeable indipendente, no-op se id assenti).
+- Handoff **#4** Sec22-B mating roll initiator (big-scope design-call, brainstorming).
+- Handoff **#5** Enforcement ALIENA (data-driven post-collection GET /aliena-telemetry).
+- Handoff **#6** Token cost baseline (legacy task 15).
+- Spawn task: commit `.uid` mancanti Godot (drift #361/#362).
+
+### Note
+- **SDMG**: runtime (peer routing) ha falsificato assunzione "publishPhaseChange non su ALIENA path" -> corretto mid-PR-1 (Room surface). Lesson candidate: verificare consumer-side routing PRIMA di scegliere broadcast surface.
+- **Anti-pattern #12 manifest**: `Set-Content -Encoding utf8` PS5.1 = BOM+mojibake su `.gd` loader -> gdlint fail. Fix: `[IO.File]::WriteAllText` ASCII-only no-BOM.
+- **tdd-guard Game**: Write-tool blocca impl premature anche con helper gia' esistente+testato -> Option B heredoc/shell post-RED (metodologia handoff).
+
+---
+
 ## 2026-05-28 (post-closure: T13 Ryzen cross-fleet deploy verified, Lenovo .10)
 
 Sessione breve next-session resumption post handoff `2026-05-28-handoff-closure.md`. Compass DI 81/100 (rotta coerente, drift `knowledge-preservation` non actionable per handoff). Next-smallest-step = T13 Ryzen deploy.
