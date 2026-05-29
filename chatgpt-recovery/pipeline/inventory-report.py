@@ -43,6 +43,8 @@ def dir_stats(d: Path):
 
 
 def main():
+    """Generates a comprehensive markdown inventory report detailing conversation and file statistics.
+    The report aggregates data across the regular bucket, projects, and memory items."""
     args = parse_args()
     root = args.input
     today = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
