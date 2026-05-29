@@ -27,9 +27,13 @@ def parse_args():
     return p.parse_args()
 
 
+_IT_MARKERS_RE = re.compile('\\b(che|della|degli|delle|sono|essere|sua|suo|nei|questo|pi\u00f9|per\u00f2|come|perch\u00e9)\\b', re.IGNORECASE)
+_EN_MARKERS_RE = re.compile(r'\b(the|and|with|that|for|this|from|have|been|use)\b', re.IGNORECASE)
+
+
 def detect_lang(text):
-    it = len(re.findall(r'\b(che|della|degli|delle|sono|essere|sua|suo|nei|questo|più|però|come|perché)\b', text, re.IGNORECASE))
-    en = len(re.findall(r'\b(the|and|with|that|for|this|from|have|been|use)\b', text, re.IGNORECASE))
+    it = len(_IT_MARKERS_RE.findall(text))
+    en = len(_EN_MARKERS_RE.findall(text))
     if it > en + 3:
         return 'it'
     if en > it + 3:
@@ -90,7 +94,7 @@ def enrich_card(card_path: Path, dry_run: bool):
 
     # Append new fields to frontmatter
     new_fields = [
-        f'enriched: true',
+        'enriched: true',
         f'msg_count_bucket: {bucket}',
         f'date_year: {date_year}',
         f'has_image_refs: {str(has_img).lower()}',
@@ -134,7 +138,7 @@ def main():
     print(f'\nEnrichment stats: {stats}')
     print(f'Total cards: {len(cards)}')
     if args.dry_run:
-        print('(DRY RUN — no files written)')
+        print('(DRY RUN -- no files written)')
 
 
 if __name__ == '__main__':

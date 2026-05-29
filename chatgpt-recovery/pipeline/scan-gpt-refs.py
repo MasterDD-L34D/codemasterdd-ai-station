@@ -14,7 +14,7 @@ import argparse
 import json
 import re
 import sys
-from collections import defaultdict, Counter
+from collections import defaultdict
 from datetime import datetime
 from pathlib import Path
 
@@ -118,14 +118,14 @@ def main():
     lines = [
         '---',
         f'id: chatgpt-recovery-gpt-refs-{today}',
-        f'type: index',
-        f'status: live',
+        'type: index',
+        'status: live',
         f'created: {today}',
-        f'collection: chatgpt-recovery-2026-05-14',
-        f'tags: [index, chatgpt-import, gpt-references, third-party-gpts]',
+        'collection: chatgpt-recovery-2026-05-14',
+        'tags: [index, chatgpt-import, gpt-references, third-party-gpts]',
         '---',
         '',
-        f'# ChatGPT — Shared GPT references detected ({today})',
+        f'# ChatGPT -- Shared GPT references detected ({today})',
         '',
         f'Scanned {len(json_files)} conversation JSONs for Custom GPT URLs (`chat.openai.com/g/g-...`).',
         f'Distinct GPTs referenced: **{len(gpt_refs)}**',
@@ -147,7 +147,7 @@ def main():
     lines.extend(['', '## Per-GPT conversation list (sample top 20)', ''])
     for gpt_id, refs in sorted_refs[:20]:
         slug = sorted(gpt_slugs[gpt_id])[0] if gpt_slugs[gpt_id] else '(no slug)'
-        lines.append(f'### `{gpt_id}` — {slug} ({len(refs)} refs)')
+        lines.append(f'### `{gpt_id}` -- {slug} ({len(refs)} refs)')
         lines.append('')
         for r in refs[:8]:
             lines.append(f'- `{r["conv_id"]}` {r["conv_title"][:60]}')

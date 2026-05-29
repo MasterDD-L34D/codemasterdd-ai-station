@@ -6,7 +6,6 @@ Each conv has a realistic OpenAI 'mapping' tree shape with 4-8 messages.
 """
 
 import json
-import os
 import uuid
 from datetime import datetime, timedelta
 from pathlib import Path
@@ -22,7 +21,6 @@ def make_conv(title: str, project_name: str = None, messages_data: list = None, 
 
     # Build linear mapping tree
     mapping = {}
-    parent_id = None
     root_id = str(uuid.uuid4())
     # Root node (no message)
     mapping[root_id] = {'id': root_id, 'message': None, 'parent': None, 'children': []}
@@ -123,7 +121,7 @@ def main():
             ('user', 'My d20 + STR combat: average roll is 13, mid-game STR is 5. So 18 vs DC. DC tier 1 = 15, tier 2 = 20. Feels too forgiving early.'),
             ('assistant', 'Math right. To tighten: raise DC tier 1 to 17 (75% hit), or reduce starting STR to 3 (avg 16 vs 15 = 60% hit). Sweet spot for D&D-style is 60-70% hit early, 45-55% mid, 35-45% late.'),
             ('user', 'Critical fails?'),
-            ('assistant', 'Critical fail on natural 1 = consider auto-miss + minor penalty (drop weapon, slip). Adds variance + memorable moments. Not just "miss" — narrative consequence.'),
+            ('assistant', 'Critical fail on natural 1 = consider auto-miss + minor penalty (drop weapon, slip). Adds variance + memorable moments. Not just "miss" -- narrative consequence.'),
         ]),
         ('Onboarding: first 5 min new player', [
             ('user', 'New player onboarding: what should they understand in first 5 minutes?'),
@@ -151,7 +149,7 @@ def main():
         ]),
         ('UniUPO thesis structure proposal', [
             ('user', 'My UniUPO thesis is on synesthesia + cognition. Structure suggestions?'),
-            ('assistant', 'Standard 5-chapter: 1. Intro+definitions, 2. Literature review, 3. Methods/your contribution, 4. Results, 5. Discussion+future work. Keep methods rigorous — review boards focus there.'),
+            ('assistant', 'Standard 5-chapter: 1. Intro+definitions, 2. Literature review, 3. Methods/your contribution, 4. Results, 5. Discussion+future work. Keep methods rigorous -- review boards focus there.'),
             ('user', 'Original contribution? I cant do an experiment.'),
             ('assistant', 'Meta-analysis of existing studies is valid original work. Or theoretical synthesis bridging cognitive neuroscience + phenomenology. Both publishable, no IRB needed.'),
         ]),

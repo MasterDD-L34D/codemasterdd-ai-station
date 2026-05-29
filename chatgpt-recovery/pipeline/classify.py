@@ -22,7 +22,6 @@ Usage:
 
 import argparse
 import json
-import os
 import re
 import sys
 from collections import defaultdict
@@ -30,11 +29,9 @@ from datetime import datetime
 from pathlib import Path
 from typing import Iterator
 
-import frontmatter
 import numpy as np
 import ollama
 from bertopic import BERTopic
-from sentence_transformers import SentenceTransformer
 from sklearn.feature_extraction.text import CountVectorizer
 from tqdm import tqdm
 from umap import UMAP
@@ -501,7 +498,7 @@ def write_outputs(output_dir: Path, docs: list[dict], topics: list[int], labels:
     log(f'Outputs written to {output_dir}')
     log(f'  - conversations-classified.json ({len(docs_with_topics)} docs)')
     log(f'  - topics-summary.md ({len(set(topics))} topics)')
-    log(f'  - bertopic-model/ (re-loadable)')
+    log('  - bertopic-model/ (re-loadable)')
 
 
 def main():

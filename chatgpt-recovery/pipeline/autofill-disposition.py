@@ -43,7 +43,7 @@ RULES = [
     # Worldbuilding / storyline
     (['beatrice', 'red-alfa', 'kalekot', 'cercatori-altare', 'mondo-fantasy',
       'syron'], 'PROMOTE', 'GDR/MondoFantasy'),
-    # Pathfinder generic (broad — keep after specific campaigns)
+    # Pathfinder generic (broad -- keep after specific campaigns)
     (['pathfinder', 'druidi', 'lich-filatterio', 'magus', 'armi-potenziamento',
       'item-craft', 'loot', 'antipaladino', 'dispel-magic', 'ap-companion',
       'bardo', 'attacchi-combattere', 'build-combattimento', 'build-personaggio',

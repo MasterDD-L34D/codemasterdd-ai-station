@@ -24,11 +24,9 @@ import hashlib
 import json
 import re
 import sys
-from collections import defaultdict
 from datetime import datetime
 from pathlib import Path
 
-from tqdm import tqdm
 
 
 def parse_args():
@@ -113,9 +111,13 @@ def message_to_text(msg):
     return ''
 
 
+_IT_MARKERS_RE = re.compile('\\b(che|della|degli|delle|sono|essere|sua|suo|nei|questo|questa|pi\u00f9|per\u00f2|come|quindi|perch\u00e9)\\b', re.IGNORECASE)
+_EN_MARKERS_RE = re.compile(r'\b(the|and|with|that|for|this|from|have|been|use|user)\b', re.IGNORECASE)
+
+
 def detect_language(text):
-    it = len(re.findall(r'\b(che|della|degli|delle|sono|essere|sua|suo|nei|questo|questa|più|però|come|quindi|perché)\b', text, re.IGNORECASE))
-    en = len(re.findall(r'\b(the|and|with|that|for|this|from|have|been|use|user)\b', text, re.IGNORECASE))
+    it = len(_IT_MARKERS_RE.findall(text))
+    en = len(_EN_MARKERS_RE.findall(text))
     if it > en:
         return 'it'
     if en > 3:
@@ -167,8 +169,8 @@ def atomize_conv(conv_json, conv_path, project_slug, project_name, output_dir, m
         fm = [
             '---',
             f'id: {card_id}',
-            f'type: card',
-            f'status: live',
+            'type: card',
+            'status: live',
             f'created: {today}',
             f'language: {lang}',
             f'collection: {project_slug}',
@@ -178,7 +180,7 @@ def atomize_conv(conv_json, conv_path, project_slug, project_name, output_dir, m
             f'source_section: "msg-{atom["msg_idx"]:03d}-{atom["role"]}"',
             f'source_sha256: {sha}',
             f'char_count: {len(text)}',
-            f'card_type: chat-atom',
+            'card_type: chat-atom',
             f'role: {atom["role"]}',
             f'project_name: {yaml_escape(project_name)}',
             f'conv_id: {conv_id}',
@@ -216,13 +218,13 @@ def atomize_conv(conv_json, conv_path, project_slug, project_name, output_dir, m
     src_lines = [
         '---',
         f'id: chatgpt-{project_slug}-{conv_id_short}-source',
-        f'type: card',
-        f'status: live',
+        'type: card',
+        'status: live',
         f'created: {today}',
         f'collection: {project_slug}',
         f'tags: [card, {project_slug}, chatgpt-import, source]',
         f'last_verified: {today}',
-        f'card_type: chat-conv-source',
+        'card_type: chat-conv-source',
         f'conv_id: {conv_id}',
         f'conv_title: {yaml_escape(conv_title)}',
         f'project_name: {yaml_escape(project_name)}',
@@ -290,8 +292,8 @@ def main():
         idx_lines = [
             '---',
             f'id: {project_slug}-preview-index',
-            f'type: moc',
-            f'status: live',
+            'type: moc',
+            'status: live',
             f'created: {datetime.now().strftime("%Y-%m-%d")}',
             f'collection: {project_slug}',
             f'card_count: {proj_atom_count}',
@@ -299,7 +301,7 @@ def main():
             f'tags: [moc, {project_slug}, chatgpt-import, project-preview]',
             '---',
             '',
-            f'# {project_name} — Preview MOC',
+            f'# {project_name} -- Preview MOC',
             '',
             f'Per-project atomize preview. {proj_conv_count} conv processed, {proj_atom_count} atoms.',
             '',
@@ -325,15 +327,15 @@ def main():
     # Cross-project summary
     summary_lines = [
         '---',
-        f'id: chatgpt-project-preview-index',
-        f'type: index',
-        f'status: live',
+        'id: chatgpt-project-preview-index',
+        'type: index',
+        'status: live',
         f'created: {datetime.now().strftime("%Y-%m-%d")}',
-        f'collection: chatgpt-recovery-2026-05-14',
-        f'tags: [index, chatgpt-import, project-preview]',
+        'collection: chatgpt-recovery-2026-05-14',
+        'tags: [index, chatgpt-import, project-preview]',
         '---',
         '',
-        f'# ChatGPT Project Preview — Cross-project summary',
+        '# ChatGPT Project Preview -- Cross-project summary',
         '',
         f'Generated: {datetime.now().isoformat()}',
         f'Total projects processed: {len(cross_proj_summary)}',

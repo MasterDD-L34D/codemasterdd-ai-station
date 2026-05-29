@@ -14,21 +14,18 @@ Usage:
 
 import argparse
 import json
-import os
-from collections import defaultdict
 from datetime import datetime
 from pathlib import Path
 
 
 PROJECT_EXPECTED = {
     'Progetto Gioco Evo Tactics': 541,
-    'Le Sfide dell’Arena di Hao Jin': 592,  # apostrophe variant
+    'Le Sfide dell'Arena di Hao Jin': 592,  # apostrophe variant
     "Le Sfide dell'Arena di Hao Jin": 592,
     'Creazione gpts Master DD': 624,
     'Il mio Mondo Fantasy': 168,
     'Torneo Cremesi': 106,
     'M\xc9ZI\xc8RES PRO 2025: Corso ed Esercitazioni Manuali': 88,
-    'MÉZIÈRES PRO 2025: Corso ed Esercitazioni Manuali': 88,
     'pg forge': 78,
     'Valdombra': 16,
     'Campagna supporto': 9,
@@ -108,11 +105,11 @@ def main():
     # ETA estimate (rough)
     # Pace at slow rate: ~1 conv/3min for projects
     pace_min_per_conv = 3
-    remaining_proj = sum(max(0, expected - disk_proj.get(name.replace(' ', '_').replace(':', '_').replace("'", '_').replace('’', '_'), 0)) for name, expected in PROJECT_EXPECTED.items() if expected > 0)
+    remaining_proj = sum(max(0, expected - disk_proj.get(name.replace(' ', '_').replace(':', '_').replace("'", '_').replace(''', '_'), 0)) for name, expected in PROJECT_EXPECTED.items() if expected > 0)
     eta_hours = remaining_proj * pace_min_per_conv / 60
 
     lines = [
-        f'# ChatGPT Recovery — Live Dashboard',
+        '# ChatGPT Recovery -- Live Dashboard',
         f'_Generated: {today.isoformat()}_',
         '',
         '## Bulk export state',
@@ -120,7 +117,7 @@ def main():
         '### Regular + archived bucket',
         '',
         f'- Downloaded: **{regular_count} / {regular_expected}** ({100*regular_count/regular_expected:.1f}%)',
-        f'- Status: **PIVOT-PAUSED** (waiting Phase 5)',
+        '- Status: **PIVOT-PAUSED** (waiting Phase 5)',
         '',
         '### Project bucket (PRIORITY)',
         '',
@@ -151,8 +148,8 @@ def main():
         '### Aggregate',
         '',
         f'- Total files downloaded: {total_files}',
-        f'- Memory items: {"✅ fetched" if memory_present else "❌ missing"}',
-        f'- Custom Instructions: {"✅ fetched" if ci_present else "❌ missing"}',
+        f'- Memory items: {"[PASS] fetched" if memory_present else "[FAIL] missing"}',
+        f'- Custom Instructions: {"[PASS] fetched" if ci_present else "[FAIL] missing"}',
         '',
         '## Pipeline scripts',
         '',
@@ -164,16 +161,16 @@ def main():
     for script in sorted(pipeline_dir.glob('*.py')):
         if script.name == 'live-dashboard.py':
             continue
-        lines.append(f'| `pipeline/{script.name}` | ✅ ready |')
+        lines.append(f'| `pipeline/{script.name}` | [PASS] ready |')
 
     scripts_dir = pipeline_dir.parent / 'scripts'
     if scripts_dir.is_dir():
         for script in sorted(scripts_dir.glob('*.py')):
-            lines.append(f'| `scripts/{script.name}` | ✅ ready |')
+            lines.append(f'| `scripts/{script.name}` | [PASS] ready |')
         for script in sorted(scripts_dir.glob('*.ps1')):
-            lines.append(f'| `scripts/{script.name}` | ✅ ready |')
+            lines.append(f'| `scripts/{script.name}` | [PASS] ready |')
         for script in sorted(scripts_dir.glob('*.js')):
-            lines.append(f'| `scripts/{script.name}` | ✅ ready |')
+            lines.append(f'| `scripts/{script.name}` | [PASS] ready |')
 
     lines.extend([
         '',
@@ -205,17 +202,17 @@ def main():
         '',
         '## Key artifacts (test-fixtures/)',
         '',
-        '- `partial-classification-661/` — 25 topic snapshot',
-        '- `partial-cards-661/` — 18,194 vault-convention Cards',
-        '- `project-preview/` — per-project preview Cards (Evo-Tactics 40 conv -> 2258 atoms)',
-        '- `entities-index-v2.md` — 200 entity candidates',
-        '- `vault-collisions-2026-05-14.md` — 127 candidate duplicates',
-        '- `review-sample-661.md` — 143-card stratified review template',
-        '- `chatgpt-recovery-2026-05-14-moc.md` — Atlas MOC skeleton',
+        '- `partial-classification-661/` -- 25 topic snapshot',
+        '- `partial-cards-661/` -- 18,194 vault-convention Cards',
+        '- `project-preview/` -- per-project preview Cards (Evo-Tactics 40 conv -> 2258 atoms)',
+        '- `entities-index-v2.md` -- 200 entity candidates',
+        '- `vault-collisions-2026-05-14.md` -- 127 candidate duplicates',
+        '- `review-sample-661.md` -- 143-card stratified review template',
+        '- `chatgpt-recovery-2026-05-14-moc.md` -- Atlas MOC skeleton',
         '',
         '## Critical reminders',
         '',
-        '- Bearer JWT: `%TEMP%/chatgpt-bearer.env` (NTFS ACL edusc+SYSTEM). Also in Claude Code session jsonl — ROTATE post-pipeline.',
+        '- Bearer JWT: `%TEMP%/chatgpt-bearer.env` (NTFS ACL edusc+SYSTEM). Also in Claude Code session jsonl -- ROTATE post-pipeline.',
         '- vault-shared sibling-peer NO-WRITE boundary: writes require Eduardo OK esplicito',
         '- Rate limit OpenAI server-side: NO bypass legitimate (autoresearch confirmed)',
         '- Resumable: laptop sleep OK, brianjlacy resumes from .export-progress.json',

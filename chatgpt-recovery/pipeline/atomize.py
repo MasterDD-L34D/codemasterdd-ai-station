@@ -147,10 +147,14 @@ def yaml_escape(s):
     return f'"{s}"'
 
 
+_IT_MARKERS_RE = re.compile('\\b(che|della|degli|delle|sono|essere|sua|suo|nei|questo|questa|pi\u00f9|per\u00f2|come|quindi|perch\u00e9)\\b', re.IGNORECASE)
+_EN_MARKERS_RE = re.compile(r'\b(the|and|with|that|for|this|from|have|been|use|user)\b', re.IGNORECASE)
+
+
 def detect_language(text):
     """Heuristic: italian if dominant, else default english/mixed."""
-    it_markers = len(re.findall(r'\b(che|della|degli|delle|sono|essere|sua|suo|nei|questo|questa|più|però|come|quindi|perché)\b', text, re.IGNORECASE))
-    en_markers = len(re.findall(r'\b(the|and|with|that|for|this|from|have|been|use|user)\b', text, re.IGNORECASE))
+    it_markers = len(_IT_MARKERS_RE.findall(text))
+    en_markers = len(_EN_MARKERS_RE.findall(text))
     if it_markers > en_markers:
         return 'it'
     if en_markers > 3:
@@ -161,7 +165,7 @@ def detect_language(text):
 def build_card_content(doc, msg, msg_idx, role, total_msgs, conv_title, prev_atom, next_atom):
     """Build markdown content with resolved wikilinks (no wildcards).
     prev_atom / next_atom: dicts with 'filename_stem' or None.
-    Length filtering is done in pass 1 by caller — no threshold here.
+    Length filtering is done in pass 1 by caller -- no threshold here.
 
     Frontmatter aligned with vault-shared conventions (Explore agent finding 2026-05-14):
     id, type:card, status:live, created, language, collection, source_ref, source_sha256, char_count.
@@ -189,8 +193,8 @@ def build_card_content(doc, msg, msg_idx, role, total_msgs, conv_title, prev_ato
         '---',
         # Vault-convention universal (100%)
         f'id: {card_id}',
-        f'type: card',
-        f'status: live',
+        'type: card',
+        'status: live',
         f'created: {today}',
         # Common (80-100%)
         f'language: {language}',
@@ -203,7 +207,7 @@ def build_card_content(doc, msg, msg_idx, role, total_msgs, conv_title, prev_ato
         f'source_sha256: {sha256}',
         f'char_count: {char_count}',
         # ChatGPT-specific (extension)
-        f'card_type: chat-atom',
+        'card_type: chat-atom',
         f'role: {role}',
         f'topic_label: {doc["topic_label"]}',
         f'topic_id: {doc["topic_id"]}',
@@ -253,15 +257,15 @@ def write_conv_source_card(source_path_out, doc, conv_title, all_atoms):
     fm_lines = [
         '---',
         f'id: chatgpt-{conv_id_uniq}-source',
-        f'type: card',
-        f'status: live',
+        'type: card',
+        'status: live',
         f'created: {today}',
         f'collection: {collection}',
         f'tags: [card, {collection}, chatgpt-import, source]',
         f'last_verified: {today}',
         f'source_ref: {yaml_escape(doc.get("source_path") or "")}',
         f'atom_count: {len(all_atoms)}',
-        f'card_type: chat-conv-source',
+        'card_type: chat-conv-source',
         f'conv_id: {doc["id"]}',
         f'conv_title: {yaml_escape(conv_title)}',
         f'topic_label: {doc["topic_label"]}',
@@ -372,7 +376,7 @@ def main():
             write_conv_source_card(source_card_path, doc, conv_title, all_atoms)
             stats['convs_processed'] += 1
 
-    log(f'\n=== Atomize stats ===')
+    log('\n=== Atomize stats ===')
     log(f'Atoms written: {stats["atoms_written"]}')
     log(f'Conversations processed: {stats["convs_processed"]}')
     log(f'Skipped (read err / missing source): {stats["skipped"]}')

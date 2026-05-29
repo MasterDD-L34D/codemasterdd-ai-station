@@ -49,7 +49,7 @@ def api_get(url, bearer, account_id):
             return resp.status, json.loads(resp.read().decode('utf-8'))
     except urllib.error.HTTPError as e:
         return e.code, None
-    except Exception as e:
+    except Exception:
         return 0, None
 
 
@@ -158,7 +158,7 @@ def main():
 
     args.output.mkdir(parents=True, exist_ok=True)
 
-    print(f'Fetching memories...')
+    print('Fetching memories...')
     status, mem_data = api_get(f'{API_BASE}/memories', bearer, account_id)
     if status == 200 and mem_data:
         (args.output / 'memory-items.json').write_text(json.dumps(mem_data, indent=2, ensure_ascii=False), encoding='utf-8')
@@ -167,12 +167,12 @@ def main():
     else:
         print(f'  FAILED: status={status}')
 
-    print(f'Fetching custom instructions...')
+    print('Fetching custom instructions...')
     status, ci_data = api_get(f'{API_BASE}/user_system_messages', bearer, account_id)
     if status == 200 and ci_data:
         (args.output / 'custom-instructions.json').write_text(json.dumps(ci_data, indent=2, ensure_ascii=False), encoding='utf-8')
         (args.output / 'custom-instructions.md').write_text(instructions_to_md(ci_data), encoding='utf-8')
-        print(f'  OK: instructions saved')
+        print('  OK: instructions saved')
     else:
         print(f'  FAILED: status={status}')
 

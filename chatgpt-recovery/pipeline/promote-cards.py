@@ -26,10 +26,8 @@ Usage:
 """
 
 import argparse
-import hashlib
 import json
 import re
-import shutil
 import sys
 from datetime import datetime
 from pathlib import Path
@@ -77,7 +75,7 @@ def parse_review_md(md_path: Path):
 
 
 def load_cross_ref(path: Path):
-    """Parse minimal YAML — only project_to_space + tag_to_space sections.
+    """Parse minimal YAML -- only project_to_space + tag_to_space sections.
     Stdlib-only to avoid PyYAML dep (already transitive via BERTopic but kept light)."""
     content = path.read_text(encoding='utf-8')
     # Naive parser: look for "label:\n  space: \"X\"" patterns
@@ -132,7 +130,7 @@ def update_card_frontmatter(card_path: Path, decision: dict, staging_root: Path)
 
     added_lines = []
     if 'imported_from:' not in fm:
-        added_lines.append(f'imported_from: chatgpt-recovery-2026-05-14')
+        added_lines.append('imported_from: chatgpt-recovery-2026-05-14')
     if 'imported_at:' not in fm:
         added_lines.append(f'imported_at: {today}')
     if 'original_path:' not in fm:
@@ -250,7 +248,7 @@ def main():
     print(f'HOLD / DISCARD: {len(skipped_dispositions)} (no action)', file=sys.stderr)
 
     if args.dry_run:
-        print('\n=== DRY RUN — no files will be written ===', file=sys.stderr)
+        print('\n=== DRY RUN -- no files will be written ===', file=sys.stderr)
 
     results = []
     for d in promote_decisions:
@@ -273,7 +271,7 @@ def main():
 
     total_copied = sum(r.get('copied', 0) for r in results)
     total_errors = sum(r.get('errors', 0) for r in results)
-    print(f'\n=== Summary ===', file=sys.stderr)
+    print('\n=== Summary ===', file=sys.stderr)
     print(f'Topics promoted: {len([r for r in results if r.get("copied", 0) > 0])}', file=sys.stderr)
     print(f'Cards copied: {total_copied}', file=sys.stderr)
     print(f'Errors: {total_errors}', file=sys.stderr)

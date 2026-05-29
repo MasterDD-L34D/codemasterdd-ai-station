@@ -6,7 +6,7 @@ Identifies proper nouns / named entities (characters, locations, concepts) appea
 across conversations. Useful as vault taxonomy seed for autotag + cross-link.
 
 Method: heuristic capitalized-word frequency analysis on titles + sample messages.
-NOT LLM-based (avoid latency). Output is candidate list — Eduardo curates.
+NOT LLM-based (avoid latency). Output is candidate list -- Eduardo curates.
 
 Output: entities-index.md with frequency table + per-entity conv list.
 """
@@ -26,11 +26,11 @@ SKIP_WORDS = {
     'L', 'La', 'Le', 'Il', 'Lo', 'Gli', 'Un', 'Una', 'Uno', 'Del', 'Della', 'Dei', 'Delle',
     'Per', 'Con', 'Da', 'In', 'Su', 'Tra', 'Fra', 'A', 'Al', 'Allo', 'Alla', 'Alle', 'Ai', 'Agli',
     'Sul', 'Sulla', 'Sullo', 'Sui', 'Sugli', 'Sulle', 'Coi', 'Cogli', 'Colle',
-    'E', 'Ed', 'O', 'Od', 'Ma', 'Se', 'Mentre', 'Quando', 'Dove', 'Perché', 'Poiché',
+    'E', 'Ed', 'O', 'Od', 'Ma', 'Se', 'Mentre', 'Quando', 'Dove', 'Perch\u00e9', 'Poich\u00e9',
     # Italian common verbs (often sentence-start capitalized)
-    'Sono', 'Sei', 'Siamo', 'Siete', 'Sia', 'Sarà', 'Era', 'Eri', 'Eravate', 'Erano',
+    'Sono', 'Sei', 'Siamo', 'Siete', 'Sia', 'Sar\u00e0', 'Era', 'Eri', 'Eravate', 'Erano',
     'Ho', 'Hai', 'Ha', 'Abbiamo', 'Avete', 'Hanno', 'Avere', 'Essere',
-    'Posso', 'Puoi', 'Può', 'Possiamo', 'Potete', 'Possono', 'Potrebbe', 'Potrebbero',
+    'Posso', 'Puoi', 'Pu\u00f2', 'Possiamo', 'Potete', 'Possono', 'Potrebbe', 'Potrebbero',
     'Voglio', 'Vuoi', 'Vuole', 'Vogliamo', 'Volete', 'Vogliono', 'Vorrei', 'Vorrebbe',
     'Devo', 'Devi', 'Deve', 'Dobbiamo', 'Dovete', 'Devono', 'Dovrebbe',
     'Faccio', 'Fai', 'Fa', 'Facciamo', 'Fate', 'Fanno', 'Fare',
@@ -69,11 +69,11 @@ SKIP_WORDS = {
     'Yes', 'No', 'Ok', 'Sure', 'Maybe', 'Perhaps',
     # Italian/English numeral words
     'Io', 'Tu', 'Lui', 'Lei', 'Noi', 'Voi', 'Loro',
-    'Sì', 'Si',
+    'S\u00ec', 'Si',
     # ChatGPT-specific noise
     'Eduardo', 'User', 'Assistant', 'ChatGPT', 'GPT', 'Gpts', 'GPTs', 'Master',
     'Pathfinder',  # dominates frequency, skip (real domain noise)
-    'Razza', 'Classe', 'Abilità',  # generic GDR terms
+    'Razza', 'Classe', 'Abilit\u00e0',  # generic GDR terms
 }
 
 
@@ -94,7 +94,7 @@ def extract_entities_from_text(text):
         return []
     # Multi-word capitalized phrases (e.g., "Hao Jin", "Master DD")
     # Match: word starting with uppercase, possibly followed by another uppercase word
-    pattern = re.compile(r"\b([A-ZÀÈÌÒÙÁÉÍÓÚ][a-zàèìòùáéíóúñç']+(?:[ -][A-ZÀÈÌÒÙÁÉÍÓÚ][a-zàèìòùáéíóúñç']+)*)\b")
+    pattern = re.compile("\\b([A-Z\u00c0\u00c8\u00cc\u00d2\u00d9\u00c1\u00c9\u00cd\u00d3\u00da][a-z\u00e0\u00e8\u00ec\u00f2\u00f9\u00e1\u00e9\u00ed\u00f3\u00fa\u00f1\u00e7\']+(?:[ -][A-Z\u00c0\u00c8\u00cc\u00d2\u00d9\u00c1\u00c9\u00cd\u00d3\u00da][a-z\u00e0\u00e8\u00ec\u00f2\u00f9\u00e1\u00e9\u00ed\u00f3\u00fa\u00f1\u00e7\']+)*)\\b")
     candidates = pattern.findall(text)
     return [c for c in candidates if c not in SKIP_WORDS and len(c) >= 3]
 
@@ -133,14 +133,14 @@ def main():
     lines = [
         '---',
         f'id: chatgpt-recovery-entities-{today}',
-        f'type: index',
-        f'status: live',
+        'type: index',
+        'status: live',
         f'created: {today}',
-        f'collection: chatgpt-recovery-2026-05-14',
-        f'tags: [index, entities, chatgpt-import]',
+        'collection: chatgpt-recovery-2026-05-14',
+        'tags: [index, entities, chatgpt-import]',
         '---',
         '',
-        f'# ChatGPT Recovery — Entity Index ({today})',
+        f'# ChatGPT Recovery -- Entity Index ({today})',
         '',
         f'Heuristic proper-noun frequency analysis on {len(docs)} classified conversations.',
         f'Top {len(top)} entities (frequency >= {args.min_freq}).',
@@ -180,8 +180,8 @@ def main():
         '## Usage hints',
         '',
         '- High-freq entities (>= 10) likely warrant dedicated vault tags (`tag-<slug>`)',
-        '- Character/NPC entities → vault Spaces/GDR/CharacterForge/ candidates',
-        '- Location entities → worldbuilding tags',
+        '- Character/NPC entities -> vault Spaces/GDR/CharacterForge/ candidates',
+        '- Location entities -> worldbuilding tags',
         '- Eduardo curates: remove false positives (auto-detected sometimes catches phrases)',
         '',
     ])

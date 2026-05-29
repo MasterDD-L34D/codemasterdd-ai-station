@@ -82,7 +82,7 @@ def main():
     # Build review markdown
     today = datetime.now().strftime('%Y-%m-%d')
     lines = [
-        f'# ChatGPT Recovery — Review Sample ({today})',
+        f'# ChatGPT Recovery -- Review Sample ({today})',
         '',
         f'Generated: {datetime.now().isoformat()}',
         f'Total classified docs: {len(classified_docs)}',
@@ -134,7 +134,7 @@ def main():
             conv_id_short = (s.get('id') or 'unknown')[:8]
             title = s.get('title', '(no title)')[:80].replace('|', '\\|')
             proj = f" [{s.get('project_name')}]" if s.get('project_name') else ''
-            archived = ' 📦' if s.get('is_archived') else ''
+            archived = ' [ARCHIVED]' if s.get('is_archived') else ''
             msg_count = s.get('message_count', '?')
             create = s.get('create_time', '?')
             if isinstance(create, (int, float)):
@@ -147,11 +147,10 @@ def main():
             card_pattern = f'{conv_id_short}_*'
             existing_cards = list(cards_dir.glob(f'{card_pattern}.md')) if cards_dir.is_dir() else []
 
-            lines.append(f'- [ ] `{conv_id_short}` **{title}**{proj}{archived} — {msg_count} msgs, {create}')
+            lines.append(f'- [ ] `{conv_id_short}` **{title}**{proj}{archived} -- {msg_count} msgs, {create}')
             if existing_cards:
                 lines.append(f'  - Cards: {len(existing_cards)} atoms in [[{label}/]]')
                 # Link to source card + first atom
-                source_link = f'{label}/{conv_id_short}_source.md'
                 lines.append(f'  - Source: [[{label}/{conv_id_short}_source|{title}]]')
 
         lines.append('')
@@ -165,7 +164,7 @@ def main():
     lines.append(f'- Total topics: {len(by_topic)}')
     lines.append(f'- Total docs: {len(classified_docs)}')
     lines.append(f'- Estimated review effort: ~{total_sample} cards across all topics')
-    lines.append(f'- Sampling method: sqrt-based stratification (Plan agent Phase 4 recommendation)')
+    lines.append('- Sampling method: sqrt-based stratification (Plan agent Phase 4 recommendation)')
     lines.append('')
 
     args.output.parent.mkdir(parents=True, exist_ok=True)

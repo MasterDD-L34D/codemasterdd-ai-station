@@ -79,10 +79,14 @@ def detect_tags(content):
     return sorted(tags)
 
 
+_IT_MARKERS_RE = re.compile('\\b(che|della|degli|delle|sono|essere|sua|suo|nei|questo|questa|pi\u00f9|per\u00f2|come|quindi|perch\u00e9|sempre|per\u00f2)\\b', re.IGNORECASE)
+_EN_MARKERS_RE = re.compile(r'\b(the|and|with|that|for|this|from|have|been|were|been|use|user)\b', re.IGNORECASE)
+
+
 def detect_language(content):
     """Heuristic: italian if mostly italian words, else default."""
-    italian_markers = re.findall(r'\b(che|della|degli|delle|sono|essere|sua|suo|nei|questo|questa|più|però|come|quindi|perché|sempre|però)\b', content, re.IGNORECASE)
-    english_markers = re.findall(r'\b(the|and|with|that|for|this|from|have|been|were|been|use|user)\b', content, re.IGNORECASE)
+    italian_markers = _IT_MARKERS_RE.findall(content)
+    english_markers = _EN_MARKERS_RE.findall(content)
     if len(italian_markers) > len(english_markers):
         return 'italian'
     elif len(english_markers) > 5:
@@ -174,15 +178,15 @@ def write_card(item, idx, output_dir):
         '---',
         # Vault-convention universal
         f'id: chatgpt-memory-{mem_id[:12] if mem_id else idx}',
-        f'type: card',
-        f'status: live',
+        'type: card',
+        'status: live',
         f'created: {today}',
         # Common
         f'language: {lang_code}',
-        f'collection: chatgpt-memory',
+        'collection: chatgpt-memory',
         f'tags: [{", ".join(all_tags)}]',
         f'last_verified: {today}',
-        f'source_ref: chatgpt-export-2026-05-14/memory-items.json',
+        'source_ref: chatgpt-export-2026-05-14/memory-items.json',
         # Metadata
         f'source_section: "memory-item-{mem_id[:8] if mem_id else idx}"',
         f'source_sha256: {sha256}',
@@ -191,7 +195,7 @@ def write_card(item, idx, output_dir):
         f'pii_tags: [{pii_tags_str}]',
         f'canonical_audience: {audience}',
         # ChatGPT-memory extension
-        f'card_type: chatgpt-memory',
+        'card_type: chatgpt-memory',
         f'chatgpt_memory_id: {mem_id}',
         f'chatgpt_memory_updated: {updated}',
         f'title: {yaml_escape(title)}',
@@ -230,7 +234,7 @@ def write_index(output_dir, cards_meta):
     sorted_tags = sorted(tag_freq.items(), key=lambda x: -x[1])
 
     lines = [
-        f'# Memory Cards Index -- 2026-05-14',
+        '# Memory Cards Index -- 2026-05-14',
         '',
         f'Generated: {datetime.now().isoformat()}',
         f'Total cards: {len(cards_meta)}',

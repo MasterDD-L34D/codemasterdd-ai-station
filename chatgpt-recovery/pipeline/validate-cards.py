@@ -6,7 +6,7 @@ Scans Cards for:
   - Missing required frontmatter fields (id, type, status, created, collection, source_ref)
   - Frontmatter parse errors (malformed YAML lines)
   - Orphan wikilinks (target file doesn't exist locally)
-  - Very short body content (<30 char) — likely atomize edge case
+  - Very short body content (<30 char) -- likely atomize edge case
   - Encoding issues (mojibake patterns)
   - Duplicate IDs across cards
 
@@ -61,7 +61,7 @@ def extract_wikilinks(body):
 
 def find_mojibake(text):
     """Detect common mojibake patterns (UTF-8 decoded as cp1252)."""
-    patterns = ['Ã©', 'Ã¨', 'Ã ', 'Ã²', 'Ã¹', 'â€™', 'â€"', 'â€"', 'â€œ', 'â€']
+    patterns = ['\xc3\x83\xc2\xa9', '\xc3\x83\xc2\xa8', '\xc3\x83\x20', '\xc3\x83\xc2\xb2', '\xc3\x83\xc2\xb9', '\xc3\xa2\xe2\x82\xac\xe2\x84\xa2', '\xc3\xa2\xe2\x82\xac"', '\xc3\xa2\xe2\x82\xac"', '\xc3\xa2\xe2\x82\xac\xc5\x93', '\xc3\xa2\xe2\x82\xac']
     return [p for p in patterns if p in text]
 
 
@@ -157,26 +157,26 @@ def main():
         f'| Malformed YAML | {len(findings["malformed_yaml"])} | P1 |',
         f'| Short body (<30 char) | {len(findings["short_body"])} | P1 |',
         f'| Mojibake patterns | {len(findings["mojibake"])} | P2 |',
-        f'| Orphan wikilinks | {len(findings["orphan_wikilinks"])} | P2 |' if args.check_wikilinks else '| Orphan wikilinks | (skipped -- use --check-wikilinks) | — |',
+        f'| Orphan wikilinks | {len(findings["orphan_wikilinks"])} | P2 |' if args.check_wikilinks else '| Orphan wikilinks | (skipped -- use --check-wikilinks) | -- |',
         '',
     ]
 
     if findings['missing_fields']:
-        lines.extend(['## P0 — Missing required FM fields', ''])
+        lines.extend(['## P0 -- Missing required FM fields', ''])
         for path, missing in findings['missing_fields'][:50]:
-            lines.append(f'- `{path}` — missing: {", ".join(missing)}')
+            lines.append(f'- `{path}` -- missing: {", ".join(missing)}')
         if len(findings['missing_fields']) > 50:
             lines.append(f'- ... ({len(findings["missing_fields"]) - 50} more)')
         lines.append('')
 
     if findings['no_frontmatter']:
-        lines.extend(['## P0 — No frontmatter', ''])
+        lines.extend(['## P0 -- No frontmatter', ''])
         for path in findings['no_frontmatter'][:30]:
             lines.append(f'- `{path}`')
         lines.append('')
 
     if findings['duplicate_ids']:
-        lines.extend(['## P0 — Duplicate IDs', ''])
+        lines.extend(['## P0 -- Duplicate IDs', ''])
         for card_id, paths in list(findings['duplicate_ids'].items())[:20]:
             lines.append(f'- `{card_id}`:')
             for p in paths:
@@ -184,21 +184,21 @@ def main():
         lines.append('')
 
     if findings['short_body']:
-        lines.extend(['## P1 — Short body (<30 char)', ''])
-        for path, l in findings['short_body'][:30]:
-            lines.append(f'- `{path}` — {l} chars')
+        lines.extend(['## P1 -- Short body (<30 char)', ''])
+        for path, length in findings['short_body'][:30]:
+            lines.append(f'- `{path}` -- {length} chars')
         if len(findings['short_body']) > 30:
             lines.append(f'- ... ({len(findings["short_body"]) - 30} more)')
         lines.append('')
 
     if findings['mojibake']:
-        lines.extend(['## P2 — Mojibake patterns detected', ''])
+        lines.extend(['## P2 -- Mojibake patterns detected', ''])
         for path, patterns in findings['mojibake'][:20]:
-            lines.append(f'- `{path}` — patterns: {patterns}')
+            lines.append(f'- `{path}` -- patterns: {patterns}')
         lines.append('')
 
     if findings['orphan_wikilinks'] and args.check_wikilinks:
-        lines.extend(['## P2 — Orphan wikilinks (top 30)', ''])
+        lines.extend(['## P2 -- Orphan wikilinks (top 30)', ''])
         # Count per orphan target
         orphan_freq = defaultdict(int)
         for src, tgt in findings['orphan_wikilinks']:
@@ -215,12 +215,12 @@ def main():
     lines.extend([
         '## Verdict',
         '',
-        f'- P0 issues: **{p0}** {"❌ FIX REQUIRED" if p0 > 0 else "✅ clean"}',
+        f'- P0 issues: **{p0}** {"[FAIL] FIX REQUIRED" if p0 > 0 else "[PASS] clean"}',
         f'- P1 issues: **{p1}** ({100*p1/total:.1f}% of cards)',
         f'- P2 issues: **{p2}** (cosmetic)',
         '',
-        f'Pass threshold: P0 = 0 AND P1 < 5% of cards.',
-        f'Result: **{"PASS" if p0 == 0 and p1 < total * 0.05 else "FAIL — review fixes"}**',
+        'Pass threshold: P0 = 0 AND P1 < 5% of cards.',
+        f'Result: **{"PASS" if p0 == 0 and p1 < total * 0.05 else "FAIL -- review fixes"}**',
         '',
     ])
 
