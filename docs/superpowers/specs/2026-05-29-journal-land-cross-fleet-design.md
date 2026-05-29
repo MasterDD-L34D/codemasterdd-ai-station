@@ -167,3 +167,43 @@ parallel subagents (Workflow) and/or `harsh-reviewer`. P0 findings block; P1 fix
 - Helper runs identically on Lenovo + Ryzen (PowerShell + git + SSH push); Ryzen degrades to
   push-only without losing content.
 - cross-fleet-reproducibility pillar (Compass) no longer flags journal-branch drift.
+
+## 11. Revision 2026-05-29 -- worktree isolation (supersedes the sec 3/6 mechanics)
+
+The first shipped helper (stash + `git switch -c` in the SHARED working tree) was exercised
+live and failed; a bug hunt of the on-main version found three real defects. The originating
+incident: a session ran the helper while the shared clone's HEAD was on a CONCURRENT session's
+branch -- the helper switched HEAD away from it.
+
+Defects (in the stash+switch design):
+- **B (shared-clone HEAD switch, significant):** `git stash push` + `git switch -c <branch>` mutate
+  the shared working tree's HEAD. On a clone shared by concurrent Claude Code sessions, this yanks
+  HEAD out from under another session. Root cause of the originating incident.
+- **#3 (wrong-stash drop, significant):** `git stash drop` / `pop` with no ref operate on
+  `stash@{0}` = the NEWEST stash = possibly a concurrent session's stash, not `journal-land-temp`.
+- **C (delete-branch false negative, minor):** `gh pr merge --delete-branch` ran while the journal
+  branch was still checked out -> local delete fails -> gh returns non-zero -> the script printed
+  "auto-merge not enabled" even though the merge succeeded.
+
+Fix (the SDMG fix-the-base, not another amendment): **do all branch/commit/push work in a
+THROWAWAY git worktree based on freshly-fetched origin/main; never run `git switch` in the shared
+tree.** Revised data flow:
+```
+session edits JOURNAL.md (newest-first, after the --- divider)
+   -> journal-land.ps1 -Subject "docs(journal): <desc>"
+      -> git fetch origin main
+      -> git stash push -u -m <UNIQUE-TAG> -- <paths>   (carry edit off the SHARED tree)
+      -> resolve OUR stash by tag (git stash list) -> $stashRef   (never stash@{0})  [fixes #3]
+      -> git worktree add -b claude/journal-<host>-<date> <TEMP> origin/main  [fixes B: no switch]
+      -> git -C <TEMP> stash apply $stashRef        (apply edit in the worktree; conflict -> abort+restore)
+      -> hash-compare each path vs pre-stash hash   (silent 3-way detect; abort unless -AcceptMerge)
+      -> git stash drop $stashRef                   (by ref)  [fixes #3]
+      -> git -C <TEMP> add/commit -F <tmp> ; git -C <TEMP> push -u origin <branch>
+      -> git worktree remove --force <TEMP>         (free the branch BEFORE gh)  [fixes C]
+      -> gh authed? create PR [+ auto-merge --squash --delete-branch] : push-only notice (Ryzen)
+      -> git branch -D <branch>                     (shared HEAD was NEVER switched -> no return needed)
+```
+The safety contract (origin/main base, hash-based silent-merge detection + `-AcceptMerge`,
+exit-code-checked recovery, ASCII-no-BOM `-F` commit, gh-graceful Ryzen path, conventional-subject
+fail-fast) is preserved unchanged. The helper interface (sec 4) is unchanged. Verified by a live
+dogfood land + a different-model `harsh-reviewer` pass (SDMG external falsification, Protocol 7).
