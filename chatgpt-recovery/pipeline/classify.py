@@ -40,6 +40,7 @@ from tqdm import tqdm
 from umap import UMAP
 from hdbscan import HDBSCAN
 
+LABEL_PREFIX_RE = re.compile(r'^(label:|topic:|cluster:)\s*')
 
 # Multilingual stopwords (Italian + English common terms that don't carry topic signal)
 ITALIAN_STOPWORDS = [
@@ -436,7 +437,7 @@ def label_topics_with_llm(topic_model, docs, topics, label_model: str, ollama_ho
             raw_label = resp.get('response', '').strip().lower()
             raw_label = raw_label.split('\n')[0].strip().strip('"').strip("'").strip()
             # Strip leading punctuation + "label:" prefix sometimes added by model
-            raw_label = re.sub(r'^(label:|topic:|cluster:)\s*', '', raw_label)
+            raw_label = LABEL_PREFIX_RE.sub('', raw_label)
             raw_label = re.sub(r'[^a-z0-9-]+', '-', raw_label).strip('-')
             label = raw_label[:60] or f'topic-{topic_id}'
             labels[topic_id] = label

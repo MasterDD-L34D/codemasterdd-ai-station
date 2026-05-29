@@ -54,8 +54,11 @@ find .claude/skills -maxdepth 3 -name "SKILL.md" -type f 2>/dev/null
 # 4. USER global skills
 find "$HOME/.claude/skills" -maxdepth 3 -name "SKILL.md" -type f 2>/dev/null
 
-# 5. Plugin agents + skills
+# 5. Plugin agents + skills (PROJECT)
 find .claude/plugins -maxdepth 6 -name "*.md" -type f 2>/dev/null | grep -E "(agents|skills)/"
+
+# 5b. Plugin agents + skills (USER global cache, e.g. caveman cavecrew)
+find "$HOME/.claude/plugins" -maxdepth 6 -name "*.md" -type f 2>/dev/null | grep -E "(agents|skills)/"
 
 # 6. Inline mentions
 grep -lE "^---$" AGENTS.md CLAUDE.md 2>/dev/null

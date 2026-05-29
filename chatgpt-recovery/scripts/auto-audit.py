@@ -52,6 +52,7 @@ def log(msg, *args):
 
 
 def vlog(msg, *args):
+    """Outputs verbose-conditional logging messages."""
     pass  # set via --verbose below
 
 

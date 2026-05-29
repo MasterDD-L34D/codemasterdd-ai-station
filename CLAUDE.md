@@ -531,8 +531,17 @@ Per evitare protocols 5+6 diventino aspirational reactive (stesso pattern P2 aut
 
 ## Aggiornamento JOURNAL
 A fine sessione significativa, aggiungere entry in JOURNAL.md:
-- Data YYYY-MM-DD
+- Data YYYY-MM-DD (newest-first, subito dopo il divisore `---` del template)
 - Sezioni: Completato | Da fare | Note
+
+Poi **landare** la entry con l'helper canonico (vale su ENTRAMBI i PC, Lenovo + Ryzen):
+`powershell -File scripts/fleet/journal-land.ps1 -Subject "docs(journal): <descrizione>"`
+L'helper crea il branch `claude/journal-<host>-<date>`, committa (Conventional + trailer
+ADR-0011), pusha via SSH e apre/auto-mergia la PR (o, dove gh non e' autenticato come su Ryzen,
+pusha comunque -> contenuto su origin, PR follow-up dall'hub). **MAI** journalare su branch
+`chore/`/`docs/` (non matcha la push allow-rule -> resta orfano + recovery manuale); **MAI**
+`git pull` su un feature branch (`git pull --ff-only` solo su main -> evita stray merge).
+Razionale: spec `docs/superpowers/specs/2026-05-29-journal-land-cross-fleet-design.md`.
 
 ## Governance meta-operativa (framework archivio adottato 2026-04-23)
 

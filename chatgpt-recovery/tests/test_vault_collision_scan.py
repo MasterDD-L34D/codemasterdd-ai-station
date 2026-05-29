@@ -33,3 +33,4 @@ def test_tokenize_accents():
 
 def test_tokenize_punctuation():
     assert vcs.tokenize("hello, world! testing-is a test.") == {"hello", "world", "testing", "test"}
+
