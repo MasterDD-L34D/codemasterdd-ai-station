@@ -19,6 +19,23 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-05-29 (journal-land cross-fleet drift fix -- Lenovo .10)
+
+Root-caused + fixed the recurring cross-fleet JOURNAL-branch drift: Ryzen kept stranding `docs(journal)` commits on `chore/journal-*` / `docs/journal-*` branches that never reached origin, forcing manual recovery every session (e.g. PR #214).
+
+### Completato
+- **Root cause** (systematic-debugging + SSH read-only to Ryzen): journal commits used commit-type-prefixed branches that miss the `git push origin claude/*` allow-rule, and Ryzen's gh token is invalid -> the commit never reached origin. Stray `ort` merges came from `git pull` while on a feature branch. Ryzen push itself is healthy (origin=SSH, `ssh -T git@github.com` authenticates). Ruled out with evidence: rogue hook (3 hooks = check/seed only), scheduled task (none), local settings override (none).
+- **Fix shipped (PR #221)**: `scripts/fleet/journal-land.ps1` -- branches `claude/journal-<host>-<date>` from a freshly fetched origin/main, commits (Conventional + ADR-0011 trailers, uuidv7), SSH-pushes (both PCs), PR+auto-merge where gh is authed / graceful push-only where not (Ryzen), never pulls on a feature branch. Plus doctrine: ORCHESTRATION.md sec 6b + CLAUDE.md journal section. This entry was landed via the helper itself (dogfood).
+- **Verification**: QG Step-1 (DryRun + 2 live -Apply sandbox smokes + negatives + uuidv7 confirmed) + 3-lens harsh-reviewer workflow (0 P0; 5 P1 all fixed: silent 3-way-merge guard, rc-checked recovery, Restore-Branch warn-loud returns, detached-HEAD fail-fast, path validation) + confirmation judge = SHIP.
+
+### Note
+- **Multi-session-on-one-clone hazard confirmed LIVE**: mid-task a concurrent session switched the shared codemasterdd HEAD to `docs/ermes-fase2b-knowledge-map`; recovered by isolating my work in a git worktree. Notably that session used a `docs/`-prefixed branch -- the exact anti-pattern this fix kills.
+- **Ryzen gh re-auth** (`gh auth login -h github.com`) is an optional manual upgrade to full Ryzen self-service PR+auto-merge; not required (push-only degrade keeps content safe on origin).
+- Rejected a cross-fleet-drift monitor/cron (anti-pattern #11): Ryzen *can* push, so fixing at the source beats mopping up.
+
+### Da fare
+- Confirm the next Ryzen session adopts `journal-land.ps1` (no new `chore/`/`docs/` journal branches stranding).
+
 ## 2026-05-29 (coop-WS session_id/campaign_id surface -- 3 PR Opt A + Lenovo pull)
 
 Next-session resumption post handoff `2026-05-28 notte`. Items 1-3 handoff DONE da Ryzen (`DESKTOP-T77TMKT`).
