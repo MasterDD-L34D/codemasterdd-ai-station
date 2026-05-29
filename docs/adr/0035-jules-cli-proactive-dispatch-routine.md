@@ -1,6 +1,6 @@
 # ADR-0035 — Jules-from-CLI proactive dispatch as async-remote-agent tier
 
-> Status: **Proposed** (Eduardo ratify) — 2026-05-29
+> Status: **Accepted** — 2026-05-29 (ratified; scoped clean-rate 5/5 = 100% >= 80% gate; see Ratification)
 > Builds on ADR-0034 (Jules autonomous managed-owner, Option D) + ADR-0033 (governance) + standing authorization 2026-05-29 (Claude may answer/archive Jules sessions, R3-bis discipline).
 
 ## TL;DR
@@ -95,7 +95,26 @@ scoped template + digest enumeration); Jules can pollute its VM workspace
 
 **Follow-up (ratify trigger):** after N>=5 scoped-dispatched sessions, measure
 clean-rate. If scoped clean-rate >=80% -> Accepted; if not -> revisit template
-or restrict to doc/test-only tasks. Track in the daily digest.
+or restrict to doc/test-only tasks. Track in the daily digest. **[MET — see Ratification.]**
+
+## Ratification (2026-05-29)
+
+N=5 scoped-dispatched sessions measured. **Clean-rate 5/5 = 100% (>= 80% gate) -> Accepted.**
+
+| # | Session | Task (scoped-strict prompt) | File ASCII-clean | Verdict |
+|---|---|---|---|---|
+| 1 | 10886104925284546195 | module docstring autofill-disposition.py | yes | clean (PR #210) |
+| 2 | 14401300909237995460 | hoist label-prefix regex to module const (classify.py) | yes | clean (behavior verified identical) |
+| 3 | 14781013997603496086 | main() docstring inventory-report.py | yes | clean |
+| 4 | 5881695722392670384 | main() docstring promote-cards.py | yes | clean (21 tests pass) |
+| 5 | 1031649118507799171 | vlog() docstring auto-audit.py | yes | clean |
+
+**Controls that produced the clean rate (load-bearing — keep in the routine):**
+- **Scoped-strict prompt** each: exact file + exact target (named function/regex) + "no logic change" + "ASCII only, no accented chars" + "single-file only".
+- **ASCII-clean target files only.** Confounding finding from the same-day vague wave: Jules **mangles non-ASCII files on rewrite** (mojibake `pi\xc3\xb9`, accent-strip `piu/pero`) regardless of task. The 5/5 used only ASCII-clean files; files containing accented content (e.g. atomize-memory.py language-marker regexes) are landmines and MUST be excluded from Jules dispatch or hand-verified byte-for-byte. Detect with `perl -ne 'exit 1 if /[^\x00-\x7F]/'` (NOT `grep -P`, GNU-only).
+- Ground-truth triage (diff vs origin/main + pytest where a test exists) confirmed each before apply.
+
+**Contrast (why the gate matters):** the unscoped/vague wave the same day ran ~50% defective (mojibake regex, test targeting a non-existent module, tz-wrong assertions, tile_size self-rated Incorrect + workspace pollution). Prompt-scoping + ASCII-file selection is the difference between 100% and ~50%.
 
 ## References
 
