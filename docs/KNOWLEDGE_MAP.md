@@ -40,6 +40,7 @@ Principio: *governance colleziona, ADR delimita, YAML prova, freeze decide, agen
 | Serie core numerata 00-90 | Game `docs/core/NN-*.md` (canonical) + vault shadow | A1-A3 | OK |
 | ADR game-design | vault `Spaces/Dev/Evo-Tactics/adr/` (~42) + Game `docs/adr/` (date-named) | A1 | OK |
 | Modello genetico Fase-1 (D-HEIR/D-REPRO) | vault `core/00-SOURCE-OF-TRUTH.md` §24.6 + `90-FINAL-DESIGN-FREEZE.md` §21.3 (scoped-supersede 2026-05-26) + Game `docs/adr/ADR-2026-05-26-deep-genetics-phase1-supersede-freeze.md` + spec `docs/superpowers/specs/2026-05-26-repro-heir-genetic-model-design.md` | A2-A3 | OK (vault sovereign; Game-side **solo origin**, local 71-behind -- vedi §6) |
+| ERMES runtime bridge (FASE 2/2b) | vault `adr/ADR-2026-05-29-ermes-runtime-bridge.md` (banner FASE-3 not-wired 2026-05-30) + Game `apps/backend/services/coop/ermesExporter.js` + `traitEffects.js` + `services/ermes/*` + `data/core/balance/ermes_bucket_thresholds.yaml` (PR #2428 + #2432) | A1-A2 | OK (plumbing shipped + CI-guarded; combat wiring + N=40 calibration = FASE 3, applyErmesBiomeTraitCosts no caller yet) |
 
 **Regola confronto**: in caso di divergenza reference-vs-SoT, vince A0-A4. vault `core/` (freeze A3) vince per scope-shipping; museum/digest = catalogo alternative + ROI. Drift reference-vs-SoT lo flagga l'agent `evo-tactics-design-watcher` (vault `production/agents/`).
 
