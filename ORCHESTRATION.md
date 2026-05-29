@@ -21,7 +21,7 @@ verdict. Five spokes:
 |-------|------|------------------|
 | Inline-Opus (hub) | strategic, multi-file, synthesis, architecture, ALL verification | (this session) |
 | Local fleet | sovereign, cheap, scoped edits, batch, tagging | `ollama run <model>` / `aider-cosmetic <f>` / `aider-refactor <f>` / `opencode run --model "ollama/qwen3-coder:30b"` / REST `:11434` |
-| Cloud keys | local-insufficient + repo cloud-OK + privacy-guard pass | `aider-groq-bypass`/`aider-cerebras`/`aider-gemini`/`aider-openai`/`aider-hf`/`aider-github-models <f>`; or `llm_call` (MCP llm-fleet once built); keys from `~/.config/api-keys/keys.env` |
+| Cloud keys | local-insufficient + repo cloud-OK + privacy-guard pass | `aider-groq-bypass`/`aider-cerebras`/`aider-gemini`/`aider-openai`/`aider-hf`/`aider-github-models <f>`; fleet-tools MCP (`tavily_search`/`openai_image`/`cross_check`) for services + non-Claude cross-check; keys from `~/.config/api-keys/keys.env` |
 | Jules async | well-defined + acceptance-criteria + scoped chore, whitelisted repo, ASCII-clean target, parallelizable | `jules remote new --repo <o/r> --session "<scoped task>"` + REST `jules.googleapis.com/v1alpha` (list/pull/`:archive`/`:sendMessage`) |
 | In-session subagents / Workflow | parallel read/review/verify; deterministic fan-out | Agent tool (harsh-reviewer, Explore, godot-engine-specialist, ...) ; Workflow tool (opt-in) |
 
@@ -105,7 +105,7 @@ the SDMG gate (eval: `docs/research/2026-05-29-mcp-llm-fleet-eval.md`):
   REJECTED.** No caller: the hub Opus 4.8 is more capable than every callable cloud model;
   cloud-OK edits -> aider-*; sovereign-cheap -> Ollama; async -> Jules. That framing was
   LiteLLM-gateway-redux (OD-009 category). Do not build.
-- **Fleet-tools (services + cross-check judge) -- GO (scoped; build pending dedicated spec).**
+- **Fleet-tools (services + cross-check judge) -- GO (scoped; BUILT 2026-05-29, `apps/fleet-tools-mcp/`, registered in `.mcp.json`).**
   The cloud keys are used WITH Opus, not as competitors: (a) **services Opus lacks** --
   Tavily (web search) + OpenAI image generation; (b) **non-Claude cross-check judge** --
   Gemini/Groq as a DIFFERENT-model-family verifier for high-stakes (true anti-monoculture;

@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "fleet-tools": {
+      "command": "node",
+      "args": ["apps/fleet-tools-mcp/server.mjs"]
+    }
+  }
+}
