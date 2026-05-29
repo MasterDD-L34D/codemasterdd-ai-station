@@ -64,3 +64,4 @@ def test_extract_entities_skip_words_exact_match(extract_module, monkeypatch):
     monkeypatch.setattr(extract_module, "SKIP_WORDS", {"Mock"})
     func = extract_module.extract_entities_from_text
     assert "Mockingbird" in func("leggere Mockingbird")
+

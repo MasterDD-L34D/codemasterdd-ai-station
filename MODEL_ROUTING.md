@@ -1,5 +1,9 @@
 # MODEL_ROUTING
 
+> **Consolidated 2026-05-29 (ADR-0036):** the cross-executor routing authority is now
+> `ORCHESTRATION.md`. This file is the LOCAL-FLEET detail (llmfit / Ollama 2-machine).
+> For "which executor for task X" (local vs cloud vs Jules vs inline) see ORCHESTRATION.md.
+
 > Compilato dal template `Archivio_Libreria_Operativa_Progetti/04_BOOTSTRAP_KIT/MODEL_ROUTING.md` con stack reale codemasterdd-ai-station.
 >
 > Source-of-truth per routing strategico. Per istruzioni operative in-session vedi `CLAUDE.md` "Priorità modelli AI". Questo file è il **perché** strategico, CLAUDE.md è il **come** operativo.
