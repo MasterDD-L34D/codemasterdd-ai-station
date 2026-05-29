@@ -35,14 +35,19 @@ Next-session resumption post handoff `2026-05-28 notte`. Items 1-3 handoff DONE 
   - **Game #2426**: `orch.voteMating`/`matingTally` + `mating_tally` broadcast + REST `/coop/mating/vote` + identity telemetry + **`mating_vote` WS intent handler** (wsSession). 270 backend coop/net test green.
   - **Godot #368** (stacked su #366): `PhoneMatingView` + `PhoneMatingLoader` + nest in PhoneDebriefView + `PhoneMatingWire` (forward tally + `send_vote` via WS intent). 2823 GUT pass, gdlint clean, composer al cap 1000.
   - *Course-correction #2 (SDMG)*: phone vota via WS intent (come ogni player action) NON REST -> aggiunto `mating_vote` WS intent handler, rimosso REST `MatingApi` unused.
-  - **Task 8** (offspring birth on resolve) = **deferred**: bloccato su port Nido/mating Godot (port-pending SoT Sec24; roll engine vive solo backend `meta.js` + web host archiviato).
+  - **Task 8** (offspring birth on resolve) = **SHIPPED backend** (`#2431`, plan `#369`). Correzione blocco: NON serve port Godot -- `meta.js rollOffspring` idrata geni da `creatureEpigenomeStore` by `(campaignId, unitId)`, quindi roll server-side con solo parent IDs + `run.id`. orch persist `run.survivors` + idempotent `resolveMatingWinner` (valida pair vs survivors -- Codex P1); additive `coopMatingResolver` (epigenome-hydrated, meta.js untouched, Codex P2 epigenomeConfig); WS `mating_vote` handler + REST -> roll su quorum -> `mating_resolved` broadcast. Loop completo: phone vote -> quorum -> nascita server-side -> broadcast. Godot offspring-reveal UI = follow-up minore.
+
+### Merge completion (sessione 2026-05-29)
+- **10 PR merged** (Eduardo-authorized, review+Codex-fix+merge): Game #2422/#2430(re #2423)/#2426/#2431 · Godot #366/#367/#368/#369 · codemasterdd #212 · vault #214.
+- Codex P0/P1/P2 tutti risolti inline (sessionId/matingVotes clear, tap+rehydrate, host-quorum, pair-validate, epigenomeConfig).
+- **Gotcha merge stacked-squash**: `--delete-branch` su base con figlio stacked CHIUDE il figlio (#2423 auto-closed -> recovery `rebase --onto` + nuovo #2430). Lesson: merge base senza delete, retarget figlio, poi delete base.
 
 ### Da fare (next session)
-- **Merge order Eduardo**: Game #2422 -> #2423 -> #2426 ; Godot #366 -> #368 ; #367 (docs indip).
-- **S22-B Task 8**: offspring birth on `mating_tally.all_connected_voted` -- richiede port meta-loop (Nido/mating/rollOffspring) in Godot. Roadmap item separato.
-- Handoff **#5** Enforcement ALIENA (data-driven post-collection GET /aliena-telemetry).
-- Handoff **#6** Token cost baseline (legacy task 15).
-- Spawn task: commit `.uid` mancanti Godot (drift #361/#362).
+- Handoff **#5** Enforcement ALIENA: machinery shippable config-gated (veto spawn/weight per SoT Sec21), threshold tuning data-driven post-collection. NON iniziato.
+- S22-B Task 8 Godot offspring-reveal UI (consumer `mating_resolved`) -- minore.
+- 4 stray Game PR out-of-scope: #2424/#2428/#2429/#2385 (review propria).
+- ~~#6 Token cost baseline~~ DONE (snapshot 2026-05: cloud $0.0148/0.074%, no nuovo spend Ryzen).
+- ~~Spawn .uid drift~~ DONE da Jules #365.
 
 ### Note
 - **SDMG**: runtime (peer routing) ha falsificato assunzione "publishPhaseChange non su ALIENA path" -> corretto mid-PR-1 (Room surface). Lesson candidate: verificare consumer-side routing PRIMA di scegliere broadcast surface.
