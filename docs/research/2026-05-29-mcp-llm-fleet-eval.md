@@ -53,6 +53,32 @@ adoption rule), NOT by a tool with an empty caller-set.
 a needed raw cloud completion -- and then the narrowest form is a curl snippet in a runbook,
 not a process.
 
+## CORRECTION (2026-05-29, Eduardo reframe -- human overrule of an over-narrow gate)
+
+The eval above evaluated ONE framing: a general completion-routing MCP (`llm_call` to
+weaker cloud models for normal tasks). That framing is correctly **REJECTED** -- it stands.
+But Eduardo clarified the actual intent: the cloud keys are used **WITH** Opus, not as
+competitors -- for cross-check / diverse-POV inside multi-agent steps, deferrable sub-tasks,
+and **services Opus lacks**. This defeats the harsh-reviewer's "no caller" axis for a
+DIFFERENT, scoped design:
+
+- **Services (no hub equivalent):** Tavily web search; OpenAI image generation. The
+  "hub is more capable" argument does not apply -- Opus cannot generate images or run
+  Tavily. Clear callers.
+- **Non-Claude cross-check judge:** Gemini/Groq as a DIFFERENT-model-family verifier for
+  high-stakes. This is the doctrine's own anti-monoculture mandate -- and note the
+  harsh-reviewer is itself a Claude subagent (same family = partial monoculture), which is
+  exactly why it under-weighted the diverse-POV value. A non-Claude second opinion is
+  strictly better for catching shared blind spots.
+
+**Corrected verdict:** general completion-routing MCP = **REJECT** (gold-plating, stands).
+A **scoped fleet-tools MCP = GO** -- `tavily_search` + `openai_image` + `cross_check(model,
+prompt)`, keys.env, used inside multi-agent steps. NOT cost-routing, NOT LiteLLM-redux. The
+build goes through its own SDMG-minimal spec/plan (where the scoped design is itself
+falsified before code). Lesson: an automated gate run by a same-family judge can be
+over-aggressive on diversity value; the human decider is the correct overrule for that
+exact blind spot.
+
 ## Methodology note
 
 This is the SDMG gate working as designed: self-designed tool = hypothesis -> executed

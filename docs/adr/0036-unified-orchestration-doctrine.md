@@ -12,10 +12,11 @@ Ollama fleet, cloud-key LLMs, Jules async coding agent, in-session subagents/Wor
 Route by capability x cost x privacy x async-fit (cheapest-sufficient-first, <=3 tiers).
 **Mandatory verification gate** with a DIFFERENT-model judge (anti-monoculture). **Autonomy
 ladder**: auto-merge low-risk + external-merge-auto (CI + Codex-auto-review-resolved + fix
-+ judge); irreducible human residue for irreversible/outward-facing/architecture. (A custom MCP
-"llm-fleet" to make cloud keys native tools was proposed but **SDMG-REJECTED 2026-05-29** --
-no caller + gateway-redux; keys stay reached via Aider/Jules/Ollama.) Explicit anti-scope:
-no LangGraph/CrewAI/AutoGen/LiteLLM-redux.
++ judge); irreducible human residue for irreversible/outward-facing/architecture. Tooling: a general
+completion-routing MCP was **SDMG-REJECTED** (no caller; gateway-redux), but a **scoped
+fleet-tools MCP = GO** -- services Opus lacks (Tavily search, OpenAI image-gen) + a
+non-Claude cross-check judge (anti-monoculture), used WITH Opus, not as competitors.
+Explicit anti-scope: no LangGraph/CrewAI/AutoGen/LiteLLM-redux.
 
 ## Context
 
@@ -54,13 +55,18 @@ Establish the doctrine operationalized in `ORCHESTRATION.md`:
    different-model judge OK; irreducible human residue = irreversible/destructive,
    outward-facing, account-credential, external-comms, ADR-class architecture,
    low-automated-confidence. Standing allow-rules for verified-safe action classes.
-5. **Spoke invocation = Bash (wrappers/CLI/REST), no new tooling.** A custom MCP
-   "llm-fleet" (`llm_call` over keys.env) was proposed to make cloud keys native tools;
-   **SDMG-REJECTED 2026-05-29** (eval: `docs/research/2026-05-29-mcp-llm-fleet-eval.md`):
-   no caller (hub more capable than callable cloud models; cloud-OK work = edits -> aider-*),
-   LiteLLM-gateway-redux (OD-009 overhead category), net failure surface. Keys reached via
-   Aider edit-wrappers + Jules CLI + Ollama REST; discoverability handled by the
-   ORCHESTRATION.md invocation table + adoption rule.
+5. **Spoke invocation = Bash today; one SCOPED fleet-tools MCP = GO (build via own spec).**
+   The SDMG gate (eval: `docs/research/2026-05-29-mcp-llm-fleet-eval.md`) separated two
+   designs: (i) a general completion-routing MCP (`llm_call` to weaker cloud models for
+   normal tasks) -- **REJECTED** (no caller -- hub more capable; cloud-OK work = edits ->
+   aider-*; LiteLLM-gateway-redux per OD-009). (ii) a **fleet-tools MCP -- GO**: services
+   the hub lacks (Tavily `tavily_search`, OpenAI `openai_image`) + a non-Claude
+   `cross_check(model, prompt)` judge (DIFFERENT-model-family verification = true
+   anti-monoculture; the harsh-reviewer is itself Claude). These are used WITH Opus inside
+   multi-agent steps (cross-check, diverse-POV, deferrable, missing-capability), have real
+   doctrine-aligned callers, and are NOT cost-routing. Keys from keys.env. Build is
+   SDMG-minimal via its own spec/plan. Bash wrappers + Jules CLI + Ollama REST remain for
+   their existing edit/dispatch roles.
 6. **Anti-scope**: no heavy orchestration framework; no Docker/proxy/observability stack
    for the tooling layer.
 

@@ -98,16 +98,25 @@ allow-listed: the irreducible residue in sec 5.
 
 10 keys in `~/.config/api-keys/keys.env` (ANTHROPIC, CEREBRAS, GEMINI, GITHUB_MODELS,
 GOOGLE_GENERATIVE_AI, GROQ, HUGGINGFACE, JULES, OPENAI, TAVILY). Cloud/Jules/local spokes
-are invoked via Bash (wrappers/CLI/REST) -- they are NOT native tools, and that is the
-chosen design. A custom MCP "llm-fleet" (`llm_call`) was proposed and **REJECTED 2026-05-29
-(SDMG NO-GO)**: it has no caller (the hub Opus 4.8 is more capable than every callable
-cloud model; cloud-OK work is edits -> aider-*; sovereign-cheap -> Ollama; async -> Jules),
-it is LiteLLM-gateway-redux (the OD-009 overhead category), and it adds net failure surface
-for ~zero gain. Eval: `docs/research/2026-05-29-mcp-llm-fleet-eval.md`. The keys are reached
-via the Aider edit-wrappers + Jules CLI + Ollama REST (proven). Adoption rule (sec 3): reach
-for the cheapest-sufficient spoke; do not default to inline-Opus out of forgetfulness.
-Re-open the tool only at n>=2 logged call-sites where REST/wrapper genuinely blocked a
-needed raw cloud completion (then: a curl snippet in a runbook, not a process).
+are invoked via Bash (wrappers/CLI/REST). Two distinct tooling questions were separated by
+the SDMG gate (eval: `docs/research/2026-05-29-mcp-llm-fleet-eval.md`):
+
+- **General completion-routing MCP (`llm_call` to weaker cloud models for normal tasks) --
+  REJECTED.** No caller: the hub Opus 4.8 is more capable than every callable cloud model;
+  cloud-OK edits -> aider-*; sovereign-cheap -> Ollama; async -> Jules. That framing was
+  LiteLLM-gateway-redux (OD-009 category). Do not build.
+- **Fleet-tools (services + cross-check judge) -- GO (scoped; build pending dedicated spec).**
+  The cloud keys are used WITH Opus, not as competitors: (a) **services Opus lacks** --
+  Tavily (web search) + OpenAI image generation; (b) **non-Claude cross-check judge** --
+  Gemini/Groq as a DIFFERENT-model-family verifier for high-stakes (true anti-monoculture;
+  harsh-reviewer alone is Claude = same family = partial monoculture); (c) deferrable /
+  diverse-POV sub-tasks inside a multi-agent step. These have real, doctrine-aligned callers
+  and are NOT cost-routing. Minimal MCP exposing `tavily_search`, `openai_image`, and
+  `cross_check(model, prompt)`; keys from keys.env. SDMG-minimal build via its own spec/plan.
+
+The keys are reached today via Aider edit-wrappers + Jules CLI + Ollama REST (proven).
+Adoption rule (sec 3): reach for the cheapest-sufficient spoke; do not default to inline-Opus
+out of forgetfulness; for high-stakes verification prefer a non-Claude cross-check.
 
 ## 8. Anti-scope
 
