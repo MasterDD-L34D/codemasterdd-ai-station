@@ -31,10 +31,15 @@ Next-session resumption post handoff `2026-05-28 notte`. Items 1-3 handoff DONE 
   - **Game #2423** PR-1: `session_id`+`campaign_id` su **VERSIONED** `Room.publishPhaseChange` + `coopStore.linkSession` + `/session/start` link (270 coop+net test). *Course-correction mid-PR*: peer `coop_ws_peer.gd:655` droppa plain version-less `phase_change` -> surface = canale versioned Room.
   - **Godot #366** PR-2: `PhoneCoopIds` cache + `PhoneAlienaLoader` + mount dispatch (2818 GUT pass, gdformat+gdlint clean, composer 999<1000 cap).
   - Chiude **T4** (ALIENA chart auto-fetch) + **T2** (tribes campaign_id), i 2 stop-condition deferred handoff.
+- **S22-B mating roll initiator** (handoff #4) -- brainstorming -> spec -> plan -> subagent-driven exec. Decisioni: debrief player-driven; **all-players VOTE** (most-voted pair wins, mirror world-vote); identity-signal tracked per-vote, formula vote->MBTI/conviction **deferred data-driven**. Spec+plan **Godot #367**. Implementazione (Tasks 1-7 di 8) TDD subagent-driven:
+  - **Game #2426**: `orch.voteMating`/`matingTally` + `mating_tally` broadcast + REST `/coop/mating/vote` + identity telemetry + **`mating_vote` WS intent handler** (wsSession). 270 backend coop/net test green.
+  - **Godot #368** (stacked su #366): `PhoneMatingView` + `PhoneMatingLoader` + nest in PhoneDebriefView + `PhoneMatingWire` (forward tally + `send_vote` via WS intent). 2823 GUT pass, gdlint clean, composer al cap 1000.
+  - *Course-correction #2 (SDMG)*: phone vota via WS intent (come ogni player action) NON REST -> aggiunto `mating_vote` WS intent handler, rimosso REST `MatingApi` unused.
+  - **Task 8** (offspring birth on resolve) = **deferred**: bloccato su port Nido/mating Godot (port-pending SoT Sec24; roll engine vive solo backend `meta.js` + web host archiviato).
 
 ### Da fare (next session)
-- **Merge order Eduardo**: #2422 -> #2423 -> #366 (PR-2 mergeable indipendente, no-op se id assenti).
-- Handoff **#4** Sec22-B mating roll initiator (big-scope design-call, brainstorming).
+- **Merge order Eduardo**: Game #2422 -> #2423 -> #2426 ; Godot #366 -> #368 ; #367 (docs indip).
+- **S22-B Task 8**: offspring birth on `mating_tally.all_connected_voted` -- richiede port meta-loop (Nido/mating/rollOffspring) in Godot. Roadmap item separato.
 - Handoff **#5** Enforcement ALIENA (data-driven post-collection GET /aliena-telemetry).
 - Handoff **#6** Token cost baseline (legacy task 15).
 - Spawn task: commit `.uid` mancanti Godot (drift #361/#362).
