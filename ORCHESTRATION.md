@@ -98,10 +98,16 @@ allow-listed: the irreducible residue in sec 5.
 
 10 keys in `~/.config/api-keys/keys.env` (ANTHROPIC, CEREBRAS, GEMINI, GITHUB_MODELS,
 GOOGLE_GENERATIVE_AI, GROQ, HUGGINGFACE, JULES, OPENAI, TAVILY). Cloud/Jules/local spokes
-are invoked via Bash (wrappers/CLI/REST) -- they are NOT native tools today. The **MCP
-llm-fleet** (when built, SDMG-gated) exposes `llm_call(provider, model, prompt,
-[max_tokens])` as a native tool so the keys are first-class. Adoption rule (sec 3): reach
+are invoked via Bash (wrappers/CLI/REST) -- they are NOT native tools, and that is the
+chosen design. A custom MCP "llm-fleet" (`llm_call`) was proposed and **REJECTED 2026-05-29
+(SDMG NO-GO)**: it has no caller (the hub Opus 4.8 is more capable than every callable
+cloud model; cloud-OK work is edits -> aider-*; sovereign-cheap -> Ollama; async -> Jules),
+it is LiteLLM-gateway-redux (the OD-009 overhead category), and it adds net failure surface
+for ~zero gain. Eval: `docs/research/2026-05-29-mcp-llm-fleet-eval.md`. The keys are reached
+via the Aider edit-wrappers + Jules CLI + Ollama REST (proven). Adoption rule (sec 3): reach
 for the cheapest-sufficient spoke; do not default to inline-Opus out of forgetfulness.
+Re-open the tool only at n>=2 logged call-sites where REST/wrapper genuinely blocked a
+needed raw cloud completion (then: a curl snippet in a runbook, not a process).
 
 ## 8. Anti-scope
 

@@ -12,9 +12,10 @@ Ollama fleet, cloud-key LLMs, Jules async coding agent, in-session subagents/Wor
 Route by capability x cost x privacy x async-fit (cheapest-sufficient-first, <=3 tiers).
 **Mandatory verification gate** with a DIFFERENT-model judge (anti-monoculture). **Autonomy
 ladder**: auto-merge low-risk + external-merge-auto (CI + Codex-auto-review-resolved + fix
-+ judge); irreducible human residue for irreversible/outward-facing/architecture. Add a
-**lightweight MCP llm-fleet** so cloud keys become first-class tools (SDMG-gated, NOT a
-heavy gateway). Explicit anti-scope: no LangGraph/CrewAI/AutoGen/LiteLLM-redux.
++ judge); irreducible human residue for irreversible/outward-facing/architecture. (A custom MCP
+"llm-fleet" to make cloud keys native tools was proposed but **SDMG-REJECTED 2026-05-29** --
+no caller + gateway-redux; keys stay reached via Aider/Jules/Ollama.) Explicit anti-scope:
+no LangGraph/CrewAI/AutoGen/LiteLLM-redux.
 
 ## Context
 
@@ -53,9 +54,13 @@ Establish the doctrine operationalized in `ORCHESTRATION.md`:
    different-model judge OK; irreducible human residue = irreversible/destructive,
    outward-facing, account-credential, external-comms, ADR-class architecture,
    low-automated-confidence. Standing allow-rules for verified-safe action classes.
-5. **MCP llm-fleet** (SDMG-gated): a lightweight stdio MCP exposing
-   `llm_call(provider, model, prompt, [max_tokens])` over keys.env so cloud keys are
-   first-class tools. NOT a heavy gateway (LiteLLM/Bifrost rejected per OD-009).
+5. **Spoke invocation = Bash (wrappers/CLI/REST), no new tooling.** A custom MCP
+   "llm-fleet" (`llm_call` over keys.env) was proposed to make cloud keys native tools;
+   **SDMG-REJECTED 2026-05-29** (eval: `docs/research/2026-05-29-mcp-llm-fleet-eval.md`):
+   no caller (hub more capable than callable cloud models; cloud-OK work = edits -> aider-*),
+   LiteLLM-gateway-redux (OD-009 overhead category), net failure surface. Keys reached via
+   Aider edit-wrappers + Jules CLI + Ollama REST; discoverability handled by the
+   ORCHESTRATION.md invocation table + adoption rule.
 6. **Anti-scope**: no heavy orchestration framework; no Docker/proxy/observability stack
    for the tooling layer.
 
