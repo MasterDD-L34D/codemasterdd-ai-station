@@ -57,7 +57,8 @@ function Restore-Branch($target) {
   & git switch $target *> $null
   if ($LASTEXITCODE -ne 0) {
     $cur = (& git rev-parse --abbrev-ref HEAD 2>$null)
-    Warn "could not return to '$target' -- you are on '$($cur.Trim())'. Do NOT 'git pull' here; switch back manually."
+    $curName = if ($cur) { $cur.Trim() } else { '(unknown)' }
+    Warn "could not return to '$target' -- you are on '$curName'. Do NOT 'git pull' here; switch back manually."
   }
 }
 
@@ -157,7 +158,7 @@ if ($LASTEXITCODE -ne 0) {
     Fail "overlapping edit conflict AND recovery restore failed. Your edit is preserved in 'git stash list' (journal-land-temp); throwaway branch '$branch' KEPT. Resolve manually."
   }
   & git branch -D $branch *> $null
-  Fail "overlapping JOURNAL edit on origin/main. Edit restored on '$origBranch'. Run 'git pull --ff-only' on main, redo the insert, re-run."
+  Fail "stash apply failed vs origin/main (overlapping edit or untracked-file collision). Edit restored to your working tree (target '$origBranch' -- heed any WARNING above). Run 'git pull --ff-only' on main, redo the insert, re-run."
 }
 
 # --- detect a SILENT clean 3-way merge (origin changed a journaled file in a separate hunk) ---
@@ -177,7 +178,7 @@ if ($merged.Count -gt 0 -and -not $AcceptMerge) {
     Fail "origin changed [$($merged -join ', ')] concurrently (clean 3-way merge) AND recovery restore failed. Edit preserved in 'git stash list'; branch '$branch' KEPT."
   }
   & git branch -D $branch *> $null
-  Fail "origin changed [$($merged -join ', ')] concurrently -- a 3-way merge would land content you did not review. Edit restored on '$origBranch'. Run 'git pull --ff-only' on main, redo the insert, re-run (or pass -AcceptMerge to land the merged result)."
+  Fail "origin changed [$($merged -join ', ')] concurrently -- a clean 3-way merge would land content you did not review. Edit restored to your working tree (target '$origBranch' -- heed any WARNING above). Run 'git pull --ff-only' on main, redo the insert, re-run (or pass -AcceptMerge to land the merged result)."
 }
 if ($merged.Count -gt 0) { Warn "origin changed [$($merged -join ', ')] concurrently; committing the 3-way merge result (-AcceptMerge)." }
 
