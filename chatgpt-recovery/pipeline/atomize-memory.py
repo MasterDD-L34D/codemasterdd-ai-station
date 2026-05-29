@@ -81,10 +81,14 @@ def detect_tags(content):
     return sorted(tags)
 
 
+_IT_MARKERS_RE = re.compile(r'\b(che|della|degli|delle|sono|essere|sua|suo|nei|questo|questa|piu|pero|come|quindi|perche|sempre|pero)\b', re.IGNORECASE)
+_EN_MARKERS_RE = re.compile(r'\b(the|and|with|that|for|this|from|have|been|were|been|use|user)\b', re.IGNORECASE)
+
+
 def detect_language(content):
     """Heuristic: italian if mostly italian words, else default."""
-    italian_markers = re.findall(r'\b(che|della|degli|delle|sono|essere|sua|suo|nei|questo|questa|piu|pero|come|quindi|perche|sempre|pero)\b', content, re.IGNORECASE)
-    english_markers = re.findall(r'\b(the|and|with|that|for|this|from|have|been|were|been|use|user)\b', content, re.IGNORECASE)
+    italian_markers = _IT_MARKERS_RE.findall(content)
+    english_markers = _EN_MARKERS_RE.findall(content)
     if len(italian_markers) > len(english_markers):
         return 'italian'
     elif len(english_markers) > 5:
