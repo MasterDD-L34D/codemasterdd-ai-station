@@ -235,6 +235,8 @@ def promote_topic(decision, staging_root: Path, vault_root: Path, space_map: dic
 
 
 def main():
+    """Parses review decisions, loads space mappings, and promotes approved topics to the vault.
+    Outputs results as JSON."""
     args = parse_args()
 
     decisions = parse_review_md(args.review)

@@ -19,6 +19,100 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-05-29 (journal-land helper hardened -- worktree isolation, shared-clone safe)
+
+Eduardo flagged that the journal-land helper failed when I used it. Root-caused + fixed (this entry landed BY the fixed helper = live dogfood).
+
+### Completato
+- **Root cause of the live failure**: the shared Lenovo clone's HEAD was on a CONCURRENT session's branch (`docs/ermes-fase2b-knowledge-map`), so I ran the STALE ermes-branch helper (152-line, 11:22), not main's newer hardened 230-line version (11:51). The on-main version would have aborted gracefully.
+- **Bug hunt of the on-main version found 3 real defects** (it amended around the base defect): (B) `git stash push` + `git switch -c` mutate the SHARED tree's HEAD -> yanks HEAD from a concurrent session; (#3) `git stash drop`/`pop` with no ref hit `stash@{0}` = possibly a concurrent stash; (C) `gh --delete-branch` while the branch is checked out -> false "auto-merge not enabled".
+- **Fix (SDMG fix-the-base)**: do all branch/commit/push work in a THROWAWAY worktree off freshly-fetched origin/main -- NEVER `git switch` the shared HEAD (B); resolve the stash to its immutable COMMIT SHA for apply + re-resolve the tag at drop-time (#3); free the branch before `gh merge` (C). Keep the safety stash until commit succeeds (the on-main version dropped it before commit = edit-loss risk). Safety contract + interface preserved.
+- **harsh-reviewer (different-model judge, SDMG)**: first rewrite REWORK'd -- it caught that `$stashRef = stash@{N}` was resolved once but is positional, so a concurrent stash push between resolve and use re-armed defect #3. Fixed via commit-SHA handles (race-immune). Re-verified.
+
+### Da fare
+- ermes branch carries a STALE (older, simpler) journal-land.ps1 (0287a73); if it merges it will conflict with / regress main's hardened version -- resolve in favor of the hardened version.
+
+### Note
+- This session also shipped the **fleet-tools MCP** (PR #218) -- see the entry below.
+- Anti-pattern #19 (stale tracker) in reverse: I almost rebuilt the helper from scratch before checking ground-truth; the hardened fix was already on main, newer than the branch copy I had run.
+
+## 2026-05-29 (fleet-tools MCP -- scoped 3-tool server shipped + native-verified)
+
+Scoped MCP server build, GO'd via SDMG human-reframe (general `llm_call` router stays REJECTED -- no caller / OD-009 gateway-redux). Full superpowers pipeline run.
+
+### Completato
+- **fleet-tools MCP shipped** -- PR **#218 MERGED** (squash `05bad5ae0`). `apps/fleet-tools-mcp/` stdio server, 3 tools: `tavily_search`, `openai_image` (gpt-image-1, quality medium), `cross_check(model, prompt)` (prefix-route gemini->Gemini else->Groq). Node + low-level MCP SDK + native fetch = 1 direct dep. Registered root `.mcp.json`.
+- **Pipeline**: brainstorming -> spec (`docs/superpowers/specs/2026-05-29-fleet-tools-mcp-design.md`) -> writing-plans (`docs/superpowers/plans/2026-05-29-fleet-tools-mcp.md`) -> build -> smokes -> harsh-reviewer -> fixes -> PR -> CI green -> auto-merge.
+- **SDMG-minimal verify**: 4 live smokes PASS (tavily answer+results; image 1024x1024 PNG 1.24MB; gemini-2.5-flash `FLEET_CROSS_OK`; groq llama-3.3-70b `FLEET_GROQ_OK`) + 7/7 offline unit + keyless protocol smoke. harsh-reviewer (different-model judge) = **SHIP IT** (0 P0 / 0 surviving P1); 3 P2 fixed (argv[1] entry-guard crash per L-038, generic `scrubSecrets` in error paths, security+scope tests).
+- **Security CWE-214**: keys in-process headers only, read per-call from keys.env, never argv/logs, Gemini key in `x-goog-api-key` header not URL.
+- **Doctrine sync**: ORCHESTRATION.md dropped stale `llm_call (once built)` promise from routing table, sec 7 marked BUILT.
+- **Native roundtrip verified** (this resume session): `tavily_search` + `cross_check` called through Claude Code MCP integration, real outputs returned (image skipped -- costs $, already proven). Registration works end-to-end, not just the smoke client.
+
+### Da fare
+- Optional: Ryzen-side native verify next Ryzen session (`.mcp.json` relative + `os.homedir()` portable; node present both PCs -- expected clean, unverified there).
+
+### Note
+- **Anti-monoculture dogfood**: `cross_check` (Gemini) flagged a point the Claude harsh-reviewer missed -- cross_check "inherently performs an LLM query," a potential backdoor-router loophole. The boundary is doctrinal (documented README + ADR: "NOT a cheaper completion router"), not mechanical. Recorded, no re-arch (SDMG anti-accretion). The diverse-family judge earned its place by catching a same-family blind spot -- exactly the doctrine thesis.
+- No memory written -- repo records it fully (ORCHESTRATION sec 7 BUILT, README, ADR-0036, spec/plan).
+
+## 2026-05-29 (journal-land cross-fleet drift fix -- Lenovo .10)
+
+Root-caused + fixed the recurring cross-fleet JOURNAL-branch drift: Ryzen kept stranding `docs(journal)` commits on `chore/journal-*` / `docs/journal-*` branches that never reached origin, forcing manual recovery every session (e.g. PR #214).
+
+### Completato
+- **Root cause** (systematic-debugging + SSH read-only to Ryzen): journal commits used commit-type-prefixed branches that miss the `git push origin claude/*` allow-rule, and Ryzen's gh token is invalid -> the commit never reached origin. Stray `ort` merges came from `git pull` while on a feature branch. Ryzen push itself is healthy (origin=SSH, `ssh -T git@github.com` authenticates). Ruled out with evidence: rogue hook (3 hooks = check/seed only), scheduled task (none), local settings override (none).
+- **Fix shipped (PR #221)**: `scripts/fleet/journal-land.ps1` -- branches `claude/journal-<host>-<date>` from a freshly fetched origin/main, commits (Conventional + ADR-0011 trailers, uuidv7), SSH-pushes (both PCs), PR+auto-merge where gh is authed / graceful push-only where not (Ryzen), never pulls on a feature branch. Plus doctrine: ORCHESTRATION.md sec 6b + CLAUDE.md journal section. This entry was landed via the helper itself (dogfood).
+- **Verification**: QG Step-1 (DryRun + 2 live -Apply sandbox smokes + negatives + uuidv7 confirmed) + 3-lens harsh-reviewer workflow (0 P0; 5 P1 all fixed: silent 3-way-merge guard, rc-checked recovery, Restore-Branch warn-loud returns, detached-HEAD fail-fast, path validation) + confirmation judge = SHIP.
+
+### Note
+- **Multi-session-on-one-clone hazard confirmed LIVE**: mid-task a concurrent session switched the shared codemasterdd HEAD to `docs/ermes-fase2b-knowledge-map`; recovered by isolating my work in a git worktree. Notably that session used a `docs/`-prefixed branch -- the exact anti-pattern this fix kills.
+- **Ryzen gh re-auth** (`gh auth login -h github.com`) is an optional manual upgrade to full Ryzen self-service PR+auto-merge; not required (push-only degrade keeps content safe on origin).
+- Rejected a cross-fleet-drift monitor/cron (anti-pattern #11): Ryzen *can* push, so fixing at the source beats mopping up.
+
+### Da fare
+- Confirm the next Ryzen session adopts `journal-land.ps1` (no new `chore/`/`docs/` journal branches stranding).
+
+## 2026-05-29 (coop-WS session_id/campaign_id surface -- 3 PR Opt A + Lenovo pull)
+
+Next-session resumption post handoff `2026-05-28 notte`. Items 1-3 handoff DONE da Ryzen (`DESKTOP-T77TMKT`).
+
+### Completato
+- **Cross-fleet pull Lenovo** (item 1): Game/Godot/vault ff-pulled via SSH da Ryzen (read+pull = libero). Lenovo full-synced (Game `3d298f32`, Godot `41bac36`, vault `15887c7da`, codemasterdd gia' `3104d1c`). vault Lenovo-side = ff puro (eng-graph divergence vive solo Ryzen).
+- **Coop-WS surface decision** (item 2): **Opt A** (estendi `phase_change` payload). Grounding: orch non conosce `session_id` (host chiama `/session/start`), `campaign_id == run.id`.
+- **T2/T4 implement** (item 3) -- 3 PR TDD:
+  - **Game #2422** PR-0: extract `buildPhaseChangePayload` helper (no-behavior, 24 test).
+  - **Game #2423** PR-1: `session_id`+`campaign_id` su **VERSIONED** `Room.publishPhaseChange` + `coopStore.linkSession` + `/session/start` link (270 coop+net test). *Course-correction mid-PR*: peer `coop_ws_peer.gd:655` droppa plain version-less `phase_change` -> surface = canale versioned Room.
+  - **Godot #366** PR-2: `PhoneCoopIds` cache + `PhoneAlienaLoader` + mount dispatch (2818 GUT pass, gdformat+gdlint clean, composer 999<1000 cap).
+  - Chiude **T4** (ALIENA chart auto-fetch) + **T2** (tribes campaign_id), i 2 stop-condition deferred handoff.
+- **S22-B mating roll initiator** (handoff #4) -- brainstorming -> spec -> plan -> subagent-driven exec. Decisioni: debrief player-driven; **all-players VOTE** (most-voted pair wins, mirror world-vote); identity-signal tracked per-vote, formula vote->MBTI/conviction **deferred data-driven**. Spec+plan **Godot #367**. Implementazione (Tasks 1-7 di 8) TDD subagent-driven:
+  - **Game #2426**: `orch.voteMating`/`matingTally` + `mating_tally` broadcast + REST `/coop/mating/vote` + identity telemetry + **`mating_vote` WS intent handler** (wsSession). 270 backend coop/net test green.
+  - **Godot #368** (stacked su #366): `PhoneMatingView` + `PhoneMatingLoader` + nest in PhoneDebriefView + `PhoneMatingWire` (forward tally + `send_vote` via WS intent). 2823 GUT pass, gdlint clean, composer al cap 1000.
+  - *Course-correction #2 (SDMG)*: phone vota via WS intent (come ogni player action) NON REST -> aggiunto `mating_vote` WS intent handler, rimosso REST `MatingApi` unused.
+  - **Task 8** (offspring birth on resolve) = **SHIPPED backend** (`#2431`, plan `#369`). Correzione blocco: NON serve port Godot -- `meta.js rollOffspring` idrata geni da `creatureEpigenomeStore` by `(campaignId, unitId)`, quindi roll server-side con solo parent IDs + `run.id`. orch persist `run.survivors` + idempotent `resolveMatingWinner` (valida pair vs survivors -- Codex P1); additive `coopMatingResolver` (epigenome-hydrated, meta.js untouched, Codex P2 epigenomeConfig); WS `mating_vote` handler + REST -> roll su quorum -> `mating_resolved` broadcast. Loop completo: phone vote -> quorum -> nascita server-side -> broadcast. Godot offspring-reveal UI = follow-up minore.
+
+### Merge completion (sessione 2026-05-29)
+- **10 PR merged** (Eduardo-authorized, review+Codex-fix+merge): Game #2422/#2430(re #2423)/#2426/#2431 · Godot #366/#367/#368/#369 · codemasterdd #212 · vault #214.
+- Codex P0/P1/P2 tutti risolti inline (sessionId/matingVotes clear, tap+rehydrate, host-quorum, pair-validate, epigenomeConfig).
+- **Gotcha merge stacked-squash**: `--delete-branch` su base con figlio stacked CHIUDE il figlio (#2423 auto-closed -> recovery `rebase --onto` + nuovo #2430). Lesson: merge base senza delete, retarget figlio, poi delete base.
+
+### Session 2 close (handoff #5 + residui, +6 PR = 16 totali sessione)
+- **#5 Enforcement ALIENA SHIPPED** (`#2435` + spec): weight modulation `w*=(1-strength*(1-aggregate))`, config-gated `policy.aliena_enforcement {enabled,strength}` default-OFF. **No threshold** (strength knob continuo) -> il data-block si dissolve (ship strength=0, tuning later). Hook = `applyBiomeBias` real selection path. 5 test + 1027 regression green. `strength` value tuning resta data-driven.
+- **#2436** Task-8 robustness (Codex P2): survivors normalizzati (string-id | {id}); birth non piu' silently-broken per browser-host flow.
+- **#370 §22-B offspring reveal + mating routing FIX**: bug latente trovato -- `coop_ws_peer` droppava plain `mating_tally`/`mating_resolved` come `unknown_type` (solo `world_tally` aveva case esplicito), quindi tally live non arrivava mai al phone (handler shippato su `_on_event_received` versioned-only = mai fired). Fix: signal+case dedicati (mirror world_tally) + composer rewire + `PhoneMatingView.set_resolved` offspring reveal. **Loop §22-B phone completo + live**. 2834 GUT pass. *Course-correction #3 (stessa classe PR-1/SDMG): peer-routing consumer-side va verificato end-to-end, non solo unit che bypassa il peer.*
+- **Stray PR triage** (out-of-scope, review propria): `#2424` (doc TKT-09) + `#2429` (taxonomy version-pin env-gated) + `#2385` (weekly-drift-audit, era draft) MERGED; **`#2428` ERMES bridge Fase-2 (+1254 ADR feat + Codex P2 mutation-bias) FLAGGED non-merged** -- feature cross-agent sostanziale, decisione Eduardo.
+
+### Da fare (next session)
+- **`#2428` ERMES bridge Fase-2**: review Eduardo + fix Codex P2 (mutation-bias buckets non popolati pre-return) prima di merge.
+- ALIENA `strength` value tuning -- data-driven post telemetry-collection (endpoint #2420).
+- ~~#5 enforcement~~ DONE (#2435). ~~Task 8 reveal~~ DONE (#370). ~~#6 cost baseline~~ DONE. ~~stray PR triage~~ DONE (3 merged, #2428 flagged).
+
+### Note
+- **SDMG**: runtime (peer routing) ha falsificato assunzione "publishPhaseChange non su ALIENA path" -> corretto mid-PR-1 (Room surface). Lesson candidate: verificare consumer-side routing PRIMA di scegliere broadcast surface.
+- **Anti-pattern #12 manifest**: `Set-Content -Encoding utf8` PS5.1 = BOM+mojibake su `.gd` loader -> gdlint fail. Fix: `[IO.File]::WriteAllText` ASCII-only no-BOM.
+- **tdd-guard Game**: Write-tool blocca impl premature anche con helper gia' esistente+testato -> Option B heredoc/shell post-RED (metodologia handoff).
+
+---
+
 ## 2026-05-28 (post-closure: T13 Ryzen cross-fleet deploy verified, Lenovo .10)
 
 Sessione breve next-session resumption post handoff `2026-05-28-handoff-closure.md`. Compass DI 81/100 (rotta coerente, drift `knowledge-preservation` non actionable per handoff). Next-smallest-step = T13 Ryzen deploy.
@@ -3863,4 +3957,59 @@ Mitigation L-002 attiva. Restoration cognitive prioritized vs compound execution
 - **Honest accounting** (post-feedback Eduardo): distinto "lavoro reale shippato" vs "marker-update / doc-hygiene". Pattern anti-pattern #19 consistent.
 - **Cognitive protocols applied**: P1 refresh-verify (pull pass), P2 autoresearch (governance + decommission), P5 harsh-reviewer (spec + PR #2413), P6 brainstorming, P7 SDMG.
 - **Auto-mode classifier**: 4 warnings + 1 hard block (T15) -> main-thread direct con plan-approval.
+
+
+
+## 2026-05-28 (notte) -- ALIENA diagnostic pipeline + §22-A/C tribes+telemetry phone cross-repo
+
+### Completato (14 PR cross-3-repos)
+
+**§21 ALIENA diagnostic runtime layer — pipeline A->D end-to-end shipped Game**:
+- PR #2417 ALIENA-B: `reinforcementSpawner.tick` per-tick emit on `session.aliena_coherence_telemetry` (opt-in `encounter.reinforcement_policy.aliena_coherence_telemetry`, tail-cap 500).
+- PR #2418 ALIENA-C: `services/combat/initialAlienaTelemetry.emitInitial` round=0 baseline at session-start (reinforcement_pool schema).
+- PR #2419 ALIENA-fix: Codex P2 catch on #2418 -- `_scorePlausibilita` returnava 0 per `unit_id` schema (canonical `reinforcement_pool`). Extract `_entryId(e) = e.id || e.unit_id`. Affetto B+C; restora `plausibilita=1.0` in-pool.
+- PR #2420 ALIENA-D: `GET /api/session/:id/aliena-telemetry` consumer endpoint `{session_id, telemetry, count, capped}` — chiude diagnostic loop.
+- PR #2421 ALIENA-E: estende baseline a `encounter.groups` schema (parallel a reinforcement_pool, `source: 'groups'` discriminator). Refactor DRY helpers `_deriveBiomeConfig` + `_emitPool`.
+
+Pipeline ora diagnostic-end-to-end: A scorer -> B per-tick -> C+E baseline -> D endpoint READ. Enforcement layer DEFERRED data-driven.
+
+**§22-A phone tribes viewer end-to-end Godot**:
+- PR #357 (pre-session): PhoneTribesView + meta_api.gd HTTP client + GUT tests.
+- PR #358: gdformat hygiene #357.
+- PR #359: nested in PhoneDebriefView + pure `set_tribes(tribes, threshold)` seam.
+- PR #360: composer MODE_DEBRIEF auto-fetch via `MainPhoneDebriefMount` static helper (extracted to preserve composer 1000-LOC cap, ora 998/1000).
+
+**§22-C phone ALIENA chart Godot** (consume PR #2420 endpoint):
+- PR #361: AlienaApi client + PhoneAlienaChart widget + scene + GUT tests (3/3). ItemList timeline V1 (no Line2D dep).
+- PR #362: nested in PhoneDebriefView + pure `set_aliena_telemetry()` seam. Auto-fetch caller wire DEFERRED (richiede coop-WS session_id surface, stesso blocker T2 campaign_id).
+
+**vault SoT state-reconcile**:
+- PR #209: v6 -> v7 — §21+§22-A shipped state.
+- PR #210: v7 -> v7.1 — §21 ALIENA-D + scorer fix close diagnostic loop.
+
+### Methodology
+- TDD-guard discipline: RED test first → Edit blocked premature impl → Bash heredoc Option B post-RED (~7 helper writes).
+- gdlint class-definitions-order: 2 lint fixes (const ordering after signals, MockMetaApi public var before _resp).
+- Composer 1000-LOC cap preserved: extract via `MainPhoneDebriefMount` static helper pattern.
+- Sovereign-merge vault PR #209+#210 (prior Eduardo auth, SoT-completion scope).
+- Codex P2 caught + fixed mid-session (PR #2419, real bug Both B+C).
+
+### Stop conditions hit
+- T2 (campaign_id propagation phone-side): coop WS broadcast surface unknown → halt, deferred.
+- T4 scope-pivoted: auto-fetch dispatch needs same coop WS session_id surface → reduced to pure seam (matches PR #359 pattern), auto-fetch deferred.
+
+### Cognitive protocols applied
+- P1 refresh-verify (pre-action state pull cross-repo).
+- P2 autoresearch + P3 Archon (CALIBRATE plausibilita bug verify).
+- P5 harsh-reviewer concept: Codex bot caught what I missed (unit_id schema → fix #2419).
+- P7 SDMG: helper extraction discipline (no LOC cap break).
+
+### Lenovo state at close
+- HEAD pre-session su tutti 3 repo Eduardo's (Game `31250b5d` -14 behind, Godot `efd5bf6` -6 behind, vault `af851b67f` -2 behind). Working tree pulito. Pull = ff-clean quando Eduardo riprende.
+
+### Da fare (non bloccante)
+- §22-B mating roll initiator phone (big scope, design-call).
+- T2/T4 caller wire auto-fetch (richiede WS surface decision: phase_change payload extension OR new broadcast type).
+- Enforcement ALIENA layer (data-driven post-collection via D endpoint).
 - Token cost baseline capture post first 5 real invocations (Task 15 plan).
+- **Cross-fleet pull ff-clean Eduardo-side Lenovo**: Game (`31250b5d` -> `3d298f32`, +5 mine incl ALIENA-E), Game-Godot-v2 (`efd5bf6` -> `41bac36`, +6 mine incl §22-C nest), codemasterdd (`af851b67f` not vault — codemasterdd HEAD pre-session vs `52bf929`, +governance refresh+knowledge-archive). vault HEAD `0159c183d` LOCAL Lenovo (eng-graph C3 spec NON-pushed Eduardo) DIVERGED da origin `15887c7da` (mio v7.2 squash-merge): Eduardo rebase suo C3 commit onto origin/main + push (mantiene C3 + integra v7.2). Tutti gli altri pull = ff-clean diretti.
