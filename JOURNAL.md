@@ -19,6 +19,25 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-05-29 (fleet-tools MCP -- scoped 3-tool server shipped + native-verified)
+
+Scoped MCP server build, GO'd via SDMG human-reframe (general `llm_call` router stays REJECTED -- no caller / OD-009 gateway-redux). Full superpowers pipeline run.
+
+### Completato
+- **fleet-tools MCP shipped** -- PR **#218 MERGED** (squash `05bad5ae0`). `apps/fleet-tools-mcp/` stdio server, 3 tools: `tavily_search`, `openai_image` (gpt-image-1, quality medium), `cross_check(model, prompt)` (prefix-route gemini->Gemini else->Groq). Node + low-level MCP SDK + native fetch = 1 direct dep. Registered root `.mcp.json`.
+- **Pipeline**: brainstorming -> spec (`docs/superpowers/specs/2026-05-29-fleet-tools-mcp-design.md`) -> writing-plans (`docs/superpowers/plans/2026-05-29-fleet-tools-mcp.md`) -> build -> smokes -> harsh-reviewer -> fixes -> PR -> CI green -> auto-merge.
+- **SDMG-minimal verify**: 4 live smokes PASS (tavily answer+results; image 1024x1024 PNG 1.24MB; gemini-2.5-flash `FLEET_CROSS_OK`; groq llama-3.3-70b `FLEET_GROQ_OK`) + 7/7 offline unit + keyless protocol smoke. harsh-reviewer (different-model judge) = **SHIP IT** (0 P0 / 0 surviving P1); 3 P2 fixed (argv[1] entry-guard crash per L-038, generic `scrubSecrets` in error paths, security+scope tests).
+- **Security CWE-214**: keys in-process headers only, read per-call from keys.env, never argv/logs, Gemini key in `x-goog-api-key` header not URL.
+- **Doctrine sync**: ORCHESTRATION.md dropped stale `llm_call (once built)` promise from routing table, sec 7 marked BUILT.
+- **Native roundtrip verified** (this resume session): `tavily_search` + `cross_check` called through Claude Code MCP integration, real outputs returned (image skipped -- costs $, already proven). Registration works end-to-end, not just the smoke client.
+
+### Da fare
+- Optional: Ryzen-side native verify next Ryzen session (`.mcp.json` relative + `os.homedir()` portable; node present both PCs -- expected clean, unverified there).
+
+### Note
+- **Anti-monoculture dogfood**: `cross_check` (Gemini) flagged a point the Claude harsh-reviewer missed -- cross_check "inherently performs an LLM query," a potential backdoor-router loophole. The boundary is doctrinal (documented README + ADR: "NOT a cheaper completion router"), not mechanical. Recorded, no re-arch (SDMG anti-accretion). The diverse-family judge earned its place by catching a same-family blind spot -- exactly the doctrine thesis.
+- No memory written -- repo records it fully (ORCHESTRATION sec 7 BUILT, README, ADR-0036, spec/plan).
+
 ## 2026-05-29 (journal-land cross-fleet drift fix -- Lenovo .10)
 
 Root-caused + fixed the recurring cross-fleet JOURNAL-branch drift: Ryzen kept stranding `docs(journal)` commits on `chore/journal-*` / `docs/journal-*` branches that never reached origin, forcing manual recovery every session (e.g. PR #214).
