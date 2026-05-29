@@ -68,12 +68,19 @@ jobs:
           python-version: '3.12'
       - name: Run pytest (dep-light stable set)
         run: |
-          # Scoped to scripts/tests: stdlib-only, no app deps. The per-app suites
-          # (apps/*/tests) need their own deps and are out of scope for this
-          # lightweight safety-net gate; widen later if those apps grow CI of their own.
+          # Stdlib-only, no app deps. Covers the root scripts/tests plus the
+          # chatgpt-recovery stdlib test trees. The per-app suites (apps/*/tests)
+          # need their own deps and are out of scope for this lightweight
+          # safety-net gate; widen later if those apps grow CI of their own.
+          # Each candidate dir is included only if it exists, so the gate stays
+          # green on branches where a given test tree has not landed yet.
           python -m pip install --quiet pytest
+          targets=""
+          for d in scripts/tests chatgpt-recovery/scripts/tests chatgpt-recovery/pipeline/tests chatgpt-recovery/tests; do
+            if [ -d "$d" ]; then targets="$targets $d"; fi
+          done
           set +e
-          python -m pytest -q scripts/tests
+          python -m pytest -q $targets
           code=$?
           set -e
           if [ "$code" = 5 ]; then echo "pytest: no tests collected (pass)"; exit 0; fi

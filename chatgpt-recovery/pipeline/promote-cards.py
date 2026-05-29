@@ -77,7 +77,7 @@ def parse_review_md(md_path: Path):
 
 
 def load_cross_ref(path: Path):
-    """Parse minimal YAML — only project_to_space + tag_to_space sections.
+    """Parse minimal YAML -- only project_to_space + tag_to_space sections.
     Stdlib-only to avoid PyYAML dep (already transitive via BERTopic but kept light)."""
     content = path.read_text(encoding='utf-8')
     # Naive parser: look for "label:\n  space: \"X\"" patterns
@@ -250,7 +250,7 @@ def main():
     print(f'HOLD / DISCARD: {len(skipped_dispositions)} (no action)', file=sys.stderr)
 
     if args.dry_run:
-        print('\n=== DRY RUN — no files will be written ===', file=sys.stderr)
+        print('\n=== DRY RUN -- no files will be written ===', file=sys.stderr)
 
     results = []
     for d in promote_decisions:
