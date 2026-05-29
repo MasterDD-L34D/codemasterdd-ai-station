@@ -62,7 +62,8 @@ surface (`prompt`, `size`) deliberately does not expose quality.
 Provider model ids and API shapes drift (e.g. Gemini model names, Groq model availability).
 This server has a single owner; if a tool starts failing, check the provider's current model
 id / endpoint first. Keep the dependency surface minimal (one direct dep: the MCP SDK; native
-fetch otherwise) to limit that drift.
+fetch otherwise) to limit that drift. The SDK pulls ~90 transitive packages (including an HTTP
+transport unused on stdio) -- that footprint is the SDK's, not this server's code.
 
 ## Smokes
 

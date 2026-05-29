@@ -31,3 +31,10 @@ test("redact removes secret of length >= 6", () => {
   assert.equal(redact("k=abcdef123 z", "abcdef123"), "k=[REDACTED] z");
   assert.equal(redact("short=abc", "abc"), "short=abc"); // too short, untouched
 });
+
+test("redact strips secret embedded mid-string with surrounding context", () => {
+  assert.equal(
+    redact("ERROR: auth Bearer sk-LIVE-7777 failed", "sk-LIVE-7777"),
+    "ERROR: auth Bearer [REDACTED] failed",
+  );
+});

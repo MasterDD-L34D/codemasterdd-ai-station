@@ -37,7 +37,17 @@ async function postJson(url, { headers = {}, body, timeoutMs }) {
 }
 
 const ok = (text) => ({ content: [{ type: "text", text }] });
-const fail = (text) => ({ content: [{ type: "text", text }], isError: true });
+
+// Generic secret scrub: defense-in-depth for any error text that bypasses the per-call
+// redact() (e.g. an exception escaping to the dispatcher catch). Applied to error results
+// only -- ok() output is left intact so legitimate answers are not mangled.
+export function scrubSecrets(text) {
+  return String(text)
+    .replace(/Bearer\s+[A-Za-z0-9._-]+/gi, "Bearer [REDACTED]")
+    .replace(/\b(tvly-|sk-|gsk_|AIza)[A-Za-z0-9._-]+/g, "$1[REDACTED]");
+}
+
+const fail = (text) => ({ content: [{ type: "text", text: scrubSecrets(text) }], isError: true });
 
 // ---- tool: tavily_search ----
 export async function tavilySearch({ query, max_results } = {}) {
@@ -177,6 +187,7 @@ export async function main() {
 }
 
 // Windows-safe ESM entry guard (L-038: file://${process.argv[1]} literal is POSIX-only).
-if (import.meta.url === pathToFileURL(process.argv[1]).href) {
+// argv[1] guard: pathToFileURL(undefined) throws under REPL / programmatic import.
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   main().catch((e) => { log("fatal:", e.message); process.exit(1); });
 }
