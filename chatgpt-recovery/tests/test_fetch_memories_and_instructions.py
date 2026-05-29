@@ -43,17 +43,22 @@ def test_memory_to_md_happy_path(fetch_script, monkeypatch):
 
     result = fetch_script.memory_to_md(data)
 
+    # fmt_ts() renders epoch seconds via datetime.fromtimestamp() (local tz),
+    # so derive the expected strings the same way to stay timezone-independent.
+    created_1 = datetime.datetime.fromtimestamp(1704067200).isoformat()
+    updated_1 = datetime.datetime.fromtimestamp(1704153600).isoformat()
+
     assert "# ChatGPT Memory Items Export -- 2024-01-01T12:00:00" in result
     assert "Memory tokens used: 150 / 1000" in result
     assert "Total items: 3" in result
 
     assert "### 1. (id `mem_123`)" in result
     assert "User prefers Markdown formatting." in result
-    assert "_created: 2024-01-01T00:00:00 | updated: 2024-01-02T00:00:00_" in result
+    assert f"_created: {created_1} | updated: {updated_1}_" in result
 
     assert "### 2. (id `mem_456`)" in result
     assert "User is from Italy." in result
-    assert "_created: 2024-01-01T00:00:00_" in result
+    assert f"_created: {created_1}_" in result
 
     assert "### 3. (id `mem_789`)" in result
     assert "No timestamps." in result
