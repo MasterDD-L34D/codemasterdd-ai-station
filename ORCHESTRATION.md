@@ -94,6 +94,20 @@ list/pull`; Jules `:archive` / `:sendMessage` (ADR-0034 scope). The auto-mode cl
 still gatekeeps; allow-rules only remove prompts on the verified-safe set. NEVER
 allow-listed: the irreducible residue in sec 5.
 
+## 6b. Journal / handoff landing (cross-fleet)
+
+Recording session work to `JOURNAL.md` (and `COMPACT_CONTEXT.md` / memory) MUST use
+`scripts/fleet/journal-land.ps1` on BOTH PCs. It branches `claude/journal-<host>-<date>`
+(matches the `claude/*` push allow-rule, sec 6) from a freshly fetched origin/main, commits,
+pushes via SSH (works on Lenovo + Ryzen today), and -- where gh is authed -- opens the PR and
+auto-merges (squash); where gh is NOT authed (e.g. Ryzen's dead token) it pushes anyway so the
+content reaches origin and the PR is a trivial hub follow-up (content never stranded). Rules:
+- NEVER journal on a `chore/`/`docs/`-prefixed local branch -- it misses the push allow-rule and
+  strands; the content then needs manual recovery on the hub (the bug this fixes).
+- NEVER `git pull` while on a feature branch (`git pull --ff-only` on main only) -- pulling on a
+  branch creates stray `ort` merge commits and diverges fleet HEADs.
+Root cause + design: `docs/superpowers/specs/2026-05-29-journal-land-cross-fleet-design.md`.
+
 ## 7. Spoke invocation layer + adoption
 
 10 keys in `~/.config/api-keys/keys.env` (ANTHROPIC, CEREBRAS, GEMINI, GITHUB_MODELS,
