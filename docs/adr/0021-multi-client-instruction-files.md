@@ -130,12 +130,28 @@ In caso conflitto: CLAUDE.md > AGENTS.md su decisioni progetto; AGENTS.md > CLAU
 - [x] Aggiungere pointer ad AGENTS.md in CLAUDE.md "Ordine di lettura raccomandato"
 - [x] ADR-0021 scritto
 - [ ] Chiudere branch `codex/structural-reset` su origin (delete remote ref) dopo merge ADR-0021
-- [ ] Decidere se aggiungere check pre-commit ASCII-only su nuovi `.md` (deferred, gather data primo)
+- [x] Check ASCII-only su file code changed: SHIPPED (CI `ci.yml` step "Scan changed code files for non-ASCII" + pre-commit globale marker-aware). Scope corretto = **added-lines + marker** (vedi Addendum 2026-05-29).
 - [ ] Future: se entra Mac mini come device secondario → riconsiderare `config/machine-profile.example.yaml` template (concept Codex valido in scenario multi-PC)
+
+## Addendum 2026-05-29 — ASCII-guard scope fix (whole-file -> added-lines + marker)
+
+**Problem (evidenza PR #200)**: la CI ASCII-guard (`.github/workflows/ci.yml` step "Scan changed code files for non-ASCII") esegue `perl -ne 'exit 1 if /[^\x00-\x7F]/'` sull'INTERO contenuto di ogni file CHANGED -- non solo sulle righe aggiunte -- e NON onora il marker `# encoding-non-ascii-ok:` (che invece il pre-commit globale rispetta, anti-pattern #12). Conseguenza: modificare un `.py` con accenti legittimi pre-esistenti (italiano `puo'`/`pero'`/`perche'` in SKIP_WORDS / regex natural-language) fa scattare il guard sull'INTERO file, anche se la modifica e' ASCII-pulita. L'agente e' forzato a una scelta cattiva: (a) byte-escape-mangle gli accenti (`\xc3\xb9` dentro raw-string regex = match rotto, regressione funzionale reale osservata in PR #200, Jules); (b) ASCII-fold (altera dati corretti); (c) skip dell'edit. Tutte e tre degradano.
+
+**Root cause**: il guard e' file-scoped, non line-scoped. La policy ADR-0021 mira a impedire NUOVI artifact mojibake, non a vietare accenti legittimi pre-esistenti o dati natural-language intenzionali. Il file-scope confonde "drift nuovo" con "non-ASCII legittimo gia' presente".
+
+**Decision**: il guard scansiona solo le righe **AGGIUNTE** nel diff (non l'intero file) E onora il marker `# encoding-non-ascii-ok: <reason>` (parita' col pre-commit). Distinzione esplicita:
+- NUOVO non-ASCII in righe aggiunte, senza marker -> **BLOCK** (em-dash drift / smart-quote / mojibake artifact).
+- non-ASCII pre-esistente (righe non toccate dal diff) -> **IGNORATO** (frozen, coerente con CLAUDE.md legacy-frozen).
+- non-ASCII intenzionale (dati accentati / regex natural-language) -> **ALLOW** via marker `# encoding-non-ascii-ok: <reason>`.
+
+**Implementation**: `ci.yml` step passa da scan-whole-file (`perl ... "$f"`) a scan-added-lines (`git diff <range> -- "$f" | grep '^+' | grep -v '^+++' | perl ...`) + skip-se-file-contiene-marker. Excludes invariati (ryzen-memory-archive). Pre-commit globale gia' marker-aware (anti-pattern #12); nessun cambio richiesto li'.
+
+**Consequence**: agent editano file con accenti legittimi senza mangling; la policy resta efficace su drift NUOVO (em-dash, smart-quote, mojibake in righe aggiunte). Risolve il loop "mangle-vs-fold-vs-skip" che ha prodotto la regressione #200. Lesson load-bearing: enforcement file-scoped su un attributo line-local (non-ASCII di una singola riga aggiunta) penalizza edit legittimi -> scope l'enforcement all'unita' del cambiamento (added-lines), non al contenitore (file).
 
 ## Riferimenti
 
 - Branch rejected: `codex/structural-reset` (HEAD `4b7c84a`, 2026-05-01, rejected 2026-05-07)
+- Addendum 2026-05-29: PR #200 regression (Jules byte-escape-mangle accenti per passare il guard) + rework correttivo (SHA `1faa7de`)
 - ADR-0010 — MADR format adoption + skill policy: `0010-madr-format-adoption-and-skill-policy.md`
 - ADR-0011 — cross-agent commit governance: `0011-cross-agent-commit-governance.md`
 - Convenzione `agents.md`: https://agents.md/
