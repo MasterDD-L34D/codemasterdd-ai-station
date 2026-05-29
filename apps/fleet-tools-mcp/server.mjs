@@ -26,6 +26,11 @@ async function postJson(url, { headers = {}, body, timeoutMs }) {
     let json = null;
     try { json = JSON.parse(text); } catch { /* leave null */ }
     return { ok: res.ok, status: res.status, json, text };
+  } catch (e) {
+    // Convert network/timeout errors into a structured non-ok result so each
+    // handler's `if (!r.ok)` path returns a clean isError instead of throwing.
+    const reason = e.name === "AbortError" ? `timeout after ${timeoutMs}ms` : (e.message || String(e));
+    return { ok: false, status: 0, json: null, text: reason };
   } finally {
     clearTimeout(timer);
   }
