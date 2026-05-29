@@ -85,8 +85,21 @@ evidence: avoid gold-plating; wrappers already work):
   is for judgment/synthesis/verification, not for work a cheaper spoke can verifiably do.
 - 10 keys present: ANTHROPIC, CEREBRAS, GEMINI, GITHUB_MODELS, GOOGLE_GENERATIVE_AI, GROQ,
   HUGGINGFACE, JULES, OPENAI, TAVILY.
-- Deferred (only if friction proves high): a thin `dispatch <tier> <task>` helper. NOT
-  built now (YAGNI; the wrappers + REST suffice).
+
+**Tooling -- MCP "llm-fleet" (decided 2026-05-29, was wrongly deferred).** Build a
+lightweight stdio MCP server (~100 lines, Node or Python) that reads `keys.env` and
+exposes ONE first-class tool `llm_call(provider, model, prompt, [max_tokens])` covering
+the OpenAI-compatible endpoints (Groq, Cerebras, OpenAI, HuggingFace router, GitHub
+Models) + Gemini. This closes the discoverability gap directly: the cloud keys become
+NATIVE tools in the orchestrator's toolset (today they are Bash-only, invisible to the
+user). It is NOT a heavy gateway -- LiteLLM-MCP and Bifrost are explicitly rejected as the
+admin-overhead category Eduardo decommissioned 2026-05-29 (OD-009: LiteLLM+Langfuse =
+overhead without proportional value for solo-dev). The MCP is stdio (no Docker, no proxy,
+no Langfuse), keys stay in keys.env (not in argv). **Build is SDMG-gated** (Protocol 7 +
+anti-pattern #8 no shallow-adopt): research the minimal viable shape -> external
+falsification (harsh-reviewer + smoke) -> build minimal only if it survives. The Aider
+edit-wrappers + Jules CLI + Ollama REST remain for their existing roles; llm-fleet adds
+the missing general-completion path.
 
 ## 3. Routing decision-tree (capability x cost x privacy x async-fit)
 
@@ -167,8 +180,10 @@ subagent review + workflow research, all hub-coordinated).
 
 - NO heavy orchestration framework (LangGraph/CrewAI/AutoGen/claude-flow) -- evidence:
   more failure surface than value for solo-dev.
-- NO new infra (LiteLLM already exists in Docker for the cases that want a proxy).
-- NO `dispatch` helper now (deferred; YAGNI).
+- NO heavy LLM gateway/proxy (LiteLLM, Bifrost, Langfuse) -- decommissioned 2026-05-29
+  (OD-009) as solo-dev admin overhead; the MCP llm-fleet is stdio/keys.env only, NOT a
+  gateway.
+- NO Docker/proxy/observability-stack for the tooling layer.
 
 ## Evidence appendix (sources)
 
@@ -191,9 +206,30 @@ subagent review + workflow research, all hub-coordinated).
 - lushbinary, "Multi-agent orchestration patterns" (supervisor/router/pipeline/swarm;
   router best for solo hub-and-spoke).
 
-## Open questions for user review
+## Decisions (user-confirmed 2026-05-29)
 
-- ADR-0036 scope: full ADR or lightweight pointer? (recommend full -- it is an
-  architectural decision that supersedes/reframes several ADRs).
-- Auto-merge rollout: all whitelisted repos at once, or pilot on one (e.g. Game-Database)
-  first then expand on evidence?
+- **MCP llm-fleet**: BUILD (SDMG-gated), lightweight stdio, keys.env -> native `llm_call`
+  tool. NOT a heavy gateway.
+- **ADR-0036**: FULL MADR ADR (context/decision/options/consequences + supersession map of
+  ADR-0013/0022/0023/0030/0034/0035; MODEL_ROUTING reframed as local-fleet detail).
+- **Auto-merge rollout**: FULL -- all whitelisted repos at once (Game, Game-Godot-v2,
+  codemasterdd, Game-Database), NOT a pilot. User accepted the higher risk.
+  **Risk note (honest):** full rollout of external-merge-auto is the most aggressive step;
+  the load-bearing safety net is the automated gate stack (CI + Codex auto-review resolved
+  + fixes + different-model judge) plus reversibility (git revert / branch+PR is reversible,
+  unlike force-push). If a bad merge lands, the recovery is revert -- which is why
+  auto-MERGE is permitted at full rollout while irreversible actions stay human-gated.
+
+## Deliverables (build order, for writing-plans)
+
+1. **ADR-0036** (full) -- the decision record + supersession map.
+2. **ORCHESTRATION.md** (root) -- the operational doctrine: core model, decision-tree,
+   verification gate, autonomy ladder, spoke invocation layer, adoption rule. MODEL_ROUTING
+   linked (not duplicated); fragments referenced.
+3. **MCP llm-fleet** -- SDMG-gated build (research -> falsify -> minimal). Register in
+   `.mcp.json` / settings so `llm_call` is a native tool.
+4. **Autonomy enablement** -- settings.json allow-rules for verified-safe action classes +
+   the auto-merge gate procedure (incl. Codex sub-gate) documented + applied across all
+   whitelisted repos (full rollout).
+5. **Cross-fleet deploy** -- doctrine + allow-rules deploy to Lenovo + Ryzen (this doctrine
+   governs both PCs).
