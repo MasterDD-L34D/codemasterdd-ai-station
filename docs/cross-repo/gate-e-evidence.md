@@ -17,14 +17,14 @@ Detail: `logs/sdmg-invocations.md` (local). SDMG = ADR-0026 Protocol 7.
 
 | Metric | Value (2026-05-29) | Health |
 |--------|--------------------|--------|
-| Total invocations (window from 2026-05-20) | 3 | -- |
-| ADOPT / REJECT | 2 / 1 | -- |
-| Adoption rate | 67% | GREEN (trigger fires < 30%) |
+| Total invocations (window from 2026-05-20) | 4 | -- |
+| ADOPT / REJECT | 2 / 2 | -- |
+| Adoption rate | 50% | GREEN (trigger fires < 30%) |
 | ADOPT-without-executed-falsifying-experiment | 0 | GREEN (trigger fires > 0) |
 
-Invocations: (1) whisper-local stack -> **ADOPT** (smoke executed); (2) autonomous-next-point protocol -> **REJECT** (harsh-reviewer falsification, archived); (3) ADR-0035 Jules-CLI dispatch routine -> **ADOPT** (N=5 scoped clean-rate 5/5 executed before Accept).
+Invocations: (1) whisper-local stack -> **ADOPT** (smoke executed); (2) autonomous-next-point protocol -> **REJECT** (harsh-reviewer falsification, archived); (3) ADR-0035 Jules-CLI dispatch routine -> **ADOPT** (N=5 scoped clean-rate 5/5 executed before Accept); (4) MCP "llm-fleet" general completion-routing -> **REJECT** (harsh-reviewer 5/5 NO-GO + Groq REST smoke proved keys reachable without MCP; split: general-routing REJECT, scoped fleet-tools MCP GO deferred to own spec).
 
-**Both ADR-0026 quarterly-review triggers GREEN** -- discipline holding (every ADOPT had a pre-commit executed experiment; the falsified method was rejected-not-defended).
+**Both ADR-0026 quarterly-review triggers GREEN** -- discipline holding (every ADOPT had a pre-commit executed experiment; both falsified methods were rejected-not-defended, incl. MCP llm-fleet rejected same-day before any build).
 
 ## 2. Hybrid A1 cost/cite
 
