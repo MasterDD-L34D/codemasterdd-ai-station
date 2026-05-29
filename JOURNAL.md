@@ -19,6 +19,23 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-05-29 (journal-land helper hardened -- worktree isolation, shared-clone safe)
+
+Eduardo flagged that the journal-land helper failed when I used it. Root-caused + fixed (this entry landed BY the fixed helper = live dogfood).
+
+### Completato
+- **Root cause of the live failure**: the shared Lenovo clone's HEAD was on a CONCURRENT session's branch (`docs/ermes-fase2b-knowledge-map`), so I ran the STALE ermes-branch helper (152-line, 11:22), not main's newer hardened 230-line version (11:51). The on-main version would have aborted gracefully.
+- **Bug hunt of the on-main version found 3 real defects** (it amended around the base defect): (B) `git stash push` + `git switch -c` mutate the SHARED tree's HEAD -> yanks HEAD from a concurrent session; (#3) `git stash drop`/`pop` with no ref hit `stash@{0}` = possibly a concurrent stash; (C) `gh --delete-branch` while the branch is checked out -> false "auto-merge not enabled".
+- **Fix (SDMG fix-the-base)**: do all branch/commit/push work in a THROWAWAY worktree off freshly-fetched origin/main -- NEVER `git switch` the shared HEAD (B); resolve the stash to its immutable COMMIT SHA for apply + re-resolve the tag at drop-time (#3); free the branch before `gh merge` (C). Keep the safety stash until commit succeeds (the on-main version dropped it before commit = edit-loss risk). Safety contract + interface preserved.
+- **harsh-reviewer (different-model judge, SDMG)**: first rewrite REWORK'd -- it caught that `$stashRef = stash@{N}` was resolved once but is positional, so a concurrent stash push between resolve and use re-armed defect #3. Fixed via commit-SHA handles (race-immune). Re-verified.
+
+### Da fare
+- ermes branch carries a STALE (older, simpler) journal-land.ps1 (0287a73); if it merges it will conflict with / regress main's hardened version -- resolve in favor of the hardened version.
+
+### Note
+- This session also shipped the **fleet-tools MCP** (PR #218) -- see the entry below.
+- Anti-pattern #19 (stale tracker) in reverse: I almost rebuilt the helper from scratch before checking ground-truth; the hardened fix was already on main, newer than the branch copy I had run.
+
 ## 2026-05-29 (fleet-tools MCP -- scoped 3-tool server shipped + native-verified)
 
 Scoped MCP server build, GO'd via SDMG human-reframe (general `llm_call` router stays REJECTED -- no caller / OD-009 gateway-redux). Full superpowers pipeline run.
