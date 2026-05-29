@@ -28,16 +28,25 @@ jobs:
           if [ -n "$BASE" ]; then
             git fetch origin "$BASE" --depth=1 >/dev/null 2>&1 || true
             git diff --name-only "origin/$BASE...HEAD" > changed.txt
+            RANGE="origin/$BASE...HEAD"
           elif [ -n "$BEFORE" ] && [ "$BEFORE" != "0000000000000000000000000000000000000000" ] && git rev-parse --verify --quiet "$BEFORE^{commit}" >/dev/null; then
             git diff --name-only "$BEFORE" "$SHA" > changed.txt
+            RANGE="$BEFORE $SHA"
           else
             git diff-tree --no-commit-id --name-only -r "$SHA" > changed.txt
+            # Lone commit: diff vs parent for added-lines (root commit has no parent -> empty range, scan no-ops).
+            if git rev-parse --verify --quiet "$SHA^{commit}~1" >/dev/null; then RANGE="$SHA~1 $SHA"; else RANGE=""; fi
           fi
+          echo "RANGE=$RANGE" >> "$GITHUB_ENV"
           echo "list<<EOF" >> "$GITHUB_OUTPUT"; cat changed.txt >> "$GITHUB_OUTPUT"; echo "EOF" >> "$GITHUB_OUTPUT"
-      - name: Scan changed code files for non-ASCII (ADR-0021)
+      - name: Scan ADDED lines for non-ASCII (ADR-0021, added-lines + marker)
         run: |
-          # Only NEW/MODIFIED code files in this push; legacy mojibake files are
-          # frozen (CLAUDE.md), and the ryzen-memory-archive is excluded.
+          # Addendum 2026-05-29: scan ONLY the ADDED lines in the diff (not the
+          # whole file). Pre-existing legit non-ASCII (e.g. Italian accents in
+          # SKIP_WORDS / natural-language regex) must NOT block an otherwise-ASCII
+          # edit -- that file-scoped friction produced the PR #200 mangling
+          # regression. Honor `# encoding-non-ascii-ok:` marker (parity with the
+          # global pre-commit hook). Legacy frozen + ryzen-archive excluded.
           fail=0
           while IFS= read -r f; do
             [ -z "$f" ] && continue
@@ -47,17 +56,21 @@ jobs:
             case "$f" in
               *.ps1|*.sh|*.bat|*.cmd|*.py|*.js|*.mjs|*.json|*.yml|*.yaml)
                 [ -f "$f" ] || continue
-                if ! perl -ne 'exit 1 if /[^\x00-\x7F]/' "$f"; then
-                  echo "::error file=$f::non-ASCII bytes in changed code file (ADR-0021 ASCII-first policy)"
+                # Marker bypass: intentional non-ASCII (accented data / regex).
+                if grep -q 'encoding-non-ascii-ok' "$f"; then continue; fi
+                # Added lines only: leading '+', excluding the '+++' file header.
+                added="$(git diff $RANGE -- "$f" | grep '^+' | grep -v '^+++' || true)"
+                if ! printf '%s' "$added" | perl -ne 'exit 1 if /[^\x00-\x7F]/'; then
+                  echo "::error file=$f::non-ASCII bytes in ADDED lines (ADR-0021 ASCII-first; use -- not em-dash / ASCII quotes, or add a '# encoding-non-ascii-ok: <reason>' marker)"
                   fail=1
                 fi ;;
             esac
           done < changed.txt
           if [ "$fail" != 0 ]; then
-            echo "ADR-0021 violation: non-ASCII in changed code file(s). Use -- not em-dash, ASCII quotes, etc."
+            echo "ADR-0021 violation: non-ASCII in ADDED code lines. Use -- not em-dash, ASCII quotes, or the marker."
             exit 1
           fi
-          echo "ASCII guard OK"
+          echo "ASCII guard OK (added-lines scope)"
   pytest:
     name: pytest
     runs-on: ubuntu-latest
