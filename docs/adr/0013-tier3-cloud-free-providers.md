@@ -3,6 +3,7 @@
 > *TL;DR: acquisite 4 API keys gratuite o a basso costo (Groq/Cerebras/Gemini/OpenAI) il 2026-04-22. Ridefiniscono lo scenario post-Claude Max: non più "pay-per-use $1200/mese" ma "free-tier cloud sovereign" con Groq/Cerebras come tier 3 primario (LPU/WSE velocissimi). OpenAI resta pay-per-use ma tenuto come ultimo resort capability-max. Storage file-based ACL-hardened, zero registry, zero commit.*
 
 - **Status**: **Accepted** (2026-04-23 02:05 — quality bench v1+v2 75 test 100% pass@1 + approvazione utente)
+> Consolidated under ADR-0036 (ORCHESTRATION.md) 2026-05-29: routing surface unified; this ADR stays Accepted as detail. Cross-executor entry point = ORCHESTRATION.md.
 - **Data**: 2026-04-22 (Proposed), 2026-04-23 (Accepted)
 - **Decisore**: Eduardo Scarpelli
 - **Deciders**: solo-dev (single-user workstation)

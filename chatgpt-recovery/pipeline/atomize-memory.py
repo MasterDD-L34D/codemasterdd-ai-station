@@ -71,17 +71,19 @@ def slugify(s, maxlen=60):
     return s[:maxlen] or 'untitled'
 
 
+COMPILED_TAG_RULES = [(re.compile(pattern, re.IGNORECASE), label) for pattern, label in TAG_RULES]
+
 def detect_tags(content):
     tags = set()
-    for pattern, label in TAG_RULES:
-        if re.search(pattern, content, re.IGNORECASE):
+    for compiled_pattern, label in COMPILED_TAG_RULES:
+        if compiled_pattern.search(content):
             tags.add(label)
     return sorted(tags)
 
 
 def detect_language(content):
     """Heuristic: italian if mostly italian words, else default."""
-    italian_markers = re.findall(r'\b(che|della|degli|delle|sono|essere|sua|suo|nei|questo|questa|più|però|come|quindi|perché|sempre|però)\b', content, re.IGNORECASE)
+    italian_markers = re.findall(r'\b(che|della|degli|delle|sono|essere|sua|suo|nei|questo|questa|piu|pero|come|quindi|perche|sempre|pero)\b', content, re.IGNORECASE)
     english_markers = re.findall(r'\b(the|and|with|that|for|this|from|have|been|were|been|use|user)\b', content, re.IGNORECASE)
     if len(italian_markers) > len(english_markers):
         return 'italian'

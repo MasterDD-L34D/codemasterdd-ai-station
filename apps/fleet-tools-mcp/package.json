@@ -1,0 +1,18 @@
+{
+  "name": "fleet-tools-mcp",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Scoped MCP server: Tavily search, OpenAI image gen, non-Claude cross-check judge.",
+  "bin": { "fleet-tools-mcp": "server.mjs" },
+  "scripts": {
+    "start": "node server.mjs",
+    "test": "node --test",
+    "smoke:protocol": "node smoke/protocol.mjs",
+    "smoke:live": "node smoke/live.mjs"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.12.0"
+  },
+  "engines": { "node": ">=18" }
+}

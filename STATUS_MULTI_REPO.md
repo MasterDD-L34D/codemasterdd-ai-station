@@ -83,6 +83,7 @@ Stack `Accepted` con **T3 SPRINT_02 hot-restart 2nd pass 10/5 mattina PASS**: `d
 
 ### Decisioni pendenti
 - ADR-0016 (Proposed) awaiting n>=3 data points addizionali
+- **ADR-0036 (Proposed 2026-05-29) -- Unified Orchestration Doctrine**: `ORCHESTRATION.md` is now the single cross-executor routing authority (hub Opus 4.8 + 5 spokes; capability/cost/privacy routing; mandatory different-model verification gate; autonomy ladder with auto-merge + external-merge-auto, full rollout). Consolidates ADR-0013/0022/0023/0030/0034/0035; reframes MODEL_ROUTING as local-fleet detail. Tooling: general completion-routing MCP SDMG-REJECTED; **scoped fleet-tools MCP (Tavily + OpenAI image + non-Claude cross-check judge) GO** -- build pending own spec/plan. Ratify trigger: >=1 clean external-merge-auto cycle/repo, zero bad-merge, ~2 weeks. Cross-fleet (Lenovo + Ryzen).
 
 ### Sub-agent ecosystem (`.claude/agents/`)
 
