@@ -59,12 +59,16 @@ Next-session resumption post handoff `2026-05-28 notte`. Items 1-3 handoff DONE 
 - Codex P0/P1/P2 tutti risolti inline (sessionId/matingVotes clear, tap+rehydrate, host-quorum, pair-validate, epigenomeConfig).
 - **Gotcha merge stacked-squash**: `--delete-branch` su base con figlio stacked CHIUDE il figlio (#2423 auto-closed -> recovery `rebase --onto` + nuovo #2430). Lesson: merge base senza delete, retarget figlio, poi delete base.
 
+### Session 2 close (handoff #5 + residui, +6 PR = 16 totali sessione)
+- **#5 Enforcement ALIENA SHIPPED** (`#2435` + spec): weight modulation `w*=(1-strength*(1-aggregate))`, config-gated `policy.aliena_enforcement {enabled,strength}` default-OFF. **No threshold** (strength knob continuo) -> il data-block si dissolve (ship strength=0, tuning later). Hook = `applyBiomeBias` real selection path. 5 test + 1027 regression green. `strength` value tuning resta data-driven.
+- **#2436** Task-8 robustness (Codex P2): survivors normalizzati (string-id | {id}); birth non piu' silently-broken per browser-host flow.
+- **#370 §22-B offspring reveal + mating routing FIX**: bug latente trovato -- `coop_ws_peer` droppava plain `mating_tally`/`mating_resolved` come `unknown_type` (solo `world_tally` aveva case esplicito), quindi tally live non arrivava mai al phone (handler shippato su `_on_event_received` versioned-only = mai fired). Fix: signal+case dedicati (mirror world_tally) + composer rewire + `PhoneMatingView.set_resolved` offspring reveal. **Loop §22-B phone completo + live**. 2834 GUT pass. *Course-correction #3 (stessa classe PR-1/SDMG): peer-routing consumer-side va verificato end-to-end, non solo unit che bypassa il peer.*
+- **Stray PR triage** (out-of-scope, review propria): `#2424` (doc TKT-09) + `#2429` (taxonomy version-pin env-gated) + `#2385` (weekly-drift-audit, era draft) MERGED; **`#2428` ERMES bridge Fase-2 (+1254 ADR feat + Codex P2 mutation-bias) FLAGGED non-merged** -- feature cross-agent sostanziale, decisione Eduardo.
+
 ### Da fare (next session)
-- Handoff **#5** Enforcement ALIENA: machinery shippable config-gated (veto spawn/weight per SoT Sec21), threshold tuning data-driven post-collection. NON iniziato.
-- S22-B Task 8 Godot offspring-reveal UI (consumer `mating_resolved`) -- minore.
-- 4 stray Game PR out-of-scope: #2424/#2428/#2429/#2385 (review propria).
-- ~~#6 Token cost baseline~~ DONE (snapshot 2026-05: cloud $0.0148/0.074%, no nuovo spend Ryzen).
-- ~~Spawn .uid drift~~ DONE da Jules #365.
+- **`#2428` ERMES bridge Fase-2**: review Eduardo + fix Codex P2 (mutation-bias buckets non popolati pre-return) prima di merge.
+- ALIENA `strength` value tuning -- data-driven post telemetry-collection (endpoint #2420).
+- ~~#5 enforcement~~ DONE (#2435). ~~Task 8 reveal~~ DONE (#370). ~~#6 cost baseline~~ DONE. ~~stray PR triage~~ DONE (3 merged, #2428 flagged).
 
 ### Note
 - **SDMG**: runtime (peer routing) ha falsificato assunzione "publishPhaseChange non su ALIENA path" -> corretto mid-PR-1 (Room surface). Lesson candidate: verificare consumer-side routing PRIMA di scegliere broadcast surface.
