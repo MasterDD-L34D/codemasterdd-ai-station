@@ -19,6 +19,26 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-05-29 (hub checkup + 3-task batch: backup + vault smell-fix + Game #2437 ermes ship)
+
+Sessione Lenovo (.10) hub. Avvio-checkup completo (identity P1, git/gh fleet, agent-scanner BOOTSTRAP, compass DI 87, Currency Gate sui governance docs) -> poi 4 work-item selezionati Eduardo in sequenza.
+
+### Completato
+- **Cleanup branch stale** (PR #227): `docs/ermes-fase2b-knowledge-map` era 2-ahead/12-behind + superseded (journal-land.ps1 @152 vs main gia' @262). Salvata l'unica riga unica (ERMES KNOWLEDGE_MAP §2) via cherry-pick su branch fresco + jules 2026-05-29 digest tracked. Stale abbandonato. main pulito.
+- **Gate-E evidence sync** (PR #228, codemasterdd Short goal): `docs/cross-repo/gate-e-evidence.md` §1 lag-fixato 3->4 invocazioni / 67%->50% adoption (aggiunto #4 MCP llm-fleet REJECT). Health signals GREEN (50% > 30% trigger; 0 ADOPT-without-experiment). §2 Hybrid A1 + §3 H7 spend = $0 verificati current. Pronto per ~06-03 D2 gate.
+- **Fleet mirror refresh** (cross-fleet-repro): `scripts/backup/mirror-repos.ps1` rilanciato, 7 repo bare-mirror current (erano 1.5gg stale). L-040 fix confermato (all [ok], no false-fail su git-stderr). NO fake-commit per il compass-pillar (dip = timing, non gap reale).
+- **Game #2437 ermes FASE 3 P1 MERGED** (commit b4802f0): code-review PASS verificato (cap +/-2 COMBINED corretto via base-snapshot/diff/re-apply, R6 gate no-epigenome, idempotent, soft-fail; 3 test file +151 righe; CI all green). ermes ora LIVE in combat (era plumbing-only da FASE 2). P2 N=40 WR calibration = follow-up documentato.
+
+### Da fare
+- **vault (tuo merge gate sovereign)**: merge 5 backstop puliti (#180/181/190/205/213) + salvage #217; ratifica smell-fix #219 (trigger-C direct-commit policy) -> poi 1-line Ryzen cron change (sostituisci `gh pr create --draft` con commit-diretto su 0-BLOCK) per killare il pile-up alla radice. #201 gia' chiuso (superseded).
+- **Game P2**: N=40 WR calibration ermes (harness Ryzen PG17, doc `2026-05-30-ermes-fase3-p2-calibration.md` mergiato) -> ratifica WR shift <5pp.
+
+### Note
+- vault triage #201: eng-graph half (eng_cognee + SoT §24.6 D-HEIR/D-REPRO + crosswalk + ollama-runs) gia' su main via #200 + direct eng-work -> 100% superseded (main ahead: Fase-3 epigenome, SoT v7.5). Solo i 2 lint report 27/5 erano unici (404 su main) -> salvati in #217. Conflitto = quell'overlap.
+- Boundary rispettato: vault/Game merge = gate Eduardo; salvage+close #201 + Game #2437 merge = auth esplicita per-item via AskUserQuestion.
+- Anti-pattern guard attivi: #19 ground-truth-before-action (gate-e ledger 4 vs durable doc 3), no-fake-commit (backup pillar onesto), #11 worktree-isolation (tutti gli edit vault).
+- Game #2437 risultava "already merged" al mio merge-attempt = merge concorrente (tuo/altra sessione) post-scelta "merge ora"; outcome confermato (b4802f0, ermes live su main, Game 0 PR open).
+
 ## 2026-05-29 (journal-land helper hardened -- worktree isolation, shared-clone safe)
 
 Eduardo flagged that the journal-land helper failed when I used it. Root-caused + fixed (this entry landed BY the fixed helper = live dogfood).
