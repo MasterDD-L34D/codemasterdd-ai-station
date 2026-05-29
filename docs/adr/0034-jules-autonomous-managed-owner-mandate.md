@@ -13,6 +13,7 @@
 > (b) Eduardo permission-rule che sblocca il classifier auto-mode.*
 
 - **Status**: **Accepted (Option D) 2026-05-18** — Eduardo "si confermo". Option A REJECTED-redux da arbitro esterno harsh-reviewer (conf 84%, SDMG pre-commit onorato, NON difesa). **Modello vincolante = Option D**: full-auto triage+ground-truth + auto-exec-solo-non-generativo + generativo via 1 batch-artifact Eduardo-approve/ciclo. Unlock = **batch-approve esplicito Eduardo** (NON standing permission-rule — least-privilege: nessun privilegio autonomo external-write permanente; il batch-approve umano e' il throttle generativo). Go-live operativo = primo batch-artifact approvato (= dry-run falsifying experiment).
+> Amended by ADR-0036 + standing authorization 2026-05-29: the autonomy ladder removes the human batch-approve throttle for verified-gate-green classes (auto-merge incl. external-repo when CI + Codex-resolved + different-model-judge pass); the human throttle is retained ONLY for the irreducible residue (irreversible / outward-facing / account-credential / architecture). Routing entry point = ORCHESTRATION.md.
 - **Data**: 2026-05-18
 - **Decisore**: Eduardo Scarpelli (mandato durevole esplicito)
 - **Supersedes**: ADR-0033 decision (2) (esterni read-only / zero sendMessage / Eduardo-explicit). ADR-0033 (1) throttle + (3) own-repo-active RESTANO validi e incorporati.

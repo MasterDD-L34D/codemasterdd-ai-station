@@ -2,6 +2,7 @@
 
 > Status: **Accepted** — 2026-05-29 (ratified; scoped clean-rate 5/5 = 100% >= 80% gate; see Ratification)
 > Builds on ADR-0034 (Jules autonomous managed-owner, Option D) + ADR-0033 (governance) + standing authorization 2026-05-29 (Claude may answer/archive Jules sessions, R3-bis discipline).
+> Consolidated under ADR-0036 (ORCHESTRATION.md) 2026-05-29: routing surface unified; this ADR stays Accepted as detail. Cross-executor entry point = ORCHESTRATION.md.
 
 ## TL;DR
 
