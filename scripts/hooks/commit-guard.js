@@ -22,6 +22,19 @@ process.stdin.on('end', () => {
   if (toolName !== 'Bash') process.exit(0);
   if (!/(^|[;&|]\s*)git\s+commit/.test(command)) process.exit(0);
 
+  // ADR-0011 Addendum 2026-05-17 (policy-C, Eduardo-decided): ban GitHub
+  // "Co-Authored-By:" trailer. ALWAYS-ON -- applies even to HEREDOC commits
+  // (orthogonal to the Conventional format-check which stays HEREDOC-skip).
+  // Cheap content check on full command, zero false-positive.
+  if (/co-authored-by\s*:/i.test(command)) {
+    process.stderr.write(
+      'commit-guard.js block -- ADR-0011 policy-C: "Co-Authored-By:" trailer VIETATO.\n' +
+      '  Usa trailer metadata: "Coding-Agent: <agent-id>" + "Trace-Id: <uuidv7>".\n' +
+      '  Rif: codemasterdd docs/adr/0011 Addendum 2026-05-17.\n'
+    );
+    process.exit(2);
+  }
+
   // Check for HEREDOC opener
   if (command.includes('<<')) {
     console.error('HEREDOC detected, skipping validation');
