@@ -19,6 +19,28 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-05-30 (Game design-data orchestration: adapter keystone phase 1+2a + D5/D6 + swarm merge-gate)
+
+Sessione Lenovo (.10) hub. Continuazione del design-data gap-plan su Game (atlas 8-sistemi + 4-wave plan gia' landati). Orchestrazione: build keystone adapter ecologia->combat + risoluzione decisioni + merge-gate per uno swarm di sessioni-chip parallele. 13 PR landati/triagati su Game.
+
+### Completato
+- **Census + reframe** (#2454 census ecologia-combat disconnect, #2456 plan reframe adapter-first): 0/53 specie canoniche hanno hp/mod/dc -> la keystone Wave 3/4 NON e il backfill-broad ma l'**adapter ecologia->combat**. D4 demoted (foodweb-only), nuova D6.
+- **Decisioni D5+D6 risolte** (#2459): D5 SPECIES_BY_JOB = derive-from-jobs_bias (DRY, SoT species.jobs_bias 1:many, indice inverso derivato, impl deferita roster-UI YAGNI). D6 rovine_planari = leave hardcore_06/07 (bande ratificate) + fill come NEW content. Gate Wave 3-4: resta solo L2-L5 (playtest-gated).
+- **Adapter keystone** (TKT-ADAPTER-ECO-COMBAT): spec #2457 -> **phase 1** #2460 (`ecologyCombatAdapter.js` deriveCombatStats threat_tier x role_class, 16 test TDD) -> **phase 2a** #2468 (pilota `enc_badlands_pilot_01`, enemies adapter-derived da specie badlands reali, loader normalizza YAML balance.threat_tier, GAP-A verificato, 8 test TDD). Design: trait passthrough via traitEffects (no doppio conteggio), tabelle = knob calibrazione, output BASE pre-damageCurves.
+- **Swarm merge-gate** (10 PR sessioni-chip): Wave-1 surface #2461+#2465 (P4 voices live end-to-end), Wave-2 combat #2463 (4 orphan wire + crit system, **band-verified N=40 calibrate_parallel live + harsh-review SHIP no-P0**), follow-up #2464 (woundperma permanent-meta doc per tua decisione roguelike + crit-panic clarity), Codex #2455, D4 spec/CLI #2462+#2466, atlas-fix #2458, campaign #2469.
+
+### Da fare
+- **Adapter phase 2b** (prossima sessione fresca): calibrazione N=40 enc_badlands_pilot_01 -> damage_curves band + calibrate_parallel SCENARIO_MAP + batch script -> run N=40 -> tune knob adapter (HP_BASE/role-mult) -> ratify banda (disciplina L-069/L-070/L-072/L-073). Empirica, ore wall-time. Handoff paste-ready prodotto.
+- **Triage swarm PR aperti**: #2470 job-expansion perks [PHASEC] (behavior-critical, band-check), #2467 e2e debrief socket, #2466 D4 CLI.
+- **Fix terrain-flake** (chip spawnato): `terrain wire: lightning + water -> electrified + burst damage` cronico (bloccato #2464+#2468), probabile unseeded RNG / Worker SIGTERM sotto CI-load.
+
+### Note
+- **Swarm concorrenza**: sessioni-chip parallele proliferano (d4-impl, phasec, p4, debrief-wire) -> io merge-gate. Hot-files (session.js/hardcoreScenario.js) -> nuovo modulo separato badlandsPilotScenario.js (SRP + low-conflict) invece di editare hardcoreScenario 470-righe.
+- **node_modules wiped**: una sessione swarm ha svuotato C:/dev/Game/node_modules (npm ci mid-flight su shared checkout) -> js-yaml/prettier rotti. Fix: npm ci nel worktree isolato (deps proprie, immune al churn main-checkout).
+- **Terrain-flake + swarm-race**: #2468 bloccata da flake cronico (non-mio: 8/8 test verdi, flake anche su #2464) + BEHIND-race (swarm landa durante i rerun). Risolto: smart-poll auto-update-branch su BEHIND + full-rerun fresh-runner (3 tentativi). Costoso ma pulito (no admin-merge su behavior-critical).
+- **Harsh-review #2463** (Protocol 5): SHIP no-P0; band-gate chiuso confermando calibrate_parallel = live backend (start_shard spawn node index.js) -> N=40 valida; HC07-identical-baseline = self-consistent proof draw cold.
+- Anti-pattern guard: #8/#19 ground-truth (cumstate gia-wired confermato vs BACKLOG-stale L-075), #10 (deletions = refactor-extract verificate), #12 ASCII (em-dash header .js fixati pre-push; git-diff escludeva untracked = methodology miss corretta via git-show added-lines).
+
 ## 2026-05-29 (hub checkup + 3-task batch: backup + vault smell-fix + Game #2437 ermes ship)
 
 Sessione Lenovo (.10) hub. Avvio-checkup completo (identity P1, git/gh fleet, agent-scanner BOOTSTRAP, compass DI 87, Currency Gate sui governance docs) -> poi 4 work-item selezionati Eduardo in sequenza.
