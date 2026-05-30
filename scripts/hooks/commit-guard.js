@@ -35,6 +35,17 @@ process.stdin.on('end', () => {
     process.exit(2);
   }
 
+  // ADR-0011-C (warn-only, policy-C): nudge missing required trailers. This is a
+  // PreToolUse hook -- it fires ONLY for Claude Code agent commits, so it never
+  // nags human hand-commits (those go through the global commit-msg hook, which
+  // deliberately does NOT require the trailers). Non-blocking: warn + continue.
+  if (!/coding-agent\s*:/i.test(command) || !/trace-id\s*:/i.test(command)) {
+    process.stderr.write(
+      'commit-guard.js note (ADR-0011-C, warn-only): agent commit missing ' +
+      '"Coding-Agent:" and/or "Trace-Id:" trailer -- add them (not blocked).\n'
+    );
+  }
+
   // Check for HEREDOC opener
   if (command.includes('<<')) {
     console.error('HEREDOC detected, skipping validation');
