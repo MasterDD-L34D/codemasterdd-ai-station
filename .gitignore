@@ -84,3 +84,8 @@ logs/sdmg-invocations-*.jsonl
 Extras/dashboard-logs/
 apps/dogfood-ui/data/*.sqlite
 apps/dogfood-ui/data/*.sqlite-journal
+
+# === tdd-guard scratch (nested .claude dirs; root .claude/* misses sub-app paths) ===
+**/.claude/tdd-guard/
+# === apps/dogfood-ui decommissioned (OD-009) -- ignore orphan sqlite-shm/wal + pyc remnants ===
+apps/dogfood-ui/
