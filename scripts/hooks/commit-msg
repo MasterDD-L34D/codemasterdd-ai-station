@@ -1,0 +1,72 @@
+#!/bin/bash
+# Guard rail: validate Conventional Commits format across all agents (ADR-0011)
+# Applies to Claude Code, Aider, manual git, any subprocess invoking git commit.
+# Companion to scripts/hooks/commit-guard.js (Claude Code PreToolUse fail-fast).
+#
+# Rules:
+#   - Conventional Commits: type(scope): description
+#   - Subject line <= 72 chars
+#   - No trailing period
+#   - Lowercase description
+#
+# To bypass (NOT recommended): git commit --no-verify
+# To uninstall: git config --global --unset core.hooksPath
+
+set -u
+
+MSG_FILE="$1"
+[ -z "$MSG_FILE" ] && exit 0
+[ -f "$MSG_FILE" ] || exit 0
+
+MSG=$(head -n 1 "$MSG_FILE")
+
+[ -z "$MSG" ] && exit 0
+
+# Skip auto-generated commits (merge, revert, fixup/squash)
+case "$MSG" in
+    Merge*|Revert*|fixup\!*|squash\!*|\#*) exit 0 ;;
+esac
+
+# ADR-0011 Addendum 2026-05-17 (policy-C): ban Co-Authored-By trailer (Layer 2;
+# covers Aider/manual/external agents that bypass the Claude PreToolUse hook).
+# Scans the FULL message (trailer is at the bottom, not the subject line).
+if grep -qiE 'co-authored-by[[:space:]]*:' "$MSG_FILE"; then
+    echo 'commit-msg hook block -- ADR-0011 policy-C: "Co-Authored-By:" trailer VIETATO.' >&2
+    echo '  Usa trailer metadata: Coding-Agent: <agent-id> + Trace-Id: <uuidv7>.' >&2
+    exit 1
+fi
+
+errors=()
+
+TYPE_RE='(feat|fix|docs|style|refactor|perf|test|chore|ci|build|revert)'
+
+if ! echo "$MSG" | grep -qE "^${TYPE_RE}(\(.+\))?!?:[[:space:]].+"; then
+    errors+=("Message does not follow conventional commit format: type(scope): description")
+fi
+
+msg_len=${#MSG}
+if [ "$msg_len" -gt 72 ]; then
+    errors+=("Subject line is ${msg_len} chars (max 72)")
+fi
+
+case "$MSG" in
+    *.) errors+=("Subject line should not end with a period") ;;
+esac
+
+desc=$(echo "$MSG" | sed -E "s/^${TYPE_RE}(\(.+\))?!?:[[:space:]]+//")
+first_char="${desc:0:1}"
+case "$first_char" in
+    [A-Z]) errors+=("Description should start with lowercase letter") ;;
+esac
+
+if [ ${#errors[@]} -gt 0 ]; then
+    echo "commit-msg hook block -- commit message issues:" >&2
+    for e in "${errors[@]}"; do
+        echo "  - $e" >&2
+    done
+    echo "" >&2
+    echo "Subject: ${MSG}" >&2
+    exit 1
+fi
+
+exit 0
