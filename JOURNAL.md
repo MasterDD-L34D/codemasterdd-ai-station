@@ -19,6 +19,29 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-06-01 (HUB Game Wave-3: adapter calib + bestiary unify + trait-reconcile + strato-2 lore + lifecycle + events)
+
+Sessione Lenovo (.10) hub lunga, tutta su Game (Evo-Tactics) Wave-3 design-data. Caveman mode. 13 PR mergeate end-to-end (worktree isolati off origin/main, squash --delete-branch, merge-gate CI + Codex).
+
+### Completato
+- **Adapter ecologia->combat calibrato** (#2475): pilota badlands band win_rate [0.40,0.60] GREEN. Finding chiave: il lever NON erano i knob HP dell'adapter (baseline corretto) ma `turn_limit_defeat=37` (stalemate breaker). 3x N=40 ratify.
+- **CANON-RECONCILE / bestiary unify** (D7, #2490/#2496): canon (53) + creature gameplay (43) erano due bestiari quasi disgiunti. 22 promosse in `species_catalog.json` (53->75) + fix schema source-enum/ecotypes (Codex P2).
+- **TRAIT-RECONCILE** (#2501/#2507): 50 `TR-####` ref dangling -> remappati a slug (mappa esisteva in `data/external/evo/traits/TR-####.json`) + guard CI catalog-trait_refs.
+- **Strato-2 lore** (#2503/#2508/#2511): 16/22 creature reali con trait_refs + prosa completa (binomi per naming-styleguide, voce naturalista, grounded su foodweb + vault Pathfinder/GM manuals come metodo, no IP).
+- **Lifecycle stub** (#2514): 5-fasi grounded biome-native per le 16.
+- **Eventi mal-promossi** (#2515/#2517): 6 `evento_ecologico` flaggati `is_event` + filtro ETL + esclusi dal canonical index. Chip-agente verificato + reconciled + 2 Codex P2 fix.
+- **Tracker aggiornati** (#2518 gap-plan) + memoria `project_game_wave3_hub`.
+
+### Da fare (gated/creativo, NON HUB-auto-derivabile)
+- Lifecycle per-fase authoring (aspect/sprite prose, tipo Skiv 5-fasi).
+- ecotypes cluster (vocab vincolato), orphan-mech glossary (4, synced), flavor-only->meccanica (106), D6 rovine, traitkeeper-reloc.
+- 38 lifecycle legacy + eco-yaml promotion (sessione D4/swarm).
+
+### Note
+- **Merge-gate lesson rinforzata**: Codex revisiona con LAG -> sempre re-check `gh api .../comments` ~75s dopo CI-verde. Ha intercettato P2 REALI su 5 mie PR (schema enum, version downgrade, stats recompute, kebab refs). Tutti fix-forward pre-merge.
+- `species_catalog.json` editato in-place (sorgenti merge /tmp perse); glossary synced da `index.json` (no hand-edit).
+- Multi-sessione concorrente su Game (d4-ecoyaml, fix-ecotypes-enum, gapc, phasec, pillar-status) -> worktree isolati = zero conflitto.
+
 ## 2026-05-30 (Game design-data orchestration: adapter keystone phase 1+2a + D5/D6 + swarm merge-gate)
 
 Sessione Lenovo (.10) hub. Continuazione del design-data gap-plan su Game (atlas 8-sistemi + 4-wave plan gia' landati). Orchestrazione: build keystone adapter ecologia->combat + risoluzione decisioni + merge-gate per uno swarm di sessioni-chip parallele. 13 PR landati/triagati su Game.
