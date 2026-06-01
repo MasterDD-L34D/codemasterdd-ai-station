@@ -19,6 +19,26 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-06-01 (Ryzen: fleet governor -- Fase 0 doctrine shipped + Fase 1 plan)
+
+Sessione Ryzen (.11), parallela alla sessione hub Game di oggi. Caveman mode. Goal multi-fase: governatore autonomo unico del fleet, cablato SENZA rompere SDMG (falsify-before-autonomy).
+
+### Completato
+- **Ground-truth (Protocol 1)**: Gate-E coord-pain log = 0 eventi reali (solo 2 test); `.claude/settings.json` ceiling = `push claude/*` (no merge -> auto-merge NON cablato); dashboard = Flask in-memory, NO SQLite; mappate le 5 fonti-segnale reali (Game governance_drift JSON + sot-drift gh-issue; vault gap/coherence/whatsmissing md privati; evo-swarm digest; ARCHON learnings).
+- **SDMG falsification (harsh-reviewer)**: verdetto SURVIVE-WITH-CHANGES, 4 P0, tutti adottati non difesi. Ucciso un Gate-E auto-instrument self-licking; corretto premise "circolare" -> SDMG-incompatibile; ridotto scope da 4-fasi-dottrina a spine + Fase-1.
+- **Fase 0 SHIPPED -> PR #241**: ADR-0036 spine **Accepted** + auto-merge rung **Deferred** (earn-path); ORCHESTRATION sec 5 annotata R0-R3; nuovo spec design + `actor-activation-criteria.md` (earn-path meccanico + off-ramp N=3/4wk); piano Fase-1a. 5 doc, zero codice, zero autonomia.
+- **Fase 1a pianificata** (TDD): SignalStore sqlite + Signal model + 2 ingestor pubblici + pane read-only + advisory log severed. Scope-split: Fase-1b = vault authed + gh-issue + learnings.
+- Memoria `project_fleet_governor` + index.
+
+### Da fare (gated)
+- Merge PR #241 (ADR-class = Eduardo). Poi eseguire Fase-1a (gated su merge).
+- Fasi 2-4 evidence-gated: off-ramp 4 settimane dopo ship Fase-1 (acted-on >=3) prima di Fase 2.
+
+### Note
+- Destinazione = governatore completo (scope C Eduardo); percorso = ladder SDMG (guadagna ogni rung, no pre-ratify). "C full build" riconciliato SDMG = full-phased, non big-bang.
+- Gate-E zero = logging-gap (L-016) per Eduardo, non zero-dolore: tutti e 4 i dolori confermati reali.
+- harsh-reviewer = Claude (monoculture parziale); R2 richiede different-FAMILY judge (cross_check).
+
 ## 2026-06-01 (HUB Game Wave-3: adapter calib + bestiary unify + trait-reconcile + strato-2 lore + lifecycle + events)
 
 Sessione Lenovo (.10) hub lunga, tutta su Game (Evo-Tactics) Wave-3 design-data. Caveman mode. 13 PR mergeate end-to-end (worktree isolati off origin/main, squash --delete-branch, merge-gate CI + Codex).
