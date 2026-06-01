@@ -1,25 +1,56 @@
 from __future__ import annotations
 
+import base64
 import json
+import subprocess
 import sys
 from pathlib import Path
 
 import requests
 
-from governor.parsers import parse_game_governance_drift, parse_evo_swarm_digest, parse_sot_drift_issues
+from governor.parsers import (
+    parse_game_governance_drift,
+    parse_evo_swarm_digest,
+    parse_sot_drift_issues,
+    parse_vault_report,
+)
 
-# Each source: id -> (url, parse-style). URLs overridable by env in Fase-1b.
+# Source URLs.
 GAME_DRIFT_URL = "https://raw.githubusercontent.com/MasterDD-L34D/Game/main/reports/docs/governance_drift_report.json"
 EVO_EXPORTS_API = "https://api.github.com/repos/MasterDD-L34D/evo-swarm/contents/docs/exports"
-EVO_RAW_BASE = "https://raw.githubusercontent.com/MasterDD-L34D/evo-swarm/main/docs/exports/"
 SOT_ISSUES_URL = "https://api.github.com/repos/MasterDD-L34D/Game/issues?labels=sot-drift-candidate&state=open"
+VAULT_LINT_API = "https://api.github.com/repos/MasterDD-L34D/vault/contents/Extras/lint-reports"
+
+# 6 sources: 2 Game public + 1 evo private + 3 vault lint.
+SOURCES = [
+    {"id": "game-governance-drift", "style": "json"},
+    {"id": "game-sot-drift", "style": "gh-issues"},
+    {"id": "evo-swarm-digest", "style": "evo-private"},
+    {"id": "vault-gap", "style": "vault", "prefix": "gap-", "kind": "gap"},
+    {"id": "vault-coherence", "style": "vault", "prefix": "coherence-", "kind": "coherence"},
+    {"id": "vault-whatsmissing", "style": "vault", "prefix": "whatsmissing-", "kind": "whatsmissing"},
+]
+
+
+def _gh_token() -> str:
+    """Token from env, else `gh auth token` (mirrors app.py)."""
+    import os
+    t = os.environ.get("GH_TOKEN", "").strip() or os.environ.get("GITHUB_TOKEN", "").strip()
+    if t:
+        return t
+    try:
+        r = subprocess.run(["gh", "auth", "token"], capture_output=True, text=True, timeout=10)
+        if r.returncode == 0:
+            return r.stdout.strip()
+    except Exception:  # noqa: BLE001
+        pass
+    return ""
 
 
 def gh_get_json(url: str):
-    """GET a GitHub REST endpoint -> parsed JSON. Token optional (public repos)."""
-    import os
+    """GET a GitHub REST endpoint -> parsed JSON. Token via _gh_token (public + private repos)."""
     headers = {"Accept": "application/vnd.github+json", "X-GitHub-Api-Version": "2022-11-28"}
-    tok = os.environ.get("GH_TOKEN", "").strip()
+    tok = _gh_token()
     if tok:
         headers["Authorization"] = f"Bearer {tok}"
     r = requests.get(url, headers=headers, timeout=15)
@@ -27,52 +58,68 @@ def gh_get_json(url: str):
     return r.json()
 
 
-def resolve_evo_latest_url(lister=gh_get_json) -> str | None:
-    """List the exports dir, return the raw URL of the newest dated digest."""
-    entries = lister(EVO_EXPORTS_API)
-    names = sorted(
-        e["name"] for e in (entries or [])
-        if str(e.get("name", "")).startswith("EXPORT-FOR-GAME-REPO") and e["name"].endswith(".md")
-    )
-    if not names:
-        return None
-    return EVO_RAW_BASE + names[-1]
+def gh_get_file_content(api_url: str, getter=None) -> str:
+    """GET a contents-API file URL -> decoded UTF-8 text (private-repo safe)."""
+    getter = getter or gh_get_json
+    obj = getter(api_url)
+    if isinstance(obj, dict) and obj.get("encoding") == "base64":
+        return base64.b64decode(obj.get("content", "")).decode("utf-8", errors="replace")
+    raise ValueError("unexpected contents-API response (no base64 content)")
 
-# evo-swarm deferred to Fase-1c (PRIVATE repo -> needs authed-contents-fetch, like vault)
-SOURCES = [
-    {"id": "game-governance-drift", "style": "json"},
-    {"id": "game-sot-drift", "style": "gh-issues"},
-]
+
+def resolve_latest_in_dir(api_url: str, prefix: str, getter=None) -> str | None:
+    """List a contents dir, return the contents-API url of the newest prefix*.md."""
+    getter = getter or gh_get_json
+    entries = getter(api_url)
+    cands = sorted(
+        [e for e in (entries or [])
+         if str(e.get("name", "")).startswith(prefix) and e.get("name", "").endswith(".md")],
+        key=lambda e: e["name"],
+    )
+    if not cands:
+        return None
+    return cands[-1].get("url")  # contents-API url of the file
 
 
 def raw_fetch(url: str) -> str:
-    """Anonymous raw fetch (public repos). Fase-1b adds authed + gh-issue."""
+    """Anonymous raw fetch (public repos)."""
     r = requests.get(url, timeout=15)
     r.raise_for_status()
     return r.text
 
 
-def _produce(source_id: str, style: str, fetcher, json_getter):
+def _produce(src: dict, fetcher, json_getter, content_getter):
     """Fetch + parse one source into a Signal. Raises on failure (caller isolates)."""
+    sid, style = src["id"], src["style"]
     if style == "json":
-        body = fetcher(GAME_DRIFT_URL)
-        return parse_game_governance_drift(json.loads(body))
-    if style == "evo-dynamic":
-        url = resolve_evo_latest_url(json_getter) or (EVO_RAW_BASE + "EXPORT-FOR-GAME-REPO-latest.md")
-        return parse_evo_swarm_digest(fetcher(url), url)
+        return parse_game_governance_drift(json.loads(fetcher(GAME_DRIFT_URL)))
     if style == "gh-issues":
-        issues = json_getter(SOT_ISSUES_URL)
-        return parse_sot_drift_issues(issues, SOT_ISSUES_URL)
-    raise ValueError(f"unknown style {style} for {source_id}")
+        return parse_sot_drift_issues(json_getter(SOT_ISSUES_URL), SOT_ISSUES_URL)
+    if style == "evo-private":
+        url = resolve_latest_in_dir(EVO_EXPORTS_API, "EXPORT-FOR-GAME-REPO", json_getter)
+        if not url:
+            raise ValueError("no evo export found")
+        return parse_evo_swarm_digest(content_getter(url), url)
+    if style == "vault":
+        url = resolve_latest_in_dir(VAULT_LINT_API, src["prefix"], json_getter)
+        if not url:
+            raise ValueError(f"no vault {src['prefix']} report found")
+        return parse_vault_report(content_getter(url), source=sid, kind=src["kind"], ref=url)
+    raise ValueError(f"unknown style {style} for {sid}")
 
 
-def ingest_all(store, fetcher=raw_fetch, json_getter=gh_get_json) -> dict:
+def ingest_all(
+    store,
+    fetcher=raw_fetch,
+    json_getter=gh_get_json,
+    content_getter=gh_get_file_content,
+) -> dict:
     ingested = 0
     new = 0
     errors = 0
     for src in SOURCES:
         try:
-            sig = _produce(src["id"], src["style"], fetcher, json_getter)
+            sig = _produce(src, fetcher, json_getter, content_getter)
             is_new = store.upsert(sig)
             ingested += 1
             if is_new:

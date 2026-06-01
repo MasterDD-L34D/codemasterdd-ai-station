@@ -54,6 +54,65 @@ def parse_evo_swarm_digest(md: str, ref: str) -> Signal:
     )
 
 
+_RE_VAULT_DATE_TITLE = re.compile(r"^#\s+.*?(20\d{2}-\d{2}-\d{2})", re.MULTILINE)
+_RE_VAULT_DATE_ANY = re.compile(r"(20\d{2}-\d{2}-\d{2})")
+_RE_VAULT_BOLD_NUM = re.compile(r"\*\*(\d+)\*\*")
+_RE_VAULT_SUMMARY = re.compile(r"^##\s+Summary\b(.*?)(?=^##\s|\Z)", re.MULTILINE | re.DOTALL | re.IGNORECASE)
+_RE_VAULT_BLOCK = re.compile(r"\bBLOCK:\s*(\d+)")
+
+
+def parse_vault_report(md: str, source: str, kind: str, ref: str) -> Signal:
+    """Generic vault lint-report parser (gap-scan, coherence, whatsmissing).
+
+    R0 surface (presence + coarse severity; detail lives at `ref`):
+    - date: anchored to the report's `# heading` line (a stray ISO date in body
+      prose must not win and churn the change-hash every run).
+    - severity: error ONLY if the structured verdict `BLOCK: N` has N>0 (NOT the
+      bare word "BLOCK", which appears in policy prose -> false alarms); else
+      warning if the `## Summary` section has any nonzero metric; else ok.
+    - findings/metrics are restricted to the `## Summary` section (excludes corpus
+      sizes like "Scanned **2249** md"). The summary STRING reports the count of
+      nonzero metrics, NOT a conflated sum (a graph-density census is not an
+      actionable finding total).
+    """
+    text = md or ""
+    m_title = _RE_VAULT_DATE_TITLE.search(text)
+    if m_title:
+        produced_at = m_title.group(1)
+    else:
+        m_any = _RE_VAULT_DATE_ANY.search(text)
+        produced_at = m_any.group(1) if m_any else None
+    m_sum = _RE_VAULT_SUMMARY.search(text)
+    nums = [int(n) for n in _RE_VAULT_BOLD_NUM.findall(m_sum.group(1) if m_sum else "")]
+    findings = sum(nums)
+    nonzero = sum(1 for n in nums if n > 0)
+    m_block = _RE_VAULT_BLOCK.search(text)
+    block_n = int(m_block.group(1)) if m_block else 0
+    if block_n > 0:
+        severity = "error"
+    elif nonzero > 0:
+        severity = "warning"
+    else:
+        severity = "ok"
+    date_s = produced_at or "(undated)"
+    if nums:
+        summary_text = f"{kind} report {date_s}: {nonzero}/{len(nums)} summary metrics nonzero"
+    elif block_n > 0:
+        summary_text = f"{kind} report {date_s}: BLOCK {block_n}"
+    else:
+        summary_text = f"{kind} report present {date_s}"
+    return Signal(
+        source=source,
+        kind=kind,
+        severity=severity,
+        summary=summary_text,
+        counts={"findings": findings, "metrics": len(nums), "nonzero": nonzero, "block": block_n},
+        produced_at=produced_at,
+        ref=ref,
+        payload_hash=make_hash(source, str(produced_at), str(findings), str(block_n)),
+    )
+
+
 def parse_sot_drift_issues(issues: list, ref: str) -> Signal:
     items = issues or []
     open_count = len(items)

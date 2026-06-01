@@ -70,3 +70,72 @@ def test_parse_sot_drift_issues_empty_is_ok():
     assert sig.severity == "ok"
     assert sig.counts == {"open": 0}
     assert sig.produced_at is None
+
+
+def test_parse_vault_report_gap():
+    from pathlib import Path
+    from governor.parsers import parse_vault_report
+    md = (Path(__file__).resolve().parent / "fixtures" / "vault_gap.md").read_text(encoding="utf-8")
+    sig = parse_vault_report(md, source="vault-gap", kind="gap", ref="ref")
+    assert sig.source == "vault-gap"
+    assert sig.kind == "gap"
+    assert sig.produced_at == "2026-06-01"
+    # findings present (G4=1, G3=4, dup=1 -> nonzero) -> warning
+    assert sig.severity == "warning"
+    assert "finding" in sig.summary.lower() or any(v > 0 for v in sig.counts.values())
+    assert sig.payload_hash != ""
+
+
+def test_parse_vault_report_empty_is_ok():
+    from governor.parsers import parse_vault_report
+    sig = parse_vault_report("", source="vault-coherence", kind="coherence", ref="r")
+    assert sig.severity == "ok"
+    assert sig.counts["findings"] == 0
+
+
+def test_parse_vault_report_counts_only_summary_section():
+    # Real reports bold the corpus size ("Scanned **2249** md") OUTSIDE the Summary;
+    # findings must count ONLY the Summary-section metrics, not corpus/other numbers.
+    from governor.parsers import parse_vault_report
+    md = (
+        "# Gap-scan report 2026-06-01\n\n"
+        "Scanned **2249** md.\n\n"
+        "## Summary\n\n"
+        "- G4 orphan: **1**\n"
+        "- G3 stale: **4**\n\n"
+        "## G4 orphan (1)\n- detail **9**\n"
+    )
+    sig = parse_vault_report(md, source="vault-gap", kind="gap", ref="r")
+    assert sig.counts["findings"] == 5   # 1 + 4 (Summary only); NOT 2249 or 9
+    assert sig.counts["metrics"] == 2
+
+
+def test_parse_vault_report_date_anchored_to_title():
+    # A stray ISO date in body text before the title must NOT win: the report
+    # date comes from the heading line (else wrong produced_at -> wrong hash ->
+    # spurious "new" signal churn in the advisory pane every ingest run).
+    from governor.parsers import parse_vault_report
+    md = (
+        "context mentions 2025-01-01 in passing\n\n"
+        "# Gap-scan report 2026-06-01\n\n"
+        "## Summary\n\n"
+        "- G4 orphan: **1**\n"
+    )
+    sig = parse_vault_report(md, source="vault-gap", kind="gap", ref="r")
+    assert sig.produced_at == "2026-06-01"
+
+
+def test_parse_vault_report_coherence_block_zero_not_error():
+    # Coherence reports have NO `## Summary`; the bare word "BLOCK" appears in
+    # policy prose, but the STRUCTURED verdict is `BLOCK: 0`. Must NOT be a false
+    # "error" (that would cry wolf on the governor's top-severity signal).
+    from governor.parsers import parse_vault_report
+    md = (
+        "# Coherence pass -- 2026-06-01\n\n"
+        "Apri PR SOLO se >=1 BLOCK. WARN o BLOCK -> review.\n\n"
+        "## Disposition\n\nVerdict: BLOCK: 0  WARN: 1  INFO: 6\n"
+    )
+    sig = parse_vault_report(md, source="vault-coherence", kind="coherence", ref="r")
+    assert sig.severity != "error"      # BLOCK: 0 -> not blocking
+    assert sig.counts["block"] == 0
+    assert sig.produced_at == "2026-06-01"
