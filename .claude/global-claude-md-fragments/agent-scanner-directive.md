@@ -18,7 +18,7 @@ Microsoft Multi-Agent Reference Architecture).
 **Sorgenti** (priorita decrescente, vedi SKILL.md):
 `.claude/agents/` PROJECT > `~/.claude/agents/` USER > plugin agents
 > `~/.claude/skills/` > `.claude/skills/` > `AGENTS.md`/`CLAUDE.md`
-inline > ARCHON pointer (Lenovo-only).
+inline > ARCHON pointer (vendored nel git del vault, fires dove aa01/archon e' presente -- Ryzen incl., NON Lenovo-only).
 
 **Skill locations** (two-tier):
 - **LITE cross-project**: `~/.claude/skills/agent-scanner/SKILL.md`

@@ -20,7 +20,7 @@
 |-----------|----------|----------|
 | Frontmatter malformato in agent file | SKILL.md says log `MALFORMED FRONTMATTER: <path>`, skip, continua | Documented in SKILL.md Step 1; manual smoke required if a real malformed agent file appears |
 | Permission denied on source dir | Log `SOURCE UNREADABLE: <path>` (NOT silent-empty) | Documented in SKILL.md Step 1 |
-| AA01 source 7 absent on non-Lenovo PC | Silently omit source 7, NOT error | Test 7 PASS (2026-05-28) |
+| AA01 source 7 absent on a PC without the aa01/archon deploy | Silently omit source 7, NOT error | Test 7 PASS (2026-05-28) |
 | Inventory >50 agents | Hard cap 50 + ranked by source-priority + `+N more` footer | Documented in SKILL.md Step 3; smoke required when inventory reaches threshold |
 | Sentinel false-positive (start match but Rule (STRONG missing) | Returns 'ambiguous', logs `.apply-blocked-<ts>.log`, exit 4 | Test 4 PASS |
 | -Remove with user content post-directive | User content survives (P0#3 harsh) | Test 5 PASS + T14 sandbox smoke |
