@@ -1,6 +1,6 @@
 # ADR-0036 — Unified Orchestration Doctrine (multi-LLM + Jules + Opus 4.8)
 
-> Status: **Proposed** -- 2026-05-29 (ratify after full rollout + first auto-merge cycle observed clean per repo over ~2 weeks)
+> Status: **Accepted (spine)** + **Deferred (auto-merge rung)** -- revised 2026-06-01 (orig Proposed 2026-05-29). The doctrine spine (hub-and-spoke, 5 spokes, routing tree, mandatory verification gate, ladder-as-classification) is ratified on already-practiced evidence. The auto-merge rung is deferred to a future R2 ADR via the earn-path in `docs/cross-repo/actor-activation-criteria.md`. A harsh-reviewer falsification (2026-06-01) corrected the original trigger framing (not "circular" but SDMG-incompatible). See "Ratify scope split".
 > Supersedes-as-routing-authority (consolidates, does not deprecate): ADR-0013, 0022, 0023, 0030, 0034, 0035. Reframes: MODEL_ROUTING.md as local-fleet detail.
 > Operational authority: `ORCHESTRATION.md` (root). This ADR = the why; ORCHESTRATION.md = the which-executor-and-autonomy; CLAUDE.md = the how.
 
@@ -12,7 +12,7 @@ Ollama fleet, cloud-key LLMs, Jules async coding agent, in-session subagents/Wor
 Route by capability x cost x privacy x async-fit (cheapest-sufficient-first, <=3 tiers).
 **Mandatory verification gate** with a DIFFERENT-model judge (anti-monoculture). **Autonomy
 ladder**: auto-merge low-risk + external-merge-auto (CI + Codex-auto-review-resolved + fix
-+ judge); irreducible human residue for irreversible/outward-facing/architecture. Tooling: a general
++ judge); irreducible human residue for irreversible/outward-facing/architecture. **NOTE (revised 2026-06-01): the auto-merge rung is DEFERRED -- only the spine is ratified now; auto-merge is granted later via the earn-path (see "Ratify scope split").** Tooling: a general
 completion-routing MCP was **SDMG-REJECTED** (no caller; gateway-redux), but a **scoped
 fleet-tools MCP = GO** -- services Opus lacks (Tavily search, OpenAI image-gen) + a
 non-Claude cross-check judge (anti-monoculture), used WITH Opus, not as competitors.
@@ -109,9 +109,32 @@ different-model judge (not self-judge), Codex auto-review resolution, CI, and
 **reversibility** (git revert / branch+PR) -- which is precisely why auto-MERGE is
 permitted at full rollout while irreversible actions stay human-gated.
 
-**Ratify trigger:** observe >=1 clean external-merge-auto cycle per whitelisted repo with
-zero bad-merge incidents over ~2 weeks -> flip Proposed -> Accepted. If a bad merge lands
-that the gate missed, revert + downgrade the offending class to human-gated + amend.
+## Ratify scope split (revised 2026-06-01)
+
+A harsh-reviewer falsification (SDMG Cognitive Protocol 7, step 3) found the original
+single "Ratify trigger" both mis-framed and over-scoped. Corrected:
+
+**Ratified now (spine, Accepted):** hub-and-spoke, the 5 executor spokes, the routing
+decision-tree, the mandatory verification gate, and the autonomy ladder AS A
+CLASSIFICATION TAXONOMY. These are already-practiced and evidence-backed (two crons --
+vault coherence-pass report-only + codemasterdd playtest2-board-sync PR-only -- already
+run the lower rungs clean).
+
+**Deferred (auto-merge rung):** the original trigger ("observe >=1 clean
+external-merge-auto cycle per repo, then ratify") is not circular but is
+SDMG-INCOMPATIBLE: it asks you to RUN auto-merge to GENERATE its own ratify-evidence,
+which Protocol 7 (no autonomize-before-falsify) and anti-pattern #10 (bot-rewrite-drop,
+a real incident) forbid. Replacement: a rung-by-rung earn-path where evidence accrues at
+a lower, REVERSIBLE rung (R1 = open-PR, human-merges) first. Auto-merge (R2) is granted
+only by a dedicated future ADR after the mechanical conditions in
+`docs/cross-repo/actor-activation-criteria.md` are met (>=4 clean R1 cycles across >=2
+repos over >=2 weeks + harsh-reviewer falsifies the increment + revert proven +
+different-family judge). If a bad merge ever lands, revert + downgrade that class to
+human-gated + amend.
+
+This doctrine is operationalized by the unified governor (the cross-repo-dashboard
+promoted to an active observe->classify->act loop); design + phased rollout:
+`docs/superpowers/specs/2026-06-01-unified-fleet-governor-design.md`.
 
 ## References
 
@@ -121,3 +144,5 @@ that the gate missed, revert + downgrade the offending class to human-gated + am
   "why multi-agent LLM systems fail"; Hannecke "LLM routing Ollama+LiteLLM"; lushbinary
   "orchestration patterns".
 - OD-009 (LiteLLM/Langfuse decommission), ADR-0026 (cognitive protocols / SDMG), anti-pattern catalogue #8/#10/#12.
+- `docs/superpowers/specs/2026-06-01-unified-fleet-governor-design.md` (unified governor design + phased rollout, harsh-reviewer-falsified 2026-06-01).
+- `docs/cross-repo/actor-activation-criteria.md` (autonomy-rung earn-path + mechanical clean-cycle + off-ramp decision rule N=3).
