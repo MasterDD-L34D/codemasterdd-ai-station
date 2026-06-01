@@ -1,0 +1,30 @@
+<!-- templates/cr_governor.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Governor -- signals (R0)</title>
+  <link rel="stylesheet" href="{{ url_for('cross_repo.static', filename='style.css') }}">
+</head>
+<body>
+  <h1>Fleet governor -- consolidated signals (R0, report-only)</h1>
+  <p>Acted-on signals (off-ramp metric, target &gt;= 3 over 4 weeks): <strong>{{ acted_count }}</strong></p>
+  <table>
+    <thead><tr><th>Source</th><th>Kind</th><th>Severity</th><th>Summary</th><th>Produced</th><th>Fetched</th></tr></thead>
+    <tbody>
+    {% for s in signals %}
+      <tr class="sev-{{ s.severity }}">
+        <td>{{ s.source }}</td><td>{{ s.kind }}</td><td>{{ s.severity }}</td>
+        <td>{{ s.summary }}</td><td>{{ s.produced_at or '-' }}</td><td>{{ s.fetched_at }}</td>
+      </tr>
+    {% else %}
+      <tr><td colspan="6">No signals yet -- run <code>python -m governor.ingest</code>.</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  <h2>Advisory auto-observed (NOT a gate input)</h2>
+  <ul>
+    {% for a in advisory %}<li>{{ a.observed_at }} -- {{ a.source }}: {{ a.event }} ({{ a.detail }})</li>{% endfor %}
+  </ul>
+</body>
+</html>
