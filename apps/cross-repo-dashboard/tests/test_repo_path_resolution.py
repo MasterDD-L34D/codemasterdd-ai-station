@@ -85,3 +85,27 @@ def test_vault_local_path_is_machine_portable():
             f"vault local_path {vault_path!r} does not exist though a known "
             f"candidate does -- path is not machine-portable"
         )
+
+
+def test_dafne_local_path_is_machine_portable():
+    """Regression guard for the Dafne hardcoded-path bug (2026-06-01).
+
+    The Dafne (evo-swarm) clone lives at C:\\dev\\evo-swarm on Ryzen
+    (DESKTOP-T77TMKT/VGit) and at C:\\Users\\edusc\\Dafne\\workspace\\swarm on
+    Lenovo (edusc). On any machine where a known clone exists, the wired Dafne
+    local_path MUST point at an existing directory -- never unconditionally at
+    the Lenovo-only C:\\Users\\edusc\\Dafne\\workspace\\swarm. On a fresh machine
+    where neither candidate exists the assertion is vacuous. Same bug class as
+    the vault fix (PR #237).
+    """
+    from pathlib import Path
+
+    import app
+
+    dafne_path = app.REPOS["Dafne"]["local_path"]
+    candidates = [r"C:\dev\evo-swarm", r"C:\Users\edusc\Dafne\workspace\swarm"]
+    if any(Path(c).exists() for c in candidates):
+        assert Path(dafne_path).exists(), (
+            f"Dafne local_path {dafne_path!r} does not exist though a known "
+            f"candidate does -- path is not machine-portable"
+        )

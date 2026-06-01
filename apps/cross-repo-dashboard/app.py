@@ -126,7 +126,12 @@ REPOS: dict[str, dict[str, Any]] = {
     "Dafne": {
         "slug": "MasterDD-L34D/evo-swarm",
         "dormant": False,
-        "local_path": r"C:\Users\edusc\Dafne\workspace\swarm",
+        # Machine-portable: evo-swarm clone is C:\dev\evo-swarm on Ryzen
+        # (DESKTOP-T77TMKT) and C:\Users\edusc\Dafne\workspace\swarm on Lenovo.
+        # Override via DAFNE_REPO_PATH.
+        "local_path": resolve_repo_path(
+            "DAFNE_REPO_PATH", r"C:\dev\evo-swarm", r"C:\Users\edusc\Dafne\workspace\swarm"
+        ),
         "privacy": "sovereign-only",
     },
     "vault": {
