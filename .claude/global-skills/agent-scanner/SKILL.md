@@ -19,8 +19,8 @@ work, never recreate**.
 
 For full ARCHON-context analysis (overlap calc 7 ruoli + REUSE_AUTO/CONFIRM/
 COMPLEMENT thresholds + registry persistence), see
-`aa01/archon/skills/agent-scanner/SKILL.md` (used only when `aa01/archon/`
-is detected in CWD or its parents).
+`aa01/archon/skills/agent-scanner/SKILL.md` (vendored nel git del vault,
+cross-PC; used only when `aa01/archon/` is detected in CWD or `$HOME`).
 
 ---
 
@@ -63,13 +63,13 @@ find "$HOME/.claude/plugins" -maxdepth 6 -name "*.md" -type f 2>/dev/null | grep
 # 6. Inline mentions
 grep -lE "^---$" AGENTS.md CLAUDE.md 2>/dev/null
 
-# 7. ARCHON pointer (Lenovo-only, AA01 detection)
+# 7. ARCHON pointer (AA01 detection -- fires wherever aa01/archon present)
 if [ -d "$HOME/aa01/archon" ] || [ -d "$(pwd)/aa01/archon" ]; then
   echo "ARCHON_DETECTED -> see aa01/archon/skills/agent-scanner/SKILL.md for FULL version"
 fi
 ```
 
-**Note**: AA01 e' Lenovo-edusc-only by design. Su Ryzen e altri PC source 7 e' assente, NON e' un errore -- il report omette il pointer ARCHON.
+**Note**: ARCHON/AA01 e' vendored nel git del vault (`Vault-ops-remote/claude-global/aa01-system/archon`, codemasterdd PR #72 / vault commit `275f8bc5f`) e presente su Ryzen -- NON e' Lenovo-only. Source 7 scatta su qualunque PC dove `aa01/archon` e' deployato (Ryzen incluso) -> il tier FULL si attiva. Su un PC senza quel deploy source 7 e' assente, NON e' un errore -- il report omette semplicemente il pointer ARCHON (graceful-missing).
 
 ### Step 2 -- Parse frontmatter
 

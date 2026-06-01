@@ -512,9 +512,11 @@ Falsify di TUTTI i claim §Snapshot/§1-7 vs git reale (vault `cross-stack-state
 | vault-shared | `1abaa743`/`054cad6` | `7285cb74` #31 synced | ⚠️STALE (sano) |
 | compass-marketplace | "v0.4.3 in-flight `5943ffa`" | landed origin `#10 57d4267`; branch locale dietro | ⚠️STALE (no-loss) |
 | Synesthesia/Dafne/supermemory/Master-DD-PF/Item-gen/LeaD/pathfinder-1e/Game-DB | come dichiarato | confermato git | ✅ACCURATE |
-| AA01 / Gpt | tracciati | AA01 no-.git; Gpt repo vuoto | 🔒N-A |
+| AA01 / Gpt | tracciati | AA01 no-.git *(corretto 2026-06-01: vendored nel vault git da PR #72 il 2026-05-17, post-snapshot)*; Gpt repo vuoto | 🔒N-A |
 
 **No loss-risk** ovunque (branch autoritativi synced; Game/Godot root-detached = cosmetico già documentato sopra). Drift = §1-7 ~2gg dietro su repo daily-ship (Game/Godot) + torneo §7 entry mai-vera (PR#18/SHA dangling — da correggere a parte, dominio §7). Raccomandazione: §1-7 HEAD-narrativi non affidabili come git-truth → usare QUESTO blocco §Ecosystem-audit per stato verificato; §1-7 per contesto operativo.
+
+> **Correzione stale-pointer (2026-06-01)**: la riga "AA01 no-.git" sopra era vera al 2026-05-16, ma e' **superata**. ARCHON v2 + AA01 sono ora **vendored nel git del vault** a `Vault-ops-remote/claude-global/aa01-system/archon/` (landato via codemasterdd PR #72 = vault commit `275f8bc5f`, 2026-05-17) e **presenti su Ryzen**. NON e' piu' "Lenovo-only / NON-git / filesystem-direct"; il tier FULL di agent-scanner si attiva dove `aa01/archon/` e' detected (Ryzen incl.). Ref: vault `docs/research/2026-06-01-autogovernance-ecosystem-map.md` (Sez. 2 + Correzioni #1).
 
 ---
 

@@ -228,12 +228,12 @@ $fragContent = Get-Content -Raw $canonicalFragmentFile
 Assert-True -Condition (-not ($fragContent -match '[^\x00-\x7F]')) -Name "canonical fragment ASCII"
 
 # ----------------------------------------------------------------------
-# Test 7: scope-7 ARCHON degradation (P1#6 -- Lenovo only, Ryzen ok absent)
+# Test 7: scope-7 ARCHON detection (vendored in vault git, cross-PC; graceful-missing where deploy absent)
 # ----------------------------------------------------------------------
 Write-Host ""
 Write-Host "Test 7: ARCHON source absent != enumeration failure"
 
-Assert-True -Condition ($skillContent -match 'AA01.*Lenovo.*only.*by design') -Name "SKILL.md documents AA01 Lenovo-only"
+Assert-True -Condition ($skillContent -match 'vendored nel git del vault') -Name "SKILL.md documents ARCHON vendored in vault (not Lenovo-only)"
 Assert-True -Condition ($skillContent -match 'NON e.*errore') -Name "SKILL.md says missing source 7 not an error"
 
 # ----------------------------------------------------------------------
