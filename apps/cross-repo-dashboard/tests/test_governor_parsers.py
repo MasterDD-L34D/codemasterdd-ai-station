@@ -48,3 +48,25 @@ def test_parse_evo_swarm_digest_missing_numbers_safe():
     assert sig.counts.get("cycles") == 0
     assert sig.counts.get("coverage_gaps") == 0
     assert sig.produced_at == "2026-06-01"
+
+def test_parse_sot_drift_issues_open():
+    import json
+    from pathlib import Path
+    from governor.parsers import parse_sot_drift_issues
+    fix = Path(__file__).resolve().parent / "fixtures" / "sot_drift_issues.json"
+    issues = json.loads(fix.read_text(encoding="utf-8"))
+    sig = parse_sot_drift_issues(issues, "ref-url")
+    assert sig.source == "game-sot-drift"
+    assert sig.kind == "sot-drift"
+    assert sig.severity == "warning"
+    assert sig.counts == {"open": 1}
+    assert sig.produced_at == "2026-06-01T20:51:08Z"
+    assert sig.ref == "ref-url"
+    assert sig.payload_hash != ""
+
+def test_parse_sot_drift_issues_empty_is_ok():
+    from governor.parsers import parse_sot_drift_issues
+    sig = parse_sot_drift_issues([], "ref")
+    assert sig.severity == "ok"
+    assert sig.counts == {"open": 0}
+    assert sig.produced_at is None
