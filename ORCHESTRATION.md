@@ -93,9 +93,10 @@ GitHub and posts comments that MUST be evaluated before proceeding:
 (Repos with NO Codex configured: skip 1-2; other gates still apply.)
 
 Rollout (revised 2026-06-01): auto-merge (R2) is NOT live -- deferred per the ADR-0036 scope
-split until earned via the `actor-activation-criteria.md` earn-path. R0 (report) + R1 (open-PR,
-HUMAN merges) are the active rungs. When R2 is earned by its own ADR, the whitelisted repos are
-Game, Game-Godot-v2, codemasterdd, Game-Database.
+split until earned via the `actor-activation-criteria.md` earn-path. R0 (report) is the first
+rung to activate (when Fase-1 ships); R1 (open-PR, human merges) is the NEXT increment, unlocked
+only after the R0 off-ramp passes (>=3 acted-on signals / 4 weeks). When R2 is earned by its own
+ADR, the whitelisted repos are Game, Game-Godot-v2, codemasterdd, Game-Database.
 Safety net = the gate stack + reversibility (revert). Bad merge -> revert + downgrade that
 class to human-gated + amend ADR-0036.
 
