@@ -76,7 +76,9 @@ HTTP_TIMEOUT = 15
 
 # Paths
 CODEMASTERDD_ROOT = Path(r"C:\dev\codemasterdd-ai-station")
-AA01_ROOT = Path(r"C:\Users\edusc\aa01")
+# Machine-portable: aa01 lives at C:\Users\<user>\aa01 (VGit on Ryzen,
+# edusc on Lenovo). Override via AA01_ROOT_PATH.
+AA01_ROOT = Path(os.environ.get("AA01_ROOT_PATH", "").strip() or (Path.home() / "aa01"))
 LOGS_DIR = CODEMASTERDD_ROOT / "logs"
 ADR_DIR = CODEMASTERDD_ROOT / "docs" / "adr"
 
