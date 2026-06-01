@@ -80,6 +80,16 @@ AA01_ROOT = Path(r"C:\Users\edusc\aa01")
 LOGS_DIR = CODEMASTERDD_ROOT / "logs"
 ADR_DIR = CODEMASTERDD_ROOT / "docs" / "adr"
 
+
+def resolve_repo_path(env_var: str, *candidates: str) -> str:
+    override = os.environ.get(env_var, "").strip()
+    if override:
+        return override
+    for cand in candidates:
+        if Path(cand).exists():
+            return cand
+    return candidates[-1] if candidates else ""
+
 # Healthcheck endpoints
 # HTTP-based (require service exposing /health or similar)
 HEALTHCHECKS = [
@@ -122,7 +132,11 @@ REPOS: dict[str, dict[str, Any]] = {
     "vault": {
         "slug": "MasterDD-L34D/vault",
         "dormant": False,
-        "local_path": r"C:\dev\vault-shared",
+        # Machine-portable: vault is C:\dev\vault on Ryzen (DESKTOP-T77TMKT) and
+        # Lenovo, historically C:\dev\vault-shared. Override via VAULT_REPO_PATH.
+        "local_path": resolve_repo_path(
+            "VAULT_REPO_PATH", r"C:\dev\vault", r"C:\dev\vault-shared"
+        ),
         "privacy": "sovereign-only",
     },
     "Synesthesia": {
