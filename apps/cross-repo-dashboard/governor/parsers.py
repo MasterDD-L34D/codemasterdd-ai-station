@@ -52,3 +52,22 @@ def parse_evo_swarm_digest(md: str, ref: str) -> Signal:
         ref=ref,
         payload_hash=make_hash(str(produced_at), str(cycles), str(gaps)),
     )
+
+
+def parse_sot_drift_issues(issues: list, ref: str) -> Signal:
+    items = issues or []
+    open_count = len(items)
+    updated = [i.get("updatedAt") or i.get("updated_at") or "" for i in items]
+    produced_at = max(updated) if updated and any(updated) else None
+    severity = "warning" if open_count > 0 else "ok"
+    summary_text = f"{open_count} open SoT drift candidate(s)"
+    return Signal(
+        source="game-sot-drift",
+        kind="sot-drift",
+        severity=severity,
+        summary=summary_text,
+        counts={"open": open_count},
+        produced_at=produced_at,
+        ref=ref,
+        payload_hash=make_hash("sot-drift", str(open_count), str(produced_at)),
+    )
