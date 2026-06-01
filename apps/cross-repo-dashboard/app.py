@@ -81,6 +81,7 @@ CODEMASTERDD_ROOT = Path(r"C:\dev\codemasterdd-ai-station")
 AA01_ROOT = Path(os.environ.get("AA01_ROOT_PATH", "").strip() or (Path.home() / "aa01"))
 LOGS_DIR = CODEMASTERDD_ROOT / "logs"
 ADR_DIR = CODEMASTERDD_ROOT / "docs" / "adr"
+GOVERNOR_DB = CODEMASTERDD_ROOT / "apps" / "cross-repo-dashboard" / "governor.db"
 
 
 def resolve_repo_path(env_var: str, *candidates: str) -> str:
@@ -712,6 +713,20 @@ def drill_down(repo: str) -> Any:
 @cross_repo_bp.route("/health")
 def health() -> Any:
     return jsonify({"status": "ok", "version": "0.3.0-daily-use-features", "timestamp": now_iso()})
+
+
+@cross_repo_bp.route("/governor")
+def governor_pane() -> Any:
+    """R0 read-only consolidated signal pane (Fase 1a). No action taken here."""
+    from governor.store import SignalStore
+    store = SignalStore(GOVERNOR_DB)
+    signals = store.latest_per_source()
+    return render_template(
+        "cr_governor.html",
+        signals=signals,
+        acted_count=store.acted_on_count(),
+        advisory=store.auto_observed_recent(limit=20),
+    )
 
 
 _NOTES_SAFE_REGEX = re.compile(r"^[A-Za-z0-9 .,_/:#\-+()=]{1,200}$")

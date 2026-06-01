@@ -85,6 +85,11 @@ Extras/dashboard-logs/
 apps/dogfood-ui/data/*.sqlite
 apps/dogfood-ui/data/*.sqlite-journal
 
+# === governor signal store (Fase 1a) -- local SQLite, not versioned ===
+apps/cross-repo-dashboard/governor.db
+apps/cross-repo-dashboard/governor.db-wal
+apps/cross-repo-dashboard/governor.db-shm
+
 # === tdd-guard scratch (nested .claude dirs; root .claude/* misses sub-app paths) ===
 **/.claude/tdd-guard/
 # === apps/dogfood-ui decommissioned (OD-009) -- ignore orphan sqlite-shm/wal + pyc remnants ===
