@@ -165,6 +165,57 @@ via API (Option D). Suggestions = check dashboard manuale quando vuole.
 
 ---
 
-*Doc unico. Authority ADR-0034. Wiring empirico 2026-05-18. Supersede note
-Jules sparse. §8 = digest automation (Eduardo installa). Update quando
-endpoint archive/create verificati o API suggestions emerge.*
+## 9. Addendum 2026-06-02 -- Suggestions READABLE read-only via Claude-in-Chrome (corregge §2/§3 "classifier-blocked")
+
+**Finding (verificato live 2026-06-02, Ryzen, sweep 7/7 repo configurati).** La
+claim §2 layer-browser "classifier-blocked" + §3 matrice "Suggestions = azione
+manuale Eduardo" era **conflazione di 2 cose**: (a) LEGGERE i suggerimenti vs
+(b) AGIRE (start-from-suggestion, generativo SDMG-rejected). Empiricamente: (a)
+**NON e' bloccato** -- Claude-in-Chrome ha navigato jules.google + letto i
+suggerimenti di tutti i 7 repo configurati, read-only, zero blocco. (b) resta
+Eduardo (invariato). API/CLI restano ciechi (404 su 10 path-variant + nessun
+comando CLI), MA il browser e' ora **leggibile da Claude**, non solo manuale.
+
+**Wiring corretto layer browser:**
+
+| Azione browser jules.google | Chi | Note |
+|---|---|---|
+| READ suggestions (navigate + screenshot/get_page_text) | Claude-in-Chrome read-only | verificato; serve Chrome MCP connesso + sessione Google Eduardo loggata |
+| Start (avvia sessione da suggerimento) | Eduardo | generativo external = SDMG-rejected per autonomia |
+| edit (modifica prompt) + submit | Eduardo | edit-box leggibile; submit = generativo |
+| close (scarta) / toggle "Enable proactive suggestions" | Eduardo | config/mutation |
+
+**Meccanica suggestions (beta) osservata:**
+- Opt-in **per repo**, cap "3/5 repo max" (<=5). Refresh "every few days".
+  Modello **Gemini 3.1 Pro**, piano PRO, limite **0/100 sessioni/giorno**.
+- Categorie: Cleanup / Performance / Security / Code Health / Testing.
+- Suggerimento espanso (chevron) = struttura **DESCRIPTION + LOCATION
+  (file:line) + RATIONALE + CODE CONTEXT**. Detection rigorosa (es. code
+  duplication via **AST hashing** cross-file).
+
+**Inventario cross-repo (snapshot 2026-06-02):**
+- ENABLED (4): Game, Game-Database, Game-Godot-v2, codemasterdd-ai-station.
+- OFF (3 configurati): compass-marketplace, evo-swarm, evo-tactics-refs-meta.
+  (+4 repo nel selettore non-configurati: Gpt, Item-generator, LeaD,
+  Master-DD-Pathfinder-GPT.)
+- Sample: Game-DB = header non-validati + rate-limit mancante (Sec); codemasterdd
+  = "API Secret Exposure to Frontend" (Sec, da verificare indip.); Game
+  code-health = unused import os/sys + duplication flint_status_stdlib.py.
+
+**Operativo load-bearing -- edit-before-Start:** il bottone "Start" lancia un
+**template generico** ("Code Health Improvement Task" boilerplate) che NON
+include i nostri vincoli anti-#10/anti-S5. Per scoping hardened: usare "edit"
+sul suggerimento -> incollare i vincoli (zero-behavior, single-file,
+minimal-diff/no-rewrite, grep-before-remove, lock-test CI-green) -> poi Start
+(Eduardo). Cosi' il suggerimento high-signal Jules eredita il guard-rail.
+
+**Invariante invariato:** merge/close PR + Start/submit/close/toggle =
+Eduardo-explicit. Cambia solo: la *lettura* dei suggerimenti e' ora un read-op
+Claude (come GET sessions), non un buco manuale.
+
+---
+
+*Doc unico. Authority ADR-0034. Wiring empirico 2026-05-18 + addendum 2026-06-02
+(§9 suggestions readable read-only). Supersede note Jules sparse. §8 = digest
+automation (Eduardo installa). Update quando endpoint archive/create verificati
+o API suggestions emerge.*
