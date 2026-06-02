@@ -259,3 +259,142 @@ def test_main_prints_merged_verdicts_and_exits_clean_on_all_pass():
     )
     assert rc == 0
     assert _j.loads(captured["s"])[0]["verdict"] == "PASS"
+
+
+# --- S0 re-baseline: parchment anti-pattern -> Ferrospora biopunk canon ---
+# The judge was certifying the shipped anti-pattern (parchment/bronze/gold) as
+# PASS. Canon (vault 42-STYLE-GUIDE-UI): teal spore-glow #3acde5 is the PRIMARY
+# accent, gold/bronze is SECONDARY. Color is measurable -> deterministic (the
+# vision model hallucinates color, same lesson as _is_dark_bg), so item 5 (the
+# accent line) gets a deterministic teal-presence override, not a vision verdict.
+
+
+def test_classify_teal_pixel_accepts_spore_glow_rejects_gold_void_mycelium():
+    # The primary-accent gate: teal #3acde5 = RGB(58,205,229) is the target;
+    # gold #eedbae, near-black void, and mycelium #cd52d2 must NOT count as teal
+    # (gold/mycelium are secondary, the void is bg) -- else parchment screens pass.
+    from judge_screen import _classify_teal_pixel
+
+    assert _classify_teal_pixel((58, 205, 229)) is True   # ferro-teal (primary)
+    assert _classify_teal_pixel((40, 150, 170)) is True    # darker teal glow
+    assert _classify_teal_pixel((238, 219, 174)) is False   # ferro gold (secondary)
+    assert _classify_teal_pixel((10, 10, 15)) is False      # living void (bg)
+    assert _classify_teal_pixel((205, 82, 210)) is False    # mycelium purple
+
+
+def test_is_teal_accent_thresholds_a_minimum_fraction():
+    # A parchment-only screen has ~0 teal pixels -> FAIL; a biopunk screen with a
+    # teal-accented frame has a meaningful teal fraction -> PASS.
+    from judge_screen import _is_teal_accent
+
+    assert _is_teal_accent(0.0) is False
+    assert _is_teal_accent(0.0001) is False   # below the min accent fraction
+    assert _is_teal_accent(0.03) is True
+
+
+def test_sample_accent_counts_teal_fraction(tmp_path):
+    # Deterministic IO: scan the screenshot, return the teal-pixel fraction.
+    from PIL import Image
+
+    from judge_screen import sample_accent
+
+    # half teal, half black -> fraction ~0.5
+    im = Image.new("RGB", (200, 100), (10, 10, 15))
+    for x in range(100):
+        for y in range(100):
+            im.putpixel((x, y), (58, 205, 229))
+    p = tmp_path / "half_teal.png"
+    im.save(str(p))
+    assert sample_accent(str(p)) > 0.4
+
+    # all gold parchment -> ~0 teal
+    pg = tmp_path / "gold.png"
+    Image.new("RGB", (64, 64), (238, 219, 174)).save(str(pg))
+    assert sample_accent(str(pg)) < 0.001
+
+
+def test_item5_specs_flipped_from_parchment_to_biopunk_teal():
+    # The core re-baseline: every screen that had the parchment line now demands
+    # the Ferrospora biopunk skin with teal as the PRIMARY accent; a parchment-
+    # only gold-bordered panel is the FAIL exemplar, not the target.
+    from judge_screen import SPECS
+
+    parchment_screens = (
+        "lobby", "form_pulse", "world_seed_reveal",
+        "world_setup", "scenario_brief", "debrief",
+    )
+    for screen in parchment_screens:
+        item5 = SPECS[screen]["items"][4].lower()
+        assert "teal" in item5, screen
+        assert ("biopunk" in item5 or "ferrospora" in item5
+                or "spore" in item5), screen
+        # the old wording certified parchment/gold as the target -- it must be gone
+        assert "warm parchment/bronze theme with gold borders" not in item5, screen
+        # this screen's accent line is deterministically teal-gated (item 5)
+        assert SPECS[screen].get("accent_item") == 5, screen
+
+
+def test_combat_has_no_parchment_accent_item():
+    # Combat's item 5 is the selected-unit info panel, NOT a theme/color line --
+    # it must NOT get the teal-color override (it would mis-gate a non-color item).
+    from judge_screen import SPECS
+
+    assert "accent_item" not in SPECS["combat"]
+    assert "info panel" in SPECS["combat"]["items"][4].lower()
+
+
+def test_run_applies_deterministic_teal_accent_override_on_parchment_screen():
+    # End-to-end: a parchment screen (no teal) where vision says item 5 PASS must
+    # be overridden to FAIL by the deterministic teal gate (color is measurable).
+    from judge_screen import run
+
+    all_pass = (
+        '[{"verdict":"PASS"},{"verdict":"PASS"},{"verdict":"PASS"},'
+        '{"verdict":"PASS"},{"verdict":"PASS","reason":"looks teal"},'
+        '{"verdict":"PASS"}]'
+    )
+    merged = run(
+        "x.png",
+        "lobby",
+        40,
+        sampler=lambda path, inset=40: [(10, 10, 15)] * 4,  # dark void -> item4 PASS
+        vision_post=lambda path, screen, host, model: all_pass,
+        accent_sampler=lambda path: 0.0,  # no teal -> deterministic FAIL
+    )
+    by = {m["item"]: m for m in merged}
+    assert by[5]["verdict"] == "FAIL"
+    assert by[5]["source"] == "deterministic"
+    # and with teal present the gate passes
+    merged_ok = run(
+        "x.png",
+        "lobby",
+        40,
+        sampler=lambda path, inset=40: [(10, 10, 15)] * 4,
+        vision_post=lambda path, screen, host, model: all_pass,
+        accent_sampler=lambda path: 0.05,  # teal accent present -> PASS
+    )
+    by_ok = {m["item"]: m for m in merged_ok}
+    assert by_ok[5]["verdict"] == "PASS"
+    assert by_ok[5]["source"] == "deterministic"
+
+
+def test_run_combat_keeps_item5_vision_no_teal_override():
+    # Combat has no accent_item -> even with an accent_sampler the info-panel item
+    # 5 must stay vision-judged (the override is parchment-screens-only).
+    from judge_screen import run
+
+    all_pass = (
+        '[{"verdict":"PASS"},{"verdict":"PASS"},{"verdict":"PASS"},'
+        '{"verdict":"PASS"},{"verdict":"PASS"},{"verdict":"PASS"}]'
+    )
+    merged = run(
+        "x.png",
+        "combat",
+        40,
+        sampler=lambda path, inset=40: [(77, 77, 77)] * 4,
+        vision_post=lambda path, screen, host, model: all_pass,
+        accent_sampler=lambda path: 0.0,
+    )
+    by = {m["item"]: m for m in merged}
+    assert by[5]["source"] == "vision"
+    assert by[5]["verdict"] == "PASS"
