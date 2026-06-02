@@ -13,7 +13,6 @@ Output: collision-candidates.md with severity ranked.
 import argparse
 import json
 import re
-from collections import defaultdict
 from datetime import datetime
 from pathlib import Path
 

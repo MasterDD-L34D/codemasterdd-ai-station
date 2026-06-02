@@ -160,7 +160,6 @@ def test_gh_get_file_content_decodes_base64():
 
 
 def test_gh_token_prefers_env_over_subprocess(monkeypatch):
-    import os
     from governor.ingest import _gh_token
     monkeypatch.setenv("GH_TOKEN", "tok-from-env")
     called = {}
