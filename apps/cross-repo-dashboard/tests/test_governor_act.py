@@ -222,3 +222,27 @@ def test_run_r1_run2_same_signals_is_noop(tmp_path):
     )
     assert len(calls["create"]) == 1  # no second create
     assert len(calls["update"]) == 0  # no update
+
+
+# ---------------------------------------------------------------------------
+# Least-privilege token (deferred R1-spec hardening): the actor's gh CLI uses a
+# dedicated issues:write-scoped token (GOVERNOR_ISSUE_TOKEN) via the child env,
+# never argv, instead of the ambient repo-scope `gh auth token`.
+# ---------------------------------------------------------------------------
+
+def test_subprocess_env_injects_least_priv_token_when_set():
+    """When GOVERNOR_ISSUE_TOKEN is set, the actor's subprocess env forces gh to
+    use it via GH_TOKEN (not argv -> no CWE-214 leak), preserving the rest of env."""
+    from governor.act import _subprocess_env
+    env = _subprocess_env({"PATH": "/usr/bin", "GOVERNOR_ISSUE_TOKEN": "ghp_least_priv"})
+    assert env is not None
+    assert env["GH_TOKEN"] == "ghp_least_priv"
+    assert env["PATH"] == "/usr/bin"
+
+
+def test_subprocess_env_returns_none_when_token_absent():
+    """Without GOVERNOR_ISSUE_TOKEN, return None -> subprocess inherits the ambient
+    gh auth (current behavior, non-breaking). Blank/whitespace also counts as absent."""
+    from governor.act import _subprocess_env
+    assert _subprocess_env({"PATH": "/usr/bin"}) is None
+    assert _subprocess_env({"GOVERNOR_ISSUE_TOKEN": "   "}) is None

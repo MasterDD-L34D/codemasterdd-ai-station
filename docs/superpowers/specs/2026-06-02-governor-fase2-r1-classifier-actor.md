@@ -64,8 +64,12 @@
   excludes all timestamps; the change-key is severity-state only.
 - `gh` token note (P0.3, probe-confirmed `repo`-scope = merge-capable): the actor does NOT
   call any merge; a negative test guards the argv. A least-privilege token is the stronger
-  structural fix and is recorded as a deferred hardening (issue-only actor needs only
-  `issues:write`, not `repo`); not blocking because the artifact is unmergeable anyway.
+  structural fix and is now IMPLEMENTED (2026-06-02): the actor's gh CLI reads
+  `GOVERNOR_ISSUE_TOKEN` (a fine-grained PAT scoped `issues:write` on codemasterdd ONLY) and
+  passes it via the child ENV (`GH_TOKEN`), never argv (CWE-214-safe); if unset it falls back
+  to ambient `gh auth` (non-breaking). To activate: mint the PAT (human step,
+  account-credential) + set `GOVERNOR_ISSUE_TOKEN`. Issue-only actor needs only `issues:write`,
+  not `repo`; not blocking before activation because the artifact is unmergeable anyway.
 - Fires rarely (error/regression only) -> low write-rate, no attention-fatigue.
 
 ## 4. SDMG
