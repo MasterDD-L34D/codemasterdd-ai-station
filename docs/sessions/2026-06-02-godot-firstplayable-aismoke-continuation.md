@@ -46,15 +46,22 @@ Vision is for qualitative only; measurables go to the deterministic layer. Valid
 pixel ground-truth (PIL) + a combined-judge run where the deterministic check OVERRODE the
 VLM's false-PASS on the bg.
 
-## What is BUILT + LANDED
+## What is BUILT (in OPEN PRs #262/#263 -- NOT on `main` yet)
 
-- **PR #263** -- `scripts/ai-smoke/` (codemasterdd): `judge_screen.py` with 7 TDD'd
+> **Merge prerequisite (cold-start agents read this first)**: `scripts/ai-smoke/` and
+> the runbook below live ONLY on the open PR branches -- they are **NOT on `main`**.
+> To use them, `git checkout` (or merge) `claude/ai-smoke-vision-judge` (#263) /
+> `claude/godot-firstplayable-runbook` (#262); do not assume the files exist on a
+> fresh `main` checkout until those PRs merge.
+
+- **PR #263** (`claude/ai-smoke-vision-judge`) -- `scripts/ai-smoke/` (codemasterdd): `judge_screen.py` with 7 TDD'd
   primitives (`_extract_json`, `_prompt`+`SPECS`, `_is_dark_bg`, `_merge_verdicts`,
-  `sample_bg`, `build_judge_payload`, `run`) + `test_judge_screen.py` (7 pytest GREEN via
-  `pytest --rootdir .`) + `README.md`. `run()` = DI-injectable combined judge (sampler +
-  vision_post), end-to-end orchestration unit-tested without real IO. Real IO (Ollama
-  urllib, PIL) proven via inline harness; a `main()` CLI wrapper is the only un-landed glue.
-- **PR #262** -- `docs/runbook/godot-v2-first-playable-golive.md` (the AI-driven smoke design + deploy runbook).
+  `sample_bg`, `build_judge_payload`, `run`) + `test_judge_screen.py` + `README.md`.
+  `run()` = DI-injectable combined judge (sampler + vision_post), unit-tested without real IO.
+  **UPDATE (session b, commit `9c944ef`)**: the `main()` CLI + real `_vision_post` Ollama
+  transport are now landed on #263 (10 pytest GREEN, verified e2e against real PIL + Gemma-4) --
+  no un-landed glue remains; still pending #263 merge to reach `main`.
+- **PR #262** (`claude/godot-firstplayable-runbook`) -- `docs/runbook/godot-v2-first-playable-golive.md` (the AI-driven smoke design + deploy runbook).
 - Conditional-loop demonstrated autonomously: `✦` (U+2726) tofu in `LobbyView.tscn` +
   `CompanionPanel.tscn` -> removed -> rebuild -> vision re-smoke confirmed clean
   (judge->fix->verify, no human). Changes live in worktree `C:/dev/Game-Godot-v2-golive` (uncommitted).

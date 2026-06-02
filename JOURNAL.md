@@ -40,6 +40,26 @@ Eduardo ha fissato il goal First-Playable (Godot-v2: room-creation RoJ/Jackbox T
 - Gotcha: global tdd-guard ultra-granulare (stub->populate->impl per funzione; blocca anche il delete di un RED-test); `pytest --rootdir .` registra il RED; un GUT-RED da bash-hub NON viene registrato -> GDScript va fatto nel Godot-workflow (GUT+tdd-guard wired).
 - Env riusabile: worktree `-golive` (Godot + Game), Postgres-17 + Game backend boota (HEALTH 200), Godot 4.6.2, `qwen2.5vl:7b` local Ryzen. Serve :8060 killed a chiusura.
 
+## 2026-06-02 (Ryzen: governor post-completion -- triage + FIRST acted-on + gate-def + Game path-map PR)
+
+Eduardo: "spiega da player + come continuare (evidenza, usa i tool)". Ricerca live del governatore + azione sui segnali. Eduardo ha scelto 3: osserva + triagia i 5 gialli ORA + pulizia gate-def.
+
+### Completato
+- **Ricerca/triage 5 gialli (evidenza live)**: governatore 1gg, 8 segnali, R1 mai scattato (0 escalation, 0 issue) -- silenzio CORRETTO (5 warning fermi, niente peggiora). I "297 warning" Game = **295 stale_document** (date-revisione scadute) + 2 frontmatter-mismatch, NON bug. sot-drift = 1 reale (#2477). vault = item piccoli + density-debt lungo-termine.
+- **PRIMO acted-on del governatore**: #2477 verdittato da `sot-drift-verifier` = **NOT-STALE / falso-positivo** (runtime PR #2557 costruito per conformarsi a `26-ECONOMY_CANONICAL` canon; il SoT non era mai indietro) -> **chiuso Game #2477 come no-drift**. = acted-on #1 (l'orologio off-ramp parte; manuale-auditable, non DB-inferred).
+- **Blind-spot scoperto + fix**: il path-map del sentinel mandava `combat/**` solo a doc 10/11, NON a 26-ECONOMY (vera autorita economia) -> falso-positivo su #2477 + mancherebbe drift-economia vera futura. **Game PR #2560** (worktree isolato off origin/main) aggiunge 26-ECONOMY a `combat/**`. Awaiting Game CI/Codex + merge Eduardo.
+- **gate-def fix** (#260 MERGED d7fd3e0): il cancello R2 chiedeva ">=4 cicli R1 puliti = PR mergiate", ma R1 apre ISSUE -> irraggiungibile/ambiguo. Chiarito: issue NON sono prova-PR-cycle per R2; alimentano `acted-on` (input R2 necessario-non-sufficiente + gate Fase-2); R2 serve ENTRAMBI (acted-on>=3 AND >=4 clean PR-cycles).
+
+### Note / lezioni
+- **Lezione Codex-reaction applicata**: su #258 (sessione precedente) mi era sfuggito il thumbs-up reaction (guardavo solo `.reviews[]`); questa volta poll su BOTH -> tutti gestiti corretti. Memory `feedback_codex_clean_verdict_reaction`.
+- **Codex 3 round su #260** (doc-gate): ha beccato che (a) avevo fatto contare le issue come prova-R2, poi (b) over-corretto dicendo acted-on != R2. Entrambi adottati (adopt-not-defend). Il doc-gate ora e' internamente consistente con sec 2/4.
+- **observe cadence**: `python -m governor.ingest` + `governor.act` manuale settimanale + pane `/cross-repo/governor`. `act` resta MANUALE (schedularlo = Fase-4 = gated).
+
+### Da fare (gated / Eduardo)
+- Game PR #2560 merge (governance Game).
+- Vault stale-line `11-REGOLE_D20_TV.md:182` (executor TODO ora done) = doc-sync low-pri (non bloccante).
+- R2/Fase-4 gated: acted-on ora **1** (serve >=3 in 4 settimane); clean-PR-cycles = 0 (R1 e' issue-only -> per definizione non ne produce; serve un R1 PR-opening futuro). Off-ramp in corso.
+
 ## 2026-06-02 (Ryzen: governor 3 non-gated -- least-priv token + archon 8th signal + eng-graph staleness)
 
 Eduardo: "farli tutti 3, hai il mio permesso per completare il governatore". 3 PR non-gated, ognuna branch+PR+rituale (TDD + CI + Codex + harsh-reviewer dove autonomia). R2/Fase-4 restano hard-gated: il permesso NON scavalca SDMG (0 cicli R1 puliti oggi).
