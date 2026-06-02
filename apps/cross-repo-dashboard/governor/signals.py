@@ -4,6 +4,10 @@ import hashlib
 from dataclasses import dataclass, field
 
 
+# Single source of truth for severity ordering (R1 classifier uses this).
+SEVERITY_RANK: dict[str, int] = {"error": 3, "warning": 2, "info": 1, "ok": 0}
+
+
 @dataclass(frozen=True)
 class Signal:
     """Normalized cross-island signal record (R0 -- no action attached)."""

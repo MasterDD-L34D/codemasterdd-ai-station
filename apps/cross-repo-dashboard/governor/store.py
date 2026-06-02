@@ -128,3 +128,17 @@ class SignalStore:
                 "SELECT * FROM auto_observed ORDER BY id DESC LIMIT ?", (limit,)
             ).fetchall()
             return [dict(r) for r in rows]
+    def previous_severity(self, source: str) -> 'str | None':
+        """Return the severity of the SECOND-most-recent signals row for this source.
+
+        Ordered by monotonic id (descending).  Returns None if fewer than 2 rows exist
+        for this source.
+        """
+        with self._connect() as c:
+            row = c.execute(
+                "SELECT severity FROM signals WHERE source=? ORDER BY id DESC LIMIT 1 OFFSET 1",
+                (source,),
+            ).fetchone()
+            if row is None:
+                return None
+            return row["severity"]
