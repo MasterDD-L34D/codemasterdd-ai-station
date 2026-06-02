@@ -127,12 +127,16 @@ judgment that a verdict "looked plausible".
 >   evidence (human-merged reconcile PRs, no revert/drop) the auto-merge gate exists to require.
 > - What the issue-R1 DOES feed is the **acted-on metric** (sec 5): when Eduardo acts on the
 >   underlying signal an escalation named (a fix / OD / ADR / deliberately-wont-fix), that
->   increments acted-on, which gates **Fase-2 EXPANSION (sec 2)** -- a SEPARATE gate from the
->   R2 PR-cycle gate. Closing/reading the issue is NOT acted-on.
+>   increments acted-on. Per sec 2 + sec 4, acted-on>=3 IS a NECESSARY R2 input (and also
+>   gates Fase-2 expansion) -- so issue escalations DO advance that precondition. But
+>   acted-on is necessary-NOT-sufficient for R2: the R2 unlock ALSO requires >= 4 clean
+>   PR-cycles (sec 3) on the journal/doc-reconcile class, which the issue-only R1 does not
+>   produce. R2 needs BOTH; issue escalations can satisfy the acted-on input, NEVER the
+>   clean-PR-cycle condition. Closing/reading the issue is NOT acted-on.
 >
-> Net: a silent governor (steady warnings, nothing worsening) accrues zero R2 clean-cycles
-> AND zero acted-on. Issue escalations can raise acted-on (-> gates Fase-2 expansion) but
-> NEVER R2 evidence (-> R2 needs PR cycles). Both staying at 0 is the honest off-ramp signal.
+> Net: a silent governor (steady warnings, nothing worsening) accrues zero acted-on AND zero
+> clean PR-cycles. Issue escalations can advance acted-on (an R2 input + the Fase-2 gate) but
+> NEVER the clean-PR-cycle R2 condition. Both at 0 today is the honest off-ramp signal.
 
 ## 7. Per-increment discipline (every climb)
 
@@ -151,10 +155,10 @@ judgment that a verdict "looked plausible".
 - Auto-merge: **OFF**. `.claude/settings.json` ceiling = `git push origin claude/*`.
 - Autonomy ceiling after R1 ship: classify + open/update ONE GitHub issue (label
   governor-attention, codemasterdd only).  Human closes.  No PR, no merge, no branch.
-- Next gate to evaluate: R0 off-ramp acted-on count (sec 2) accumulating from Fase 1 ship.
-  The R2 clean-cycle count (sec 6, PR-based) stays 0 under the issue-only R1 BY DESIGN (per
-  the sec-6 addendum -- issue escalations are not R2 evidence); acted-on (sec 5) is the live
-  metric and gates Fase-2 EXPANSION, not R2 auto-merge.
+- Next gate to evaluate: R0 off-ramp acted-on count (sec 2). acted-on (sec 5) is an R2 INPUT
+  (sec 2/4) AND the Fase-2-expansion gate -- issue escalations can advance it. The SEPARATE
+  R2 condition, >= 4 clean PR-cycles (sec 3/6), stays 0 under the issue-only R1 BY DESIGN
+  (issues are not PR-cycles); R2 needs BOTH, so issue-R1 alone never unlocks R2.
 - **Live state 2026-06-02 (post the 3 non-gated PRs #256/#257/#258).** R0 = **8 signal
   sources** (added archon-learnings #257 + eng-graph staleness #258; R1 actor token-hardened
   #256). R1 has escalated **0 times** to date: the 5 standing `warning` signals are STEADY
