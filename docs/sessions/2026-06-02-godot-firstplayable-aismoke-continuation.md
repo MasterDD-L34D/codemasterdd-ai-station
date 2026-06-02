@@ -2,6 +2,15 @@
 
 > Status: phase-close. Cold-start continuation doc. Live state lives in memory
 > `project_godot_first_playable`; this is the human-readable session recap + next-workstream.
+>
+> **UPDATE 2026-06-02 (session b)**: NEXT-WORKSTREAM **item 4 DONE** -- the `main()` CLI +
+> real `_vision_post` Ollama transport landed on PR #263 (commit `9c944ef`, 10 pytest GREEN,
+> verified e2e against real PIL + Gemma-4: item4 bg FAIL `source=deterministic` overrides the
+> VLM). The judge is now an invokable autonomous tool. **Populated-drive (item 1) de-risked to
+> LOW**: real room code `GKKV` proven via `POST /api/lobby/create` on the booted Game-golive
+> backend; COOP/COEP moot (`thread_support=false`); tunnel separable. Remaining = MAIN-mode
+> Godot build + Playwright repoint (Godot-venue). See memory `project_godot_first_playable`
+> LATEST block for the full recipe + the refined tdd-guard "run pytest from repo ROOT" gotcha.
 
 ## TL;DR
 
