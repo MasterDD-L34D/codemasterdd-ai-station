@@ -19,6 +19,21 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-06-02 (Ryzen: governor eng-graph 7th signal + session close)
+
+Chiusura sessione governor. eng-graph integrato (chiude la riga "opportunita'" del journal precedente).
+
+### Completato
+- **eng-graph = 7 segnale** (#252 MERGED, 5acd04f): il governatore ingerisce `Atlas/engineering-moc.md` (last_verified + repo-count da `eng-graph:auto`), severity info. Pivot ground-truth vs JSON-2-repo: nodi/archi NON committati (anti-#20) -> ingerisco il MOC esistente = ZERO cambio vault. Live `{ingested:7, errors:0}`. 97 test.
+- **Governatore R0+R1 completo**: 7 segnali osservati + R1 (classify -> issue-escalation, manuale, silenzioso oggi). harsh-reviewer hardened static read-only.
+
+### Da fare (gated)
+- R2 auto-merge (Fase 3): >=4 cicli R1 puliti (0 oggi) + ADR R2 + harsh-reviewer + cross_check different-family. Fase-4 cron. Evidence + tempo gated.
+- Non-gated opzionali: token least-privilege per R1 actor (issues:write); eng-graph staleness-escalation (now-aware classify); ARCHON learnings = possibile 8 segnale.
+
+### Note
+- Sessione concorrente viva sulla macchina (~1 write/min): BACKLOG.md ancora dirty (sua), esclusa dalle mie PR.
+
 ## 2026-06-02 (Ryzen: governor R1 shipped + harsh-reviewer hardened + vault coord)
 
 Continuazione autonoma (Eduardo "facciamo 1+2"). Prima autonomia (R1) atterrata; arbitro hardened prima; coordinamento vault verificato.
