@@ -44,6 +44,12 @@ Climb to R1 only when ALL hold:
       NOT build the classifier/actor. (N=3 set by Eduardo 2026-06-01.)
 - [ ] R1 ships behind its own PR + its own ADR (Fase 2).
 
+> **Off-ramp WAIVED 2026-06-02 by Eduardo.** The 4wk/>=3 acted-on condition was not met
+> (R0 shipped same day as R1 build).  R1 triggers on a heuristic (error OR worsened-delta).
+> Waiver is intentional and recorded here per SDMG step 1 (honesty preamble).  Off-ramp
+> counting still runs: acted-on>=3 gates R2 normally; the waiver does NOT propagate.
+> Authority: spec docs/superpowers/specs/2026-06-02-governor-fase2-r1-classifier-actor.md.
+
 R1 is reversible by construction (a PR is inert until merged), so it is the rung at
 which auto-merge evidence may accrue WITHOUT ever enabling auto-merge first.
 
@@ -88,8 +94,10 @@ self-licking regression -- reject it.
 A surfaced signal counts as "acted on" when, after the pane/advisory surfaced it,
 Eduardo did one of: merged a PR addressing it; pushed a commit/branch fixing the drift
 it named; recorded a decision (OD / ADR / JOURNAL) resolving it; or archived it as
-deliberately-wont-fix. Passive viewing does NOT count. Counting is manual + auditable
-(git log / OD / JOURNAL cross-ref) -- never inferred by the actor.
+deliberately-wont-fix. Passive viewing does NOT count.  Closing or reading a governor-attention issue is
+"seen" (acknowledged), NOT "acted-on" -- only acting on the underlying signal (a fix,
+OD/ADR, or deliberately-wont-fix) counts.  Counting is manual + auditable (git log / OD /
+JOURNAL cross-ref) -- never inferred by the actor.
 
 ## 6. Definition of a CLEAN R1 cycle (mechanical, not self-assessed)
 
@@ -114,8 +122,12 @@ judgment that a verdict "looked plausible".
 - If a bad merge ever lands: revert + downgrade that class to human-gated + amend
   ADR-0036 + record the lesson.
 
-## 8. Current state (2026-06-01)
+## 8. Current state (2026-06-02 -- R1 built)
 
-- Rung live: **none beyond R0-pending** -- Fase 1 (R0) not yet built.
+- Rung live: **R0 shipped** (Fase 1a PR #243; Fase 1b PR #244; Fase 1c PR #245).
+  **R1 built 2026-06-02** (Fase 2, branch claude/governor-fase2-r1, off-ramp waived per sec 2).
 - Auto-merge: **OFF**. `.claude/settings.json` ceiling = `git push origin claude/*`.
-- Next gate to evaluate: the R0 off-ramp (sec 2), 4 weeks after Fase 1 ships.
+- Autonomy ceiling after R1 ship: classify + open/update ONE GitHub issue (label
+  governor-attention, codemasterdd only).  Human closes.  No PR, no merge, no branch.
+- Next gate to evaluate: R0 off-ramp acted-on count (sec 2) accumulating from Fase 1 ship;
+  also R1 clean-cycle count (sec 6) for future R2 consideration.
