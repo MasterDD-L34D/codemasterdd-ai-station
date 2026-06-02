@@ -25,7 +25,7 @@ def parse_game_governance_drift(raw: dict) -> Signal:
     )
 
 
-_RE_DATE = re.compile(r"Digest\s*--\s*(\d{4}-\d{2}-\d{2})")
+_RE_DATE = re.compile(r"Digest.*?(\d{4}-\d{2}-\d{2})")
 _RE_CYCLES = re.compile(r"Cicli inclusi\**:\s*(\d+)", re.IGNORECASE)
 _RE_GAPS = re.compile(r"Coverage gap\s*\((\d+)\s+entry\)", re.IGNORECASE)
 
