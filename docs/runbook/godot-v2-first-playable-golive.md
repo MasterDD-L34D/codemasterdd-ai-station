@@ -18,6 +18,16 @@
   is **100% BLANK** -- the assembled chain has never been run live end-to-end.
 - Therefore First-Playable = run that smoke + fix conditionals, NOT build new systems.
 
+**Convergence with the recovered RoJ design session (handoff #385, 2026-06-02).** A 2026-05-19
+session analyzed the Godot-v2 screens (Playwright screenshots) against the RoJ/Jackbox model
+-> produced `docs/godot-v2/design-conformance-gap-2026-05-19.md` (gap report, DRAFT) + baked the
+6 RoJ patterns into `docs/godot-v2/visual-screen-bible.md` (A2 visual authority). Its verdict
+(Screen-1 Lobby = critical: TV entry `/` 404 + phone zero-theme) was actioned by PR #284 cascade
+-- but never verified live. Two independent threads (that 2026-05-19 design analysis + this
+2026-06-02 impl-state audit) converge on the SAME move: deploy + smoke on real devices AGAINST
+the bible. The device smoke is also the empirical answer to the gap report's never-run
+`/ultrareview` (ground-truth on device > re-review of a 2-week-old doc, anti-pattern #8).
+
 ## 1. Deploy architecture (verified from deploy-quick.sh)
 
 `Game-Godot-v2/tools/deploy/deploy-quick.sh` does it in one shot:
@@ -77,11 +87,24 @@ GAME_DIR=<clean-Game-main> ./tools/deploy/deploy-quick.sh
 
 ## 5. Smoke (Eduardo, physical) -- the goal gate
 
-Open `Game-Godot-v2/docs/godot-v2/qa/2026-05-20-pr284-visual-smoke.md` (40 items,
-blank today). On TV `/` + iPhone Safari `/phone/?room=`, mark PASS / CONDITIONAL /
-FAIL per surface. Worldgen payoff-legibility is exercised by the "World Seed Reveal"
-items (resonance line, biome tint, eco_pressure readouts) -- this is the in-play check
-against the "biodiversita invisibile" design risk.
+On TV `/` + iPhone Safari `/phone/?room=`, mark PASS / CONDITIONAL / FAIL per surface.
+Smoke AGAINST three reference layers (not just the checklist):
+1. **Surface grid** -- `Game-Godot-v2/docs/godot-v2/qa/2026-05-20-pr284-visual-smoke.md` (40 items, blank today).
+2. **Target spec** -- `docs/godot-v2/visual-screen-bible.md` (A2 authority, RoJ/Jackbox-derived per-screen "should look like").
+3. **Known-issue baseline** -- `docs/godot-v2/design-conformance-gap-2026-05-19.md` (what was broken 2026-05-19; confirm each closed).
+
+**"Feels-like-RoJ" acceptance (6 bible patterns)**: (1) 2-device split (TV host + phone companion);
+(2) room-code DOMINANT on host screen + QR + separate phone join-URL, join reflects on host;
+(3) hand-drawn cartoony aesthetic; (4) one-click join; (5) info easy to digest + accessibility-first;
+(6) stream-friendly host.
+
+Worldgen payoff-legibility is exercised by the "World Seed Reveal" items (resonance line, biome
+tint, eco_pressure readouts) -- the in-play check against the "biodiversita invisibile" design risk.
+
+**/ultrareview**: the gap report's external falsification (SDMG/Protocol-7) was never run.
+Recommendation: do NOT re-review the 2-week-old, partially-actioned doc -- let THIS device smoke
+be the empirical falsification (ground-truth on device > stale-doc review). Use the report as the
+known-issue baseline only.
 
 ## 6. Conditional loop -- Claude
 
@@ -101,4 +124,5 @@ wound-system (and Lenovo PHASEC combat work) before touching any combat-code.
 - Smoke checklist: `Game-Godot-v2/docs/godot-v2/qa/2026-05-20-pr284-visual-smoke.md`
 - Handoffs: `handoff-pr284-cascade-2026-05-20.md`, `handoff-2026-06-01-species-enrichment.md`
 - Vision: codemasterdd `GOALS.md` (TV+phones Jackbox); RoJ reference = jungle.buzz room-code model
+- RoJ design lineage: `Game-Godot-v2/docs/godot-v2/handoff-2026-06-02-republic-of-jungle-screen-ref.md` (#385, recovered) -> `visual-screen-bible.md` (A2) + `design-conformance-gap-2026-05-19.md` (gap report) + museum card `pr284-bible-conformance-cascade-methodology-2026-05-20.md`
 - Backend boot recipe: memory `ryzen-game-backend-boot`
