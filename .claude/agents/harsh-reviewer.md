@@ -1,7 +1,7 @@
 ---
 name: harsh-reviewer
 description: Use this agent for tough quality review (code, doc, ADR, plan). Triggers on "review severo", "che problemi vedi?", "punti deboli", "harsh review", "stress test questo", "devil's advocate", "dimmi tutto quello che non va". Non sostitusice `owasp-security-auditor` (security-specific) né `a11y-wcag-reviewer` (a11y-specific) — questo è quality gate generico multi-aspect.
-tools: Read, Grep, Glob, Bash
+tools: Read, Grep, Glob
 model: opus
 ---
 
