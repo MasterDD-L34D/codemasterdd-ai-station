@@ -17,6 +17,7 @@ Public API
 """
 from __future__ import annotations
 
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -88,10 +89,32 @@ def run_r1(store, issue_api: dict, now_iso: "str | None" = None) -> dict:
 # Injected in tests via the issue_api parameter.
 # ---------------------------------------------------------------------------
 
+def _subprocess_env(environ: dict) -> "dict | None":
+    """Subprocess env that forces the actor's gh CLI to use a dedicated
+    least-privilege token, or None to inherit the ambient gh auth.
+
+    GOVERNOR_ISSUE_TOKEN should be a fine-grained PAT scoped to issues:write on
+    codemasterdd-ai-station ONLY (the actor opens/edits one issue -- it needs no
+    `repo`/merge scope). It is passed to the child via GH_TOKEN in the ENV, never
+    argv, so it never appears in the process arg list (CWE-214).
+
+    Minting the PAT is a human step (account-credential = human-irreducible). Until
+    GOVERNOR_ISSUE_TOKEN is set, this returns None and gh falls back to the ambient
+    `gh auth` (functional but over-privileged) -- non-breaking.
+    """
+    tok = (environ.get("GOVERNOR_ISSUE_TOKEN") or "").strip()
+    if not tok:
+        return None
+    return {**environ, "GH_TOKEN": tok}
+
+
 def _gh(*args: str, capture: bool = True) -> str:
     """Run gh CLI and return stdout.  Raises on non-zero exit."""
     cmd = ["gh"] + list(args)
-    r = subprocess.run(cmd, capture_output=capture, text=True, timeout=30)
+    r = subprocess.run(
+        cmd, capture_output=capture, text=True, timeout=30,
+        env=_subprocess_env(os.environ),
+    )
     if r.returncode != 0:
         raise RuntimeError(f"gh {' '.join(args)} failed: {r.stderr.strip()}")
     return r.stdout.strip() if capture else ""
