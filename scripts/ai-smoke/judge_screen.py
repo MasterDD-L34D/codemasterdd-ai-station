@@ -202,22 +202,41 @@ def sample_bg(image_path, inset=40):
     return [im.getpixel(p) for p in pts]
 
 
-def sample_accent(image_path, max_dim=256):
-    """Scan the whole screenshot (downscaled, nearest = no color blending) and
-    return the fraction of teal-glow pixels -- the measurable layer behind the
-    primary-accent verdict. ~0 on a parchment/gold screen, non-trivial when a
-    teal Ferrospora frame/accent is present."""
+def sample_accent(image_path, max_dim=256, border_frac=0.2):
+    """Scan only the CHROME BAND -- the outer frame of the screenshot (panel
+    borders, top/side bars, frame edges) -- and return the fraction of teal-glow
+    pixels there. The central content rectangle (the dominant gameplay element)
+    is EXCLUDED so teal *content* (e.g. a teal 5-axis radar or chart) cannot mask
+    parchment/gold *chrome*: item 5 gates the panel skin, not gameplay graphics.
+    Downscaled, nearest = no color blending. ~0 on a parchment/gold screen,
+    non-trivial when a teal Ferrospora frame/accent is present.
+
+    border_frac is the band thickness as a fraction of each dimension; the
+    excluded centre is [border_frac, 1-border_frac] on both axes (default 0.2 ->
+    outer 20% frame sampled, central 60% x 60% content ignored)."""
     from PIL import Image
 
     im = Image.open(image_path).convert("RGB")
     im.thumbnail((max_dim, max_dim), Image.NEAREST)
+    w, h = im.size
     raw = im.tobytes()  # flat RGB bytes -- stable, avoids deprecated getdata()
-    total = len(raw) // 3
-    if total == 0:
+    if w == 0 or h == 0:
         return 0.0
-    teal = sum(1 for i in range(total)
-               if _classify_teal_pixel((raw[3 * i], raw[3 * i + 1], raw[3 * i + 2])))
-    return teal / total
+    x0, x1 = w * border_frac, w * (1.0 - border_frac)
+    y0, y1 = h * border_frac, h * (1.0 - border_frac)
+    band = 0
+    teal = 0
+    for i in range(len(raw) // 3):
+        x = i % w
+        y = i // w
+        if x0 <= x < x1 and y0 <= y < y1:
+            continue  # central content region -- not chrome, skip
+        band += 1
+        if _classify_teal_pixel((raw[3 * i], raw[3 * i + 1], raw[3 * i + 2])):
+            teal += 1
+    if band == 0:
+        return 0.0
+    return teal / band
 
 
 def build_judge_payload(image_b64, screen, model="gemma4:latest"):

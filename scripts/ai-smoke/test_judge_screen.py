@@ -398,3 +398,41 @@ def test_run_combat_keeps_item5_vision_no_teal_override():
     by = {m["item"]: m for m in merged}
     assert by[5]["source"] == "vision"
     assert by[5]["verdict"] == "PASS"
+
+
+def test_sample_accent_ignores_central_teal_content_masking_parchment_chrome(tmp_path):
+    # Codex P2 (judge_screen.py:220): teal *content* (e.g. a central 5-axis radar
+    # or a teal chart) must NOT mask parchment/gold *chrome*. The item-5 gate
+    # judges the panel SKIN, not gameplay graphics. sample_accent samples the
+    # chrome band (outer frame) and excludes the central content region, so a teal
+    # blob dead-center on a gold-panel screen scores ~0 -> the parchment FAIL is
+    # preserved. (Whole-screen sampling false-PASSed this: 3600/40000 ~= 0.09.)
+    from PIL import Image
+
+    from judge_screen import sample_accent
+
+    im = Image.new("RGB", (200, 200), (238, 219, 174))  # gold parchment chrome
+    for x in range(70, 130):  # teal "radar" content, dead center
+        for y in range(70, 130):
+            im.putpixel((x, y), (58, 205, 229))
+    p = tmp_path / "teal_center_gold_chrome.png"
+    im.save(str(p))
+    assert sample_accent(str(p)) < 0.005
+
+
+def test_sample_accent_still_counts_teal_in_the_chrome_band(tmp_path):
+    # The flip side of the chrome-band restriction: a real Ferrospora skin glows
+    # teal on the frame/panels (the band), so a teal-framed screen still scores a
+    # meaningful fraction -- the fix must not over-restrict and lose true teal.
+    from PIL import Image
+
+    from judge_screen import sample_accent
+
+    im = Image.new("RGB", (200, 200), (10, 10, 15))  # living-void centre
+    for x in range(200):
+        for y in range(200):
+            if x < 25 or x >= 175 or y < 25 or y >= 175:  # teal outer frame (chrome)
+                im.putpixel((x, y), (58, 205, 229))
+    p = tmp_path / "teal_frame.png"
+    im.save(str(p))
+    assert sample_accent(str(p)) > 0.3
