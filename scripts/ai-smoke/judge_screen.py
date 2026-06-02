@@ -35,6 +35,18 @@ SPECS = {
             "no missing-glyph boxes (tofu squares) anywhere in the text",
         ],
     },
+    "form_pulse": {
+        "title": "Screen 2 - Shared Form Pulse (TV host view)",
+        "purpose": "player choices create party identity",
+        "items": [
+            "a 5-axis party radar (pentagon shape) is the dominant central element",
+            "the 5 axes use creature-verb labels (Simbiosi/Predazione, Esplorativo/Cauto, Agile/Robusto, Solitario/Sciame, Memoria/Istinto), NOT numeric or MBTI psychology jargon",
+            "a per-axis party imprint readout (bars or aggregate) is shown below the radar",
+            "background is a dark living void (near-black, subtle), NOT flat mid-gray default",
+            "panels use a warm parchment/bronze theme with gold borders (not flat default UI)",
+            "no missing-glyph boxes (tofu squares) anywhere in the text",
+        ],
+    },
 }
 
 

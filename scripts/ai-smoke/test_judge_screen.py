@@ -110,6 +110,19 @@ def test_prompt_includes_screen_and_all_bible_items():
         assert it in p
 
 
+def test_form_pulse_spec_prompt_includes_radar_and_creature_verbs():
+    # Screen 2 (Shared Form Pulse). bg stays item 4 (run() hardcodes det={4}).
+    from judge_screen import _prompt, SPECS
+
+    assert "form_pulse" in SPECS
+    assert "void" in SPECS["form_pulse"]["items"][3].lower()  # item 4 = deterministic bg
+    p = _prompt("form_pulse")
+    assert "Form Pulse" in p
+    assert "radar" in p.lower()
+    for it in SPECS["form_pulse"]["items"]:
+        assert it in p
+
+
 def test_vision_post_posts_to_ollama_and_returns_response(tmp_path):
     # Real Ollama transport for run()'s vision channel. Reads image -> b64 ->
     # POST /api/generate -> returns the model 'response' text. urlopen injected,
