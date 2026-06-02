@@ -19,6 +19,24 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-06-02 (Ryzen: governor R1 shipped + harsh-reviewer hardened + vault coord)
+
+Continuazione autonoma (Eduardo "facciamo 1+2"). Prima autonomia (R1) atterrata; arbitro hardened prima; coordinamento vault verificato.
+
+### Completato
+- **harsh-reviewer -> static read-only** (#249 MERGED): `tools: Read,Grep,Glob` (no Bash, no Edit/Write) + boundary rule. SDMG/P5: l'arbitro non deve autorare cio' che giudica (aveva scritto un test via Bash durante 1c). Codex P2 -> drop Bash accettato (enforced, non solo istruzione).
+- **R1 SHIPPED** (#250 MERGED, 0f5a4c7): classifier (escalate iff error O peggioramento-delta) + actor che apre/aggiorna UN GH issue `governor-attention` (umano chiude = visto). Issue = non-mergiabile = contenimento strutturale. Fires-rarely; live oggi = silenzioso (0 error -> noop).
+- **SDMG sul primo incremento autonomia**: harsh-reviewer HA RIGETTATO R1-v1 (digest-PR rumoroso 5/6 + no-merge non-enforced; probe confermati). Redisegnato -> 6 condizioni-sopravvivenza (issue-non-PR) -> build-review SURVIVE-WITH-CHANGES, tutto adottato (P0.1 idempotenza key-embed, P1.2 no-duplicate-issue, P2.2, P1.3, P1.1). 90 test.
+- **Coordinamento vault verificato** (Explore): i 3 parser vault (gap/coherence/whatsmissing) sono IN SYNC -- nessun format-drift, zero modifiche. Nuovo tool vault = eng-graph (OD-059: estrazione cloud gpt-4o-mini, SSE daemon :8765, 1147 nodi/2889 archi) MA nessun artefatto committato -> il governatore non puo' ingerirlo ora. Cron coherence autonomo (noreply@anthropic.com) direct-commit -> gestito da fetch-by-filename.
+
+### Da fare (gated / esplicito)
+- **R2 = auto-merge** (Fase 3, gradino pericoloso anti-#10): ADR R2 dedicata + >=4 cicli R1 puliti (0 oggi) + harsh-reviewer falsifica + giudice different-family (cross_check). Fase-4 = cron. Entrambi gated + OK esplicito.
+- **eng-graph signal (opzionale)**: se vault committa un summary JSON post-rebuild (nodi/archi/timestamp) in `Extras/`, il governatore potrebbe ingerirlo come 7a fonte (health/staleness). Cambio vault-side prima.
+
+### Note
+- **Sessione concorrente viva** su questa macchina (~1 write/min): ha aggiunto BACKLOG L6, toccato harsh-reviewer.md (riga tools:), commit fbc3013, edit mid-write. Due agent stesso working tree = rischio race (vinte via index-snapshot). Da monitorare.
+- Off-ramp WAIVED da Eduardo per R1 (registrato in actor-activation-criteria); cicli-R1-puliti + acted-on contano comunque per R2.
+
 ## 2026-06-02 (Ryzen: fleet governor -- R0 observability COMPLETE, halt at R1)
 
 Continuazione autonoma (standing-grant "merge dopo rituali + procedi"). R0 observability del governatore COMPLETO + mergiato. Mi fermo al confine R1 (l'attore inizia ad AGIRE = incremento autonomia, off-ramp-gated + OK esplicito).
