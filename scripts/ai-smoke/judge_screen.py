@@ -53,7 +53,7 @@ SPECS = {
         "items": [
             "a primary-biome panel is a dominant element (large, left/center)",
             "world pressure is shown as a diegetic word + meter/bar (e.g. 'bassa'/'unstable'), NOT a raw decimal like 0.52",
-            "a companion panel is present with a dormant/unnamed seed placeholder",
+            "a companion panel is present (the Custode named/appearing -- the reveal makes the companion felt, so a populated/named panel is correct here, NOT a defect)",
             "background is a dark living void (near-black, subtle), NOT flat mid-gray default",
             "panels use a warm parchment/bronze theme with gold borders (not flat default UI)",
             "no missing-glyph boxes (tofu squares) anywhere in the text",
@@ -71,9 +71,25 @@ SPECS = {
             "no missing-glyph boxes (tofu) AND no raw debug keys (e.g. missing_world.biome_id) leaking to the UI",
         ],
     },
+    "scenario_brief": {
+        "title": "Screen 5 - Scenario Brief (TV host view)",
+        "purpose": "the mission becomes concrete; commit to combat",
+        "items": [
+            "the scenario title + a short brief/description is the dominant central element",
+            "a biome + pressure readout is shown (e.g. 'Bioma: ... -- pressione ...')",
+            "a start-combat call-to-action is present (e.g. 'Inizia combattimento')",
+            "background is a dark living void (near-black, subtle), NOT flat mid-gray default",
+            "panels use a warm parchment/bronze theme with gold borders (not flat default UI)",
+            "no missing-glyph boxes (tofu squares) anywhere in the text",
+        ],
+    },
     "combat": {
         "title": "Screen 6 - Combat (TV host view)",
         "purpose": "tactical clarity",
+        # Combat board + chrome fill the screen -> no clean corner void to sample;
+        # the corner-sample false-FAILs, so item 4 is vision-judged (qualitative)
+        # not the deterministic corner check. run() honors bg_mode.
+        "bg_mode": "vision",
         "items": [
             "a tactical board with unit sprites is the central element",
             "an objective + round/season/phase readout is shown (top bar)",
@@ -81,6 +97,18 @@ SPECS = {
             "background is a dark living void (near-black, subtle), NOT flat mid-gray default",
             "a selected-unit info panel is present (left edge)",
             "no missing-glyph boxes (tofu), no overlapping/garbled status text, no missing-texture (magenta/checkerboard) tiles",
+        ],
+    },
+    "debrief": {
+        "title": "Screen 7 - Debrief (TV host view)",
+        "purpose": "the run is remembered; outcome + chronicle",
+        "items": [
+            "an outcome + run readout is shown (e.g. esito, turni totali, MVP)",
+            "a lineage / bond readout is present (e.g. 'Legame: ...' or a lineage summary)",
+            "a chronicle/Cronaca section is present (per-encounter or full-story log)",
+            "background is a dark living void (near-black, subtle), NOT flat mid-gray default",
+            "panels use a warm parchment/bronze theme with gold borders (not flat default UI)",
+            "no missing-glyph boxes (tofu squares) anywhere in the text",
         ],
     },
 }
@@ -185,8 +213,14 @@ def run(image_path, screen, det_threshold, sampler, vision_post,
     measurable bg item). sampler + vision_post are injectable for testing."""
     bg = sampler(image_path)
     bg_dark = _is_dark_bg(bg, det_threshold)
-    det = {4: {"verdict": "PASS" if bg_dark else "FAIL",
-               "reason": "bg pixel mean ~%s -> %s" % (bg[0], "dark" if bg_dark else "NOT dark (gray)")}}
+    # Per-screen bg mode: default = deterministic corner-sample wins for item 4
+    # (vision hallucinates color). "vision" = the screen has no clean corner void
+    # (e.g. combat board+chrome fill it) -> item 4 falls back to the vision verdict.
+    if SPECS.get(screen, {}).get("bg_mode") == "vision":
+        det = {}
+    else:
+        det = {4: {"verdict": "PASS" if bg_dark else "FAIL",
+                   "reason": "bg pixel mean ~%s -> %s" % (bg[0], "dark" if bg_dark else "NOT dark (gray)")}}
     vraw = _extract_json(vision_post(image_path, screen, host, model)) or []
     vision = [{"item": i + 1, "verdict": str(v.get("verdict", "")).upper(), "reason": v.get("reason", "")}
               for i, v in enumerate(vraw)]

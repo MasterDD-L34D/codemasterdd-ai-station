@@ -186,6 +186,62 @@ def test_main_returns_1_when_smoke_has_a_fail():
     assert rc == 1
 
 
+def test_world_seed_reveal_item3_accepts_named_companion():
+    # The reveal IS the companion appearance (Bible 3) -- a populated/named
+    # Custode is correct, NOT a defect. item3 must not demand a dormant placeholder
+    # (the Godot smoke now seeds a real Custode -> the old wording false-FAILed it).
+    from judge_screen import SPECS
+
+    item3 = SPECS["world_seed_reveal"]["items"][2].lower()
+    assert "dormant" not in item3
+    assert "companion" in item3
+
+
+def test_scenario_brief_spec_present_with_bg_item4():
+    # Screen 5 (Scenario Brief). bg stays item 4 so run()'s det={4} maps.
+    from judge_screen import SPECS, _prompt
+
+    assert "scenario_brief" in SPECS
+    assert len(SPECS["scenario_brief"]["items"]) == 6
+    assert "void" in SPECS["scenario_brief"]["items"][3].lower()
+    p = _prompt("scenario_brief")
+    assert "Scenario" in p
+
+
+def test_debrief_spec_present_with_bg_item4():
+    # Screen 7 (Debrief). bg stays item 4 so run()'s det={4} maps.
+    from judge_screen import SPECS, _prompt
+
+    assert "debrief" in SPECS
+    assert len(SPECS["debrief"]["items"]) == 6
+    assert "void" in SPECS["debrief"]["items"][3].lower()
+    p = _prompt("debrief")
+    assert "Debrief" in p
+
+
+def test_combat_bg_is_vision_not_deterministic():
+    # Combat board + chrome fill the screen -> no clean corner void to sample, so
+    # the corner-sample false-FAILs (handoff finding). run() must NOT apply the
+    # deterministic bg override for combat (item 4 -> vision).
+    from judge_screen import run
+
+    all_pass = (
+        '[{"verdict":"PASS"},{"verdict":"PASS"},{"verdict":"PASS"},'
+        '{"verdict":"PASS"},{"verdict":"PASS"},{"verdict":"PASS"}]'
+    )
+    merged = run(
+        "x.png",
+        "combat",
+        40,
+        sampler=lambda path, inset=40: [(77, 77, 77)] * 4,  # gray corners (chrome)
+        vision_post=lambda path, screen, host, model: all_pass,
+    )
+    by = {m["item"]: m for m in merged}
+    # gray corners would FAIL deterministically; combat opts out -> vision wins.
+    assert by[4]["source"] == "vision"
+    assert by[4]["verdict"] == "PASS"
+
+
 def test_main_prints_merged_verdicts_and_exits_clean_on_all_pass():
     # Happy path: main emits the merged verdicts as JSON (via injected out) and
     # returns 0 when nothing FAILs. The autonomous smoke's machine-readable output.
