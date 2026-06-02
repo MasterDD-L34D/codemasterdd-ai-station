@@ -125,10 +125,11 @@ def test_parse_vault_report_date_anchored_to_title():
     assert sig.produced_at == "2026-06-01"
 
 
-def test_parse_vault_report_coherence_block_zero_not_error():
-    # Coherence reports have NO `## Summary`; the bare word "BLOCK" appears in
-    # policy prose, but the STRUCTURED verdict is `BLOCK: 0`. Must NOT be a false
-    # "error" (that would cry wolf on the governor's top-severity signal).
+def test_parse_vault_report_coherence_block_zero_warn_is_warning():
+    # Coherence reports have NO `## Summary`; "BLOCK" appears in policy prose, but
+    # the STRUCTURED verdict is e.g. `BLOCK: 0  WARN: 1  INFO: 6`. Must NOT be a
+    # false "error" (BLOCK:0), but must NOT be green "ok" either when WARN>0 --
+    # that would hide a surfaced vault signal (Codex P2). -> warning.
     from governor.parsers import parse_vault_report
     md = (
         "# Coherence pass -- 2026-06-01\n\n"
@@ -136,6 +137,7 @@ def test_parse_vault_report_coherence_block_zero_not_error():
         "## Disposition\n\nVerdict: BLOCK: 0  WARN: 1  INFO: 6\n"
     )
     sig = parse_vault_report(md, source="vault-coherence", kind="coherence", ref="r")
-    assert sig.severity != "error"      # BLOCK: 0 -> not blocking
+    assert sig.severity == "warning"    # BLOCK:0 but WARN:1 -> warning (not error, not ok)
     assert sig.counts["block"] == 0
+    assert sig.counts["warn"] == 1
     assert sig.produced_at == "2026-06-01"

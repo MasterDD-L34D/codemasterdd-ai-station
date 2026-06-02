@@ -59,6 +59,7 @@ _RE_VAULT_DATE_ANY = re.compile(r"(20\d{2}-\d{2}-\d{2})")
 _RE_VAULT_BOLD_NUM = re.compile(r"\*\*(\d+)\*\*")
 _RE_VAULT_SUMMARY = re.compile(r"^##\s+Summary\b(.*?)(?=^##\s|\Z)", re.MULTILINE | re.DOTALL | re.IGNORECASE)
 _RE_VAULT_BLOCK = re.compile(r"\bBLOCK:\s*(\d+)")
+_RE_VAULT_WARN = re.compile(r"\bWARN:\s*(\d+)")
 
 
 def parse_vault_report(md: str, source: str, kind: str, ref: str) -> Signal:
@@ -88,17 +89,19 @@ def parse_vault_report(md: str, source: str, kind: str, ref: str) -> Signal:
     nonzero = sum(1 for n in nums if n > 0)
     m_block = _RE_VAULT_BLOCK.search(text)
     block_n = int(m_block.group(1)) if m_block else 0
+    m_warn = _RE_VAULT_WARN.search(text)
+    warn_n = int(m_warn.group(1)) if m_warn else 0
     if block_n > 0:
         severity = "error"
-    elif nonzero > 0:
+    elif nonzero > 0 or warn_n > 0:
         severity = "warning"
     else:
         severity = "ok"
     date_s = produced_at or "(undated)"
     if nums:
         summary_text = f"{kind} report {date_s}: {nonzero}/{len(nums)} summary metrics nonzero"
-    elif block_n > 0:
-        summary_text = f"{kind} report {date_s}: BLOCK {block_n}"
+    elif block_n > 0 or warn_n > 0:
+        summary_text = f"{kind} report {date_s}: BLOCK {block_n} WARN {warn_n}"
     else:
         summary_text = f"{kind} report present {date_s}"
     return Signal(
@@ -106,10 +109,10 @@ def parse_vault_report(md: str, source: str, kind: str, ref: str) -> Signal:
         kind=kind,
         severity=severity,
         summary=summary_text,
-        counts={"findings": findings, "metrics": len(nums), "nonzero": nonzero, "block": block_n},
+        counts={"findings": findings, "metrics": len(nums), "nonzero": nonzero, "block": block_n, "warn": warn_n},
         produced_at=produced_at,
         ref=ref,
-        payload_hash=make_hash(source, str(produced_at), str(findings), str(block_n)),
+        payload_hash=make_hash(source, str(produced_at), str(findings), str(block_n), str(warn_n)),
     )
 
 
