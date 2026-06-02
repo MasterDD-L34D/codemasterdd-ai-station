@@ -1,8 +1,14 @@
 from __future__ import annotations
 
 import re
+from datetime import date
 
 from governor.signals import Signal, make_hash, severity_from_counts
+
+# eng-graph staleness thresholds (days since last_verified). Monthly-ish MOC
+# cadence -> warn past a month, error past a quarter. Tunable module constants.
+STALE_WARN_DAYS = 30
+STALE_ERROR_DAYS = 90
 
 
 def parse_game_governance_drift(raw: dict) -> Signal:
@@ -126,24 +132,58 @@ _RE_ENG_GRAPH_AUTO_REGION = re.compile(
 _RE_ENG_GRAPH_REPO = re.compile(r'repo\s+`([^`]+)`')
 
 
-def parse_eng_graph_moc(md: str, ref: str) -> Signal:
+def parse_eng_graph_moc(md: str, ref: str, now: date | None = None) -> Signal:
+    """eng-graph MOC signal with staleness-aware severity.
+
+    `now` (a date) enables staleness: info if fresh, warning past STALE_WARN_DAYS,
+    error past STALE_ERROR_DAYS vs the MOC's last_verified (or created fallback).
+    now=None (clock-free callers/tests) -> severity stays info (staleness opt-in).
+    Severity is folded into payload_hash so an info->warning transition is a DISTINCT
+    row that the worsened-delta classifier (R1) escalates.
+
+    CAVEAT -- first-seen-stale (harsh-reviewer P1, by design): a warning-stale MOC is
+    escalated only by a worsened delta (info->warning), NOT first-seen. So on a fresh
+    governor.db where the MOC is ALREADY 30-90d stale, it stays `report` (silent) until
+    it crosses error/90d. This inherits the classifier's first-seen suppression (uniform
+    with the noisy lint sources) rather than special-casing eng-graph in the pure
+    classifier. An error-stale (>90d) MOC DOES escalate first-seen (severity == error).
+    """
     text = md or ''
     m_lv = _RE_ENG_GRAPH_LAST_VERIFIED.search(text)
     m_cr = _RE_ENG_GRAPH_CREATED.search(text)
-    produced_at = (m_lv.group(1) if m_lv else None) or (m_cr.group(1) if m_cr else None)
+    if m_lv:
+        produced_at, date_label = m_lv.group(1), 'last_verified'
+    elif m_cr:
+        produced_at, date_label = m_cr.group(1), 'created'
+    else:
+        produced_at, date_label = None, 'last_verified'
     m_region = _RE_ENG_GRAPH_AUTO_REGION.search(text)
     repo_count = len(_RE_ENG_GRAPH_REPO.findall(m_region.group(1))) if m_region else 0
+    severity = 'info'
+    if now is not None and produced_at:
+        try:
+            age_days = (now - date.fromisoformat(produced_at)).days
+            # `>` not `>=` on purpose: exactly STALE_*_DAYS stays in the lower band
+            # ("more than a month/quarter" stale -- 30d-exactly is still fresh).
+            if age_days > STALE_ERROR_DAYS:
+                severity = 'error'
+            elif age_days > STALE_WARN_DAYS:
+                severity = 'warning'
+        except (ValueError, TypeError):
+            # malformed produced_at, or a non-date `now` (e.g. a datetime) -> degrade
+            # to info rather than erroring the whole source out in _produce.
+            pass
     date_s = produced_at or '(undated)'
-    summary_text = f'eng-graph MOC: {repo_count} repos indexed, last_verified {date_s}'
+    summary_text = f'eng-graph MOC: {repo_count} repos indexed, {date_label} {date_s}'
     return Signal(
         source='vault-eng-graph',
         kind='eng-graph',
-        severity='info',
+        severity=severity,
         summary=summary_text,
         counts={'repos': repo_count},
         produced_at=produced_at,
         ref=ref,
-        payload_hash=make_hash('eng-graph', str(produced_at), str(repo_count)),
+        payload_hash=make_hash('eng-graph', str(produced_at), str(repo_count), severity),
     )
 
 def parse_sot_drift_issues(issues: list, ref: str) -> Signal:
