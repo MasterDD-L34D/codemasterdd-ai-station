@@ -19,6 +19,25 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-06-02 (Ryzen: fleet governor -- R0 observability COMPLETE, halt at R1)
+
+Continuazione autonoma (standing-grant "merge dopo rituali + procedi"). R0 observability del governatore COMPLETO + mergiato. Mi fermo al confine R1 (l'attore inizia ad AGIRE = incremento autonomia, off-ramp-gated + OK esplicito).
+
+### Completato
+- **R0 = 6 fonti segnale live** via `apps/cross-repo-dashboard/governor/`: game-governance-drift + game-sot-drift (public), evo-swarm-digest + vault gap/coherence/whatsmissing (private, authed contents-API base64 via `gh auth token`). Live smoke 6/6 errori 0.
+- **PR mergiate**: #243 (Fase-1a store+pane), #244 (sot-drift; evo scoperto PRIVATE -> deferito), #245 (evo+vault private), #246 (evo date em-dash fix). Tutte: TDD + harsh-reviewer SDMG + Codex sub-gate + rituale + autorizzazione Eduardo.
+- **SDMG/ground-truth ha beccato bug REALI** (non dai test mockati): evo-private (live smoke errors:1); vault parser sommava corpus-size come findings (read DB reale); coherence falso-error (parola BLOCK in prosa-policy vs verdetto BLOCK:0); coherence WARN nascosto come ok (Codex); evo date em-dash. Tutti fixati + verificati live.
+- Memoria `project_fleet_governor` aggiornata.
+
+### Da fare (gated / esplicito)
+- **Fase-2 = R1** (classifier -> apre PR/escala): NON costruito. Gated su off-ramp (4 settimane R0, acted-on >=3) + OK esplicito. Standing-grant copre merge R0, non il salto R1.
+- **harsh-reviewer read-only hardening**: l'arbitro ha scritto un test via Bash (loophole; tools gia escludono Edit/Write). Fix boundary BLOCCATO dall'auto-mode classifier (self-mod agent-config) -> serve OK esplicito.
+- ARCHON learnings (aa01) = ultima fonte deferita (micro-Fase-1d).
+
+### Note
+- Off-ramp clock puo' partire ora (strumento-segnale completo + onesto). 4 settimane -> se acted-on >=3 -> Fase-2; else stop a observability (onesto, reading-B).
+- Token/privacy del fetch privato = empiricamente pulito (harsh-reviewer vs 401 live: zero leak, db gitignored, no cloud, GET-only).
+
 ## 2026-06-01 (Ryzen: fleet governor -- Fase 0 doctrine shipped + Fase 1 plan)
 
 Sessione Ryzen (.11), parallela alla sessione hub Game di oggi. Caveman mode. Goal multi-fase: governatore autonomo unico del fleet, cablato SENZA rompere SDMG (falsify-before-autonomy).
