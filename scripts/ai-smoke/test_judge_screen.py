@@ -123,6 +123,18 @@ def test_form_pulse_spec_prompt_includes_radar_and_creature_verbs():
         assert it in p
 
 
+def test_screens_3_4_6_specs_present_with_bg_as_item4():
+    # Screens 3 (world_seed_reveal), 4 (world_setup), 6 (combat). Each keeps the
+    # dark-void bg as item 4 so run()'s deterministic det={4} maps correctly.
+    from judge_screen import _prompt, SPECS
+
+    for screen in ("world_seed_reveal", "world_setup", "combat"):
+        assert screen in SPECS, screen
+        assert len(SPECS[screen]["items"]) == 6, screen
+        assert "void" in SPECS[screen]["items"][3].lower(), screen
+        _prompt(screen)  # builds without KeyError
+
+
 def test_vision_post_posts_to_ollama_and_returns_response(tmp_path):
     # Real Ollama transport for run()'s vision channel. Reads image -> b64 ->
     # POST /api/generate -> returns the model 'response' text. urlopen injected,

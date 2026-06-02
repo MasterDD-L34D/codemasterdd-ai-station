@@ -47,6 +47,42 @@ SPECS = {
             "no missing-glyph boxes (tofu squares) anywhere in the text",
         ],
     },
+    "world_seed_reveal": {
+        "title": "Screen 3 - World Seed Reveal (TV host view)",
+        "purpose": "ERMES + companion become felt, not explained",
+        "items": [
+            "a primary-biome panel is a dominant element (large, left/center)",
+            "world pressure is shown as a diegetic word + meter/bar (e.g. 'bassa'/'unstable'), NOT a raw decimal like 0.52",
+            "a companion panel is present with a dormant/unnamed seed placeholder",
+            "background is a dark living void (near-black, subtle), NOT flat mid-gray default",
+            "panels use a warm parchment/bronze theme with gold borders (not flat default UI)",
+            "no missing-glyph boxes (tofu squares) anywhere in the text",
+        ],
+    },
+    "world_setup": {
+        "title": "Screen 4 - World Setup Vote (TV host view)",
+        "purpose": "first shared decision",
+        "items": [
+            "a world-condition package panel is shown (biome, pressure, hazards, scenario)",
+            "a vote tally / readiness readout is present (e.g. 'Voti: N')",
+            "a companion comment panel is present",
+            "background is a dark living void (near-black, subtle), NOT flat mid-gray default",
+            "panels use a warm parchment/bronze theme with gold borders (not flat default UI)",
+            "no missing-glyph boxes (tofu) AND no raw debug keys (e.g. missing_world.biome_id) leaking to the UI",
+        ],
+    },
+    "combat": {
+        "title": "Screen 6 - Combat (TV host view)",
+        "purpose": "tactical clarity",
+        "items": [
+            "a tactical board with unit sprites is the central element",
+            "an objective + round/season/phase readout is shown (top bar)",
+            "an icon action dock is present along the bottom",
+            "background is a dark living void (near-black, subtle), NOT flat mid-gray default",
+            "a selected-unit info panel is present (left edge)",
+            "no missing-glyph boxes (tofu), no overlapping/garbled status text, no missing-texture (magenta/checkerboard) tiles",
+        ],
+    },
 }
 
 
