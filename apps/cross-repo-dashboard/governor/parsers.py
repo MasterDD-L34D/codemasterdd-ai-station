@@ -163,3 +163,37 @@ def parse_sot_drift_issues(issues: list, ref: str) -> Signal:
         ref=ref,
         payload_hash=make_hash("sot-drift", str(open_count), str(produced_at)),
     )
+
+
+_RE_ARCHON_LESSON = re.compile(r'^(L-\d{4}-\d{2}-\d{3})')
+
+
+def parse_archon_learnings(entries: list, ref: str) -> Signal:
+    """ARCHON learnings count signal (vault-vendored aa01 lessons).
+
+    `entries` is a contents-API dir listing; count the L-YYYY-MM-NNN-*.md lessons
+    and name the latest (max by lesson id). INFO-severity by design: a lesson count
+    is observability, never "on fire", and info never escalates (not error; a steady
+    info->info is no worsened-delta). So this 8th source is pure R0 -- no autonomy change.
+    """
+    names = [str(e.get('name', '')) for e in (entries or [])]
+    ids = sorted(
+        m.group(1)
+        for m in (_RE_ARCHON_LESSON.match(n) for n in names if n.endswith('.md'))
+        if m
+    )
+    count = len(ids)
+    latest = ids[-1] if ids else None
+    # L-YYYY-MM-NNN carries no day, so produced_at is the YYYY-MM month of the latest.
+    produced_at = latest[2:9] if latest else None
+    summary_text = f'{count} ARCHON lessons, latest {latest}' if latest else '0 ARCHON lessons'
+    return Signal(
+        source='archon-learnings',
+        kind='learnings',
+        severity='info',
+        summary=summary_text,
+        counts={'lessons': count},
+        produced_at=produced_at,
+        ref=ref,
+        payload_hash=make_hash('archon-learnings', str(count), str(latest)),
+    )

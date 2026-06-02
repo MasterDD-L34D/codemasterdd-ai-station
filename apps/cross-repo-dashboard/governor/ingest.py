@@ -9,6 +9,7 @@ from pathlib import Path
 import requests
 
 from governor.parsers import (
+    parse_archon_learnings,
     parse_eng_graph_moc,
     parse_game_governance_drift,
     parse_evo_swarm_digest,
@@ -22,8 +23,10 @@ EVO_EXPORTS_API = "https://api.github.com/repos/MasterDD-L34D/evo-swarm/contents
 SOT_ISSUES_URL = "https://api.github.com/repos/MasterDD-L34D/Game/issues?labels=sot-drift-candidate&state=open"
 VAULT_LINT_API = "https://api.github.com/repos/MasterDD-L34D/vault/contents/Extras/lint-reports"
 ENG_GRAPH_MOC_API = "https://api.github.com/repos/MasterDD-L34D/vault/contents/Atlas/engineering-moc.md"
+# ARCHON learnings are vendored on GitHub in the vault repo (local aa01 is NON-git).
+ARCHON_LEARNINGS_API = "https://api.github.com/repos/MasterDD-L34D/vault/contents/Vault-ops-remote/claude-global/aa01-system/learnings"
 
-# 7 sources: 2 Game public + 1 evo private + 3 vault lint + 1 vault eng-graph.
+# 8 sources: 2 Game public + 1 evo private + 3 vault lint + 1 vault eng-graph + 1 archon learnings.
 SOURCES = [
     {"id": "game-governance-drift", "style": "json"},
     {"id": "game-sot-drift", "style": "gh-issues"},
@@ -32,6 +35,7 @@ SOURCES = [
     {"id": "vault-coherence", "style": "vault", "prefix": "coherence-", "kind": "coherence"},
     {"id": "vault-whatsmissing", "style": "vault", "prefix": "whatsmissing-", "kind": "whatsmissing"},
     {"id": "vault-eng-graph", "style": "vault-fixed", "api_url": ENG_GRAPH_MOC_API},
+    {"id": "archon-learnings", "style": "archon-learnings", "api_url": ARCHON_LEARNINGS_API},
 ]
 
 
@@ -110,6 +114,8 @@ def _produce(src: dict, fetcher, json_getter, content_getter):
         return parse_vault_report(content_getter(url), source=sid, kind=src["kind"], ref=url)
     if style == "vault-fixed":
         return parse_eng_graph_moc(content_getter(src["api_url"]), src["api_url"])
+    if style == "archon-learnings":
+        return parse_archon_learnings(json_getter(src["api_url"]), src["api_url"])
     raise ValueError(f"unknown style {style} for {sid}")
 
 
