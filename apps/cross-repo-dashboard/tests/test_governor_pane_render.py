@@ -17,7 +17,17 @@ from __future__ import annotations
 
 from pathlib import Path
 
-import jinja2
+import pytest
+
+# The dashboard suite is hermetic: conftest treats web deps as absent (it mocks
+# flask rather than installing it). jinja2 is in the same web-dep class and is NOT
+# guaranteed present, so a top-level `import jinja2` would error collection of the
+# whole per-app suite in a jinja2-absent env (confirmed by Codex running it ->
+# ModuleNotFoundError). importorskip skips THIS module cleanly when jinja2 is
+# absent and runs it fully on the invoker machine (where jinja2 is installed) --
+# the real-render verification surface. Mocking jinja2 is rejected: a real-render
+# test needs the real engine.
+jinja2 = pytest.importorskip("jinja2")
 
 _TEMPLATES = Path(__file__).resolve().parent.parent / "templates"
 
