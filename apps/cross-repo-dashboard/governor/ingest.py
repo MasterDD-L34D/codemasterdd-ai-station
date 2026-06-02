@@ -9,6 +9,7 @@ from pathlib import Path
 import requests
 
 from governor.parsers import (
+    parse_eng_graph_moc,
     parse_game_governance_drift,
     parse_evo_swarm_digest,
     parse_sot_drift_issues,
@@ -20,8 +21,9 @@ GAME_DRIFT_URL = "https://raw.githubusercontent.com/MasterDD-L34D/Game/main/repo
 EVO_EXPORTS_API = "https://api.github.com/repos/MasterDD-L34D/evo-swarm/contents/docs/exports"
 SOT_ISSUES_URL = "https://api.github.com/repos/MasterDD-L34D/Game/issues?labels=sot-drift-candidate&state=open"
 VAULT_LINT_API = "https://api.github.com/repos/MasterDD-L34D/vault/contents/Extras/lint-reports"
+ENG_GRAPH_MOC_API = "https://api.github.com/repos/MasterDD-L34D/vault/contents/Atlas/engineering-moc.md"
 
-# 6 sources: 2 Game public + 1 evo private + 3 vault lint.
+# 7 sources: 2 Game public + 1 evo private + 3 vault lint + 1 vault eng-graph.
 SOURCES = [
     {"id": "game-governance-drift", "style": "json"},
     {"id": "game-sot-drift", "style": "gh-issues"},
@@ -29,6 +31,7 @@ SOURCES = [
     {"id": "vault-gap", "style": "vault", "prefix": "gap-", "kind": "gap"},
     {"id": "vault-coherence", "style": "vault", "prefix": "coherence-", "kind": "coherence"},
     {"id": "vault-whatsmissing", "style": "vault", "prefix": "whatsmissing-", "kind": "whatsmissing"},
+    {"id": "vault-eng-graph", "style": "vault-fixed", "api_url": ENG_GRAPH_MOC_API},
 ]
 
 
@@ -105,6 +108,8 @@ def _produce(src: dict, fetcher, json_getter, content_getter):
         if not url:
             raise ValueError(f"no vault {src['prefix']} report found")
         return parse_vault_report(content_getter(url), source=sid, kind=src["kind"], ref=url)
+    if style == "vault-fixed":
+        return parse_eng_graph_moc(content_getter(src["api_url"]), src["api_url"])
     raise ValueError(f"unknown style {style} for {sid}")
 
 

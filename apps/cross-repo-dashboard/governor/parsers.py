@@ -116,6 +116,36 @@ def parse_vault_report(md: str, source: str, kind: str, ref: str) -> Signal:
     )
 
 
+
+_RE_ENG_GRAPH_LAST_VERIFIED = re.compile(r'^last_verified:\s*(\d{4}-\d{2}-\d{2})', re.MULTILINE)
+_RE_ENG_GRAPH_CREATED = re.compile(r'^created:\s*(\d{4}-\d{2}-\d{2})', re.MULTILINE)
+_RE_ENG_GRAPH_AUTO_REGION = re.compile(
+    r'<!--\s*eng-graph:auto\s*-->(.*?)<!--\s*/eng-graph:auto\s*-->',
+    re.DOTALL,
+)
+_RE_ENG_GRAPH_REPO = re.compile(r'repo\s+`([^`]+)`')
+
+
+def parse_eng_graph_moc(md: str, ref: str) -> Signal:
+    text = md or ''
+    m_lv = _RE_ENG_GRAPH_LAST_VERIFIED.search(text)
+    m_cr = _RE_ENG_GRAPH_CREATED.search(text)
+    produced_at = (m_lv.group(1) if m_lv else None) or (m_cr.group(1) if m_cr else None)
+    m_region = _RE_ENG_GRAPH_AUTO_REGION.search(text)
+    repo_count = len(_RE_ENG_GRAPH_REPO.findall(m_region.group(1))) if m_region else 0
+    date_s = produced_at or '(undated)'
+    summary_text = f'eng-graph MOC: {repo_count} repos indexed, last_verified {date_s}'
+    return Signal(
+        source='vault-eng-graph',
+        kind='eng-graph',
+        severity='info',
+        summary=summary_text,
+        counts={'repos': repo_count},
+        produced_at=produced_at,
+        ref=ref,
+        payload_hash=make_hash('eng-graph', str(produced_at), str(repo_count)),
+    )
+
 def parse_sot_drift_issues(issues: list, ref: str) -> Signal:
     items = issues or []
     open_count = len(items)

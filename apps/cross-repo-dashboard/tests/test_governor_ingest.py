@@ -46,8 +46,8 @@ def test_ingest_all_uses_injected_fetcher_and_persists(tmp_path):
     store = SignalStore(tmp_path / "g.db")
     fetcher, json_getter, content_getter = _fakes()
     result = ingest_all(store, fetcher=fetcher, json_getter=json_getter, content_getter=content_getter)
-    assert result["ingested"] == 6
-    assert result["new"] == 6
+    assert result["ingested"] == 7
+    assert result["new"] == 7
     sources = {r["source"] for r in store.latest_per_source()}
     assert "game-governance-drift" in sources
     assert "game-sot-drift" in sources
@@ -63,7 +63,7 @@ def test_ingest_all_records_advisory_on_new_only(tmp_path):
     fetcher, json_getter, content_getter = _fakes()
     ingest_all(store, fetcher=fetcher, json_getter=json_getter, content_getter=content_getter)
     ingest_all(store, fetcher=fetcher, json_getter=json_getter, content_getter=content_getter)
-    assert len(store.auto_observed_recent(limit=50)) == 6
+    assert len(store.auto_observed_recent(limit=50)) == 7
 
 def test_ingest_all_one_source_failure_does_not_abort_others(tmp_path):
     from governor.store import SignalStore
@@ -78,7 +78,7 @@ def test_ingest_all_one_source_failure_does_not_abort_others(tmp_path):
 
     result = ingest_all(store, fetcher=fetcher, json_getter=json_getter_sot_fails, content_getter=content_getter)
     assert result["errors"] == 1
-    assert result["ingested"] == 5
+    assert result["ingested"] == 6
 
 def _fakes():
     drift_json = '{"generated_at":"2026-05-25T07:19:51+00:00","summary":{"total":2,"errors":0,"warnings":2},"issues":[]}'
@@ -87,16 +87,24 @@ def _fakes():
     coherence_text = "# Coherence-check 2026-06-01\n## Summary\n- broken links: **0**\n"
     whatsmissing_text = "# Whats-missing 2026-06-01\n## Summary\n- missing: **2**\n"
 
+    eng_graph_moc_text = (
+        "---\nlast_verified: 2026-05-31\n---\n"
+        "<!-- eng-graph:auto -->\n"
+        "- [[x]] " + chr(0x2014) + " repo `game`\n"
+        "<!-- /eng-graph:auto -->\n"
+    )
     evo_file_url = "https://api.github.com/repos/MasterDD-L34D/evo-swarm/contents/docs/exports/EXPORT-FOR-GAME-REPO-2026-05-27.md"
     gap_file_url = "https://api.github.com/repos/MasterDD-L34D/vault/contents/Extras/lint-reports/gap-2026-06-01.md"
     coherence_file_url = "https://api.github.com/repos/MasterDD-L34D/vault/contents/Extras/lint-reports/coherence-2026-06-01.md"
     whatsmissing_file_url = "https://api.github.com/repos/MasterDD-L34D/vault/contents/Extras/lint-reports/whatsmissing-2026-06-01.md"
+    eng_graph_moc_url = "https://api.github.com/repos/MasterDD-L34D/vault/contents/Atlas/engineering-moc.md"
 
     _content_map = {
         evo_file_url: digest_text,
         gap_file_url: gap_text,
         coherence_file_url: coherence_text,
         whatsmissing_file_url: whatsmissing_text,
+        eng_graph_moc_url: eng_graph_moc_text,
     }
 
     def fetcher(url):
@@ -204,6 +212,41 @@ def test_produce_vault_source_via_content_getter():
     assert sig.source == "vault-gap"
     assert sig.kind == "gap"
     assert sig.produced_at == "2026-06-01"
+
+
+def test_ingest_all_includes_vault_eng_graph(tmp_path):
+    from governor.store import SignalStore
+    from governor.ingest import ingest_all
+    store = SignalStore(tmp_path / "g.db")
+    fetcher, json_getter, content_getter = _fakes()
+    result = ingest_all(store, fetcher=fetcher, json_getter=json_getter, content_getter=content_getter)
+    assert result["ingested"] == 7
+    assert result["errors"] == 0
+    sources = {r["source"] for r in store.latest_per_source()}
+    assert "vault-eng-graph" in sources
+
+
+def test_produce_vault_fixed_source():
+    from governor.ingest import _produce, ENG_GRAPH_MOC_API
+    em = chr(0x2014)
+    moc_text = (
+        "---\nlast_verified: 2026-05-31\n---\n"
+        "<!-- eng-graph:auto -->\n"
+        f"- [[x]] {em} repo `game`\n"
+        "<!-- /eng-graph:auto -->\n"
+    )
+
+    def content_getter(url):
+        if url == ENG_GRAPH_MOC_API:
+            return moc_text
+        raise AssertionError(f"unexpected content url {url}")
+
+    src = {"id": "vault-eng-graph", "style": "vault-fixed", "api_url": ENG_GRAPH_MOC_API}
+    sig = _produce(src, fetcher=None, json_getter=None, content_getter=content_getter)
+    assert sig.source == "vault-eng-graph"
+    assert sig.severity == "info"
+    assert sig.counts["repos"] == 1
+    assert sig.produced_at == "2026-05-31"
 
 
 def test_governor_route_renders(tmp_path, monkeypatch):
