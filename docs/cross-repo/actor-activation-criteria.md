@@ -112,6 +112,32 @@ A cycle failing (b) or (c) is a FAILED cycle and resets the clean-cycle counter 
 class. "Clean" is decided by these mechanical facts (git history), never by the hub's
 judgment that a verdict "looked plausible".
 
+> **Addendum 2026-06-02 (R1 shipped as issue-escalation, scope A).** The SHIPPED R1
+> opens/updates a GitHub ISSUE, not a PR (sec 8). This does NOT redefine the clean R1 cycle
+> above; it clarifies that issue escalations are a DIFFERENT artifact that must NOT be
+> counted as R2 evidence (Codex P1/P2 on PR #260, adopted):
+> - The "clean R1 cycle" above stays **PR-based and unchanged** (human-merged PR, no revert,
+>   no same-line follow-up) on the **journal/doc-reconcile class** (sec 3). It is the R2
+>   auto-merge evidence metric.
+> - **Issue escalations are NOT PRs and DO NOT count as clean R1 cycles / R2 evidence.** The
+>   shipped issue-only R1 accrues ZERO R2 clean-cycles BY DESIGN. The R2 counter can advance
+>   only once R1 is extended to OPEN PRs (a future rung defined by the R2 ADR), and even then
+>   only on the journal/doc-reconcile class -- never on arbitrary signals (e.g. eng-graph
+>   staleness or a lint warning). Counting issue escalations toward R2 would strip the field
+>   evidence (human-merged reconcile PRs, no revert/drop) the auto-merge gate exists to require.
+> - What the issue-R1 DOES feed is the **acted-on metric** (sec 5): when Eduardo acts on the
+>   underlying signal an escalation named (a fix / OD / ADR / deliberately-wont-fix), that
+>   increments acted-on. Per sec 2 + sec 4, acted-on>=3 IS a NECESSARY R2 input (and also
+>   gates Fase-2 expansion) -- so issue escalations DO advance that precondition. But
+>   acted-on is necessary-NOT-sufficient for R2: the R2 unlock ALSO requires >= 4 clean
+>   PR-cycles (sec 3) on the journal/doc-reconcile class, which the issue-only R1 does not
+>   produce. R2 needs BOTH; issue escalations can satisfy the acted-on input, NEVER the
+>   clean-PR-cycle condition. Closing/reading the issue is NOT acted-on.
+>
+> Net: a silent governor (steady warnings, nothing worsening) accrues zero acted-on AND zero
+> clean PR-cycles. Issue escalations can advance acted-on (an R2 input + the Fase-2 gate) but
+> NEVER the clean-PR-cycle R2 condition. Both at 0 today is the honest off-ramp signal.
+
 ## 7. Per-increment discipline (every climb)
 
 - SDMG step 3 (FALSIFY) before the climb: harsh-reviewer on the specific increment;
@@ -129,5 +155,15 @@ judgment that a verdict "looked plausible".
 - Auto-merge: **OFF**. `.claude/settings.json` ceiling = `git push origin claude/*`.
 - Autonomy ceiling after R1 ship: classify + open/update ONE GitHub issue (label
   governor-attention, codemasterdd only).  Human closes.  No PR, no merge, no branch.
-- Next gate to evaluate: R0 off-ramp acted-on count (sec 2) accumulating from Fase 1 ship;
-  also R1 clean-cycle count (sec 6) for future R2 consideration.
+- Next gate to evaluate: R0 off-ramp acted-on count (sec 2). acted-on (sec 5) is an R2 INPUT
+  (sec 2/4) AND the Fase-2-expansion gate -- issue escalations can advance it. The SEPARATE
+  R2 condition, >= 4 clean PR-cycles (sec 3/6), stays 0 under the issue-only R1 BY DESIGN
+  (issues are not PR-cycles); R2 needs BOTH, so issue-R1 alone never unlocks R2.
+- **Live state 2026-06-02 (post the 3 non-gated PRs #256/#257/#258).** R0 = **8 signal
+  sources** (added archon-learnings #257 + eng-graph staleness #258; R1 actor token-hardened
+  #256). R1 has escalated **0 times** to date: the 5 standing `warning` signals are STEADY
+  (no error, no worsened-delta), so the actor is silent BY DESIGN. Hence clean-R1-cycles = 0
+  AND acted-on = 0; the off-ramp window is just opening. The next real decision point is
+  whether R1 ever fires on a genuine regression and whether Eduardo acts on it (sec 6
+  addendum) -- NOT more building. R2/Fase-4 remain hard-gated; the "complete the governor"
+  grant (2026-06-02) explicitly did not override these gates.
