@@ -108,3 +108,73 @@ def test_prompt_includes_screen_and_all_bible_items():
     assert "Lobby" in p
     for it in SPECS["lobby"]["items"]:
         assert it in p
+
+
+def test_vision_post_posts_to_ollama_and_returns_response(tmp_path):
+    # Real Ollama transport for run()'s vision channel. Reads image -> b64 ->
+    # POST /api/generate -> returns the model 'response' text. urlopen injected,
+    # no real network. This is the un-landed glue that makes run() invokable.
+    import json as _j
+
+    from PIL import Image
+
+    from judge_screen import _vision_post
+
+    p = tmp_path / "shot.png"
+    Image.new("RGB", (8, 8), (0, 0, 0)).save(str(p))
+    captured = {}
+
+    class FakeResp:
+        def read(self):
+            return b'{"response": "[{\\"verdict\\":\\"PASS\\"}]"}'
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *a):
+            return False
+
+    def fake_urlopen(req, timeout=None):
+        captured["url"] = req.full_url
+        captured["body"] = _j.loads(req.data)
+        return FakeResp()
+
+    out = _vision_post(str(p), "lobby", "host:1234", "m", urlopen=fake_urlopen)
+    assert out == '[{"verdict":"PASS"}]'
+    assert captured["url"] == "http://host:1234/api/generate"
+    assert captured["body"]["model"] == "m"
+    assert isinstance(captured["body"]["images"][0], str) and captured["body"]["images"][0]
+
+
+def test_main_returns_1_when_smoke_has_a_fail():
+    # CLI gate semantics: any FAIL verdict -> non-zero exit (autonomous smoke
+    # trips). run_fn injected so no real IO; argv parsed by main's argparse.
+    from judge_screen import main
+
+    rc = main(
+        ["--image", "x.png", "--screen", "lobby"],
+        run_fn=lambda *a, **k: [
+            {"item": 4, "verdict": "FAIL", "reason": "gray", "source": "deterministic"},
+        ],
+        out=lambda *a, **k: None,
+    )
+    assert rc == 1
+
+
+def test_main_prints_merged_verdicts_and_exits_clean_on_all_pass():
+    # Happy path: main emits the merged verdicts as JSON (via injected out) and
+    # returns 0 when nothing FAILs. The autonomous smoke's machine-readable output.
+    import json as _j
+
+    from judge_screen import main
+
+    captured = {}
+    rc = main(
+        ["--image", "x.png"],
+        run_fn=lambda *a, **k: [
+            {"item": 1, "verdict": "PASS", "reason": "ok", "source": "vision"},
+        ],
+        out=lambda s: captured.__setitem__("s", s),
+    )
+    assert rc == 0
+    assert _j.loads(captured["s"])[0]["verdict"] == "PASS"

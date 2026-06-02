@@ -5,8 +5,10 @@ Productionized "judge" layer of the Godot-v2 First-Playable AI-driven smoke.
 Incremental TDD build (tdd-guard): start with the JSON extractor the RED test
 needs; integration (Ollama call, CLI) added in later cycles.
 """
+import base64
 import json
 import re
+import urllib.request
 
 
 def _extract_json(text):
@@ -110,6 +112,24 @@ def build_judge_payload(image_b64, screen, model="gemma4:latest"):
     }
 
 
+def _vision_post(image_path, screen, host, model="gemma4:latest",
+                 urlopen=urllib.request.urlopen):
+    """Real Ollama transport for run()'s vision channel: image -> b64 ->
+    POST http://<host>/api/generate -> the model 'response' text. urlopen is
+    injectable so the transport contract is unit-tested without real network."""
+    with open(image_path, "rb") as f:
+        b64 = base64.b64encode(f.read()).decode("ascii")
+    payload = build_judge_payload(b64, screen, model)
+    req = urllib.request.Request(
+        "http://%s/api/generate" % host,
+        data=json.dumps(payload).encode("utf-8"),
+        headers={"Content-Type": "application/json"},
+    )
+    with urlopen(req, timeout=180) as resp:
+        data = json.loads(resp.read())
+    return data["response"]
+
+
 def run(image_path, screen, det_threshold, sampler, vision_post,
         host="192.168.1.10:11434", model="gemma4:latest"):
     """End-to-end combined judge: deterministic bg (sampler -> _is_dark_bg) +
@@ -123,3 +143,27 @@ def run(image_path, screen, det_threshold, sampler, vision_post,
     vision = [{"item": i + 1, "verdict": str(v.get("verdict", "")).upper(), "reason": v.get("reason", "")}
               for i, v in enumerate(vraw)]
     return _merge_verdicts(vision, det)
+
+
+def main(argv=None, run_fn=run, sampler=sample_bg, vision_post=_vision_post,
+         out=print):
+    """CLI wrapper -- the un-landed glue making the judge invokable end-to-end.
+    Wires the real sampler + Ollama transport into run(); exits non-zero iff any
+    item FAILs (autonomous-smoke gate). All collaborators injectable for tests."""
+    import argparse
+
+    ap = argparse.ArgumentParser(description="AI-driven Godot-v2 screen smoke judge")
+    ap.add_argument("--image", required=True, help="screenshot PNG to judge")
+    ap.add_argument("--screen", default="lobby", help="SPECS screen key")
+    ap.add_argument("--host", default="192.168.1.10:11434", help="Ollama host:port")
+    ap.add_argument("--model", default="gemma4:latest", help="vision model tag")
+    ap.add_argument("--threshold", type=int, default=40, help="dark-bg brightness cutoff")
+    a = ap.parse_args(argv)
+    merged = run_fn(a.image, a.screen, a.threshold, sampler=sampler,
+                    vision_post=vision_post, host=a.host, model=a.model)
+    out(json.dumps(merged, indent=2))
+    return 1 if any(m.get("verdict") == "FAIL" for m in merged) else 0
+
+
+if __name__ == "__main__":  # pragma: no cover
+    raise SystemExit(main())
