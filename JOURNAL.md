@@ -19,6 +19,23 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-06-02 (Ryzen: governor /governor pane render-test, item-4 hardening)
+
+Continuazione governor (chip). Item-4 dei non-gated: blindare il rendering della pagina `/governor`. Test-only -> nessun incremento autonomia -> niente harsh-reviewer.
+
+### Completato
+- **Gap trovato + chiuso** (#254 MERGED, squash 237e050): la rotta `/governor` era logica-OK ma l'unico test MOCKAVA `render_template` -> il template Jinja reale (`cr_governor.html`) non veniva mai renderizzato (un typo nel template = test verde) + seminava 1 segnale non 7. Nuovo `test_governor_pane_render.py`: render reale via jinja2 standalone (flask mockato in suite, jinja2 no) -> assert dei 7 segnali + `acted_count` esatto (`<strong>3</strong>`) + advisory.
+- **TDD teeth-proof ha pescato un assert mascherato**: rotto `s.source` nel template -> test passava ANCORA (il summary-seme conteneva il source token). Scollegato -> RED per il motivo giusto -> ripristino. Senza il teeth-proof avrei shippato un test cieco.
+- **Codex P2 adottato (SDMG adopt-not-defend) + ground-truth**: `import jinja2` top-level rompe la suite hermetic (Codex l'ha ESEGUITO in sandbox -> `ModuleNotFoundError`). Fix = `pytest.importorskip("jinja2")`: skippa pulito se jinja2 assente, gira pieno dove c'e' (macchina invoker). Verificato riproducendo l'env senza jinja2 (meta_path block) -> `1 skipped` non errore. 100 test (era 97). Re-review Codex pulito (no major issues + thumbs-up sulla PR). Thread risolto.
+
+### Da fare (gated / opzionali invariati)
+- Gate R2/Fase-4 invariati: questo NON e' un ciclo R1 ne' un acted-on (R1 clean-cycle resta 0, off-ramp acted-on resta 0). E' hardening dell'osservabilita' R0.
+- Non-gated rimasti: token least-privilege per R1 actor (issues:write); eng-graph staleness-escalation (now-aware classify); 8a sorgente ARCHON learnings (verificare visibilita' aa01 prima).
+
+### Note
+- Sessione concorrente viva (~1 write/min): `.mcp.json` + `BACKLOG.md` + `.mcp.json.bak-pre-sse-2026-06-02` dirty/untracked (sue) -> escluse dai miei commit (stage path-espliciti, index-snapshot).
+- Merge #254 squash autorizzato esplicito da Eduardo (una-tantum, NON grant auto-merge permanente).
+
 ## 2026-06-02 (Ryzen: governor eng-graph 7th signal + session close)
 
 Chiusura sessione governor. eng-graph integrato (chiude la riga "opportunita'" del journal precedente).
