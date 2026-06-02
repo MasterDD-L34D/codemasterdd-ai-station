@@ -112,6 +112,24 @@ A cycle failing (b) or (c) is a FAILED cycle and resets the clean-cycle counter 
 class. "Clean" is decided by these mechanical facts (git history), never by the hub's
 judgment that a verdict "looked plausible".
 
+> **Addendum 2026-06-02 (R1 shipped as issue-escalation, scope A -- reconciles the
+> PR-based definition above).** The SHIPPED R1 opens/updates a GitHub ISSUE, not a PR
+> (sec 8) -- so the PR-based definition above does NOT apply to it as written; it governs a
+> future PR-opening rung (R2+). For the issue-escalation R1, a CLEAN R1 cycle is:
+> - (a) the actor opened/updated a `governor-attention` issue for a GENUINE escalation
+>       (severity == error OR a worsened-delta per classify), AND
+> - (b) Eduardo ACTED on the underlying signal it named (sec 5: a fix / OD / ADR /
+>       deliberately-wont-fix) -- NOT merely closing or reading the issue, AND
+> - (c) it was not a false alarm (not dismissed as noise) and the same escalate-key did not
+>       churn-re-escalate (idempotency held).
+>
+> Consequence: a clean issue-R1 cycle IMPLIES an acted-on event (sec 5) -- for R1 the
+> clean-cycle counter and the acted-on counter move together. The R2 gate's ">= 4 clean R1
+> cycles across >= 2 repos" is therefore reachable only once R1 actually FIRES on real
+> error/worsened-delta signals AND Eduardo acts on them; a governor that stays silent
+> (steady warnings, nothing worsening) accrues ZERO clean cycles -- which is the honest
+> off-ramp signal, not a bug.
+
 ## 7. Per-increment discipline (every climb)
 
 - SDMG step 3 (FALSIFY) before the climb: harsh-reviewer on the specific increment;
@@ -130,4 +148,12 @@ judgment that a verdict "looked plausible".
 - Autonomy ceiling after R1 ship: classify + open/update ONE GitHub issue (label
   governor-attention, codemasterdd only).  Human closes.  No PR, no merge, no branch.
 - Next gate to evaluate: R0 off-ramp acted-on count (sec 2) accumulating from Fase 1 ship;
-  also R1 clean-cycle count (sec 6) for future R2 consideration.
+  also R1 clean-cycle count (sec 6 + the 2026-06-02 issue-based addendum) for future R2.
+- **Live state 2026-06-02 (post the 3 non-gated PRs #256/#257/#258).** R0 = **8 signal
+  sources** (added archon-learnings #257 + eng-graph staleness #258; R1 actor token-hardened
+  #256). R1 has escalated **0 times** to date: the 5 standing `warning` signals are STEADY
+  (no error, no worsened-delta), so the actor is silent BY DESIGN. Hence clean-R1-cycles = 0
+  AND acted-on = 0; the off-ramp window is just opening. The next real decision point is
+  whether R1 ever fires on a genuine regression and whether Eduardo acts on it (sec 6
+  addendum) -- NOT more building. R2/Fase-4 remain hard-gated; the "complete the governor"
+  grant (2026-06-02) explicitly did not override these gates.
