@@ -56,7 +56,7 @@ boots the GAME (Node) backend -- a current, bootable Game backend is required.
 | Godot 4.6 binary | MISSING -- `GODOT_BIN` unset, not in PATH |
 | Game backend current | STALE -- `C:/dev/Game` on `feat/od-058-d2-wound-system`, 28 behind, 39 dirty (WIP combat, do NOT disturb) |
 | Game backend boot (Ryzen) | FRICTION -- Docker broken -> standalone Postgres 17 + `@game/*` junction fix |
-| Physical device smoke | Eduardo only (iPhone + TV) |
+| Smoke execution | AI-driven harness (Playwright + bridge-state + vision-LLM), NO human -- see sec 5 |
 
 ## 3. Gaps to clear BEFORE deploy
 
@@ -85,31 +85,56 @@ GAME_DIR=<clean-Game-main> ./tools/deploy/deploy-quick.sh
 ```
 -> TV host: `https://evo-tactics.com/`  |  phone players: `https://evo-tactics.com/phone/?room=XXXX`
 
-## 5. Smoke (Eduardo, physical) -- the goal gate
+## 5. AI-driven smoke (autonomous, NO human eyes) -- the goal gate
 
-On TV `/` + iPhone Safari `/phone/?room=`, mark PASS / CONDITIONAL / FAIL per surface.
-Smoke AGAINST three reference layers (not just the checklist):
-1. **Surface grid** -- `Game-Godot-v2/docs/godot-v2/qa/2026-05-20-pr284-visual-smoke.md` (40 items, blank today).
-2. **Target spec** -- `docs/godot-v2/visual-screen-bible.md` (A2 authority, RoJ/Jackbox-derived per-screen "should look like").
-3. **Known-issue baseline** -- `docs/godot-v2/design-conformance-gap-2026-05-19.md` (what was broken 2026-05-19; confirm each closed).
+Replaces the human iPhone+TV pass. The existing `tools/playtest/playwright/` harness ALREADY
+drives + screenshots the Godot web build (`phone_smoke.spec`, `combat_5r.spec`); only the final
+visual JUDGMENT was human (README "Analysis pipeline: Master-dd browses report + reviews
+screenshots"). Swap that human step for vision-LLM + bridge-state asserts.
 
-**"Feels-like-RoJ" acceptance (6 bible patterns)**: (1) 2-device split (TV host + phone companion);
-(2) room-code DOMINANT on host screen + QR + separate phone join-URL, join reflects on host;
-(3) hand-drawn cartoony aesthetic; (4) one-click join; (5) info easy to digest + accessibility-first;
-(6) stream-friendly host.
+**Smoke AGAINST** (3 reference layers): (1) surface grid `qa/2026-05-20-pr284-visual-smoke.md`
+(40 items); (2) target spec `visual-screen-bible.md` (A2); (3) known-issue baseline
+`design-conformance-gap-2026-05-19.md`. "Feels-like-RoJ" acceptance = 6 bible patterns (2-device,
+room-code-dominant + QR + separate join-URL, hand-drawn, one-click join, digestible/accessible,
+stream-friendly).
 
-Worldgen payoff-legibility is exercised by the "World Seed Reveal" items (resonance line, biome
-tint, eco_pressure readouts) -- the in-play check against the "biodiversita invisibile" design risk.
+**Why it is non-trivial**: Godot HTML5 = `<canvas>` WebGL -> no inspectable DOM. Two reliable
+channels only: screenshots (pixels) + Godot->JS bridge (structured state).
 
-**/ultrareview**: the gap report's external falsification (SDMG/Protocol-7) was never run.
-Recommendation: do NOT re-review the 2-week-old, partially-actioned doc -- let THIS device smoke
-be the empirical falsification (ground-truth on device > stale-doc review). Use the report as the
-known-issue baseline only.
+**3-layer autonomous harness**:
+1. **Drive** (no human input): backend-script the phases via WS/REST (`tests/e2e/lobbyEndToEnd.mjs`
+   pattern: createRoom / joinRoom / publishWorld / advance) + phone join via `?room=` URL (wired) +
+   in-canvas coord-clicks (existing harness technique).
+2. **Capture**: `page.screenshot()` per phase (visual items) + in-engine
+   `get_viewport().get_texture().get_image().save_png()` (sovereign/CI path) + **bridge expose** --
+   extend `main.gd` -> `window.__<screen>_state = {room_code, conn_color, theme, font_px, panel_present, ...}`
+   (precedent: existing `window.__main_get_telemetry_summary` hook).
+3. **Judge** (replaces the human): (a) DETERMINISTIC -- `page.evaluate()` reads bridge state ->
+   assert vs bible exact numbers (font px, color, panel-vs-raw-label, StatusLabel player-facing);
+   (b) SEMANTIC -- vision-LLM on screenshots vs bible per-screen -> PASS / CONDITIONAL / FAIL +
+   reason (dark-void bg, biome-tint, hand-drawn, feels-like-RoJ). Vision model: Gemma-4 multimodal
+   local (sovereign $0) first-pass + Claude vision (ADR-0023 budget) for ambiguous/critical.
 
-## 6. Conditional loop -- Claude
+**Split rule (load-bearing)**: quantitative -> bridge-assert (exact); qualitative/aesthetic ->
+vision-LLM. Never ask vision to measure px/hex. Animations (fade/stagger) -> bridge tween-state,
+not static screenshot.
 
-Fix CONDITIONAL/FAIL surfaces -> PR -> re-smoke. Overlap-check `C:/dev/Game` WIP
-wound-system (and Lenovo PHASEC combat work) before touching any combat-code.
+**Autonomy boundary (honest)**: render / layout / color / state / flow = 100% AI-driven local
+(chromium + native Godot). iOS-Safari-SPECIFIC items (emoji U+25CF fallback, touch-target,
+Safari-mobile render) -> Playwright `webkit` approximates; TRUE iOS = cloud device-farm
+(BrowserStack). The only residual non-100%-local slice.
+
+Worldgen payoff-legibility -> exercised by the "World Seed Reveal" capture (resonance line, biome
+tint, eco_pressure) -- in-play check vs "biodiversita invisibile".
+
+**/ultrareview**: superseded by this autonomous smoke (ground-truth on render > stale-doc review,
+anti-#8). Gap report = known-issue baseline only.
+
+## 6. Conditional loop -- Claude (autonomous)
+
+Vision/assert FAIL or CONDITIONAL -> Claude fixes the surface -> re-run the harness (no human) ->
+re-judge -> PR. Overlap-check `C:/dev/Game` WIP wound-system (+ Lenovo PHASEC combat) before
+touching any combat-code.
 
 ## 7. Machine decision (open)
 
