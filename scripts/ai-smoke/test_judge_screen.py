@@ -56,6 +56,19 @@ def test_merge_verdicts_deterministic_overrides_vision():
     assert by_item[2]["source"] == "vision"
 
 
+def test_sample_bg_reads_corner_pixels(tmp_path):
+    # Screenshot-side deterministic IO: sample background corner pixels.
+    from PIL import Image
+
+    from judge_screen import sample_bg
+
+    p = tmp_path / "solid.png"
+    Image.new("RGB", (200, 200), (50, 60, 70)).save(str(p))
+    rgbs = sample_bg(str(p))
+    assert len(rgbs) >= 4
+    assert all(c == (50, 60, 70) for c in rgbs)
+
+
 def test_prompt_includes_screen_and_all_bible_items():
     from judge_screen import _prompt, SPECS
 

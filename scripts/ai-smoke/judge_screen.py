@@ -86,3 +86,14 @@ def _merge_verdicts(vision, det):
                 "source": "vision",
             })
     return merged
+
+
+def sample_bg(image_path, inset=40):
+    """Sample background RGB at the 4 corners (inset from edges) -- the empty
+    area around the panels. PIL-based deterministic IO for the measurable layer."""
+    from PIL import Image
+
+    im = Image.open(image_path).convert("RGB")
+    w, h = im.size
+    pts = [(inset, inset), (w - inset, inset), (inset, h - inset), (w - inset, h - inset)]
+    return [im.getpixel(p) for p in pts]
