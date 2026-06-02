@@ -19,6 +19,27 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-06-02 (Ryzen: Godot-v2 First-Playable goal + AI-driven smoke harness)
+
+Eduardo ha fissato il goal First-Playable (Godot-v2: room-creation RoJ/Jackbox TV+phone -> worldgen -> prime fasi). Sessione: costruito + VALIDATO un autonomous AI-driven smoke (no umano, no Claude nel giudizio), poi research che conferma la rotta. Niente pivot.
+
+### Completato
+- **Goal + ground-truth**: chain Godot-v2 gia assemblata su main (`main.gd` 6 fasi, web-entry=LOBBY), mai girata live (smoke checklist vuoto). Validate-not-build.
+- **AI-driven smoke harness**: loop drive(Playwright) -> capture(screenshot) -> judge(vision-LLM Gemma-4 `.10`) -> parse, ZERO umano/Claude nel giudizio. **PR #263** (`scripts/ai-smoke/judge_screen.py`, 7 primitive TDD'd / 7 pytest GREEN + README) + **PR #262** (runbook design).
+- **Design law PROVATO**: vision per qualitativo, deterministico (pixel-sample + Godot bridge) per misurabile -- 3 VLM (Gemma 8%/8%, Qwen2.5-VL 5%) TUTTI hallucinano il colore (PASS-ano un bg grigio RGB(77,77,77)=30% che e' FAIL). Combined judge proven: il check deterministico OVERRIDE il false-PASS del VLM.
+- **Conditional-loop autonomo**: `✦` tofu fix (LobbyView + CompanionPanel) -> judge->fix->rebuild->re-judge verde. F1 bg-gray root-caused (Node2D-parent mount; fix noto `set_anchors FULL_RECT`). F2 room-code = dismissed (artefatto bare-boot, label_hero=56px).
+- **Research tech-scout**: nessun tool ready-made per il niche (PlayGodot = custom-fork + desktop-only; gdUnit4 = no-web/no-visual; no vision-QA-local framework; agentic-tools = play/cloud). Custom harness = pragmatico. No model-swap (Qwen2.5-VL A/B refuted).
+
+### Da fare
+- Scale 6 screen + populated-drive (deploy-quick same-origin :3334 + room-create WS -> room code reale) -- Godot-workflow, sostanziale.
+- bg-fix F1 (`set_anchors FULL_RECT` sistemico) + Godot bridge `window.__<screen>_state` + `main()` CLI -- tdd-gated GDScript -> Godot-workflow.
+- Merge PR #262 + #263 (Codex review rate-limited -> Eduardo merge call).
+
+### Note
+- Continuation doc completo: `docs/sessions/2026-06-02-godot-firstplayable-aismoke-continuation.md`. Live state: memory `project_godot_first_playable`.
+- Gotcha: global tdd-guard ultra-granulare (stub->populate->impl per funzione; blocca anche il delete di un RED-test); `pytest --rootdir .` registra il RED; un GUT-RED da bash-hub NON viene registrato -> GDScript va fatto nel Godot-workflow (GUT+tdd-guard wired).
+- Env riusabile: worktree `-golive` (Godot + Game), Postgres-17 + Game backend boota (HEALTH 200), Godot 4.6.2, `qwen2.5vl:7b` local Ryzen. Serve :8060 killed a chiusura.
+
 ## 2026-06-02 (Ryzen: governor 3 non-gated -- least-priv token + archon 8th signal + eng-graph staleness)
 
 Eduardo: "farli tutti 3, hai il mio permesso per completare il governatore". 3 PR non-gated, ognuna branch+PR+rituale (TDD + CI + Codex + harsh-reviewer dove autonomia). R2/Fase-4 restano hard-gated: il permesso NON scavalca SDMG (0 cicli R1 puliti oggi).
