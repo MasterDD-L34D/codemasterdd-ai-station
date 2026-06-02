@@ -46,13 +46,14 @@ Vision is for qualitative only; measurables go to the deterministic layer. Valid
 pixel ground-truth (PIL) + a combined-judge run where the deterministic check OVERRODE the
 VLM's false-PASS on the bg.
 
-## What is BUILT (in OPEN PRs #262/#263 -- NOT on `main` yet)
+## What is BUILT (PR #263 MERGED to `main`; PR #262 still OPEN)
 
-> **Merge prerequisite (cold-start agents read this first)**: `scripts/ai-smoke/` and
-> the runbook below live ONLY on the open PR branches -- they are **NOT on `main`**.
-> To use them, `git checkout` (or merge) `claude/ai-smoke-vision-judge` (#263) /
-> `claude/godot-firstplayable-runbook` (#262); do not assume the files exist on a
-> fresh `main` checkout until those PRs merge.
+> **Merge prerequisite (cold-start agents read this first)**: as of 2026-06-03,
+> `scripts/ai-smoke/` IS on `main` (#263 merged). The runbook
+> `docs/runbook/godot-v2-first-playable-golive.md` is **NOT yet on `main`** -- it
+> lives only on the open `claude/godot-firstplayable-runbook` (#262) branch; `git
+> checkout` (or merge) #262 to use it. Do not assume the runbook exists on a fresh
+> `main` checkout until #262 merges.
 
 - **PR #263** (`claude/ai-smoke-vision-judge`) -- `scripts/ai-smoke/` (codemasterdd): `judge_screen.py` with 7 TDD'd
   primitives (`_extract_json`, `_prompt`+`SPECS`, `_is_dark_bg`, `_merge_verdicts`,
@@ -60,7 +61,7 @@ VLM's false-PASS on the bg.
   `run()` = DI-injectable combined judge (sampler + vision_post), unit-tested without real IO.
   **UPDATE (session b, commit `9c944ef`)**: the `main()` CLI + real `_vision_post` Ollama
   transport are now landed on #263 (10 pytest GREEN, verified e2e against real PIL + Gemma-4) --
-  no un-landed glue remains; still pending #263 merge to reach `main`.
+  no un-landed glue remains. **#263 is now MERGED -- `scripts/ai-smoke/` is on `main`.**
 - **PR #262** (`claude/godot-firstplayable-runbook`) -- `docs/runbook/godot-v2-first-playable-golive.md` (the AI-driven smoke design + deploy runbook).
 - Conditional-loop demonstrated autonomously: `✦` (U+2726) tofu in `LobbyView.tscn` +
   `CompanionPanel.tscn` -> removed -> rebuild -> vision re-smoke confirmed clean
