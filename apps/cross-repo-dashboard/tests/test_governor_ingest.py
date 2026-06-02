@@ -296,3 +296,18 @@ def test_ingest_all_includes_archon_learnings(tmp_path):
     assert result["errors"] == 0
     sources = {r["source"] for r in store.latest_per_source()}
     assert "archon-learnings" in sources
+
+
+def test_ingest_all_passes_now_so_stale_eng_graph_escalates(tmp_path):
+    """ingest_all must forward a `now` to _produce so eng-graph staleness activates
+    in production. The _fakes eng-graph fixture is last_verified 2026-05-31; with a
+    far-future now it must be severity error (not the now=None info default)."""
+    from datetime import date
+    from governor.store import SignalStore
+    from governor.ingest import ingest_all
+    store = SignalStore(tmp_path / "g.db")
+    fetcher, json_getter, content_getter = _fakes()
+    ingest_all(store, fetcher=fetcher, json_getter=json_getter,
+               content_getter=content_getter, now=date(2026, 9, 30))
+    eg = [r for r in store.latest_per_source() if r["source"] == "vault-eng-graph"]
+    assert eg and eg[0]["severity"] == "error"

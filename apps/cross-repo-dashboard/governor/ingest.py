@@ -4,6 +4,7 @@ import base64
 import json
 import subprocess
 import sys
+from datetime import date
 from pathlib import Path
 
 import requests
@@ -95,7 +96,7 @@ def raw_fetch(url: str) -> str:
     return r.text
 
 
-def _produce(src: dict, fetcher, json_getter, content_getter):
+def _produce(src: dict, fetcher, json_getter, content_getter, now: date | None = None):
     """Fetch + parse one source into a Signal. Raises on failure (caller isolates)."""
     sid, style = src["id"], src["style"]
     if style == "json":
@@ -113,7 +114,7 @@ def _produce(src: dict, fetcher, json_getter, content_getter):
             raise ValueError(f"no vault {src['prefix']} report found")
         return parse_vault_report(content_getter(url), source=sid, kind=src["kind"], ref=url)
     if style == "vault-fixed":
-        return parse_eng_graph_moc(content_getter(src["api_url"]), src["api_url"])
+        return parse_eng_graph_moc(content_getter(src["api_url"]), src["api_url"], now=now)
     if style == "archon-learnings":
         return parse_archon_learnings(json_getter(src["api_url"]), src["api_url"])
     raise ValueError(f"unknown style {style} for {sid}")
@@ -124,13 +125,15 @@ def ingest_all(
     fetcher=raw_fetch,
     json_getter=gh_get_json,
     content_getter=gh_get_file_content,
+    now: date | None = None,
 ) -> dict:
     ingested = 0
     new = 0
     errors = 0
+    now = now or date.today()  # I/O boundary: the clock for staleness-aware sources
     for src in SOURCES:
         try:
-            sig = _produce(src, fetcher, json_getter, content_getter)
+            sig = _produce(src, fetcher, json_getter, content_getter, now=now)
             is_new = store.upsert(sig)
             ingested += 1
             if is_new:
