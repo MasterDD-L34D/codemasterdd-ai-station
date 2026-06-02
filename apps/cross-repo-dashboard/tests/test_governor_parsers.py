@@ -49,6 +49,16 @@ def test_parse_evo_swarm_digest_missing_numbers_safe():
     assert sig.counts.get("coverage_gaps") == 0
     assert sig.produced_at == "2026-06-01"
 
+
+def test_parse_evo_swarm_digest_emdash_header_date():
+    # Real exports separate the date with an em-dash (U+2014), not "--". The date
+    # regex must still extract it (else evo produced_at = None, no date in the pane).
+    from governor.parsers import parse_evo_swarm_digest
+    em = chr(0x2014)  # em-dash, kept out of source bytes (ASCII-guard clean)
+    md = f"# Evo-Swarm {em} Game Repo Digest {em} 2026-05-27\n\n**Cicli inclusi**: 0 entry\n"
+    sig = parse_evo_swarm_digest(md, "r")
+    assert sig.produced_at == "2026-05-27"
+
 def test_parse_sot_drift_issues_open():
     import json
     from pathlib import Path
