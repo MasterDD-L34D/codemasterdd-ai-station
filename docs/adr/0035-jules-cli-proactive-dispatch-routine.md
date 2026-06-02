@@ -117,6 +117,51 @@ N=5 scoped-dispatched sessions measured. **Clean-rate 5/5 = 100% (>= 80% gate) -
 
 **Contrast (why the gate matters):** the unscoped/vague wave the same day ran ~50% defective (mojibake regex, test targeting a non-existent module, tz-wrong assertions, tile_size self-rated Incorrect + workspace pollution). Prompt-scoping + ASCII-file selection is the difference between 100% and ~50%.
 
+## Addendum 2026-06-02 -- REST API-key write path (no-OAuth, Ryzen-capable)
+
+**Capability finding (empirical, 2026-06-02, Ryzen).** The Jules REST write
+surface is authorized by the **`x-goog-api-key` alone** -- no OAuth / `jules
+login` token required. The Context above framed dispatch as the CLI `jules
+remote new` (which needs the OAuth `~/.jules` cache, an Eduardo-only interactive
+step absent on Ryzen). The REST path is an OAuth-free alternative, proven by
+auth-probe against a non-existent session (auth failure would be 401/403; a
+404/400 means the key passed auth and only the resource/body was wrong):
+
+| REST call (header `x-goog-api-key: $JULES_API_KEY`) | Auth-probe (fake session / empty body) | Verdict |
+|---|---|---|
+| `POST /v1alpha/sessions` (dispatch/create) | 400 INVALID_ARGUMENT (not 401/403) | key authorizes create |
+| `POST /v1alpha/sessions/{id}:sendMessage`  | 404 NOT_FOUND (not 401/403)        | key authorizes sendMessage |
+| `POST /v1alpha/sessions/{id}:archive`      | 404 NOT_FOUND (not 401/403)        | key authorizes archive |
+
+Create-session body schema (verified by live dispatch):
+`{"prompt": "...", "title": "...", "sourceContext": {"source":
+"sources/github/<owner>/<repo>", "githubRepoContext": {"startingBranch":
+"main"}}}` -> returns the session object (`name: sessions/<id>`, `state:
+IN_PROGRESS`). JSON piped via `curl --data @-` (Windows curl does not read
+MSYS `/tmp` paths).
+
+**Live validation**: session `5291221858432953647` dispatched from Ryzen via
+REST (hardened `flint_status_stdlib` dedupe prompt + ASCII-encoding clause),
+accepted `IN_PROGRESS`. Triaged per the standard gate; Game-merge stays
+Eduardo-explicit.
+
+**SDMG boundary (load-bearing -- this is a CHANNEL fact, NOT a policy change).**
+The API was always write-capable (sendMessage used since ADR-0032). This
+addendum records the OAuth-free Ryzen reach ONLY. It does NOT authorize removing
+any gate. UNCHANGED and binding:
+- Autonomy ladder default-OFF / earn-gated (ORCHESTRATION.md sec 5; R2
+  auto-merge not earned).
+- R3-bis: NO corrective sendMessage on moot/shipped sessions (backfire
+  #2294/#2313); archive-only.
+- External-repo PR **merge** = Eduardo-explicit (Codex sub-gate).
+- Scoped-prompt template + ASCII-clean-target + mandatory ground-truth triage
+  (this ADR, Hard constraints) apply to every REST-dispatched task identically.
+- "Full-autonomous corrective via API" = ADR-0032, self-destructed (69%
+  FP-close), REJECTED. Channel openness does not reopen it.
+
+Net: the dispatch+triage loop now reaches Ryzen too (not only the Lenovo CLI
+host). The govern envelope is unchanged; only its fleet reach widened.
+
 ## References
 
 - ADR-0034 (Option D), ADR-0033, runbook `docs/runbook/jules-session-triage-via-cli.md`
