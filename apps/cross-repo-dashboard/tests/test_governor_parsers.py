@@ -151,3 +151,94 @@ def test_parse_vault_report_coherence_block_zero_warn_is_warning():
     assert sig.counts["block"] == 0
     assert sig.counts["warn"] == 1
     assert sig.produced_at == "2026-06-01"
+
+
+def _eng_graph_moc_fixture() -> str:
+    """Inline fixture for eng-graph MOC tests.
+
+    Uses chr(0x2014) for em-dash so source bytes stay ASCII-guard clean.
+    """
+    em = chr(0x2014)
+    return (
+        "---\n"
+        "created: 2026-05-20\n"
+        "last_verified: 2026-05-31\n"
+        "---\n"
+        "\n"
+        "# Engineering MOC\n"
+        "\n"
+        "<!-- eng-graph:auto -->\n"
+        "## Repo (bridge)\n"
+        f"- [[codemasterdd-overview]] {em} repo `codemasterdd`\n"
+        f"- [[evo-swarm-overview]] {em} repo `evo-swarm`\n"
+        f"- [[game-overview]] {em} repo `game`\n"
+        f"- [[game-database-overview]] {em} repo `game-database`\n"
+        f"- [[game-godot-v2-overview]] {em} repo `game-godot-v2`\n"
+        "<!-- /eng-graph:auto -->\n"
+    )
+
+
+def test_parse_eng_graph_moc_happy_path():
+    from governor.parsers import parse_eng_graph_moc
+    md = _eng_graph_moc_fixture()
+    ref = "https://api.github.com/repos/MasterDD-L34D/vault/contents/Atlas/engineering-moc.md"
+    sig = parse_eng_graph_moc(md, ref)
+    assert sig.source == "vault-eng-graph"
+    assert sig.kind == "eng-graph"
+    assert sig.severity == "info"
+    assert sig.produced_at == "2026-05-31"
+    assert sig.counts["repos"] == 5
+    assert "5" in sig.summary
+    assert "2026-05-31" in sig.summary
+    assert sig.ref == ref
+    assert sig.payload_hash != ""
+
+
+def test_parse_eng_graph_moc_falls_back_to_created_date():
+    from governor.parsers import parse_eng_graph_moc
+    em = chr(0x2014)
+    md = (
+        "---\n"
+        "created: 2026-05-01\n"
+        "---\n"
+        "\n"
+        "<!-- eng-graph:auto -->\n"
+        f"- [[x]] {em} repo `alpha`\n"
+        "<!-- /eng-graph:auto -->\n"
+    )
+    sig = parse_eng_graph_moc(md, "r")
+    assert sig.produced_at == "2026-05-01"
+    assert sig.counts["repos"] == 1
+
+
+def test_parse_eng_graph_moc_no_region_returns_zero_repos():
+    from governor.parsers import parse_eng_graph_moc
+    md = "---\nlast_verified: 2026-05-31\n---\n\n# Eng MOC\n\nNo auto region here.\n"
+    sig = parse_eng_graph_moc(md, "r")
+    assert sig.counts["repos"] == 0
+    assert sig.severity == "info"
+    assert sig.produced_at == "2026-05-31"
+
+
+def test_parse_eng_graph_moc_empty_input():
+    from governor.parsers import parse_eng_graph_moc
+    sig = parse_eng_graph_moc("", "r")
+    assert sig.counts["repos"] == 0
+    assert sig.produced_at is None
+    assert "(undated)" in sig.summary
+    assert sig.severity == "info"
+
+
+def test_parse_eng_graph_moc_hash_stable():
+    # Same inputs -> same hash (no time-dependent component).
+    from governor.parsers import parse_eng_graph_moc
+    em = chr(0x2014)
+    md = (
+        "---\nlast_verified: 2026-05-31\n---\n"
+        "<!-- eng-graph:auto -->\n"
+        f"- [[x]] {em} repo `game`\n"
+        "<!-- /eng-graph:auto -->\n"
+    )
+    sig1 = parse_eng_graph_moc(md, "r")
+    sig2 = parse_eng_graph_moc(md, "r")
+    assert sig1.payload_hash == sig2.payload_hash
