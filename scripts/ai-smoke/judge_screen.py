@@ -97,3 +97,29 @@ def sample_bg(image_path, inset=40):
     w, h = im.size
     pts = [(inset, inset), (w - inset, inset), (inset, h - inset), (w - inset, h - inset)]
     return [im.getpixel(p) for p in pts]
+
+
+def build_judge_payload(image_b64, screen, model="gemma4:latest"):
+    """Pure Ollama /api/generate request body for the vision judge."""
+    return {
+        "model": model,
+        "prompt": _prompt(screen),
+        "images": [image_b64],
+        "stream": False,
+        "options": {"temperature": 0.1},
+    }
+
+
+def run(image_path, screen, det_threshold, sampler, vision_post,
+        host="192.168.1.10:11434", model="gemma4:latest"):
+    """End-to-end combined judge: deterministic bg (sampler -> _is_dark_bg) +
+    vision (vision_post -> _extract_json) merged (deterministic wins for the
+    measurable bg item). sampler + vision_post are injectable for testing."""
+    bg = sampler(image_path)
+    bg_dark = _is_dark_bg(bg, det_threshold)
+    det = {4: {"verdict": "PASS" if bg_dark else "FAIL",
+               "reason": "bg pixel mean ~%s -> %s" % (bg[0], "dark" if bg_dark else "NOT dark (gray)")}}
+    vraw = _extract_json(vision_post(image_path, screen, host, model)) or []
+    vision = [{"item": i + 1, "verdict": str(v.get("verdict", "")).upper(), "reason": v.get("reason", "")}
+              for i, v in enumerate(vraw)]
+    return _merge_verdicts(vision, det)

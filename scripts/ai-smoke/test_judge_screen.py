@@ -69,6 +69,38 @@ def test_sample_bg_reads_corner_pixels(tmp_path):
     assert all(c == (50, 60, 70) for c in rgbs)
 
 
+def test_build_judge_payload_shapes_ollama_request():
+    from judge_screen import build_judge_payload
+
+    pl = build_judge_payload("B64DATA", "lobby", model="m")
+    assert pl["model"] == "m"
+    assert pl["images"] == ["B64DATA"]
+    assert pl["stream"] is False
+    assert "ITEMS:" in pl["prompt"]
+
+
+def test_run_deterministic_overrides_vision_on_gray_bg():
+    # End-to-end orchestration (DI: inject sampler + vision transport, no real IO).
+    # Gray bg + vision saying "PASS" on item 4 -> deterministic FAIL must win.
+    from judge_screen import run
+
+    all_pass = (
+        '[{"verdict":"PASS"},{"verdict":"PASS"},{"verdict":"PASS"},'
+        '{"verdict":"PASS","reason":"looks dark"},{"verdict":"PASS"},{"verdict":"PASS"}]'
+    )
+    merged = run(
+        "x.png",
+        "lobby",
+        40,
+        sampler=lambda path, inset=40: [(77, 77, 77)] * 4,
+        vision_post=lambda path, screen, host, model: all_pass,
+    )
+    by = {m["item"]: m for m in merged}
+    assert by[4]["verdict"] == "FAIL"
+    assert by[4]["source"] == "deterministic"
+    assert by[1]["source"] == "vision"
+
+
 def test_prompt_includes_screen_and_all_bible_items():
     from judge_screen import _prompt, SPECS
 
