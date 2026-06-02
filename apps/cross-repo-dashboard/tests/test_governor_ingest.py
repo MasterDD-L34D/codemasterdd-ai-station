@@ -42,12 +42,12 @@ def test_main_runs_ingest_and_returns_zero(monkeypatch, tmp_path):
 
 def test_ingest_all_uses_injected_fetcher_and_persists(tmp_path):
     from governor.store import SignalStore
-    from governor.ingest import ingest_all
+    from governor.ingest import ingest_all, SOURCES
     store = SignalStore(tmp_path / "g.db")
     fetcher, json_getter, content_getter = _fakes()
     result = ingest_all(store, fetcher=fetcher, json_getter=json_getter, content_getter=content_getter)
-    assert result["ingested"] == 7
-    assert result["new"] == 7
+    assert result["ingested"] == len(SOURCES)
+    assert result["new"] == len(SOURCES)
     sources = {r["source"] for r in store.latest_per_source()}
     assert "game-governance-drift" in sources
     assert "game-sot-drift" in sources
@@ -58,16 +58,16 @@ def test_ingest_all_uses_injected_fetcher_and_persists(tmp_path):
 
 def test_ingest_all_records_advisory_on_new_only(tmp_path):
     from governor.store import SignalStore
-    from governor.ingest import ingest_all
+    from governor.ingest import ingest_all, SOURCES
     store = SignalStore(tmp_path / "g.db")
     fetcher, json_getter, content_getter = _fakes()
     ingest_all(store, fetcher=fetcher, json_getter=json_getter, content_getter=content_getter)
     ingest_all(store, fetcher=fetcher, json_getter=json_getter, content_getter=content_getter)
-    assert len(store.auto_observed_recent(limit=50)) == 7
+    assert len(store.auto_observed_recent(limit=50)) == len(SOURCES)
 
 def test_ingest_all_one_source_failure_does_not_abort_others(tmp_path):
     from governor.store import SignalStore
-    from governor.ingest import ingest_all
+    from governor.ingest import ingest_all, SOURCES
     store = SignalStore(tmp_path / "g.db")
     fetcher, json_getter, content_getter = _fakes()
 
@@ -78,7 +78,7 @@ def test_ingest_all_one_source_failure_does_not_abort_others(tmp_path):
 
     result = ingest_all(store, fetcher=fetcher, json_getter=json_getter_sot_fails, content_getter=content_getter)
     assert result["errors"] == 1
-    assert result["ingested"] == 6
+    assert result["ingested"] == len(SOURCES) - 1
 
 def _fakes():
     drift_json = '{"generated_at":"2026-05-25T07:19:51+00:00","summary":{"total":2,"errors":0,"warnings":2},"issues":[]}'
@@ -122,6 +122,12 @@ def _fakes():
                 {"name": "gap-2026-06-01.md", "url": gap_file_url},
                 {"name": "coherence-2026-06-01.md", "url": coherence_file_url},
                 {"name": "whatsmissing-2026-06-01.md", "url": whatsmissing_file_url},
+            ]
+        if "aa01-system/learnings" in url:
+            return [
+                {"name": "L-2026-05-038-x.md"},
+                {"name": "L-2026-05-002-y.md"},
+                {"name": "README.md"},
             ]
         raise AssertionError(f"unexpected json url {url}")
 
@@ -216,11 +222,11 @@ def test_produce_vault_source_via_content_getter():
 
 def test_ingest_all_includes_vault_eng_graph(tmp_path):
     from governor.store import SignalStore
-    from governor.ingest import ingest_all
+    from governor.ingest import ingest_all, SOURCES
     store = SignalStore(tmp_path / "g.db")
     fetcher, json_getter, content_getter = _fakes()
     result = ingest_all(store, fetcher=fetcher, json_getter=json_getter, content_getter=content_getter)
-    assert result["ingested"] == 7
+    assert result["ingested"] == len(SOURCES)
     assert result["errors"] == 0
     sources = {r["source"] for r in store.latest_per_source()}
     assert "vault-eng-graph" in sources
@@ -279,3 +285,14 @@ def test_governor_route_renders(tmp_path, monkeypatch):
     assert args[0] == "cr_governor.html"
     assert any(s["source"] == "game-governance-drift" for s in kwargs["signals"])
     assert kwargs["acted_count"] == 0
+
+
+def test_ingest_all_includes_archon_learnings(tmp_path):
+    from governor.store import SignalStore
+    from governor.ingest import ingest_all
+    store = SignalStore(tmp_path / "g.db")
+    fetcher, json_getter, content_getter = _fakes()
+    result = ingest_all(store, fetcher=fetcher, json_getter=json_getter, content_getter=content_getter)
+    assert result["errors"] == 0
+    sources = {r["source"] for r in store.latest_per_source()}
+    assert "archon-learnings" in sources
