@@ -147,6 +147,10 @@ judgment that a verdict "looked plausible".
 - The climb lands as its own 1 PR (no big-bang). Eduardo merges (human-irreducible).
 - If a bad merge ever lands: revert + downgrade that class to human-gated + amend
   ADR-0036 + record the lesson.
+- **Governance-doctrine files = Eduardo-only-merge, regardless of repo** (ADR-0037
+  decision 2): `ORCHESTRATION.md`, `docs/adr/**`, this file, authoritative `CLAUDE.md`,
+  `.claude/settings.json`, the privacy-whitelist. The hub proposes (branch + PR) but NEVER
+  merges its own rule-book -- a hub that can loosen its own gate voids the gate.
 
 ## 8. Current state (2026-06-02 -- R1 built)
 
@@ -167,3 +171,8 @@ judgment that a verdict "looked plausible".
   whether R1 ever fires on a genuine regression and whether Eduardo acts on it (sec 6
   addendum) -- NOT more building. R2/Fase-4 remain hard-gated; the "complete the governor"
   grant (2026-06-02) explicitly did not override these gates.
+
+> **Update 2026-06-03.** First **acted-on = 1** (per #261): a governor-surfaced signal
+> Eduardo acted on -- Game issue #2477 closed as no-drift (deliberately-wont-fix, sec 5).
+> Off-ramp now **1/3**. clean-R1-PR-cycles still **0** (R1 issue-only, by design -- sec 6
+> addendum). R2/Fase-4 stay hard-gated. (Supersedes the "acted-on = 0" snapshot above.)
