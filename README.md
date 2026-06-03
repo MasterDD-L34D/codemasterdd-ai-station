@@ -49,8 +49,9 @@ File governance root-level (schema framework archivio adottato 2026-04-23):
 - [DECISIONS_LOG.md](./DECISIONS_LOG.md) — indice ADR strategici + decisioni operative
 - [BACKLOG.md](./BACKLOG.md) — backlog prioritizzato + primo sprint consigliato
 - [OPEN_DECISIONS.md](./OPEN_DECISIONS.md) — decisioni aperte non bloccanti
-- [ROADMAP.md](./ROADMAP.md) — piano per fasi (1-8)
-- [SPRINT_01.md](./SPRINT_01.md) — sprint attivo 2026-04-23 → 2026-05-06
+- [docs/archive/ROADMAP.md](./docs/archive/ROADMAP.md) — ARCHIVED (fasi 1-8 storiche; direzione live = GOALS.md)
+- [docs/archive/SPRINT_01.md](./docs/archive/SPRINT_01.md) — ARCHIVED (sprint chiuso 2026-04-24)
+- [docs/archive/SPRINT_02.md](./docs/archive/SPRINT_02.md) — ARCHIVED (finestra 2026-05-20..06-19 spent)
 - [MASTER_PROMPT.md](./MASTER_PROMPT.md) — prompt apertura portabile
 - [REFERENCE_INDEX.md](./REFERENCE_INDEX.md) — indice navigabile docs/patterns/research
 - [PROMPT_LIBRARY.md](./PROMPT_LIBRARY.md) — prompt riutilizzabili progetto-specifici

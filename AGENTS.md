@@ -60,7 +60,7 @@ Non duplicare in questo file:
 - Tier routing modelli AI (vive in `CLAUDE.md` "Priorità modelli AI" + `MODEL_ROUTING.md`)
 - Privacy policy per-repo (vive in `CLAUDE.md` "Progetti monitorati")
 - Lista ADR (vive in `DECISIONS_LOG.md` + `docs/adr/`)
-- Sprint corrente (vive in `SPRINT_01.md`)
+- Direzione corrente (vive in `GOALS.md`; sprint storici archiviati in `docs/archive/`)
 
 Se cambia uno di questi, aggiorna il file autoritativo, NON AGENTS.md.
 

@@ -1,3 +1,6 @@
+> ARCHIVED 2026-06-03 (context-files reorg Fase 2). SUPERSEDED -- live direction = GOALS.md + ORCHESTRATION.md.
+> Historical record.
+
 # ROADMAP — CodeMasterDD AI Station
 
 > Rinormalizzata post ADR-0013/0014 (2026-04-23) + refresh post Fase 6 closure (2026-05-08). Numerazione fasi conservata dall'ADR-0001 originale (1-3 = setup/transizione/steady state) + evoluzione operativa 4-8 introdotta in Fase di tracking.

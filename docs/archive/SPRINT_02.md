@@ -1,3 +1,6 @@
+> ARCHIVED 2026-06-03 (context-files reorg Fase 2). SUPERSEDED -- live direction = GOALS.md + ORCHESTRATION.md.
+> Historical record.
+
 # SPRINT_02 -- "Post-Max scenario A operativo + smoke sovereign + cleanup"
 
 > Sprint 2 della Fase 7 (post-Max). Finestra: **2026-05-20 -> ~2026-06-19** (4 settimane, prima sessione full-sovereign settimana 1).

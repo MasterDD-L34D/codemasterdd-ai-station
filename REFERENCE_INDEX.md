@@ -52,10 +52,10 @@ Categorie attive:
 
 ### REF-G04
 - **Codice**: GOV-04
-- **Titolo**: BACKLOG.md + ROADMAP.md + SPRINT_01.md
+- **Titolo**: BACKLOG.md + docs/archive/ROADMAP.md + docs/archive/SPRINT_01.md
 - **Categoria**: GOV
-- **Funzione**: backlog prioritizzato + fasi long-term + sprint attivo
-- **Stato**: live, SPRINT_01 attivo 2026-04-23 → 2026-05-06
+- **Funzione**: backlog prioritizzato (live) + fasi long-term + sprint (ARCHIVED). Direzione live = GOALS.md
+- **Stato**: BACKLOG live; ROADMAP/SPRINT_01/SPRINT_02 ARCHIVED 2026-06-03 (docs/archive/)
 - **Uso consigliato**: Fase 2 Task Execution Protocol — mappa task corrente
 
 ### REF-G05
