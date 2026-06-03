@@ -14,6 +14,13 @@
   web export forces entry = LOBBY).
 - Bible surfaces shipped to spec (PR #287-299 cascade). Co-op "Nido" session loop
   shipped (#375-384, through 2026-06-01).
+- **CAVEAT (scene-chain navigable != meta-loop wired -- harsh-reviewer P1 2026-06-03)**:
+  the scenes NAVIGATE (lobby->...->combat), but the meta-loop PAYOFF the smoke validates
+  (sistema-state telegraph; "biodiversita invisibile" resonance / eco_pressure) may still
+  be PORT+WIRE in Godot -- built in the Game/ web-v1 backend (#2386/#353), not confirmed
+  ported client-side. So an AI-smoke PASS on surface render does NOT by itself certify
+  "first playable"; verify the loop-payoff is actually wired before claiming it
+  (see Q1 below). "validate-not-build" holds for the scene chain, NOT for the loop payoff.
 - The live-device smoke checklist `docs/godot-v2/qa/2026-05-20-pr284-visual-smoke.md`
   is **100% BLANK** -- the assembled chain has never been run live end-to-end.
 - Therefore First-Playable = run that smoke + fix conditionals, NOT build new systems.
@@ -37,6 +44,8 @@ the bible. The device smoke is also the empirical answer to the gap report's nev
 4. mount phone build -> `Game/apps/backend/public/phone/`
 5. mount TV build -> `Game/apps/backend/public/` root (served at `/`)
 6. boot Game Express in `LOBBY_WS_SHARED=true`, single port 3334 (REST + WS + static, same-origin)
+   -- NOTE: deploy-quick.sh sets this env DIRECTLY, not via docker-compose (the ecosystem
+   guide shows the compose path, but Docker is broken on Ryzen -- memory ryzen-game-backend-boot)
 7. Cloudflare tunnel: named `evo-tactics.com` if token present, else Quick Tunnel (random URL)
 
 Client side: `scripts/net/web_origin_resolver.gd` reads `window.location.origin` on
@@ -71,8 +80,11 @@ worktree at origin/main, then boot:
   `postgresql-x64-17`, db `game`), `DATABASE_URL=postgresql://postgres:postgres@localhost:5432/game`
 - `prisma migrate deploy --schema apps/backend/prisma/schema.prisma`
 - `@game/*` workspace junction fix (or `npm install`); verify `node -e "require.resolve('@game/contracts')"`
-- OPEN: verify whether a minimal `lobby -> world -> combat` smoke can boot DB-less
-  (Postgres backs Sistema-state / meta-loop; likely required).
+- Postgres is REQUIRED for the sistema-state / telegraph surface (NOT "likely"):
+  migrations `0010/0011` must be applied at deploy; an empty DB -> telegraph renders DARK
+  (a structural empty, NOT a render bug). A DB-less shortcut yields a FALSE-green surface
+  smoke. (harsh-reviewer P1; refs memories project_camp3c_loop_reentry,
+  project_m1_subproj2_godot_mirror.)
 
 Ref: memory `ryzen-game-backend-boot` (7d old -- verify vs current code).
 
@@ -133,8 +145,10 @@ anti-#8). Gap report = known-issue baseline only.
 ## 6. Conditional loop -- Claude (autonomous)
 
 Vision/assert FAIL or CONDITIONAL -> Claude fixes the surface -> re-run the harness (no human) ->
-re-judge -> PR. Overlap-check `C:/dev/Game` WIP wound-system (+ Lenovo PHASEC combat) before
-touching any combat-code.
+re-judge -> PR. **Hard rule (harsh-reviewer P2)**: fixes are authored in the clean Godot worktree
+ONLY -- NEVER edit `C:/dev/Game` (the 39-dirty WIP wound-system tree); ANY combat-code touch is a
+HUMAN gate (overlap vs Lenovo PHASEC combat too). This closes anti-pattern #10 (drop-on-non-CI-guarded)
+against the WIP tree -- the soft "overlap-check" is upgraded to a hard worktree boundary.
 
 ## 7. Machine decision (open)
 
@@ -151,3 +165,4 @@ touching any combat-code.
 - Vision: codemasterdd `GOALS.md` (TV+phones Jackbox); RoJ reference = jungle.buzz room-code model
 - RoJ design lineage: `Game-Godot-v2/docs/godot-v2/handoff-2026-06-02-republic-of-jungle-screen-ref.md` (#385, recovered) -> `visual-screen-bible.md` (A2) + `design-conformance-gap-2026-05-19.md` (gap report) + museum card `pr284-bible-conformance-cascade-methodology-2026-05-20.md`
 - Backend boot recipe: memory `ryzen-game-backend-boot`
+- Teardown: `Game-Godot-v2/docs/godot-v2/2026-05-19-continuity-handoff.md` (Unregister-ScheduledTask evo-deploy-quick / evo-godot-install; kill node/cloudflared/bash; rm `.dq*`)
