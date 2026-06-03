@@ -411,3 +411,67 @@ def _real_open_or_update_pr(repo, branch, base, path, content, rid):
     if status not in (200, 201):
         raise RuntimeError(f"create PR {branch} -> HTTP {status}")
     return {"number": data.get("number"), "action": "created", "url": data.get("html_url", "")}
+
+
+# ---------------------------------------------------------------------------
+# The BUILT reconciler set (spec sec 5) + real_gh_api factory + manual entrypoint.
+# ---------------------------------------------------------------------------
+
+_VAULT_LINT_DOC_HEADER = """---
+title: Vault lint status (governor-synced)
+type: status-index
+owner: master-dd
+language: en
+tags: [vault, lint, governor, status]
+---
+
+# Vault lint status
+
+> Auto-synced by the cross-repo governor (R1 reconcile rung). The block below is
+> governor-owned (marker-bounded); human prose outside it is authoritative. Source signals:
+> vault gap-scan / coherence / whatsmissing lint reports. Severity is content-based,
+> clock-free. Branch+PR only; disposition is Eduardo-only (vault sibling-peer)."""
+
+
+def build_reconcilers():
+    """The BUILT reconciler set (spec sec 5). Construction RAISES if any target is doctrine
+    (the __post_init__ fail-closed guard)."""
+    status_block = Reconciler(
+        id="status-multi-repo",
+        repo="MasterDD-L34D/codemasterdd-ai-station",
+        path="STATUS_MULTI_REPO.md",
+        marker=("<!-- GOVERNOR-SYNC:signals BEGIN -->", "<!-- GOVERNOR-SYNC:signals END -->"),
+        render=render_status_multi_repo,
+        anchor="# STATUS_MULTI_REPO",
+    )
+    vault_lint = Reconciler(
+        id="vault-lint-status",
+        repo="MasterDD-L34D/vault",
+        path="Atlas/lint-status.md",
+        marker=("<!-- GOVERNOR-SYNC:lint BEGIN -->", "<!-- GOVERNOR-SYNC:lint END -->"),
+        render=render_vault_lint_status,
+        create_header=_VAULT_LINT_DOC_HEADER,
+    )
+    return [status_block, vault_lint]
+
+
+def real_gh_api():
+    """Real REST gh_api (clone-agnostic; works for vault without a local vault clone)."""
+    return {"get_file": _real_get_file, "open_or_update_pr": _real_open_or_update_pr}
+
+
+def main(argv=None):
+    """Manual entrypoint: `python -m governor.reconcile` (no cron; Fase-4 out of scope)."""
+    from governor.store import SignalStore
+    db = Path(__file__).resolve().parent.parent / "governor.db"
+    if not db.exists():
+        print(f"governor.reconcile: db not found at {db} -- run ingest first", file=sys.stderr)
+        return 1
+    store = SignalStore(db)
+    result = reconcile_actor(store, build_reconcilers(), real_gh_api())
+    print(_json.dumps(result, default=str))
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

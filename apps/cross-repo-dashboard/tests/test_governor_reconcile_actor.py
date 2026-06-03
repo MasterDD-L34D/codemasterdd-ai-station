@@ -126,3 +126,29 @@ def test_actor_one_reconciler_error_is_isolated(tmp_path):
     res = reconcile_actor(store, [bad, _status_reconciler()], api, environ=TOKEN_ENV)
     assert any(e["id"] == "bad" for e in res["errors"])
     assert len(res["opened"]) == 1               # the good one still proceeded
+
+
+def test_build_reconcilers_two_legs_nondoctrine_targets():
+    from governor.reconcile import build_reconcilers
+    recs = build_reconcilers()
+    by_id = {r.id: r for r in recs}
+    assert set(by_id) == {"status-multi-repo", "vault-lint-status"}
+    assert by_id["status-multi-repo"].repo.endswith("/codemasterdd-ai-station")
+    assert by_id["status-multi-repo"].path == "STATUS_MULTI_REPO.md"
+    assert by_id["vault-lint-status"].repo.endswith("/vault")
+    assert by_id["vault-lint-status"].path == "Atlas/lint-status.md"
+    assert by_id["vault-lint-status"].create_header is not None       # NEW doc
+    assert by_id["status-multi-repo"].marker[0] == "<!-- GOVERNOR-SYNC:signals BEGIN -->"
+    assert by_id["vault-lint-status"].marker[0] == "<!-- GOVERNOR-SYNC:lint BEGIN -->"
+
+
+def test_build_reconcilers_targets_are_not_doctrine():
+    from governor.reconcile import build_reconcilers, is_doctrine
+    for r in build_reconcilers():
+        assert is_doctrine(r.path, r.repo) is False
+
+
+def test_real_gh_api_exposes_two_callables():
+    from governor.reconcile import real_gh_api
+    api = real_gh_api()
+    assert callable(api["get_file"]) and callable(api["open_or_update_pr"])
