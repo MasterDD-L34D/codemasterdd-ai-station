@@ -1,3 +1,10 @@
+<#
+.SYNOPSIS
+Registers the jules-daily-digest Windows scheduled task.
+
+.DESCRIPTION
+This script registers the jules-daily-digest Windows scheduled task on Ryzen, idempotently.
+#>
 # register-jules-digest-task.ps1 -- idempotent (un)register of the daily
 # Jules digest Windows Scheduled Task. Cross-fleet, single-owner.
 #
