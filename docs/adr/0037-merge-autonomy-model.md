@@ -136,3 +136,37 @@ External harsh-reviewer falsification PRE-write. Verdict **SURVIVE-WITH-CHANGES*
 - `docs/cross-repo/actor-activation-criteria.md` (R0/R1/R2 earn-path; sec 8 = unreachable today).
 - `ORCHESTRATION.md` sec 5 (autonomy ladder + irreducible residue) + sec 6 (standing perms).
 - `docs/goals/2026-06-03-jules-autonomy-gaps.md` (G1 + G4).
+
+## Addendum 2026-06-03 -- `jules-dispatch` wrapper BUILT (path-to-standing prerequisite met; standing STILL deferred)
+
+The fail-closed `jules-dispatch` wrapper named in the `:create` path-to-standing clause now
+EXISTS: `scripts/fleet/jules-dispatch.ps1` (+ `jules-dispatch.Tests.ps1`, 52 unit asserts).
+
+- **What was built.** A 5-gate fail-closed stack: repo-whitelist -> ASCII-lint (native
+  byte-check) -> scoped-template-lint (+ a `-Target`<->task-file consistency check) -> dedup
+  vs ACTIVE sessions -> dispatch (REST `POST /v1alpha/sessions`) + audit-log
+  (`logs/jules-dispatch-YYYY-MM.md`, gitignored). Dedup = option A: title+prompt target-token
+  match over sessions in a NON-terminal state (denylist {COMPLETED, FAILED, CANCELLED, ARCHIVED};
+  unknown/null -> active, fail-closed), boundary-precise matcher, conservative-abort on
+  uncertainty, `-Force` (known-overlap override) and `-ForceBlind` (cannot-verify override) as
+  distinct flags that NEVER bypass gates 1-3.
+- **Dispatch-SOURCE decided.** Human-authored scoped tasks from real repo needs (Eduardo,
+  2026-06-03) -- the SAFE source. This closes the harsh-reviewer "attacker-influenced auto-feed"
+  risk that was a blocker to making `:create` standing.
+- **Disciplined path.** Spec (`docs/superpowers/specs/2026-06-03-jules-dispatch-wrapper-design.md`)
+  -> harsh-reviewer FALSIFICATION (SDMG Protocol 7; verdict SURVIVE-WITH-CHANGES; 3 P0 + 4 P1
+  adopted, verified against the LIVE Jules API not just docs) -> TDD (RED/GREEN) -> QG
+  (`docs/research/jules-dispatch-wrapper-2026-06-03.md`: Smoke + 7 research edges + 1 tuning
+  iteration with before/after).
+
+**SDMG boundary (load-bearing -- this addendum does NOT loosen any gate).** Building/running the
+wrapper is the PREREQUISITE + the ENFORCEMENT MECHANISM, NOT the grant. `:create` stays
+**NOT-standing / per-instance**: a human runs the wrapper manually each dispatch (the wrapper
+just makes each manual dispatch SAFE). "Standing" = removing the per-action human prompt by
+allow-listing the wrapper in `.claude/settings.json` -- a SEPARATE autonomization that needs its
+own decision + its own harsh-reviewer gate (un-globbable scope + dispatch-time harms remain the
+open questions). Until that separate gate is passed, settings.json is unchanged (no `:create`
+allow-rule). External-repo MERGE is untouched by this addendum (decision 3: Eduardo-explicit).
+
+**Merge of THIS addendum.** It edits `docs/adr/**`, a governance-doctrine file -> Eduardo-only
+merge (decision 2). Shipped as its own branch + PR, NOT self-merged by the hub.
