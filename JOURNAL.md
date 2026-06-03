@@ -19,6 +19,24 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-06-03 (governor R1 open-PR reconcile rung -- built + activated)
+
+### Completato
+- **Governor R1->open-PR reconcile rung BUILT via TDD** (spec #292, ADR-0039): nuovo `apps/cross-repo-dashboard/governor/reconcile.py` -- Reconciler con doctrine-guard fail-closed al `__post_init__`, `splice` idempotente + create-if-absent, 2 render leg clock-free (`status-multi-repo` + `vault-lint-status`), `reconcile_actor` open-PR-only fail-closed sul token, real REST gh_api builder che NON emette mai merge -- + `reconcile_cycles_report.py` (clean-cycle accounting ESTERNO all'actor, anti-self-licking). 53 test nuovi, full app-suite 176 pass, scripts/tests 6 pass.
+- **Merged**: PR #295 (codice rung + ADR-0039 + nota `actor-activation-criteria.md`) -- Eduardo-merge (autonomy increment + doctrine).
+- **3a passata SDMG harsh-reviewer** sul codice BUILT -> SURVIVE-WITH-CHANGES (no P0). Le 3 claim load-bearing (clock-free, create-if-absent idempotente, branch+PR-only mai-merge) hanno retto sotto attacco diretto. Adottati (non difesi): P1.1 (scope-claim `is_doctrine` = write-refusal superset, non il classifier canonico), P1.2 (nota human-review al construction-site + verdict ADR), P1.3 (negative merge source-scan estesa a `reconcile_actor` + `real_gh_api` + pin del key-set), P2.1/P2.2.
+- **Rung ATTIVATA**: `GOVERNOR_RECONCILE_TOKEN` mintato (fine-grained PAT, contents+pull_requests write su codemasterdd+vault SOLO, no admin -- form compilato via Claude-in-Chrome, "Generate" + copia fatti da Eduardo). Primo run reale: 2 reconcile-PR aperte -- codemasterdd **#296** (blocco-snapshot in `STATUS_MULTI_REPO.md`) + vault **#252** (`Atlas/lint-status.md`, doc nuovo). Verificate OPEN/non-merged, file giusti (solo il target), trailer ADR-0011 corretti, 0 Co-Authored-By.
+
+### Da fare
+- **Rivedere + mergiare** i 2 primi reconcile-PR: #296 (codemasterdd) + #252 (vault sovereign = Eduardo-only). Ogni PR mergiata-da-umano + non-revertita-7gg + no-same-line-followup-7gg = 1 clean cycle verso R2.
+- R2 (auto-merge, ADR dedicato) resta hard-gated: >=4 clean cycle su >=2 repo, >=2 settimane, 0 bad-merge -- poi falsificazione harsh-reviewer specifica.
+
+### Note
+- Confine umano rispettato per tutta la sessione: **mint token + "Generate" + ogni merge** = azioni umane (account-credential + merge = human-irreducible, ADR-0037 sec.1). Claude ha compilato il form ma si e' fermato prima del Generate; verificato il token in read-only senza mai vederlo (admin-probe HTTP 403 = niente scope Administration; il `permissions.admin=True` era il ruolo owner, non il token).
+- Il token NON e' il merge-block (un PAT pull_requests:write puo' tecnicamente mergiare via REST): il blocco e' code (negative test sul REAL builder) + invariante human-merge-only + settings ceiling. codemasterdd = nessuna branch protection (free-tier 403) -> nessun backstop di piattaforma; il R2 ADR deve pesarlo.
+- Re-run manuale (no cron): load `keys.env` -> `python -m governor.ingest` -> `python -m governor.reconcile`. Drift -> aggiorna/apre PR; stabile -> `unchanged` (silenzio = off-ramp signal, non stallo).
+- Gotcha nuovo: PS5.1 `$msg | git commit -F -` inietta un BOM nel subject (non-ASCII, rompe i regex commit-msg) -> usa `git commit -m subj -m body` (argv, niente BOM). reference_windows_python_gotchas Gotcha 8.
+
 ## 2026-06-03 (context-files reorg Fasi 1-6 + merge-autonomy SDMG reconciliation)
 
 ### Completato
