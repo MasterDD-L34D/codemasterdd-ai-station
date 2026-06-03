@@ -327,3 +327,18 @@ def test_parse_jules_digest_empty_safe():
     assert sig.counts["awaiting"] == 0
     assert sig.produced_at is None
     assert sig.severity == "ok"
+
+
+def test_parse_jules_digest_real_format_snapshot():
+    # Guards the jules-daily-digest.ps1 <-> parser-regex contract (anti-pattern #10
+    # cross-file drift). The fixture mirrors the SCRIPT's exact session-line format AND
+    # its legend prose (bare ARCHIVE/ACTIONABLE words without `**`) -- those must NOT be
+    # counted. If a future script reword breaks the format, this test goes red instead of
+    # the signal silently zeroing.
+    from governor.parsers import parse_jules_digest
+    sig = parse_jules_digest((_FIX / "jules_digest_sample.md").read_text(encoding="utf-8"), "ref")
+    assert sig.counts == {
+        "awaiting": 4, "actionable": 1, "defer": 1, "ambiguous": 1, "archive": 1, "in_progress": 0,
+    }
+    assert sig.severity == "warning"      # 1 actionable; legend prose did NOT inflate the count
+    assert sig.produced_at == "2026-05-18"

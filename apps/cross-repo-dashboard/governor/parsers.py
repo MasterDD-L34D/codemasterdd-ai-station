@@ -256,9 +256,11 @@ def parse_jules_digest(md: str, ref: str) -> Signal:
     is `error`. Severity is folded into payload_hash so an ok/info -> warning transition
     is a DISTINCT row the R1 worsened-delta classifier escalates.
 
-    NOT a self-licking loop (actor-criteria sec 4): the digest is an EXTERNAL input
-    (Jules sessions + the cron + Claude's advisory triage), NOT the governor actor's own
-    output, and it feeds NO unlock condition -- acted-on stays gated on Eduardo's actions.
+    NOT a self-licking loop (actor-criteria sec 4): it feeds NO unlock METRIC -- acted-on is
+    HUMAN-gated (sec 5; the actor never calls record_acted_on) and issue escalations are not
+    clean-PR-cycles (sec 6). The loop is severed AT THE METRIC, not at the input. (Provenance
+    is the weaker secondary reason: the digest is an external cron + Claude advisory triage,
+    not the governor actor's own output.)
     """
     text = md or ""
     m_date = _RE_JULES_DATE.search(text)
