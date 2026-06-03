@@ -1,0 +1,282 @@
+<#
+.SYNOPSIS
+jules-dispatch.ps1 -- fail-closed wrapper for dispatching a human-authored scoped task to Jules
+via REST POST /v1alpha/sessions. ADR-0037 path-to-standing for :create (ADR-0035 hard-constraints).
+
+.DESCRIPTION
+5-gate fail-closed stack (abort on first failure, non-zero exit):
+  1. repo-whitelist        (NOT -Force/-ForceBlind overridable)
+  2. ASCII-lint task-file  (NOT overridable; native byte-check)
+  3. scoped-template lint  (NOT overridable; + Target<->task-file consistency)
+  4. dedup vs ACTIVE        (-Force overrides a KNOWN overlap; -ForceBlind overrides cannot-verify)
+  5. dispatch + audit-log
+
+SDMG boundary: building/running this wrapper does NOT make :create standing. "Standing" =
+allow-listing it in .claude/settings.json (a SEPARATE harsh-reviewer-gated autonomization).
+Until then :create stays per-instance: a human runs this manually. External-repo MERGE stays
+Eduardo-explicit (ADR-0037 decision 3). Spec: docs/superpowers/specs/2026-06-03-jules-dispatch-wrapper-design.md
+
+.PARAMETER Repo        Bare repo name: Game | Game-Godot-v2 | codemasterdd-ai-station | Game-Database.
+.PARAMETER TaskFile    Path to an ASCII scoped-strict markdown prompt (ADR-0035 template).
+.PARAMETER Target      Identifier(s) dedup checks: a path and/or function (e.g. scripts/fleet/foo.ps1::Get-Bar).
+.PARAMETER Title       Optional session title (default derived from Repo/Target/date).
+.PARAMETER Force       Override a KNOWN dedup overlap only (gate 4). Never bypasses gates 1-3.
+.PARAMETER ForceBlind  Override cannot-verify dedup (list-GET fail / paginated). Louder audit tag.
+.PARAMETER DryRun      Run all gates + build/show the REST body + write a DRYRUN audit line; do NOT POST.
+
+.EXAMPLE
+  scripts/fleet/jules-dispatch.ps1 -Repo Game -TaskFile task.md -Target services/combat/resolve.ts -DryRun
+#>
+param(
+  [string]$Repo,
+  [string]$TaskFile,
+  [string]$Target,
+  [string]$Title,
+  [switch]$Force,
+  [switch]$ForceBlind,
+  [switch]$DryRun
+)
+
+# ====================================================================================
+# PURE FUNCTIONS (dot-sourced + unit-tested by jules-dispatch.Tests.ps1).
+# No side effects except Test-AsciiClean's file read. Constants inlined (dot-source safe).
+# ====================================================================================
+
+function Get-Whitelist {
+  # Single source of truth for the repo whitelist (gate 1).
+  return @('Game', 'Game-Godot-v2', 'codemasterdd-ai-station', 'Game-Database')
+}
+
+function Test-RepoWhitelisted {
+  param([string]$Repo)
+  return ((Get-Whitelist) -contains $Repo)
+}
+
+function Get-JulesSource {
+  param([string]$Repo)
+  # Owner is invariant across all 4 whitelisted repos (confirmed live + git remotes 2026-06-03).
+  return "sources/github/MasterDD-L34D/$Repo"
+}
+
+function Test-SessionActive {
+  param([string]$State)
+  # ACTIVE = complement of a TERMINAL denylist (fail-closed: unknown/null/empty -> active).
+  # Allowlisting {IN_PROGRESS, AWAITING_USER_FEEDBACK} was rejected (harsh-reviewer P0.2): an
+  # unobserved in-flight state would silently false-ALLOW (the dangerous direction).
+  if ([string]::IsNullOrWhiteSpace($State)) { return $true }
+  $terminal = @('COMPLETED', 'FAILED', 'CANCELLED', 'ARCHIVED')
+  return (-not ($terminal -contains $State.ToUpperInvariant()))
+}
+
+function Test-AsciiClean {
+  param([string]$Path)
+  # Native byte-level ASCII check (anti-#12). Equivalent to perl -ne 'exit 1 if /[^\x00-\x7F]/'
+  # for our cases (BOM -> not-clean is INTENTIONAL); no external dep (fleet test-runner policy).
+  $bytes = [IO.File]::ReadAllBytes($Path)
+  foreach ($b in $bytes) { if ($b -gt 127) { return $false } }
+  return $true
+}
+
+function Test-ScopedTemplate {
+  param([string]$Content)
+  # Gate 3: the 4 load-bearing markers of the ADR-0035 scoped-strict template.
+  $missing = @()
+  if ($Content -notmatch '[\\/][\w.-]+\.[A-Za-z0-9]{1,8}') { $missing += 'target-file-path' }
+  if ($Content -notmatch '(?i)(single[\s-]?file|named function|no logic change|no behaviou?r change|docstring)') { $missing += 'scope-bound' }
+  if ($Content -notmatch '(?i)ascii[\s-]?only') { $missing += 'ascii-only-clause' }
+  if ($Content -notmatch '(?i)(accept|acceptance|verif|tests?\s+pass)') { $missing += 'acceptance' }
+  return [pscustomobject]@{ Ok = ($missing.Count -eq 0); Missing = $missing }
+}
+
+function Get-TargetIdentifiers {
+  param([string]$Target)
+  # Derive dedup identifiers from -Target. Path-like part -> {full path, basename stem};
+  # symbol-like part -> the token. Generic stop-tokens dropped (over-match). If NOTHING
+  # survives, the caller (Test-TargetOverlap) treats it as overlap -> conservative abort.
+  $stop = @('src', 'lib', 'app', 'apps', 'test', 'tests', 'scripts', 'services', 'main',
+            'index', 'util', 'utils', 'core', 'api', 'docs', 'data', 'get', 'set', 'new',
+            'run', 'build')
+  $ids = New-Object System.Collections.Generic.List[string]
+  $parts = $Target -split '[\s,]+|::' | Where-Object { $_ -ne '' }
+  foreach ($p in $parts) {
+    if ($p -match '[\\/]' -or $p -match '\.[A-Za-z0-9]{1,8}$') {
+      $norm = ($p -replace '\\', '/').ToLowerInvariant()
+      [void]$ids.Add($norm)
+      $leaf = ($norm -split '/')[-1]
+      $stem = $leaf -replace '\.[A-Za-z0-9]{1,8}$', ''
+      if ($stem.Length -ge 3 -and ($stop -notcontains $stem)) { [void]$ids.Add($stem) }
+    } else {
+      $tok = $p.ToLowerInvariant()
+      if ($tok.Length -ge 3 -and ($tok -match '^[a-z_][a-z0-9_.-]*$') -and ($stop -notcontains $tok)) {
+        [void]$ids.Add($tok)
+      }
+    }
+  }
+  return ($ids | Select-Object -Unique)
+}
+
+function Test-TargetOverlap {
+  param([string]$Target, [string]$SessionText)
+  # Gate 4 core. Boundary-precise match of any target identifier against a session's title+prompt.
+  # No surviving identifier -> $true (conservative: too-generic target aborts the dispatch).
+  $ids = @(Get-TargetIdentifiers $Target)
+  if ($ids.Count -eq 0) { return $true }
+  $hay = $SessionText.ToLowerInvariant()
+  foreach ($id in $ids) {
+    $rx = '(?<![A-Za-z0-9_])' + [regex]::Escape($id) + '(?![A-Za-z0-9_])'
+    if ([regex]::IsMatch($hay, $rx)) { return $true }
+  }
+  return $false
+}
+
+function Test-TargetInTaskFile {
+  param([string]$Target, [string]$Content)
+  # P1.3: at least one target identifier MUST appear in the task-file body, else the wrapper
+  # would dedup-check a file the task does not touch. No identifier -> $false (forces a specific Target).
+  $ids = @(Get-TargetIdentifiers $Target)
+  if ($ids.Count -eq 0) { return $false }
+  $hay = $Content.ToLowerInvariant()
+  foreach ($id in $ids) {
+    $rx = '(?<![A-Za-z0-9_])' + [regex]::Escape($id) + '(?![A-Za-z0-9_])'
+    if ([regex]::IsMatch($hay, $rx)) { return $true }
+  }
+  return $false
+}
+
+function Find-ActiveOverlap {
+  param($Sessions, [string]$Target, [string]$Source)
+  # Gate 4 wiring (pure): over a session list, keep only ACTIVE (non-terminal) sessions on the
+  # SAME repo source, and return the first whose title+prompt overlaps -Target ($null if none).
+  $active = @($Sessions | Where-Object { (Test-SessionActive $_.state) -and ($_.sourceContext.source -eq $Source) })
+  foreach ($s in $active) {
+    $txt = ([string]$s.title) + ' ' + ([string]$s.prompt)
+    if (Test-TargetOverlap $Target $txt) {
+      return [pscustomobject]@{ Id = ($s.name -replace 'sessions/', ''); Title = (([string]$s.title -split "`n")[0]) }
+    }
+  }
+  return $null
+}
+
+# === MAIN (impure orchestration -- not dot-sourced; everything below runs only on direct invoke) ===
+$ErrorActionPreference = 'Stop'
+
+# --- required-arg validation (param is non-mandatory so the test can dot-source without a prompt) ---
+if (-not $Repo)     { Write-Error 'ABORT: -Repo required';     exit 2 }
+if (-not $TaskFile) { Write-Error 'ABORT: -TaskFile required'; exit 2 }
+if (-not $Target)   { Write-Error 'ABORT: -Target required';   exit 2 }
+
+# --- Gate 1: repo whitelist (NOT overridable) ---
+if (-not (Test-RepoWhitelisted $Repo)) {
+  Write-Error "ABORT gate1: repo '$Repo' not whitelisted. Allowed: $((Get-Whitelist) -join ', ')"
+  exit 1
+}
+
+# --- load + validate task-file ---
+if (-not (Test-Path $TaskFile)) { Write-Error "ABORT: TaskFile not found: $TaskFile"; exit 2 }
+$taskContent = [IO.File]::ReadAllText($TaskFile)
+if ([string]::IsNullOrWhiteSpace($taskContent)) { Write-Error 'ABORT: task-file is empty'; exit 1 }
+
+# --- Gate 2: ASCII-lint (NOT overridable) ---
+if (-not (Test-AsciiClean $TaskFile)) {
+  Write-Error "ABORT gate2: task-file '$TaskFile' has non-ASCII bytes (anti-#12). Make it ASCII-only."
+  exit 1
+}
+
+# --- Gate 3: scoped-template lint + Target consistency (NOT overridable) ---
+$tmpl = Test-ScopedTemplate $taskContent
+if (-not $tmpl.Ok) {
+  Write-Error "ABORT gate3: task-file missing scoped markers: $($tmpl.Missing -join ', ') (ADR-0035 #1; vague prompts are proven defect generators)"
+  exit 1
+}
+if (-not (Test-TargetInTaskFile $Target $taskContent)) {
+  Write-Error "ABORT gate3: -Target '$Target' is not named in the task-file -- dedup would check the wrong file. Align -Target with the scoped target."
+  exit 1
+}
+
+# --- Gate 4: dedup vs ACTIVE sessions ---
+$apiKey = ((Get-Content "$HOME/.config/api-keys/keys.env" -ErrorAction SilentlyContinue |
+            Where-Object { $_ -match '^JULES_API_KEY=' }) -replace '^JULES_API_KEY=', '')
+if (-not $apiKey) { Write-Error 'ABORT gate4: JULES_API_KEY not found in ~/.config/api-keys/keys.env'; exit 2 }
+$api = 'https://jules.googleapis.com/v1alpha'
+$hdr = @{ 'x-goog-api-key' = $apiKey }
+$source = Get-JulesSource $Repo
+
+$overlap = $null
+$listOk = $false
+try {
+  $resp = Invoke-RestMethod -Headers $hdr "$api/sessions?pageSize=100" -ErrorAction Stop
+  $listOk = $true
+  if ($resp.nextPageToken) {
+    if (-not $ForceBlind) {
+      Write-Error 'ABORT gate4: session list is paginated (nextPageToken present) -- dedup may be incomplete. Re-run with -ForceBlind to override.'
+      exit 1
+    }
+    Write-Warning 'FORCED-BLIND: paginated session list, dedup possibly incomplete, proceeding (-ForceBlind).'
+  }
+  $activeCount = @($resp.sessions | Where-Object { (Test-SessionActive $_.state) -and ($_.sourceContext.source -eq $source) }).Count
+  Write-Host "gate4: $activeCount active session(s) on $source"
+  $overlap = Find-ActiveOverlap -Sessions $resp.sessions -Target $Target -Source $source
+} catch {
+  $listOk = $false
+  if (-not $ForceBlind) {
+    Write-Error "ABORT gate4: cannot enumerate active sessions ($($_.Exception.Message)). Re-run with -ForceBlind to dispatch with NO dedup verification."
+    exit 1
+  }
+  Write-Warning 'DISPATCHING WITH NO DEDUP VERIFICATION (-ForceBlind: list-GET failed).'
+}
+
+if ($overlap) {
+  if (-not $Force) {
+    Write-Error "ABORT gate4: -Target '$Target' overlaps active session $($overlap.Id) ($($overlap.Title)). Re-run with -Force only if this is NOT a real overlap."
+    exit 1
+  }
+  Write-Warning "FORCED-OVERRIDE-OVERLAP $($overlap.Id): proceeding despite overlap (-Force)."
+}
+
+# --- forced-tag for the audit line ---
+$forcedTag = ''
+if ($Force -and $overlap) { $forcedTag = " | FORCED-OVERRIDE-OVERLAP $($overlap.Id)" }
+elseif ($ForceBlind -and -not $listOk) { $forcedTag = ' | FORCED-BLIND' }
+
+# --- build dispatch body (ADR-0035 verified schema) ---
+if (-not $Title) { $Title = "[$Repo] $Target ($(Get-Date -Format 'yyyy-MM-dd'))" }
+$body = @{
+  prompt        = $taskContent
+  title         = $Title
+  sourceContext = @{
+    source            = $source
+    githubRepoContext = @{ startingBranch = 'main' }
+  }
+} | ConvertTo-Json -Depth 8
+
+# --- audit-log (logs/ is gitignored) ---
+$repoRoot = (Resolve-Path (Join-Path $PSScriptRoot '..\..')).Path
+$log = Join-Path $repoRoot ("logs/jules-dispatch-$(Get-Date -Format 'yyyy-MM').md")
+$ts = (Get-Date -Format 'o')
+function Write-Audit {
+  param([string]$Line)
+  New-Item -ItemType Directory -Force -Path (Split-Path $log) | Out-Null
+  [IO.File]::AppendAllText($log, $Line + "`n", (New-Object Text.UTF8Encoding $false))
+}
+
+# --- DryRun: show body + DRYRUN audit, no POST ---
+if ($DryRun) {
+  Write-Host '--- DRYRUN: all gates PASSED. Dispatch body (NOT posted): ---'
+  Write-Host $body
+  Write-Audit "$ts | DRYRUN | $Repo | $Target | (no-session) | (dryrun) | $Title$forcedTag"
+  Write-Host "DRYRUN complete. Audit-log: $log"
+  exit 0
+}
+
+# --- Gate 5: dispatch + audit ---
+try {
+  $created = Invoke-RestMethod -Method Post -Headers $hdr -ContentType 'application/json' -Body $body "$api/sessions" -ErrorAction Stop
+  $sid = ($created.name -replace 'sessions/', '')
+  $state = $created.state
+  Write-Audit "$ts | $Repo | $Target | $sid | $state | $Title$forcedTag"
+  Write-Host "DISPATCHED session $sid (state=$state). Audit-log: $log"
+  exit 0
+} catch {
+  Write-Error "ABORT gate5: dispatch POST failed ($($_.Exception.Message))"
+  exit 1
+}
