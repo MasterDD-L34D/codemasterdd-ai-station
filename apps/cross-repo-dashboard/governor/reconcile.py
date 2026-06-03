@@ -13,9 +13,12 @@ is EXTERNAL (reconcile_cycles_report.py), never in the actor.
 """
 from __future__ import annotations
 
+import os
 import re
 from dataclasses import dataclass
 from typing import Callable, Optional, Tuple
+
+_RECONCILE_TOKEN_ENV = "GOVERNOR_RECONCILE_TOKEN"
 
 _DOCTRINE_NAMES = frozenset({
     "CLAUDE.md", "AGENTS.md", "ORCHESTRATION.md",
@@ -207,3 +210,56 @@ def render_vault_lint_status(store):
     note = ("\n\n_Auto-synced vault lint status (gap / coherence / whatsmissing); "
             "content-based severity, clock-free. Human prose elsewhere is authoritative._")
     return table + note
+
+
+# ---------------------------------------------------------------------------
+# The actor -- the only new autonomy surface. Opens/updates PRs, NEVER merges.
+# ---------------------------------------------------------------------------
+
+def reconcile_actor(store, reconcilers, gh_api, environ=None) -> dict:
+    """Open/update ONE branch+PR per drifted reconciler. NEVER merges (spec sec 3.1 / 6).
+
+    Per reconciler, ISOLATED (one failure never aborts the rest, mirroring ingest_all):
+      1. current = gh_api['get_file'](repo, path)  ("" if 404 -> a new-doc reconciler creates it)
+      2. region  = R.render(store); None -> skip ("cannot compute", no junk PR)
+      3. patched = splice(current, R.marker, region, anchor=R.anchor, create_header=R.create_header)
+      4. patched == current -> no-op (no drift; NO branch, NO PR; record 'unchanged')
+      5. else: assert not is_doctrine (defence in depth) -> require the write token ->
+         gh_api['open_or_update_pr'](repo, branch=auto/governor-reconcile-<id>, base=main, ...)
+
+    Fail-closed write token (spec sec 6.5): without GOVERNOR_RECONCILE_TOKEN the actor refuses to
+    OPEN PRs (records the drifted reconciler under 'skipped' reason no-token; opens NOTHING). A
+    WRITE actor does NOT fall back to ambient gh auth. Reads (get_file) may use the ambient token
+    (read is not the autonomy surface); only the WRITE is gated.
+
+    Returns {"opened": [...], "unchanged": [...], "skipped": [...], "errors": [...]}.
+    """
+    environ = os.environ if environ is None else environ
+    has_token = bool((environ.get(_RECONCILE_TOKEN_ENV) or "").strip())
+    result = {"opened": [], "unchanged": [], "skipped": [], "errors": []}
+
+    for R in reconcilers:
+        try:
+            current = gh_api["get_file"](R.repo, R.path)
+            region = R.render(store)
+            if region is None:
+                result["skipped"].append({"id": R.id, "reason": "render-none"})
+                continue
+            patched = splice(current, R.marker, region, anchor=R.anchor,
+                             create_header=R.create_header)
+            if patched == current:
+                result["unchanged"].append({"id": R.id})
+                continue
+            # Drift. Runtime re-check (defence in depth; __post_init__ already enforced it).
+            if is_doctrine(R.path, R.repo):
+                raise ValueError(f"refusing to open PR on doctrine path {R.path!r}")
+            if not has_token:
+                result["skipped"].append({"id": R.id, "reason": "no-token"})
+                continue
+            pr = gh_api["open_or_update_pr"](
+                R.repo, f"auto/governor-reconcile-{R.id}", "main", R.path, patched, R.id,
+            )
+            result["opened"].append({"id": R.id, "pr": pr})
+        except Exception as e:  # noqa: BLE001 -- one reconciler failure must not abort the rest
+            result["errors"].append({"id": getattr(R, "id", "?"), "error": str(e)[:200]})
+    return result
