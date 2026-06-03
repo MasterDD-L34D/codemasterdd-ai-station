@@ -19,6 +19,28 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-06-03 (Ryzen: Jules collaboration -- triage suggestions, merge w/ rituals, recover S3, gap-goal)
+
+Eduardo: triage TUTTI i suggerimenti Jules + correggi prima del lancio; poi check chip results + merge se rituali + recover S3; poi "stato Jules + cosa manca" (ricerca, no guess) -> goal per next session.
+
+### Completato
+- **Loop Jules dimostrato end-to-end** (dispatch+monitor+triage+recover+merge via REST `x-goog-api-key`, NO OAuth, Ryzen): **6 PR merged** -- Game-DB #170 (CWE-290 headers) + #169 (mutation-scoped rate-limit) + #171 (zodResolver S3 recovery); Game #2577 (W8O-2 guard +Codex P2 fix) + #2581 (map-index S3 recovery); codemasterdd #265/#266 (capabilities §9 + ADR-0035 addendum) + #267 (5 unused-import direct-fix).
+- **Triage tutti i suggerimenti** (4 repo enabled): codemasterdd direct-fix; Game-family ground-truth -> 1 dispatch + 3 chip (rate-limit/stale-render, perf×5, headers-auth) + reject (Godot insecure-HTTP = localhost FP) + dismiss-list. Chip eseguiti -> i PR sopra.
+- **2 S3-trapped recuperate** (zodResolver + map-index) -> sovereign-extract -> PR -> merged -> sessions archived. Lavoro clean salvato (sarebbe andato perso).
+- **Rituali rigorosi, no rubber-stamp**: #2577 Codex P2 reale (guard ingannabile da bump commentato) -> fix comment-strip + falsificato. #2581 Codex usage-limit -> harsh-reviewer substitute (SHIP-IT, grep-verified behavior-preserving).
+- **Stato Jules ground-truthed + 6 gap mappati** -> goal doc `docs/goals/2026-06-03-jules-autonomy-gaps.md` + memory `project_jules_collaboration_state`.
+
+### Da fare (next session = il /goal)
+- Risolvi i 6 gap, ordine: **G6+G5** (ORCHESTRATION §5/§6 doc) -> **G3** (digest-cron Ryzen) -> **G2** (suggestions read-only feed) -> **G1** (merge-autonomy ADR -- brainstorm + harsh-reviewer, **NO fiat**) -> **G4** (governor R0->R1, mid-horizon).
+- perf×5 chip: solo map-index materializzato (#2581); altri 4 N+1/re-eval restano nel chip.
+
+### Note
+- Loop Jules funziona **on-demand**; per autonomia piena manca: merge-standing (oggi per-grant), suggestions-feed-auto (browser-only, no API), digest-cron (non su Ryzen, ultimo 2026-05-29), governor-ladder R0->R1 (acted-on 1/3).
+- SDMG load-bearing G1: external-merge resta Eduardo finche un ADR (sopravvissuto a harsh-reviewer) non lo cambia. No standing-grant by fiat.
+- Memory: `project_jules_collaboration_state` (nuovo) + `feedback_codex_clean_verdict_reaction` addendum (Codex usage-limit -> substitute).
+
+---
+
 ## 2026-06-02 (Ryzen: AI-smoke Screen-1+2 GREEN + scale to 5/7 screens)
 
 Continuazione del First-Playable AI-smoke. Da "harness disegnato" a "schermi reali validati live, autonomi". 5/7 schermi coperti dallo smoke, 2 green.
@@ -65,6 +87,8 @@ Eduardo ha fissato il goal First-Playable (Godot-v2: room-creation RoJ/Jackbox T
 - Continuation doc completo: `docs/sessions/2026-06-02-godot-firstplayable-aismoke-continuation.md`. Live state: memory `project_godot_first_playable`.
 - Gotcha: global tdd-guard ultra-granulare (stub->populate->impl per funzione; blocca anche il delete di un RED-test); `pytest --rootdir .` registra il RED; un GUT-RED da bash-hub NON viene registrato -> GDScript va fatto nel Godot-workflow (GUT+tdd-guard wired).
 - Env riusabile: worktree `-golive` (Godot + Game), Postgres-17 + Game backend boota (HEALTH 200), Godot 4.6.2, `qwen2.5vl:7b` local Ryzen. Serve :8060 killed a chiusura.
+
+---
 
 ## 2026-06-02 (Ryzen: governor post-completion -- triage + FIRST acted-on + gate-def + Game path-map PR)
 

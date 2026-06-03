@@ -6,7 +6,6 @@ Each conv has a realistic OpenAI 'mapping' tree shape with 4-8 messages.
 """
 
 import json
-import os
 import uuid
 from datetime import datetime, timedelta
 from pathlib import Path
