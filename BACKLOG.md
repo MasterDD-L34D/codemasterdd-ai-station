@@ -54,6 +54,7 @@ Pattern di chiusura applicato: marker stale = anti-pattern #19 -> ground-truth v
 
 ## Dead weight / sospetti (da NON riaprire senza trigger)
 
+- **L6** `governor/act.py` dead-import (presunto `import json as _json` inutile in `_real_create`) -> NO-OP verificato 2026-06-03: l'import sta in `_real_find_open` (act.py:129) ed e' usato (142); nessun import morto in `_real_create`. WIP transitorio auto-swept pre-merge (come il self-gate L6 stesso prevedeva). Origine: nota Ryzen-local 2026-06-02, mai pushata su origin (overlap concorrenza cross-fleet sul work-stream governor). Non riaprire.
 - `docs/reference/agno-ollama-snippets.md` Pattern 2 → fixato, no-op pendente.
 - `docs/reference/subagents-skills-candidates.md` → catalogo dormiente, nessun install pianificato.
 - `final-research-and-snippets-2026-04-21-v3.md` (root) → source material esterno, triato.
