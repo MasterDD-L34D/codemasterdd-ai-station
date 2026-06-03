@@ -84,9 +84,17 @@ CLI ha dato 8/8 completo. Metodo CLI = canonical d'ora in poi.
 
 L'enumeratore READ-ONLY `scripts/jules-daily-digest.ps1` (heuristic v4.1:
 session -> linked-PR state+files, independent dal prompt) gira in automatico
-via Windows Scheduled Task `jules-daily-digest` (daily 09:30, `-StartWhenAvailable`
-per i missed-run quando il PC e' spento), scrivendo `docs/jules-batch/<day>-digest.md`.
-Usa REST `x-goog-api-key` (no OAuth, addendum ADR-0035 2026-06-02) + `gh pr view`.
+via Windows Scheduled Task `jules-daily-digest` (daily 09:30, `-StartWhenAvailable`),
+scrivendo `docs/jules-batch/<day>-digest.md`. Usa REST `x-goog-api-key` (no OAuth,
+addendum ADR-0035 2026-06-02) + `gh pr view`.
+
+- **Caveat reliability (LogonType Interactive)**: il task parte SOLO quando l'owner
+  (Vgit) e' loggato interattivamente; `-StartWhenAvailable` recupera i miss da
+  PC-spento/sospeso, NON da utente-disconnesso/lock-screen. NON e' un cron unattended
+  puro -- best-effort when-logged-in. Il filename date-stamped rende il miss osservabile
+  (nessun `<day>-digest.md` nuovo = non girato; resta il file del giorno prima). Per un
+  unattended vero servirebbe un principal con credenziali memorizzate (admin) --
+  scartato per tenere il "no admin".
 
 - **Registrazione / handoff (idempotente)**: `scripts/fleet/register-jules-digest-task.ps1`
   (re-run = re-register `-Force`; `-Unregister` per rimuovere). No elevazione admin
@@ -97,8 +105,10 @@ Usa REST `x-goog-api-key` (no OAuth, addendum ADR-0035 2026-06-02) + `gh pr view
   gh authed, JULES_API_KEY presente. Handoff a Lenovo: `-Unregister` su Ryzen PRIMA,
   poi register su Lenovo. Mai registrato su due PC insieme.
 - **Prereq sull'owner**: `JULES_API_KEY` in `~/.config/api-keys/keys.env` + gh authed
-  (il segnale a 2 sorgenti dello stato-PR; senza gh il digest gira comunque ma i
-  verdetti degradano a AMBIGUOUS).
+  (il segnale a 2 sorgenti dello stato-PR). Taxonomy fallimenti (precisa): se fallisce
+  il *lookup PR via gh* -> quella sessione degrada a AMBIGUOUS (no crash); se fallisce
+  la *sessions API* (key assente/invalida) -> il digest e' un file ERROR esplicito con
+  exit 1 (MAI empty-set silenzioso); path no-PR -> DEFER/AMBIGUOUS senza usare gh.
 - **Gate (ADR-0034 Option D)**: il digest e' advisory, ZERO auto-exec. Eduardo/Claude
   fanno triage ground-truth (sezioni sopra) sul set ACTIONABLE/IN-PROGRESS/AMBIGUOUS;
   il generativo (archive/respond/start) resta batch-approve Eduardo.

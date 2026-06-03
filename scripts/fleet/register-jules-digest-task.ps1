@@ -22,7 +22,7 @@
 [CmdletBinding()]
 param(
   [switch]$Unregister,
-  [string]$At = '9:30am',
+  [string]$At = '09:30',
   [string]$ScriptPath = 'C:\dev\codemasterdd-ai-station\scripts\jules-daily-digest.ps1'
 )
 $ErrorActionPreference = 'Stop'
