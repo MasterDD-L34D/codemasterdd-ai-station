@@ -159,6 +159,18 @@ Indice completo in `DECISIONS_LOG.md`. Path: `docs/adr/NNNN-topic.md`.
 
 ## REF — Reference esterne
 
+### REF-DOC-01 (estratto da CLAUDE.md 2026-06-03, context-files reorg Fase 1)
+- **Codice**: REF-DOC-01
+- **Titolo**: `docs/reference/stack-installed.md`
+- **Funzione**: inventario stack esaustivo (tool + versioni + plugin) spostato da CLAUDE.md per snellire context sempre-caricato
+- **Stato**: on-demand reference (verifica runtime: `<tool> --version`)
+
+### REF-DOC-02 (estratto da CLAUDE.md 2026-06-03, context-files reorg Fase 1)
+- **Codice**: REF-DOC-02
+- **Titolo**: `docs/reference/hardware-and-models.md`
+- **Funzione**: hardware + tabelle bench tok/s + catalogo modelli Ollama spostato da CLAUDE.md
+- **Stato**: on-demand reference (verifica modelli: `ollama list`)
+
 ### REF-E01
 - **Codice**: REF-01
 - **Titolo**: `docs/reference/commands-cheatsheet-windows.md`
