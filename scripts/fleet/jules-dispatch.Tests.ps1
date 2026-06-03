@@ -171,6 +171,16 @@ Assert-True  $naiveWouldMatch 'naive .Contains(fetch) WOULD false-positive (befo
 Assert-False $boundaryMatches 'boundary matcher does NOT false-positive (after) -- tuning delta'
 
 # ======================================================================
+Write-Host "Test 11: Get-SessionId (P1-C POST-response shape guard -- no hollow success)"
+$goodResp = [pscustomobject]@{ name = 'sessions/abc123'; state = 'IN_PROGRESS' }
+Assert-Eq 'abc123' (Get-SessionId $goodResp) 'well-formed response -> id extracted'
+$lroResp = [pscustomobject]@{ operation = [pscustomobject]@{ done = $false } }  # no .name
+Assert-True ($null -eq (Get-SessionId $lroResp)) 'shapeless response (no .name) -> null (MAIN must abort, not log hollow success)'
+Assert-True ($null -eq (Get-SessionId $null)) 'null response -> null'
+$emptyName = [pscustomobject]@{ name = ''; state = 'IN_PROGRESS' }
+Assert-True ($null -eq (Get-SessionId $emptyName)) 'empty name -> null'
+
+# ======================================================================
 Write-Host ""
 Write-Host "Results: $script:passed passed, $script:failed failed"
 if ($script:failed -gt 0) {

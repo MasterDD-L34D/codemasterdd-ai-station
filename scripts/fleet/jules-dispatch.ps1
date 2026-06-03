@@ -157,6 +157,17 @@ function Find-ActiveOverlap {
   return $null
 }
 
+function Get-SessionId {
+  param($Created)
+  # P1-C: extract the session id from a create-POST response, or $null if the response has no
+  # usable name (LRO/error envelope / unexpected shape). MAIN aborts on $null rather than
+  # writing a hollow "DISPATCHED" audit line with a blank id (the honesty axis).
+  if ($null -eq $Created) { return $null }
+  $n = $Created.name
+  if ([string]::IsNullOrWhiteSpace($n)) { return $null }
+  return ($n -replace 'sessions/', '')
+}
+
 # === MAIN (impure orchestration -- not dot-sourced; everything below runs only on direct invoke) ===
 $ErrorActionPreference = 'Stop'
 
@@ -194,8 +205,16 @@ if (-not (Test-TargetInTaskFile $Target $taskContent)) {
 }
 
 # --- Gate 4: dedup vs ACTIVE sessions ---
-$apiKey = ((Get-Content "$HOME/.config/api-keys/keys.env" -ErrorAction SilentlyContinue |
-            Where-Object { $_ -match '^JULES_API_KEY=' }) -replace '^JULES_API_KEY=', '')
+# P1-A: guard the key read -- keys.env is ACL-locked (edusc+SYSTEM); on a host where the current
+# user is excluded, an access-denied is a TERMINATING error under Stop. Catch it to a clean exit-2.
+$apiKey = $null
+try {
+  $keysPath = "$HOME/.config/api-keys/keys.env"
+  if (Test-Path $keysPath) {
+    $apiKey = ((Get-Content $keysPath -ErrorAction Stop |
+                Where-Object { $_ -match '^JULES_API_KEY=' }) -replace '^JULES_API_KEY=', '')
+  }
+} catch { Write-Error "ABORT gate4: cannot read keys.env ($($_.Exception.Message))"; exit 2 }
 if (-not $apiKey) { Write-Error 'ABORT gate4: JULES_API_KEY not found in ~/.config/api-keys/keys.env'; exit 2 }
 $api = 'https://jules.googleapis.com/v1alpha'
 $hdr = @{ 'x-goog-api-key' = $apiKey }
@@ -250,7 +269,10 @@ $body = @{
 } | ConvertTo-Json -Depth 8
 
 # --- audit-log (logs/ is gitignored) ---
-$repoRoot = (Resolve-Path (Join-Path $PSScriptRoot '..\..')).Path
+# P1-B: GetFullPath normalizes '..\..' WITHOUT touching the filesystem (Resolve-Path throws under
+# Stop if the path is not resolvable -- e.g. junction/symlink fleet layouts). The audit spine must
+# never be the thing that throws.
+$repoRoot = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..\..'))
 $log = Join-Path $repoRoot ("logs/jules-dispatch-$(Get-Date -Format 'yyyy-MM').md")
 $ts = (Get-Date -Format 'o')
 function Write-Audit {
@@ -271,7 +293,13 @@ if ($DryRun) {
 # --- Gate 5: dispatch + audit ---
 try {
   $created = Invoke-RestMethod -Method Post -Headers $hdr -ContentType 'application/json' -Body $body "$api/sessions" -ErrorAction Stop
-  $sid = ($created.name -replace 'sessions/', '')
+  # P1-C: do NOT record a dispatch we cannot name. A 200 with no .name (LRO/error envelope) must
+  # abort, not write a hollow "DISPATCHED" audit line with a blank id.
+  $sid = Get-SessionId $created
+  if (-not $sid) {
+    Write-Error "ABORT gate5: POST returned no session name (shape: $($created | ConvertTo-Json -Depth 3 -Compress))"
+    exit 1
+  }
   $state = $created.state
   Write-Audit "$ts | $Repo | $Target | $sid | $state | $Title$forcedTag"
   Write-Host "DISPATCHED session $sid (state=$state). Audit-log: $log"
