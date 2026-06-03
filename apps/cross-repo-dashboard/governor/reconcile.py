@@ -174,3 +174,36 @@ def render_status_multi_repo(store):
     note = ("\n\n_Auto-synced governor signal snapshot; human prose elsewhere is "
             "authoritative._")
     return table + note
+
+
+_VAULT_LINT_SOURCES = ("vault-gap", "vault-coherence", "vault-whatsmissing")
+_VAULT_LINT_COLS = ("report", "severity", "summary", "produced_at", "ref")
+
+
+def render_vault_lint_status(store):
+    """Deterministic, CLOCK-FREE vault lint dashboard from the three vault lint signals.
+
+    Filters store.latest_per_source() to vault-gap / vault-coherence / vault-whatsmissing,
+    iterated in fixed order (deterministic regardless of dict ordering). Columns
+    report|severity|summary|produced_at|ref. Severity is CONTENT-based: parse_vault_report
+    (parsers.py) derives it from BLOCK/WARN/nonzero metrics with NO `now` parameter (spec sec
+    5.2), so the rendered state changes only when vault lint CONTENT changes, never on a
+    clock-tick. Returns None when none of the three lint sources is present (cannot compute).
+    """
+    by_source = {r["source"]: r for r in store.latest_per_source()}
+    if not any(s in by_source for s in _VAULT_LINT_SOURCES):
+        return None
+    cells = []
+    for s in _VAULT_LINT_SOURCES:
+        r = by_source.get(s)
+        if r is None:
+            continue
+        report = s[len("vault-"):]   # gap / coherence / whatsmissing
+        cells.append([
+            _md_cell(report), _md_cell(r.get("severity")), _md_cell(r.get("summary")),
+            _md_cell(r.get("produced_at")), _md_cell(r.get("ref")),
+        ])
+    table = _md_table(_VAULT_LINT_COLS, cells)
+    note = ("\n\n_Auto-synced vault lint status (gap / coherence / whatsmissing); "
+            "content-based severity, clock-free. Human prose elsewhere is authoritative._")
+    return table + note
