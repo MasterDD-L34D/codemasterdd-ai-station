@@ -19,6 +19,29 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-06-03 (Ryzen: Jules-autonomy gaps G1-G6 closed -- /goal session)
+
+Eduardo /goal: close the 6 Jules-collaboration autonomy gaps per `docs/goals/2026-06-03-jules-autonomy-gaps.md`, in order, SDMG-gated (no fiat; harsh-reviewer falsification pre-commit; external-merge stays Eduardo until G1 survives).
+
+### Completato
+- **G6+G5 (#271, merged)** -- ORCHESTRATION sec 6: `:create` formalized **NOT-standing / per-instance** -- harsh-reviewer FALSIFIED the first-draft standing-grant (settings.json claim false + un-globbable scope on Ryzen-curl + intersects unresolved G2) -> reworked + adopted. sec 5 Codex sub-gate: usage-limited -> SUBSTITUTE, prefer `cross_check` (different-family) over harsh-reviewer (same-family), dual-poll reviews+reactions first, never self-waive.
+- **G3 (#272, merged)** -- `jules-daily-digest` Windows task on Ryzen (daily 09:30, single-owner) + idempotent `scripts/fleet/register-jules-digest-task.ps1`. QG Step-1: sandbox-run to a throwaway target THEN run-once the real task (no-BOM, LastTaskResult 0x0) -- artifact+encoding verified, not just the log. harsh-reviewer P1 honesty-fixes adopted (LogonType-Interactive caveat + gh-vs-API failure taxonomy + locale-proof `-At '09:30'`).
+- **G2 (#273, merged)** -- read-only suggestions snapshot flow `docs/runbook/jules-suggestions-snapshot.md` + baseline inventory (no Claude-connected browser this session -> honestly baseline-labeled, NOT fabricated). harsh-reviewer SHIP-IT.
+- **G1 (PR #275, Proposed, LEFT FOR EDUARDO)** -- **ADR-0037 merge-autonomy model** via brainstorming options + harsh-reviewer falsification (verdict SURVIVE-WITH-CHANGES, 2 P0 + 2 P1 all adopted -- the falsification REDUCED the autonomy the draft asserted). Decision: self-repo merge = classifier-judged NOT settings.json-standing; **governance-doctrine files = Eduardo-only-merge regardless of repo** (NEW carve-out, closes the self-licensing loop); external-merge Eduardo-explicit indefinitely; earn-path is the only route but CURRENTLY UNREACHABLE (R1 issue-only). First PR the hub does NOT self-merge -- it demonstrates its own decision 2.
+- **G4 (verified, mid-horizon -- not built)** -- R0 shipped + R1 built + governor live (8 signals, `apps/cross-repo-dashboard/governor/`); off-ramp acted-on 1/3, clean-R1-PR-cycles 0 (by design). Next increment = R1->open-PR rung ADR (linked from 0037). Not rushed (acted-on must accrue from real Eduardo actions).
+- **Codex usage-limit exercised LIVE**: all 3 self-repo PRs (#271/#272/#273) hit the cap the same session -> harsh-reviewer substitute (cross_check MCP was down), documented in each merge -- the G5 rule was used the session it shipped.
+
+### Da fare (Eduardo / next session)
+- **Ratify ADR-0037** (PR #275). If Accepted: add the doctrine-file carve-out one-liner to ORCHESTRATION sec 5/6 + actor-criteria sec 7; flip to Accepted.
+- **Reconcile actor-criteria sec 8** stale acted-on (says 0; real = 1 per #261) -- doctrine file, Eduardo-merge.
+- **G2 live validation**: run ONE real Claude-in-Chrome suggestions sweep (browser connected) -> a non-baseline inventory file. That is G2's true validation gate (the live path has never executed).
+- **G4**: define the R1->open-PR rung ADR once acted-on reaches >= 3.
+
+### Note
+- **tdd-guard scoped-off** this session (Eduardo-authorized via AskUserQuestion -- the classifier correctly demanded current-session auth, not memory-of-prior-auth) for doc/ops writes; **re-enabled (config deleted) at close**.
+- #271 self-merged a doctrine file (ORCHESTRATION.md) BEFORE ADR-0037's carve-out existed -- gate-tightening + harsh-reviewer-gated + revertible -> left standing, flagged in the ADR.
+- Pre-existing dirty `.mcp.json` + `BACKLOG.md` (not mine) left untouched; this JOURNAL landed manually on a `claude/` branch (journal-land.ps1 would hit the dirty-tree-vs-origin/main conflict from those files + #274's reorg).
+
 ## 2026-06-03 (Ryzen: Jules collaboration -- triage suggestions, merge w/ rituals, recover S3, gap-goal)
 
 Eduardo: triage TUTTI i suggerimenti Jules + correggi prima del lancio; poi check chip results + merge se rituali + recover S3; poi "stato Jules + cosa manca" (ricerca, no guess) -> goal per next session.
