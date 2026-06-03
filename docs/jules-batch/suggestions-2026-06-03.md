@@ -1,51 +1,65 @@
-# Jules suggestions snapshot 2026-06-03 (READ-ONLY; Start = Eduardo)
+# Jules suggestions snapshot 2026-06-03 (LIVE; READ-ONLY; Start = Eduardo)
 
-> **BASELINE, not a live sweep.** No Claude-connected browser was available this
-> session (`list_connected_browsers` -> `[]`), so this carries the last-known
-> inventory from the sec-9 finding (`docs/jules/JULES-CAPABILITIES-MASTER.md`,
-> live sweep 2026-06-02) -- NOT fresh 2026-06-03 data. Refresh via
-> `docs/runbook/jules-suggestions-snapshot.md` once Eduardo's Chrome is connected.
-> Verdicts are ADVISORY stubs for a human/triage pass. Start / edit+submit /
-> close / toggle = Eduardo (SDMG R6). Source: jules.google per-repo (no API).
+> **LIVE sweep** via Claude-in-Chrome (Eduardo's connected browser, logged in jules.google),
+> per `docs/runbook/jules-suggestions-snapshot.md`. Supersedes the earlier 2026-06-02 baseline.
+> Read path: navigate `jules.google.com/repo/<owner>/<repo>/suggestions` -> screenshot ->
+> read (the `/repo` accessibility tree is too large; screenshot is the reliable reader, as the
+> runbook warns). Verdicts are ADVISORY stubs for a human/triage pass. Start / edit+submit /
+> close / toggle = Eduardo (SDMG R6). Source: jules.google per-repo (no API). PRO, Gemini 3.1 Pro,
+> daily session limit 3/100.
 
-## Enabled repos (4): suggestions surface
+## Enabled state (live)
 
-### Game-Database
-- **[Security]** Unvalidated headers
-  - VERDICT-STUB: **likely-resolved-verify** -- CWE-290 role-spoof / header trust
-    fixed + merged (PR #170, authContext-authoritative). Ground-truth before acting.
-- **[Security]** Missing rate-limit
-  - VERDICT-STUB: **likely-resolved-verify** -- mutation-scoped rate-limit merged
-    (PR #169). Confirm the suggestion is stale on next live sweep.
+**3/5 repo max enabled** (the toggle count shown in-app): **codemasterdd-ai-station, Game,
+Game-Godot-v2**. **Game-Database = suggestions OFF** now (it was ENABLED in the 2026-06-02
+baseline; toggled off since -- plausibly after the #169/#170 security fixes landed). The 4
+remaining repos in the selector (compass-marketplace, evo-swarm, evo-tactics-refs-meta, +
+others) are not suggestions-configured.
 
-### codemasterdd-ai-station
-- **[Security]** "API Secret Exposure to Frontend"
-  - VERDICT-STUB: **triage** -- no known PR; verify independently (could be a
-    false-positive on a public config or a real leak). Ground-truth the cited file.
+## codemasterdd-ai-station (ENABLED)
+- **[Security]** API Secret Exposure to Frontend
+  - VERDICT-STUB: **triage** -- recurs from the 06-02 baseline; ground-truth the cited file
+    (public-config false-positive vs a real leak). High-signal, verify before any action.
+- **[Performance]** N+1 Database Insert in Loop
+  - VERDICT-STUB: **triage** -- verify the loop is a real hot path (likely a script/migration).
+- **[Cleanup]** Unused import: `os` / `Counter` / `defaultdict` / `shutil` / `hashlib` (5)
+  - VERDICT-STUB: **likely-resolved-verify / batch** -- #267 already removed 11 unused imports;
+    confirm these are residual/new. If real, a single scoped batch (grep-before-remove).
+- **[Testing]** Missing test file for `llmfit-task-eval.py` functions; Missing edge-case test
+  for `redact` with empty secrets array; Missing test for `map_outcome` in `migrate-log-to-sqlite.py`
+  - VERDICT-STUB: **triage** -- legit coverage gaps if the functions exist; edit-before-Start.
 
-### Game
-- **[Code Health]** Unused imports (os / sys)
-  - VERDICT-STUB: **likely-resolved-verify** -- a cleanup pass removed 11 unused
-    imports (PR #267); confirm scope overlap, drop if covered.
-- **[Code Health]** Duplication `flint_status_stdlib.py`
-  - VERDICT-STUB: **drop** -- the apparent duplication is a DELIBERATE stdlib-only
-    fallback; a prior Jules dedup of it would have broken CI (design-intent catch,
-    memory `feedback_jules_autonomous_loop_2026_06_02`). Do NOT dedup.
+## Game (ENABLED)
+- **[Testing]** Test missing for `main`
+- **[Testing]** Test missing for `fetchTraitRegistry`
+- **[Performance]** N+1 Array Search in `session.js` (playerIntents loop)
+  - VERDICT-STUB (all): **triage** -- the N+1 in the playerIntents loop is a plausible real hot
+    path (matches the kind of perf chip already triaged this cycle); the 2 testing gaps are
+    coverage-legit. edit-before-Start for any dispatch (anti-#10/anti-S5 guard-rail).
 
-### Game-Godot-v2
-- (no sample captured in the sec-9 baseline; enumerate on the next live sweep.)
+## Game-Godot-v2 (ENABLED)
+- **[Testing]** Missing test for `nnResolution` in `SpeciesCatalog`
+  - VERDICT-STUB: **triage** -- coverage gap, GDScript.
+- **[Security]** Insecure default HTTP endpoint (~10 instances)
+  - VERDICT-STUB: **drop** -- localhost/dev HTTP false-positives (the sec-9 + prior-session
+    reject: "Godot insecure-HTTP = localhost FP"). Do NOT dispatch; same FP class repeated.
+- **[Security]** Hardcoded HTTP URL schema (x2)
+  - VERDICT-STUB: **defer-verify** -- probably the same localhost-FP class; confirm before any action.
+- **[Cleanup]** Actionable URL routing implementation task (x4)
+  - VERDICT-STUB: **triage** -- inspect one; if it is the URL-routing follow-up it may be real.
+- **[Performance]** Dynamic Array Allocation for Membership Check (several)
+  - VERDICT-STUB: **triage** -- GDScript perf; verify it is a hot path, not a cold-path micro-opt.
 
-## Repos OFF / not-configured
-- **OFF (3 configured):** compass-marketplace, evo-swarm, evo-tactics-refs-meta.
-- **Not-configured (4 in selector):** Gpt, Item-generator, LeaD, Master-DD-Pathfinder-GPT.
+## Game-Database (OFF)
+- Suggestions toggle OFF (was ENABLED 2026-06-02). Nothing to triage; re-enable in-app if the
+  post-#169/#170 state should be re-scanned. Eduardo-only (toggle = config mutation, SDMG R6).
 
 ## Triage notes
-- **edit-before-Start**: the generic "Start" template is a "Code Health Improvement
-  Task" boilerplate WITHOUT our anti-#10 / anti-S5 constraints. For any high-signal
-  suggestion that survives triage, Eduardo uses "edit" to paste the guard-rail
-  (zero-behavior, single-file, minimal-diff/no-rewrite, grep-before-remove, lock-test
-  CI-green) THEN Starts -- so the suggestion inherits the scoped-prompt discipline.
-- **Mechanics (beta):** opt-in per repo, cap <=5, refresh every few days, PRO plan
-  Gemini 3.1 Pro, daily session limit 0/100. Categories: Cleanup / Performance /
-  Security / Code Health / Testing. Expanded chevron = DESCRIPTION + LOCATION
-  (file:line) + RATIONALE + CODE CONTEXT (e.g. duplication via AST hashing cross-file).
+- **edit-before-Start** (load-bearing): the generic "Start" launches a "Code Health Improvement
+  Task" boilerplate WITHOUT our anti-#10 / anti-S5 constraints. For any suggestion that survives
+  triage, Eduardo uses "edit" to paste the guard-rail (zero-behavior, single-file,
+  minimal-diff/no-rewrite, grep-before-remove, lock-test CI-green) THEN Starts.
+- **Net high-signal this sweep**: codemasterdd "API Secret Exposure to Frontend" (Security,
+  verify) + the N+1s (codemasterdd DB-insert, Game session.js). **Net noise**: Godot-v2's ~10x
+  "Insecure default HTTP endpoint" (localhost FP, drop) + the codemasterdd unused-imports
+  (likely covered by #267). Categories live: Cleanup / Performance / Security / Code Health / Testing.
