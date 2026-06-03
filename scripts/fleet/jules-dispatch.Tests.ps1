@@ -13,9 +13,11 @@ $ErrorActionPreference = 'Continue'
 $script:passed = 0
 $script:failed = 0
 $script:failures = @()
+$script:results = @()  # tdd-guard PS-reporter: per-assert {name,state} -> test.json at the end
 
 function Assert-True {
   param([bool]$Condition, [string]$Name)
+  $script:results += [pscustomobject]@{ name = $Name; state = $(if ($Condition) { 'passed' } else { 'failed' }) }
   if ($Condition) { $script:passed++; Write-Host "  [PASS] $Name" -ForegroundColor Green }
   else { $script:failed++; $script:failures += $Name; Write-Host "  [FAIL] $Name" -ForegroundColor Red }
 }
@@ -207,8 +209,35 @@ $fetchedScalar = 'oops-not-an-object'
 Assert-Eq 'IN_PROGRESS' (Resolve-AuditState -Fetched $fetchedScalar -CreateState 'IN_PROGRESS') 'scalar Fetched (no .state) -> fall back to create-state'
 
 # ======================================================================
+Write-Host "Test 13: Add-DispatchConstraints (anti-pollution guard -- skiv 121MB-binary root cause)"
+$body13 = Add-DispatchConstraints 'ORIGINAL TASK BODY'
+Assert-True ($body13.StartsWith('ORIGINAL TASK BODY')) 'original task content preserved at the start'
+Assert-True ($body13 -match 'Do NOT add, create, download, or commit') 'anti-pollution clause present'
+Assert-True ($body13 -match 'no engine/SDK/tool downloads') 'engine/binary-download ban present'
+Assert-True ($body13.Length -gt 'ORIGINAL TASK BODY'.Length) 'guard appended (output longer than input)'
+
+# ======================================================================
 Write-Host ""
 Write-Host "Results: $script:passed passed, $script:failed failed"
+
+# --- tdd-guard PowerShell reporter (structural fix for the PS blind-spot) ---
+# tdd-guard (npx tdd-guard) ships reporters for pytest/vitest/jest but NOT for hand-rolled
+# PowerShell runners, so a PS .Tests.ps1 RED is invisible to the PreToolUse guard, which then
+# false-blocks the GREEN implementation (hit 3x on 2026-06-04). Writing results to
+# .claude/tdd-guard/data/test.json in the reporter schema lets the guard see PS outcomes.
+# Reusable: any *.Tests.ps1 using Assert-True can copy this block.
+try {
+  $tddDir = Join-Path $PSScriptRoot '..\..\.claude\tdd-guard\data'
+  if (Test-Path $tddDir) {
+    $moduleId = 'scripts/fleet/jules-dispatch.Tests.ps1'
+    $tests = @($script:results | ForEach-Object {
+        @{ name = $_.name; fullName = "${moduleId}::$($_.name)"; state = $_.state }
+      })
+    $report = @{ testModules = @(@{ moduleId = $moduleId; tests = $tests }) }
+    [IO.File]::WriteAllText((Join-Path $tddDir 'test.json'), ($report | ConvertTo-Json -Depth 6))
+  }
+} catch { Write-Host "  (tdd-guard reporter write skipped: $($_.Exception.Message))" }
+
 if ($script:failed -gt 0) {
   Write-Host "Failures:" -ForegroundColor Red
   $script:failures | ForEach-Object { Write-Host "  - $_" -ForegroundColor Red }
