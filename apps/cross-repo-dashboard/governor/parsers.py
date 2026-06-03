@@ -237,3 +237,65 @@ def parse_archon_learnings(entries: list, ref: str) -> Signal:
         ref=ref,
         payload_hash=make_hash('archon-learnings', str(count), str(latest)),
     )
+
+
+_RE_JULES_DATE = re.compile(r"#\s*Jules daily digest\s+(\d{4}-\d{2}-\d{2})")
+_RE_JULES_AWAITING = re.compile(r"Awaiting sessions:\s*(\d+)", re.IGNORECASE)
+_RE_JULES_VERDICT = re.compile(r"\*\*(ARCHIVE|ACTIONABLE|DEFER|IN-PROGRESS|AMBIGUOUS)\b")
+
+
+def parse_jules_digest(md: str, ref: str) -> Signal:
+    """Jules daily-digest signal (the READ-ONLY enumerator output, G3 cron).
+
+    Maps the digest's per-session verdicts to an R0 OBSERVE signal so the governor
+    surfaces Jules cycles needing attention. **ACTIONABLE** (PR closed-unmerged/open or
+    Jules-asking = NOT shipped) is the ONLY verdict that escalates to `warning`;
+    AMBIGUOUS / DEFER / IN-PROGRESS are `info` (the digest is conservative-AMBIGUOUS, so
+    escalating those would be noise); ARCHIVE-only / 0-awaiting are `ok`. A digest that
+    self-reports an API-fetch failure (the script's `Sessions API fetch FAILED` marker)
+    is `error`. Severity is folded into payload_hash so an ok/info -> warning transition
+    is a DISTINCT row the R1 worsened-delta classifier escalates.
+
+    NOT a self-licking loop (actor-criteria sec 4): the digest is an EXTERNAL input
+    (Jules sessions + the cron + Claude's advisory triage), NOT the governor actor's own
+    output, and it feeds NO unlock condition -- acted-on stays gated on Eduardo's actions.
+    """
+    text = md or ""
+    m_date = _RE_JULES_DATE.search(text)
+    produced_at = m_date.group(1) if m_date else None
+    m_await = _RE_JULES_AWAITING.search(text)
+    awaiting = int(m_await.group(1)) if m_await else 0
+    verdicts = _RE_JULES_VERDICT.findall(text)
+    counts = {
+        "awaiting": awaiting,
+        "actionable": verdicts.count("ACTIONABLE"),
+        "defer": verdicts.count("DEFER"),
+        "ambiguous": verdicts.count("AMBIGUOUS"),
+        "archive": verdicts.count("ARCHIVE"),
+        "in_progress": verdicts.count("IN-PROGRESS"),
+    }
+    date_s = produced_at or "(undated)"
+    if "Sessions API fetch FAILED" in text:
+        severity = "error"
+        summary_text = f"jules digest {date_s}: API fetch FAILED (re-run -- NOT empty-set)"
+    elif counts["actionable"] > 0:
+        severity = "warning"
+        summary_text = f"jules digest {date_s}: {counts['actionable']} actionable / {awaiting} awaiting"
+    elif awaiting > 0:
+        severity = "info"
+        summary_text = f"jules digest {date_s}: {awaiting} awaiting (0 actionable)"
+    else:
+        severity = "ok"
+        summary_text = f"jules digest {date_s}: 0 awaiting"
+    return Signal(
+        source="jules-digest",
+        kind="jules-digest",
+        severity=severity,
+        summary=summary_text,
+        counts=counts,
+        produced_at=produced_at,
+        ref=ref,
+        payload_hash=make_hash(
+            "jules-digest", str(produced_at), str(awaiting), str(counts["actionable"]), severity
+        ),
+    )
