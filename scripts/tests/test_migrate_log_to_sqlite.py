@@ -47,3 +47,31 @@ def test_extract_cumulative_table_invalid_id(migrate_module):
     assert len(rows) == 2
     assert rows[0]["id"] == 1
     assert rows[1]["id"] == 2
+
+def test_parse_retry(migrate_module):
+    """Test parse_retry parses ints, strips markdown, and defaults to 0."""
+    parse_retry = migrate_module.parse_retry
+
+    assert parse_retry("5") == 5
+    assert parse_retry("2 (manual)") == 2
+    assert parse_retry("**3**") == 3
+    assert parse_retry("none") == 0
+
+def test_map_outcome(migrate_module):
+    """Test map_outcome handles OUTCOME_MAP matching and fallback branches."""
+    map_outcome = migrate_module.map_outcome
+
+    # OUTCOME_MAP exact match
+    assert map_outcome("\u2705 (rescue)") == "success"
+
+    # Text branches
+    assert map_outcome("partial completion") == "partial"
+    assert map_outcome("was a REJECT") == "reject"
+
+    # Fallback
+    assert map_outcome("unrelated") == "unknown"
+
+    # Emoji branches constructed via Unicode escapes (ASCII-clean)
+    assert map_outcome("\u2705") == "success"
+    assert map_outcome("\U0001f7e1") == "partial"
+    assert map_outcome("\u274c") == "reject"
