@@ -1,11 +1,12 @@
 # ADR-0037 — Merge-autonomy model (standing vs Eduardo-explicit)
 
-> Status: **Proposed** — 2026-06-03 (G1 of the Jules-autonomy gap plan).
+> Status: **Accepted** — 2026-06-03 (G1; Proposed + ratified same day by Eduardo, explicit "fai la ratifica").
 > Survived an SDMG harsh-reviewer falsification (verdict: SURVIVE-WITH-CHANGES;
 > all blocking + significant findings adopted pre-write -- see "Falsification").
 > Extends ADR-0036 (ORCHESTRATION doctrine) + `docs/cross-repo/actor-activation-criteria.md`
 > (the governor earn-path). ASCII-first body (ADR-0021).
-> **This ADR does not auto-activate anything**: it is a Proposed decision Eduardo ratifies.
+> **Accepted**: the decisions below are binding doctrine. The doctrine-file carve-out
+> (decision 2) is reflected in actor-criteria sec 7 (this PR) + ORCHESTRATION sec 5/6 (follow-up).
 
 ## TL;DR
 
@@ -110,8 +111,10 @@ but flagged here; going forward (2) makes doctrine-file merges Eduardo-only. Thi
 PR is therefore the FIRST the hub does NOT self-merge -- it is left for Eduardo, demonstrating
 the rule it proposes.
 
-**On ratification (Eduardo):** add the doctrine-file carve-out (2) as a one-liner to
-ORCHESTRATION sec 5 + sec 6, and to actor-criteria sec 7; flip this ADR to Accepted.
+**Ratified (Eduardo, 2026-06-03, explicit "fai la ratifica"):** flipped to Accepted; the
+doctrine-file carve-out (2) added to actor-criteria sec 7 + the sec-8 acted-on count
+reconciled (0->1) in this same PR; the ORCHESTRATION sec 5/6 pointer is a follow-up (it lives
+on origin/main ahead of this branch).
 
 ## Falsification (SDMG Protocol 7, 2026-06-03)
 
