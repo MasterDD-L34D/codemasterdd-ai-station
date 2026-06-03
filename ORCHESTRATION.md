@@ -82,6 +82,13 @@ action is reversible.
 > Operationalized by the unified governor (cross-repo-dashboard promoted to observe->classify->act):
 > `docs/superpowers/specs/2026-06-01-unified-fleet-governor-design.md`.
 
+> **Governance-doctrine files = Eduardo-only-merge, regardless of repo (ADR-0037 decision 2,
+> Accepted 2026-06-03).** `ORCHESTRATION.md` / `docs/adr/**` / `actor-activation-criteria.md` /
+> authoritative `CLAUDE.md` / `.claude/settings.json` / the privacy-whitelist: the hub proposes
+> (branch + PR) but NEVER merges its own rule-book -- a hub that can loosen its own gate voids
+> the gate (an instance of the "ADR-class architecture" residue above). Self-repo merge of
+> NON-doctrine files is classifier-judged per-call, NOT settings.json-standing (no merge glob exists).
+
 **Codex sub-gate (external-repo merge -- precise).** Codex (`chatgpt-codex-connector[bot]`)
 runs AUTOMATIC PR review on GitHub. Its CLEAN verdict is EITHER a "no major issues" review
 OR a thumbs-up REACTION -- poll BOTH `gh pr view <pr> --json reviews` AND
@@ -161,7 +168,9 @@ mandatory ground-truth triage -- still bind every dispatch):
   decided dispatch-SOURCE model (gated on G2) -- not prose. Tracked, not done.
 
 The auto-mode classifier still gatekeeps every call; allow-globs only remove the prompt on
-layer-1's verified-safe set. NEVER allow-listed: the irreducible residue in sec 5.
+layer-1's verified-safe set. NEVER allow-listed: the irreducible residue in sec 5 -- which
+explicitly includes MERGING governance-doctrine files (ADR-0037 decision 2): doctrine-file
+merge is Eduardo-only regardless of repo, never standing, never classifier-auto.
 
 ## 6b. Journal / handoff landing (cross-fleet)
 
