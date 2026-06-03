@@ -169,13 +169,19 @@ function Get-SessionId {
 }
 
 function Resolve-AuditState {
-  param($Fetched, [string]$CreateState)
+  param($Fetched, $CreateState)
   # The create-POST response returns an EMPTY state (the session is actually QUEUED, surfaced only
   # by a follow-up GET /sessions/{id}; observed live 2026-06-03 sid 17389050512450210982). Resolve
   # the audit-log state with a never-throw fallback chain: the GET state (authoritative) -> the
   # create-POST state -> 'UNKNOWN'. Pure: the impure GET runs in MAIN; this only picks a value.
-  if ($null -ne $Fetched -and -not [string]::IsNullOrWhiteSpace($Fetched.state)) { return $Fetched.state }
-  if (-not [string]::IsNullOrWhiteSpace($CreateState)) { return $CreateState }
+  # Array-safe (P2#1): Invoke-RestMethod may return Object[], and member-enumeration of .state then
+  # yields an array. @(...)[0] + [string] hard-scalarizes so an array can NEVER leak into the
+  # pipe-delimited audit spine (silent corruption worse than blank). $CreateState is left untyped
+  # for the same reason -- a [string] param would space-join an array at bind time.
+  $getState = if ($null -ne $Fetched) { [string](@($Fetched.state)[0]) } else { '' }
+  if (-not [string]::IsNullOrWhiteSpace($getState)) { return $getState }
+  $createState = [string](@($CreateState)[0])
+  if (-not [string]::IsNullOrWhiteSpace($createState)) { return $createState }
   return 'UNKNOWN'
 }
 
@@ -316,9 +322,17 @@ try {
   # GET failure degrades to the create-response state, then to 'UNKNOWN' (Resolve-AuditState).
   $fetched = $null
   try {
-    $fetched = Invoke-RestMethod -Headers $hdr "$api/sessions/$sid" -ErrorAction Stop
+    # -TimeoutSec caps a hung audit-only GET so it can never stall the audit-spine write (P3): the
+    # dispatch already succeeded, so this GET is best-effort enrichment, not part of the exit path.
+    $fetched = Invoke-RestMethod -Headers $hdr -TimeoutSec 15 "$api/sessions/$sid" -ErrorAction Stop
   } catch {
     Write-Warning "gate5: post-dispatch GET /sessions/$sid failed ($($_.Exception.Message)); audit state degrades to create-response/UNKNOWN."
+  }
+  # P2#2 honesty axis (mirrors Get-SessionId's loud abort): a 200-but-shapeless GET (no usable
+  # .state) must WARN, not be silently logged as the fallback -- else 'UNKNOWN' is ambiguous between
+  # "GET threw" (warned above) and "GET returned junk" (otherwise silent). Array-safe scalarize.
+  if ($null -ne $fetched -and [string]::IsNullOrWhiteSpace([string](@($fetched.state)[0]))) {
+    Write-Warning "gate5: GET /sessions/$sid returned no usable state (shape: $($fetched | ConvertTo-Json -Depth 3 -Compress)); audit state from create-response/UNKNOWN."
   }
   $state = Resolve-AuditState -Fetched $fetched -CreateState $created.state
   Write-Audit "$ts | $Repo | $Target | $sid | $state | $Title$forcedTag"
