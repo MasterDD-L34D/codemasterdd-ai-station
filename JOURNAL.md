@@ -41,6 +41,55 @@ Eduardo: triage TUTTI i suggerimenti Jules + correggi prima del lancio; poi chec
 
 ---
 
+## 2026-06-02 (Ryzen: AI-smoke Screen-1+2 GREEN + scale to 5/7 screens)
+
+Continuazione del First-Playable AI-smoke. Da "harness disegnato" a "schermi reali validati live, autonomi". 5/7 schermi coperti dallo smoke, 2 green.
+
+### Completato
+- **Judge CLI landato** (PR #263): `main()` + `_vision_post` (Ollama urllib) -- lo smoke ora e' uno strumento invocabile, verificato e2e (PIL + Gemma-4 reali). 12 pytest green.
+- **Screen-1 Lobby GREEN 6/6 autonomo** (PR #386): room reale `JVKQ` via `POST /api/lobby/create` same-origin :3334 + Godot MAIN build montato. **Root-cause corretto**: il grigio era il `default_clear_color` di Godot non-overridato (0.3=RGB77), NON un bug di mount Control (LobbyView gia' full-rect). Fix = `project.godot` clear-color dark (sistemico). Bridge `_collect_probe_state`/`_publish_ai_probe` -> `window.__lobby_state` (GUT TDD).
+- **`?phase=` enabler** (`AiSmokePhaseOverride`, PR #386): booti ogni bible screen in isolamento + sample-state. Estratto in helper (main.gd sforava il cap gdlint 1000 righe). GUT TDD 2/2.
+- **Form Pulse GREEN 6/6** (PR #386+#263): radar 5-assi + verbi-creatura + tofu `✦` rimosso.
+- **Scale 3/4/6** (SPECS PR #263): world_seed_reveal 4/6 soft-green; world_setup 5/6 (**smoke ha BECCATO leak raw** `missing_world.biome_id`); combat 5/6 (bg-check spec-mismatch + WIP).
+- **PR #264** (sessione prima): conflict JOURNAL + Codex P2 risolti.
+
+### Findings (load-bearing)
+- **Legge color-hallucination estesa al TOFU**: vision lo MANCA (3 conferme). Tofu/colore -> deterministic o source-fix. Testo raw INVECE e' vision-catchable (leak biome_id beccato).
+- bg fix = clear-color sistemico, non per-Control. combat bg-check serve sample regione-board (non angoli).
+- playwright cancella `test-results/` ogni run -> captures fuori.
+
+### Da fare (per venue -- vedi handoff)
+- **Sessione Godot-rooted** (`C:/dev/Game-Godot-v2-golive`, no tdd-guard scope-leak): world_setup biome-enrich (->green) + scenario_brief/debrief enabler. Il classifier blocca giustamente disable-tdd-guard ripetuti senza consenso fresco.
+- NON bloccato da codemasterdd (Python): combat bg-refine.
+- Handoff turnkey: `docs/sessions/2026-06-02-screen-scaling-godot-handoff.md`.
+
+### Note
+- Live state: memory `project_godot_first_playable`. PR aperti: #262 #263 #264 #386 (Eduardo mergia).
+- tdd-guard temp-disable autorizzato esplicito da Eduardo SOLO per l'enabler GDScript; ripristinato. Repos as-found.
+
+## 2026-06-02 (Ryzen: Godot-v2 First-Playable goal + AI-driven smoke harness)
+
+Eduardo ha fissato il goal First-Playable (Godot-v2: room-creation RoJ/Jackbox TV+phone -> worldgen -> prime fasi). Sessione: costruito + VALIDATO un autonomous AI-driven smoke (no umano, no Claude nel giudizio), poi research che conferma la rotta. Niente pivot.
+
+### Completato
+- **Goal + ground-truth**: chain Godot-v2 gia assemblata su main (`main.gd` 6 fasi, web-entry=LOBBY), mai girata live (smoke checklist vuoto). Validate-not-build.
+- **AI-driven smoke harness**: loop drive(Playwright) -> capture(screenshot) -> judge(vision-LLM Gemma-4 `.10`) -> parse, ZERO umano/Claude nel giudizio. **PR #263** (`scripts/ai-smoke/judge_screen.py`, 7 primitive TDD'd / 7 pytest GREEN + README) + **PR #262** (runbook design).
+- **Design law PROVATO**: vision per qualitativo, deterministico (pixel-sample + Godot bridge) per misurabile -- 3 VLM (Gemma 8%/8%, Qwen2.5-VL 5%) TUTTI hallucinano il colore (PASS-ano un bg grigio RGB(77,77,77)=30% che e' FAIL). Combined judge proven: il check deterministico OVERRIDE il false-PASS del VLM.
+- **Conditional-loop autonomo**: `✦` tofu fix (LobbyView + CompanionPanel) -> judge->fix->rebuild->re-judge verde. F1 bg-gray root-caused (Node2D-parent mount; fix noto `set_anchors FULL_RECT`). F2 room-code = dismissed (artefatto bare-boot, label_hero=56px).
+- **Research tech-scout**: nessun tool ready-made per il niche (PlayGodot = custom-fork + desktop-only; gdUnit4 = no-web/no-visual; no vision-QA-local framework; agentic-tools = play/cloud). Custom harness = pragmatico. No model-swap (Qwen2.5-VL A/B refuted).
+
+### Da fare
+- Scale 6 screen + populated-drive (deploy-quick same-origin :3334 + room-create WS -> room code reale) -- Godot-workflow, sostanziale.
+- bg-fix F1 (`set_anchors FULL_RECT` sistemico) + Godot bridge `window.__<screen>_state` + `main()` CLI -- tdd-gated GDScript -> Godot-workflow.
+- Merge PR #262 + #263 (Codex review rate-limited -> Eduardo merge call).
+
+### Note
+- Continuation doc completo: `docs/sessions/2026-06-02-godot-firstplayable-aismoke-continuation.md`. Live state: memory `project_godot_first_playable`.
+- Gotcha: global tdd-guard ultra-granulare (stub->populate->impl per funzione; blocca anche il delete di un RED-test); `pytest --rootdir .` registra il RED; un GUT-RED da bash-hub NON viene registrato -> GDScript va fatto nel Godot-workflow (GUT+tdd-guard wired).
+- Env riusabile: worktree `-golive` (Godot + Game), Postgres-17 + Game backend boota (HEALTH 200), Godot 4.6.2, `qwen2.5vl:7b` local Ryzen. Serve :8060 killed a chiusura.
+
+---
+
 ## 2026-06-02 (Ryzen: governor post-completion -- triage + FIRST acted-on + gate-def + Game path-map PR)
 
 Eduardo: "spiega da player + come continuare (evidenza, usa i tool)". Ricerca live del governatore + azione sui segnali. Eduardo ha scelto 3: osserva + triagia i 5 gialli ORA + pulizia gate-def.
