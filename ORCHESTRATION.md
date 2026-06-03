@@ -82,15 +82,42 @@ action is reversible.
 > Operationalized by the unified governor (cross-repo-dashboard promoted to observe->classify->act):
 > `docs/superpowers/specs/2026-06-01-unified-fleet-governor-design.md`.
 
-**Codex sub-gate (external-repo merge -- precise).** Codex runs AUTOMATIC PR review on
-GitHub and posts comments that MUST be evaluated before proceeding:
-1. WAIT for the Codex auto-review to complete (never auto-merge while pending).
+**Codex sub-gate (external-repo merge -- precise).** Codex (`chatgpt-codex-connector[bot]`)
+runs AUTOMATIC PR review on GitHub. Its CLEAN verdict is EITHER a "no major issues" review
+OR a thumbs-up REACTION -- poll BOTH `gh pr view <pr> --json reviews` AND
+`gh api repos/<R>/issues/<pr>/reactions` (reviews-only misses the reaction; that poll-bug,
+not Codex, is what makes it look unresponsive). Comments MUST be evaluated before proceeding:
+1. WAIT for the Codex auto-review to complete (never auto-merge while pending; it lags
+   ~10-15min and is reliably re-triggered by an `@codex review` comment, NOT by a push).
 2. Evaluate EVERY Codex comment: real issue -> fix; false-positive/nit -> dismiss with a
    one-line rationale. Zero unresolved actionable comments.
 3. Re-run CI after fixes; require green.
 4. Different-model judge (harsh-reviewer) OK.
 5. AUTO-MERGE (squash + delete branch).
 (Repos with NO Codex configured: skip 1-2; other gates still apply.)
+
+**Codex confirmed-unavailable -> SUBSTITUTE, never self-waive.** Before concluding Codex is
+unavailable, poll BOTH reviews AND `issues/<pr>/reactions` (a clean verdict may be a
+thumbs-up). Two modes, discriminated by ground-truth (NOT by a poll-miss):
+- (a) *poll-miss* -- 0 reviews but a `chatgpt-codex-connector[bot]` thumbs-up reaction
+  exists = NOT unavailable, the poll was wrong. Proceed normally.
+- (b) *usage-limited* -- genuinely blocked, ground-truthed ONLY by Codex's own comment
+  "You have reached your Codex usage limits for code reviews" in
+  `gh api repos/<R>/issues/<pr>/comments` (never inferred from a poll-miss, and only after
+  the reactions poll is ALSO clean). Then SUBSTITUTE a different-model judge and DOCUMENT it
+  in the merge -- this keeps the gate's purpose (independent external review) met by another
+  reviewer; a waiver removes it. **Prefer fleet-tools `cross_check` (Gemini/Groq -- a
+  genuinely DIFFERENT model FAMILY, which is the property the Codex gate exists for); fall
+  back to `harsh-reviewer` only if cross_check is unavailable, and NOTE that the substitution
+  reduced family-diversity (harsh-reviewer is Claude = same family as the hub = partial
+  monoculture, sec 7).**
+
+NEVER skip the gate or declare Codex "unresponsive" to self-waive: the auto-mode classifier
+correctly blocks a self-waiver -- treat that denial as a correct signal, not an obstacle to
+route around. If no substitute judge can run, or the change is high-stakes, surface to
+Eduardo. Evidence (n=1, monitor -- not settled doctrine): PR #258 poll-miss (mode a,
+2026-06-02) + Game PR #2581 usage-limit substitution (mode b, 2026-06-03, harsh-reviewer
+returned a real clean SHIP-IT).
 
 Rollout (revised 2026-06-01): auto-merge (R2) is NOT live -- deferred per the ADR-0036 scope
 split until earned via the `actor-activation-criteria.md` earn-path. R0 (report) is the first
@@ -102,11 +129,39 @@ class to human-gated + amend ADR-0036.
 
 ## 6. Standing permission classes
 
-Allow-listed (no per-action prompt; `.claude/settings.json`): read-ops; local git commit;
-branch push (non-main); local-LLM dispatch (ollama / aider-* local); `jules remote
-list/pull`; Jules `:archive` / `:sendMessage` (ADR-0034 scope). The auto-mode classifier
-still gatekeeps; allow-rules only remove prompts on the verified-safe set. NEVER
-allow-listed: the irreducible residue in sec 5.
+Standing = NO per-action human prompt. Two enforcement layers, do not conflate them:
+1. **`.claude/settings.json` allow-globs** -- the mechanically globbable set: read-ops;
+   local git commit; branch push (`claude/*`, non-main); local-LLM dispatch (ollama /
+   aider-* local); `jules remote list/pull`. A glob removes the prompt outright.
+2. **Policy-standing but classifier-judged** -- REST curl calls have no clean glob, so they
+   are NOT in settings.json: Jules `:archive` / `:sendMessage` on EXISTING sessions
+   (ADR-0034 scope -- low blast radius, in-flight management). The auto-mode classifier
+   judges each call; "standing" here means policy says no human prompt is needed for a
+   well-formed one, not that a glob bypasses the classifier.
+
+**Jules `:create` (dispatch) is NOT standing -- per-instance, by design.** Dispatch
+(`jules remote new` / REST `POST /v1alpha/sessions`) is an OUTWARD-FACING call that
+INITIATES new work (sends repo context to Google's service, consumes quota, grows the
+queue) -- which places it in the sec-5 irreducible "outward-facing" residue, unlike
+`:archive`/`:sendMessage` (which only manage already-existing sessions). Three reasons it
+stays per-instance, not fiat-standing (the ADR-0035 hard constraints -- scoped-strict prompt
++ ASCII-clean target + whitelisted repo {Game, Game-Godot-v2, codemasterdd, Game-Database} +
+mandatory ground-truth triage -- still bind every dispatch):
+- **No enforceable scope glob.** Those constraints are a PROMPT contract, not a settings.json
+  glob; on the active PC (Ryzen) the only channel is raw `curl` (CLI dispatch needs the OAuth
+  `~/.jules` cache, absent there) -- allow-listing `curl` would over-grant far beyond Jules.
+- **Dispatch-time harms the output-gate does not cover.** Triage gates the OUTPUT (diff); it
+  cannot un-send the context, un-spend the quota, or vet the dispatch SOURCE. A prompt-free
+  `:create` fed by an auto-source (TODO / `gh issue list` / the G2 suggestions feed) would let
+  whoever controls that source choose what a coding agent runs on the repo.
+- **SDMG (Protocol 7): no fiat standing-grant.** Standing-izing a self-designed dispatch
+  capability is an autonomization. The honest path to standing is a fail-closed
+  `jules-dispatch` wrapper (repo-whitelist + `perl` ASCII-check + scoped-template lint, abort
+  otherwise -- the privacy-guard-wrapper pattern) allow-listed in place of raw curl, AND a
+  decided dispatch-SOURCE model (gated on G2) -- not prose. Tracked, not done.
+
+The auto-mode classifier still gatekeeps every call; allow-globs only remove the prompt on
+layer-1's verified-safe set. NEVER allow-listed: the irreducible residue in sec 5.
 
 ## 6b. Journal / handoff landing (cross-fleet)
 
