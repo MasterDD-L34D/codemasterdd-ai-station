@@ -176,3 +176,21 @@ judgment that a verdict "looked plausible".
 > Eduardo acted on -- Game issue #2477 closed as no-drift (deliberately-wont-fix, sec 5).
 > Off-ramp now **1/3**. clean-R1-PR-cycles still **0** (R1 issue-only, by design -- sec 6
 > addendum). R2/Fase-4 stay hard-gated. (Supersedes the "acted-on = 0" snapshot above.)
+
+> **Update 2026-06-03 (R1 open-PR rung BUILT -- ADR-0039).** The R1->open-PR reconcile rung is
+> BUILT: deterministic, clock-free reconcile actors that OPEN (never merge) one branch+PR per
+> drifted doc -- the PR variant the issue-only R1 lacked, added ALONGSIDE it (the issue actor
+> `act.py:run_r1` is UNCHANGED; both coexist). Two legs: codemasterdd `STATUS_MULTI_REPO.md` +
+> vault `Atlas/lint-status.md` (new governor-owned doc, Eduardo OK; clock-free, content-based
+> severity). **Human-merge-only during the earn (sec 6): a clean R1 cycle is HUMAN-merged, so the
+> hub must NOT self-merge reconcile-class PRs; vault PRs are Eduardo-only (sibling-peer).** The
+> rung OPENS PRs only -- auto-merge (R2) stays **OFF**; `.claude/settings.json` ceiling UNCHANGED.
+> The merge-block is code (a negative test on the REAL builder) + the human-merge-only invariant +
+> the settings ceiling -- codemasterdd has NO branch protection (free-tier 403), so there is NO
+> platform backstop (the R2 ADR must weigh this). Clean-cycle accounting stays EXTERNAL (read-only
+> `reconcile_cycles_report.py`, never in the actor -- sec 4). **clean-R1-PR-cycles still 0** until
+> the FIRST reconcile PR is human-merged AND survives the 7-day no-revert / no-same-line-followup
+> windows (sec 6); cadence is change-triggered, so the rung is SILENT when nothing drifts (silence
+> = the off-ramp signal, not a stall). The ">= 4 across >= 2 repos" distribution is DEFERRED to
+> the R2 ADR (two real legs now exist; not pre-decided). R2/Fase-4 stay hard-gated. Authority:
+> ADR-0039 + spec/plan 2026-06-03.
