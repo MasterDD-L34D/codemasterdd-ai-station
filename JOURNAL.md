@@ -19,6 +19,25 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-06-03 (Ryzen cont.: ratify G1 + live G2 sweep + G3->G4 digest-governor link)
+
+Eduardo, same session: "1 fai la ratifica, 2 fai la prova, 3 fai i fix, 4 prepara" + "il digest deve essere usato dal governatore per gestire i cicli futuri".
+
+### Completato
+- **G1 RATIFIED -- ADR-0037 ACCEPTED** (#275 merged on Eduardo's explicit "fai la ratifica"): Proposed->Accepted + actor-criteria sec 7 doctrine-file carve-out + sec 8 acted-on reconcile (0->1). The doctrine-file merge ADR-0037 reserves to Eduardo, done on his explicit grant.
+- **#278 OPEN (for Eduardo)** -- ORCHESTRATION sec 5/6 carve-out pointer; doctrine file -> NOT self-merged (demonstrates its own rule).
+- **G2 LIVE-VALIDATED (#279)** -- Eduardo connected Chrome; ran the read-only Claude-in-Chrome sweep (the live path that had never executed). 3/5 repos enabled (codemasterdd/Game/Godot-v2; Game-Database now OFF). Read-path: SCREENSHOT is the reliable reader (/repo a11y tree ~224k; get_page_text fragments on the SPA). Replaced the baseline inventory with REAL data + verdict-stubs (no fabrication earlier when the browser was absent).
+- **G3<->G4 LINK SHIPPED (#280)** -- built `jules-digest` as the 9th R0 governor signal (TDD, 123 tests). The digest now FEEDS the governor (ACTIONABLE -> warning -> R1 escalate) -- exactly the link Eduardo asked for. harsh-reviewer SURVIVE (no P0; regex verified vs the real 2026-05-18 digest; self-licking severed AT THE METRIC, acted-on human-gated). Adopted both P2 (metric-severance docstring + a snapshot guard test binding the PS-script<->regex contract, anti-#10).
+- **G5 doctrine exercised live x5** -- every self-repo PR (#271/#272/#273/#278/#279/#280) hit the Codex usage-limit -> harsh-reviewer substitute, documented in each merge.
+
+### Da fare (Eduardo / next)
+- Merge **#278** (ORCHESTRATION carve-out doc -- doctrine-file = your merge per ADR-0037).
+- G4 mid-horizon: define the R1->open-PR rung ADR once acted-on reaches >=3 (the governor now surfaces ACTIONABLE Jules sessions, helping that accrue).
+
+### Note
+- tdd-guard scoped-off twice more (Eduardo-authorized via AskUserQuestion each): doc-writes, then the #5 governor build where the ROOT guard is blind to the sub-app's own test reporter = the documented cross-scope blind-spot (I did genuine TDD via pytest red->green). Re-enabled at close.
+- Pre-existing dirty `.mcp.json` (SSE) + `BACKLOG.md` (L6 WIP) preserved untouched throughout (stashed only during origin/main branches, restored after).
+
 ## 2026-06-03 (Ryzen: Jules-autonomy gaps G1-G6 closed -- /goal session)
 
 Eduardo /goal: close the 6 Jules-collaboration autonomy gaps per `docs/goals/2026-06-03-jules-autonomy-gaps.md`, in order, SDMG-gated (no fiat; harsh-reviewer falsification pre-commit; external-merge stays Eduardo until G1 survives).
