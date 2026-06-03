@@ -13,6 +13,9 @@ is EXTERNAL (reconcile_cycles_report.py), never in the actor.
 """
 from __future__ import annotations
 
+from dataclasses import dataclass
+from typing import Callable, Optional, Tuple
+
 _DOCTRINE_NAMES = frozenset({
     "CLAUDE.md", "AGENTS.md", "ORCHESTRATION.md",
     "GOALS.md", "DECISIONS_LOG.md", "OPEN_DECISIONS.md",
@@ -67,3 +70,30 @@ def is_doctrine(path: "str | None", repo: str) -> bool:
     if base in _DOCTRINE_NAMES or base in _DOCTRINE_BASENAMES_EXACT:
         return True
     return False
+
+
+@dataclass(frozen=True)
+class Reconciler:
+    """A deterministic, clock-free doc-reconciler (spec sec 3.1 / 4).
+
+    render(store) -> the INNER marker-region body (a table), or None = "cannot compute" (the
+    actor skips it, never a junk PR). render MUST be pure: reads signals from the store, no
+    network, no write, NO wall-clock (spec sec 6.3).
+    """
+    id: str
+    repo: str
+    path: str
+    marker: Tuple[str, str]                       # (begin, end) GOVERNOR-SYNC region
+    render: Callable[[object], Optional[str]]     # store -> inner region body, or None
+    anchor: Optional[str] = None                  # heading to inject after (existing doc)
+    create_header: Optional[str] = None           # frontmatter+heading for a NEW doc
+
+    def __post_init__(self):
+        # Fail-closed doctrine guard AT CONSTRUCTION (spec sec 3.1 / 4.2): a reconciler
+        # aimed at a doctrine path refuses to exist -- a config error fails fast, never
+        # silently opens a doctrine PR.
+        if is_doctrine(self.path, self.repo):
+            raise ValueError(
+                f"Reconciler {self.id!r} targets a doctrine path {self.path!r} "
+                f"(ADR-0038 carve-out) -- refusing to construct"
+            )

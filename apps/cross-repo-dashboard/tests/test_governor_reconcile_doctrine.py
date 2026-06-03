@@ -46,3 +46,27 @@ def test_is_doctrine_empty_path_is_failclosed_true():
     from governor.reconcile import is_doctrine
     assert is_doctrine("", "MasterDD-L34D/codemasterdd-ai-station") is True
     assert is_doctrine(None, "MasterDD-L34D/codemasterdd-ai-station") is True
+
+
+def test_reconciler_constructs_for_nondoctrine_target():
+    from governor.reconcile import Reconciler
+    r = Reconciler(
+        id="status-multi-repo",
+        repo="MasterDD-L34D/codemasterdd-ai-station",
+        path="STATUS_MULTI_REPO.md",
+        marker=("<!-- B -->", "<!-- E -->"),
+        render=lambda store: None,
+    )
+    assert r.id == "status-multi-repo"
+
+
+def test_reconciler_raises_on_doctrine_path():
+    from governor.reconcile import Reconciler
+    with pytest.raises(ValueError, match="doctrine"):
+        Reconciler(
+            id="bad",
+            repo="MasterDD-L34D/codemasterdd-ai-station",
+            path="docs/adr/0001-x.md",
+            marker=("<!-- B -->", "<!-- E -->"),
+            render=lambda store: None,
+        )
