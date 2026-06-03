@@ -4,9 +4,9 @@
 > `ORCHESTRATION.md`. This file is the LOCAL-FLEET detail (llmfit / Ollama 2-machine).
 > For "which executor for task X" (local vs cloud vs Jules vs inline) see ORCHESTRATION.md.
 
-> Compilato dal template `Archivio_Libreria_Operativa_Progetti/04_BOOTSTRAP_KIT/MODEL_ROUTING.md` con stack reale codemasterdd-ai-station.
->
-> Source-of-truth per routing strategico. Per istruzioni operative in-session vedi `CLAUDE.md` "Priorità modelli AI". Questo file è il **perché** strategico, CLAUDE.md è il **come** operativo.
+> Source-of-truth per routing strategico (il **perche'**). Per istruzioni operative
+> in-session vedi `CLAUDE.md` "Priorita' modelli AI" (il **come**). Compilato dal
+> template `Archivio_Libreria_Operativa_Progetti/04_BOOTSTRAP_KIT/MODEL_ROUTING.md`.
 
 ## Fleet 2-machine routing (llmfit standard, 2026-05-22)
 
@@ -15,322 +15,155 @@
 > Lenovo `lenovo-llm-fit.md` (raw su .10 `C:\Users\edusc\llmfit-lenovo-*.json`).
 > Refresh mensile auto (Ryzen, Windows Task Scheduler `llmfit-ryzen-refresh`).
 
-Lo stack locale NON è più single-machine. Fleet = 2 macchine a profilo OPPOSTO:
+Lo stack locale NON e' piu' single-machine. Fleet = 2 macchine a profilo OPPOSTO:
 
 | Macchina | host | VRAM / RAM | Profilo | Ruolo locale |
 |----------|------|------------|---------|--------------|
-| **Ryzen** | `.11` DESKTOP-T77TMKT | RTX 4070S **12GB** / 31GB | VRAM-rich | dense fit-in-VRAM (≤14B q4), veloce |
+| **Ryzen** | `.11` DESKTOP-T77TMKT | RTX 4070S **12GB** / 31GB | VRAM-rich | dense fit-in-VRAM (<=14B q4), veloce |
 | **Lenovo** | `.10` CodeMasterDD (edusc) | RTX 5060 8GB / **63GB** | RAM-rich | MoE/grandi/120B (expert-offload), host Ollama primario |
 
 **Machine-routing** (ortogonale al tier-by-capability sotto -- aggiunge SU QUALE macchina + parallelo):
-- small-instruct ≤8B (judgment, cosmetic, tagging) → **Ryzen** se `ollama serve` su (full-VRAM), else Lenovo `mistral:latest`.
-- mid dense 13-14B → **Ryzen** (12GB tiene 14B q4 full-quality). **SUPERSEDES** il workaround storico "14B-Q2 su Lenovo": il Q2 era compromesso VRAM-8GB-bound; su Ryzen q4-full è più veloce E più fedele (no spill CPU). Validare tok/s con task-eval.
-- MoE 30-35B-A3B (`qwen3-coder:30b`) / 120B (`gpt-oss:120b`) → **Lenovo** (RAM-offload 63GB). Lo swarm Dafne gira correttamente qui.
-- embedding → entrambe (cheap).
+- small-instruct <=8B (judgment, cosmetic, tagging) -> **Ryzen** se `ollama serve` su (full-VRAM), else Lenovo `mistral:latest`.
+- mid dense 13-14B -> **Ryzen** (12GB tiene 14B q4 full-quality). **SUPERSEDES** il workaround storico "14B-Q2 su Lenovo": il Q2 era compromesso VRAM-8GB-bound; su Ryzen q4-full e' piu' veloce E piu' fedele (no spill CPU). Validare tok/s con task-eval.
+- MoE 30-35B-A3B (`qwen3-coder:30b`) / 120B (`gpt-oss:120b`) -> **Lenovo** (RAM-offload 63GB). Lo swarm Dafne gira correttamente qui.
+- embedding -> entrambe (cheap).
 
-**llmfit = 2-stage, NON 1** (caveat load-bearing OD-056 S4): la lista llmfit risponde a "cosa gira bene sul mio HW + qualità generale di categoria", NON "quale modello fa meglio il MIO task". Pipeline: **llmfit shortlist-by-HW → task-eval N≥10 sul prompt reale** (anti lucky-sample, anti-pattern #14). HW-fit ≠ task-fit. Per output-strutturato/rule-following preferire **clean-instruct** (mistral, qwen-instruct), NON reasoning/think (deepseek-r1 think-block flaky/vuoto).
+**llmfit = 2-stage, NON 1** (caveat load-bearing OD-056 S4): la lista llmfit risponde a "cosa gira bene sul mio HW + qualita' generale di categoria", NON "quale modello fa meglio il MIO task". Pipeline: **llmfit shortlist-by-HW -> task-eval N>=10 sul prompt reale** (anti lucky-sample, anti-pattern #14). HW-fit != task-fit. Per output-strutturato/rule-following preferire **clean-instruct** (mistral, qwen-instruct), NON reasoning/think (deepseek-r1 think-block flaky/vuoto).
 
-**Parallelo ~2x (VALIDATED 2026-05-22)**: batch indipendenti (synthesis, calibration N-run, bulk tagging, swarm specialist batch) → shard su 2 endpoint Ollama (`.10:11434` + Ryzen `localhost:11434`), 1 worker/macchina, `OLLAMA_HOST` pinned per worker. Precedente: `Game/tools/py/calibrate_parallel.py`. Gotcha port-bind: anti-pattern #16 / L-071. NON mettere 2 job VRAM-heavy sulla stessa GPU (contention → più lento del seriale).
+**Parallelo ~2x (VALIDATED 2026-05-22)**: batch indipendenti (synthesis, calibration N-run, bulk tagging, swarm specialist batch) -> shard su 2 endpoint Ollama (`.10:11434` + Ryzen `localhost:11434`), 1 worker/macchina, `OLLAMA_HOST` pinned per worker. Precedente: `Game/tools/py/calibrate_parallel.py`. Gotcha port-bind: anti-pattern #16 / L-071. NON mettere 2 job VRAM-heavy sulla stessa GPU (contention -> piu' lento del seriale).
 
-La matrice tier sotto (7B/14B/30B + constraint-count ADR-0016) resta valida per QUALE modello/quant; questa sezione aggiunge la dimensione macchina. Scelta finale task concreto: **llmfit shortlist → tier rule → task-eval N-sample**.
+La matrice tier sotto (7B/14B/30B + constraint-count ADR-0016) resta valida per QUALE modello/quant; questa sezione aggiunge la dimensione macchina. Scelta finale task concreto: **llmfit shortlist -> tier rule -> task-eval N-sample**.
 
 ## Scopo
 
-Definire quale strumento / modello / accesso usare per ogni fase del progetto.
+Definire quale strumento / modello / accesso usare per ogni fase. Evita: usare sempre lo stesso strumento per tutto; accumulare modelli senza ruoli chiari; mandare codice sensibile in cloud; perdere tempo/$ su task delegabili piu' veloci/economici.
 
-Evita:
-- usare sempre lo stesso strumento per tutto
-- accumulare modelli senza ruoli chiari
-- mandare codice sensibile in cloud
-- perdere tempo/$ su task delegabili più veloci/economici
-
-## Regola madre
-
-**Fonte complessa → Comprensione → Compressione → Decisione → Esecuzione → Compact → Archivio**
-
-Applicata in concreto:
-- **Comprensione**: Claude Code Opus 4.7 (fino 19/05) legge repo + docs + ADR
-- **Compressione**: Claude Code stesso (multi-file synthesis) o Gemini 2.5 Flash (quick summary)
-- **Decisione**: Claude Code (ADR draft) + utente (approvazione esplicita)
-- **Esecuzione coding**: Aider + modello tier-appropriate (vedi matrice)
-- **Compact**: Claude Code (/COMPACT via PROMPT_LIBRARY)
-- **Archivio**: Claude Code scrive in docs/ / logs/ / memory
-
----
+**Regola madre**: Fonte complessa -> Comprensione -> Compressione -> Decisione -> Esecuzione -> Compact -> Archivio. In concreto: Comprensione/Sintesi/Decisione = Claude Code (read multi-file + ADR draft, approvazione utente esplicita); Esecuzione coding = Aider + modello tier-appropriate (vedi matrice); Compact/Archivio = Claude Code (docs/ / logs/ / memory).
 
 ## Profilo progetto
 
-- **Nome progetto**: CodeMasterDD AI Station
-- **Tipo progetto**: infrastructure-as-code + registry decisionale
-- **Contesto principale**: repo infrastructure + documentazione (ADR/patterns) + log operativi
-- **Vincoli privacy**: repo personale OK cloud; progetti dipendenti hanno policy per-repo separata
-- **Vincoli costo**: Claude Max fino 19/05 ($0 marginale); post-Max target <$20/mese
-- **Vincoli hardware**: fleet 2-macchine (vedi "Fleet 2-machine routing" sopra) -- Lenovo `.10` RTX 5060 8GB / 63GB RAM (RAM-rich, host Ollama primario) + Ryzen `.11` RTX 4070S 12GB / 31GB (VRAM-rich, dense ≤14B q4 full-VRAM). NON più single-machine 8GB-bound: il 7B-only/14B-Q2 era framing Lenovo-solo.
-- **Vincoli velocità**: daily-driver 8-10h/giorno, iterazione rapida essenziale
-- **Priorità principale**: **privacy + costo** (≥ qualità) in stato sovereign. Durante Max: qualità+velocità primarie.
-
----
+- **Tipo**: infrastructure-as-code + registry decisionale (repo infra + ADR/patterns + log operativi).
+- **Privacy**: repo personale OK cloud; progetti dipendenti hanno policy per-repo separata.
+- **Costo**: Claude Max ancora attivo (deadline transition ~17/06/2026, ri-acquistato +1mo 2026-05-17); post-Max target <$20/mese on-demand.
+- **Hardware**: fleet 2-macchine (vedi "Fleet 2-machine routing" sopra). NON piu' single-machine 8GB-bound: il 7B-only/14B-Q2 era framing Lenovo-solo.
+- **Velocita'**: daily-driver 8-10h/giorno, iterazione rapida essenziale.
+- **Priorita'**: privacy + costo (>= qualita') in stato sovereign. Durante Max: qualita'+velocita' primarie.
 
 ## Stack disponibile
 
-### Strumenti disponibili
-- [x] **Claude Code 2.1.116** (Opus 4.7, OAuth Max fino 19/05 → poi API key o dismissione)
-- [x] **Aider 0.86.2** (6 wrapper in `~/.local/bin/`)
-- [x] **Ollama 0.21.0** (5 modelli attivi + 3 reference-only)
-- [x] **API esterne**: Groq + Cerebras (free) + Gemini + OpenAI (paid)
-- [x] **OpenCode v1.14.41** (npm global, installato 2026-05-08; tier multi-step agentic con tool calls; ADR-0022 Accepted 2026-05-09)
-- [ ] NotebookLM → usato saltuariamente da browser per corpus analysis, non integrato repo
-- [ ] ChatGPT → saltuario, non integrato
-
-### Accessi disponibili
-- [x] Locale puro (Ollama + Claude Code senza cloud)
-- [x] Cloud integrato (Claude Code via Max OAuth)
-- [x] API provider esterni (keys [conteggio NON hardcodato: leggi il file - anti-rot stale-claim, lezione OD-048] in `~/.config/api-keys/keys.env`)
-- [x] Repo aperto in Claude Code + Aider
-- [ ] Fonti documentali caricate (es. NotebookLM): **no**, docs vivono nel repo
-
----
+- **Claude Code** (Opus, OAuth Max attivo fino a deadline transition ~17/06 -> poi API key on-demand o dismissione).
+- **Aider** + 6 wrapper in `~/.local/bin/`.
+- **Ollama** (5 modelli attivi + reference-only; verifica con `ollama list`).
+- **OpenCode** (npm global; tier multi-step agentic con tool calls; ADR-0022 Accepted).
+- **API esterne**: Groq + Cerebras (free) + Gemini + OpenAI (paid). Keys (conteggio NON hardcodato: leggi il file -- anti-rot stale-claim, OD-048) in `~/.config/api-keys/keys.env`.
+- NotebookLM / ChatGPT: saltuari da browser, NON integrati repo.
 
 ## Routing per fase
 
-| Fase | Obiettivo | Strumento | Accesso | Modello | Perché | Output atteso | Quando passare oltre |
-|---|---|---|---|---|---|---|---|
-| Comprensione | leggere repo + docs | Claude Code | cloud Max | Opus 4.7 | 1M context, read multi-file strategico | mental model + citation file:line | Opus satura / task execution |
-| Sintesi | compattare | Claude Code | cloud Max | Opus 4.7 | synthesis cross-source | COMPACT_CONTEXT update | — (compact end-of-session) |
-| Planning | ADR draft / sprint plan | Claude Code | cloud Max | Opus 4.7 | reasoning strategico + evaluation options | ADR MADR / SPRINT_NN.md | approvazione utente |
-| Repo map | structure analysis | Claude Code | cloud Max | Opus 4.7 | Glob/Grep multi-pattern | reference index / repo overview | — (output stabile) |
-| Coding cosmetic | JSDoc, rename, lint | Aider + wrapper | hybrid | Qwen 7B local OR Cerebras 8B cloud | fast + faithful | diff additive pulito | commit |
-| Coding behavior | refactor, bug fix | Aider + wrapper | hybrid | Qwen 14B Q2 local OR Groq 70B cloud | safe-fail diff + capability | diff controlled | review manuale + commit |
-| Coding escalation | 14B safe-fails | Aider + wrapper | hybrid | qwen3:30b MoE local OR Groq 70B cloud | higher capability locale OR cloud | retry success | commit |
-| Capability-max | debug strategico, multi-file refactor | Claude Code | cloud Max | Opus 4.7 | frontier quality | resolution | — (non delegabile) |
-| Review | QA edit recente | Claude Code | cloud Max | Opus 4.7 | `git diff` audit + semantics | approval or remediation | commit |
-| Compact | chiusura sessione | Claude Code | cloud Max | Opus 4.7 | context engineering | COMPACT + JOURNAL + memory | end |
-| Archivio | persist memory | Claude Code | local fs | — | file write | memory/docs updated | end |
+| Fase | Obiettivo | Strumento | Modello | Output atteso |
+|---|---|---|---|---|
+| Comprensione | leggere repo + docs | Claude Code Max | Opus | mental model + citation file:line |
+| Sintesi | compattare | Claude Code Max | Opus | COMPACT_CONTEXT update |
+| Planning | ADR draft / sprint plan | Claude Code Max | Opus | ADR MADR / SPRINT_NN.md |
+| Repo map | structure analysis | Claude Code Max | Opus | reference index / repo overview |
+| Coding cosmetic | JSDoc, rename, lint | Aider + wrapper | Qwen 7B local OR Cerebras 8B cloud | diff additive pulito |
+| Coding behavior | refactor, bug fix | Aider + wrapper | Qwen 14B Q2 local (Ryzen q4 preferito) OR Groq 70B cloud | diff controlled + review manuale |
+| Coding escalation | 14B safe-fails | Aider + wrapper | qwen3:30b MoE local OR Groq 70B cloud | retry success |
+| Capability-max | debug strategico, multi-file refactor | Claude Code Max | Opus | resolution (non delegabile) |
+| Review | QA edit recente | Claude Code Max | Opus | `git diff` audit + semantics |
+| Compact / Archivio | chiusura sessione | Claude Code | Opus / fs | COMPACT + JOURNAL + memory |
 
-**Post-Max (2026-05-20+)**: colonna "Capability-max" + "Planning strategico" → passa a **Groq 70B** (free) o **OpenAI gpt-4o** (paid overflow). Claude Code stesso funziona via API key pay-per-use per task critici, ma routing shift verso Aider+cloud-free per daily work.
-
----
+**Post-Max (transition ~17/06+)**: "Capability-max" + "Planning strategico" -> **Groq 70B** (free) o **OpenAI gpt-4o** (paid overflow); Claude API on-demand pay-per-use per task critici, daily work shift verso Aider+cloud-free.
 
 ## Routing consigliato per scenario
 
 ### Se ho molte fonti eterogenee
-- **Strumento preferito**: NotebookLM browser (capacità corpus analysis)
-- **Modello / accesso**: Gemini Pro via NotebookLM
-- **Motivo**: Claude Code non è ottimo su corpus massivo scattered
-- **Output che voglio ottenere**: synthesis → bring back a repo come `docs/research/NNNN.md`
+NotebookLM browser (Gemini Pro) per corpus analysis -> synthesis back a repo come `docs/research/NNNN.md`. Claude Code non e' ottimo su corpus massivo scattered.
 
 ### Se devo capire e toccare il repo
-- **Strumento preferito**: Claude Code nativa
-- **Modello**: Opus 4.7 (fino 19/05); post-Max Opus via API o Sonnet 4.6 via API se costo eccessivo
-- **Motivo**: integrazione nativa filesystem + Glob/Grep/Edit/Read
-- **Output**: file scritti nel repo (file-first regola)
+Claude Code nativa (Opus via Max; post-Max via API o Sonnet se costo eccessivo). Integrazione nativa filesystem + Glob/Grep/Edit/Read -> file scritti nel repo (file-first).
 
 ### Se devo scrivere documenti, backlog, ADR
-- **Strumento preferito**: Claude Code Opus (fino 19/05)
-- **Post-Max**: Claude Code API pay-per-use (ADR strategico) OR Groq 70B via `aider-groq-bypass` (ADR operativo semplice)
-- **Motivo**: reasoning strategico + consistency di stile
+Claude Code Opus (Max). Post-Max: Claude API pay-per-use (ADR strategico) OR Groq 70B via `aider-groq-bypass` (ADR operativo semplice). Reasoning strategico + consistency di stile.
 
 ### Se devo lavorare in locale per privacy o costo
-- **Strumento preferito**: Aider + Ollama
-- **Modello locale primario**: `qwen2.5-coder:7b` (cosmetic) + `qwen2.5-coder:14b-q2_K` (behavior)
-- **Limiti hardware**: 8GB VRAM → 7B full-GPU, 14B spill ~27%, 30B MoE spill ~40%
-- **Quando passare al cloud**: emerge task oltre capability 14B locale (safe-fail dopo 2 retry)
+Aider + Ollama. Modello locale primario: `qwen2.5-coder:7b` (cosmetic) + `qwen2.5-coder:14b-q2_K` (behavior; su Ryzen preferire q4-full). Passa al cloud quando emerge task oltre capability 14B locale (safe-fail dopo 2 retry).
 
 ### Se devo usare il cloud
-- **Strumento preferito**: Aider + wrapper (`aider-groq-bypass`, `aider-cerebras`, `aider-gemini`, `aider-openai`)
-- **Modello cloud primario**: `groq/llama-3.3-70b-versatile` (free, 630 tok/s)
-- **Perché proprio lui**: free tier 6000 tok/min + LPU speed + capability 70B dense
+Aider + wrapper (`aider-groq-bypass`, `aider-cerebras`, `aider-gemini`, `aider-openai`). Modello primario: `groq/llama-3.3-70b-versatile` (free tier, LPU speed, capability 70B dense).
 - **OpenCode + cloud free NON viable** (ADR-0022): TPM 6-12k Groq + context 8k Cerebras 8B << OpenCode default request ~50k token. OpenCode resta sovereign-only (Ollama 30B MoE).
-- **Cosa NON mandare al cloud**:
-  - Codice repo cliente (sempre)
-  - Synesthesia `controllers/`/`routes/`/`middlewares/` (auth sensitive)
-  - Segreti / env vars / API keys / token
-  - Output che contenga i sopra
+- **Cosa NON mandare al cloud**: codice repo cliente (sempre); Synesthesia `controllers/`/`routes/`/`middlewares/` (auth sensitive); segreti / env vars / API keys / token; output che contenga i sopra.
 
 ### Se devo fare task multi-step agentic con tool calls
-- **Strumento preferito**: OpenCode (NOT Aider, scope diverso)
-- **Modello sovereign default**: `ollama/qwen3-coder:30b` MoE A3B (tier 1 OpenCode, ADR-0022 Accepted 2026-05-09)
-- **Tool calls supportati**: Read, Edit, Bash, ListFiles, Glob, Grep, MCP servers integration
-- **Use case esempio**: refactor multi-file con orchestration di Read+Edit coordinati, GitHub agent, ACP server, esplorazione interattiva TUI mode
-- **Cosa NON usare con OpenCode**:
-  - Qwen 2.5 Coder family (7B/14B/32B): tool call raw JSON non eseguito
-  - Cloud free tier (rate-limited TPM o context-limited)
-  - Qualsiasi task adatto a single-file edit semplice (Aider e' superiore: faithful diff, latency 7B 5s vs OpenCode 30B 45s)
-
----
+OpenCode (NOT Aider, scope diverso). Modello sovereign default: `ollama/qwen3-coder:30b` MoE A3B (tier 1 OpenCode, ADR-0022). Tool calls: Read, Edit, Bash, ListFiles, Glob, Grep, MCP servers.
+- **Cosa NON usare con OpenCode**: Qwen 2.5 Coder family (7B/14B/32B) -- tool call raw JSON non eseguito; cloud free tier (rate-limited TPM o context-limited); qualsiasi task single-file edit semplice (Aider superiore: faithful diff, latency 7B 5s vs OpenCode 30B 45s).
 
 ## Policy locale / cloud
 
-### Locale prima?
-- [x] Sì
-- **Motivo**: filosofia sovereign (ADR-0001) + privacy-by-default + zero rate-limit dependency
+**Locale prima? SI** -- filosofia sovereign (ADR-0001) + privacy-by-default + zero rate-limit dependency.
 
-### Quando il locale basta
-- Cosmetic task (JSDoc, docstring, rename, lint-fix, typo batch)
-- Behavior-critical task singolo file, logica chiara, constraint respecting
-- Bench benchmark e framework iterativi
-- Sperimentazione / prototipo
-- Task con codice sensibile (sovereign guard rail)
+**Quando il locale basta**: cosmetic task; behavior-critical single-file con logica chiara + constraint respecting; bench/framework iterativi; sperimentazione/prototipo; task con codice sensibile (sovereign guard rail).
 
-### Quando il cloud è giustificato
-- Speed-critical (Groq 20× più veloce di locale 30B MoE su stesso task)
-- Multi-file refactor con >3 file target (14B Q2 safe-fails frequenti)
-- Capability reasoning oltre Qwen Coder specialist (es. debug architetturale)
-- Quality validation (seconda opinion su output locale dubbio)
-- Task volumetrici (batch large quando locale impiegherebbe >10min total)
+**Quando il cloud e' giustificato**: speed-critical (Groq ~20x piu' veloce di locale 30B MoE); multi-file refactor >3 file target (14B Q2 safe-fails frequenti); capability reasoning oltre Qwen Coder specialist (debug architetturale); quality validation (second opinion); task volumetrici (>10min total locale).
 
-### Materiali che non devono uscire in cloud
-- API keys, .env, credenziali
-- Codice cliente / progetti con NDA
-- Synesthesia backend auth (`controllers/`, `routes/`, `middlewares/`)
-- Log che contengano path utente sensibili
-- Dump database o dati personali
-
----
+**Materiali che NON devono uscire in cloud**: API keys, .env, credenziali; codice cliente / progetti NDA; Synesthesia backend auth (`controllers/`, `routes/`, `middlewares/`); log con path utente sensibili; dump database o dati personali.
 
 ## Modelli attivi del progetto
 
 | Modello | Runtime / accesso | Ruolo | Quando usarlo | Quando NON usarlo |
 |---------|-------------------|-------|---------------|-------------------|
-| `qwen2.5-coder:7b` | Ollama locale | tier 1 cosmetic | JSDoc, docstring, rename, batch≥5, working tree clean | behavior-critical (silent-corruption whole ADR-0008) |
+| `qwen2.5-coder:7b` | Ollama locale | tier 1 cosmetic | JSDoc, docstring, rename, batch>=5, working tree clean | behavior-critical (silent-corruption whole ADR-0008) |
 | `qwen2.5-coder:14b-q2_K` | Ollama locale | tier 2 behavior default | refactor, bug fix, logic change single-file | task semplici <10 righe (overhead), multi-file >3 |
-| `qwen3-coder:30b` (MoE) | Ollama locale | tier 2 escalation Aider + tier 1 default OpenCode | Aider: quando 14B Q2 safe-fails. OpenCode: default agentic single-shot (ADR-0022 Accepted, 3/3 PASS validati) | single-file semplice via Aider (overhead); task >70B capability needed; cloud free OpenCode (NON viable per OpenCode default context) |
+| `qwen3-coder:30b` (MoE) | Ollama locale | tier 2 escalation Aider + tier 1 default OpenCode | Aider: quando 14B Q2 safe-fails. OpenCode: default agentic single-shot (ADR-0022, 3/3 PASS) | single-file semplice via Aider (overhead); task >70B capability; cloud free OpenCode (NON viable) |
 | `deepseek-r1:8b` | Ollama locale | tier reasoning | chain-of-thought esplicito, debug logico, math/proof | coding standard (Qwen domina); batch/iterazione (thinking verbose) |
 | `gemma4:latest` | Ollama locale | tier multimodal | OCR screenshot, audio dictation, vision analysis | coding (non coder-specialist); task text-only |
-| `deepseek-coder-v2:16b` (MoE A2.4B) | Ollama locale **Ryzen** `.11` | speed-first non-constraint | chat/draft/quick coding speed-first su Ryzen (~34% più veloce di qwen-14b su task semplici) | **behavior-critical / constraint-following** (task-eval 50% su 5-constraint vs qwen-14b 90% -- `docs/research/llmfit-task-eval-deepseek-2026-05-22.md`); output-strutturato / rule-following |
+| `deepseek-coder-v2:16b` (MoE A2.4B) | Ollama locale **Ryzen** `.11` | speed-first non-constraint | chat/draft/quick coding speed-first su Ryzen (~34% piu' veloce di qwen-14b su task semplici) | **behavior-critical / constraint-following** (task-eval 50% su 5-constraint vs qwen-14b 90% -- `docs/research/llmfit-task-eval-deepseek-2026-05-22.md`); output-strutturato / rule-following |
 | `groq/llama-3.3-70b-versatile` | Cloud free (6k tok/min) | tier 3 behavior cloud | Online, privacy OK, capability 70B needed | repo sensitive, quota limit, offline |
 | `cerebras/llama3.1-8b` | Cloud free | tier 3 cosmetic cloud fast | Online, cosmetic batch veloce | behavior complesso (8B capability limit possibile) |
 | `gemini/gemini-2.5-flash` | Cloud 60 req/min | tier 3 quick query | fast explain / translate / summarize | coding edit (richiede `thinkingBudget=0` esplicito) |
 | `openai/gpt-4o-mini` | Cloud paid | tier 4 capability-max | task estremi free-tier non copre | default daily (paid, ccusage monitor) |
-| Opus 4.7 (via Claude Code/Max) | Cloud Max OAuth | tier 0 strategic | comprensione, planning, ADR, multi-file, debug arch | operazioni meccaniche (spreco token) — fino 19/05 |
+| Opus (via Claude Code/Max) | Cloud Max OAuth | tier 0 strategic | comprensione, planning, ADR, multi-file, debug arch | operazioni meccaniche (spreco token) -- durante Max |
 
-**Regola**: meglio **pochi modelli con ruoli chiari** che molti modelli sovrapposti. Modelli deprecati sono in `docs/adr/` o marked reference-only — **non usare**.
+**Regola**: meglio **pochi modelli con ruoli chiari** che molti modelli sovrapposti. Modelli deprecati (in `docs/adr/` o marked reference-only): **non usare**.
 
----
-
-## Scelte operative minime
-
-### Modello locale principale
-- **Nome**: `qwen2.5-coder:14b-q2_K`
-- **Ruolo**: behavior-critical default (tier 2)
-- **Perché lui**: sweet spot speed (25.4 tok/s) + faithfulness constraint-respect + safe-fail diff format
-
-### Modello cloud principale
-- **Nome**: `groq/llama-3.3-70b-versatile`
-- **Ruolo**: online tier 3 behavior + fallback qualità
-- **Perché lui**: free tier + LPU speed 630 tok/s + capability 70B dense + quality parity confermata (quality bench 2026-04-23)
-
-### Modello fallback
-- **Nome**: `openai/gpt-4o-mini`
-- **Ruolo**: capability-max ultimo resort
-- **Quando entra in gioco**: task quality-critical dove Groq 70B + Qwen 30B MoE safe-fail entrambi. Paid, ccusage monitor.
-
----
-
-## Integrazione con la libreria
-
-### Prompt ponte da usare tra strumenti
-- **Da NotebookLM a Claude Code**: export synthesis → `docs/research/NNNN.md` + Claude Code carica file
-- **Da ChatGPT a Claude Code**: screenshot/transcript → repo (via `Archivio_.../03_REFERENCE/`) + Claude Code consulta
-- **Da Aider ad archivio**: post-edit `git diff` + entry `logs/aider-delegation-YYYY-MM.md` manuale (Claude Code hub)
-
-### File da aggiornare dopo ogni passaggio importante
-- [x] `COMPACT_CONTEXT.md` — snapshot stato corrente
-- [x] `DECISIONS_LOG.md` — se decisioni granulari aggiunte (strategiche → ADR separato)
-- [x] `BACKLOG.md` — priorità rifresh / task done / nuovi bloccanti
-- [x] `REFERENCE_INDEX.md` — nuovi docs/reference aggiunti
-- [x] `JOURNAL.md` — entry sessione significativa
-- [x] `logs/aider-delegation-YYYY-MM.md` — ogni delegazione Aider
-- [x] Memory `~/.claude/projects/.../memory/` — stato persistente cross-session
-
----
+**Scelte minime**: locale principale = `qwen2.5-coder:14b-q2_K` (behavior-critical default, sweet spot speed + faithfulness + safe-fail diff; su Ryzen preferire q4-full). Cloud principale = `groq/llama-3.3-70b-versatile` (free + LPU speed + 70B quality parity). Fallback = `openai/gpt-4o-mini` (capability-max ultimo resort, paid, ccusage monitor).
 
 ## Regole anti-caos
 
-1. Non fare la stessa cosa in tre strumenti (es. non usare ChatGPT + Claude Code + NotebookLM sullo stesso corpus — scegli uno)
-2. Non mandare fonti grezze nel coding tool se prima vanno capite (fase Comprensione separata)
-3. Non accumulare modelli "per sicurezza" (ADR-0005 YAGNI — aggiungi solo quando trigger)
-4. Non tenere implicito il routing: questo file è la verità, se non è scritto qui **non è una regola**
-5. Se un passaggio aumenta caos invece di ridurlo, fermati e consolida (es. se tier 3 cloud fail rate >30%, torna a tier 2 locale prima di debug wrapper)
+1. Non fare la stessa cosa in tre strumenti (scegli uno per corpus).
+2. Non mandare fonti grezze nel coding tool prima di capirle (fase Comprensione separata).
+3. Non accumulare modelli "per sicurezza" (ADR-0005 YAGNI -- aggiungi solo quando trigger).
+4. Non tenere implicito il routing: questo file e' la verita', se non e' scritto qui **non e' una regola**.
+5. Se un passaggio aumenta caos invece di ridurlo, fermati e consolida (es. tier 3 cloud fail rate >30% -> torna a tier 2 locale prima di debug wrapper).
 
----
+**File da aggiornare dopo ogni passaggio importante**: `COMPACT_CONTEXT.md`, `DECISIONS_LOG.md` (strategiche -> ADR separato), `BACKLOG.md`, `REFERENCE_INDEX.md`, `JOURNAL.md`, `logs/aider-delegation-YYYY-MM.md`, memory `~/.claude/projects/.../memory/`.
 
-## Decisione finale attuale (refresh post-Fase 6 closure + ADR-0022 Accepted 9/5)
+## Constraint count -- seconda dimensione routing (ADR-0016)
 
-- **Workflow primario fino 19/05**: Claude Code Opus per comprensione/planning/multi-file/strategic; Aider + Qwen local per coding 1-file routine; Aider + Groq/Cerebras cloud per coding 1-file speed-critical (privacy permitting); **OpenCode + qwen3-coder:30b** per multi-step agentic con tool calls coordinati (nuovo da 8-9/5)
-- **Workflow post 19/05 (Fase 8 sovereign)**: Aider + Ollama come daily-driver, OpenCode + Ollama 30B MoE per agentic multi-step, cloud free Aider-side per speed/capability marginale (NON OpenCode -- rate-limited). Claude Code Max OAuth dismesso. **Tier 0 strategic** -> Claude API on-demand pay-per-use con budget cap $10-20/mese (ADR-0023 Proposed 2026-05-09). Trigger reactivation Pro: utilizzo >$20/mese 2 mesi consecutivi.
-- **Strumento principale di comprensione**: Claude Code nativo (Glob/Grep/Read) -- post 19/05 Aider repo-map mode + Ollama
-- **Strumento principale di esecuzione single-file**: Aider con wrapper tier-appropriate (classificazione CLAUDE.md)
-- **Strumento principale di esecuzione agentic multi-step**: OpenCode + qwen3-coder:30b (ADR-0022)
-- **Strumento principale di archivio / orchestrazione**: Claude Code scrive docs/, logs/, memory; ADR come decision persistence
-- **Prossimo test da fare sul routing** (deferred SPRINT_02): n>=3 data points constraint-count addizionali per ADR-0016 Accepted; dogfood organici OpenCode reali verso n>=20 cumulative
+Dogfood Fase 6 (n=8) ha rivelato che la success-rate delega degrada col numero di constraint espliciti, indipendentemente dalla classe (cosmetic/behavior):
 
----
+| Constraint count | Esito | Regola |
+|:---:|:---|:---|
+| 1 (add-only / fix puntuale) | ~100% qualsiasi tier | Safe delega |
+| 2-3 (fix + transform / logic change) | ~80-85% (14B Q2 / Groq 70B) | Preferire diff + review manuale |
+| 5+ (multi-constraint strict + branch-semantic) | ~20% REJECT | **Rewrite manuale Claude Code** |
 
-## Finding empirico 2026-04-23 — Constraint count come seconda dimensione routing
+**Implicazione**: la matrice CLAUDE.md "Priorita' modelli AI" si basa su CLASSE task; ADR-0016 aggiunge **constraint-count** come seconda dimensione (estende, non sostituisce). Operativa: quando classifico pre-delega, conto i constraint espliciti -- se >=5 skip delega, rewrite direct. Distinzione transform vs preserve (7B skippa transform; 14B Q2 safe su preserve). Causa ipotetica: LLM <=70B preservano ~2-3 constraint simultaneamente, oltre "dimenticano" i meno prominenti (tipicamente i trasformativi). Matrice 2D completa + rationale empirico (n=11 cumulative, esempi dogfood #6/#7/#8): `docs/adr/0016-constraint-count-routing-dimension.md`.
 
-Dogfood Fase 6 n=8 rivela **pattern nuovo non previsto nella matrice originale**: la success-rate delega degrada con il numero di constraint espliciti, indipendentemente dalla classe (cosmetic/behavior).
+## Status decisione (post-Fase 6 closure + ADR-0022 Accepted)
 
-| Constraint count | Qwen 7B local whole | Qwen 14B Q2 local diff | Groq 70B cloud diff | Nota |
-|:----------------:|:-------------------:|:----------------------:|:-------------------:|------|
-| 1 (add-only / fix puntuale) | 100% (n=3) | n/a | 100% (n=2) | Safe delega, qualsiasi tier |
-| 2-3 (fix + transform / logic change) | 50% (n=1) | ~80% (ADR-0007) | ~85% (n=1 small smell) | Preferire diff + review manual |
-| 5+ (multi-constraint strict + branch-semantic) | n/a | n/a | **20% (n=1 REJECT)** | **Rewrite manuale Claude Code** raccomandato |
+**Scenario A full-sovereign confermato Accepted 2026-05-07** (ADR-0015), operativo dalla transition Max. Soft-override esteso n>=12 con 5 rationale empirici; cumulative al 2026-05-09 zero trigger attivati (PASS OpenCode 30B MoE 3/3, Aider Fase 6 fail rate 8.3%).
 
-**Implicazione routing formalizzata** (OD-006 → ADR-0016 Proposed 2026-04-24):
-- La matrice `CLAUDE.md "Priorità modelli AI"` si basa su CLASSE task. **ADR-0016** aggiunge **constraint-count** come seconda dimensione. Non sostituisce, estende.
-- Regola operativa: **quando classifico task pre-delega, conta anche constraint espliciti nel prompt**. Se ≥5 → skip delega, rewrite direct.
-- **Nuova distinzione qualitativa**: transform vs preserve constraint (7B skippa transform; 14B Q2 safe su preserve).
-- Vedi `docs/adr/0016-constraint-count-routing-dimension.md` per matrice 2D completa + rationale empirico (n=11 cumulative, n=6 cross-tier).
+- **Durante Max** (fino a transition ~17/06): Claude Code Opus per comprensione/planning/multi-file/strategic; Aider + Qwen local (o Ryzen q4) per coding 1-file routine; Aider + Groq/Cerebras cloud per coding 1-file speed-critical (privacy permitting); **OpenCode + qwen3-coder:30b** per multi-step agentic con tool calls.
+- **Post-transition (Fase 8 sovereign)**: Aider + Ollama daily-driver; OpenCode + Ollama 30B MoE per agentic multi-step; cloud free Aider-side per speed/capability marginale (NON OpenCode, rate-limited). Claude Code Max dismesso. **Tier 0 strategic** -> Claude API on-demand pay-per-use, budget cap $10-20/mese (ADR-0023); trigger reactivation Pro: utilizzo >$20/mese 2 mesi consecutivi. Per repo sensibili: Qwen 14B Q2 + diff locale.
+- **Privacy validation Synesthesia** (criterio #3 ADR-0014): DEROGATO retroattivo, completamento post agosto 2026 (riattivazione pre-esame UniUPO).
+- **Trigger ri-evaluation soft-override**: silent-corruption working-tree >=1 caso reale -> ADR-0015 addendum + scenario B revisited; fail rate cumulative >15% -> revisione routing tier; privacy violation in repo non-sensitive -> ADR addendum reactive.
+- **Prossimo test** (deferred SPRINT_02): n>=3 data points constraint-count addizionali per ADR-0016 Accepted; dogfood organici OpenCode reali verso n>=20 cumulative.
 
-**Esempi dogfood reference**:
-- #6 (3 constraint: signature + return + resilience) → Groq 70B success con small smell
-- #7 (5 constraint: signature + return-branch-divergent + max=3 + discriminator + informative) → Groq 70B **REJECT** con blocking bug
-- #8 (2 constraint: fix + condense) → Qwen 7B applicato solo fix (1/2 compliance)
+Dettaglio narrativo completo: ADR-0008 (whole-format silent-corruption), ADR-0015 (sovereign scenario A), ADR-0016 (constraint-count), ADR-0022 (OpenCode tool-use), ADR-0023 (tier 0 strategic post-Max).
 
-**Cause ipotetica**: LLM ≤70B hanno capacity per preservare ~2-3 constraint simultaneamente. Oltre, iniziano a "dimenticare" i meno prominenti nel prompt — tipicamente quelli trasformativi (vs fix puntuali più concreti).
+## Research input esterno -- vault LLM routing matrix (reference only)
 
-## Evoluzione post Fase 6 (ADR-0015 Accepted 2026-05-07, scenario A confermato)
-
-**Scenario A full-sovereign $0-50/anno** confermato Accepted 2026-05-07. Operativo da 2026-05-19 (Claude Max expiration). Soft-override esteso n>=12 con 5 rationale empirici.
-
-**Stack operativo Fase 8**:
-- **Claude Code**: dismesso daily-driver. NON acquisito Claude Pro $240/anno (scenario B declassato per quality parity 70B cloud + 14B Q2 locale).
-- **Tier 0 strategic** -> Groq 70B via `aider-groq-bypass` per ADR/planning leggero quando privacy permitting. Per repo sensibili: Qwen 14B Q2 + diff locale.
-- **Tier 1 sovereign default Aider**: Qwen 7B (cosmetic) + 14B Q2 (behavior) locali, ADR-0007/0008
-- **Tier 1 sovereign default OpenCode** (NEW da ADR-0022): qwen3-coder:30b MoE A3B per multi-step agentic con tool calls
-- **Tier 2 escalation Aider**: qwen3-coder:30b quando 14B Q2 safe-fails
-- **Tier 3 cloud free**: Groq llama-3.3-70b + Cerebras llama3.1-8b (Aider-side) per single-file speed/capability marginal. **NOTA: NON viable per OpenCode** (rate-limited TPM/context, ADR-0022 addendum).
-- **Tier 4 paid emergency**: openai/gpt-4o-mini via aider-openai, ccusage monitor
-
-**Privacy validation Synesthesia (criterio #3 ADR-0014) DEROGATO retroattivo**: completamento post agosto 2026 quando Synesthesia riattiva pre-esame UniUPO. Documentato in ADR-0015.
-
-**Trigger ri-evaluation soft-override (validi durante SPRINT_02)**:
-- silent-corruption working-tree >=1 caso reale -> ADR-0015 addendum + scenario B revisited
-- fail rate cumulative >15% -> revisione routing tier
-- privacy violation in repo non-sensitive -> ADR addendum reactive
-
-Cumulative al 2026-05-09: zero trigger attivati. PASS rate empirico OpenCode 30B MoE 3/3, Aider Fase 6 fail rate 8.3%.
-
----
-
-## Research input esterno (added 2026-05-10)
-
-### Vault-shared LLM routing matrix v1.0 (sibling-peer reference)
-
-vault-shared (`C:/dev/vault-shared`, sibling-peer codemasterdd) ha una decision matrix derivata da bench A/B claude-vs-ollama. Cross-reference per codemasterdd MODEL_ROUTING:
-
-- **Path stabile**: `C:/dev/vault-shared/llm-routing.json` (vault repo, NO commit hash citato per drift risk in repo Eduardo-driven)
-- **Doc methodology**: `vault-shared/docs/research/` -- 5 research report formali (dispatcher, design-watcher, ingestor, pathfinder-pdf-indexer, vault-linter), tutti dated 2026-05-10 Quality Gate Step 2
-- **Methodology rigorosa**: split metrics (cold_load_s + inference_s + wall_s) + keep_alive=-1 per modello caldo + retries con exponential backoff + output validation (word count check + retry stricter prompt)
-- **Pattern emersi**: A/B variants + multi-claude self-tune + 3-gate workflow (smoke -> draft -> production)
-- **Claim metric esempio**: ollama-dispatcher v1 -91% wall vs baseline (METHODOLOGY TBR -- non audited codemasterdd-side al moment of integration)
-
-**NON adoption diretta**: vault scope content-routing != codemasterdd code-edit. Reference solo, per inspiration potential MODEL_ROUTING addendum:
-- Metric "wall time reduction %" pattern (codemasterdd traccia tok/s + workflow time, NON wall reduction %)
-- Categoria "content-routing vs code-edit-routing" distinction esplicita
-- Multi-variant Claude self-tune A/B (codemasterdd ha dogfood ma NON A/B variants stesso modello)
-
-**Boundary**: codemasterdd NON adotta vault metric come ground truth senza audit empirico. Reference solo per pattern + methodology.
-
-**Integrato**: 2026-05-10 via AA01 task `2026-05-aa01-001-two-repos-analysis-integratio` research-long preset. Memory `project_vault_shared.md` + STATUS_MULTI_REPO sezione 6.
+vault (`C:/dev/vault`, sibling-peer codemasterdd) ha una decision matrix derivata da bench A/B claude-vs-ollama. **NON adoption diretta** (vault scope = content-routing, codemasterdd = code-edit-routing): reference solo per pattern + methodology, NON ground-truth senza audit empirico codemasterdd-side.
+- Path: `C:/dev/vault/llm-routing.json` + `vault/docs/research/` (5 report Quality Gate Step 2, 2026-05-10). Methodology rigorosa: split metrics (cold_load_s + inference_s + wall_s) + keep_alive=-1 + retries exponential backoff + output validation.
+- Inspiration potenziale: metric "wall time reduction %"; distinzione esplicita content-routing vs code-edit-routing; multi-variant Claude self-tune A/B. Integrato 2026-05-10 via AA01 task research-long; memory `project_vault_shared.md` + STATUS_MULTI_REPO sezione 6.

@@ -5,7 +5,7 @@
 ## Identità del progetto
 - **Nome progetto**: CodeMasterDD AI Station (repo: `codemasterdd-ai-station`)
 - **Tipo di progetto**: infrastructure-as-code personale + registry decisionale di transizione strategica AI (NON un prodotto, NON una libreria, NON codice di progetti reali — quelli vivono in `Evo-Tactics` e `Synesthesia` separati)
-- **Stato attuale**: barra globale 88%, Fase 6 (empirical tracking compressa) al 55% (11/20 dogfood), HEAD `cb2e506` working tree clean, review settimana 2 anticipata ✅ on-track
+- **Stato attuale**: NON inline qui (evita drift). Snapshot stato/fase/metriche -> `COMPACT_CONTEXT.md` + `STATUS_MULTI_REPO.md`. Direzione live -> `GOALS.md`.
 - **Owner / team**: solo-dev — Eduardo Scarpelli (`eduscarpelli@gmail.com`), GitHub `@MasterDD-L34D`
 
 ## Scopo
@@ -58,26 +58,7 @@
 - **Asset**: 6 wrapper Aider in `~/.local/bin/`, 4 API keys in `~/.config/api-keys/keys.env`, hook git globali in `~/.local/share/git-hooks/`
 - **Conversazioni importanti**: sessione maratona 2026-04-22/23 (14 commit, 3 ADR strategici ratificati) documentata in JOURNAL + memory `project_session_resumption.md`
 
-## Problemi attuali
-- **P1** — Dogfood behavior-critical n=4 (3 success + 1 REJECT) → gap 1 verso target ≥5
-- **P2** — Fix cp1252 deployato ma non validato empiricamente su retry loop reale (8 dogfood consecutivi senza trigger, soglia pazienza n=15)
-- **P3** — Privacy validation reale = 1 sessione su target ≥3 (criterio 3 ADR-0014)
-- **P6** — Qwen 7B commit-prompt 0% compliance, ma auto-retry post-hook-block validato empirically n=2 (#8 + #11)
-- **P7** — Cloud 70B degrada a ~20% compliance su behavior-critical con ≥5 strict constraint (dogfood #7 REJECT). **Driver ADR-0016** (Proposed 2026-04-24, chiude OD-006).
-
-## Metriche di successo
-
-### Criteri chiusura Fase 6 (tutti-4 AND, da ADR-0014) — review sett.2 anticipata 2026-04-24
-
-1. **Quality bench** ≥10 problemi × ≥5 modelli → ✅ **PASS** (75 test, 100% pass@1, discriminant-limited ma sufficiente per parity)
-2. **Reliability dogfood**: n≥20, fail rate <30%, **zero silent-corruption** → 🟡 **on-track** (11/20 al 55%, fail rate 9.1%, 0 silent-corruption working-tree)
-3. **Privacy validation**: ≥3 sessioni reali classificazione repo enforced → 🟡 **on-track** (1/3, gap attende task Synesthesia reale)
-4. **Cost tracking**: <$20/mese extrapolato → ✅ **PASS** ($0.0148 cloud = 0.07% budget)
-
-### Metriche di sostenibilità Fase 8 (post ADR-0015)
-- Spesa cumulativa 30 giorni post-Max < $4/mese
-- Zero incidenti silent-corruption su workflow reali
-- ≥1 revisione qualitativa senza gap materiali a 30 giorni
-
-## Prossimo passo singolo più utile
-**Attendere task emergente** per M5 Synesthesia privacy validation (criterio 3 ADR-0014, ancora 1/3). Sprint 01 obiettivi già superati early (11/12 dogfood, 4/3 behavior-critical); forzare ulteriori dogfood artificiali contraddice anti-pattern "non forzare". Pre-closure check formale previsto settimana 4 (~2026-05-17) + preparazione ADR-0015 skeleton. H1 residuo (+1 behavior-critical) e H2 (+3 cosmetic) restano opportunistici su task naturali.
+## Problemi attuali, metriche di successo, prossimo passo
+Stato volatile (problemi aperti, metriche, prossimo passo) NON inline qui per evitare drift.
+Vedi `COMPACT_CONTEXT.md` (snapshot) + `STATUS_MULTI_REPO.md` (cross-repo) + `GOALS.md` (direzione live).
+La storia Fase-6/criteri ADR-0014 vive in `docs/archive/` (ROADMAP/SPRINT lifecycle docs).

@@ -1,3 +1,6 @@
+> ARCHIVED 2026-06-03 (context-files reorg Fase 2). SUPERSEDED -- live direction = GOALS.md + ORCHESTRATION.md.
+> Historical record.
+
 # SPRINT_01 — "Fase 6 push + cp1252 monitoring"
 
 > Sprint 1 della Fase 6 compressa. Finestra: **2026-04-23 → 2026-05-06** (2 settimane, fino alla review settimana 2 ADR-0014).

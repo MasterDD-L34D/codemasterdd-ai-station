@@ -54,7 +54,7 @@ Chiudi la sessione con handoff pulito: aggiorna COMPACT_CONTEXT + BACKLOG + JOUR
 Prompt per aggiungere entry conforme al log dogfood Aider (schema `docs/patterns/aider-delegation-log-template.md`).
 
 ```text
-Aggiungi entry in logs/aider-delegation-2026-04.md per la delegazione Aider appena eseguita.
+Aggiungi entry in logs/aider-delegation-YYYY-MM.md (mese corrente) per la delegazione Aider appena eseguita.
 
 Raccogli da contesto sessione:
 - Data/ora (ISO 8601)
@@ -169,7 +169,7 @@ Se 1+ check FAIL → lista gap in output, proponi remediation o extension Propos
 
 ## Sezione 3 — Prompt per scenari specifici
 
-### /FASE6-CHECKPOINT
+### /FASE6-CHECKPOINT (ARCHIVED -- Fase 6 CLOSED 2026-05-07, prompt storico)
 ```text
 Review stato Fase 6 rispetto criteri chiusura ADR-0014:
 
