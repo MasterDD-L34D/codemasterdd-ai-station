@@ -128,15 +128,42 @@ ADR (two real legs now exist; do not pre-decide).
   silence IS the off-ramp signal (the rung must not inflate). A governor-owned doc now lives in the
   sovereign vault (Eduardo OK; branch+PR, Eduardo-only merge). No platform merge-backstop on the
   free-tier private repo -> the code + invariant + ceiling are load-bearing (the R2 ADR re-weighs).
+- **Create-if-absent reporting (P2.2, expected, not drift):** until the FIRST vault PR is
+  human-merged, `get_file(main)` returns "" (the file is not yet on main), so each run re-derives
+  the same drift and the actor reports the vault leg as `opened` (action `reused`). The real
+  builder's branch-level base64 dedup skips the PUT on identical content -> no new commit, no
+  churn; only the open PR is reused. This is expected create-if-absent behavior, not a cadence
+  violation; once Eduardo merges, the leg goes `unchanged` when stable.
 
 ## Falsification (SDMG Protocol 7)
 
 The DESIGN passed two harsh-reviewer rounds (v1 REJECT -> v2 SURVIVE-WITH-CHANGES, all adopted;
-recorded in the spec's Falsification section). A 3rd pass runs on the BUILT code and MUST
-specifically falsify the new vault lint-status leg (sec 5): (a) `parse_vault_report` is truly
-clock-free (no `now`); (b) the new-doc create-if-absent is safe + idempotent; (c) the
-sovereign-repo write is branch+PR-only, never merge. Pre-commit stance "se rigetta adotto, non
-difendo." Verdict (filled on completion of the 3rd pass): _pending build-phase harsh-reviewer_.
+recorded in the spec's Falsification section). The 3rd pass ran on the BUILT code (2026-06-03) and
+specifically attacked the new vault lint-status leg (sec 5).
+
+**Round 3 -- BUILT-CODE verdict: SURVIVE-WITH-CHANGES (no P0).** The three load-bearing safety
+claims HELD under direct attack: (a) `parse_vault_report` confirmed clock-free (no `now` param;
+severity + payload_hash from BLOCK/WARN/nonzero CONTENT only -- contrast the KILLED clock-dependent
+`parse_eng_graph_moc`); (b) create-if-absent splice is byte-idempotent (no timestamp in body; the
+real builder's branch-level base64 dedup skips the PUT on identical content -> no new commit / no
+new Trace-Id / no churn); (c) the sovereign vault write is branch+PR-only -- no `/merge` route in
+any path of the REAL builder, pinned by the negative test. Adopted (pre-commit "se rigetta adotto,
+non difendo"):
+- **P1.1** -- rescoped the `is_doctrine` docstring: it is a fail-closed WRITE-REFUSAL SUPERSET of
+  the static carve-out subset, NOT the canonical ADR-0038 classifier (which uses a positive
+  ALLOW-list for global `~/.claude/`). Over-refusal is fail-safe for a write-gate; the claim was
+  scoped down. Do not reuse for allow-decisions.
+- **P1.2** -- added a construction-site note in `build_reconcilers` that adding ANY leg REQUIRES a
+  recorded Eduardo doctrine-classification review (the content catch-all is human, not the static
+  `__post_init__` backstop); filled this verdict line.
+- **P1.3** -- extended the negative merge source-scan to ALSO cover `reconcile_actor` +
+  `real_gh_api`, and added a test pinning `real_gh_api().keys() == {get_file, open_or_update_pr}`
+  -- so a future merge call in the actor or a merge callable exported from the factory goes CI-red
+  (closing the one real gap in the load-bearing test's coverage boundary).
+- **P2.1** -- dropped the accept-then-ignore `argv` from `main()` (CWE-214 hygiene -- token is
+  env-only); **P2.2** -- documented the create-if-absent reused-PR behavior (Consequences, below).
+Held with no change: merge-block (3-part), clock-free render, fail-closed token, anti-self-licking
+externality, doctrine `__post_init__` fail-closed.
 
 ## References
 

@@ -110,11 +110,23 @@ def test_real_open_or_update_pr_failclosed_without_write_token(monkeypatch):
 def test_no_merge_source_scan():
     """Cheap tripwire (the test_governor_act.py convention): the real gh-builder source contains
     no merge ROUTE / FLAG literal. Scoped to '/merge' + flags so PR-body prose ('human-merge-only'
-    / 'a human merges') does NOT false-positive."""
+    / 'a human merges') does NOT false-positive.
+
+    Scans BOTH the builder AND the actor's call site + the api factory (harsh-reviewer P1.3): the
+    merge-block must stay CI-red if a future edit adds a merge call in reconcile_actor or exports
+    a merge callable from real_gh_api -- not only if it lands in the builder."""
     import inspect
     from governor import reconcile
     forbidden = ("/merge", "--merge", "--admin", "--squash", "--rebase", "pr merge")
-    for fn_name in ("_real_open_or_update_pr", "_real_get_file", "_http", "_commit_message"):
+    for fn_name in ("_real_open_or_update_pr", "_real_get_file", "_http", "_commit_message",
+                    "reconcile_actor", "real_gh_api"):
         src = inspect.getsource(getattr(reconcile, fn_name))
         for tok in forbidden:
             assert tok not in src, f"{fn_name} contains forbidden merge token {tok!r}"
+
+
+def test_real_gh_api_exports_no_merge_callable():
+    """harsh-reviewer P1.3: the injected api surface is EXACTLY get_file + open_or_update_pr.
+    A future merge callable cannot be exported without going CI-red (no platform backstop)."""
+    from governor.reconcile import real_gh_api
+    assert set(real_gh_api().keys()) == {"get_file", "open_or_update_pr"}

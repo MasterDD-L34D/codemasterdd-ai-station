@@ -51,15 +51,21 @@ def _normalize_path(path: "str | None") -> str:
 
 
 def is_doctrine(path: "str | None", repo: str) -> bool:
-    """STATIC path-classifier for the ADR-0038 doctrine carve-out (fail-closed).
+    """A fail-closed WRITE-REFUSAL gate: True for the static subset of ADR-0038 doctrine paths
+    relevant to this rung. It is a SUPERSET (over-refuses) of that static set -- NOT the canonical
+    ADR-0038 classifier. Do NOT reuse it for ALLOW-decisions (e.g. a merge-eligibility call):
+    ADR-0038's global `~/.claude/` rule uses a positive subpath ALLOW-list (excluding
+    credentials/cache/sessions/plugins), whereas this gate treats ANY `.claude/` segment as
+    doctrine. Over-refusal is harmless for a write-gate (refusing to auto-edit a path is safe; a
+    doctrine path must never escape) but WRONG semantics for an allow-list. The catch-all is
+    handled by a HUMAN review (below), not here.
 
     True for ANY of the static carve-out set: dir globs (docs/adr/**, docs/cross-repo/**,
     Archivio_.../07_CLAUDE_CODE_OPERATING_PACKAGE/**), any `.claude/` segment (repo .claude/**
     AND the global ~/.claude/ governance subpaths -- home machine-junk is conservatively
-    OVER-classified, which is FAIL-SAFE for a write-gate: refusing to auto-edit it is harmless,
-    a doctrine path must never escape), named root rule files (CLAUDE.md/AGENTS.md/
-    ORCHESTRATION.md/GOALS.md/DECISIONS_LOG.md/OPEN_DECISIONS.md, any level), and
-    ~/.config/aider-privacy-whitelist.txt.
+    OVER-classified, which is FAIL-SAFE for a write-gate, per above), named root rule files
+    (CLAUDE.md/AGENTS.md/ORCHESTRATION.md/GOALS.md/DECISIONS_LOG.md/OPEN_DECISIONS.md, any level),
+    and ~/.config/aider-privacy-whitelist.txt.
 
     NOT here (BY DESIGN): the ADR-0038 *content-based* catch-all -- a pure path-classifier
     cannot evaluate "does this file's content define rules". That clause is a HUMAN process
@@ -435,7 +441,13 @@ tags: [vault, lint, governor, status]
 
 def build_reconcilers():
     """The BUILT reconciler set (spec sec 5). Construction RAISES if any target is doctrine
-    (the __post_init__ fail-closed guard)."""
+    (the __post_init__ fail-closed guard).
+
+    ADDING A LEG IS NOT A CODE-ONLY CHANGE: every new reconciler REQUIRES an explicit Eduardo
+    doctrine-classification review of its target, recorded in ADR-0039 (spec sec 4.2). The
+    __post_init__ `is_doctrine` guard enforces only the STATIC carve-out subset; it CANNOT catch
+    ADR-0038's content-based catch-all (a new governance file at an unforeseen path). That clause
+    is the human checkpoint, not this backstop -- do not add a leg without the recorded review."""
     status_block = Reconciler(
         id="status-multi-repo",
         repo="MasterDD-L34D/codemasterdd-ai-station",
@@ -460,8 +472,11 @@ def real_gh_api():
     return {"get_file": _real_get_file, "open_or_update_pr": _real_open_or_update_pr}
 
 
-def main(argv=None):
-    """Manual entrypoint: `python -m governor.reconcile` (no cron; Fase-4 out of scope)."""
+def main():
+    """Manual entrypoint: `python -m governor.reconcile` (no cron; Fase-4 out of scope).
+
+    Takes NO argv: the write credential is read from the env (GOVERNOR_RECONCILE_TOKEN), never a
+    command-line flag (CWE-214 -- no token on the process arg list)."""
     from governor.store import SignalStore
     db = Path(__file__).resolve().parent.parent / "governor.db"
     if not db.exists():
