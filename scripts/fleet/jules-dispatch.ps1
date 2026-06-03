@@ -168,6 +168,17 @@ function Get-SessionId {
   return ($n -replace 'sessions/', '')
 }
 
+function Resolve-AuditState {
+  param($Fetched, [string]$CreateState)
+  # The create-POST response returns an EMPTY state (the session is actually QUEUED, surfaced only
+  # by a follow-up GET /sessions/{id}; observed live 2026-06-03 sid 17389050512450210982). Resolve
+  # the audit-log state with a never-throw fallback chain: the GET state (authoritative) -> the
+  # create-POST state -> 'UNKNOWN'. Pure: the impure GET runs in MAIN; this only picks a value.
+  if ($null -ne $Fetched -and -not [string]::IsNullOrWhiteSpace($Fetched.state)) { return $Fetched.state }
+  if (-not [string]::IsNullOrWhiteSpace($CreateState)) { return $CreateState }
+  return 'UNKNOWN'
+}
+
 # === MAIN (impure orchestration -- not dot-sourced; everything below runs only on direct invoke) ===
 $ErrorActionPreference = 'Stop'
 
@@ -300,7 +311,16 @@ try {
     Write-Error "ABORT gate5: POST returned no session name (shape: $($created | ConvertTo-Json -Depth 3 -Compress))"
     exit 1
   }
-  $state = $created.state
+  # The create-POST returns an EMPTY state (the session is QUEUED, surfaced only by a follow-up
+  # GET). Fetch the real state for an accurate audit line; the audit spine must never throw, so any
+  # GET failure degrades to the create-response state, then to 'UNKNOWN' (Resolve-AuditState).
+  $fetched = $null
+  try {
+    $fetched = Invoke-RestMethod -Headers $hdr "$api/sessions/$sid" -ErrorAction Stop
+  } catch {
+    Write-Warning "gate5: post-dispatch GET /sessions/$sid failed ($($_.Exception.Message)); audit state degrades to create-response/UNKNOWN."
+  }
+  $state = Resolve-AuditState -Fetched $fetched -CreateState $created.state
   Write-Audit "$ts | $Repo | $Target | $sid | $state | $Title$forcedTag"
   Write-Host "DISPATCHED session $sid (state=$state). Audit-log: $log"
   exit 0

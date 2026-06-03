@@ -181,6 +181,22 @@ $emptyName = [pscustomobject]@{ name = ''; state = 'IN_PROGRESS' }
 Assert-True ($null -eq (Get-SessionId $emptyName)) 'empty name -> null'
 
 # ======================================================================
+Write-Host "Test 12: Resolve-AuditState (audit-state fallback chain -- never-throw)"
+# Empirical (2026-06-03 sid 17389050512450210982): the create-POST returns an EMPTY state; the
+# session is actually QUEUED, surfaced only by a follow-up GET /sessions/{id}. So the GET state,
+# when present, must win; on GET failure ($null) fall back to the create-state, then to 'UNKNOWN'.
+$fetchedQueued = [pscustomobject]@{ name = 'sessions/abc'; state = 'QUEUED' }
+Assert-Eq 'QUEUED' (Resolve-AuditState -Fetched $fetchedQueued -CreateState '') 'empty create-state + GET QUEUED -> QUEUED (the fix)'
+Assert-Eq 'QUEUED' (Resolve-AuditState -Fetched $fetchedQueued -CreateState 'IN_PROGRESS') 'GET state wins over a present create-state'
+Assert-Eq 'IN_PROGRESS' (Resolve-AuditState -Fetched $null -CreateState 'IN_PROGRESS') 'GET failed (null) -> fall back to create-state'
+$fetchedBlank = [pscustomobject]@{ name = 'sessions/abc'; state = '   ' }
+Assert-Eq 'IN_PROGRESS' (Resolve-AuditState -Fetched $fetchedBlank -CreateState 'IN_PROGRESS') 'GET blank/whitespace state -> fall back to create-state'
+$fetchedNoState = [pscustomobject]@{ name = 'sessions/abc' }
+Assert-Eq 'IN_PROGRESS' (Resolve-AuditState -Fetched $fetchedNoState -CreateState 'IN_PROGRESS') 'GET shape has no state property -> fall back to create-state'
+Assert-Eq 'UNKNOWN' (Resolve-AuditState -Fetched $null -CreateState '') 'GET failed + empty create-state -> UNKNOWN'
+Assert-Eq 'UNKNOWN' (Resolve-AuditState -Fetched $null -CreateState $null) 'GET failed + null create-state -> UNKNOWN'
+
+# ======================================================================
 Write-Host ""
 Write-Host "Results: $script:passed passed, $script:failed failed"
 if ($script:failed -gt 0) {
