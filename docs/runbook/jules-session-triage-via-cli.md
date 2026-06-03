@@ -79,3 +79,29 @@ Codex#2031/#2034/W5.5, dead-band, GSD-pre-enrich, code-health species_builder)
 -> CLOSE. 1 (code-health orchestrator.py) = non applicata, path sensibile
 -> Eduardo-review. Browser-scrape aveva visto solo 5+inferenza (miss);
 CLI ha dato 8/8 completo. Metodo CLI = canonical d'ora in poi.
+
+## Daily digest cron (G3, registrato 2026-06-03)
+
+L'enumeratore READ-ONLY `scripts/jules-daily-digest.ps1` (heuristic v4.1:
+session -> linked-PR state+files, independent dal prompt) gira in automatico
+via Windows Scheduled Task `jules-daily-digest` (daily 09:30, `-StartWhenAvailable`
+per i missed-run quando il PC e' spento), scrivendo `docs/jules-batch/<day>-digest.md`.
+Usa REST `x-goog-api-key` (no OAuth, addendum ADR-0035 2026-06-02) + `gh pr view`.
+
+- **Registrazione / handoff (idempotente)**: `scripts/fleet/register-jules-digest-task.ps1`
+  (re-run = re-register `-Force`; `-Unregister` per rimuovere). No elevazione admin
+  (current-user, RunLevel Limited).
+- **Ownership = SINGLE-OWNER, NON entrambi i PC.** Due cloni che scrivono lo stesso
+  `<day>-digest.md` = drift cross-fleet (due working-tree divergenti + doppio commit).
+  **Owner attuale = Ryzen (DESKTOP-T77TMKT)** -- PC attivo del loop dispatch/triage,
+  gh authed, JULES_API_KEY presente. Handoff a Lenovo: `-Unregister` su Ryzen PRIMA,
+  poi register su Lenovo. Mai registrato su due PC insieme.
+- **Prereq sull'owner**: `JULES_API_KEY` in `~/.config/api-keys/keys.env` + gh authed
+  (il segnale a 2 sorgenti dello stato-PR; senza gh il digest gira comunque ma i
+  verdetti degradano a AMBIGUOUS).
+- **Gate (ADR-0034 Option D)**: il digest e' advisory, ZERO auto-exec. Eduardo/Claude
+  fanno triage ground-truth (sezioni sopra) sul set ACTIONABLE/IN-PROGRESS/AMBIGUOUS;
+  il generativo (archive/respond/start) resta batch-approve Eduardo.
+- **QG Step-1 (2026-06-03)**: sandbox-run su target throwaway (artifact + encoding
+  UTF-8-no-BOM verificati, non solo il log) PRIMA del register; poi run-once del task
+  reale (`LastTaskResult 0x0`, digest reale prodotto no-BOM). Anti-pattern #9 onorato.
