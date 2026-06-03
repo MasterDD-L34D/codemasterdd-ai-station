@@ -136,3 +136,41 @@ def splice(doc_text, marker, new_region, anchor=None, create_header=None) -> str
         return "\n".join(out)
 
     return text.rstrip("\n") + "\n\n" + block + "\n"
+
+
+# ---------------------------------------------------------------------------
+# Render legs -- pure, deterministic, CLOCK-FREE (spec sec 5 / 6.3).
+# ---------------------------------------------------------------------------
+
+_STATUS_COLS = ("source", "severity", "summary", "produced_at", "ref")
+
+
+def _md_cell(value) -> str:
+    """Single-line markdown table cell (escape pipes/newlines). Pure."""
+    s = "" if value is None else str(value)
+    return s.replace("|", "\\|").replace("\n", " ").strip()
+
+
+def _md_table(columns, rows_cells) -> str:
+    header = "| " + " | ".join(columns) + " |"
+    sep = "| " + " | ".join("---" for _ in columns) + " |"
+    body = ["| " + " | ".join(cells) + " |" for cells in rows_cells]
+    return "\n".join([header, sep] + body)
+
+
+def render_status_multi_repo(store):
+    """Deterministic, CLOCK-FREE governor signal snapshot from store.latest_per_source().
+
+    Columns source|severity|summary|produced_at|ref, ordered by source (the store returns rows
+    ORDER BY source). NO wall-clock / no time-derived value -- the change-key is signal STATE
+    only (spec sec 5.1 / 6.3). produced_at is the artifact's own timestamp (from the signal),
+    never the current time. Returns None when the store holds no signals (cannot compute).
+    """
+    rows = store.latest_per_source()
+    if not rows:
+        return None
+    cells = [[_md_cell(r.get(c)) for c in _STATUS_COLS] for r in rows]
+    table = _md_table(_STATUS_COLS, cells)
+    note = ("\n\n_Auto-synced governor signal snapshot; human prose elsewhere is "
+            "authoritative._")
+    return table + note
