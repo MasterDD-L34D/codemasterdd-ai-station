@@ -13,6 +13,7 @@ is EXTERNAL (reconcile_cycles_report.py), never in the actor.
 """
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass
 from typing import Callable, Optional, Tuple
 
@@ -97,3 +98,41 @@ class Reconciler:
                 f"Reconciler {self.id!r} targets a doctrine path {self.path!r} "
                 f"(ADR-0038 carve-out) -- refusing to construct"
             )
+
+
+def splice(doc_text, marker, new_region, anchor=None, create_header=None) -> str:
+    """Pure, idempotent region-replace bounded by (begin, end) markers.
+
+    - markers present          -> replace the BEGIN..END region in place (re.DOTALL, count=1).
+    - target absent/empty       -> CREATE: `create_header` (frontmatter+heading) + the block.
+    - markers absent + anchor    -> first-time injection AFTER the anchor line.
+    - markers absent, no anchor   -> append the block at end (defensive; never drops prose).
+
+    `new_region` is the INNER body (a table); splice wraps it with the markers. splice adds NO
+    timestamp (idempotency: identical new_region -> identical output, spec sec 6.4). A function
+    replacement is used in re.sub so backslashes in `new_region` are literal (no backref bug).
+    """
+    begin, end = marker
+    block = f"{begin}\n{new_region}\n{end}"
+    text = doc_text or ""
+
+    if begin in text and end in text:
+        pattern = re.escape(begin) + r".*?" + re.escape(end)
+        return re.sub(pattern, lambda _m: block, text, count=1, flags=re.DOTALL)
+
+    if not text.strip():
+        header = (create_header or "").rstrip()
+        return (header + "\n\n" + block + "\n") if header else (block + "\n")
+
+    if anchor and anchor in text:
+        out = []
+        injected = False
+        for ln in text.split("\n"):
+            out.append(ln)
+            if not injected and anchor in ln:
+                out.append("")
+                out.append(block)
+                injected = True
+        return "\n".join(out)
+
+    return text.rstrip("\n") + "\n\n" + block + "\n"
