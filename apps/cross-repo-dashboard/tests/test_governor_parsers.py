@@ -242,3 +242,103 @@ def test_parse_eng_graph_moc_hash_stable():
     sig1 = parse_eng_graph_moc(md, "r")
     sig2 = parse_eng_graph_moc(md, "r")
     assert sig1.payload_hash == sig2.payload_hash
+
+
+def _jules_digest_fixture(awaiting=2, verdicts=(
+    "ACTIONABLE (linked PR CLOSED unmerged -> NOT shipped)",
+    "ARCHIVE (shipped: linked PR merged)",
+)):
+    lines = [
+        "# Jules daily digest 2026-06-03 (ADR-0034 Option D, READ-ONLY, heuristic v4.1: PR-state+files)",
+        "> Signal = Jules session -> linked GitHub PR -> {merge-state, changed files}.",
+        "",
+        f"Awaiting sessions: {awaiting}",
+        "",
+    ]
+    for i, v in enumerate(verdicts):
+        lines.append(f"- `sess{i}` [MasterDD-L34D/Game] **{v}** -- some task  | ev")
+    return "\n".join(lines) + "\n"
+
+
+def test_parse_jules_digest_actionable_is_warning():
+    from governor.parsers import parse_jules_digest
+    sig = parse_jules_digest(_jules_digest_fixture(), "ref-url")
+    assert sig.source == "jules-digest"
+    assert sig.kind == "jules-digest"
+    assert sig.severity == "warning"          # 1 actionable
+    assert sig.counts["awaiting"] == 2
+    assert sig.counts["actionable"] == 1
+    assert sig.counts["archive"] == 1
+    assert sig.produced_at == "2026-06-03"
+    assert sig.ref == "ref-url"
+    assert sig.payload_hash != ""
+
+
+def test_parse_jules_digest_zero_awaiting_is_ok():
+    from governor.parsers import parse_jules_digest
+    md = "# Jules daily digest 2026-06-03 (...)\n\nAwaiting sessions: 0\n"
+    sig = parse_jules_digest(md, "r")
+    assert sig.severity == "ok"
+    assert sig.counts["awaiting"] == 0
+    assert sig.counts["actionable"] == 0
+    assert sig.produced_at == "2026-06-03"
+
+
+def test_parse_jules_digest_archive_only_is_info():
+    from governor.parsers import parse_jules_digest
+    md = _jules_digest_fixture(awaiting=1, verdicts=("ARCHIVE (shipped: linked PR merged)",))
+    sig = parse_jules_digest(md, "r")
+    assert sig.severity == "info"             # awaiting>0 but no actionable
+    assert sig.counts["actionable"] == 0
+    assert sig.counts["archive"] == 1
+
+
+def test_parse_jules_digest_ambiguous_defer_dont_escalate():
+    # The digest is conservative-AMBIGUOUS; only ACTIONABLE escalates to warning.
+    from governor.parsers import parse_jules_digest
+    md = _jules_digest_fixture(awaiting=2, verdicts=(
+        "AMBIGUOUS (PR state unknown)", "DEFER (freeze-path; no PR)"))
+    sig = parse_jules_digest(md, "r")
+    assert sig.severity == "info"
+    assert sig.counts["ambiguous"] == 1
+    assert sig.counts["defer"] == 1
+
+
+def test_parse_jules_digest_error_digest_is_error():
+    from governor.parsers import parse_jules_digest
+    md = ("# Jules daily digest 2026-06-03 -- ERROR\n\n"
+          "> Sessions API fetch FAILED (timeout). NOT empty-set; re-run / check JULES_API_KEY.\n")
+    sig = parse_jules_digest(md, "r")
+    assert sig.severity == "error"
+    assert sig.produced_at == "2026-06-03"
+
+
+def test_parse_jules_digest_hash_folds_severity():
+    # actionable (warning) vs none (ok) on the same date -> distinct hash (escalation = a new row)
+    from governor.parsers import parse_jules_digest
+    warn = parse_jules_digest(_jules_digest_fixture(awaiting=1, verdicts=("ACTIONABLE (x)",)), "r")
+    ok = parse_jules_digest("# Jules daily digest 2026-06-03\n\nAwaiting sessions: 0\n", "r")
+    assert warn.payload_hash != ok.payload_hash
+
+
+def test_parse_jules_digest_empty_safe():
+    from governor.parsers import parse_jules_digest
+    sig = parse_jules_digest("", "r")
+    assert sig.counts["awaiting"] == 0
+    assert sig.produced_at is None
+    assert sig.severity == "ok"
+
+
+def test_parse_jules_digest_real_format_snapshot():
+    # Guards the jules-daily-digest.ps1 <-> parser-regex contract (anti-pattern #10
+    # cross-file drift). The fixture mirrors the SCRIPT's exact session-line format AND
+    # its legend prose (bare ARCHIVE/ACTIONABLE words without `**`) -- those must NOT be
+    # counted. If a future script reword breaks the format, this test goes red instead of
+    # the signal silently zeroing.
+    from governor.parsers import parse_jules_digest
+    sig = parse_jules_digest((_FIX / "jules_digest_sample.md").read_text(encoding="utf-8"), "ref")
+    assert sig.counts == {
+        "awaiting": 4, "actionable": 1, "defer": 1, "ambiguous": 1, "archive": 1, "in_progress": 0,
+    }
+    assert sig.severity == "warning"      # 1 actionable; legend prose did NOT inflate the count
+    assert sig.produced_at == "2026-05-18"

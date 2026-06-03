@@ -98,6 +98,8 @@ def _fakes():
     coherence_file_url = "https://api.github.com/repos/MasterDD-L34D/vault/contents/Extras/lint-reports/coherence-2026-06-01.md"
     whatsmissing_file_url = "https://api.github.com/repos/MasterDD-L34D/vault/contents/Extras/lint-reports/whatsmissing-2026-06-01.md"
     eng_graph_moc_url = "https://api.github.com/repos/MasterDD-L34D/vault/contents/Atlas/engineering-moc.md"
+    jules_digest_text = "# Jules daily digest 2026-06-03 (READ-ONLY, v4.1)\n\nAwaiting sessions: 0\n"
+    jules_digest_url = "https://api.github.com/repos/MasterDD-L34D/codemasterdd-ai-station/contents/docs/jules-batch/2026-06-03-digest.md"
 
     _content_map = {
         evo_file_url: digest_text,
@@ -105,6 +107,7 @@ def _fakes():
         coherence_file_url: coherence_text,
         whatsmissing_file_url: whatsmissing_text,
         eng_graph_moc_url: eng_graph_moc_text,
+        jules_digest_url: jules_digest_text,
     }
 
     def fetcher(url):
@@ -128,6 +131,11 @@ def _fakes():
                 {"name": "L-2026-05-038-x.md"},
                 {"name": "L-2026-05-002-y.md"},
                 {"name": "README.md"},
+            ]
+        if "codemasterdd-ai-station/contents/docs/jules-batch" in url:
+            return [
+                {"name": "2026-06-03-digest.md", "url": jules_digest_url},
+                {"name": "suggestions-2026-06-03.md", "url": "ignored-not-a-digest"},
             ]
         raise AssertionError(f"unexpected json url {url}")
 
@@ -310,3 +318,41 @@ def test_ingest_all_passes_now_so_stale_eng_graph_escalates(tmp_path):
                content_getter=content_getter, now=date(2026, 9, 30))
     eg = [r for r in store.latest_per_source() if r["source"] == "vault-eng-graph"]
     assert eg and eg[0]["severity"] == "error"
+
+
+def test_produce_jules_digest_resolves_newest_excludes_suggestions():
+    from governor.ingest import _produce, JULES_DIGEST_API
+    older = "https://api.github.com/repos/x/codemasterdd-ai-station/contents/docs/jules-batch/2026-06-01-digest.md"
+    newer = "https://api.github.com/repos/x/codemasterdd-ai-station/contents/docs/jules-batch/2026-06-03-digest.md"
+
+    def json_getter(url):
+        if "codemasterdd-ai-station/contents/docs/jules-batch" in url:
+            return [
+                {"name": "2026-06-01-digest.md", "url": older},
+                {"name": "2026-06-03-digest.md", "url": newer},
+                {"name": "suggestions-2026-06-03.md", "url": "MUST-NOT-PICK"},
+            ]
+        raise AssertionError(f"unexpected json url {url}")
+
+    def content_getter(url):
+        # picks the NEWEST digest, never the suggestions file or the older digest
+        if url == newer:
+            return "# Jules daily digest 2026-06-03\n\nAwaiting sessions: 1\n- `s` [r] **ACTIONABLE (x)** -- t | e\n"
+        raise AssertionError(f"resolver picked the wrong url: {url}")
+
+    src = {"id": "jules-digest", "style": "jules-digest", "api_url": JULES_DIGEST_API}
+    sig = _produce(src, fetcher=None, json_getter=json_getter, content_getter=content_getter)
+    assert sig.source == "jules-digest"
+    assert sig.severity == "warning"   # 1 actionable
+    assert sig.produced_at == "2026-06-03"
+
+
+def test_ingest_all_includes_jules_digest(tmp_path):
+    from governor.store import SignalStore
+    from governor.ingest import ingest_all
+    store = SignalStore(tmp_path / "g.db")
+    fetcher, json_getter, content_getter = _fakes()
+    result = ingest_all(store, fetcher=fetcher, json_getter=json_getter, content_getter=content_getter)
+    assert result["errors"] == 0
+    sources = {r["source"] for r in store.latest_per_source()}
+    assert "jules-digest" in sources

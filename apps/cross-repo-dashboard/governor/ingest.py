@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import base64
 import json
+import re
 import subprocess
 import sys
 from datetime import date
@@ -14,6 +15,7 @@ from governor.parsers import (
     parse_eng_graph_moc,
     parse_game_governance_drift,
     parse_evo_swarm_digest,
+    parse_jules_digest,
     parse_sot_drift_issues,
     parse_vault_report,
 )
@@ -26,8 +28,10 @@ VAULT_LINT_API = "https://api.github.com/repos/MasterDD-L34D/vault/contents/Extr
 ENG_GRAPH_MOC_API = "https://api.github.com/repos/MasterDD-L34D/vault/contents/Atlas/engineering-moc.md"
 # ARCHON learnings are vendored on GitHub in the vault repo (local aa01 is NON-git).
 ARCHON_LEARNINGS_API = "https://api.github.com/repos/MasterDD-L34D/vault/contents/Vault-ops-remote/claude-global/aa01-system/learnings"
+# Jules daily-digest dir (codemasterdd's own repo; the G3 cron writes <date>-digest.md here).
+JULES_DIGEST_API = "https://api.github.com/repos/MasterDD-L34D/codemasterdd-ai-station/contents/docs/jules-batch"
 
-# 8 sources: 2 Game public + 1 evo private + 3 vault lint + 1 vault eng-graph + 1 archon learnings.
+# 9 sources: 2 Game public + 1 evo private + 3 vault lint + 1 vault eng-graph + 1 archon learnings + 1 jules digest.
 SOURCES = [
     {"id": "game-governance-drift", "style": "json"},
     {"id": "game-sot-drift", "style": "gh-issues"},
@@ -37,6 +41,7 @@ SOURCES = [
     {"id": "vault-whatsmissing", "style": "vault", "prefix": "whatsmissing-", "kind": "whatsmissing"},
     {"id": "vault-eng-graph", "style": "vault-fixed", "api_url": ENG_GRAPH_MOC_API},
     {"id": "archon-learnings", "style": "archon-learnings", "api_url": ARCHON_LEARNINGS_API},
+    {"id": "jules-digest", "style": "jules-digest", "api_url": JULES_DIGEST_API},
 ]
 
 
@@ -89,6 +94,21 @@ def resolve_latest_in_dir(api_url: str, prefix: str, getter=None) -> str | None:
     return cands[-1].get("url")  # contents-API url of the file
 
 
+def resolve_latest_digest(api_url: str, getter=None) -> str | None:
+    """List the jules-batch dir, return the contents-API url of the newest <date>-digest.md.
+
+    Matches `YYYY-MM-DD-digest.md` ONLY (excludes `suggestions-*.md` etc.); newest by name.
+    """
+    getter = getter or gh_get_json
+    entries = getter(api_url)
+    cands = sorted(
+        [e for e in (entries or [])
+         if re.fullmatch(r"\d{4}-\d{2}-\d{2}-digest\.md", str(e.get("name", "")))],
+        key=lambda e: e["name"],
+    )
+    return cands[-1].get("url") if cands else None
+
+
 def raw_fetch(url: str) -> str:
     """Anonymous raw fetch (public repos)."""
     r = requests.get(url, timeout=15)
@@ -117,6 +137,11 @@ def _produce(src: dict, fetcher, json_getter, content_getter, now: date | None =
         return parse_eng_graph_moc(content_getter(src["api_url"]), src["api_url"], now=now)
     if style == "archon-learnings":
         return parse_archon_learnings(json_getter(src["api_url"]), src["api_url"])
+    if style == "jules-digest":
+        url = resolve_latest_digest(src["api_url"], json_getter)
+        if not url:
+            raise ValueError("no jules digest found")
+        return parse_jules_digest(content_getter(url), url)
     raise ValueError(f"unknown style {style} for {sid}")
 
 
