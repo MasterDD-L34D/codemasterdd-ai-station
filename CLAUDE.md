@@ -20,6 +20,12 @@ Utente = italiano. Codice/identifier/commit message = inglese. Doc progetto = it
 - **Logging/backup**: `logs/` + `backup/` gitignored; `.env` gitignored (template `.env.example`).
 - **Encoding**: ASCII-first body nuovi `.md` (em-dash -> `--`); em-dash OK solo titoli ADR. Enforcement: `~/.claude/rules/encoding.md` + hook pre-commit. Legacy mojibake = frozen.
 
+## Baseline / quality gates
+- **Definition of Done**: una change e DONE solo con test/build verdi (output mostrato, no "sembra fatto") + zero TODO/stub/placeholder + doc/commit aggiornati + nessun self-merge che salta il review-gate. Vedi Quality Gate globale + protocollo `verification-before-completion`.
+- **Testing**: prima di dire done -> `python -m pytest -q scripts/tests` (pytest, `--import-mode=importlib`) + ASCII-guard ADR-0021 (la "lint" di questo repo infra/scripts, via hook pre-commit / CI). No typecheck (no TS). Preferisci test mirati > full-suite.
+- **PR review (pre-merge, OBBLIGATORIO)**: leggi i commenti review (`gh api repos/<owner>/<repo>/pulls/<N>/comments`) + triage P1 (block, fix obbligatorio) / P2 (should) / P3 (nice). No silent-merge senza risolvere i P1.
+- **Dependencies**: chiedi conferma prima di aggiungere una prod-dependency; niente version-bump/update senza approval esplicito; rispetta il lockfile (no edit manuale).
+
 ## API keys (security)
 Storage `~/.config/api-keys/keys.env` (ACL-locked edusc+SYSTEM). MAI in repo/registry/commit.
 Provider: Groq/Cerebras/Gemini/OpenAI/Anthropic. Load bash: `set -a; source ~/.config/api-keys/keys.env; set +a`.
