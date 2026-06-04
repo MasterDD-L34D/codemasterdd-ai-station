@@ -40,6 +40,10 @@ Pattern di chiusura applicato: marker stale = anti-pattern #19 -> ground-truth v
 - [ ] **L4** — Gemma 4 multimodal dogfood reale. Opportunistic.
 - [ ] **L5** — Skill install policy audit periodico (cadence 3 mesi).
 
+### Godot design-work (human + AI, NON Jules-mechanical)
+
+- [ ] **GD1** -- TV LobbyView spectator mode (`?room=XXXX` URL boot -> REST poll `/api/lobby/list` ogni POLL_INTERVAL_SEC, render party display-only: no input, no host_token). REST-only, `Game/` list_rooms gia' esiste -> nessun endpoint nuovo. Refs (Game-Godot-v2): `scripts/ui/lobby_spectator_poll.gd` (Eval A / PR #284 / P3-gap doc), `scripts/net/web_origin_resolver.gd:82`, `scripts/phone/phone_lobby_join_view.gd` (`?room=` deep-link). **NON un task Jules** -- Jules lo auto-proponeva come "implement" (over-reach su design differito da commento, 2026-06-04 triage). Design-work umano+AI: scope insieme alla prossima sessione feature Godot.
+
 ### ADR-0017 rollout (residuo)
 
 - [ ] **U0-test** — Step 0 quick-win: abilita `aider --browser`, prova 1-2 sessioni dev-loop. Gate: UX accettabile? Se sì → procedi. Se no → deferred step 1+. (No completion evidence.)
