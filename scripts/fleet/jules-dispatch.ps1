@@ -21,7 +21,7 @@ Eduardo-explicit (ADR-0037 decision 3). Spec: docs/superpowers/specs/2026-06-03-
 .PARAMETER Target      Identifier(s) dedup checks: a path and/or function (e.g. scripts/fleet/foo.ps1::Get-Bar).
 .PARAMETER Title       Optional session title (default derived from Repo/Target/date).
 .PARAMETER Force       Override a KNOWN dedup overlap only (gate 4). Never bypasses gates 1-3.
-.PARAMETER ForceBlind  Override cannot-verify dedup (list-GET fail / paginated). Louder audit tag.
+.PARAMETER ForceBlind  Override cannot-verify dedup (list-GET failure only -- pagination is now walked via Get-AllSessionPages). Louder audit tag.
 .PARAMETER DryRun      Run all gates + build/show the REST body + write a DRYRUN audit line; do NOT POST.
 
 .EXAMPLE
@@ -205,6 +205,34 @@ function Add-DispatchConstraints {
   return ($TaskContent + $guard)
 }
 
+function Get-AllSessionPages {
+  param([scriptblock]$Fetch, [int]$MaxPages = 50)
+  # Gate-4 pagination (fix 2026-06-05). The Jules sessions list paginates once total sessions
+  # exceed pageSize (nextPageToken). The previous gate-4 ABORTED on a paginated list (or forced a
+  # blind dispatch with -ForceBlind), so an active session sitting on page 2+ was invisible to the
+  # dedup check -- the root cause of a cross-machine same-target re-dispatch on 2026-06-05. This
+  # walks EVERY page via the $Fetch callback and returns the merged session array so dedup sees all
+  # active sessions. $Fetch is a callback (param: pageToken -> a response object exposing .sessions
+  # and .nextPageToken); keeping the impure Invoke-RestMethod inside the caller's callback leaves
+  # this function pure + unit-testable with a fake multi-page fetcher. A throw from $Fetch
+  # propagates to MAIN's gate-4 try/catch (degrade to -ForceBlind / abort), unchanged. $MaxPages
+  # bounds a pathological walk (50 * 100 = 5000 sessions); Truncated flags hitting that bound.
+  $all = @()
+  $token = $null
+  $pages = 0
+  do {
+    $page = & $Fetch $token
+    if ($null -ne $page) { $all += @($page.sessions) }
+    $token = if ($null -ne $page) { [string]$page.nextPageToken } else { '' }
+    $pages++
+  } while ((-not [string]::IsNullOrEmpty($token)) -and ($pages -lt $MaxPages))
+  return [pscustomobject]@{
+    Sessions  = $all
+    Pages     = $pages
+    Truncated = (-not [string]::IsNullOrEmpty($token))
+  }
+}
+
 # === MAIN (impure orchestration -- not dot-sourced; everything below runs only on direct invoke) ===
 $ErrorActionPreference = 'Stop'
 
@@ -260,18 +288,22 @@ $source = Get-JulesSource $Repo
 $overlap = $null
 $listOk = $false
 try {
-  $resp = Invoke-RestMethod -Headers $hdr "$api/sessions?pageSize=100" -ErrorAction Stop
-  $listOk = $true
-  if ($resp.nextPageToken) {
-    if (-not $ForceBlind) {
-      Write-Error 'ABORT gate4: session list is paginated (nextPageToken present) -- dedup may be incomplete. Re-run with -ForceBlind to override.'
-      exit 1
-    }
-    Write-Warning 'FORCED-BLIND: paginated session list, dedup possibly incomplete, proceeding (-ForceBlind).'
+  $pageResult = Get-AllSessionPages -Fetch {
+    param($tok)
+    $u = "$api/sessions?pageSize=100"
+    if ($tok) { $u += "&pageToken=$tok" }
+    return (Invoke-RestMethod -Headers $hdr $u -ErrorAction Stop)
   }
-  $activeCount = @($resp.sessions | Where-Object { (Test-SessionActive $_.state) -and ($_.sourceContext.source -eq $source) }).Count
-  Write-Host "gate4: $activeCount active session(s) on $source"
-  $overlap = Find-ActiveOverlap -Sessions $resp.sessions -Target $Target -Source $source
+  $listOk = $true
+  $allSessions = @($pageResult.Sessions)
+  if ($pageResult.Truncated) {
+    # Pathological only (>5000 sessions): the walk hit the page bound, so a later page MAY hold an
+    # unseen active session. Honest warning (not a silent gap); archive old terminal sessions to fix.
+    Write-Warning "gate4: session list exceeded $($pageResult.Pages) pages (>5000 sessions) -- dedup scanned a bounded prefix; archive old terminal sessions."
+  }
+  $activeCount = @($allSessions | Where-Object { (Test-SessionActive $_.state) -and ($_.sourceContext.source -eq $source) }).Count
+  Write-Host "gate4: $activeCount active session(s) on $source ($($pageResult.Pages) page(s) scanned)"
+  $overlap = Find-ActiveOverlap -Sessions $allSessions -Target $Target -Source $source
 } catch {
   $listOk = $false
   if (-not $ForceBlind) {

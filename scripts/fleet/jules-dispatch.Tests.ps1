@@ -217,6 +217,28 @@ Assert-True ($body13 -match 'no engine/SDK/tool downloads') 'engine/binary-downl
 Assert-True ($body13.Length -gt 'ORIGINAL TASK BODY'.Length) 'guard appended (output longer than input)'
 
 # ======================================================================
+Write-Host "Test 14: Get-AllSessionPages (gate 4 pagination -- walk all pages, fix 2026-06-05)"
+# Pure pagination over a fake fetcher (param: pageToken -> {sessions, nextPageToken}). The old
+# gate-4 ABORTED on a paginated list (>100 sessions) so dedup could miss an active session on a
+# later page (2026-06-05 collision root cause). This walks every page.
+$page1 = [pscustomobject]@{ sessions = @('s1', 's2'); nextPageToken = 'P2' }
+$page2 = [pscustomobject]@{ sessions = @('s3');       nextPageToken = $null }
+$pageMap = @{ '' = $page1; 'P2' = $page2 }
+$multiFetch = { param($t) $pageMap[[string]$t] }
+$r14 = $null; try { $r14 = Get-AllSessionPages -Fetch $multiFetch } catch {}
+Assert-Eq 3 (@($r14.Sessions).Count) 'walks 2 pages -> 3 sessions merged (s1,s2,s3)'
+Assert-Eq 2 $r14.Pages '2 pages walked'
+Assert-False ([bool]$r14.Truncated) 'followed token to null -> not truncated'
+$onlyPage = [pscustomobject]@{ sessions = @('a'); nextPageToken = $null }
+$r14b = $null; try { $r14b = Get-AllSessionPages -Fetch { param($t) $onlyPage } } catch {}
+Assert-Eq 1 (@($r14b.Sessions).Count) 'single page -> 1 session'
+Assert-Eq 1 $r14b.Pages 'single page -> 1 page walked'
+$loopPage = [pscustomobject]@{ sessions = @('x'); nextPageToken = 'NEXT' }
+$r14c = $null; try { $r14c = Get-AllSessionPages -Fetch { param($t) $loopPage } -MaxPages 3 } catch {}
+Assert-Eq 3 $r14c.Pages 'always-token fetcher -> capped at MaxPages=3'
+Assert-True ([bool]$r14c.Truncated) 'token still present at cap -> Truncated=true'
+
+# ======================================================================
 Write-Host ""
 Write-Host "Results: $script:passed passed, $script:failed failed"
 
