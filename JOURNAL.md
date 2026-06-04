@@ -19,6 +19,23 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-06-04 (pomeriggio -- Jules orchestration: suggestions-triage + reorg-read pattern + doctrine)
+
+### Completato
+- **Jules auto-suggestions ground-truthed = ~100% rumore** (Godot-v2): "Missing test" tutti STALE (gia' testati), "Insecure HTTP" false-positive (localhost dev su 9 file), "XSS via eval" false-positive (JSON.stringify/int-only), "URL routing" = design-comment differito -> feature, "Dynamic Array" = for-loop non membership. Verificare PRIMA ha evitato duplicati/rotture. Dismiss della classe HTTP via Chrome (permesso-B esplicito). URL-routing catturato in BACKLOG GD1.
+- **Doc-comment batch-2 -> PR #409** (board_overlay, ct_bar_hud, vfx_spawner, tv_mating_panel): gdlint-clean al primo colpo -- **vincolo max-line-100 bakeato nel prompt** (fix della lezione batch-1, dove gdlint pescava i doc-comment >100).
+- **Reorg-read pattern "Jules as free READER" VALIDATO 4/4** (Godot 159 + cdd 421 + Game 1489 + Game-DB 675 doc): task read-only "leggi i doc, scrivi `docs/_reorg-proposal.md`, non muovere nulla" -> offload del read token-heavy gratis, io verifico cheap (dels=0 + only-target + accuratezza). Proposte salvate in `logs/jules-tasks/proposals/`. **HOLD** esecuzione -> chip aperto per eseguirle.
+- **Doctrine catturata** in memory `feedback_jules_loop_operational`: safe-lane (prosa-read = forza Gemini 3 Pro) vs risky-lane (code-ground-truth = debolezza provata, NON outsourcare) + gdlint-baking + suggestions=rumore.
+- **Global CLAUDE.md bloat-revert** (lezione mia): avevo aggiunto 15 righe Currency-Gate al global SALTANDO il refresh-verify sulla ricerca slim #270 (+ creando drift Ryzen vs Lenovo-canonical). Eduardo l'ha pescato. Revert -> 62 righe slim. Lezione: refresh-verify (ADR-0026 #1) PRIMA di editare un context-file (rubrica: `docs/superpowers/specs/2026-06-03-context-files-governance-reorg-design.md`).
+
+### Da fare
+- Merge PR #409 (Eduardo). Eseguire i 4 reorg (chip aperto, parte da codemasterdd hub). I 3 reorg-PR esterni (Godot/Game/Game-DB) = Eduardo-merge.
+
+### Note
+- Quota Jules ~46/100, tutto free-token (Jules legge, io verifico; commit/PR scritti da me). 0 FAILED nell'intera giornata (anti-pollution + activities-recovery non serviti).
+
+---
+
 ## 2026-06-04 (Jules Godot loop + insights-actions + cross-repo CI fixes)
 
 ### Completato
