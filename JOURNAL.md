@@ -19,6 +19,25 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-06-04 (Jules Godot loop + insights-actions + cross-repo CI fixes)
+
+### Completato
+- **Jules Godot doc-comment loop**: 3 dispatch via jules-dispatch.ps1 (action_dock, offspring_ritual_panel, battle_feed) -> 3/3 COMPLETED, 0 FAILED (primo batch Godot tutto-pulito; anti-pollution #299 ha retto). Ground-truth clean -> PR #408. Fixato anche il P2-Codex su PR #176 Game-DB (test non wired nel runner -> aggiunto a run-tests.js, verificato col meccanismo `require()`, CI verde).
+- **CI gdlint fix #407 + #408**: ground-truth catch -- avevo verificato gdformat ma NON gdlint; max-line-length(100) pescava i doc-comment lunghi. Wrappati a <=100 (gdlint "Success", gdformat clean). Entrambi i PR ora merge-ready.
+- **Insights-actions (3/3)**: (#5) claim "6 sessioni perse a 500-token" FALSIFICATO (0 stop_reason:max_tokens in 632 file; erano stub ai-title + errori transitori overloaded/auth auto-recuperati). (#6) regola **Currency Gate pre-flight** nel global CLAUDE.md (sync/PR/commit/marker prima di branch/PR/fix-differito). (#7) **tdd-guard cross-repo false-block FIXATO**: config ignorePatterns sibling-repo (minimatch matcha separatori / e backslash) via setup idempotente `scripts/setup/tddguard-ignore-config.py` (commit 323e88e), verificato 8/8 + auto-validato live (6 edit Godot cross-repo, zero block). guard-off ora last-resort.
+- **Currency Gate dogfood**: local main era 5-dietro (wrapper-upgrade #299 nascosto); sincronizzato. Committato il WIP .mcp.json SSE (abad989), scartato BACKLOG-L6 obsoleto (gia' chiuso da #298). 2 commit pushati su main.
+
+### Da fare
+- **Eduardo-merge** (ADR-0037, external-explicit): PR #176 (Game-DB) + #407 + #408 (Godot, ora gdlint-verdi).
+- **Lenovo**: `python scripts/setup/tddguard-ignore-config.py` (config.json e' local-only) + applicare la regola Currency Gate al `~/.claude/CLAUDE.md` di Lenovo (global = machine-local non-git; authoring dal canonical-owner).
+- **Jules suggestions Godot**: browser-only (Chrome non connesso) -- triage quando connetti jules.google.
+
+### Note
+- gdformat (formatter) NON flagga line-length; gdlint (linter) si'. La CI "gdformat lint" gira ENTRAMBI -> il ground-truth dei doc-comment Godot deve girare gdlint, non solo gdformat.
+- Insights = ipotesi, non verita': 4/5 add CLAUDE.md gia' coperti, "features to try" (Skills/Hooks/MCP) gia' tutti in uso, claim 500-token allucinato. SDMG/ground-truth applicato all'analyzer stesso.
+
+---
+
 ## 2026-06-03 (governor R1 open-PR reconcile rung -- built + activated)
 
 ### Completato
