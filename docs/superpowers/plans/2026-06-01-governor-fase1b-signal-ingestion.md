@@ -16,7 +16,7 @@
 
 **Tech Stack:** Python 3.13, sqlite3, `requests` (REST + raw), pytest + monkeypatch. Both 1b sources are PUBLIC repos (anon REST OK; token optional). Vault-authed (private) + ARCHON learnings = deferred to Fase-1c.
 
-**Spec:** `docs/superpowers/specs/2026-06-01-unified-fleet-governor-design.md`. **Doctrine (on main):** ADR-0036 + `docs/cross-repo/actor-activation-criteria.md`.
+**Spec:** `docs/superpowers/specs/2026-06-01-unified-fleet-governor-design.md`. **Doctrine (on main):** ADR-0036 + `docs/governance/actor-activation-criteria.md`.
 
 **Verified ground-truth (2026-06-01):**
 - evo exports dir `repos/MasterDD-L34D/evo-swarm/contents/docs/exports` lists `EXPORT-FOR-GAME-REPO-YYYY-MM-DD.md` (newest today: `2026-05-27`). Resolve newest -> raw-fetch it.

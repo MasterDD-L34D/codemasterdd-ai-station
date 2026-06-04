@@ -8,7 +8,7 @@
 
 **Tech Stack:** Python 3.13, Flask (blueprint, already present), sqlite3 (stdlib), pytest + monkeypatch (existing conftest mocks requests/flask at function scope), `requests` for fetch.
 
-**Spec:** `docs/superpowers/specs/2026-06-01-unified-fleet-governor-design.md`. **Doctrine:** ADR-0036 (Accepted spine) + `docs/cross-repo/actor-activation-criteria.md` (R0 active, all else gated).
+**Spec:** `docs/superpowers/specs/2026-06-01-unified-fleet-governor-design.md`. **Doctrine:** ADR-0036 (Accepted spine) + `docs/governance/actor-activation-criteria.md` (R0 active, all else gated).
 
 **Scope (Fase-1a vs 1b):** This plan ships the foundation + the two PUBLIC-anon raw-fetch signals only (Game `governance_drift_report.json` JSON; evo-swarm digest markdown). Deferred to a Fase-1b plan/PR: the private-authed vault signals (gap/coherence/whats_missing -- need GH_TOKEN raw-fetch), the gh-issue-polled `sot-drift-sentinel`, and ARCHON learnings. Each Fase-1b adapter reuses the parser+store pattern established here; their exact schemas are recorded in the spec + the ground-truth map. Keeping each PR reviewable (no big-bang).
 

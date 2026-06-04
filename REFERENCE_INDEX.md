@@ -94,25 +94,25 @@ Indice completo in `DECISIONS_LOG.md`. Path: `docs/adr/NNNN-topic.md`.
 
 ### REF-P01
 - **Codice**: PAT-01
-- **Titolo**: `docs/patterns/delegation-to-aider.md`
+- **Titolo**: `docs/reference/patterns/delegation-to-aider.md`
 - **Funzione**: decision tree classificazione task cosmetic/behavior/strategic + formato handoff + review loop
 - **Stato**: live, **backbone** trigger delega in-session (CLAUDE.md)
 - **Uso consigliato**: prima di ogni Edit/Write su file esistente
 
 ### REF-P02
 - **Codice**: PAT-02
-- **Titolo**: `docs/patterns/aider-delegation-log-template.md`
+- **Titolo**: `docs/reference/patterns/aider-delegation-log-template.md`
 - **Funzione**: schema colonne log dogfood (mensile)
 - **Uso consigliato**: entry in `logs/aider-delegation-YYYY-MM.md`
 
 ### REF-P03
 - **Codice**: PAT-03
-- **Titolo**: `docs/patterns/git-amend-force-push-safe.md`
+- **Titolo**: `docs/reference/patterns/git-amend-force-push-safe.md`
 - **Funzione**: protocollo safe git amend/force-push (raro, autorizzazione esplicita)
 
 ### REF-P04
 - **Codice**: PAT-04
-- **Titolo**: `docs/patterns/claude-code-workflow.md` + `docs/patterns/prompt-engineering-italiano.md`
+- **Titolo**: `docs/reference/patterns/claude-code-workflow.md` + `docs/reference/patterns/prompt-engineering-italiano.md`
 - **Funzione**: convenzioni Claude Code specifiche + italiano prompt patterns
 
 ---
@@ -142,17 +142,17 @@ Indice completo in `DECISIONS_LOG.md`. Path: `docs/adr/NNNN-topic.md`.
 
 ### REF-L01
 - **Codice**: LES-01
-- **Titolo**: `docs/lessons-learned/victus-trauma-postmortem.md`
+- **Titolo**: `docs/reference/lessons/victus-trauma-postmortem.md`
 - **Funzione**: post-mortem incidente BitLocker+OneDrive (driver filosofia sovereign ADR-0001)
 
 ### REF-L02
 - **Codice**: LES-02
-- **Titolo**: `docs/lessons-learned/capire-prima-fare-dopo.md`
+- **Titolo**: `docs/reference/lessons/capire-prima-fare-dopo.md`
 - **Funzione**: meta-lesson su analisi-prima-di-execution
 
 ### REF-L03
 - **Codice**: LES-03
-- **Titolo**: `docs/lessons-learned/ai-as-thinking-partner.md`
+- **Titolo**: `docs/reference/lessons/ai-as-thinking-partner.md`
 - **Funzione**: rubber duck meta-pattern per future sessioni
 
 ---
@@ -241,8 +241,8 @@ Indice completo in `DECISIONS_LOG.md`. Path: `docs/adr/NNNN-topic.md`.
 
 ## SES — Sessioni log
 
-- `docs/sessions/2026-04-19-sessione-notturna.md`
-- `docs/sessions/2026-04-19-sessione-serale.md`
+- `docs/handoffs/2026-04-19-sessione-notturna.md`
+- `docs/handoffs/2026-04-19-sessione-serale.md`
 
 **Stato**: frozen. Storiche, low re-read value.
 

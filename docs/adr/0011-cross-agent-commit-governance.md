@@ -213,7 +213,7 @@ Dopo fix 2C il wrapper Aider produce commit message conformi in inglese; 1A bloc
 **Problema**: conflitto cross-sistema scoperto in cross-PC reconciliation. Tre fonti
 divergenti sull'attribution Claude nei commit:
 - vault `Spaces/Dev/Evo-Tactics/COMMIT_STYLE.md` → **raccomanda** `Co-Authored-By: Claude Opus 4.6`
-- codemasterdd `docs/patterns/claude-code-workflow.md` → **prescrive** `Co-Authored-By: Claude Opus 4.7`
+- codemasterdd `docs/reference/patterns/claude-code-workflow.md` → **prescrive** `Co-Authored-By: Claude Opus 4.7`
 - Lenovo AA01 `AGENTS.md` FORBIDDEN-#6 → **vieta** `Co-authored-by: Claude`, trailer `Coding-Agent:`
 
 Drift aggiuntivo: i due doc git divergono pure sul model (4.6 vs 4.7). Nessuna

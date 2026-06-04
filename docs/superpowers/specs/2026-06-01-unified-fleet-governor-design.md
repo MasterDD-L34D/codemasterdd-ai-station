@@ -186,7 +186,7 @@ cross-repo writes = branch+PR only, never direct.
    - Add the north-star governor + pointer to this spec.
 2. **`ORCHESTRATION.md` sec 5**: annotate the ladder table with R0-R3 rungs + note
    auto-merge is default-OFF until R2 earned; point to the actor + activation-criteria.
-3. **`docs/cross-repo/actor-activation-criteria.md` (new)**: rung table (sec 3) +
+3. **`docs/governance/actor-activation-criteria.md` (new)**: rung table (sec 3) +
    mechanical clean-cycle def + the off-ramp decision rule (sec 4) + the advisory-vs-gate
    signal separation. This is the single checklist that decides when any autonomy
    increment is allowed.

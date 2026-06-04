@@ -3,7 +3,7 @@
 > **Authored-from**: Lenovo (CodeMasterDD / edusc / 192.168.1.10), 2026-05-28.
 > **For-use-on**: Ryzen (DESKTOP-T77TMKT / Vgit / 192.168.1.11) o qualsiasi PC fleet.
 > **Come arriva qui**: codemasterdd e' PRIVATE + synced -> su Ryzen `git -C C:/dev/codemasterdd-ai-station pull` (se clonato) e leggi questo file.
-> Companion: handoff originale `docs/sessions/2026-05-28-handoff-sot-drift-A.md` + spec/plan in `docs/superpowers/` (entrambi codemasterdd).
+> Companion: handoff originale `docs/handoffs/2026-05-28-handoff-sot-drift-A.md` + spec/plan in `docs/superpowers/` (entrambi codemasterdd).
 
 ## Repo legend (necessaria per navigare i path qui sotto)
 
@@ -34,7 +34,7 @@ Stato: **A merged + primo CI run verde**; **B QG full-PASS**; privacy gap chiuso
 | Action + matcher + watch-map + flag-issue | Game `.github/sot-drift/` + `tools/sot-drift/` + `.github/workflows/sot-drift-sentinel.yml` | PR #2406 MERGED (`29ac9102`), CI run sul merge = success 14s, 0 issue spurie |
 | Subagent verdetto | codemasterdd `.claude/agents/sot-drift-verifier.md` | QG Step-1 PASS (live dispatch smoke) -- production-ready |
 | Wiring tracking | codemasterdd `docs/KNOWLEDGE_MAP.md` section 8 | done |
-| Privacy guard | codemasterdd `.aiderignore` (esclude `docs/ryzen-memory-archive/`) | done, smoke PASS |
+| Privacy guard | codemasterdd `.aiderignore` (esclude `docs/archive/ryzen-memory-archive/`) | done, smoke PASS |
 | Lessons | `~/aa01/learnings/L-2026-05-038` (ESM CLI portability) + `L-2026-05-039` (branch-protection pitfall) | promosse |
 
 ## Come si OPERA (workflow runtime)

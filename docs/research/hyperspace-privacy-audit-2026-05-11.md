@@ -290,7 +290,7 @@ Plus pktmon capture findings (zero LAN traffic, 30+ public destinations) NON web
 - DRAFT integrali primary: `C:/Users/edusc/aa01/workspace/2026-05-aa01-001-2026-05-10-fleet-discovery-pod-design/DRAFT/01-07-*.md`
 - Lesson L-2026-05-002: in promotion da DRAFT/07-lesson-draft.md → learnings/L-2026-05-002-hyperspace-audit-cycle.md
 - ADR-0025 `docs/adr/0025-hyperspace-pods-privacy-assessment.md` (formalized decision NO-GO)
-- Plan integration `docs/plans/integration-aa01-vault-hyperspace-2026-05.md` Obiettivo 3 (DONE empirical via aa01-001)
+- Plan integration `docs/archive/plans/integration-aa01-vault-hyperspace-2026-05.md` Obiettivo 3 (DONE empirical via aa01-001)
 - Session: 2026-05-10/11 (aa01-001 empirical) + 2026-05-11 (aa01-003 web-only duplicate + AMEND)
 
 ## 10. Related

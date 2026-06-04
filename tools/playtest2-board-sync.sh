@@ -10,7 +10,7 @@
 #
 # This script refreshes ONLY the auto-syncable signal block inside the
 # `| **playtest#2 automation (OD-044)** |` row of
-# docs/cross-repo/EXECUTION-BOARD.md, between the AUTO-SYNC markers. The
+# docs/governance/EXECUTION-BOARD.md, between the AUTO-SYNC markers. The
 # human-authored prose of the row is never touched.
 #
 # Contract:
@@ -33,7 +33,7 @@ BASELINE_PATH="tools/sim/pillar-baseline.json"
 # the per-pillar line is simply omitted, never fabricated, never crashes.
 DIGEST_PATH="tools/sim/playtest2-latest.json"
 WORKFLOW_FILE="ai-sim-nightly.yml"
-BOARD="docs/cross-repo/EXECUTION-BOARD.md"
+BOARD="docs/governance/EXECUTION-BOARD.md"
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$REPO_ROOT" || { echo "[sync] cannot cd repo root"; exit 0; }

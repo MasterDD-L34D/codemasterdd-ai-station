@@ -42,7 +42,7 @@ Criteri **pre-definiti** per evoluzione paradigm cross-repo SE failure trigger e
 | 2-4.99/wk | **MODERATE pain** -- Component 1 v0.2 mostly OK, minor gaps | Iterate v0.3+ on identified gaps opportunistic |
 | <2/wk | **LOW pain** -- Component 1 v0.2 adoption successful | Continue v0.2 stable, defer v0.3 iteration unless other trigger emerges |
 
-**Threshold revisability**: post 1-week pilot, threshold revisable se events tipicamente cluster (1 day = revise weekly threshold) vs scattered (mantain). Document revision in `docs/cross-repo/ESCALATION_GATES.md` amendment + JOURNAL entry.
+**Threshold revisability**: post 1-week pilot, threshold revisable se events tipicamente cluster (1 day = revise weekly threshold) vs scattered (mantain). Document revision in `docs/governance/ESCALATION_GATES.md` amendment + JOURNAL entry.
 
 **Audit week 4**: invocare harsh-reviewer subagent (Protocol 5 ADR-0026 addendum) per verificare:
 - Logging discipline consistency (no gap weeks)

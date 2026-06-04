@@ -53,7 +53,7 @@ File governance root-level (schema framework archivio adottato 2026-04-23):
 - [docs/archive/SPRINT_01.md](./docs/archive/SPRINT_01.md) — ARCHIVED (sprint chiuso 2026-04-24)
 - [docs/archive/SPRINT_02.md](./docs/archive/SPRINT_02.md) — ARCHIVED (finestra 2026-05-20..06-19 spent)
 - [MASTER_PROMPT.md](./MASTER_PROMPT.md) — prompt apertura portabile
-- [REFERENCE_INDEX.md](./REFERENCE_INDEX.md) — indice navigabile docs/patterns/research
+- [REFERENCE_INDEX.md](./REFERENCE_INDEX.md) — indice navigabile docs/reference/patterns/research
 - [PROMPT_LIBRARY.md](./PROMPT_LIBRARY.md) — prompt riutilizzabili progetto-specifici
 - [MODEL_ROUTING.md](./MODEL_ROUTING.md) — routing strategico strumenti/modelli
 

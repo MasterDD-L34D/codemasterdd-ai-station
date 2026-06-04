@@ -62,7 +62,7 @@ Continuazione marathon 11/5 dopo PR #41 v18 housekeeping merged. Triage open PR 
 - Plan 3 obiettivi sequenziati: AA01 hub orchestrante + Vault read-only sibling-peer + Hyperspace Phase 1 privacy audit
 - Sequencing 3 sessioni (~1.5h + 2h + 3h), dipendenza esplicita Hyperspace -> Vault lessons
 - Risk flag Claude Max 8gg residui (Hyperspace audit ideally entro 19/05)
-- Plan committed: `docs/plans/integration-aa01-vault-hyperspace-2026-05.md`
+- Plan committed: `docs/archive/plans/integration-aa01-vault-hyperspace-2026-05.md`
 
 #### Branch state
 1 commit ahead di main su `claude/closure-ritual-2026-05-11` (questo PR plan + JOURNAL + COMPACT v19).

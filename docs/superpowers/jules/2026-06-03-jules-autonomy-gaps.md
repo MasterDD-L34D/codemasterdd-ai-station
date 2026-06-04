@@ -3,7 +3,7 @@
 > Self-contained handoff for a fresh session (`/goal`). Cold-start: read this + the
 > pointers at the bottom; the prior session already ground-truthed the state below.
 > Authority: ADR-0035 (+2026-06-03 addendum) · ORCHESTRATION.md (ADR-0036) ·
-> `docs/jules/JULES-CAPABILITIES-MASTER.md` §9 · memory `project_jules_collaboration_state`,
+> `docs/superpowers/jules/JULES-CAPABILITIES-MASTER.md` §9 · memory `project_jules_collaboration_state`,
 > `feedback_jules_autonomous_loop_2026_06_02`, `feedback_codex_clean_verdict_reaction`.
 
 ## State (ground-truthed 2026-06-03, do not re-discover)
@@ -82,7 +82,7 @@ from "works on-demand" to "runs by itself".
   shipped; acted-on signals 1/3 toward the R0->R1 off-ramp. This is the principled,
   earn-based path to autonomous merge (so it underpins G1).
 - **Action**: ship R0 (observe pane + the crons) + accumulate acted-on signals (>=3 / 4
-  weeks per `docs/cross-repo/actor-activation-criteria.md`); R1 (open-PR, human-merge)
+  weeks per `docs/governance/actor-activation-criteria.md`); R1 (open-PR, human-merge)
   unlocks behind its own ADR. Jules-PR-cycles are one of the signals it acts on.
 - **Accept**: R0 shipped + CI-green + off-ramp tracking started. (Mid-horizon, not 1
   session.)
@@ -104,8 +104,8 @@ from "works on-demand" to "runs by itself".
 
 ## Pointers
 - `ORCHESTRATION.md` §5 (ladder) + §6 (standing perms) · `docs/adr/0035-*.md` (+addendum)
-  · `docs/adr/0036-*.md` · `docs/jules/JULES-CAPABILITIES-MASTER.md` §9
-  · `docs/cross-repo/actor-activation-criteria.md` (R0/R1/R2 earn-path)
+  · `docs/adr/0036-*.md` · `docs/superpowers/jules/JULES-CAPABILITIES-MASTER.md` §9
+  · `docs/governance/actor-activation-criteria.md` (R0/R1/R2 earn-path)
   · `docs/jules-batch/2026-06-02-hardened-prompts.md` (prompt templates + verdicts)
   · memory `project_jules_collaboration_state`, `feedback_jules_autonomous_loop_2026_06_02`,
   `feedback_codex_clean_verdict_reaction`.

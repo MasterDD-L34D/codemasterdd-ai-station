@@ -2,7 +2,7 @@
 
 > Sessione "incaricare Jules": suggerimenti letti live via Claude-in-Chrome
 > (read-only, sweep 7/7 repo configurati). Wiring + meccanica = vedi
-> `docs/jules/JULES-CAPABILITIES-MASTER.md` §9. Il **lancio (Start) = Eduardo**.
+> `docs/superpowers/jules/JULES-CAPABILITIES-MASTER.md` §9. Il **lancio (Start) = Eduardo**.
 > Uso: su jules.google -> apri il suggerimento -> bottone **"edit"** -> incolla
 > il prompt sotto (sostituisce il template generico) -> **Start**. Cosi' il
 > suggerimento high-signal di Jules eredita il guard-rail anti-#10/anti-S5.

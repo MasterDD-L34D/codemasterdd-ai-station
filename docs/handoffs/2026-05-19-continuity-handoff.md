@@ -42,11 +42,11 @@ proxy** (Eduardo l'ha flaggato ripetutamente → currency-gate encoded).
 NUOVI (questa sessione):
 - `codemasterdd/scripts/jules-daily-digest.ps1` (v4.1, scheduled 8am) — se reorg sposta scripts/, aggiornare Windows ScheduledTask `jules-daily-digest` path.
 - `codemasterdd/scripts/godot-install-ryzen.ps1`
-- `codemasterdd/docs/jules/JULES-CAPABILITIES-MASTER.md`
+- `codemasterdd/docs/superpowers/jules/JULES-CAPABILITIES-MASTER.md`
 - `codemasterdd/docs/jules-batch/2026-05-18-*.md` (digest + batch-01-CORRECTED)
 - `codemasterdd/docs/runbook/jules-session-triage-via-cli.md`, `adr-status-check.md`
 - `codemasterdd/docs/adr/0034-*.md` (+ R3-bis addendum)
-- `codemasterdd/docs/sessions/2026-05-19-continuity-handoff.md` (questo)
+- `codemasterdd/docs/handoffs/2026-05-19-continuity-handoff.md` (questo)
 - `Game-Godot-v2/docs/godot-v2/design-conformance-gap-2026-05-19.md` (PR #284 DRAFT — **non orfanare; rilocare con intento se reorg tocca docs/godot-v2/**)
 - `Game-Godot-v2/docs/combat/combat-canon.md` (migration banner aggiunto #2333)
 - `Game/docs/planning/EVO_FINAL_DESIGN_MILESTONES_AND_GATES.md` (G2 CLOSED)
@@ -76,7 +76,7 @@ PATH-DEPENDENT (citati cross-doc — se rinomini, aggiorna riferimenti):
 artefatti vivi: codemasterdd PR #167-174 merged, Game #2330/2332/2333
 merged, Game-Godot-v2 PR #284 DRAFT (design-conformance gap, pending
 /ultrareview — NON mergere, NON orfanare). Stato runtime Ryzen +
-reorg-collision file list: codemasterdd/docs/sessions/2026-05-19-
+reorg-collision file list: codemasterdd/docs/handoffs/2026-05-19-
 continuity-handoff.md. La reorg DEVE consultare quel doc §Reorg-collision
 prima di spostare gli script/doc elencati (ScheduledTask path-dependent).
 ```
@@ -221,7 +221,7 @@ end-to-end: tdd-guard plugin=false 2-PC + live-verified Ryzen
 (no-block .md edit, falsifica bug originale). vault PR #132 = close
 pending-Eduardo-merge sovereign. Per ripresa qualsiasi sessione futura:
 git -C C:\dev\codemasterdd-ai-station pull + leggi
-docs/sessions/2026-05-19-continuity-handoff.md (questo, §EVENING UPDATE).
+docs/handoffs/2026-05-19-continuity-handoff.md (questo, §EVENING UPDATE).
 Godot #284 DRAFT separato gate-1-ultrareview-Eduardo quando vuoi.
 ```
 
@@ -504,7 +504,7 @@ Rule: tdd-guard friction on out-of-scope files = signal to use Bash heredoc, NOT
 
 - L-DRAFT-F..J -> promote to canonical L-2026-05-NNN learnings in vault learnings/ next session
 - Anti-Pattern #10 candidate: "Single-quoted heredoc trace-id literal" -> add to CLAUDE.md global Anti-Pattern Catalogue if recurs
-- D-sequence successful pattern (E to A to B with anti-creep gates + harsh-review per phase + autoresearch for blocking Q's) -> reusable governance template, document in docs/patterns/multi-phase-d-sequence.md if applied again
+- D-sequence successful pattern (E to A to B with anti-creep gates + harsh-review per phase + autoresearch for blocking Q's) -> reusable governance template, document in docs/reference/patterns/multi-phase-d-sequence.md if applied again
 
 ### Cron monitor durable confirmed cross-session
 
@@ -548,7 +548,7 @@ Empirical confirmation: durable scheduled-task survives Claude Code REPL idle + 
 ### NEXT-SESSION TASKS (paste-ready prompt below)
 
 **P1 PROMOTE-LESSONS** (highest priority, anti-creep gate cleared by this session closing):
-- Move L-DRAFT-F..J from `codemasterdd/docs/sessions/2026-05-19-continuity-handoff.md` to canonical `vault/learnings/L-2026-05-NNN-<slug>.md` files
+- Move L-DRAFT-F..J from `codemasterdd/docs/handoffs/2026-05-19-continuity-handoff.md` to canonical `vault/learnings/L-2026-05-NNN-<slug>.md` files
 - Suggested slugs:
   - L-2026-05-NNN-sdmg-gate-empirical-yield-confirmed (F)
   - L-2026-05-NNN-harsh-reviewer-governance-class-catch (G)
@@ -561,7 +561,7 @@ Empirical confirmation: durable scheduled-task survives Claude Code REPL idle + 
 
 **P2 ANTI-PATTERN #10 CANDIDATE**: if heredoc trace-id literal pattern recurs across 1+ more sessions, add to CLAUDE.md Anti-Pattern Catalogue. Currently single-instance, NOT yet promoted.
 
-**P3 D-SEQUENCE PATTERN DOC**: if multi-phase E-to-A-to-B sequence is reused for another capability eval, document as `codemasterdd/docs/patterns/multi-phase-d-sequence.md`. Currently zero-shot success, NOT yet promoted.
+**P3 D-SEQUENCE PATTERN DOC**: if multi-phase E-to-A-to-B sequence is reused for another capability eval, document as `codemasterdd/docs/reference/patterns/multi-phase-d-sequence.md`. Currently zero-shot success, NOT yet promoted.
 
 **P4 VENV CLEANUP**: `rm -rf C:/Users/VGit/AppData/Local/Temp/browser-use-fe3-venv` (Eduardo manual, ~250MB transient deps including Playwright + Anthropic SDK). Classifier blocked auto-cleanup this session (correct scope-escalation safety).
 
@@ -580,7 +580,7 @@ Empirical confirmation: durable scheduled-task survives Claude Code REPL idle + 
 ```
 Sessione 2026-05-21 (o successiva). Coordinator-lane Ryzen (192.168.1.11 Vgit, edusc on Lenovo .10).
 
-CONTEXT: D-sequence E to A to B (browser-agentic-loop OD-051 + OD-052 + OD-053) COMPLETE end-to-end 2026-05-20. 8 PR merged. 5 lessons L-DRAFT-F..J in codemasterdd/docs/sessions/2026-05-19-continuity-handoff.md awaiting promotion.
+CONTEXT: D-sequence E to A to B (browser-agentic-loop OD-051 + OD-052 + OD-053) COMPLETE end-to-end 2026-05-20. 8 PR merged. 5 lessons L-DRAFT-F..J in codemasterdd/docs/handoffs/2026-05-19-continuity-handoff.md awaiting promotion.
 
 PRIMARY TASK: Promote L-DRAFT-F..J to canonical vault/learnings/L-2026-05-NNN-<slug>.md files. Find next L-NNN number via ls vault/learnings/L-2026-05-*. Use existing learning frontmatter pattern. Branch + PR to vault, Eduardo merges. Cross-link back from handoff.
 
@@ -592,7 +592,7 @@ CONSTRAINTS:
 - CAVEMAN MODE active (drop articles/filler)
 
 REFERENCES:
-- codemasterdd/docs/sessions/2026-05-19-continuity-handoff.md §LESSONS-ENCODED 2026-05-20 D-sequence (L-DRAFT-F..J source)
+- codemasterdd/docs/handoffs/2026-05-19-continuity-handoff.md §LESSONS-ENCODED 2026-05-20 D-sequence (L-DRAFT-F..J source)
 - codemasterdd/STATUS_MULTI_REPO.md §D-SEQUENCE 2026-05-20 (summary)
 - vault/docs/decisions/OD-051..OD-053-*.md (RESOLVED context)
 - Game-Database#123 (already FIXED by #124 = a11y i18n source-link for L-DRAFT-H prompt-cache + L-DRAFT-G harsh-reviewer empirical)

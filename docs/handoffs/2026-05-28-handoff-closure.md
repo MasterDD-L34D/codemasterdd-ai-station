@@ -125,6 +125,6 @@ Expected:
 - `agent-scanner` skill (LIVE post-deploy): "scan agents" -> inventario per anti-shadow-duplicate prima di selezionare specialist.
 - `repo-health-auditor` subagent: cross-repo state audit on-demand quando il check fleet emerge dubbio.
 
-**Se l'unico drift attuale (`knowledge-preservation` pillar)** suggerisce next-smallest-step su `docs/ryzen-memory-archive/**`, NON forzare un commit cerimoniale solo per "alzare il numero". Il drift e' atteso (layer reference, non daily-touched). Tunabile via `/compass:evolve` se emerge pattern stabile.
+**Se l'unico drift attuale (`knowledge-preservation` pillar)** suggerisce next-smallest-step su `docs/archive/ryzen-memory-archive/**`, NON forzare un commit cerimoniale solo per "alzare il numero". Il drift e' atteso (layer reference, non daily-touched). Tunabile via `/compass:evolve` se emerge pattern stabile.
 
 Buona sessione.

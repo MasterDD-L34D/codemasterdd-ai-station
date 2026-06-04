@@ -43,7 +43,7 @@
 | 0033 | Jules governance resolved | **Accepted** (esterni read-only superseded da 0034) | 2026-05-16 | Risoluzione post-0032 falsificazione. Supersede 0032 cleanly. Decision (1)throttle + (3)own-active restano; (2)read-only-esterni superseded da 0034. |
 | 0034 | Jules autonomous-managed (owner mandate) | **Accepted (Option D) 2026-05-18** | 2026-05-18 | Mandato owner. Option A (full-autonomous corrective-send) = ADR-0032-redux, rigettata da arbitro esterno (SDMG pre-commit onorato). **Option D**: full-auto triage+ground-truth + auto-archive-only-non-generativo; generativo → 1 batch-artifact, Eduardo 1 approve/ciclo (fuori loop, intento ok). own-repo active resta. |
 | 0035 | Jules-from-CLI proactive dispatch as async-remote-agent tier | **Accepted 2026-05-29** (ratified, scoped clean-rate 5/5 = 100% >= 80% gate) | 2026-05-29 (P) -> 2026-05-29 (A) | Jules promosso da reactive-triage a tier dispatch proattivo (async-remote-agent) via CLI. Scoped batch clean-rate 5/5. PR #211 (Proposed) + #213 (Accepted). Consolidato sotto ADR-0036 (ORCHESTRATION.md) come detail, resta Accepted. |
-| 0036 | Unified Orchestration Doctrine (multi-LLM + Jules + Opus 4.8) | **Accepted (spine) + Deferred (auto-merge rung)** revised 2026-06-01 | 2026-05-29 (P) -> 2026-06-01 (A spine) | Doctrine spine (hub-and-spoke, 5 spokes, routing tree, mandatory verification gate, ladder-as-classification) ratificata su evidenza gia'-praticata. Auto-merge rung deferred a futuro R2 ADR via earn-path (`docs/cross-repo/actor-activation-criteria.md`). harsh-reviewer falsification 2026-06-01 corregge trigger framing (SDMG-incompatible, non "circular"). PR #216 (doctrine) + #241 (ratify spine). |
+| 0036 | Unified Orchestration Doctrine (multi-LLM + Jules + Opus 4.8) | **Accepted (spine) + Deferred (auto-merge rung)** revised 2026-06-01 | 2026-05-29 (P) -> 2026-06-01 (A spine) | Doctrine spine (hub-and-spoke, 5 spokes, routing tree, mandatory verification gate, ladder-as-classification) ratificata su evidenza gia'-praticata. Auto-merge rung deferred a futuro R2 ADR via earn-path (`docs/governance/actor-activation-criteria.md`). harsh-reviewer falsification 2026-06-01 corregge trigger framing (SDMG-incompatible, non "circular"). PR #216 (doctrine) + #241 (ratify spine). |
 
 ### In review (Proposed, awaiting Accepted trigger)
 - **ADR-0016** -- Constraint-count routing dimension. Trigger Accepted: n>=3 data points addizionali (constraint=4 explicit LOCAL, 2-transform LOCAL, 5-strict LOCAL). Update 2026-04-24: +1 data point (#12 constraint=4 parity-based, partial). Stato 2026-05-09: dataset Fase 6 closed a n=12 + smoke OpenCode 9 + dogfood OpenCode 2 = ulteriori data points emergeranno organicamente in SPRINT_02 post-Max.
@@ -147,7 +147,7 @@ Formato granulare per decisioni che non meritano ADR (reversibili, locali, non v
 
 ### Decisione 007 -- Risposte 6 questions BLOCKING harsh review (2026-05-09)
 - **Data**: 2026-05-09 mattino
-- **Titolo**: Eduardo ha risposto alle 6 questions BLOCKING/SIGNIFICANT/MEDIUM identificate da harsh review flow chart 2026-05-09 (`docs/reviews/flow-chart-harsh-review-2026-05-09.md`)
+- **Titolo**: Eduardo ha risposto alle 6 questions BLOCKING/SIGNIFICANT/MEDIUM identificate da harsh review flow chart 2026-05-09 (`docs/governance/flow-chart-harsh-review-2026-05-09.md`)
 - **Decisione presa**: 6 scelte ratificate, 6 task derivate (BACKLOG H7-H12), 2 ADR scaffold (ADR-0023 + ADR-0024 Proposed):
 
 | Q | Domanda | Scelta | Action item |
@@ -161,7 +161,7 @@ Formato granulare per decisioni che non meritano ADR (reversibili, locali, non v
 
 - **Perche'**: harsh review identificato 2 BLOCKING (V1 strategic tier + V2 privacy bypass) + 1 SIGNIFICANT (V3 sample size) + 4 choke points + edge cases. Senza decisioni esplicite, transition window 10gg pre-Max chiude con vulnerabilita' note. Decisioni Eduardo direzionano fix in 3-4 giornate fattibili nel window.
 - **Alternative considerate**: per ogni Q opzioni B/C/D presentate harsh-reviewer mode. Eduardo ha scelto A in 5/6 (B in 3 con motivazione "trasparenza pura").
-- **Conseguenze**: ADR-0023 + ADR-0024 Proposed (questo PR scaffold). 6 task BACKLOG H7-H12. 4 task M7-M10 deferred SPRINT_02 / opportunistic. Report harsh review salvato `docs/reviews/flow-chart-harsh-review-2026-05-09.md`.
+- **Conseguenze**: ADR-0023 + ADR-0024 Proposed (questo PR scaffold). 6 task BACKLOG H7-H12. 4 task M7-M10 deferred SPRINT_02 / opportunistic. Report harsh review salvato `docs/governance/flow-chart-harsh-review-2026-05-09.md`.
 - **Azioni derivate**: questo PR (1) salva report + crea ADR-0023 + ADR-0024 scaffold + aggiorna BACKLOG H7-H12 + DECISIONS_LOG. (2) Eduardo direct: H11 attivazione AA01 standalone. (3) Sessioni successive: H7-H10 + H12 fix prima 19/05.
 
 ### Decisione 006 -- Transition active sovereign 8-9/5 (validation pre-Max expiration)

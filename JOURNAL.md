@@ -109,7 +109,7 @@ Eduardo, same session: "1 fai la ratifica, 2 fai la prova, 3 fai i fix, 4 prepar
 
 ## 2026-06-03 (Ryzen: Jules-autonomy gaps G1-G6 closed -- /goal session)
 
-Eduardo /goal: close the 6 Jules-collaboration autonomy gaps per `docs/goals/2026-06-03-jules-autonomy-gaps.md`, in order, SDMG-gated (no fiat; harsh-reviewer falsification pre-commit; external-merge stays Eduardo until G1 survives).
+Eduardo /goal: close the 6 Jules-collaboration autonomy gaps per `docs/superpowers/jules/2026-06-03-jules-autonomy-gaps.md`, in order, SDMG-gated (no fiat; harsh-reviewer falsification pre-commit; external-merge stays Eduardo until G1 survives).
 
 ### Completato
 - **G6+G5 (#271, merged)** -- ORCHESTRATION sec 6: `:create` formalized **NOT-standing / per-instance** -- harsh-reviewer FALSIFIED the first-draft standing-grant (settings.json claim false + un-globbable scope on Ryzen-curl + intersects unresolved G2) -> reworked + adopted. sec 5 Codex sub-gate: usage-limited -> SUBSTITUTE, prefer `cross_check` (different-family) over harsh-reviewer (same-family), dual-poll reviews+reactions first, never self-waive.
@@ -139,7 +139,7 @@ Eduardo: triage TUTTI i suggerimenti Jules + correggi prima del lancio; poi chec
 - **Triage tutti i suggerimenti** (4 repo enabled): codemasterdd direct-fix; Game-family ground-truth -> 1 dispatch + 3 chip (rate-limit/stale-render, perf×5, headers-auth) + reject (Godot insecure-HTTP = localhost FP) + dismiss-list. Chip eseguiti -> i PR sopra.
 - **2 S3-trapped recuperate** (zodResolver + map-index) -> sovereign-extract -> PR -> merged -> sessions archived. Lavoro clean salvato (sarebbe andato perso).
 - **Rituali rigorosi, no rubber-stamp**: #2577 Codex P2 reale (guard ingannabile da bump commentato) -> fix comment-strip + falsificato. #2581 Codex usage-limit -> harsh-reviewer substitute (SHIP-IT, grep-verified behavior-preserving).
-- **Stato Jules ground-truthed + 6 gap mappati** -> goal doc `docs/goals/2026-06-03-jules-autonomy-gaps.md` + memory `project_jules_collaboration_state`.
+- **Stato Jules ground-truthed + 6 gap mappati** -> goal doc `docs/superpowers/jules/2026-06-03-jules-autonomy-gaps.md` + memory `project_jules_collaboration_state`.
 
 ### Da fare (next session = il /goal)
 - Risolvi i 6 gap, ordine: **G6+G5** (ORCHESTRATION §5/§6 doc) -> **G3** (digest-cron Ryzen) -> **G2** (suggestions read-only feed) -> **G1** (merge-autonomy ADR -- brainstorm + harsh-reviewer, **NO fiat**) -> **G4** (governor R0->R1, mid-horizon).
@@ -172,7 +172,7 @@ Continuazione del First-Playable AI-smoke. Da "harness disegnato" a "schermi rea
 ### Da fare (per venue -- vedi handoff)
 - **Sessione Godot-rooted** (`C:/dev/Game-Godot-v2-golive`, no tdd-guard scope-leak): world_setup biome-enrich (->green) + scenario_brief/debrief enabler. Il classifier blocca giustamente disable-tdd-guard ripetuti senza consenso fresco.
 - NON bloccato da codemasterdd (Python): combat bg-refine.
-- Handoff turnkey: `docs/sessions/2026-06-02-screen-scaling-godot-handoff.md`.
+- Handoff turnkey: `docs/handoffs/2026-06-02-screen-scaling-godot-handoff.md`.
 
 ### Note
 - Live state: memory `project_godot_first_playable`. PR aperti: #262 #263 #264 #386 (Eduardo mergia).
@@ -195,7 +195,7 @@ Eduardo ha fissato il goal First-Playable (Godot-v2: room-creation RoJ/Jackbox T
 - Merge PR #262 + #263 (Codex review rate-limited -> Eduardo merge call).
 
 ### Note
-- Continuation doc completo: `docs/sessions/2026-06-02-godot-firstplayable-aismoke-continuation.md`. Live state: memory `project_godot_first_playable`.
+- Continuation doc completo: `docs/handoffs/2026-06-02-godot-firstplayable-aismoke-continuation.md`. Live state: memory `project_godot_first_playable`.
 - Gotcha: global tdd-guard ultra-granulare (stub->populate->impl per funzione; blocca anche il delete di un RED-test); `pytest --rootdir .` registra il RED; un GUT-RED da bash-hub NON viene registrato -> GDScript va fatto nel Godot-workflow (GUT+tdd-guard wired).
 - Env riusabile: worktree `-golive` (Godot + Game), Postgres-17 + Game backend boota (HEALTH 200), Godot 4.6.2, `qwen2.5vl:7b` local Ryzen. Serve :8060 killed a chiusura.
 
@@ -381,7 +381,7 @@ Sessione Lenovo (.10) hub. Avvio-checkup completo (identity P1, git/gh fleet, ag
 
 ### Completato
 - **Cleanup branch stale** (PR #227): `docs/ermes-fase2b-knowledge-map` era 2-ahead/12-behind + superseded (journal-land.ps1 @152 vs main gia' @262). Salvata l'unica riga unica (ERMES KNOWLEDGE_MAP §2) via cherry-pick su branch fresco + jules 2026-05-29 digest tracked. Stale abbandonato. main pulito.
-- **Gate-E evidence sync** (PR #228, codemasterdd Short goal): `docs/cross-repo/gate-e-evidence.md` §1 lag-fixato 3->4 invocazioni / 67%->50% adoption (aggiunto #4 MCP llm-fleet REJECT). Health signals GREEN (50% > 30% trigger; 0 ADOPT-without-experiment). §2 Hybrid A1 + §3 H7 spend = $0 verificati current. Pronto per ~06-03 D2 gate.
+- **Gate-E evidence sync** (PR #228, codemasterdd Short goal): `docs/governance/gate-e-evidence.md` §1 lag-fixato 3->4 invocazioni / 67%->50% adoption (aggiunto #4 MCP llm-fleet REJECT). Health signals GREEN (50% > 30% trigger; 0 ADOPT-without-experiment). §2 Hybrid A1 + §3 H7 spend = $0 verificati current. Pronto per ~06-03 D2 gate.
 - **Fleet mirror refresh** (cross-fleet-repro): `scripts/backup/mirror-repos.ps1` rilanciato, 7 repo bare-mirror current (erano 1.5gg stale). L-040 fix confermato (all [ok], no false-fail su git-stderr). NO fake-commit per il compass-pillar (dip = timing, non gap reale).
 - **Game #2437 ermes FASE 3 P1 MERGED** (commit b4802f0): code-review PASS verificato (cap +/-2 COMBINED corretto via base-snapshot/diff/re-apply, R6 gate no-epigenome, idempotent, soft-fail; 3 test file +151 righe; CI all green). ermes ora LIVE in combat (era plumbing-only da FASE 2). P2 N=40 WR calibration = follow-up documentato.
 
@@ -682,7 +682,7 @@ Sessione cross-day Ryzen .11 (VGit). Branch `claude/observability-dashboard-inte
 - **GitHub Models PROPOSED**: wrapper `aider-github-models.cmd` (default gpt-4o, 150 req/giorno free) + LiteLLM 2 model entries (gpt-4o + gpt-4o-mini). Pending Eduardo PAT generation con permission "Models read-only".
 - **8 Aider wrapper canonical** (vs 6 originali): aider-hf + aider-github-models aggiunti a `scripts/wrappers/`. install-wrappers.ps1 auto-discovery sincronizza user-side via hash-verify. Tutti i wrapper enforce privacy guard rail H8 + security hardened temp env-file pattern.
 - **LiteLLM hub audit + update**: stack Docker UP da 5h (NOT dormant come ipotizzato originale ADR-0017 follow-up). Config aggiornato con 7 nuovi model_list entries: hf-deepseek-r1 + hf-gpt-oss-120b + hf-qwen-coder-32b + github-gpt4o + github-gpt4o-mini + anthropic-sonnet-strategic + anthropic-haiku-strategic. docker-compose.yml env vars aggiunte HUGGINGFACE_API_KEY + GITHUB_MODELS_API_KEY + ANTHROPIC_API_KEY.
-- **Doc consolidata `docs/operations/key-and-task-routing-matrix.md`** (commit d255927 + 73477aa): 9 sezioni inventario chiavi + 3-tier tool ecosystem + 3-layer dispatch matrix + Hybrid A1 + integrations + REJECT list ToS-bomb + reference bookmarks + autoresearch deferred.
+- **Doc consolidata `docs/runbook/key-and-task-routing-matrix.md`** (commit d255927 + 73477aa): 9 sezioni inventario chiavi + 3-tier tool ecosystem + 3-layer dispatch matrix + Hybrid A1 + integrations + REJECT list ToS-bomb + reference bookmarks + autoresearch deferred.
 - **P2 autoresearch deep dive free LLM ecosystem** (5 parallel WebSearch queries): 18 candidati analizzati. ADOPTED: HF + GitHub Models PROPOSED + reference bookmarks 5 lists. REJECTED 5 (Puter, CLIProxyAPI, GeminiHydra, alistaitsacle/free-llm-api-keys, claude-code-proxy) per ToS bomb / sustainability red flag pattern. DEFERRED: Cloudflare AI Gateway + NVIDIA NIM + SambaNova + SiliconFlow + Mistral + Pollinations + LLM7 + Kluster.
 - **Memory + lesson promotion**: `reference_api_keys.md` rewritten (8 keys + 8 wrappers + LiteLLM 15 model_list + privacy guard). New memory `reference_free_llm_ecosystem_audit.md`. MEMORY.md index updated. **Lesson L-2026-05-022 promoted**: "Free Tier Sustainability Pattern" - pre-adoption criterion "where does provider money come from?" 30s mental check.
 
@@ -1048,7 +1048,7 @@ Sessione cross-day Ryzen .11 (VGit). Branch `claude/observability-dashboard-inte
   - Detection: file ≤200 byte il cui contenuto (post-strip whitespace + comment prefix `//`, `#`, `;`, `--`) corrisponde a filename/basename → exit 1, ADR-0008 referenziato nel messaggio
   - Validato 3 scenari: `demo.js` pure filename → block, `// demo.js` commento → block, 47-line real edit → pass. Integration test `git commit` con corruption → blocked con exit 1
   - Bypass: `git commit --no-verify` (non raccomandato). Uninstall: `git config --global --unset core.hooksPath`
-- **Delegation protocol documentato** in `docs/patterns/delegation-to-aider.md`:
+- **Delegation protocol documentato** in `docs/reference/patterns/delegation-to-aider.md`:
   - Decision tree classification (cosmetic / behavior-critical / strategic)
   - Formato handoff ready-to-paste (cmd.exe + prompt target)
   - Review loop: cosa controllo quando torna output (success / safe fail / hook-blocked / silent corruption sospetta)
@@ -1075,7 +1075,7 @@ Sessione cross-day Ryzen .11 (VGit). Branch `claude/observability-dashboard-inte
   - Fallback wrappers cmd.exe mantenuti come secondary
   - Sezione "Ottimizzazioni token" onesta: hub vince su file grandi/task complessi, break-even su task trivial piccoli
   - Limitazioni note (CRLF warnings, auto-translate commit, llama runner termination, reflection retry)
-- **aider-delegation-log-template.md creato**: schema tabella colonne (data, task, classe, stack, esito, retry, tokens, durata, note). Esempi compilati. Aggregati mensili + trigger decisioni per Fase 6. Path template `docs/patterns/`, istanze mensili `logs/aider-delegation-YYYY-MM.md` (gitignored).
+- **aider-delegation-log-template.md creato**: schema tabella colonne (data, task, classe, stack, esito, retry, tokens, durata, note). Esempi compilati. Aggregati mensili + trigger decisioni per Fase 6. Path template `docs/reference/patterns/`, istanze mensili `logs/aider-delegation-YYYY-MM.md` (gitignored).
 
 ### Progress tracker
 - Barra progetto: **60% → 70%** (fase 4.6 "hub completion + dogfood" chiusa). Restano: migrazione progetti (10%), 3-mesi uso reale (15%), decisione budget finale (5%).
@@ -1394,7 +1394,7 @@ Tentato `gh skill preview alirezarezvani/claude-skills engineering/skill-securit
 **4 azioni nuove implementate**:
 1. `docs/reference/agno-ollama-snippets.md` Pattern 2 corretto con SqliteDb drop-in
 2. `docs/reference/subagents-skills-candidates.md` (nuovo) — catalogo curato 5+ subagent + 5 skill + 3 external tool + 1 hook preview-worthy
-3. `docs/lessons-learned/ai-as-thinking-partner.md` (nuovo) — rubber duck meta-pattern per future sessioni Claude
+3. `docs/reference/lessons/ai-as-thinking-partner.md` (nuovo) — rubber duck meta-pattern per future sessioni Claude
 4. `docs/research/ai-stack-evolution-2026.md` estesa con 3 external tool (TDD Guard, recall, claudia-statusline)
 
 **Memory aggiornata**: `feedback_external_material_triage.md` ora include lesson #10 (steelman review scopre bias primo round) + lesson #11 (verificare empiricamente compatibility dichiarata).
@@ -2843,7 +2843,7 @@ Eduardo richiesta "autoanalisi e prepara piano per prossima sessione". Output:
 - Sequencing 3 sessioni (~1.5h + 2h + 3h), dipendenza esplicita Hyperspace -> Vault lessons
 - Risk flag Claude Max 8gg residui (Hyperspace audit ideally entro 19/05)
 
-Plan committed: `docs/plans/integration-aa01-vault-hyperspace-2026-05.md` (questa sessione, branch `claude/closure-ritual-2026-05-11`).
+Plan committed: `docs/archive/plans/integration-aa01-vault-hyperspace-2026-05.md` (questa sessione, branch `claude/closure-ritual-2026-05-11`).
 
 ### Da fare (next session handoff)
 
@@ -2856,7 +2856,7 @@ Plan committed: `docs/plans/integration-aa01-vault-hyperspace-2026-05.md` (quest
 - 2026-06-07 ratification check ADR-0021
 - 2026-06-09 ratification check ADR-0022
 
-**Next session focus** (vedi `docs/plans/integration-aa01-vault-hyperspace-2026-05.md`):
+**Next session focus** (vedi `docs/archive/plans/integration-aa01-vault-hyperspace-2026-05.md`):
 - Obiettivo 1: AA01 inbox capture aa01-003 + aa01-004 + classify + promote 1
 - Obiettivo 2 Phase 0: Vault read-only deep dive parziale
 - Stop hook validation: prima cosa next session - `ls .claude/.session-start-head`. Se marker esiste -> fix H12 v18 confermato. Se assente -> ulteriore debug (fallback `git rev-parse`).
@@ -3077,7 +3077,7 @@ NO action codemasterdd oggi (sub-event ADR-0024 codemasterdd, gia' chiarito adde
    - 9 nuovi repo categorizzati (skills #3 #5 #10 + memory #4 + tools #7 #8 + guides #2 #9 + design #12) + refresh stars #1/#6/#11
    - Decisioni preliminari per ognuno (INSTALL/BOOKMARK/SKIP/AUDIT-ONLY/DORMANT/REFRESH) con path target
    - Riepilogo tabella 12-row con BACKLOG mapping M11-M14
-2. `docs/aa01-handoff/` nuova directory + README + 4 scaffold paste-ready:
+2. `docs/archive/aa01-handoff/` nuova directory + README + 4 scaffold paste-ready:
    - `2026-05-12-A-skills-resources.md` -- Task A skills (4 repo, effort 4-6h)
    - `2026-05-12-B-subagent-memory-resources.md` -- Task B claude-mem + subagent refresh (2 repo, effort 2-3h)
    - `2026-05-12-C-dev-tools-resources.md` -- Task C repomix + gsd (2 repo, effort 2h)
@@ -3111,7 +3111,7 @@ NO action codemasterdd oggi (sub-event ADR-0024 codemasterdd, gia' chiarito adde
 
 ### Note
 
-- **Pattern adoption "scaffold paste-ready in codemasterdd"**: AA01 boundary preserved (NO automatized write su `C:/Users/edusc/aa01/`), ma Claude Code session puo accelerare AA01 onboarding producendo scaffold pre-compilati con preset + criteri SHIP + anti-pattern. Nuovo asset directory: `docs/aa01-handoff/`. Pattern riusabile per future batch evaluation similari.
+- **Pattern adoption "scaffold paste-ready in codemasterdd"**: AA01 boundary preserved (NO automatized write su `C:/Users/edusc/aa01/`), ma Claude Code session puo accelerare AA01 onboarding producendo scaffold pre-compilati con preset + criteri SHIP + anti-pattern. Nuovo asset directory: `docs/archive/aa01-handoff/`. Pattern riusabile per future batch evaluation similari.
 - **OCR drift lesson**: stars OCR a 5+ cifre con font monospace troncato sono **strutturalmente inaffidabili**. Sempre verifica live GitHub o star-history. Anti-pattern: prioritizzazione basata su OCR stars senza validation.
 - **Refresh vs new pattern**: 3/12 repo (#1, #6, #11) gia in `subagents-skills-candidates.md` -> "refresh inline" + extension section, NON duplicato in nuovo file. Pattern preserva continuita storica + riduce sprawl reference.
 - **AA01 task granularity**: 4 task raggruppati per categoria (vs 12 individuali) e' compromise corretto -- riduce 12x AA01 workflow overhead senza perdere triage per-repo (mantenuto in master table reference).
@@ -3139,7 +3139,7 @@ Root cause: PR #57 ha usato source secondaria (cached) vs gh API live. Karpathy 
 #### M13 Wave 2026-05-12 -- repomix INSTALL DONE
 - **repomix v1.14.0** npm global install (24609 stars MIT 2026-05-11 gh API verified)
 - Binary `C:\Users\edusc\AppData\Roaming\npm\repomix.cmd`
-- Smoke test PASS: pack `docs/sessions/** + docs/aa01-handoff/**` -> 41886 bytes 12.160 tokens "No suspicious files detected"
+- Smoke test PASS: pack `docs/handoffs/** + docs/archive/aa01-handoff/**` -> 41886 bytes 12.160 tokens "No suspicious files detected"
 - CLAUDE.md "Stack installato" repomix entry added
 - gsd-build/get-shit-done BOOKMARK (61572 MIT 2026-05-12, audit comparativo vs AA01 deferred)
 
@@ -3471,7 +3471,7 @@ Applicato Protocol 1 refresh-verify (Eduardo CLAUDE.md cognitive workflow protoc
 - Specificato drift count empirical 7/7 (era 6/7) + handoff doc reference
 
 #### V1 Vault handoff doc per Eduardo
-- Doc `docs/aa01-handoff/2026-05-12-vault-frontmatter-drift-handoff.md` (~180 righe)
+- Doc `docs/archive/aa01-handoff/2026-05-12-vault-frontmatter-drift-handoff.md` (~180 righe)
 - 3 findings empirici: frontmatter drift 100% / CLAUDE.md vs filesystem drift 5-claim / discoverability minor README
 - 3 fix options per finding (alternative ranked) + action checklist Eduardo-direct
 - Sibling-peer boundary respected: NO write vault-side da codemasterdd
@@ -4124,7 +4124,7 @@ Mitigation L-002 attiva. Restoration cognitive prioritized vs compound execution
 - `opencode stats`: $0.14 cumulative 7gg / 21 session (bridge Max = $0 subscription-included, $0.14 da cloud paid altrove)
 - Parallel stress test: 3 `opencode run` concurrent -> output corretti (1, 2, 3) no cross-contamination, port auto-assignment validato (3 localhost port distinct durante netstat snapshot)
 - TUI multi-turn smoke in spawned PowerShell window (Eduardo direct interactivity)
-- Documentazione: sezione `5.1 Day-in-the-life pratica` aggiunta a `docs/operations/key-and-task-routing-matrix.md` (cmd reference + decision tree + anti-pattern smoke documentati)
+- Documentazione: sezione `5.1 Day-in-the-life pratica` aggiunta a `docs/runbook/key-and-task-routing-matrix.md` (cmd reference + decision tree + anti-pattern smoke documentati)
 
 ### Da fare (post-19/05 transition)
 
@@ -4209,7 +4209,7 @@ Mitigation L-002 attiva. Restoration cognitive prioritized vs compound execution
 ### Completato
 - **~16 PR Jules MERGED su Game** (Batch B 2307/2312/2300/2311/2308 + MERGE-OK 7 + #2314 + S7 2293/2292/2301) + **#2325** sblocco governance (placeholder ADR-XXX morto in docs_registry bloccava l'intera coda) + **~11 PR CLOSED con diagnosi** (S4-empty + RELAUNCH-zombie work-lost) + **#2300 conflitto risolto** (gen-artifact, companionPicker preservato).
 - **ADR-0032 SUPERSEDED → ADR-0033 Accepted**: Model-3-attivo-su-esterni net-negative (provato via Archon 7-step interno c'-75% + arbitro esterno harsh-reviewer b-with-teeth-82% che ha falsificato c'). Risolto: throttle org-level primario + esterni=read-only-triage-con-ground-truth + Model-3-attivo solo codemasterdd. Contraddizione throttle nel triager (mancata da me, trovata da arbitro) fixata.
-- **Protocol 7 (SDMG) salvato come gate ripetibile**: `docs/patterns/self-designed-method-governance.md` + pointer CLAUDE.md cognitive-protocols. Metodo A8 RELAUNCH/REDESIGN progettato → falsificato dall'arbitro → adozione narrow (FLAG S3 + S6-selettivo, NO A8 anti-accretion).
+- **Protocol 7 (SDMG) salvato come gate ripetibile**: `docs/reference/patterns/self-designed-method-governance.md` + pointer CLAUDE.md cognitive-protocols. Metodo A8 RELAUNCH/REDESIGN progettato → falsificato dall'arbitro → adozione narrow (FLAG S3 + S6-selettivo, NO A8 anti-accretion).
 - **autoresearch-cli**: provenance-verificata, install compile-failed v0.3.3, mismatch strutturale per Jules-PR (negative result), riservato uso futuro (overnight numeric-metric optimization). Registrato memory + L-032.
 - **Lessons AA01 promosse**: L-031 (session-state > PR proiezione lossy), L-032 (tool-fit negative-result method), L-033 (self-designed-method → falsificazione esterna obbligatoria).
 - Game main post-storm: **SANO** (CI verde, governance success, fix #2325 regge dopo ~16 merge).
@@ -4233,7 +4233,7 @@ Mitigation L-002 attiva. Restoration cognitive prioritized vs compound execution
 - **Component B QG full-PASS**: live subagent-dispatch smoke di `sot-drift-verifier` (registrato post-restart) -> stale fixture = STALE/high + reconcile diff DEFERRED->SHIPPED + branch+PR-not-auto-merge; negative fixture = NO-DRIFT/high. Entrambi read-only zero-write (boundaries OK). Status flipped a PASS (codemasterdd `5d8b36c`).
 - **Review pre-merge (P5 harsh-reviewer)**: no P0; 1 P1 (diff perdeva i file watched nei commit precedenti di push multi-commit + fail su first-push zero-SHA) FIXATO (`7774e13e`: range `before..sha` con fetch-depth 0 + fallback diff-tree; SHA via env; trap cleanup). P2 residui deferred documentati.
 - **Live CI smoke**: primo run sentinel sul merge commit = `success` (14s), 0 issue spurie (path del merge non matchano watch-map). End-to-end validato in produzione.
-- **Privacy gap KNOWLEDGE_MAP §6 RESOLVED**: `.aiderignore` (`docs/ryzen-memory-archive/`) -- archivio contiene memory sovereign (vault + personali) dentro repo cloud-whitelisted. aider lo onora per auto-context E add esplicito, copre TUTTI i wrapper local+cloud (preferito a path-check fragile nei 6 .cmd, anti-pattern #11). Smoke PASS ("Skipping ... matches aiderignore spec").
+- **Privacy gap KNOWLEDGE_MAP §6 RESOLVED**: `.aiderignore` (`docs/archive/ryzen-memory-archive/`) -- archivio contiene memory sovereign (vault + personali) dentro repo cloud-whitelisted. aider lo onora per auto-context E add esplicito, copre TUTTI i wrapper local+cloud (preferito a path-check fragile nei 6 .cmd, anti-pattern #11). Smoke PASS ("Skipping ... matches aiderignore spec").
 - **2 lessons AA01**: L-038 (ESM CLI entry-point guard pathToFileURL, non `file://` literal -- POSIX-only, smoke locale Windows silently rotto vs CI verde) + L-039 (required-check + path-filter "skipping" blocca merge -> admin-merge, governance-gated).
 
 ### Da fare (residuo)
@@ -4251,7 +4251,7 @@ Mitigation L-002 attiva. Restoration cognitive prioritized vs compound execution
 ## 2026-05-28 (sera) — VC governance review + hardening + privacy guard
 
 ### Completato
-- **Privacy guard KNOWLEDGE_MAP §6**: `.aiderignore` esclude `docs/ryzen-memory-archive/` (memory sovereign in repo cloud-whitelisted); esentato da `.aider*` ignore -> propaga ai cloni; smoke PASS. Recap doc per Ryzen (`docs/sessions/2026-05-28-recap-sot-drift-sentinel.md`).
+- **Privacy guard KNOWLEDGE_MAP §6**: `.aiderignore` esclude `docs/archive/ryzen-memory-archive/` (memory sovereign in repo cloud-whitelisted); esentato da `.aider*` ignore -> propaga ai cloni; smoke PASS. Recap doc per Ryzen (`docs/handoffs/2026-05-28-recap-sot-drift-sentinel.md`).
 - **VC governance review** (Eduardo: "perche' push diretti su repo privati anche se coordinati? rivedi vs fonti autorevoli"): autoresearch multi-source (DORA, Fowler, trunkbaseddevelopment, GitHub docs/Well-Architected) -> `docs/research/2026-05-28-vc-governance-review.md`. **Verdetto: struttura sana**, modelli per-ruolo (codemasterdd direct-push trunk-based / vault PR-gate Ask / Game branch-protection public) matchano pattern riconosciuti. Chiarito: **sync (pull) e review-gate (PR) sono ortogonali** -- "coordinato" non implica PR.
 - **4 hardening azionati**: (P1) `.github/workflows/ci.yml` safety-net non-bloccante (ASCII guard ADR-0021 + pytest scripts/tests, primo run verde); (P2) Game issue #2410 (footgun required-check path-filtered "skipping" + fix aggregator-gate raccomandato); (P2) `scripts/backup/mirror-repos.ps1` bare-mirror idempotente + Task Scheduler settimanale (Ready, NextRun Dom 10:00) + **7/7 repo mirrorati** locale; (P3) backup-reviewer agent = opzionale.
 - **Bug mirror trovato+fixato in verify** (`db5c266`): PS5.1 `ErrorActionPreference=Stop` + git stderr "Cloning into" = NativeCommandError terminante -> clone riusciti (exit 0) marcati FAIL. Fix: `Continue` + gate su `$LASTEXITCODE`. Lesson L-040 (famiglia L-038).
@@ -4318,7 +4318,7 @@ Mitigation L-002 attiva. Restoration cognitive prioritized vs compound execution
   - evo-swarm: PR #123 weekly-digest merged `10a40ba`, branch deleted, Dafne dormant per design
   - synesthesia: invariata dormant
 - **Game #2410 footgun fix** (mattina): PR #2413 merged + branch protection swap `[governance, ci-gate]`. Lesson L-039.
-- **Privacy guard** `.aiderignore` per `docs/ryzen-memory-archive/`.
+- **Privacy guard** `.aiderignore` per `docs/archive/ryzen-memory-archive/`.
 - **Mirror infra** completa: scheduled task Dom 10:00 + helper external-drive + runbook.
 - **VC governance review** completo: autoresearch DORA/Fowler/Well-Architected; verdict struttura sana + 4 hardening azionati.
 - **Lessons AA01**: L-038 (ESM CLI pathToFileURL), L-039 (Game branch-protection footgun), L-040 (PowerShell native-stderr-under-Stop).

@@ -217,7 +217,7 @@ Se dati successivi contraddicono pattern (es. 14B Q2 @ constraint=2 transform = 
 
 1. Aggiornare `CLAUDE.md` sezione "Priorità modelli AI" con seconda dimensione matrix (stile ADR qui)
 2. Aggiornare `MODEL_ROUTING.md` "Routing per fase" con constraint-count column
-3. Aggiornare `docs/patterns/delegation-to-aider.md` con step "conta constraint" in classificazione
+3. Aggiornare `docs/reference/patterns/delegation-to-aider.md` con step "conta constraint" in classificazione
 4. Chiudere OD-006 in `OPEN_DECISIONS.md` (status: Resolved via ADR-0016)
 5. Entry JOURNAL per tracking decisione
 

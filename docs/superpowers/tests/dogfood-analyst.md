@@ -25,7 +25,7 @@
 
 ## Gate 2 sources validation
 
-- `logs/aider-delegation-2026-04.md` — template in `docs/patterns/aider-delegation-log-template.md` (our own)
+- `logs/aider-delegation-2026-04.md` — template in `docs/reference/patterns/aider-delegation-log-template.md` (our own)
 - ADR-0008/0014/0016 — our own (archivio 18 ADR)
 - Fase 6 tracking — our own methodology
 - **Verdict**: ✅ tutte fonti custom codemasterdd, nessun riferimento esterno

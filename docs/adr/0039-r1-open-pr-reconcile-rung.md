@@ -46,14 +46,14 @@ outside a marker region, and every doctrine file.
 ### 2. Doctrine exclusion = static gate + a HUMAN review checkpoint (ADR-0038)
 
 `is_doctrine(path, repo)` is a STATIC fail-closed path-classifier (globs `docs/adr/**`,
-`docs/cross-repo/**`, repo `.claude/**`, `Archivio_.../07_CLAUDE_CODE_OPERATING_PACKAGE/**`; named
+`docs/governance/**`, repo `.claude/**`, `Archivio_.../07_CLAUDE_CODE_OPERATING_PACKAGE/**`; named
 `CLAUDE.md`/`AGENTS.md`/`ORCHESTRATION.md`/`GOALS.md`/`DECISIONS_LOG.md`/`OPEN_DECISIONS.md`;
 `~/.config/aider-privacy-whitelist.txt` + the `~/.claude/` governance subpaths). A `Reconciler`
 aimed at a doctrine path **refuses to construct** (`__post_init__` assert), and the actor
 re-checks at runtime before any write. ADR-0038's content-based CATCH-ALL is **not** an executable
 path (a pure classifier cannot evaluate "is this content a rule") -- it is a HUMAN process
 checkpoint: **adding ANY new reconciler REQUIRES an explicit Eduardo doctrine-classification review
-of its target.** `docs/cross-repo/EXECUTION-BOARD.md` is under `docs/cross-repo/**` = DOCTRINE =
+of its target.** `docs/governance/EXECUTION-BOARD.md` is under `docs/governance/**` = DOCTRINE =
 EXCLUDED (why the codemasterdd leg targets `STATUS_MULTI_REPO.md`, not the board).
 
 ### 3. Human-merge-only during the earn (load-bearing invariant; spec sec 6.1)
@@ -170,7 +170,7 @@ externality, doctrine `__post_init__` fail-closed.
 - ADR-0037 (merge-autonomy model -- dec.4 named this rung), ADR-0038 (doctrine carve-out used by
   `is_doctrine`), ADR-0036 (orchestration doctrine / monoculture), ADR-0011 (commit trailers),
   ADR-0021 (ASCII), ADR-0026 (Protocol 7 SDMG).
-- `docs/cross-repo/actor-activation-criteria.md` (rungs; sec 3 R1->R2; sec 4 anti-self-licking;
+- `docs/governance/actor-activation-criteria.md` (rungs; sec 3 R1->R2; sec 4 anti-self-licking;
   sec 6 clean-cycle; sec 7 doctrine=Eduardo-merge) -- activation note added alongside this ADR.
 - The proven open-PR shape generalized: `tools/playtest2-board-sync.sh`.
 - memory `feedback_external_repo_action_boundary` (sovereign/external write boundary).

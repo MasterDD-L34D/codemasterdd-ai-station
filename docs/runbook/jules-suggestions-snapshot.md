@@ -2,7 +2,7 @@
 
 > G2 of the Jules-autonomy gap plan. Jules **proactive suggestions have NO API**
 > (404 on 10 path-variants, CLI blind) -- they are readable ONLY in the browser.
-> Per the sec-9 finding (`docs/jules/JULES-CAPABILITIES-MASTER.md`, verified live
+> Per the sec-9 finding (`docs/superpowers/jules/JULES-CAPABILITIES-MASTER.md`, verified live
 > 2026-06-02) the READ is a Claude read-op (navigate + screenshot/get_page_text),
 > NOT classifier-blocked. This runbook makes that read a repeatable sweep that
 > writes `docs/jules-batch/suggestions-<date>.md`. ASCII-first (ADR-0021).

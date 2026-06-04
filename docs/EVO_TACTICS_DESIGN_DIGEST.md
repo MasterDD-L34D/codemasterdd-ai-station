@@ -170,7 +170,7 @@ Dublin Core (31 con citazione gioco esterno, 14 worldgen/genetics interni),
 | Sentience Tiers v1.0 (5/5) | Interocezione T0-T6 + 22 Self-Control trigger | Non integrato ma high-ROI. Skiv Sprint C unblock (290/297 trait live) |
 | Worldgen 4-level stack (5/5) | Bioma->Ecosistema->Foodweb->Network | Infra completa MA zero runtime consumption. Revive ~3-6h quick win |
 | Enneagramma Registry (5/5) | 16 hook stub Ennea effect injection | Non integrato, ready-to-wire. 93 LOC orphan ~3h |
-| Voidling Bound 6 Patterns (4/5) | Genetics: rarity-gate, path-lock, Apex terminal, visual_swap | Pattern 6 (visual_swap) **SHIPPED 2026-05-05** (TKT-MUTATION-P6-VISUAL: visual_swap_it 36/36 + aspect_token, web-stack; re-scoped Godot GAP-10 post-pivot) -- NON piu P0 gap (era stale, anti-pattern #19). Ref: codemasterdd `ryzen-memory-archive/Game-Desktop-old/reference_voidling_bound_research.md` |
+| Voidling Bound 6 Patterns (4/5) | Genetics: rarity-gate, path-lock, Apex terminal, visual_swap | Pattern 6 (visual_swap) **SHIPPED 2026-05-05** (TKT-MUTATION-P6-VISUAL: visual_swap_it 36/36 + aspect_token, web-stack; re-scoped Godot GAP-10 post-pivot) -- NON piu P0 gap (era stale, anti-pattern #19). Ref: codemasterdd `docs/archive/ryzen-memory-archive/Game-Desktop-old/reference_voidling_bound_research.md` |
 | Triangle Strategy Transfer (5/5) | 3 proposte P4-closure A/B/C | Dimenticato, mai in BACKLOG/OD. Cross-validate quando Thought Cabinet wiring |
 | Mating Engine D1+D2 (5/5) | 1053 LOC engine + 7 REST, zero frontend | **REVIVED 2026-04-27**: PR#1876/1879/1911 shipped. OD-001 era disinfo |
 
@@ -239,7 +239,7 @@ CREDITS.md provenance.
 | Design watcher | vault `production/agents/evo-tactics-design-watcher.md` | Agent flag contraddizioni |
 | Asset refs | `evo-tactics-refs-meta/` (SKIV_REFS, CATALOG, CC0_SOURCES, HANDOFF) | Provenance asset 100% classificata |
 | Art Godot | Game-Godot-v2 `docs/godot-v2/visual-screen-bible.md` + `visual-design-research.md` | Bibbia visiva 3-modi |
-| External repos | codemasterdd `docs/ryzen-memory-archive/Game-Desktop-old/reference_external_repos.md` (37 repo OSS, captured 2026-05-27) + inlined in Game `games-source-index.md` righe 246-324 | Repo tracciati Fase 2 |
+| External repos | codemasterdd `docs/archive/ryzen-memory-archive/Game-Desktop-old/reference_external_repos.md` (37 repo OSS, captured 2026-05-27) + inlined in Game `games-source-index.md` righe 246-324 | Repo tracciati Fase 2 |
 | Knowledge map | codemasterdd `docs/KNOWLEDGE_MAP.md` | Dove-vive cross-repo + SoT-vs-reference (A0-A5) + git-safety per artifact |
 
 ### 11.8 A che punto siamo (roadmap M0-M6)

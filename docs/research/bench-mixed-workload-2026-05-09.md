@@ -163,6 +163,6 @@ Decision matrix CLAUDE.md sezione "Priorita modelli AI" implicazioni:
 - ADR-0004 -- Ollama RTX 5060 config (`OLLAMA_MAX_LOADED_MODELS=1` rationale)
 - ADR-0009 -- Upgrade strategy (T2 hardware materialized + bench mixed-workload addendum questo)
 - ADR-0012 -- RAM 64GB upgrade (qwen3:30b validation)
-- harsh review: `docs/reviews/flow-chart-harsh-review-2026-05-09.md` (C1 + V3 + E5 resolution)
+- harsh review: `docs/governance/flow-chart-harsh-review-2026-05-09.md` (C1 + V3 + E5 resolution)
 - BACKLOG H9 (this PR completes execution)
 - Decisione 007 in `DECISIONS_LOG.md` (Eduardo scelta 4A)

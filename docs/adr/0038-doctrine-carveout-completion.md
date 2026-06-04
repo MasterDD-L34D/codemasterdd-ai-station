@@ -13,7 +13,7 @@ listed via a **closed 6-item enumeration**. A harsh-reviewer SDMG falsification 
 separate, REJECTED merge-authority-grant draft, 2026-06-03) found that enumeration is
 **incomplete + gameable**: rule/decision/charter-defining governance files are uncovered --
 notably `GOALS.md` (the autonomy doctrine itself, G1/G4), `DECISIONS_LOG.md` (binding
-decisions), `AGENTS.md`, `docs/cross-repo/**` (governor mechanics), and `.claude/agents/**`
+decisions), `AGENTS.md`, `docs/governance/**` (governor mechanics), and `.claude/agents/**`
 (subagent charters, including `harsh-reviewer.md` -- the falsifier's own charter). A future
 merge-authority loosening could route through the gap, or through a NEW governance file
 created outside the enumerated set. This amendment completes the carve-out via **globs** (so
@@ -22,12 +22,12 @@ new files under high-risk dirs are doctrine by default) plus the missing named r
 ## Context
 
 - ADR-0037 dec.2 carve-out (the 6): `ORCHESTRATION.md`, `docs/adr/**`,
-  `docs/cross-repo/actor-activation-criteria.md`, authoritative `CLAUDE.md`,
+  `docs/governance/actor-activation-criteria.md`, authoritative `CLAUDE.md`,
   `.claude/settings.json`, `~/.config/aider-privacy-whitelist.txt`.
 - harsh-reviewer findings (2026-06-03, verbatim gist):
   - **P0.1** the set is a closed enumeration; ~25 governance artifacts exist; "non-doctrine"
     default captures `GOALS.md`, `DECISIONS_LOG.md`, `OPEN_DECISIONS.md`, `AGENTS.md`,
-    `docs/cross-repo/*` (siblings of actor-criteria), `.claude/agents/*`.
+    `docs/governance/*` (siblings of actor-criteria), `.claude/agents/*`.
   - **P0.2** `GOALS.md` G1/G4 ARE the merge-autonomy doctrine -> self-merge = direct loop.
   - **P1.2** a new governance file created OUTSIDE the set is "non-doctrine" by default ->
     gameable. Fix = invert toward globs / a positive allow-list, not a static blacklist.
@@ -40,7 +40,7 @@ new files under high-risk dirs are doctrine by default) plus the missing named r
 = the union of:**
 
 - **GLOBS (new files under these are doctrine by default):**
-  `docs/adr/**`, `docs/cross-repo/**`, repo `.claude/**` (settings, agents, rules, skills, hooks),
+  `docs/adr/**`, `docs/governance/**`, repo `.claude/**` (settings, agents, rules, skills, hooks),
   `Archivio_Libreria_Operativa_Progetti/07_CLAUDE_CODE_OPERATING_PACKAGE/**` (the meta-operating
   rules CLAUDE.md elevates to authority -- `SAFE_CHANGES_ONLY.md`/`CHANGE_BUDGET.md`/
   `CLAUDE_OPERATING_RULES.md` = the hub autonomous-change envelope; editing them loosens what
@@ -59,7 +59,7 @@ new files under high-risk dirs are doctrine by default) plus the missing named r
   This closes the "create a governance file at an unforeseen path and self-merge it" hole.
 
 **Explicitly NON-doctrine (hub self-merge OK per ADR-0037 dec.1 classifier-per-call):**
-`scripts/**`, `docs/research/**`, `docs/sessions/**`, `docs/reference/**`,
+`scripts/**`, `docs/research/**`, `docs/handoffs/**`, `docs/reference/**`,
 `docs/superpowers/**`, `JOURNAL.md`, `README.md`, code/tests, and the OPERATIONAL/STATUS/
 REFERENCE root files that do NOT define rules about the hub itself: `MODEL_ROUTING.md`
 (operational routing), `BACKLOG.md`, `COMPACT_CONTEXT.md`, `STATUS_MULTI_REPO.md`,
@@ -77,7 +77,7 @@ newly-created governance file inherits doctrine status (closes P1.2).
 ## Consequences
 
 - **Positive:** `GOALS.md`, `DECISIONS_LOG.md`, `OPEN_DECISIONS.md`, `AGENTS.md`,
-  `docs/cross-repo/**`, `.claude/**` are now Eduardo-only-merge. The "new file outside the
+  `docs/governance/**`, `.claude/**` are now Eduardo-only-merge. The "new file outside the
   set" hole is closed for the glob'd dirs. ADR-0037's anti-self-licensing intent is made
   whole. Hub self-merge is limited to genuinely non-rule-defining files.
 - **Negative / accepted:** more files are Eduardo-only-merge (this is the point -- tightening).
@@ -100,7 +100,7 @@ is real, not a disguised grant -- "grants nothing" confirmed clause-by-clause). 
   governance-subpath positive list (excludes credentials/cache/sessions/plugins).
 - **SIGNIFICANT** -- added the content-based CATCH-ALL clause, making the Principle operative and
   closing the residual "new governance file at an unforeseen path" hole (P1.2 family).
-- **MINOR** -- `docs/goals/**` left NON-doctrine (goals = inputs to doctrine, like a backlog, not
+- **MINOR** -- `docs/superpowers/jules/**` left NON-doctrine (goals = inputs to doctrine, like a backlog, not
   doctrine themselves; `GOALS.md` root IS doctrine). Noted to pre-empt the next falsifier.
 
 Pre-commit stance "se rigetta adotto, non difendo" honored: all blocking + significant findings

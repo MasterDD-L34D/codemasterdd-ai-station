@@ -2,7 +2,7 @@
 
 Catalogo curato post-rivalutazione approfondita del materiale research 2026-04-21. **NON sono installati**. Reference per futuro: se emerge use case reale, passare per `gh skill preview` (ADR-0010) o manual copy in `.claude/agents/` del repo target, audit markdown content prima.
 
-**Estensione 2026-05-12**: 9 repo aggiuntivi triagati post-screenshot OCR di Eduardo (sezione "Wave 2026-05-12 batch evaluation" in fondo). Total catalogo ora: **12 external resources** indicizzati, di cui 3 nella sezione originale + 9 nella wave 2026-05-12. Workflow di adozione: 4 scaffold AA01 **superseded+archiviati 2026-05-17** in `docs/aa01-handoff/archive/` (vedi "Re-decisione 2026-05-17" in fondo — adoption via loop studio→conferma→tuning→apply).
+**Estensione 2026-05-12**: 9 repo aggiuntivi triagati post-screenshot OCR di Eduardo (sezione "Wave 2026-05-12 batch evaluation" in fondo). Total catalogo ora: **12 external resources** indicizzati, di cui 3 nella sezione originale + 9 nella wave 2026-05-12. Workflow di adozione: 4 scaffold AA01 **superseded+archiviati 2026-05-17** in `docs/archive/aa01-handoff/archive/` (vedi "Re-decisione 2026-05-17" in fondo — adoption via loop studio→conferma→tuning→apply).
 
 ## Subagent Claude Code — da `VoltAgent/awesome-claude-code-subagents` (17.9k⭐)
 
@@ -243,6 +243,6 @@ OCR font monospace ha distrorto cifre. Validazione via star-history + GitHub-liv
 | 7 | INSTALL → **DONE** repomix v1.14.0 (`npm i -g`, Ryzen 2026-05-17 verificato) |
 | 11 | REFRESH → **ADOPT-custom** `godot-engine-specialist` (vedi sopra) |
 
-**Wave-12 scaffold AA01 (A/B/C/D)**: superseded+**ARCHIVED 2026-05-17** → `docs/aa01-handoff/archive/`. Meccanismo adoption corretto = loop studio→conferma→tuning→apply (NON rituale-paste AA01).
+**Wave-12 scaffold AA01 (A/B/C/D)**: superseded+**ARCHIVED 2026-05-17** → `docs/archive/aa01-handoff/archive/`. Meccanismo adoption corretto = loop studio→conferma→tuning→apply (NON rituale-paste AA01).
 
 **Tracking BACKLOG**: M11-M14 **CHIUSI** (Wave-12 resolved, scaffold archiviati 2026-05-17).

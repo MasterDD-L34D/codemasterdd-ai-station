@@ -121,11 +121,11 @@ Last-touch signal (most 2026-04-24 batch creation, mai modificati = mai usati o 
 
 - `docs/research/` (24): rolling audit. Alcuni post-decisione stale. Manual archive opzionale.
 - `docs/runbook/` (8): operative current. KEEP.
-- `docs/sessions/` (10): handoff storici frozen. KEEP read-only.
+- `docs/handoffs/` (10): handoff storici frozen. KEEP read-only.
 - `docs/superpowers/specs+plans/` (16): brainstorm artifacts recent. KEEP.
-- `docs/patterns/` (7): operational patterns. KEEP.
-- `docs/agent-smoke-tests/` (9): smoke logs per ADR-0018. KEEP.
-- `docs/ryzen-memory-archive/` (10): preservato 2026-05-27 (139 file memory Ryzen). KEEP (knowledge irrecoverable altrove).
+- `docs/reference/patterns/` (7): operational patterns. KEEP.
+- `docs/superpowers/tests/` (9): smoke logs per ADR-0018. KEEP.
+- `docs/archive/ryzen-memory-archive/` (10): preservato 2026-05-27 (139 file memory Ryzen). KEEP (knowledge irrecoverable altrove).
 
 **Findings**: 84+ doc surface alta, ma ognuna ha provenance + purpose chiari. NO cuts raccomandati a parte forse review research/ stale (richiede file-by-file pass, deferrabile).
 

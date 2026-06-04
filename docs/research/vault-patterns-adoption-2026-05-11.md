@@ -284,7 +284,7 @@ PR 2 e 3 possono essere adoptate selettivamente (es. solo SMOKE_TEST se SUB_AGEN
 - AA01 workspace task: `2026-05-aa01-002-2026-05-11-vault-integration-readonly`
 - DRAFT integrali: `C:/Users/edusc/aa01/workspace/2026-05-aa01-002-*/DRAFT/00-04-*.md`
 - Decision audit log: `C:/Users/edusc/aa01/workspace/2026-05-aa01-002-*/decisions.md` (D-001 Phase 5 pivot)
-- Plan integration: `docs/plans/integration-aa01-vault-hyperspace-2026-05.md` Obiettivo 2 (completion)
+- Plan integration: `docs/archive/plans/integration-aa01-vault-hyperspace-2026-05.md` Obiettivo 2 (completion)
 - Session: 2026-05-11, 8gg residui pre-Claude Max 19/05
 - Tier strategic: Claude Max attivo (cross-source synthesis 5 pattern decisions = Tier 0 ADR-0023 applicable)
 

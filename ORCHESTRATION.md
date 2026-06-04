@@ -78,7 +78,7 @@ action is reversible.
 > next increment) -> **R2** auto-merge for the lowest-risk reversible class ONLY, granted by a
 > dedicated ADR after >=4 clean R1 cycles + harsh-reviewer falsifies the increment + revert
 > proven + a different-FAMILY judge (the harsh-reviewer is Claude = partial monoculture).
-> Mechanical earn-path + clean-cycle definition + off-ramp (N=3): `docs/cross-repo/actor-activation-criteria.md`.
+> Mechanical earn-path + clean-cycle definition + off-ramp (N=3): `docs/governance/actor-activation-criteria.md`.
 > Operationalized by the unified governor (cross-repo-dashboard promoted to observe->classify->act):
 > `docs/superpowers/specs/2026-06-01-unified-fleet-governor-design.md`.
 

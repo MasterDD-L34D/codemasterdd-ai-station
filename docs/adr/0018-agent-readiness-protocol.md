@@ -64,7 +64,7 @@ Invocazione reale dell'agent via `Agent` tool con:
 
 Criterio PASS: **1+ invocazione produces output usable senza correzione manuale**.
 
-Documenta smoke test in commit message o `docs/agent-smoke-tests/<agent>.md` (1 riga OK: "YYYY-MM-DD: smoke test PASS, prompt=... output=...").
+Documenta smoke test in commit message o `docs/superpowers/tests/<agent>.md` (1 riga OK: "YYYY-MM-DD: smoke test PASS, prompt=... output=...").
 
 #### Gate 2 — Ricerca validation (required)
 

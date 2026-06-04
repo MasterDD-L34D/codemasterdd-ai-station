@@ -1,6 +1,6 @@
 # Diagnosi cross-branch — handoff file missing sul PC fisico
 
-> Trigger origin: nuova sessione Claude Code sul PC fisico Lenovo Eduardo (2026-05-12 dopo sera, post sessione cloud commit `f6dfbd8`) ha applicato Step 0 Protocol 1 refresh-verify e ha **stop-on-missing-prereq** correttamente quando ha cercato `docs/sessions/2026-05-12-handoff-12-repos.md` e non l'ha trovato.
+> Trigger origin: nuova sessione Claude Code sul PC fisico Lenovo Eduardo (2026-05-12 dopo sera, post sessione cloud commit `f6dfbd8`) ha applicato Step 0 Protocol 1 refresh-verify e ha **stop-on-missing-prereq** correttamente quando ha cercato `docs/handoffs/2026-05-12-handoff-12-repos.md` e non l'ha trovato.
 
 ## Root cause empirico
 
@@ -10,11 +10,11 @@ Verifica empirica (sessione cloud post Protocol 1):
 
 ```bash
 # Su origin/main: file NON presente
-git log origin/main -- docs/sessions/2026-05-12-handoff-12-repos.md
+git log origin/main -- docs/handoffs/2026-05-12-handoff-12-repos.md
 # -> 0 risultati
 
 # Su origin/claude/read-image-generate-list-iJwhs: file presente
-git log origin/claude/read-image-generate-list-iJwhs -- docs/sessions/2026-05-12-handoff-12-repos.md
+git log origin/claude/read-image-generate-list-iJwhs -- docs/handoffs/2026-05-12-handoff-12-repos.md
 # -> commit f6dfbd8 docs(sessions): handoff 12-repos wave con gate metodologico
 ```
 
@@ -48,7 +48,7 @@ Lista 12 repo esterni:
 cd C:\dev\codemasterdd-ai-station
 git fetch origin
 git checkout claude/read-image-generate-list-iJwhs
-ls docs/sessions/2026-05-12-handoff-12-repos.md   # verify exists
+ls docs/handoffs/2026-05-12-handoff-12-repos.md   # verify exists
 # Adesso puoi rieseguire Step 0 Protocol 1 con file effettivamente disponibile
 ```
 
@@ -61,7 +61,7 @@ ls docs/sessions/2026-05-12-handoff-12-repos.md   # verify exists
 gh pr ready 57
 gh pr merge 57 --squash
 git checkout main && git pull origin main
-ls docs/sessions/2026-05-12-handoff-12-repos.md   # verify exists su main
+ls docs/handoffs/2026-05-12-handoff-12-repos.md   # verify exists su main
 ```
 
 **Pro**: file di riferimento accessibili su main per future sessioni. Single source of truth.
@@ -73,9 +73,9 @@ ls docs/sessions/2026-05-12-handoff-12-repos.md   # verify exists su main
 
 ```powershell
 git fetch origin
-git show origin/claude/read-image-generate-list-iJwhs:docs/sessions/2026-05-12-handoff-12-repos.md | less
+git show origin/claude/read-image-generate-list-iJwhs:docs/handoffs/2026-05-12-handoff-12-repos.md | less
 # Oppure salva temp:
-git show origin/claude/read-image-generate-list-iJwhs:docs/sessions/2026-05-12-handoff-12-repos.md > C:\Temp\handoff-12-repos-readonly.md
+git show origin/claude/read-image-generate-list-iJwhs:docs/handoffs/2026-05-12-handoff-12-repos.md > C:\Temp\handoff-12-repos-readonly.md
 ```
 
 **Pro**: zero modifiche repo, zero checkout. Esplorazione veloce.
@@ -91,7 +91,7 @@ Il comportamento **stop-on-missing-prereq** della nuova sessione e' esattamente 
 - ✅ Anomalia "12 repos" segnalata empiricamente (non assunta come typo)
 
 **Lesson candidate** `L-2026-05-NNN-handoff-cross-branch-anti-pattern`:
-- Quando un handoff referenzia file `docs/sessions/<file>.md`, il consumer deve sapere su quale **branch** vive il file
+- Quando un handoff referenzia file `docs/handoffs/<file>.md`, il consumer deve sapere su quale **branch** vive il file
 - Best practice handoff: includere esplicitamente in pickup commands `git checkout <branch>` o citare PR per chiarezza
 - Best practice produttore handoff: se intent e' "file accessibile da main", merge PR PRIMA di passare il handoff (oppure dichiarare esplicitamente "file su branch X, NOT main")
 - Pattern recovery: stop-on-missing-prereq + diagnosi cross-branch + 3 opzioni fix con trade-off espliciti (NO auto-fix)

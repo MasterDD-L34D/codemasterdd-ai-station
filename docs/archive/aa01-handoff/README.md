@@ -33,4 +33,4 @@ BACKLOG tracking: M11-M14 **CHIUSI** (Wave-12 resolved via final-table, scaffold
 
 - **NO** scrivere su `C:/Users/edusc/aa01/` da Claude Code session (boundary: AA01 e' personal discipline, NO write-path automatizzato da agent)
 - **NO** clonare lifecycle AA01 in `docs/` (questo repo NON e' AA01 mirror, solo handoff staging)
-- **NO** committare in questa dir scaffold gia processati da Eduardo (post-paste). Una volta processato, archive in `docs/aa01-handoff/archive/` o delete se non-utile come reference futura.
+- **NO** committare in questa dir scaffold gia processati da Eduardo (post-paste). Una volta processato, archive in `docs/archive/aa01-handoff/archive/` o delete se non-utile come reference futura.

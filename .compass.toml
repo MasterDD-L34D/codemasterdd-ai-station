@@ -29,12 +29,12 @@ weight = 1.0
 id = "research-and-design"
 name = "Research + specs + plans + patterns + sessions"
 description = "Architettura + brainstorm + audit + sessions handoff"
-paths = ["docs/research/**", "docs/superpowers/**", "docs/patterns/**", "docs/sessions/**", "docs/runbook/**", "FIRST_PRINCIPLES_INFRA_CHECKLIST.md"]
+paths = ["docs/research/**", "docs/superpowers/**", "docs/reference/patterns/**", "docs/handoffs/**", "docs/runbook/**", "FIRST_PRINCIPLES_INFRA_CHECKLIST.md"]
 weight = 1.0
 
 [[pillars]]
 id = "knowledge-preservation"
 name = "Knowledge archive + reference library"
 description = "Ryzen memory archive + reference index + Archivio framework + routing/prompt libraries"
-paths = ["docs/ryzen-memory-archive/**", "docs/reference/**", "Archivio_Libreria_Operativa_Progetti/**", "REFERENCE_INDEX.md", "MODEL_ROUTING.md", "PROMPT_LIBRARY.md", "MASTER_PROMPT.md"]
+paths = ["docs/archive/ryzen-memory-archive/**", "docs/reference/**", "Archivio_Libreria_Operativa_Progetti/**", "REFERENCE_INDEX.md", "MODEL_ROUTING.md", "PROMPT_LIBRARY.md", "MASTER_PROMPT.md"]
 weight = 1.0

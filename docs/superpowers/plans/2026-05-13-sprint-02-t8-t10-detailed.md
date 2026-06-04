@@ -229,7 +229,7 @@ Compare baseline vs final:
 ## References
 
 - `SPRINT_02.md` (AUTHORITATIVE for T1/T2/T5/T7 + T8/T9/T10 main sub-tasks)
-- `docs/cross-repo/ESCALATION_GATES.md` (Gate E threshold definition AUTHORITATIVE)
+- `docs/governance/ESCALATION_GATES.md` (Gate E threshold definition AUTHORITATIVE)
 - `docs/research/component-1-design-options-archived-2026-05-13.md` (Alt A vs B research, DO NOT CONSULT pre-Gate-E)
 - `docs/adr/0028-tier-promotion-quality-gate-methodology.md` (Three Strikes wording AUTHORITATIVE)
 - ADR-0023 H7 ANTHROPIC tier 0 strategic (audit cost cap)

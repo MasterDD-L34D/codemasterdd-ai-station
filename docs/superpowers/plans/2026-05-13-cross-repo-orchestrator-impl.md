@@ -17,13 +17,13 @@
 ## File structure
 
 **Component 2 — Proactive contributor channel** (4 files):
-- `docs/cross-repo/PR_WORKFLOW.md` — workflow definition per cross-repo PR drafting (steps + PR type taxonomy + governance interna handling + dry-run protocol)
-- `docs/cross-repo/PR_TEMPLATE.md` — markdown template per PR body cross-repo (issue + proposed change + ADR ref + privacy class + reversibility tier)
+- `docs/governance/PR_WORKFLOW.md` — workflow definition per cross-repo PR drafting (steps + PR type taxonomy + governance interna handling + dry-run protocol)
+- `docs/governance/PR_TEMPLATE.md` — markdown template per PR body cross-repo (issue + proposed change + ADR ref + privacy class + reversibility tier)
 - `scripts/cross-repo/dry-run-pr.ps1` — dry-run validator: takes (repo target, PR type, file changes preview) → outputs DRAFT PR body to console + verifies privacy whitelist OK + verifies repo path exists + NO actual gh PR create
 - `logs/cross-repo-pr-2026-05.md` — tracking template (gitignored via `logs/*`)
 
 **Component 3 — Escalation gates + Gate E discipline** (5 files):
-- `docs/cross-repo/ESCALATION_GATES.md` — Gate A/B/C/D/E criteria definitions + thresholds + escalation paths + revisability policy
+- `docs/governance/ESCALATION_GATES.md` — Gate A/B/C/D/E criteria definitions + thresholds + escalation paths + revisability policy
 - `scripts/cross-repo/coord-event-log.ps1` — helper script: interactive prompts (date/repo/severity 1-5/grep_count/cost_minutes/notes) → appends row to `logs/coord-events-YYYY-MM.md`
 - `scripts/cross-repo/install-gate-e-reminder.ps1` — installs schtasks weekly Sunday 09:00 (matches existing `smoke-test-hooks.ps1` pattern) reminder to log events. Has `-DryRun` flag.
 - `logs/coord-events-2026-05.md` — Gate E event tracking template (gitignored)
@@ -53,13 +53,13 @@ Expected: scripts/ exists, cross-repo/ NOT yet (will create). Backup-api-keys.ps
 
 ---
 
-## Task 1: Bootstrap directory + docs/cross-repo/ scaffold
+## Task 1: Bootstrap directory + docs/governance/ scaffold
 
 **Files:**
-- Create: `docs/cross-repo/README.md`
+- Create: `docs/governance/README.md`
 - Create: `scripts/cross-repo/.gitkeep`
 
-- [ ] **Step 1.1: Create docs/cross-repo/README.md as index**
+- [ ] **Step 1.1: Create docs/governance/README.md as index**
 
 Write:
 
@@ -97,14 +97,14 @@ Use Write tool: empty content (0 byte). Anchor dir in git.
 
 - [ ] **Step 1.3: Verify files exist**
 
-Run: `ls C:/dev/codemasterdd-ai-station/docs/cross-repo/ && ls C:/dev/codemasterdd-ai-station/scripts/cross-repo/`
+Run: `ls C:/dev/codemasterdd-ai-station/docs/governance/ && ls C:/dev/codemasterdd-ai-station/scripts/cross-repo/`
 Expected: README.md + .gitkeep visible.
 
 - [ ] **Step 1.4: Commit bootstrap**
 
 Run:
 ```powershell
-git -C C:/dev/codemasterdd-ai-station add docs/cross-repo/README.md scripts/cross-repo/.gitkeep
+git -C C:/dev/codemasterdd-ai-station add docs/governance/README.md scripts/cross-repo/.gitkeep
 git -C C:/dev/codemasterdd-ai-station commit -m "feat(cross-repo): bootstrap docs + scripts directory"
 ```
 Expected: commit succeeds, hook ADR-0011 PASS (subject <72ch + lowercase desc).
@@ -114,7 +114,7 @@ Expected: commit succeeds, hook ADR-0011 PASS (subject <72ch + lowercase desc).
 ## Task 2: PR_WORKFLOW.md (Component 2 core doc)
 
 **Files:**
-- Create: `docs/cross-repo/PR_WORKFLOW.md`
+- Create: `docs/governance/PR_WORKFLOW.md`
 
 - [ ] **Step 2.1: Write PR_WORKFLOW.md content**
 
@@ -155,7 +155,7 @@ Ogni PR cross-repo deve avere type esplicito in PR title prefix:
 1. **Identify cross-repo issue** durante uso normale codemasterdd (NO active scanning policy-driven, opportunistic only)
 2. **Run dry-run validator**: `scripts/cross-repo/dry-run-pr.ps1 -RepoTarget <name> -Type <type> -PreviewFiles <paths>`
 3. **Verify privacy whitelist** PASS (script auto-checks `~/.config/aider-privacy-whitelist.txt`)
-4. **Draft PR** using template `docs/cross-repo/PR_TEMPLATE.md`
+4. **Draft PR** using template `docs/governance/PR_TEMPLATE.md`
 5. **Open PR** via `gh pr create` su repo target
 6. **Log entry** in `logs/cross-repo-pr-YYYY-MM.md` con outcome PENDING
 7. **Governance interna repo target** decide accept/reject/amend (decision time NON-controllable, days-weeks)
@@ -189,14 +189,14 @@ Pre-3rd-acceptance, ANY external governance reject → re-evaluate pattern (pote
 
 - [ ] **Step 2.2: Verify Markdown parses + render readable**
 
-Run: `cat C:/dev/codemasterdd-ai-station/docs/cross-repo/PR_WORKFLOW.md | head -30`
+Run: `cat C:/dev/codemasterdd-ai-station/docs/governance/PR_WORKFLOW.md | head -30`
 Expected: content displayed cleanly, headings rendered, table formatted.
 
 - [ ] **Step 2.3: Commit**
 
 Run:
 ```powershell
-git -C C:/dev/codemasterdd-ai-station add docs/cross-repo/PR_WORKFLOW.md
+git -C C:/dev/codemasterdd-ai-station add docs/governance/PR_WORKFLOW.md
 git -C C:/dev/codemasterdd-ai-station commit -m "feat(cross-repo): pr workflow doc with type taxonomy"
 ```
 
@@ -205,7 +205,7 @@ git -C C:/dev/codemasterdd-ai-station commit -m "feat(cross-repo): pr workflow d
 ## Task 3: PR_TEMPLATE.md (Component 2 body template)
 
 **Files:**
-- Create: `docs/cross-repo/PR_TEMPLATE.md`
+- Create: `docs/governance/PR_TEMPLATE.md`
 
 - [ ] **Step 3.1: Write PR_TEMPLATE.md content**
 
@@ -270,7 +270,7 @@ Copy questo template come body quando apri PR cross-repo via Component 2 workflo
 
 Run:
 ```powershell
-git -C C:/dev/codemasterdd-ai-station add docs/cross-repo/PR_TEMPLATE.md
+git -C C:/dev/codemasterdd-ai-station add docs/governance/PR_TEMPLATE.md
 git -C C:/dev/codemasterdd-ai-station commit -m "feat(cross-repo): pr body template with privacy + reversibility tracking"
 ```
 
@@ -485,7 +485,7 @@ NOTE: `logs/*` is gitignored. File creato local only (not committed). Template �
 
 - [ ] **Step 5.1: Create template doc (committed)**
 
-Create `docs/cross-repo/_TEMPLATES/cross-repo-pr-tracking-template.md`:
+Create `docs/governance/_TEMPLATES/cross-repo-pr-tracking-template.md`:
 
 ```markdown
 # Cross-repo PR tracking log
@@ -528,7 +528,7 @@ Expected: outputs `logs/cross-repo-pr-2026-05.md` (means file IS ignored).
 
 Run:
 ```powershell
-git -C C:/dev/codemasterdd-ai-station add docs/cross-repo/_TEMPLATES/cross-repo-pr-tracking-template.md
+git -C C:/dev/codemasterdd-ai-station add docs/governance/_TEMPLATES/cross-repo-pr-tracking-template.md
 git -C C:/dev/codemasterdd-ai-station commit -m "feat(cross-repo): pr tracking template doc for monthly log"
 ```
 
@@ -537,7 +537,7 @@ git -C C:/dev/codemasterdd-ai-station commit -m "feat(cross-repo): pr tracking t
 ## Task 6: ESCALATION_GATES.md (Component 3 core doc)
 
 **Files:**
-- Create: `docs/cross-repo/ESCALATION_GATES.md`
+- Create: `docs/governance/ESCALATION_GATES.md`
 
 - [ ] **Step 6.1: Write ESCALATION_GATES.md content**
 
@@ -579,7 +579,7 @@ Criteri **pre-definiti** per evoluzione paradigm cross-repo SE failure trigger e
 | 2-4.99/wk | BUILD MINIMAL | Extension dogfood-ui ONLY (drop standalone alternative + reduce SPRINT_02 T1-T2 scope) |
 | <2/wk | NOT BUILT | Trigger #1 falsified empirical, defer indefinitely. Update STATUS_MULTI_REPO + close spec V3 |
 
-**Threshold revisability**: post 1-week pilot, threshold revisable se events tipicamente cluster (1 day = revise weekly threshold) vs scattered (mantain). Document revision in `docs/cross-repo/ESCALATION_GATES.md` amendment + JOURNAL entry.
+**Threshold revisability**: post 1-week pilot, threshold revisable se events tipicamente cluster (1 day = revise weekly threshold) vs scattered (mantain). Document revision in `docs/governance/ESCALATION_GATES.md` amendment + JOURNAL entry.
 
 **Audit week 4**: invocare harsh-reviewer subagent (Protocol 5 ADR-0026 addendum) per verificare:
 - Logging discipline consistency (no gap weeks)
@@ -637,7 +637,7 @@ This document is checkpoint, NOT prescription. Gate trigger does NOT mean automa
 
 Run:
 ```powershell
-git -C C:/dev/codemasterdd-ai-station add docs/cross-repo/ESCALATION_GATES.md
+git -C C:/dev/codemasterdd-ai-station add docs/governance/ESCALATION_GATES.md
 git -C C:/dev/codemasterdd-ai-station commit -m "feat(cross-repo): escalation gates A-E with thresholds + anti-L-016 discipline"
 ```
 
@@ -914,7 +914,7 @@ git -C C:/dev/codemasterdd-ai-station commit -m "feat(cross-repo): gate e weekly
 ## Task 9: escalation-gates tracking template doc
 
 **Files:**
-- Create: `docs/cross-repo/_TEMPLATES/escalation-gates-tracking-template.md`
+- Create: `docs/governance/_TEMPLATES/escalation-gates-tracking-template.md`
 
 - [ ] **Step 9.1: Write template doc**
 
@@ -986,7 +986,7 @@ Copy content to `logs/escalation-gates-2026-05.md` (initial state).
 
 Run:
 ```powershell
-git -C C:/dev/codemasterdd-ai-station add docs/cross-repo/_TEMPLATES/escalation-gates-tracking-template.md
+git -C C:/dev/codemasterdd-ai-station add docs/governance/_TEMPLATES/escalation-gates-tracking-template.md
 git -C C:/dev/codemasterdd-ai-station commit -m "feat(cross-repo): escalation gates tracking template with week 4 audit"
 ```
 
@@ -1017,7 +1017,7 @@ Edit BACKLOG.md, find section "Sprint corrente" (SPRINT_02) area, add new sub-se
 Edit STATUS_MULTI_REPO.md, find apps section, add row:
 
 ```markdown
-| Cross-repo coordination (Component 2+3) | `docs/cross-repo/` + `scripts/cross-repo/` | DOC + scripts pre-Max ✅ | Gate E empirical 30gg post-Max pending |
+| Cross-repo coordination (Component 2+3) | `docs/governance/` + `scripts/cross-repo/` | DOC + scripts pre-Max ✅ | Gate E empirical 30gg post-Max pending |
 ```
 
 - [ ] **Step 10.3: Commit BACKLOG + STATUS update**
@@ -1085,12 +1085,12 @@ Run:
 git -C C:/dev/codemasterdd-ai-station log --stat --oneline -15
 ```
 Expected: 11 commits visible (Task 1-11 + spec V3 + 2 prev spec versions). Files created:
-- docs/cross-repo/README.md
-- docs/cross-repo/PR_WORKFLOW.md
-- docs/cross-repo/PR_TEMPLATE.md
-- docs/cross-repo/ESCALATION_GATES.md
-- docs/cross-repo/_TEMPLATES/cross-repo-pr-tracking-template.md
-- docs/cross-repo/_TEMPLATES/escalation-gates-tracking-template.md
+- docs/governance/README.md
+- docs/governance/PR_WORKFLOW.md
+- docs/governance/PR_TEMPLATE.md
+- docs/governance/ESCALATION_GATES.md
+- docs/governance/_TEMPLATES/cross-repo-pr-tracking-template.md
+- docs/governance/_TEMPLATES/escalation-gates-tracking-template.md
 - scripts/cross-repo/.gitkeep
 - scripts/cross-repo/dry-run-pr.ps1
 - scripts/cross-repo/coord-event-log.ps1
@@ -1119,7 +1119,7 @@ gh pr edit 87 --repo MasterDD-L34D/codemasterdd-ai-station --body "$(cat <<'EOF'
 Plan executed: `docs/superpowers/plans/2026-05-13-cross-repo-orchestrator-impl.md` (11 tasks, ~6-8h actual).
 
 Files created:
-- docs/cross-repo/README.md + PR_WORKFLOW.md + PR_TEMPLATE.md + ESCALATION_GATES.md + 2 templates
+- docs/governance/README.md + PR_WORKFLOW.md + PR_TEMPLATE.md + ESCALATION_GATES.md + 2 templates
 - scripts/cross-repo/dry-run-pr.ps1 + coord-event-log.ps1 + install-gate-e-reminder.ps1
 - BACKLOG.md X1-X5 entries
 - JOURNAL.md entry 2026-05-13 sera-tardi-ultra-2

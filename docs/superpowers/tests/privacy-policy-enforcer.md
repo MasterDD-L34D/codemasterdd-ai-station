@@ -20,7 +20,7 @@
 
 - CLAUDE.md sezione "Progetti monitorati" + "API keys tier 3 cloud" — our own policy
 - ADR-0013 cloud free providers — our own (archivio 16 ADR)
-- `docs/patterns/delegation-to-aider.md` — our own (Fase 6 tracking)
+- `docs/reference/patterns/delegation-to-aider.md` — our own (Fase 6 tracking)
 - **Verdict**: ✅ zero fonti esterne (custom codemasterdd), nessun license concern
 
 ## Gate 3 tuning iteration

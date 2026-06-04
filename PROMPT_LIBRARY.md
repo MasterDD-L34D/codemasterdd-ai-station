@@ -51,7 +51,7 @@ Chiudi la sessione con handoff pulito: aggiorna COMPACT_CONTEXT + BACKLOG + JOUR
 ## Sezione 2 — Prompt specifici progetto
 
 ### /DOGFOOD-LOG
-Prompt per aggiungere entry conforme al log dogfood Aider (schema `docs/patterns/aider-delegation-log-template.md`).
+Prompt per aggiungere entry conforme al log dogfood Aider (schema `docs/reference/patterns/aider-delegation-log-template.md`).
 
 ```text
 Aggiungi entry in logs/aider-delegation-YYYY-MM.md (mese corrente) per la delegazione Aider appena eseguita.
@@ -112,7 +112,7 @@ Prompt per classificare task prima di Edit/Write (policy CLAUDE.md "Trigger dele
 Task proposto: [DESCRIZIONE BREVE]
 File target: [PATH]
 
-Classifica il task secondo docs/patterns/delegation-to-aider.md:
+Classifica il task secondo docs/reference/patterns/delegation-to-aider.md:
 
 1. Cosmetic? (JSDoc, docstring, rename, lint-fix, typo, 1-liner)
    → se sì E working tree clean → proponi `aider-cosmetic <file>` con task short-description, attendi OK

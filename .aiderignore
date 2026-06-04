@@ -5,4 +5,4 @@
 # and explicit `aider <file>` adds, covering every wrapper (local + cloud) at once --
 # preferred over a per-path check in the 6 .cmd cloud wrappers (anti-pattern #11:
 # fragile batch path-matching across security-critical files).
-docs/ryzen-memory-archive/
+docs/archive/ryzen-memory-archive/

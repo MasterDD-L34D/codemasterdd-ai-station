@@ -166,7 +166,7 @@ if (-not $SkipOpenRouter) {
     Write-Host "    2. Get API key from dashboard"
     Write-Host "    3. Append a $keysEnv :"
     Write-Host "       OPENROUTER_API_KEY=sk-or-v1-..."
-    Write-Host "    4. Update opencode.json provider 'openrouter' (template fornito in docs/cross-repo)"
+    Write-Host "    4. Update opencode.json provider 'openrouter' (template fornito in docs/governance)"
   }
 }
 

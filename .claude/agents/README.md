@@ -23,7 +23,7 @@ Stato 2026-04-24 (post batch P0 + P1 + P2-partial): **12/18 ✅ ready** (smoke t
   - Opportunistic (Game data disponibile): `game-balance-auditor` — audit reale con 2 ROSSO findings concreti
 - **Restano draft** (6 agent): game-systems-designer, game-design-validator, lore-consistency-checker, dafne-proposal-triager, database-schema-designer, a11y-wcag-reviewer
 
-Log smoke test completi: [docs/agent-smoke-tests/](../../docs/agent-smoke-tests/)
+Log smoke test completi: [docs/superpowers/tests/](../../docs/superpowers/tests/)
 
 ## Agent registrati (18 totali)
 
@@ -145,7 +145,7 @@ Agent({
 2. **Commit 2 `test(agents): smoke test <name> gate 1`**:
    - Invoca agent via `Agent` tool con prompt rappresentativo del scope
    - Segui checklist [SMOKE_TEST_TEMPLATE.md](SMOKE_TEST_TEMPLATE.md)
-   - Log risultato in commit message o `docs/agent-smoke-tests/<name>.md`
+   - Log risultato in commit message o `docs/superpowers/tests/<name>.md`
 
 3. **Commit 3 `chore(agents): validate sources <name> gate 2`**:
    - Verifica licenze fonti (MIT/Apache/BSD preferite, flag AGPL/NC)
@@ -175,5 +175,5 @@ Agent candidates tracked in BACKLOG, da considerare post ADR-0017 ratification:
 - [ADR-0016 Constraint-count routing dimension](../../docs/adr/0016-constraint-count-routing-dimension.md)
 - [ADR-0017 UI + observability stack](../../docs/adr/0017-ui-observability-stack.md)
 - [CLAUDE.md](../../CLAUDE.md) — convenzioni progetto
-- [docs/patterns/delegation-to-aider.md](../../docs/patterns/delegation-to-aider.md)
+- [docs/reference/patterns/delegation-to-aider.md](../../docs/reference/patterns/delegation-to-aider.md)
 - Claude Code agents docs: https://code.claude.com/docs/en/agent-teams

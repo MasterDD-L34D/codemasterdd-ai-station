@@ -3,7 +3,7 @@
 > Status: **Accepted** — 2026-06-03 (G1; Proposed + ratified same day by Eduardo, explicit "fai la ratifica").
 > Survived an SDMG harsh-reviewer falsification (verdict: SURVIVE-WITH-CHANGES;
 > all blocking + significant findings adopted pre-write -- see "Falsification").
-> Extends ADR-0036 (ORCHESTRATION doctrine) + `docs/cross-repo/actor-activation-criteria.md`
+> Extends ADR-0036 (ORCHESTRATION doctrine) + `docs/governance/actor-activation-criteria.md`
 > (the governor earn-path). ASCII-first body (ADR-0021).
 > **Accepted**: the decisions below are binding doctrine. The doctrine-file carve-out
 > (decision 2) is reflected in actor-criteria sec 7 (this PR) + ORCHESTRATION sec 5/6 (follow-up).
@@ -20,7 +20,7 @@ ADR LOCKS OUT shortcuts more than it enables autonomy -- which is the SDMG-corre
 
 ## Context
 
-- The goal (`docs/goals/2026-06-03-jules-autonomy-gaps.md`, G1) asks for a decided
+- The goal (`docs/superpowers/jules/2026-06-03-jules-autonomy-gaps.md`, G1) asks for a decided
   merge-autonomy model, gated by SDMG (Cognitive Protocol 7): NO fiat standing-grant; the
   chosen option must survive an external harsh-reviewer falsification before this ADR.
 - Today: external-repo merge (Game, Game-Godot-v2, Game-Database) = Eduardo per-PR
@@ -51,7 +51,7 @@ ADR LOCKS OUT shortcuts more than it enables autonomy -- which is the SDMG-corre
    self-licensing loop CI/Codex/same-family-harsh-reviewer do not close). This aligns with
    ORCHESTRATION sec 5's irreducible-human residue ("ADR-class architecture, what NOT to
    build"). The carve-out set:
-   `ORCHESTRATION.md`, `docs/adr/**`, `docs/cross-repo/actor-activation-criteria.md`,
+   `ORCHESTRATION.md`, `docs/adr/**`, `docs/governance/actor-activation-criteria.md`,
    authoritative `CLAUDE.md`, `.claude/settings.json`, `~/.config/aider-privacy-whitelist.txt`.
    Edits to these are proposed by the hub (branch + PR) and **merged by Eduardo only**.
 
@@ -133,9 +133,9 @@ External harsh-reviewer falsification PRE-write. Verdict **SURVIVE-WITH-CHANGES*
 
 - ADR-0036 (ORCHESTRATION doctrine), ADR-0035 (Jules external-repo merge = Eduardo-explicit),
   ADR-0026 (Cognitive Protocols, incl. Protocol 7 SDMG).
-- `docs/cross-repo/actor-activation-criteria.md` (R0/R1/R2 earn-path; sec 8 = unreachable today).
+- `docs/governance/actor-activation-criteria.md` (R0/R1/R2 earn-path; sec 8 = unreachable today).
 - `ORCHESTRATION.md` sec 5 (autonomy ladder + irreducible residue) + sec 6 (standing perms).
-- `docs/goals/2026-06-03-jules-autonomy-gaps.md` (G1 + G4).
+- `docs/superpowers/jules/2026-06-03-jules-autonomy-gaps.md` (G1 + G4).
 
 ## Addendum 2026-06-03 -- `jules-dispatch` wrapper BUILT (path-to-standing prerequisite met; standing STILL deferred)
 

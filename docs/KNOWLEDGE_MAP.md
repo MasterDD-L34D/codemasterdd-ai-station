@@ -58,7 +58,7 @@ Principio: *governance colleziona, ADR delimita, YAML prova, freeze decide, agen
 | **vault Cards/Atlas** | vault `Cards/`, `Atlas/`, `Spaces/Dev/Evo-Tactics/` | Knowledge atomizzato ACCESS (es. `game-design-references-direction-5`, `masterizzazionedigiochi-moc`) | OK (sovereign) |
 | **Asset refs** | `evo-tactics-refs-meta/` (SKIV_REFS, CATALOG, CC0_SOURCES, HANDOFF) | Provenance asset 100% classificata (32136 file) | OK (private remote) |
 | **Art Godot** | Game-Godot-v2 `docs/godot-v2/visual-screen-bible.md` + `visual-design-research.md` | Bibbia visiva 3-modi | OK (public) |
-| **Ryzen memory archive** | codemasterdd `docs/ryzen-memory-archive/` (139 file, **NEW 2026-05-27**) | Storia-decisioni + reference + feedback da sessioni Claude Code Ryzen-side -- vedi §4 | **OK (era a rischio, ora captured)** |
+| **Ryzen memory archive** | codemasterdd `docs/archive/ryzen-memory-archive/` (139 file, **NEW 2026-05-27**) | Storia-decisioni + reference + feedback da sessioni Claude Code Ryzen-side -- vedi §4 | **OK (era a rischio, ora captured)** |
 
 ---
 
@@ -92,7 +92,7 @@ Runbook diretto invece di script (anti-pattern #11: 1-comando-robusto > helper f
 
 ```powershell
 $base = "Vgit@192.168.1.11:C:/Users/VGit/.claude/projects"
-$dst  = "C:/dev/codemasterdd-ai-station/docs/ryzen-memory-archive"
+$dst  = "C:/dev/codemasterdd-ai-station/docs/archive/ryzen-memory-archive"
 $map  = [ordered]@{
   "Game-Desktop-old"="C--Users-VGit-Desktop-Game"; "C--dev-Game"="C--dev-Game";
   "C--dev-Game-Godot-v2"="C--dev-Game-Godot-v2"; "C--Users-VGit-Desktop-Game-Godot-v2"="C--Users-VGit-Desktop-Game-Godot-v2";
@@ -106,7 +106,7 @@ foreach ($f in $map.Keys) {
 }
 ```
 
-Poi `git add docs/ryzen-memory-archive` + commit se ci sono diff. Worktree effimere escluse (0 file, verificato 2026-05-27).
+Poi `git add docs/archive/ryzen-memory-archive` + commit se ci sono diff. Worktree effimere escluse (0 file, verificato 2026-05-27).
 
 ---
 
@@ -125,7 +125,7 @@ Poi `git add docs/ryzen-memory-archive` + commit se ci sono diff. Worktree effim
 - **Worktree memory** (`*--claude-worktrees-*`, ~40 chiavi) -- ✅ RESOLVED: verificato 2026-05-27, **0 file memory** nelle worktree (niente di unico). Safe da ignorare.
 - **Memory split** Game (`Game-Desktop-old` 84 file storici vs `C--dev-Game` 3 file nuovi) -- ✅ RESOLVED-as-preserved: NON mergeati di proposito (ere diverse, zero overlap-loss). Entrambi archiviati. **Active going-forward = chiave `C--dev-Game`** (Game vive in `C:/dev/Game`); `Game-Desktop-old` = archivio storico read-only.
 - **Local Game stale** -- ⏳ DEFERRED (Eduardo-gated): `C:/dev/Game` Lenovo HEAD `196a63a4`, **71 commit behind** origin/main (`637b3dc0`, verificato 2026-05-27). FF-pull **bloccato** da `.husky/pre-commit` (skip-worktree wrapper, mirror-dance Evo-Tactics). Origin = canonical, local = sandbox (no harm). Sync safe (da Eduardo): `git -C C:/dev/Game update-index --no-skip-worktree .husky/pre-commit; git checkout -- .husky/pre-commit; git pull --ff-only origin main; git update-index --skip-worktree .husky/pre-commit`.
-- **Privacy** -- ✅ RESOLVED 2026-05-28: repo codemasterdd e' **PRIVATE** (no leak) ma cloud-whitelisted per delega aider, e l'archivio contiene contenuto sovereign (memory vault + personali). Guard aggiunto via `.aiderignore` (`docs/ryzen-memory-archive/`) -- aider lo onora sia per auto-context sia per add esplicito `aider <file>`, coprendo TUTTI i wrapper (local + cloud) in un colpo. Preferito a un path-check nei 6 `.cmd` cloud (anti-pattern #11: batch path-matching fragile su file security-critical). Smoke PASS: `aider docs/ryzen-memory-archive/README.md` -> "Skipping ... matches aiderignore spec".
+- **Privacy** -- ✅ RESOLVED 2026-05-28: repo codemasterdd e' **PRIVATE** (no leak) ma cloud-whitelisted per delega aider, e l'archivio contiene contenuto sovereign (memory vault + personali). Guard aggiunto via `.aiderignore` (`docs/archive/ryzen-memory-archive/`) -- aider lo onora sia per auto-context sia per add esplicito `aider <file>`, coprendo TUTTI i wrapper (local + cloud) in un colpo. Preferito a un path-check nei 6 `.cmd` cloud (anti-pattern #11: batch path-matching fragile su file security-critical). Smoke PASS: `aider docs/archive/ryzen-memory-archive/README.md` -> "Skipping ... matches aiderignore spec".
 
 ---
 
@@ -137,7 +137,7 @@ Prova-di-eliminazione su 11 reference archiviati + 3 gap. **Onesto**: dei 11 ref
 |------|--------------|-------|
 | `reference_classification_4d` (framework 4-axis keep/kill/archive, meta-tool unico, non in SoT) | PROMOTE → vault Card (A5 curated) | ✅ DONE -- vault PR #202 merged 2026-05-28 |
 | Encounter-authoring CLI (da `reference_tactical_postmortems` / Fallout Tactics: `game_cli.py author-encounter`) | OPEN ticket Game backlog -- unblocks M3 content-slice volume | ✅ DONE (raise-ticket scope) -- TKT-ENCOUNTER-CLI in Game BACKLOG via Game PR #2403. Implementazione = lavoro Game separato |
-| `games-source-index.md:248` backlink rotto (dead Ryzen path) | repoint → `codemasterdd/docs/ryzen-memory-archive/Game-Desktop-old/` | ✅ DONE -- Game PR #2403 merged 2026-05-28 (`Game/docs/guide/games-source-index.md` repointed) |
+| `games-source-index.md:248` backlink rotto (dead Ryzen path) | repoint → `codemasterdd/docs/archive/ryzen-memory-archive/Game-Desktop-old/` | ✅ DONE -- Game PR #2403 merged 2026-05-28 (`Game/docs/guide/games-source-index.md` repointed) |
 | Genetics epigenome/Lamarck-lite (engine) | -- | **SHIPPED Fase-3** (Game #2402 `c359b576`, 2026-05-28: engine + mating wire + speciation + Frammenti). ✅ vault SoT §24.6 **RECONCILED** (vault `40992953` DEFERRED->SHIPPED, 2026-05-28 00:59; genealogie profonde + eco-repro lungo-termine restano DEFERRED, corretto). **NO-DRIFT** verificato 2026-05-28 via `sot-drift-verifier` (primo uso reale del sentinel: ha beccato il marker stale, non il SoT) |
 | Genetics genealogie profonde + eco-repro lungo-termine | Fase-3+ build | TRACKED -- DEFERRED (non in #2402) |
 | Voidling Pattern 6 visual_swap | -- | DONE (shipped 2026-05-05; claim "P0 gap" era stale, corretto DIGEST §11.5) |

@@ -85,5 +85,5 @@ Post-Gate-E decision (PASS/MINIMAL/FALSIFIED), if Component 1 build is justified
 - ADR-0026 cognitive workflow protocols (P5 harsh-reviewer caught this anti-pattern)
 - L-2026-05-016 cognitive protocols measurement anti-aspirational (the violated lesson)
 - L-2026-05-018 (in promotion) — META anti-pattern recurrence same-session
-- Component 3 escalation gates Gate E threshold definition (`docs/cross-repo/ESCALATION_GATES.md`)
+- Component 3 escalation gates Gate E threshold definition (`docs/governance/ESCALATION_GATES.md`)
 - PR #88 v1 (rewrite as v2 includes this archive) — recovery action chosen REWORK to MERGE
