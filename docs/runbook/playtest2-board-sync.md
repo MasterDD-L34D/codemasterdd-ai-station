@@ -7,14 +7,14 @@ created: 2026-05-17
 owner: master-dd
 language: it
 tags: [runbook, cross-repo, automation, od-044, od-042-a, ci]
-related: [docs/cross-repo/EXECUTION-BOARD.md, .github/workflows/playtest2-board-sync.yml, tools/playtest2-board-sync.sh]
+related: [docs/governance/EXECUTION-BOARD.md, .github/workflows/playtest2-board-sync.yml, tools/playtest2-board-sync.sh]
 ---
 
 # Runbook — OD-044 playtest#2 board auto-sync
 
 > **Scopo**: chiude il gap **B4 manual-handoff** di OD-044. La riga
 > `| **playtest#2 automation (OD-044)** |` in
-> `docs/cross-repo/EXECUTION-BOARD.md` ora si auto-aggiorna via PR
+> `docs/governance/EXECUTION-BOARD.md` ora si auto-aggiorna via PR
 > schedulata, non più sync manuale.
 
 ## Perché esiste
@@ -96,7 +96,7 @@ per-pilastro reale.
 **Verifica locale dello script**:
 ```bash
 bash tools/playtest2-board-sync.sh
-git diff docs/cross-repo/EXECUTION-BOARD.md
+git diff docs/governance/EXECUTION-BOARD.md
 # diff presente = ci sarebbe un PR ; nessun diff = no-op idempotente
 ```
 
@@ -123,7 +123,7 @@ nuovo.
 
 ## Cross-link
 
-- Board: `docs/cross-repo/EXECUTION-BOARD.md`
+- Board: `docs/governance/EXECUTION-BOARD.md`
 - Pattern: OD-042-A (skiv-monitor raw-fetch) →
   `docs/runbook/skiv-monitor-blocked-pr-fix.md`
 - Producer: Game `.github/workflows/ai-sim-nightly.yml` Envelope-B B3/B4

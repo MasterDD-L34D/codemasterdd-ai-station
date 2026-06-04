@@ -3,7 +3,7 @@
 > Status: DRAFT v2 2026-06-02 -- REJECTED v1 by harsh-reviewer (SDMG step 3), redesigned
 > to the 6 survive-conditions + 1 improvement (escalate via GH ISSUE, not PR). Author:
 > Claude (Opus) on Ryzen. First autonomy increment (R0 report-only -> R1 actor emits).
-> ASCII-first. Authority: ADR-0036 + `docs/cross-repo/actor-activation-criteria.md`.
+> ASCII-first. Authority: ADR-0036 + `docs/governance/actor-activation-criteria.md`.
 
 ## 0. Honesty preamble (SDMG)
 

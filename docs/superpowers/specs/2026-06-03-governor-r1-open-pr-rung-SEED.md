@@ -28,7 +28,7 @@ rung that would emit the required >=4 clean PR-cycles does not yet exist"). Clos
 
 ## Read FIRST (ground-truth)
 
-- `docs/cross-repo/actor-activation-criteria.md` -- R0/R1/R2 rungs; sec 2 (R0->R1 unlock); **sec 3
+- `docs/governance/actor-activation-criteria.md` -- R0/R1/R2 rungs; sec 2 (R0->R1 unlock); **sec 3
   (R1->R2 unlock conditions)**; **sec 6 (CLEAN R1 cycle = PR human-merged + no-revert-7d +
   no-same-line-followup-7d)**; sec 4 (severed self-licking loop -- only human acted-on counts);
   sec 5 (what "acted-on" means).

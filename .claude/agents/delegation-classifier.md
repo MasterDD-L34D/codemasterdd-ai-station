@@ -153,5 +153,5 @@ Target <250 parole. Decision-focused.
 - CLAUDE.md sezione "Priorità modelli AI" + "Trigger delega in-session"
 - ADR-0008 Hub pattern tier routing
 - ADR-0016 Constraint-count routing dimension
-- `docs/patterns/delegation-to-aider.md` — decision tree completo
+- `docs/reference/patterns/delegation-to-aider.md` — decision tree completo
 - `privacy-policy-enforcer` agent — upstream gate

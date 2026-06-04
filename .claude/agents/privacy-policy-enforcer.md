@@ -29,7 +29,7 @@ Sei il **privacy-policy-enforcer** per CodeMasterDD ecosystem. Classifichi file 
 ### Eventuali repo cliente (futuro)
 **Status**: **MAI cloud** per default. Policy esplicita per deroga.
 
-## Wrapper delegation matrix (da `docs/patterns/delegation-to-aider.md`)
+## Wrapper delegation matrix (da `docs/reference/patterns/delegation-to-aider.md`)
 
 | File classification | Wrapper OK | Wrapper NO |
 |---------------------|------------|------------|
@@ -110,4 +110,4 @@ Target <200 parole. Decision-focused.
 
 - CLAUDE.md sezione "Progetti monitorati" + "API keys tier 3 cloud"
 - ADR-0013 cloud free providers
-- `docs/patterns/delegation-to-aider.md` — Extension tier 3 cloud
+- `docs/reference/patterns/delegation-to-aider.md` — Extension tier 3 cloud

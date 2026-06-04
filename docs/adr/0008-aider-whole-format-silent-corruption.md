@@ -207,10 +207,10 @@ Leggermente aumentata. Un RTX 5060 Ti 16GB permetterebbe 14B Q2 full-GPU + event
 - [x] JOURNAL 2026-04-21 entry
 - [x] Wrapper script `aider-cosmetic` + `aider-refactor` in `C:\Users\edusc\.local\bin\` (zero-friction invocation)
 - [x] Guard rail pre-commit hook installato globale via `git config --global core.hooksPath` — testato 3 scenari (pattern pulito, pattern commentato, edit legittimo)
-- [x] Delegation protocol documentato in `docs/patterns/delegation-to-aider.md`
+- [x] Delegation protocol documentato in `docs/reference/patterns/delegation-to-aider.md`
 - [x] Hub model consolidato: Claude Code orchestra via bash `--message`, user stays in chat. Delegation doc riscritto hub-first.
 - [x] Dogfood completo: 7B cosmetic (commit `9280e1b`) + 14B Q2 refactor (commit `fffcbda`) entrambi success via hub.
-- [x] Tracking log template `docs/patterns/aider-delegation-log-template.md` per Fase 6 evaluation.
+- [x] Tracking log template `docs/reference/patterns/aider-delegation-log-template.md` per Fase 6 evaluation.
 
 ### Addendum 2026-04-21: reflection retry resilience (diff format)
 

@@ -58,7 +58,7 @@
 7. ADR rilevanti se il task tocca un topic noto.
 
 (Voci rimosse perche' decommissionate: runbook `adr-0017-hot-restart`,
-`docs/plans/integration-aa01-vault-hyperspace`, validation hook `.session-start-head`,
+`docs/archive/plans/integration-aa01-vault-hyperspace`, validation hook `.session-start-head`,
 dogfood-ui / infra docker -- vedi history archive.)
 
 ## Pointers

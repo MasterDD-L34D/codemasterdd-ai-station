@@ -7,7 +7,7 @@ created: 2026-05-16
 owner: master-dd
 language: it
 tags: [runbook, ci, branch-protection, skiv-monitor, game, od-041, security]
-related: [docs/cross-repo/EXECUTION-BOARD.md]
+related: [docs/governance/EXECUTION-BOARD.md]
 ---
 
 # Runbook — fix loop skiv-monitor PR BLOCKED
@@ -120,5 +120,5 @@ Prossimo cron (4h) non ricreerà un PR BLOCKED (root-cause chiuso).
 torna a questo runbook per la chiusura strutturale.
 
 ## Cross-link
-- Board: `docs/cross-repo/EXECUTION-BOARD.md`
+- Board: `docs/governance/EXECUTION-BOARD.md`
 - Decisione scope-PAT: vault `docs/decisions/OD-041-gh-token-scope-2026-05-16.md`

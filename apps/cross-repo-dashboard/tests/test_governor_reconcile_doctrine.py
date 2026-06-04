@@ -7,8 +7,8 @@ import pytest
 
 CARVE_OUTS_TRUE = [
     ("docs/adr/0039-x.md", "MasterDD-L34D/codemasterdd-ai-station"),
-    ("docs/cross-repo/EXECUTION-BOARD.md", "MasterDD-L34D/codemasterdd-ai-station"),
-    ("docs/cross-repo/actor-activation-criteria.md", "MasterDD-L34D/codemasterdd-ai-station"),
+    ("docs/governance/EXECUTION-BOARD.md", "MasterDD-L34D/codemasterdd-ai-station"),
+    ("docs/governance/actor-activation-criteria.md", "MasterDD-L34D/codemasterdd-ai-station"),
     (".claude/settings.json", "MasterDD-L34D/codemasterdd-ai-station"),
     (".claude/agents/harsh-reviewer.md", "MasterDD-L34D/codemasterdd-ai-station"),
     ("Archivio_Libreria_Operativa_Progetti/07_CLAUDE_CODE_OPERATING_PACKAGE/SAFE_CHANGES_ONLY.md",

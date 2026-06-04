@@ -2,7 +2,7 @@
 
 > **NON un to-do passivo**. Vedi sezione "Step 0 -- Metodologia obbligatoria pickup" prima di toccare qualsiasi file.
 > Trigger origin: screenshot OCR `TOP CLAUDE CODE REPOSITORIES` (12 repo) inviato da Eduardo.
-> Output principali: `docs/reference/subagents-skills-candidates.md` esteso, `docs/aa01-handoff/` (4 scaffold), BACKLOG M11-M14, PR #57 draft.
+> Output principali: `docs/reference/subagents-skills-candidates.md` esteso, `docs/archive/aa01-handoff/` (4 scaffold), BACKLOG M11-M14, PR #57 draft.
 
 ---
 
@@ -20,7 +20,7 @@ gh pr view 57                               # stato PR (merged? open? new commen
 
 # Verifica file citati nel handoff esistano effettivamente
 ls docs/reference/subagents-skills-candidates.md
-ls docs/aa01-handoff/
+ls docs/archive/aa01-handoff/
 cat BACKLOG.md | grep -A2 "M11\|M12\|M13\|M14"
 
 # Verifica state AA01 (dovresti farlo TU Eduardo se sub-agent NON puo' accedere)
@@ -107,7 +107,7 @@ Trigger di back-engineering (re-decostruire decisioni handoff):
 **Caveat back-engineering**: decisioni preliminari = output di analisi 12/5 sera basata su README scan + GitHub stats live quel giorno. NON sono binding. Re-verify con Protocol 2 prima di SHIP ognuna.
 
 ### 2. 4 scaffold AA01 paste-ready
-`docs/aa01-handoff/`:
+`docs/archive/aa01-handoff/`:
 - `2026-05-12-A-skills-resources.md` -- skills (#1 refresh, #3, #5, #10), 4-6h
 - `2026-05-12-B-subagent-memory-resources.md` -- claude-mem INSTALL + VoltAgent refresh, 2-3h
 - `2026-05-12-C-dev-tools-resources.md` -- repomix INSTALL + gsd BOOKMARK, 2h
@@ -126,7 +126,7 @@ Trigger di back-engineering (re-decostruire decisioni handoff):
 cd C:/Users/edusc/aa01
 
 # Esempio Task A
-cp /c/dev/codemasterdd-ai-station/docs/aa01-handoff/2026-05-12-A-skills-resources.md inbox/
+cp /c/dev/codemasterdd-ai-station/docs/archive/aa01-handoff/2026-05-12-A-skills-resources.md inbox/
 bash scripts/classify.sh inbox/2026-05-12-A-skills-resources.md
 bash scripts/promote.sh inbox/2026-05-12-A-skills-resources.md research-long
 # Ripeti per B, C, D oppure solo i task che vuoi attivare ora
@@ -177,7 +177,7 @@ Oppure lascia draft fino a outcome chiaro -- nessuna urgenza merge.
 
 - PR: https://github.com/MasterDD-L34D/codemasterdd-ai-station/pull/57
 - Master table: `docs/reference/subagents-skills-candidates.md` sezione Wave 2026-05-12
-- Scaffold dir: `docs/aa01-handoff/`
+- Scaffold dir: `docs/archive/aa01-handoff/`
 - BACKLOG: `BACKLOG.md` sezione "Task derivati da OCR screenshot wave 2026-05-12"
 - JOURNAL: `JOURNAL.md` entry `2026-05-12 (sera)`
 - ADR cognitive workflow: `docs/adr/0026-cognitive-workflow-protocols.md`

@@ -43,7 +43,7 @@ merges. Do NOT self-merge. STOP after PR open + CI green + the 3rd harsh-reviewe
   - `test_governor_reconcile_no_merge.py`  (load-bearing negative test)
   - `test_governor_reconcile_cycles_report.py`
 - Create `docs/adr/0039-r1-open-pr-reconcile-rung.md` (DOCTRINE -> Eduardo-merge).
-- Modify `docs/cross-repo/actor-activation-criteria.md` (DOCTRINE -> Eduardo-merge): add the R1-PR
+- Modify `docs/governance/actor-activation-criteria.md` (DOCTRINE -> Eduardo-merge): add the R1-PR
   activation note.
 
 Established conventions (from the shipped governor): tests import `from governor.X import Y`
@@ -69,8 +69,8 @@ import pytest
 
 CARVE_OUTS_TRUE = [
     ("docs/adr/0039-x.md", "MasterDD-L34D/codemasterdd-ai-station"),
-    ("docs/cross-repo/EXECUTION-BOARD.md", "MasterDD-L34D/codemasterdd-ai-station"),
-    ("docs/cross-repo/actor-activation-criteria.md", "MasterDD-L34D/codemasterdd-ai-station"),
+    ("docs/governance/EXECUTION-BOARD.md", "MasterDD-L34D/codemasterdd-ai-station"),
+    ("docs/governance/actor-activation-criteria.md", "MasterDD-L34D/codemasterdd-ai-station"),
     (".claude/settings.json", "MasterDD-L34D/codemasterdd-ai-station"),
     (".claude/agents/harsh-reviewer.md", "MasterDD-L34D/codemasterdd-ai-station"),
     ("Archivio_Libreria_Operativa_Progetti/07_CLAUDE_CODE_OPERATING_PACKAGE/SAFE_CHANGES_ONLY.md",
@@ -126,7 +126,7 @@ _DOCTRINE_NAMES = frozenset({
 })
 _DOCTRINE_DIR_PREFIXES = (
     "docs/adr/",
-    "docs/cross-repo/",
+    "docs/governance/",
     "Archivio_Libreria_Operativa_Progetti/07_CLAUDE_CODE_OPERATING_PACKAGE/",
 )
 _DOCTRINE_BASENAMES_EXACT = frozenset({"aider-privacy-whitelist.txt"})
@@ -144,7 +144,7 @@ def _normalize_path(path: "str | None") -> str:
 def is_doctrine(path: "str | None", repo: str) -> bool:
     """STATIC path-classifier for the ADR-0038 doctrine carve-out (fail-closed).
 
-    True for ANY of the static carve-out set: dir globs (docs/adr/**, docs/cross-repo/**,
+    True for ANY of the static carve-out set: dir globs (docs/adr/**, docs/governance/**,
     Archivio_.../07_CLAUDE_CODE_OPERATING_PACKAGE/**), any `.claude/` segment (repo .claude/**
     AND the global ~/.claude/ governance subpaths -- home machine-junk is conservatively
     OVER-classified, which is FAIL-SAFE for a write-gate: refusing to auto-edit it is harmless,
@@ -1223,7 +1223,7 @@ Run: `ls docs/adr/00*.md | sort | tail -3`  (expect highest = 0038; if 0039 take
 ## Task 11: actor-activation-criteria activation note (DOCTRINE, Eduardo-merge)
 
 **Files:**
-- Modify: `docs/cross-repo/actor-activation-criteria.md`
+- Modify: `docs/governance/actor-activation-criteria.md`
 
 - [ ] **Step 1: Add an activation note** under sec 8 (Current state) recording: R1-PR rung BUILT
   2026-06-03 (the PR variant added alongside the issue variant); the 2 built legs

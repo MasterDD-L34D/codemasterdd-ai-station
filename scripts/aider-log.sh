@@ -87,7 +87,7 @@ if [ ! -f "$LOG_FILE" ]; then
     cat > "$LOG_FILE" <<HEADER
 # Aider delegation log — $YM
 
-Generated via \`aider-log\`. See template: \`docs/patterns/aider-delegation-log-template.md\`
+Generated via \`aider-log\`. See template: \`docs/reference/patterns/aider-delegation-log-template.md\`
 
 | Data/ora | Task | Classe | Stack | Esito | Retry | Tokens s/r | Durata | Commit/note |
 |----------|------|--------|-------|-------|-------|------------|--------|-------------|

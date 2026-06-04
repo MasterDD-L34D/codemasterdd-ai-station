@@ -32,7 +32,7 @@ Ogni PR cross-repo deve avere type esplicito in PR title prefix:
 1. **Identify cross-repo issue** durante uso normale codemasterdd (NO active scanning policy-driven, opportunistic only)
 2. **Run dry-run validator**: `scripts/cross-repo/dry-run-pr.ps1 -RepoTarget <name> -Type <type> -PreviewFiles <paths>`
 3. **Verify privacy whitelist** PASS (script auto-checks `~/.config/aider-privacy-whitelist.txt`)
-4. **Draft PR** using template `docs/cross-repo/PR_TEMPLATE.md`
+4. **Draft PR** using template `docs/governance/PR_TEMPLATE.md`
 5. **Open PR** via `gh pr create` su repo target
 6. **Log entry** in `logs/cross-repo-pr-YYYY-MM.md` con outcome PENDING
 7. **Governance interna repo target** decide accept/reject/amend (decision time NON-controllable, days-weeks)

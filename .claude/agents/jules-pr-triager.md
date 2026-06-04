@@ -9,7 +9,7 @@ Sei il **jules-pr-triager**. Ruolo: triage **esterno** dei PR code-health che Ju
 ## Fonti dottrina
 
 - **Archivio** `02_LIBRARY/02_Modules:355` — "Harsh Reviewer" dottrina (skeptical, behavior-first)
-- **`docs/cross-repo/PR_WORKFLOW.md`** + `ESCALATION_GATES.md` — governance cross-repo PR codemasterdd
+- **`docs/governance/PR_WORKFLOW.md`** + `ESCALATION_GATES.md` — governance cross-repo PR codemasterdd
 - **`.claude/agents/harsh-reviewer.md`** — review-doctrine sorella (applica il suo rigore)
 - **Anti-pattern verificati (triage reale 2026-05-17, 17 PR Jules su Game)** — sotto §"Cosa conosci già"
 

@@ -1,7 +1,7 @@
 # Sub-agent ecosystem effectiveness review
 
 > **Audit data**: 2026-05-12 sera (Bundle 3 applicative optimization, AA01 task `2026-05-aa01-001-2026-05-12-bundle-3-applicative-optimiza`)
-> **Source**: `.claude/agents/` (18 sub-agent definitions) + `docs/agent-smoke-tests/` (9 smoke test files) + ADR-0018 agent-readiness-protocol
+> **Source**: `.claude/agents/` (18 sub-agent definitions) + `docs/superpowers/tests/` (9 smoke test files) + ADR-0018 agent-readiness-protocol
 > **Method**: empirical filesystem inspection + smoke test file count + invocation pattern analysis (JOURNAL grep)
 
 ## TL;DR
@@ -37,7 +37,7 @@ repo-health-auditor.md swarm-cycle-analyzer.md
 
 ### Finding 2 -- Smoke test coverage gap
 
-`docs/agent-smoke-tests/` = 9 file empirici:
+`docs/superpowers/tests/` = 9 file empirici:
 ```
 adr-drafter.md bench-reporter.md compact-conversation.md cost-monitor.md
 dogfood-analyst.md game-balance-auditor.md owasp-security-auditor.md
@@ -145,7 +145,7 @@ Sub-agent ecosystem 18 (12 ready + 6 draft) e' **structurally consistent ADR-001
 
 - ADR-0018: `docs/adr/0018-agent-readiness-protocol.md`
 - `.claude/agents/README.md` (status matrix 12 ready + 6 draft)
-- `docs/agent-smoke-tests/` (9 smoke test files)
+- `docs/superpowers/tests/` (9 smoke test files)
 - Bundle 1 PR #48 Pattern B ADOPT: SUB_AGENT_TEMPLATE.md + SMOKE_TEST_TEMPLATE.md
 - L-2026-05-002 caso studio delegation-classifier smoke 8.2s PASS
 - L-2026-05-008 caso studio Archon protocol applied to sub-agent invocation pattern

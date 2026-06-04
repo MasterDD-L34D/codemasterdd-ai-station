@@ -1,6 +1,6 @@
 # ADR-0036 — Unified Orchestration Doctrine (multi-LLM + Jules + Opus 4.8)
 
-> Status: **Accepted (spine)** + **Deferred (auto-merge rung)** -- revised 2026-06-01 (orig Proposed 2026-05-29). The doctrine spine (hub-and-spoke, 5 spokes, routing tree, mandatory verification gate, ladder-as-classification) is ratified on already-practiced evidence. The auto-merge rung is deferred to a future R2 ADR via the earn-path in `docs/cross-repo/actor-activation-criteria.md`. A harsh-reviewer falsification (2026-06-01) corrected the original trigger framing (not "circular" but SDMG-incompatible). See "Ratify scope split".
+> Status: **Accepted (spine)** + **Deferred (auto-merge rung)** -- revised 2026-06-01 (orig Proposed 2026-05-29). The doctrine spine (hub-and-spoke, 5 spokes, routing tree, mandatory verification gate, ladder-as-classification) is ratified on already-practiced evidence. The auto-merge rung is deferred to a future R2 ADR via the earn-path in `docs/governance/actor-activation-criteria.md`. A harsh-reviewer falsification (2026-06-01) corrected the original trigger framing (not "circular" but SDMG-incompatible). See "Ratify scope split".
 > Supersedes-as-routing-authority (consolidates, does not deprecate): ADR-0013, 0022, 0023, 0030, 0034, 0035. Reframes: MODEL_ROUTING.md as local-fleet detail.
 > Operational authority: `ORCHESTRATION.md` (root). This ADR = the why; ORCHESTRATION.md = the which-executor-and-autonomy; CLAUDE.md = the how.
 
@@ -127,7 +127,7 @@ which Protocol 7 (no autonomize-before-falsify) and anti-pattern #10 (bot-rewrit
 a real incident) forbid. Replacement: a rung-by-rung earn-path where evidence accrues at
 a lower, REVERSIBLE rung (R1 = open-PR, human-merges) first. Auto-merge (R2) is granted
 only by a dedicated future ADR after the mechanical conditions in
-`docs/cross-repo/actor-activation-criteria.md` are met (>=4 clean R1 cycles across >=2
+`docs/governance/actor-activation-criteria.md` are met (>=4 clean R1 cycles across >=2
 repos over >=2 weeks + harsh-reviewer falsifies the increment + revert proven +
 different-family judge). If a bad merge ever lands, revert + downgrade that class to
 human-gated + amend.
@@ -145,4 +145,4 @@ promoted to an active observe->classify->act loop); design + phased rollout:
   "orchestration patterns".
 - OD-009 (LiteLLM/Langfuse decommission), ADR-0026 (cognitive protocols / SDMG), anti-pattern catalogue #8/#10/#12.
 - `docs/superpowers/specs/2026-06-01-unified-fleet-governor-design.md` (unified governor design + phased rollout, harsh-reviewer-falsified 2026-06-01).
-- `docs/cross-repo/actor-activation-criteria.md` (autonomy-rung earn-path + mechanical clean-cycle + off-ramp decision rule N=3).
+- `docs/governance/actor-activation-criteria.md` (autonomy-rung earn-path + mechanical clean-cycle + off-ramp decision rule N=3).

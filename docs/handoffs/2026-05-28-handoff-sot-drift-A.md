@@ -19,7 +19,7 @@ Eseguire **Component A** di SoT Drift Sentinel (Game-side GitHub Action, detecti
 - **Component B LIVE**: subagent `codemasterdd/.claude/agents/sot-drift-verifier.md` + `KNOWLEDGE_MAP.md` §8. Pushed (codemasterdd HEAD ~`7e8b04d`). logic-smoke PASS.
   - **TODO post-restart**: girare il LIVE subagent-dispatch smoke di `sot-drift-verifier` (ora registrato come subagent) -> flippa QG status a full-PASS nel file agent.
 - **4 PR merged**: vault #202 (classification-4d Card) · #203 (epigenome SoT DEFERRED->SHIPPED) · #204 (gitignore .aider*) · Game #2403 (games-index link-fix + TKT-ENCOUNTER-CLI).
-- Knowledge preservato: `docs/ryzen-memory-archive/` (139 file) + `docs/KNOWLEDGE_MAP.md` (mappa cross-repo SoT-vs-ref A0-A5 + reuse-queue §7 + drift-automation §8).
+- Knowledge preservato: `docs/archive/ryzen-memory-archive/` (139 file) + `docs/KNOWLEDGE_MAP.md` (mappa cross-repo SoT-vs-ref A0-A5 + reuse-queue §7 + drift-automation §8).
 
 ## 3. Component A -- file da creare (Game repo, PUBLIC)
 - `.github/sot-drift/watch-map.yml` (config path-glob -> SoT-ref)
@@ -44,6 +44,6 @@ Contenuto esatto di ognuno = nel plan (Tasks 1-4). Smoke = Task 5.
 
 ## 6. Gotchas
 - **caveman mode full** attivo (terse; code/commit normali).
-- Privacy: codemasterdd cloud-whitelisted aider -> `docs/ryzen-memory-archive/` valutare path-exclude wrapper cloud (follow-up KNOWLEDGE_MAP §6).
+- Privacy: codemasterdd cloud-whitelisted aider -> `docs/archive/ryzen-memory-archive/` valutare path-exclude wrapper cloud (follow-up KNOWLEDGE_MAP §6).
 - SoT corre veloce (Game ship multipli/sessione) -> il sentinel È la mitigazione anti-#19 in costruzione.
 - Sync cloni: vault FF-pull pulito; Game = husky-dance (comandi in KNOWLEDGE_MAP §6) o worktree.

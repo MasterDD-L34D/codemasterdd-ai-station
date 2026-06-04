@@ -22,7 +22,7 @@ Usage: sdmg-gate.sh <decision-id> <class>
   decision-id: slug identifier (e.g., "plugin-install-autoresearch")
   class:       install | method | architectural | tool-adopt | abandon | other
 
-Reference: docs/patterns/self-designed-method-governance.md
+Reference: docs/reference/patterns/self-designed-method-governance.md
 Lesson:    L-2026-05-033 (vault learnings + global CLAUDE.md Anti-Pattern #8)
 USAGE
     exit 1

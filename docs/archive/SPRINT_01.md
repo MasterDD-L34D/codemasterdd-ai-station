@@ -26,7 +26,7 @@
 ### T2. Dogfood cosmetic mix n=5 [H2]
 - **Cosa**: portare cosmetic a ≥10 entries cumulative via batch operazioni opportunistiche.
 - **Esempi candidati**: JSDoc su `scripts/hooks/commit-guard.js` altre funzioni non ancora documentate, comment-based help su script PS1 residui (`disconnect-onedrive.ps1`, `bitlocker-hard-disable.ps1` — già quasi fatti), typo fixes discovered.
-- **File toccati**: `scripts/`, `docs/patterns/`.
+- **File toccati**: `scripts/`, `docs/reference/patterns/`.
 - **Check**: stesso di T1.
 - **Success**: log cumulativo mostra ≥10 cosmetic entries, ≥50% via wrapper (non direct Claude Code).
 

@@ -35,7 +35,7 @@ _DOCTRINE_NAMES = frozenset({
 })
 _DOCTRINE_DIR_PREFIXES = (
     "docs/adr/",
-    "docs/cross-repo/",
+    "docs/governance/",
     "Archivio_Libreria_Operativa_Progetti/07_CLAUDE_CODE_OPERATING_PACKAGE/",
 )
 _DOCTRINE_BASENAMES_EXACT = frozenset({"aider-privacy-whitelist.txt"})
@@ -60,7 +60,7 @@ def is_doctrine(path: "str | None", repo: str) -> bool:
     doctrine path must never escape) but WRONG semantics for an allow-list. The catch-all is
     handled by a HUMAN review (below), not here.
 
-    True for ANY of the static carve-out set: dir globs (docs/adr/**, docs/cross-repo/**,
+    True for ANY of the static carve-out set: dir globs (docs/adr/**, docs/governance/**,
     Archivio_.../07_CLAUDE_CODE_OPERATING_PACKAGE/**), any `.claude/` segment (repo .claude/**
     AND the global ~/.claude/ governance subpaths -- home machine-junk is conservatively
     OVER-classified, which is FAIL-SAFE for a write-gate, per above), named root rule files

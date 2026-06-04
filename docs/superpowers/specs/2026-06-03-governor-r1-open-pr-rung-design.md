@@ -11,7 +11,7 @@
 > **This spec defines no rules and grants no autonomy by itself** -- the rung only OPENS PRs;
 > auto-merge (R2) stays OFF, earned later via its own ADR.
 > ASCII-first body (ADR-0021). Authority: ADR-0036 + ADR-0037 (dec.4) + ADR-0038 +
-> `docs/cross-repo/actor-activation-criteria.md`. Seed:
+> `docs/governance/actor-activation-criteria.md`. Seed:
 > `docs/superpowers/specs/2026-06-03-governor-r1-open-pr-rung-SEED.md`.
 
 ## 0. Honesty preamble (SDMG)
@@ -176,7 +176,7 @@ ADRs.
 
 `is_doctrine(path, repo) -> bool` is a STATIC path-classifier that returns True for ANY of
 (complete vs ADR-0038's Decision set):
-- globs: `docs/adr/**`, `docs/cross-repo/**`, repo `.claude/**`,
+- globs: `docs/adr/**`, `docs/governance/**`, repo `.claude/**`,
   **`Archivio_Libreria_Operativa_Progetti/07_CLAUDE_CODE_OPERATING_PACKAGE/**`** (the hub
   autonomous-change envelope -- a BLOCKING add in ADR-0038's own falsification; v1 OMITTED it);
 - named root rule files: `CLAUDE.md` (any level), `AGENTS.md`, `ORCHESTRATION.md`, `GOALS.md`,
@@ -194,7 +194,7 @@ status index.)
 Consequence for the built targets:
 - `STATUS_MULTI_REPO.md` -- explicitly NON-doctrine in ADR-0038 -> OK.
 - vault `Atlas/lint-status.md` (new) -- a vault status index, not a hub rule file -> NON-doctrine.
-- `docs/cross-repo/EXECUTION-BOARD.md` -- under `docs/cross-repo/**` = DOCTRINE -> EXCLUDED (why the
+- `docs/governance/EXECUTION-BOARD.md` -- under `docs/governance/**` = DOCTRINE -> EXCLUDED (why the
   codemasterdd leg targets `STATUS_MULTI_REPO.md`, not the board; the standalone board-sync cron is
   a separate concern, sec 12.3).
 
@@ -369,7 +369,7 @@ The rung-activating change ships as: (1) the actor code (TDD, CI green); (2) **i
 reconciler-addition human review checkpoint (4.2), the human-merge-only invariant (6.1), the
 no-branch-protection reality (6.2), the external clean-cycle accounting + its honest scope (7.1),
 and the vault lint-status leg (5.2) -- plus an activation note in
-`docs/cross-repo/actor-activation-criteria.md` (DOCTRINE -> Eduardo merges). Eduardo merges the
+`docs/governance/actor-activation-criteria.md` (DOCTRINE -> Eduardo merges). Eduardo merges the
 rung-activating PR (autonomy increment, actor-criteria sec 7).
 
 ## 10. TDD plan (build phase -- NEXT session, NOT now)
@@ -415,7 +415,7 @@ One test at a time (tdd-guard), network/gh NEVER hit:
    them.** VERIFIED 2026-06-03: codemasterdd has only 2 workflows -- `ci.yml` (`contents:read`,
    cannot merge) and board-sync (`gh pr create` only, never merges). The "merge-cron" string in
    board-sync's PR body is aspirational, NOT wired. So the doctrine-leak-via-cron risk is INERT;
-   it would arise only if a merge automation is later added, which MUST exclude `docs/cross-repo/**`.
+   it would arise only if a merge automation is later added, which MUST exclude `docs/governance/**`.
    This rung keeps the board OUT of its class (4.2) regardless.
 4. **Low-judgment diffs counted as cycles.** Addressed in sec 7.1: cycles prove determinism +
    revert-safety, not merge-judgment-safety; the R2 ADR justifies auto-merge on reversibility +

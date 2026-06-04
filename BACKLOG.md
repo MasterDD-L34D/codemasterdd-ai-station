@@ -62,6 +62,6 @@ Pattern di chiusura applicato: marker stale = anti-pattern #19 -> ground-truth v
 - `docs/reference/agno-ollama-snippets.md` Pattern 2 → fixato, no-op pendente.
 - `docs/reference/subagents-skills-candidates.md` → catalogo dormiente, nessun install pianificato.
 - `final-research-and-snippets-2026-04-21-v3.md` (root) → source material esterno, triato.
-- `docs/sessions/` → log historiche, congelate.
+- `docs/handoffs/` → log historiche, congelate.
 - Task #13/#14 vecchi (deepseek eval + API keys setup) → chiusi de-facto.
 - `FIRST_PRINCIPLES_GAME_CHECKLIST.md` → skipped (Decisione 002 in `DECISIONS_LOG.md`).

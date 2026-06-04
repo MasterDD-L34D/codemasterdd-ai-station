@@ -8,7 +8,7 @@
 
 **Tech Stack:** Python 3.13, sqlite3, requests, base64+subprocess (stdlib), pytest+monkeypatch.
 
-**Spec:** `docs/superpowers/specs/2026-06-01-unified-fleet-governor-design.md`. **Doctrine (main):** ADR-0036 + `docs/cross-repo/actor-activation-criteria.md`.
+**Spec:** `docs/superpowers/specs/2026-06-01-unified-fleet-governor-design.md`. **Doctrine (main):** ADR-0036 + `docs/governance/actor-activation-criteria.md`.
 
 **Verified ground-truth (2026-06-02):**
 - Authed contents API works for the PRIVATE vault: `repos/MasterDD-L34D/vault/contents/Extras/lint-reports` lists `gap-YYYY-MM-DD.md`, `coherence-YYYY-MM-DD.md`, `whatsmissing-YYYY-MM-DD.md` (newest gap = 2026-06-01). evo-swarm is also private; `repos/MasterDD-L34D/evo-swarm/contents/docs/exports` lists `EXPORT-FOR-GAME-REPO-YYYY-MM-DD.md`.

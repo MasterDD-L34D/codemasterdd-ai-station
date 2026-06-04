@@ -192,7 +192,7 @@ Game OD-023 propone **Path C ORA + Path A Day 8** (canonical execution 2026-05-1
 - STATUS_MULTI_REPO.md sezioni Game (Vue3) + Game-Godot-v2
 - memory `project_multi_repo_overview.md` (5 progetti attivi + 1 dormant)
 - memory `project_aa01_studio.md` (FORBIDDEN actions, audit-replay pattern)
-- Harsh review: `docs/reviews/flow-chart-harsh-review-2026-05-09.md` (edge case HIGH "Game pivot Vue3->Godot")
+- Harsh review: `docs/governance/flow-chart-harsh-review-2026-05-09.md` (edge case HIGH "Game pivot Vue3->Godot")
 - Decisione 007 in `DECISIONS_LOG.md` (Eduardo scelta 5A+)
 - BACKLOG H11 (AA01 attivazione Ondata 1+2 Eduardo direct)
 - Game `OPEN_DECISIONS.md` OD-023 -- Phase B execution date verdict 2026-05-12 (cross-repo dependency citata)

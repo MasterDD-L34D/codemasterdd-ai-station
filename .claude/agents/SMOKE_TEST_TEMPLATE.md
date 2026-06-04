@@ -7,7 +7,7 @@ NO clone vault files, NO commit hash citato (drift risk).
 
 # Smoke test template -- sub-agent codemasterdd
 
-Template prescriptive per Gate 1 Smoke Test ADR-0018. Usare quando si crea/refinisce un sub-agent in `.claude/agents/` per produrre log smoke test consistente in `docs/agent-smoke-tests/<agent>.md` o commit message.
+Template prescriptive per Gate 1 Smoke Test ADR-0018. Usare quando si crea/refinisce un sub-agent in `.claude/agents/` per produrre log smoke test consistente in `docs/superpowers/tests/<agent>.md` o commit message.
 
 ## Quick reference -- 3-gate ADR-0018
 
@@ -172,7 +172,7 @@ Pattern documentazione edge case:
 
 ## Section 5 -- Smoke test log template
 
-Output finale smoke test (1 file per agent in `docs/agent-smoke-tests/<agent>.md` OR commit message):
+Output finale smoke test (1 file per agent in `docs/superpowers/tests/<agent>.md` OR commit message):
 
 ```markdown
 # Smoke test -- <agent-name> (Gate 1)
@@ -242,4 +242,4 @@ Eccezione `draft-emergency` (1-shot use case):
 - [README.md status matrix](README.md) (12/18 ready, 6/18 draft stato 2026-04-24)
 - [SOURCES.md](SOURCES.md) (attribuzione fonti agent per Gate 2)
 - [docs/research/vault-patterns-adoption-2026-05-11.md](../../docs/research/vault-patterns-adoption-2026-05-11.md) (pattern strutturale vault-informed)
-- [docs/agent-smoke-tests/](../../docs/agent-smoke-tests/) (log smoke test per-agent)
+- [docs/superpowers/tests/](../../docs/superpowers/tests/) (log smoke test per-agent)

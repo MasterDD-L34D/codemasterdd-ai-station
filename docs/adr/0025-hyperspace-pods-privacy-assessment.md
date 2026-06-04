@@ -196,7 +196,7 @@ Install + use default.
 - **AA01 task** `2026-05-aa01-001-2026-05-10-fleet-discovery-pod-design` -- 22 decisions audit trail completo
 - **Lesson L-2026-05-002** (in promotion da DRAFT/07 → learnings/) -- Hyperspace audit cycle 3 anti-pattern + 4 pattern positive
 - **Memory** `reference_hyperspace_pods.md` -- status update "ABANDONED post-trial" + reference L-2026-05-002
-- **Plan** `docs/plans/integration-aa01-vault-hyperspace-2026-05.md` Obiettivo 3 (Hyperspace audit -- NO-GO outcome formalized)
+- **Plan** `docs/archive/plans/integration-aa01-vault-hyperspace-2026-05.md` Obiettivo 3 (Hyperspace audit -- NO-GO outcome formalized)
 - **ADR-0009** Upgrade strategy (Mac mini scenario alternative -- riformulato post-Hyperspace abandonment)
 - **ADR-0023** Strategic tier post-Max (Phase 1 multi-source synthesis Tier 0)
 - **Feedback** `autoresearch_default` -- methodology enforced ma INSUFFICIENT senza empirical trial per architectural decisions

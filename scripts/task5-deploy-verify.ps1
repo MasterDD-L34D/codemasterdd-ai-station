@@ -2,7 +2,7 @@
 .SYNOPSIS
   DEPRECATED 2026-05-19. OD-050 Task-5 verification is handled by the
   runbook (manual-robust > fragile-automation, lesson encoded in
-  docs/sessions/2026-05-19-continuity-handoff.md EVENING UPDATE).
+  docs/handoffs/2026-05-19-continuity-handoff.md EVENING UPDATE).
 .DESCRIPTION
   Original helper attempted to collapse the 2-PC deploy+verify matrix
   into one command. It cost 4 fix-iterations (em-dash mojibake +

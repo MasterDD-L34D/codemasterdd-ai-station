@@ -126,15 +126,15 @@ Audit 34 ADR. **17 HELD / 8 DRIFTED / 3 FALSIFIED / 6 STALE-STATUS**.
 | ~~2026-05-12~~ | Cross-repo triage chat-only + STATUS drift fix major (Game 200 PR 14d + Godot-v2 +32 + Dafne stable + vault HEAD update) | codemasterdd | DONE -- PR #53 |
 | ~~2026-05-12~~ | ADR-0024 addendum "Sub-events timeline" + scope disjoint clarification (Game OD-023 cross-repo) | codemasterdd | DONE -- PR #55 |
 | ~~2026-05-12~~ | TKT-P2 Brigandine Phase D cross-stack chain COMPLETE (Godot PR #248 Main wire + PR #249 Phone organization mode) + Game pull Path A reset (post Protocol 1+2 investigation) | Game-Godot-v2 + Game | DONE -- questa session |
-| ~~2026-05-20~~ | **D-sequence closure** (browser-agentic-loop OD-051+OD-052+OD-053 -> 9 PR merged; 5 L-DRAFT-A..E promossi vault L-2026-05-034..038 PR #139; Anti-Pattern Catalogue #10-#13 PR #140; canonical CLAUDE.md propagated Ryzen, Lenovo PENDING) | vault + codemasterdd | DONE 2026-05-20. Dettaglio: `docs/sessions/2026-05-19-continuity-handoff.md` §LESSONS-PROMOTED 2026-05-20 |
-| ~~2026-05-20/21~~ | **Harsh-review + narrow-pick** (HSGF F-FULL fusion design proposed -> harsh-reviewer RETHINK-FUNDAMENTAL verdict -> pivot Protocol 7 narrow-adoption. Shipped: vault #141 supermemory canonical fix + vault #142 PC identity mechanism + codemasterdd #193 parallel-session collision resolve + codemasterdd #194 sdmg-gate narrow-pick. ~$0.40 harsh-reviewer cost saved ~127h F-FULL waste) | vault + codemasterdd | DONE 2026-05-21. Dettaglio: `docs/sessions/2026-05-20-evening-harsh-narrow-pick.md` |
+| ~~2026-05-20~~ | **D-sequence closure** (browser-agentic-loop OD-051+OD-052+OD-053 -> 9 PR merged; 5 L-DRAFT-A..E promossi vault L-2026-05-034..038 PR #139; Anti-Pattern Catalogue #10-#13 PR #140; canonical CLAUDE.md propagated Ryzen, Lenovo PENDING) | vault + codemasterdd | DONE 2026-05-20. Dettaglio: `docs/handoffs/2026-05-19-continuity-handoff.md` §LESSONS-PROMOTED 2026-05-20 |
+| ~~2026-05-20/21~~ | **Harsh-review + narrow-pick** (HSGF F-FULL fusion design proposed -> harsh-reviewer RETHINK-FUNDAMENTAL verdict -> pivot Protocol 7 narrow-adoption. Shipped: vault #141 supermemory canonical fix + vault #142 PC identity mechanism + codemasterdd #193 parallel-session collision resolve + codemasterdd #194 sdmg-gate narrow-pick. ~$0.40 harsh-reviewer cost saved ~127h F-FULL waste) | vault + codemasterdd | DONE 2026-05-21. Dettaglio: `docs/handoffs/2026-05-20-evening-harsh-narrow-pick.md` |
 
 ---
 
 ## 2026-05-19 evening + 2026-05-20 EVENING UPDATE — multi-session orchestration
 
 > Tight delta summary. Per-row refresh sopra (rows 1-N) = follow-up se serve.
-> Full context: `docs/sessions/2026-05-19-continuity-handoff.md` §EVENING UPDATE.
+> Full context: `docs/handoffs/2026-05-19-continuity-handoff.md` §EVENING UPDATE.
 
 ### Closed today end-to-end
 - **OD-050 tdd-guard C-raffinato** RESOLVED full chain: codemasterdd PR#178/#180/#181/#182/#183/#184/#185 + vault PR#126/#127/#128/#129/#130/#131/#132 + Task-5 deploy-Apply 2-PC (Ryzen+Lenovo) + static-assert parity tdd-guard@tdd-guard=false + LIVE TRIGGER Ryzen PASS (hot.md edit no-block). Lenovo trust-by-parity (precedent hook_userprofile_fix). `task5-deploy-verify.ps1` helper deprecated (over-engineered fragile); runbook `docs/runbook/tddguard-task5-cross-pc-verify.md` = via affidabile.
@@ -160,7 +160,7 @@ Audit 34 ADR. **17 HELD / 8 DRIFTED / 3 FALSIFIED / 6 STALE-STATUS**.
 
 ### Multi-session orchestration pattern (proven today)
 - Branch-prefix `claude/parallel-<scope>-<date>` = visibility on who-does-what
-- Mutex via `docs/sessions/2026-05-19-continuity-handoff.md` append-only stamps ("OWNING X branch Y") — used by parallel-coop session
+- Mutex via `docs/handoffs/2026-05-19-continuity-handoff.md` append-only stamps ("OWNING X branch Y") — used by parallel-coop session
 - Repo-split: coordinator (this Ryzen Bash) owns governance/meta-cross-repo; parallels own ONE repo each; subagent-orchestrator (Godot) self-contained in `.claude/worktrees/agent-*` LOCKED
 - Pre-merge `harsh-reviewer` subagent on governance-critical/cluster PRs (Protocol-5)
 - Pull-before-touch, push-after-commit on shared docs
@@ -196,7 +196,7 @@ Empirical confirmation: iter-2 (12:12), iter-3 (12:18), iter-4 (12:42) fired dur
 
 - Venv left at `C:/Users/VGit/AppData/Local/Temp/browser-use-fe3-venv` (classifier denied rm-rf scope-escalation, Eduardo manual cleanup)
 - 5 L-DRAFT-F..J lessons in continuity-handoff for promotion to canonical L-2026-05-NNN next session
-- D-sequence pattern reusable: anti-creep gate + harsh-review per phase + autoresearch for blocking Q's. Document as `docs/patterns/multi-phase-d-sequence.md` if applied again.
+- D-sequence pattern reusable: anti-creep gate + harsh-review per phase + autoresearch for blocking Q's. Document as `docs/reference/patterns/multi-phase-d-sequence.md` if applied again.
 
 ### Status post-D-sequence cross-repo (open PR snapshot 13:00)
 

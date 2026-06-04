@@ -142,7 +142,7 @@ Dopo ogni invocazione Aider, check automatici nell'ordine:
 
 ## Tracking fail rate (Fase 6 evaluation)
 
-Template log in `docs/patterns/aider-delegation-log-template.md`, istanze mensili in `logs/aider-delegation-YYYY-MM.md` (gitignored).
+Template log in `docs/reference/patterns/aider-delegation-log-template.md`, istanze mensili in `logs/aider-delegation-YYYY-MM.md` (gitignored).
 
 ### Helper `aider-log` (auto-compilazione entry)
 
@@ -331,4 +331,4 @@ Per ogni delega cloud aggiungere colonna extra:
 - Wrapper locali: `aider-cosmetic.cmd`, `aider-refactor.cmd`
 - **Wrapper cloud** (2026-04-23): `aider-groq.cmd`, `aider-cerebras.cmd`, `aider-gemini.cmd`, `aider-openai.cmd`
 - Hook guard rail: `C:\Users\edusc\.local\share\git-hooks\pre-commit` + `commit-msg` (ADR-0011) attivati via `git config --global core.hooksPath`
-- Log template: `docs/patterns/aider-delegation-log-template.md`
+- Log template: `docs/reference/patterns/aider-delegation-log-template.md`

@@ -48,7 +48,7 @@ ADR-0023 H7 setup **RAFFORZATO 2026-05-12 sera**. Empirical evidence:
 
 ## Context and Problem Statement
 
-Harsh review flow chart 2026-05-09 (`docs/reviews/flow-chart-harsh-review-2026-05-09.md`) ha identificato **vulnerabilita' BLOCKING V1**: tier 0 strategic post-19/05 e' un buco nero non risolto.
+Harsh review flow chart 2026-05-09 (`docs/governance/flow-chart-harsh-review-2026-05-09.md`) ha identificato **vulnerabilita' BLOCKING V1**: tier 0 strategic post-19/05 e' un buco nero non risolto.
 
 ### Stato corrente (pre-19/05)
 
@@ -210,6 +210,6 @@ Task strategic complesso (multi-file >=3 / constraint >=5 / debug arch / ADR dra
 - ADR-0015 -- Fase 7 budget decision full-sovereign: `0015-fase7-budget-decision-full-sovereign.md` (Scenario A confermato)
 - ADR-0016 -- Constraint-count routing dimension: `0016-constraint-count-routing-dimension.md` (Proposed, 5+ strict trigger)
 - ADR-0022 -- OpenCode tool-use model routing: `0022-opencode-tooluse-model-routing.md` (Accepted con n=3 dogfood single-file)
-- Harsh review: `docs/reviews/flow-chart-harsh-review-2026-05-09.md` (V1 BLOCKING resolution)
+- Harsh review: `docs/governance/flow-chart-harsh-review-2026-05-09.md` (V1 BLOCKING resolution)
 - Decisione 007 in `DECISIONS_LOG.md` (Eduardo risposte 6 questions, scelta 1A)
 - ccusage docs: `https://github.com/anthropics/claude-code` (tooling integrato)

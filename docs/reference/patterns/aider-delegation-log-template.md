@@ -112,5 +112,5 @@ Il quality-bench misura **capability su toy problems** (pass@1 deterministic). I
 
 ## Riferimenti
 
-- Delegation protocol: `docs/patterns/delegation-to-aider.md`
+- Delegation protocol: `docs/reference/patterns/delegation-to-aider.md`
 - ADR-0008 follow-up metrics: `docs/adr/0008-aider-whole-format-silent-corruption.md` sezione "Metriche da tracciare post-19/05"

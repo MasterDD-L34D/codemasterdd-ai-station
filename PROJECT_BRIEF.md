@@ -50,7 +50,7 @@
 
 ## Materiali esistenti
 - **Repo**: GitHub `MasterDD-L34D/codemasterdd-ai-station` (private), origin/main aligned
-- **Documentazione**: `docs/adr/` (16 ADR, ultimo ADR-0016 Proposed), `docs/patterns/`, `docs/research/`, `docs/lessons-learned/`, `docs/sessions/`
+- **Documentazione**: `docs/adr/` (16 ADR, ultimo ADR-0016 Proposed), `docs/reference/patterns/`, `docs/research/`, `docs/reference/lessons/`, `docs/handoffs/`
 - **Fonti / reference**:
   - `Archivio_Libreria_Operativa_Progetti/` — framework operativo universale multi-progetto (appena importato 2026-04-23)
   - `final-research-and-snippets-2026-04-21-v3.md` — source material esterno triato
