@@ -2,7 +2,13 @@
   "mcpServers": {
     "fleet-tools": {
       "command": "node",
-      "args": ["apps/fleet-tools-mcp/server.mjs"]
+      "args": [
+        "apps/fleet-tools-mcp/server.mjs"
+      ]
+    },
+    "eng-graph": {
+      "type": "sse",
+      "url": "http://127.0.0.1:8765/sse"
     }
   }
 }
