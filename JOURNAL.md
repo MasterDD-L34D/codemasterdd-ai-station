@@ -19,6 +19,24 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-06-04 (sera -- Jules safe-lane exploit: doc-comments batch 3-5 + ADR-index reconcile)
+
+### Completato
+- **Quota Jules residua sfruttata in safe-lane** (chip dedicato): 12 sessioni dispatchate via `jules-dispatch.ps1`, 12/12 COMPLETED, 0 FAILED (anti-pollution tenuta end-to-end).
+- **Doc-comments GDScript: 3 batch -> 3 PR Game-Godot-v2.** #410 (combat_emitter, error_banner, canvas_transition), #411 (pg_cronaca_card, nido_hub_view, atlas_pulse_adapter, dialogue_branch_view), #412 (forecast_panel_adapter, board_overlay_adapter, promotion_panel, scenario_brief_view). 11 file, +96/-0; ground-truth per ognuno: dels=0 + gdformat-unchanged + gdlint-clean (max-line-100 bakeato) + ASCII + solo-target. Corsia doc-comment cumulativa = 17/17 pulita.
+- **Report ADR-consistency prosa (cdd, 39 ADR) ground-truthed = ~85% falsi-positivi/stale.** "Contraddizione 0033-vs-0034" gia' risolta da ADR-0037; "9 ADR mancanti dal log" -> 8/9 erano nell'index (Jules ha letto la sezione sbagliata); "bad cross-ref ADR-2026" = ref cross-repo Game valido. Unico vero gap = ADR-0037/0038/0039 assenti dall'index DECISIONS_LOG -> **PR cdd #303** (reconcile, +3/-0, worktree isolato da main). Report verdict-annotato in `logs/jules-tasks/proposals/codemasterdd-adr-consistency-report.md`.
+- **Doctrine raffinata** in memory `feedback_jules_loop_operational`: prosa-FINDINGS (audit/contraddizioni) = stessa classe inaffidabile dei suggerimenti-codice ("outsource freely" overstated per i giudizi); affidabili = STRUCTURAL (reorg-map) + MECHANICAL (doc-comment). Sempre annotare il report con il verdetto verificato.
+
+### Da fare
+- **PR-BACKLOG GATE** (vedi NOTICE in COMPACT_CONTEXT): Eduardo rivede+mergia #410/#411/#412 (GGv2) + #303 (cdd) PRIMA di nuovo lavoro.
+- Opzionale: forward status-pointer in ADR-0033/0034 -> 0036/0037 (deferito -- edit retroattivo di ADR Accepted = scelta governance Eduardo).
+
+### Note
+- ~23 sessioni Jules oggi (11 mattina/pomeriggio + 12 sera), ~77 headroom; fermato su VALORE non quota (target GGv2 rimanenti = adapter sottili / 1-funzione / file grossi high-non-ASCII = busywork).
+- Tutti i commit con trailer ADR-0011 (Coding-Agent + Trace-Id uuidv7); zero self-merge esterno/doctrine; corsia rischiosa + auto-suggestion MAI dispatchate.
+
+---
+
 ## 2026-06-04 (pomeriggio -- Jules orchestration: suggestions-triage + reorg-read pattern + doctrine)
 
 ### Completato
