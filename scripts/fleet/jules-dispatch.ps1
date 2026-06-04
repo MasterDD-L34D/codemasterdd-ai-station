@@ -185,6 +185,26 @@ function Resolve-AuditState {
   return 'UNKNOWN'
 }
 
+function Add-DispatchConstraints {
+  param([string]$TaskContent)
+  # Append non-negotiable scope + anti-pollution constraints to EVERY dispatched prompt. Root cause
+  # (skiv 2026-06-04): Jules downloaded a 121MB Godot engine binary into its sandbox -> the change-set
+  # ballooned to 121MB -> the session FAILED at delivery and the real 4-line work was lost (the REST
+  # outputs gitPatch came back empty -- only an early activities snapshot held the clean diff). Hard
+  # scoping the prompt prevents the bloat-then-FAIL class at the source.
+  $guard = @'
+
+--- HARD CONSTRAINTS (jules-dispatch wrapper, non-negotiable) ---
+- Modify ONLY the named target file(s) above. Do NOT add, create, download, or commit ANY other
+  file: no binaries, no engine/SDK/tool downloads, no build artifacts, no node_modules. A polluted
+  working tree (e.g. a downloaded engine binary) makes the change-set too large to deliver and the
+  session FAILS with the work lost.
+- For a comment/doc/JSDoc-only task: do NOT build, run, compile, or download any tooling -- no
+  execution or validation environment is needed; just edit the file.
+'@
+  return ($TaskContent + $guard)
+}
+
 # === MAIN (impure orchestration -- not dot-sourced; everything below runs only on direct invoke) ===
 $ErrorActionPreference = 'Stop'
 
@@ -277,7 +297,7 @@ elseif ($ForceBlind -and -not $listOk) { $forcedTag = ' | FORCED-BLIND' }
 # --- build dispatch body (ADR-0035 verified schema) ---
 if (-not $Title) { $Title = "[$Repo] $Target ($(Get-Date -Format 'yyyy-MM-dd'))" }
 $body = @{
-  prompt        = $taskContent
+  prompt        = (Add-DispatchConstraints $taskContent)
   title         = $Title
   sourceContext = @{
     source            = $source
