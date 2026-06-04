@@ -1,5 +1,14 @@
 # COMPACT_CONTEXT
 
+> **!! PR-BACKLOG GATE (2026-06-04) -- LEGGERE PRIMA DI INIZIARE QUALSIASI NUOVO LAVORO !!**
+> La PRIMA azione di sessione, prima di aprire nuovi progetti/feature, e' rivedere + mergiare i PR
+> aperti generati dalle sessioni Jules (+ il fix ADR-index). Eduardo li analizza; NON accodare
+> nuovo lavoro finche' non sono triati/mergiati. Aperti al 2026-06-04:
+> - Game-Godot-v2 #410 / #411 / #412 -- doc-comments GDScript safe-lane (batch 3/4/5, 11 file, CI-verde)
+> - codemasterdd #303 -- reconcile ADR-index DECISIONS_LOG (righe 0037/0038/0039)
+> - + eventuali PR ancora aperti da sessioni Jules nei repo Game / Game-Godot-v2 / Game-Database
+> Rimuovere questo blocco quando il backlog PR e' chiuso.
+
 > Schema conforme a `Archivio_Libreria_Operativa_Progetti/04_BOOTSTRAP_KIT/COMPACT_CONTEXT.md`.
 >
 > Aggiornare in rituale chiusura sessione (CLAUDE_OPERATING_RULES.md #9): un solo
