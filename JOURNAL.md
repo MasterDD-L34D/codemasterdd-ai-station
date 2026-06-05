@@ -19,6 +19,22 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-06-05 (notte -- Jules wrapper fix + doc-comment campaign grind + skill nuova)
+
+### Completato
+- **Wrapper fix (cdd #307)**: `jules-dispatch` gate-4 ora pagina TUTTE le pagine (nuova `Get-AllSessionPages`, pura, TDD 79/0). Prima abortiva con >100 sessioni lifetime (radice di una re-dispatch cross-machine). `-ForceBlind` ora solo per list-GET-fail. Validato live (paginazione 2-pagine pulita ad ogni batch successivo).
+- **Campagna doc-comment Godot-v2: 15 batch, 0 FAILED, ~35 -> 69/251 (27%)**. La "cream" (file piccoli / multi-public-func / low-non-ASCII) raccolta su TUTTI i dir: ui 23/46, data 15/21, net 9/16, phone 6/29, combat 5/37, ai 4/35, session 3/33. PR #422/#425 (combat), #427 (ai), #428/#429/#430/#434 (data), #432 (session+phone), #433 (net). Auto-merge (sole Jules handler, autorizzato da Eduardo), rebase (preserva trailer ADR-0011), ground-truth per-file (dels=0 / gdformat / gdlint / ASCII / only-target).
+- **#303 ADR-index reconcile merged** + **#306 PR-backlog-GATE removed** (backlog chiuso) + **tracker scan-regen** (#426/#435, ora 69/251 + phase-note).
+- **Skill nuova `evo-tactics-dispatch`** (`~/.claude/skills/`): report stato-gioco mood rivista-player ("Dev-Build Dispatch"), ri-ancora a ogni run (legge README/git/sistemi correnti). agent-scanner verdict: COMPLEMENTA `evo-tactics-monitor` (designer-lens), nessun shadow-duplicate.
+
+### Da fare
+- Campagna doc-comment in **PAUSA a 69/251** (cream done). Fase residua = file grandi (>150L = rewrite-risk, 1-2 alla volta), low/zero-public-func, o high-non-ASCII host-views -- effort alto, valore-per-batch basso. Resume: skill `evo-tactics-dispatch` + loop provato + coda tracker (consigliata sessione fresca per context).
+
+### Note
+- Sole Jules handler (Lenovo si e' tolto da Jules questa sessione). Stop su **context-budget**, non quota (Jules ~full) ne' target. Loop one-shot (extract+ground-truth+apply+lint+commit+PR+merge in 1 bash) = efficiente per il grind.
+
+---
+
 ## 2026-06-04 (sera -- Jules safe-lane exploit: doc-comments batch 3-5 + ADR-index reconcile)
 
 ### Completato
