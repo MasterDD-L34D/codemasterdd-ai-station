@@ -19,6 +19,22 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-06-05 (resume -- doc-comment campaign batch 16-19 + wrapper-drift recovery)
+
+### Completato
+- **Campagna doc-comment Godot-v2 RIPRESA (pausa annullata)**: lo scan ground-truth ha smentito la phase-note "cream done" -- 6 file IDEAL (>=2 public-func, <=150L, ZERO non-ASCII) + ~57 acceptable ancora disponibili. 4 batch trio-per-dir, **12 file, 0 FAILED**, tutti ground-truth-clean (dels=0 / gdformat-unchanged / gdlint-clean / ASCII-add / only-target): **#436** session (compat_scorer/attrition/succession), **#437** combat (status_modifiers/pin_down/defender_advantage), **#438** ai (sistema_actor/ai_profiles_loader/threat_preview), **#439** session (status_system/rewind_session_adapter/sistema_memory). **69 -> 81/251 (32%)**; session 3->9, combat 5->8, ai 4->7. Tracker scan-regen **#440** (phase-note corretta: ground-truth scan > marker).
+- **Recovery wrapper-drift**: cdd local `main` driftato stale (behind 5) mid-sessione -> `jules-dispatch.ps1` revertito a pre-#307 (gate-4 abort-on-pagination, triggerato da >100 sessioni lifetime = lista paginata). Fix = `git merge --ff-only origin/main` (NON -ForceBlind, che batte il dedup). Gotcha + pre-dispatch-check persistiti in memory feedback_jules_loop_operational.
+- **Cleanup branch**: prunati 16 branch GGv2 doc-comment mergiati + cdd `chore/fix-jules-dispatch-pagination` (cherry-verified, solo merged). Decisione process (Eduardo): cdd sync-main (ff-only pre-dispatch, run-tooling) SI; PR esterni GGv2 = branch+PR (CI+audit+gate valgono il branch, NO commit-diretto-main su repo esterno).
+
+### Da fare
+- Campagna **NON in pausa** (correzione): clean target restano -- combat (interrupt_fire/defy_engine/range_query/biome_modifiers/bravado), session/ai/phone abbondanti, root *.gd 0/22, ui 23 remaining. Prossima sessione: continua trio-per-dir (prefer >=2 pub, <=150L, low-NA); STOP quando il valore cala davvero.
+- Prunare stragglers GGv2 (combat-doccomments-3, ai-doccomments-2, session-doccomments-2, tracker-regen-3/4) + sweep cdd merged (opzionale).
+
+### Note
+- Sole Jules handler. Stop = context-budget (Jules quota ~3/100, valore ancora alto, non quota-limited). Gotcha PS5.1: commit-msg con doppi apici -> native-quoting rompe i token git, usare `git commit -F <file>`.
+
+---
+
 ## 2026-06-05 (notte -- Jules wrapper fix + doc-comment campaign grind + skill nuova)
 
 ### Completato
