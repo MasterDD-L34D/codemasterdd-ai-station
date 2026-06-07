@@ -19,6 +19,31 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-06-07 (continuation -- audit-A + 8 decisioni eseguite + code-batch TDD + governance burn-down)
+
+### Completato
+- **Audit-A consistency** (2 sub-agent, grep-verified vs codice) delle 2 narrative reconstruction Codex (~2670 righe) + 30 refresh: substantively accurate; **13 fix fattuali** applicati a #2606 (path-dir sbagliate, route-vote skew-note stale, P1 falsa attribuzione "host drives" a phone_nido_view.gd, line-refs). 30 refresh in-scope = clean.
+- **Governance check** (richiesto da Eduardo): `check_docs_governance` = **271 stale_document, 0 errori** (warning-only, gate VERDE). Burn-down **batch-1** (adr+core 37) via agent no-blind-bump -> 21 re-verified-bumped (271->250, #2611) + 16 real-issue residue. Tool-patch skip-superseded (#2612) -> **246**. Campagna progressiva tracciata (Game BACKLOG #2614).
+- **8 decisioni evidence-based ratificate (research-agent) + eseguite**:
+  - DOC-batch (#2612): D2+D5 nuovo `ADR-2026-05-30-coop-server-authoritative-combat` (Express WS authoritative, supersede colyseus + networking-co-op); D3 pincer + D4 plan-reveal -> superseded; D7 tool skip-superseded; D8b swarm DROP.
+  - CODE-batch (#2613, TDD red->green): D8a WIRE sbilanciato defense-malus (statusModifiers); D1 HYBRID = `onHitStatus.js` port in performAttack (target SV d20+tier vs trigger_dc, seeded rng, gated if-hit) + RETIRE on_hit_stress_delta + reconcile disorient/disoriented. Full backend suite **3749 pass 0 fail**. + worldEnricher savana flake-fix (hermetic ERMES).
+  - D6 telemetry = spec-first (no-op).
+- **Cross-fleet Lenovo sweep**: 0 weekend-stranded; Sprint-Impronta `aa01/cap-*` (13 br) -> backup origin (git bundle+scp) + 44-ref archive bundle Ryzen. Sprint-Impronta verdict = SUPERSEDE (design non-canonico). Parity-sweep = 4 GAP (GAP-1/2 = trait yaml live ma INERTI -> fixati in D1).
+
+### Da fare
+- Eduardo: nessun blocco (tutto merged). #2512 (weekly-drift June-1) = vecchio, triage opzionale.
+- **Governance burn-down**: ~6 dir-batch progressivi (piano+pattern in Game BACKLOG #2614). Sessioni dedicate, non-blocking.
+- **DRIFTED residue** (batch-1: 16 doc) + GAP-3-shipped/GAP-4-dropped: fix-ticket tracciati BACKLOG.
+- Sessione worldEnricher spawned = RIDONDANTE (#2613 ha gia' il fix) -> stoppare.
+
+### Note
+- **Codex prosa = RELIABLE 'sto weekend** (anche le 2 grandi narrative grep-verified accurate) -- counter al prior Jules/Gemini "prosa inaffidabile".
+- **Gotcha cross-PC**: git-over-ssh verso Lenovo rotto (remote PS shell non strippa il quoting POSIX di git) -> transfer = git bundle + scp.
+- **Governance mechanism**: `stale_document` legge REGISTRY last_verified (bump registry + file frontmatter); tool ora skippa doc_status superseded/deprecated/archived.
+- Giornata ~13 PR (Godot #449 + Game #2606-#2614 + cdd #311). Memory `project_codex_weekend_reconstruction_suite` = stato completo.
+
+---
+
 ## 2026-06-07 (Codex weekend review -> 3 PR + canon ADR + cross-fleet aa01 backup)
 
 ### Completato
