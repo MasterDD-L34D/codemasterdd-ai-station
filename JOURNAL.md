@@ -19,6 +19,26 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-06-07 (Codex weekend review -> 3 PR + canon ADR + cross-fleet aa01 backup)
+
+### Completato
+- **Review weekend Codex**: ground-truth -> 2 branch stranded (Game `claude/jules-test-coverage-batch-2026-06-03` + Godot `codex/k01-k06-godot-surface-audit`), nulla pushato. Harsh-review (agent, ADR-0026 #5): facts grep-verified SOLID (HEAD hashes, PR#423 merged, route-vote origin/main, MatingGeneticsFacade live, Nido) -- risk = governance (canon edits Codex su SoT/FREEZE/GDD + branch mal-nominato).
+- **3 gate Eduardo**: G1 ratify-via-ADR / G2 guardrail (code-agent puo' editare freeze MA PR Eduardo-merge) / G3 push Godot.
+- **PR shipped**: Godot-v2 #449 (k01-k06 surface audit + CI fix gdlint max-file-lines 1001->1000), Game #2606 (reconstruction suite 8-doc + canon + nuovo ADR-2026-06-07 device-authority/TV-mirror, Eduardo-merge), Game #2607 (BACKLOG P2 queue).
+- **README flip investigato**: `docs/combat/README` source_of_truth true->false = CORRETTO (era SoT ma puntava a Python `services/rules/*` morto; redirect a combat-canon.md + Node).
+- **Cross-fleet Lenovo sweep**: 0 weekend-work stranded la'. Trovato "Sprint Impronta" (`aa01/cap-*` 13 branch, April, imprint/onboarding/primo-minuto, disk-only) -> backuppato su `origin/aa01/cap-*` (git bundle+scp; Lenovo SSH push morto per wincredman no-tty + gh-token vuoto non-interactive).
+
+### Da fare
+- Eduardo: merge #449 (CI re-run verde) + #2606 (review canon: reframe wording, SoT-flip combat/README=OK, P2 services/rules stale-ref) + #2607.
+- Forward game-work = roadmap SPEC-A..L (SPEC-K device-authority gia' avviato su Godot).
+- P2 (BACKLOG #2607): Python->Node parity sweep (SPEC-L, delegabile) + Sprint Impronta reuse-vs-supersede (SPEC-A).
+
+### Note
+- Codex prosa **reliable** 'sto round (counter al prior Jules/Gemini "prosa inaffidabile"). Memory nuova: `project_codex_weekend_reconstruction_suite`.
+- **Gotcha cross-PC**: git-over-ssh verso Lenovo rotto (remote PowerShell shell non strippa il quoting POSIX di git -> `''C:/path''`). Transfer cross-PC = git bundle + scp, non fetch/push live.
+
+---
+
 ## 2026-06-05 (resume -- doc-comment campaign batch 16-19 + wrapper-drift recovery)
 
 ### Completato
