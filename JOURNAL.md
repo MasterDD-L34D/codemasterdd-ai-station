@@ -19,6 +19,28 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-06-07 (cross-repo branch hygiene + forward roadmap + P1 spec-ratify review)
+
+### Completato
+- **Hygiene cross-repo (6 repo)**: classificati i ~108 branch local-only con classifier 3-segnali (git merge-tree zero-change + PR-state GitHub + worktree-pin) + falsificazione vs PR PRIMA di cancellare (SDMG: il verdetto "UNMERGED" di merge-tree era inaffidabile -- 3/3 campioni erano PR mergiati). **Potati 46** (Game 10, Godot 18, cdd 13, Game-DB 5; ogni delete -> SHA reflog). Risolti 2 checkout stale (Godot clone -> detached origin/main; Game-DB -> main + ff). Tenuti 37 superseded (scelta max-cautela) + 10 keep + 10 worktree-pinned.
+- **Premessa task era stale**: famiglie attese (aa01/cap, worldgen-gapc) gia' potate; quasi tutti i residui = squash-merged con main avanzato (two-dot diff inaffidabile -> serviva il classifier squash-aware).
+- **2 chip aperti**: vault hygiene (submodule frontmatter-import 67-file + log + 12 branch) + Godot worktree-cleanup (~17 worktree + 10 branch pinned).
+- **Roadmap forward**: P1 ratify+SPEC / P2 K-tickets / P3 full-loop runner / P4 burn-down / P5 ADR-0036. Stella polare = device-driven loop; Max scade ~06-17 -> front-load tier-0.
+- **P1 avviato** (agent-scanner pre-select -> harsh-reviewer, ADR-0026 #5): review SPEC-K/L + roadmap. Ground-truth: baseline GIA' ratificata via #2606/ADR-2026-06-07 (i "3 gate" del round Codex = CHIUSI); branch-skew nei doc = STALE (Game su main, thread-branch sparito); 0 violazioni device-authority su 6 doc.
+
+### Da fare
+- P1 decisioni Eduardo: (C) ADR-2026-06-07 ratifica solo 6 punti + K/L taxonomie, NON pre-bless SPEC-A..J non-scritte? (D) "multi-round WEGO" = round model esistente + device UX, non nuova combat-arch?
+- P1 doc-fix (delegabile aider-cosmetic, Game cloud-OK): righe stale branch-skew + backlink `related: ADR-2026-06-07` + stati-composti SPEC-L non-a-legenda.
+- P1 next: draft SPEC-A..D (Wave-1) via brainstorming 3-approcci, sotto Max.
+- Vault + Godot-worktree chip (aperti, attendono start).
+
+### Note
+- Currency catch x3: BACKLOG D1 "pending" -> in realta' SHIPPED #2613; STATUS_MULTI_REPO last-verified 05-28 (stale); memory codex-suite "3 gate aperti/stranded" -> chiusi+landed #2606. Ground-truth > marker riconfermato.
+- Nuova memory: `feedback_preferred_methods_reporting` (rendi espliciti i metodi nei report; domande via AskUserQuestion strutturato recommended-first).
+- /schedule ADR-0036 ratify-check impostato (~06-21, trigger-based).
+
+---
+
 ## 2026-06-07 (continuation -- audit-A + 8 decisioni eseguite + code-batch TDD + governance burn-down)
 
 ### Completato
