@@ -60,7 +60,7 @@ fonte Game `docs/planning/EVO_FINAL_DESIGN_SOURCE_AUTHORITY_MAP.md`.)
 
 | Repo | Visibilita' | Attivita' (as-of 2026-05-18) | Privacy / cloud | Playable |
 |------|-------------|------------------------------|-----------------|----------|
-| Game (Vue3) | PUBLIC | VIVO daily-ship | cloud-OK (whitelisted) | backend sim + web 2D legacy |
+| Game (backend/sim/canon) | PUBLIC | VIVO daily-ship | cloud-OK (whitelisted) | backend sim + canon (web v1 archiviato 2026-05-14) |
 | Game-Godot-v2 | PRIVATE | VIVO daily-ship | cloud-OK (whitelisted) | client; evo-tactics.com tunnel (vedi sotto) |
 | Game-Database | PUBLIC (no LICENSE) | Attivo (pipeline multi-AI) | cloud-OK; **no clone Lenovo** | n/a (CMS) |
 | evo-tactics-refs-meta | PRIVATE | IDLE (push 2026-04-29) | sovereign-default | n/a (asset) |
@@ -156,25 +156,26 @@ La mappa iniziale aveva 3 etichette imprecise. Versione verificata:
 codemasterdd-ai-station   policy + infra + ADR (rulebook workstation, NO codice gioco)
 evo-swarm (Dafne)         orchestratore agenti AI runtime (governa specialist -> content)
         | produce content
-Game (Vue3)               simulation core + gameplay loop + backend Express VIVO
-Game-Godot-v2             shell visuale + UX, client Godot 4.x VIVO (frontend canonical futuro)
-Game-Database             taxonomy CMS (trait/biome/specie/ecosistemi) -> feed Game Vue3
+Game (backend/sim/canon)  simulation core + gameplay loop + backend Express VIVO
+Game-Godot-v2             shell visuale + UX, client Godot 4.x VIVO (frontend canonico ORA, cutover 2026-05)
+Game-Database             taxonomy CMS (trait/biome/specie/ecosistemi) -> feed Game (backend)
 evo-tactics-refs-meta     pipeline asset reference (3D/2D/SFX, rebuildable, no binari)
 vault                     knowledge base Obsidian sovereign (fonte verita' design + ricerca)
 ```
 
 Correzioni chiave vs mappa iniziale:
-- **Game NON e' archivio morto.** E' il core simulation + backend Express,
-  attivo in parallelo a Godot-v2 (parallel-run port phase). Piano: Godot-v2
-  diventa frontend canonical e Vue3 -> archive, ma decisione futura non ancora
-  eseguita codebase-wide.
+- **Game NON e' archivio morto.** E' il core simulation + backend Express +
+  balance authority + canon, VIVO by design come server cross-stack per Godot.
+  Cutover Godot ESEGUITO (Game ADR-2026-05-05): Phase A 2026-05-07 Godot =
+  frontend primario; Phase B 2026-05-14 web v1 `apps/play` archiviato. Solo il
+  frontend web e' archiviato -- il backend Node resta VIVO (preservato by design).
 - **Coordinatore = evo-swarm (Dafne), NON codemasterdd.** codemasterdd e'
   infrastruttura + regole + ADR; non esegue agenti runtime.
-- **Game-Database alimenta Game Vue3**, non Godot direttamente.
+- **Game-Database alimenta Game (backend)**, non Godot direttamente.
 
 ---
 
-## 1. Game (Evo-Tactics Vue3) — simulation core + backend
+## 1. Game (Evo-Tactics backend/sim/canon) -- simulation core + backend
 
 | Campo | Valore |
 |-------|--------|
@@ -238,7 +239,7 @@ npm run test:stack        # suite cross-stack (~150 AI test + 196 Python)
 
 ---
 
-## 2. Game-Godot-v2 — client visuale Godot (frontend canonical futuro)
+## 2. Game-Godot-v2 -- client visuale Godot (frontend canonico, cutover 2026-05)
 
 | Campo | Valore |
 |-------|--------|
@@ -315,7 +316,7 @@ rigenera `data/derived/atlas-telemetry/biome-focus.jsonl` (CI fail se drift).
 | Remote | `github.com/MasterDD-L34D/Game-Database` (PUBLIC, no LICENSE) |
 | Path | Ryzen `C:\Users\VGit\Documents\GitHub\Game-Database` (no clone Lenovo) |
 | Stack | Express 4 + Prisma 5 + PostgreSQL 16 + React 18 (MUI + TanStack + Vite) |
-| Ruolo | Glossario canonical trait/biome/specie/ecosistemi -> feed Game Vue3 |
+| Ruolo | Glossario canonical trait/biome/specie/ecosistemi -> feed Game (backend) |
 | Stato | Attivo, pipeline multi-AI (Jules + Codex + Claude Code) |
 
 ### Struttura
@@ -542,7 +543,7 @@ ADR-0026 (cognitive protocols), ADR-0027 (refresh-verify).
         |                  OR GET /api/traits/glossary      |
         v                       v                          v
    +-------------------------------------------------------------+
-   |                    Game (Vue3) -- simulation core            |
+   |          Game (backend/sim/canon) -- simulation core          |
    |   apps/backend Express :3334 + WS :3341 + d20 worker Python   |
    +-------------------------------------------------------------+
                                 |  HTTPClient + WS (no logica dup)
