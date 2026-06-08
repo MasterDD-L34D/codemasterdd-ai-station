@@ -2,8 +2,8 @@
 
 > *TL;DR: Game-Godot-v2 (port pivot 2026-04-29) ha 215+ PR mergeati con governance interna autosufficiente. Game (Vue3) Sprint Impronta Ondata 1 in pausa dal 26/04, 2 PR DRAFT 9/5 mattino possibile Ondata 2 status-effect. Long-term Godot v2 frontend canonical, Vue3 archive (gia' dichiarato CLAUDE.md ma senza ADR). Decisione: **soft-deadline archive Vue3 entro 2026-09-30** (4 mesi) con review trimestrale. Trigger archive switch: 60gg senza commit Vue3 OR feature parity Godot v2 dichiarata da Eduardo. Bonus action: AA01 silent-driver attivato esplicitamente su Sprint Impronta Ondata 1+2 status-phase-a per accelerare closure feature flow Vue3 prima dell'archive.*
 
-- **Status**: Proposed
-- STATUS-CHECK: 2026-08-01 | trigger: Vue3 main 60gg-silence OR Godot parity dichiarata Eduardo | default-if-elapsed: Escalate
+- **Status**: **Rejected (reconciled + ratified Eduardo 2026-06-08)** -- archive-codebase 2026-09-30 WITHDRAWN; cutover gia' eseguito; modello canonico = Game ADR-2026-05-05 sez.6.3 + `## Addendum reconcile 2026-06-08` in fondo. (Storia Proposed 2026-05-09 preservata sotto.)
+- STATUS-CHECK: RETIRED da reconcile 2026-06-08 (review 2026-08-01 + trigger 60gg-silence MOOT)
 - **Data**: 2026-05-09
 - **Decisore**: Eduardo Scarpelli
 - **Tipo decisione**: cross-repo strategic timeline (Game Vue3 + Game-Godot-v2)
@@ -217,3 +217,82 @@ veracità ADR 2026-05-17, regola-0):
 Context/§"NEW 9/5" = *snapshot storico 2026-05-09 rotto*, NON stato
 corrente. Stato Game reale → git-truth / EXECUTION-BOARD, mai i conteggi
 qui. (Stesso anti-rot pattern PR #154 / ADR-0027.)
+
+## Addendum reconcile 2026-06-08 -- cutover GIA' eseguito, archive-codebase RITIRATA (WITHDRAWN)
+
+> RECONCILE RATIFIED Eduardo 2026-06-08. Ground-truth verificato 2026-06-08
+> (Ryzen, git + ADR cross-repo). Status -> Rejected (reconciled; archive-codebase WITHDRAWN, NON Accepted).
+
+### Cosa e' cambiato dalla stesura (2026-05-09)
+
+Il cutover Godot pianificato qui come futuro e' **gia' avvenuto ed e' ACCEPTED**
+lato Game (Scenario 3 STAGED canary,
+`Game/docs/adr/ADR-2026-05-05-cutover-godot-v2-fase-3-formal.md`):
+
+- **2026-05-07 -- Phase A ACCEPTED**: Godot v2 = frontend primario; web v1 = fallback.
+- **2026-05-14 -- Phase B ACCEPTED** (Path gamma): web v1 (`Game/apps/play/`)
+  ARCHIVIATO formale (`apps/play.archive/`). Cutover completo.
+- **Backend PRESERVATO by design** (ADR-2026-05-05 sez.6.3): `Game/apps/backend/`
+  persiste cross-stack come server di Godot (coop/lobby/companion/wsSession LIVE)
+  + balance authority + canon + sim lab.
+
+### Perche' la decisione originale (Opzione A, archive Vue3 codebase-wide 2026-09-30) e' RITIRATA (WITHDRAWN)
+
+Contraddice una decisione downstream gia' ACCEPTED: ADR-0024 voleva archive Game
+**repo-wide** (apps/ + tools/ + tests/, vedi sez. Sub-events); Game ADR-2026-05-05
+sez.6.3 decide l'OPPOSTO -- **preserva il backend**. Archiviare Game repo-wide
+orfanerebbe il server da cui Godot dipende. L'addendum anti-rot 2026-05-17 aveva
+gia' falsificato la premessa "Vue3 in pausa".
+
+Quindi:
+- **Decisione archive-codebase 2026-09-30: RITIRATA.** Niente archive repo-wide di Game.
+- **Review trimestrale 2026-08-01 + trigger 60gg-silence + feature-parity-switch: MOOT**
+  (la domanda "archiviamo Vue3?" e' gia' risolta: frontend web archiviato 14/05,
+  backend tenuto per scelta).
+- Decade anche la validita' affermata dall'anti-rot 2026-05-17 sez."decisione resta
+  valida": quel soft-deadline 2026-09-30 NON regge piu'. (Nota MADR/ADR-0010: ADR-0024
+  mai-Accepted -> si RITIRA/Withdraw, non si "supersede".)
+
+### Decisione riconciliata (modello canonico ongoing)
+
+1. **Game** = backend/sim/canon **permanente** + balance authority. NON archiviato.
+   Archiviato solo il suo frontend web `apps/play` (2026-05-14). E' il server
+   cross-stack + sorgente di verita' (SoT, ADR, dataset) + lab simulazione/balance headless.
+2. **Game-Godot-v2** = **frontend canonico** del giocatore (cutover 2026-05-07/14).
+   Consuma Game backend via HTTP/WS. Regola anti-duplicazione: no backend-logic in
+   Godot (Godot CLAUDE.md).
+3. **Combat a due motori = ratificato, NON drift.** Backend = balance authority (N=40);
+   Godot = d20 client-side shipped-runtime (SoT sez.24.1). Tripwire:
+   `Game-Godot-v2/tests/unit/test_combat_engine_parity_contract.gd` (#371).
+   **Passivita' DIFFERITA**: quando Godot-combat passa da tutorial/preview a combat
+   generale -> re-visit + N=40 (vedi
+   `Game-Godot-v2/docs/godot-v2/architecture/combat-engine-divergence.md` sez.6/7).
+   Tracciata, non urgente.
+4. **Pipeline swarm-to-game (Dafne)**: target = Game (backend/canon/agents) per
+   content/logic; Godot per frontend. Ambiguita' originale (sez. Context) risolta.
+
+### Evidenza (snapshot git-truth 2026-06-08, Ryzen -- NON ricitare come stato corrente)
+
+- Velocita' 90gg: Game 1576 commit, Godot 507 (entrambi daily-ship; Game = engine-room
+  attivo, non frontend morto).
+- Superficie: backend Game ~13.300 LOC (session.js 4185 + roundOrchestrator 1025 +
+  vcScoring 1153 + policy 307 + 40 servizi combat ~6.800) vs slice combat/scoring
+  client-side Godot ~1.603 LOC = ~8:1. Duplicazione reale = piccola + tripwired.
+- Test: Game ~529 file (438 node + 36 tsx + 55 py) + Godot 358 GUT = doppia-suite
+  (intrinseca a split client+backend, non spreco).
+
+### Metodo (ADR-0026)
+
+Refresh-verify + Currency Gate (P1): cross-repo git + 5 ADR letti, premesse 05-09
+auto-corrette. Brainstorming 3-opt (P6): A reconcile [scelto] / B cutover-totale
+[bocciato: ~13k LOC da reimplementare + perdita balance-lab] / C status-quo
+[bocciato: review 08-01 su premessa falsa]. SDMG: il reframe NON e' self-designed,
+allinea a Game ADR-2026-05-05 gia' Accepted. Harsh-reviewer P5 pre-ratify.
+
+### Ratify gate (Eduardo)
+
+RATIFIED Eduardo 2026-06-08: Status -> Rejected (reconciled); archive-codebase WITHDRAWN;
+modello canonico = Game ADR-2026-05-05 sez.6.3 + questo addendum. File toccati (6):
+questo ADR + `STATUS_MULTI_REPO.md` + `CLAUDE.md` + `DECISIONS_LOG.md` +
+`docs/runbook/adr-status-check.md` + `OPEN_DECISIONS.md` (OD-010). Re-visit-trigger
+combat (tutorial->generale = N=40) -> sorvegliato da **OD-010** (scelta Eduardo: OD).

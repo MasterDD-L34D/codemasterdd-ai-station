@@ -131,7 +131,7 @@ Dormant → Attivo: Eduardo segnala riattivazione → codemasterdd riprende trac
 **Last-verified**: 2026-05-27.
 **Open**: 0 PR open.
 **Blocker**: nessuno post-clone.
-**Next (codemasterdd-side)**: monitor `gh pr list`. NON gestire GDScript/scene files (Eduardo-driven). Relazione con Game (Vue3): Vue3 = simulation core + gameplay loop; Godot v2 = visual shell + UX + canonical frontend (long-term Godot canonical, Vue3 archive, decisione futura).
+**Next (codemasterdd-side)**: monitor `gh pr list`. NON gestire GDScript/scene files (Eduardo-driven). Relazione con Game: Game = backend/sim/canon + balance authority (server cross-stack, preservato by design, Game ADR-2026-05-05 sez.6.3); Godot v2 = frontend canonico (cutover Phase A 2026-05-07 + Phase B web-archive 2026-05-14). NO archive repo-wide Game. Dettaglio: codemasterdd ADR-0024 (reconciled 2026-06-08).
 **Detail-pointer**: repo CLAUDE.md + memory `project_multi_repo_overview.md`.
 
 ---

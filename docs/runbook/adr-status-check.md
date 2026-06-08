@@ -49,7 +49,7 @@ Alternativa low-tech: aggiungi l'one-liner al rituale mensile
 | 0016 constraint-count routing | 2026-06-09 | Escalate |
 | 0021 multi-client (early) | 2026-06-07 | Accept |
 | 0022 OpenCode tier (early) | 2026-06-09 | Accept |
-| 0024 Vue3 archive timeline | 2026-08-01 | Escalate |
+| 0024 Vue3 archive timeline | RETIRED 2026-06-08 (reconciled) | -- |
 | 0029 OpenRouter declined | 2026-06-13 | Accept |
 | 0031 ChatGPT recovery | 2026-06-14 | Escalate |
 

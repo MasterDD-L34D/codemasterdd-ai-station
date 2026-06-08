@@ -19,6 +19,24 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-06-08 (reconcile ADR-0024: dual-surface Game/Godot -- archive-codebase RITIRATO)
+
+### Completato
+- **Domanda strategica Eduardo**: "perche' produrre su 2 superfici (Game Vue3 + Godot)? consolidare?". Refresh-verify cross-repo (git + 5 ADR + build-status): NON sono 2 frontend-gioco. Cutover GIA' eseguito (Game ADR-2026-05-05: Phase A 05-07 Godot=frontend primario, Phase B 05-14 web v1 `apps/play` archiviato, backend PRESERVATO by design). Modello reale = Game backend/sim/canon + balance authority + Godot frontend canonico.
+- **Reconcile ADR-0024** (era Proposed; premessa "Vue3 in pausa" gia' falsificata + contraddiceva Game ADR-2026-05-05 "backend preserved"): Status -> **Rejected (reconciled)**. Archive-codebase 09-30 RITIRATO, review 08-01 + trigger 60gg MOOT. Sync 5 file (ADR + STATUS_MULTI_REPO + CLAUDE.md + DECISIONS_LOG + adr-status-check).
+- **Quantificazione**: backend Game ~13.300 LOC vs slice combat client-side Godot ~1.603 (~8:1); combat 2-motori = ratificato + tripwired (#371), NON drift. Duplicazione reale = piccola + governata.
+- **Process**: Refresh-verify+Currency-Gate (auto-corretto 1 mio overclaim) -> Brainstorming 3-opt -> agent-scanner (reuse harsh-reviewer, no-dup) -> harsh-reviewer P5 (0 P1; fix treatment-status Accepted->Rejected + 4 stale-residui). OD-010 aperta (sorveglianza re-visit-trigger combat orfano).
+- **Fix operativo Godot**: worktree `-ermes` spento rimosso + dir principale ri-agganciato a main@6142047 (era detached HEAD; 0 perso).
+
+### Da fare
+- Chip `task_59d829d0`: refresh `docs/EVO_TACTICS_ECOSYSTEM_GUIDE.md` (~10 ref Vue3-frontend stale post-cutover).
+- OD-010: monitor trigger combat tutorial->generale (N=40 quando scala).
+
+### Note
+- Sessione su Ryzen (read-verify + authoring codemasterdd, synced). Reframe NON self-designed: allinea a Game ADR-2026-05-05 gia' Accepted.
+
+---
+
 ## 2026-06-07 (cross-repo branch hygiene + forward roadmap + P1 spec-ratify review)
 
 ### Completato

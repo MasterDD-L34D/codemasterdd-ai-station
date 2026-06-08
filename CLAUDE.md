@@ -76,8 +76,8 @@ Per audit/eval/decision/pivot significativo:
 7. **SDMG**: metodo self-designed = ipotesi alto-errore; falsificazione esterna pre-integrazione governance.
 
 ## Repo monitorati (full -> STATUS_MULTI_REPO.md + memory project_multi_repo_overview)
-- **Game** (Vue3 d20) `C:\dev\Game` -- gates AI-driven batch-sim (mai human/4-amici); Wave-3 design-data done. Public, cloud-OK.
-- **Game-Godot-v2** `C:\dev\Game-Godot-v2` -- Godot 4.x port; self-governed (CLAUDE.md+AGENTS.md). Public.
+- **Game** (Evo-Tactics backend/sim/canon) `C:\dev\Game` -- Node backend + d20 sim + balance authority + canon (server cross-stack per Godot via HTTP/WS); gates AI-driven batch-sim (mai human/4-amici). Vue web frontend archiviato 2026-05-14 (cutover ADR-2026-05-05); repo NON archiviato (backend preservato by design). Public, cloud-OK.
+- **Game-Godot-v2** `C:\dev\Game-Godot-v2` -- **frontend canonico** Evo-Tactics (cutover 2026-05; consuma Game backend); Godot 4.x, self-governed (CLAUDE.md+AGENTS.md). Public.
 - **Game-Database** `C:\dev\Game-Database` -- Express+Prisma+Postgres taxonomy CMS; Jules-maintained. Public.
 - **Synesthesia** `C:\dev\synesthesia` -- web app UniUPO; dormant fino esame ago-2026. Mixed privacy (controllers/ sovereign).
 - **Dafne swarm** `~/Dafne/workspace/swarm` -- orchestratore AI (Flask+Ollama); persona-entita; scrive Game/agents su approve.
