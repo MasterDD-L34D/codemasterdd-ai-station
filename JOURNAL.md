@@ -19,6 +19,27 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-06-08 (Lenovo resume -- sync Ryzen 21 commit + vault hygiene)
+
+### Completato
+- Resume da Lenovo dopo giorni inattivita'. Identity-verify (CODEMASTERDD/edusc) -> sync codemasterdd main behind 21->0 (ff-only su main pulito, Ryzen work 06-04..06-08), HEAD `46507b0`.
+- Hygiene chip "preparato per questo PC": ground-truth ribalta i chip (Currency Gate x2). Godot-Lenovo GIA' pulito il 06-07 (cleanup SSH da Ryzen; doc `handoff-2026-06-07-worktree-hygiene-cleanup.md`: "Lenovo pristine on fresh main"). Vault = vero residuo.
+- Vault hygiene (sovereign, tutto LOCALE -- zero push/merge remoto): main behind 117->0 ff; 10 branch local->1 (gate `git cherry` unmerged=0, no blind-delete, SHA->reflog); 2 worktree->1.
+- C2 worktree sporco `cool-proskuriakova` = NON scratch: conteneva verify-green hook#9 (firing-verify edusc, premessa "non cattura" falsificata) + edge-residuo clv2 (settings.json logga ogni evento `tool_complete`, zero `tool_start`). Diff preservato -> `logs/vault-worktree-cool-proskuriakova-SESSION-HANDOFF-2026-05-18.patch` (git-apply-able), poi `worktree remove --force` + `branch -D`.
+
+### Da fare
+- clv2 edge-residuo: fix hook settings.json (append arg pre/post ai 2 command, o `enabledPlugins` clv2:true). Eduardo-gated (tocca `~/.claude/settings.json` cross-PC). Non-blocking (dati fluiscono).
+- vault gitlink `Master-DD-Pathfinder-GPT` (mode 160000, no `.gitmodules`) -- pre-esistente origin canonico, vault-PR Eduardo-merge-gate se da sistemare.
+- COMPACT_CONTEXT.md stantio (dice 06-03/HEAD vecchio; reale `46507b0`) -- refresh prossima sessione.
+- Memory gap Lenovo: `feedback_mergetree_base_must_be_freshest_main` + `project_worktree_hygiene_cleanup_2026_06_07` (Ryzen-authored, non nel mio indice).
+- Governance burn-down ~6 dir-batch (Game BACKLOG #2614) non iniziato.
+
+### Note
+- Currency Gate decisivo: 2 ribaltamenti (Godot chip era Ryzen-side; vault il vero target). Conferma cross-check autoritativo `gh pr list --head` vs cherry/merge-tree false-positive su squash-merge (handoff 06-07).
+- Domande poste via AskUserQuestion strutturato recommended-first (feedback_preferred_methods_reporting).
+
+---
+
 ## 2026-06-08 (reconcile ADR-0024: dual-surface Game/Godot -- archive-codebase RITIRATO)
 
 ### Completato
