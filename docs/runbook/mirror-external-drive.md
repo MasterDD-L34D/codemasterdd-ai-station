@@ -1,7 +1,7 @@
 # Mirror -> external drive (disk-loss insurance, manual)
 
 > **Trigger**: punto 3 della governance cleanup 2026-05-28 (D3 mirror disk-loss).
-> **Scope**: copia periodica `C:\dev\_mirror-backup\*.git` (7 bare mirror) su disco esterno per insurance da disk-loss locale. Complementa lo scheduled task `codemasterdd-mirror-backup` (settimanale Dom 10:00) che copre GitHub-account-loss ma vive sullo stesso disco di Lenovo (no disk-loss insurance).
+> **Scope**: copia periodica `C:\dev\_mirror-backup\*.git` (tutti i bare mirror dell'org; 15 al 2026-06-11, set scoperto live via `gh repo list` dallo script mirror) su disco esterno per insurance da disk-loss locale. Complementa lo scheduled task `codemasterdd-mirror-backup` (settimanale Dom 10:00) che copre GitHub-account-loss ma vive sullo stesso disco di Lenovo (no disk-loss insurance).
 
 ## Quando farlo
 
@@ -29,13 +29,14 @@ if (-not (Test-Path $dest)) { New-Item -ItemType Directory -Force -Path $dest | 
 
 L'helper usa `robocopy` con flag `/MIR` (mirror: aggiunge nuovi + aggiorna modificati + cancella file rimossi dal source) per riflettere esattamente `C:\dev\_mirror-backup\` sul drive esterno. Idempotente.
 
-Output atteso: 7 directory bare mirror copiate (codemasterdd-ai-station / vault / Game / Game-Godot-v2 / Game-Database / evo-swarm / synesthesia), totale variabile (~size cumulativo dei bare mirror).
+Output atteso: una directory bare mirror per ogni repo dell'org (15 al 2026-06-11: i 7 fleet -- codemasterdd-ai-station / vault / Game / Game-Godot-v2 / Game-Database / evo-swarm / synesthesia -- piu' i repo restanti scoperti via `gh repo list`), totale variabile (~size cumulativo dei bare mirror).
 
 ### Step 3 -- Verify + scollega
 
 ```powershell
-# Conta dir copiate
-(Get-ChildItem $dest -Directory | Where-Object Name -Like '*.git').Count   # expect 7
+# Conta dir copiate: expect = count del mirror locale (lo script verify lo confronta gia' da solo)
+(Get-ChildItem $dest -Directory | Where-Object Name -Like '*.git').Count
+(Get-ChildItem 'C:\dev\_mirror-backup' -Directory | Where-Object Name -Like '*.git').Count   # i due count devono coincidere
 
 # Verifica HEAD su una bare a campione
 $g = Join-Path $dest 'codemasterdd-ai-station.git'
