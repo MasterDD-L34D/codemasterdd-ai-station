@@ -19,6 +19,24 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-06-11 (mirror backup: audit pilastro cross-fleet-reproducibility -> org-wide discovery, PR #323)
+
+### Completato
+- Audit `scripts/backup/mirror-repos.ps1` + `copy-mirror-to-external.ps1` (trigger: Direction Index 06-10, pilastro `cross-fleet-reproducibility` non toccato da 30 commit). Findings: set CLAUDE.md "Repo monitorati" tutto coperto (Dafne swarm = `evo-swarm` verificato via remote; aa01 non-git = escluso by design); MA vs org GitHub reale gap 7/15 -- 3 repo post-snapshot D3 (compass-marketplace, evo-tactics-refs-meta, LeaD) + 5 legacy senza copertura account-loss. Fix L-040 presente in entrambi; copy-mirror gia' count-agnostic; scheduled task sano (run 06-07 saltato per macchina off, next 06-14).
+- Estensione mirror-repos.ps1: `gh repo list` = authority del repo-set (anti drift lista statica), fallback statico aggiornato a snapshot 15 repo, run degradato (gh assente/offline) mirrora comunque il fallback ma esce 1 (no silent fail-open, famiglia L-041); `-Repos` esplicito salta discovery. Probe `Get-Command gh` evita trap $LASTEXITCODE stale.
+- Evidenza run reale: before 7/7 ok exit 0; after 15/15 ok exit 0 (8 clone nuovi); edge repo-inesistente -> [FAIL] git exit 128 + exit 1; edge gh-fuori-PATH -> fallback 15/15 + DONE (degraded) + exit 1. `py -m pytest -q scripts/tests` -> 20 passed (9 regression guard nuovi in `scripts/tests/test_mirror_repos.py`). Runbook `mirror-external-drive.md` de-hardcodato (era "7").
+- PR #323 aperto (branch `claude/mirror-org-discovery`, worktree isolato, merge = Eduardo).
+
+### Da fare
+- Merge PR #323 (review Eduardo). Post-merge: il task scheduler weekly raccoglie il nuovo set senza modifiche (invoca lo script coi default).
+- Opportunistico: prossima copia external-drive includera' gli 8 mirror nuovi (~size piccolo, legacy repos).
+
+### Note
+- Mirror locale GIA' esteso a 15/15 dal run after (lo stato `C:\dev\_mirror-backup` non dipende dal merge del PR).
+- Gotcha PS5.1 emerso nel test edge: segment PATH con trailing backslash -> confronto `-ne` su dir senza TrimEnd non matcha (simulazione gh-assente fallita al primo colpo).
+
+---
+
 ## 2026-06-11 (dedupe hook clv2 in ~/.claude/settings.json Lenovo)
 
 ### Completato
