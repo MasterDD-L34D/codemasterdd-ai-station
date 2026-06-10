@@ -22,7 +22,7 @@ Utente = italiano. Codice/identifier/commit message = inglese. Doc progetto = it
 
 ## Baseline / quality gates
 - **Definition of Done**: una change e DONE solo con test/build verdi (output mostrato, no "sembra fatto") + zero TODO/stub/placeholder + doc/commit aggiornati + nessun self-merge che salta il review-gate. Vedi Quality Gate globale + protocollo `verification-before-completion`.
-- **Testing**: prima di dire done -> `python -m pytest -q scripts/tests` (pytest, `--import-mode=importlib`) + ASCII-guard ADR-0021 (la "lint" di questo repo infra/scripts, via hook pre-commit / CI). No typecheck (no TS). Preferisci test mirati > full-suite.
+- **Testing**: prima di dire done -> `py -m pytest -q scripts/tests` (launcher `py`, NON `python`: user-PATH espone un venv hermes senza pytest; pytest `--import-mode=importlib`) + ASCII-guard ADR-0021 (la "lint" di questo repo infra/scripts, via hook pre-commit / CI). No typecheck (no TS). Preferisci test mirati > full-suite.
 - **PR review (pre-merge, OBBLIGATORIO)**: leggi i commenti review (`gh api repos/<owner>/<repo>/pulls/<N>/comments`) + triage P1 (block, fix obbligatorio) / P2 (should) / P3 (nice). No silent-merge senza risolvere i P1.
 - **Dependencies**: chiedi conferma prima di aggiungere una prod-dependency; niente version-bump/update senza approval esplicito; rispetta il lockfile (no edit manuale).
 
@@ -86,7 +86,8 @@ Per audit/eval/decision/pivot significativo:
 
 ## JOURNAL (fine sessione significativa)
 Entry in JOURNAL.md (YYYY-MM-DD newest-first: Completato/Da fare/Note). Poi land via helper (vale Lenovo+Ryzen):
-`powershell -File scripts/fleet/journal-land.ps1 -Subject "docs(journal): <desc>"`.
+`powershell -File scripts/fleet/journal-land.ps1 -Subject "docs(journal): <desc>" -CodingAgent <model-id-sessione>`
+(model-id = quello del proprio system prompt, es. `claude-fable-5`; omesso -> trailer generico `claude-code`).
 MAI journal su branch `chore/`/`docs/` (resta orfano); MAI `git pull` su feature-branch (`--ff-only` solo su main).
 
 ## Ordine lettura nuove sessioni
