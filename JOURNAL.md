@@ -19,6 +19,22 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-06-11 (post-Max readiness: runbook cutover + spend tracking + smoke tier-0, PR #327)
+
+### Completato
+- **Checklist readiness 6/6 PASS** (GOAL Short ratificato 2026-06-11, Max expiry ~06-17): (1) ANTHROPIC key presente in keys.env (count=1, mai stampata); (2) spend tracking: helper nuovo `scripts/claude-api/log_spend.py` (TDD, 7 pytest) -- file mensile da template + cumulative recompute + soglie $10/$15/$20 ADR-0023; (3) coherence budget: ADR-0023 SUPERSEDED parziale da ADR-0030:166, API on-demand = overflow se Pro daily-limit, cap $10-20 = sotto-busta envelope $20-50/mo Hybrid A1, NESSUNA contraddizione; (4) fallback sovereign: ollama 16 modelli + aider-cosmetic/aider-refactor dry-run PASS (diff validi, zero mutazioni); (5) smoke API: 1 call haiku 12in/4out risposta "OK" ~$0.00003, loggata in `logs/claude-api-spend-2026-06.md`; (6) runbook `docs/runbook/post-max-cutover.md` (day-X, chi fa cosa, overflow procedure, rollback Max renewal).
+- **MODEL_ROUTING allineato a ADR-0030**: 3 righe post-Max erano framing pre-0030 ("Groq 70B / gpt-4o", senza Pro primary) -> ora CC Pro primary + API overflow + Gemini CLI routine + OpenRouter emergency.
+- **PR #327** aperto (branch claude/post-max-cutover, worktree isolato, 27 test verdi, trailer ADR-0011).
+
+### Da fare
+- Eduardo: review/merge PR #327.
+- Eduardo: subscribe Claude Pro $20/mo pre-~17/06 (ADR-0030 step 1, ~5min) -- unico gap manuale residuo.
+
+### Note
+- Smoke aider eseguito su scratch file in TEMP con `--dry-run --no-git`: nessun rischio sul tree.
+- Costo totale sessione lato API: ~$0.00003 (1 call haiku). Spend file giugno inaugurato.
+- Journal-land race con #326 (JOURNAL concorrente): helper ha abortito+ripristinato come da contract; recovery ff-only + re-insert. WIP concorrente ADR-0038/0039 nel tree NON toccato.
+
 ## 2026-06-11 (Game-DB Short start: versioned reads Biome/Species/Eco -- scope + Jules dispatch)
 
 ### Completato
