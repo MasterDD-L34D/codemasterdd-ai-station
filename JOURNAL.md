@@ -19,6 +19,24 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-06-10 (refresh coordinamento hub: GOALS + STATUS ground-truth -> PR #318)
+
+### Completato
+- Refresh ground-truth dei 2 file coordinamento hub (stale: GOALS 05-22, STATUS 05-28). Audit via subagent repo-health-auditor (read-only, gh-api verified): 22 punti stale STATUS riconciliati; tutti i 6 Short GOALS del 2026-05-22 risultano COMPLETATI (PR canonici #2384/#352/#165/#176/#122 merged ~05-25).
+- Evidenza chiave: Game ~297 PR 05-28->06-10 (OD-058 wound cutover flip-ON #2720/#2722, SPEC-I active #2705, Gate-5 #2716 + tracker #2531 CLOSED); Godot #465 AI playtest item-3 co-op PASS (105 PR); vault 0 PR open (40+ merged, eng-graph daemon #243); evo-swarm IDLE dal 05-28 (#123 merged, Flask DOWN); Game-DB wave Jules 12 PR (CWE-290 #170); ADR-0036 Accepted (spine) / 0037 Accepted / 0038-0039 Proposed; AA01 21 archive + 38 lessons.
+- Vincolo GOALS rispettato: next Short NON settato (human decision); aggiunto blocco "PROPOSTE next Short (decisione Eduardo)" con 1-2 candidati/repo evidence-derived.
+- Delivery: branch claude/goals-status-refresh-0610 + PR #318 lasciato OPEN per review Eduardo (PROPOSTE = direzione strategica). pytest 6 passed; righe aggiunte ASCII-clean.
+
+### Da fare
+- Eduardo: review/merge PR #318 + scelta next Short per repo (o skip esplicito).
+- Checkpoint nuovo a STATUS: Claude Max scadenza ~06-17 -> attivazione routing post-Max ADR-0023.
+
+### Note
+- Lavoro isolato in worktree dedicato (shared-clone Protocol 1); main locale mai switchato (CLAUDE.md dirty di altra sessione preservato intatto).
+- Gotcha: gh pr create con here-string PS5.1 -- i double-quote embedded nel body rompono l'arg parsing nativo -> usare --body-file (famiglia L-038 quoting cross-shell).
+
+---
+
 ## 2026-06-10 (fleet status check + hygiene cdd: COMPACT refresh + memory gap)
 
 ### Completato
