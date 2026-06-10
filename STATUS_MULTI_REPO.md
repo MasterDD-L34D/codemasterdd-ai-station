@@ -26,9 +26,9 @@ _Auto-synced governor signal snapshot; human prose elsewhere is authoritative._
 >
 > Riferimenti deep: CLAUDE.md sezione "Progetti monitorati" (descrittivo), memory `project_multi_repo_overview.md` (architetturale), questo file (operativo). Audit storici + session-log May 2026 archiviati in [`docs/archive/status-multi-repo-history-2026-05.md`](docs/archive/status-multi-repo-history-2026-05.md) (Ecosystem-audit 15-repo + Reconcile OD-038 + DF Integration + ADR retrospective + D-sequence + multi-session orchestration).
 
-**Ultimo refresh**: **2026-05-28 (notte)** (ALIENA diagnostic A->D pipeline + tribes+telemetry phone cross-repo, 14 PR session). _Dettaglio JOURNAL 2026-05-28 (notte)._
+**Ultimo refresh**: **2026-06-10** (ground-truth audit repo-health-auditor, gh-api verified tutti i repo; 22 punti stale riconciliati vs snapshot 05-28). _Dettaglio JOURNAL 2026-06-10._
 
-**Codemasterdd state**: HEAD main `4b40321` (docs(agent): repo-health-auditor refreshes GOALS.md). 0 PR open. Stack ADR-0017 DOWN (scaffold opt-in, all services down). Ollama UP 16 models. Last-verified: 2026-05-28.
+**Codemasterdd state**: HEAD main `44b0855` (fix(fleet): journal-land coding-agent trailer param, #316). 0 PR open. 40 PR merged 05-28->06-10. Stack ADR-0017 DOWN (scaffold opt-in, all services down). Ollama DOWN al momento audit (era UP 16 models al 05-28). Last-verified: 2026-06-10.
 
 ---
 
@@ -36,14 +36,14 @@ _Auto-synced governor signal snapshot; human prose elsewhere is authoritative._
 
 | Repo | Status | Next action | Deadline/trigger | Blocker |
 |------|--------|-------------|------------------|---------|
-| **codemasterdd-ai-station** | HEAD `4b40321` (2026-05-27). SPRINT_02 active. 3 untracked files (2 jules-batch digests + godot-install-ryzen.ps1). 0 PR open. Stack ADR-0017 DOWN (scaffold opt-in, expected). Ollama UP 16 models. | Commit/triage 3 untracked files | -- | Nessuno |
-| **Synesthesia** | Dormant, HEAD `05f8a92` (invariato) | Riattiva pre-esame UniUPO | ~agosto 2026 | Nessuno (dormant intenzionale) |
-| **Game (Evo-Tactics Vue3)** | HEAD main `05af47e9` (Ryzen synced 2026-05-28). Clean. **Fase-3 epigenome SHIPPED full** (engine #2402 + live loop #2404 + lineage sim #2407 + weight 0.45 #2409 + hardening #2412 + games-index #2405). Suite 1333/0-fail. DRAFT PR #2385 still open (weekly drift, low-pri triage). | Playtest live (L-069, the Nord) + triage #2385 | -- | Nessuno |
-| **Game-Godot-v2** | HEAD `bc475bd` local synced. 0 PR open. Daily-ship active: **PR #356 merged today** (genetics_api + offspring-ritual Fase-2 canonical). 356 PR cumulative. Genetics Fase-2 active sprint. | Monitor (Eduardo-driven) | -- | Nessuno |
-| **Dafne swarm (evo-swarm)** | Local branch `chore/weekly-digest-2026-05-27` (2 modified files: cycle-log + dafne-proposals.json). Origin/main HEAD `670e309` (2026-05-25). **PR #123 OPEN** (weekly digest 2026-05-27, non-draft -- needs review/merge). Flask :5000 DOWN. Recent: born-ready artifact enrichment + aider worktree coverage. | Triage PR #123 | -- | Flask down (not blocker unless workflow resumes) |
-| **AA01 (Archon Atelier 01)** | v1.0.0 silent-driver mode. Counter 12/5 sera post Bundle 1+2+3: **14 archive entries + 11 lessons cumulative**. Workspace 0 attivi. | Continua driver mode + nuovo task quando emerge. | nessuna | nessuno bloccante |
-| **vault-shared (Vault Knowledge Mgmt)** | Local `C:/dev/vault` HEAD `9880f4da0` (2026-05-25, obsidian-wiki runbook). Dirty: 1 modified (.gitignore) + 2 untracked. **4 DRAFT PRs open** (#180/181/190/201 coherence-backstop daily series 24-27/5 -- triage needed, likely Eduardo-merge-gate). Privacy: sovereign-only. | Triage 4 open DRAFT PRs (Eduardo-merge-gate) | -- | Nessuno |
-| **Game-Database** (Ryzen `C:\dev\Game-Database`, Lenovo clone present) | HEAD `13079e2` (2026-05-25). 0 PR open. **Phase C-Game versioning active**: versioned trait reads API (#163) + version-management UI (#164) + RFC design (#166). Jules/Claude active. | Monitor (Eduardo-driven) | -- | Nessuno |
+| **codemasterdd-ai-station** | HEAD `44b0855` (2026-06-10). 40 PR merged 05-28->06-10 (jules-dispatch fail-closed ADR-0037 #290, R1 rung #295, docs reorg #302, journal-land trailer #316). 0 PR open. SPRINT_02 archiviato in `docs/archive/` (no SPRINT_03). Stack ADR-0017 DOWN (scaffold opt-in, expected). Ollama DOWN al audit. | Ratify ADR-0038/0039 (Eduardo) + set next Short (GOALS.md PROPOSTE) | -- | Nessuno |
+| **Synesthesia** | Dormant, HEAD `05f8a92` (invariato, verificato 06-10) | Riattiva pre-esame UniUPO | ~agosto 2026 | Nessuno (dormant intenzionale) |
+| **Game (Evo-Tactics)** | HEAD main `55adfb4` (2026-06-10, #2722). ~297 PR merged 05-28->06-10 (daily-ship massivo). **OD-058 wound cutover SHIPPED flip-ON** (D1 probe #2713 -> D2 read-apply #2714 -> D3 write-trigger #2720 + vcSnapshot coop ledger #2722); ER6 StressWave flag-OFF #2712; **SPEC-I fork ratificato + flip active** #2705; Gate-5 #2716 + tracker OD-058-build #2531 CLOSED 06-10. Lenovo clone behind 15 + tmp files (lane = Ryzen). | Triage open: #2723 (ER7 biome tick, non-draft) + #2683 (DRAFT mission-console) -- lane Ryzen, NO push da Lenovo (fold-race L3) | -- | Nessuno |
+| **Game-Godot-v2** | HEAD `dc88167` = **#465 AI playtest item-3 co-op PASS** (2026-06-10). 105 PR merged 05-28->06-10, 465 cumulative. Sprint corrente: co-op + Form Pulse + phone chronicle M-7 MVP (#452) + AI playtest ladder (genetics Fase-2 conclusa). 0 PR open. | Monitor (Eduardo-driven) | -- | Nessuno |
+| **Dafne swarm (evo-swarm)** | HEAD `10a40ba` = merge PR #123 weekly digest (2026-05-28). **Repo IDLE dal 05-28** (0 PR/commit in 13gg). Flask :5000 DOWN. Clone locale main clean (solo `logs/` untracked). | Decisione Eduardo: resume ciclo integrazione o PARK esplicito | -- | Flask down (non blocker se parked) |
+| **AA01 (Archon Atelier 01)** | v1.0.0 silent-driver mode. **21 archive entries + 38 lessons** (L-001..L-040+, conteggio file 06-10). Workspace 0 attivi. | Continua driver mode + nuovo task quando emerge. | nessuna | nessuno bloccante |
+| **vault-shared (Vault Knowledge Mgmt)** | HEAD `2074956` (2026-06-10, gap-capture backstop daily attivo). 40+ PR merged 05-28->06-10 (eng-graph SSE daemon #243, OD-059 cloud judge #241, OD-058 verdicts #234, d20 SoT reconcile #254). **0 PR open** (serie DRAFT #180/181/190 MERGED + #201 CLOSED il 05-29). Clone Lenovo main clean. Privacy: sovereign-only. | Nessun triage pendente (backstop daily autonomo) | -- | Nessuno |
+| **Game-Database** (Ryzen `C:\dev\Game-Database`, Lenovo clone present) | HEAD `fbe3b7b` (2026-06-09). 12 PR merged 05-28->06-10 (Jules code-health: JSDoc batch, **CWE-290 fix #170**, mutation rate-limit #169, test coverage #171/#176, docs reorg #177, EOL #178). 0 PR open. Lenovo clone behind 3. | Monitor (Jules/Eduardo-driven) | -- | Nessuno |
 | **claude-supermemory-local** (Ryzen-only) | Claude-Supermemory MCP local instance (persistent context tooling). Auxiliary. | Informational, no action | -- | Nessuno |
 | **compass-marketplace** (Ryzen-only) | Compass plugin marketplace -- direction-first audit/kickoff lens per Claude Code. Auxiliary. | Informational, no action | -- | Nessuno |
 | **Master-DD-Pathfinder-GPT** (Ryzen-only) | Pathfinder 1E Master DD GPT core repo (API + Prompt Kit), external GPT backing. Personal PF1e. | Informational, no action | -- | Nessuno |
@@ -68,12 +68,14 @@ Stack `Accepted` ma in modalita' **scaffold opt-in** (containers down per defaul
 
 **Path**: `C:\dev\codemasterdd-ai-station\` -- **Remote**: [MasterDD-L34D/codemasterdd-ai-station](https://github.com/MasterDD-L34D/codemasterdd-ai-station) -- **Privacy**: public
 
-**Status**: Fase 6 CLOSED 2026-05-07 (ADR-0015 + ADR-0017 Accepted, scenario A full-sovereign). SPRINT_02 active (window 5/20 -> 6/19). Stack ADR-0017 scaffold opt-in (DOWN default, hot-restart <60s). Claude Max ri-acquistato fino ~2026-06-17.
-**Last-verified**: 2026-05-28.
+**Status**: Fase 6 CLOSED 2026-05-07 (ADR-0015 + ADR-0017 Accepted, scenario A full-sovereign). SPRINT_02 chiuso e archiviato in `docs/archive/` (no SPRINT_03 aperto). Stack ADR-0017 scaffold opt-in (DOWN default, hot-restart <60s). Claude Max fino ~2026-06-17 (scadenza vicina -> post-Max routing ADR-0023).
+**Last-verified**: 2026-06-10.
 **Decisioni pendenti**:
 - ADR-0016 (Proposed) awaiting n>=3 data points addizionali.
-- **ADR-0036 (Proposed 2026-05-29) -- Unified Orchestration Doctrine**: `ORCHESTRATION.md` single cross-executor routing authority (hub Opus 4.8 + 5 spokes; capability/cost/privacy routing; mandatory different-model verification gate; autonomy ladder full rollout). Consolidates ADR-0013/0022/0023/0030/0034/0035; reframes MODEL_ROUTING come local-fleet detail. Scoped fleet-tools MCP (Tavily + OpenAI image + non-Claude cross-check judge) GO -- build pending spec/plan. **Ratify trigger**: >=1 clean external-merge-auto cycle/repo, zero bad-merge, ~2 weeks. Cross-fleet (Lenovo + Ryzen).
-**Sub-agent ecosystem**: 18 agent registrati (`.claude/agents/`) coprono 4 repo + cross-cutting. Dettaglio: [.claude/agents/README.md](.claude/agents/README.md), fonti in `SOURCES.md`.
+- **ADR-0036 -- Unified Orchestration Doctrine: Accepted (spine) 2026-06-01 + Deferred (auto-merge rung)**. `ORCHESTRATION.md` single cross-executor routing authority. Consolida ADR-0013/0022/0023/0030/0034/0035.
+- **ADR-0037 -- merge-autonomy model: Accepted 2026-06-03** (jules-dispatch fail-closed wrapper #290).
+- **ADR-0038 (doctrine carveout completion) + ADR-0039 (R1 open-PR reconcile rung, built #295): Proposed** -- pending SDMG harsh-review + Eduardo ratify.
+**Sub-agent ecosystem**: 16 agent attivi + 5 dormant (`.claude/agents/`, scan 06-10) coprono 4 repo + cross-cutting. Dettaglio: [.claude/agents/README.md](.claude/agents/README.md), fonti in `SOURCES.md`.
 
 ---
 
@@ -103,11 +105,12 @@ Dormant → Attivo: Eduardo segnala riattivazione → codemasterdd riprende trac
 ## Game (Evo-Tactics Vue3)
 
 **Path**: `C:\dev\Game\` (Lenovo synced primary + Ryzen STALE sandbox) -- **Remote**: [MasterDD-L34D/Game](https://github.com/MasterDD-L34D/Game) -- **Privacy**: public (cloud-whitelisted)
-**Status**: repo daily-ship attivissimo (multi-track). HEAD main `05af47e9` (Ryzen synced). Fase-3 epigenome SHIPPED full; suite 1333/0-fail. Governance vive nel Game repo (`docs/governance/`); codemasterdd monitora, non dirige.
-**Last-verified**: 2026-05-28.
-**Open**: DRAFT PR #2385 (weekly drift audit, low-pri triage).
+**Status**: repo daily-ship attivissimo (multi-track), ~297 PR merged 05-28->06-10. HEAD main `55adfb4` (2026-06-10, #2722). **OD-058 wound cutover SHIPPED flip-ON**: D1 overcharge probe #2713 -> D2 read-apply flag-gated #2714 -> D3 write-trigger flip ON #2720 + vcSnapshot coop server-side ledger replay #2722; follow-up trait mirror/prettier #2717/#2718/#2719. ER6 StressWave flag-gated OFF #2712; SPEC-I fork ER6/ER7 ratificato + flip active #2705; trait electric channel #2715. Coop stream: SPEC-P PA3 biomeChip, branco, name-emergence, identity M-2. Governance vive nel Game repo (`docs/governance/`); codemasterdd monitora, non dirige.
+**Last-verified**: 2026-06-10.
+**Open**: PR #2723 (ER7 biome population tick BUILT flag-gated, non-draft) + PR #2683 (DRAFT mission-console auto-build dist). Chiusi 06-08/06-10: Gate-5 #2716, tracker OD-058-build #2531, weekly-drift #2512. (Nota: #2385 era un PR, MERGED 05-29 -- la riga precedente "DRAFT still open" era confusione PR/issue.)
+**Lane**: Game = Ryzen; da Lenovo NO push (fold-race L3). Lenovo clone behind 15 + file tmp non tracciati.
 **Blocker**: nessuno.
-**Next (codemasterdd-side)**: monitor Eduardo+AA01-driven progression; triage #2385; auto-skip PR cron `skiv-monitor`. NON gestire capability/design interni.
+**Next (codemasterdd-side)**: monitor Eduardo+AA01-driven progression; triage #2723/#2683 (lane Ryzen). NON gestire capability/design interni.
 **Detail-pointer**: Game `docs/governance/` + memory `project_game_wave3_hub.md` + `project_multi_repo_overview.md`. Audit findings storici (boss enrage, XP curve) + Sprint-Impronta CAP-11..15 in archive history.
 
 ---
@@ -115,11 +118,11 @@ Dormant → Attivo: Eduardo segnala riattivazione → codemasterdd riprende trac
 ## Dafne swarm (evo-swarm)
 
 **Path**: `C:\Users\edusc\Dafne\workspace\swarm\` (Lenovo) + `C:\dev\evo-swarm` (Ryzen clone) -- **Remote**: [MasterDD-L34D/evo-swarm](https://github.com/MasterDD-L34D/evo-swarm) -- **Privacy**: sovereign (orchestratore AI custom)
-**Status**: Atto 2 active. Origin/main HEAD `670e309` (2026-05-25). Process persistence ADR-0019 (`START-SWARM-PERSISTENT.ps1`). Chat Dafne endpoint `:5000/dafne` (fallback chain qwen3:8b -> groq 70B -> cerebras 8B -> gemini flash). Flask :5000 DOWN (not blocker unless workflow resumes).
-**Last-verified**: 2026-05-27.
-**Open**: PR #123 OPEN (weekly digest 2026-05-27, non-draft); OD-004 dashboard usage deferred; OD-005 Tavily degraded.
+**Status**: **repo IDLE dal 2026-05-28** -- origin/main HEAD `10a40ba` = merge PR #123 (weekly digest 2026-05-27); 0 PR/commit nei 13gg successivi. Process persistence ADR-0019 (`START-SWARM-PERSISTENT.ps1`). Chat Dafne endpoint `:5000/dafne` (fallback chain qwen3:8b -> groq 70B -> cerebras 8B -> gemini flash). Flask :5000 DOWN (not blocker unless workflow resumes).
+**Last-verified**: 2026-06-10.
+**Open**: 0 PR. OD-004 dashboard usage deferred; OD-005 Tavily degraded.
 **Blocker**: nessuno hard.
-**Next**: triage PR #123. Handoff: Dafne propone -> Eduardo approva via POST -> H5 gate -> Game agents/ write.
+**Next**: decisione Eduardo resume-vs-PARK esplicito (vedi GOALS.md PROPOSTE). Handoff invariato: Dafne propone -> Eduardo approva via POST -> H5 gate -> Game agents/ write.
 **Detail-pointer**: repo swarm governance (5 file root-level) + memory `reference_dafne_swarm.md` + `project_dafne_persona.md`.
 
 ---
@@ -127,8 +130,8 @@ Dormant → Attivo: Eduardo segnala riattivazione → codemasterdd riprende trac
 ## Game-Godot-v2 (Evo-Tactics Godot 4.x port, pivot 2026-04-29)
 
 **Path**: `C:\dev\Game-Godot-v2\` (cloned 2026-05-07) -- **Remote**: [MasterDD-L34D/Game-Godot-v2](https://github.com/MasterDD-L34D/Game-Godot-v2) -- **Privacy**: public (cloud-whitelisted)
-**Status**: daily-ship attivo. HEAD `bc475bd` local synced. 356 PR cumulative. Genetics Fase-2 active sprint. Stack Godot 4.x GDScript (200 test file GUT, ~1719 asserts; no Node/Vue/Python). Governance interna autosufficiente (proprio CLAUDE.md con caveman mode + AGENTS.md per Codex + SAFE_CHANGES/TASK_PROTOCOL); codemasterdd monitora soltanto. Hook globali applicati via `core.hooksPath` user-level.
-**Last-verified**: 2026-05-27.
+**Status**: daily-ship attivo, 105 PR merged 05-28->06-10 (465 cumulative). HEAD `dc88167` = **#465 AI playtest item-3 co-op PASS + host driver riusabile** (2026-06-10). Sprint corrente: co-op + Form Pulse (item-3 identity surfaces #463, creature_named broadcast #464) + phone chronicle M-7 Memory-mode MVP #452 + AI playtest ladder; genetics Fase-2 conclusa; stream #2679 (Form Pulse axis contract) chiuso 06-10. Stack Godot 4.x GDScript (GUT; no Node/Vue/Python). Governance interna autosufficiente (proprio CLAUDE.md con caveman mode + AGENTS.md per Codex + SAFE_CHANGES/TASK_PROTOCOL); codemasterdd monitora soltanto. Hook globali applicati via `core.hooksPath` user-level.
+**Last-verified**: 2026-06-10.
 **Open**: 0 PR open.
 **Blocker**: nessuno post-clone.
 **Next (codemasterdd-side)**: monitor `gh pr list`. NON gestire GDScript/scene files (Eduardo-driven). Relazione con Game: Game = backend/sim/canon + balance authority (server cross-stack, preservato by design, Game ADR-2026-05-05 sez.6.3); Godot v2 = frontend canonico (cutover Phase A 2026-05-07 + Phase B web-archive 2026-05-14). NO archive repo-wide Game. Dettaglio: codemasterdd ADR-0024 (reconciled 2026-06-08).
@@ -139,12 +142,12 @@ Dormant → Attivo: Eduardo segnala riattivazione → codemasterdd riprende trac
 ## vault-shared (sibling-peer Eduardo)
 
 **Path**: `C:\dev\vault\` (Lenovo clone downstream + Ryzen origin) -- **Remote**: [MasterDD-L34D/vault](https://github.com/MasterDD-L34D/vault) -- **Privacy**: **sovereign-only** (NON in aider-privacy-whitelist; aider-cloud su file vault = ABORT)
-**Status**: sibling-peer disjoint scope (knowledge management Karpathy LLM-wiki ACCESS + 7 production agents on content). HEAD `9880f4da0` (2026-05-25). Stack overlap: Ollama LAN (stesso daemon) + qwen2.5-coder + deepseek-r1 + Claude variants + LLM routing matrix v1.0. Hook globali compatibili (validated 2026-05-10).
-**Last-verified**: 2026-05-25.
-**Open**: 4 DRAFT PRs (#180/181/190/201 coherence-backstop daily series, Eduardo-merge-gate).
+**Status**: sibling-peer disjoint scope (knowledge management Karpathy LLM-wiki ACCESS + 7 production agents on content). HEAD `2074956` (2026-06-10, gap-capture backstop daily). 40+ PR merged 05-28->06-10: eng-graph SSE/HTTP daemon #243, cloud gpt-4o-mini OD-059 #241, OD-058 D1-D5 verdicts ratified #234, d20 SoT reconcile (ability executor SHIPPED) #254. Stack overlap: Ollama LAN (stesso daemon) + qwen2.5-coder + deepseek-r1 + Claude variants + LLM routing matrix v1.0. Hook globali compatibili (validated 2026-05-10).
+**Last-verified**: 2026-06-10.
+**Open**: 0 PR (serie DRAFT #180/#181/#190 MERGED + #201 CLOSED il 2026-05-29).
 **Blocker**: nessuno.
 **Boundary**: codemasterdd PUÒ branch+PR push, MAI direct-main/merge. Eduardo media il merge-gate (oversight SPOF intenzionale su personal workflow). Cross-reference one-way: vault llm-routing matrix -> potential MODEL_ROUTING.md addendum codemasterdd.
-**Next**: triage 4 DRAFT PRs (Eduardo-merge-gate).
+**Next**: nessun triage pendente (backstop daily autonomo). Lint-WARN residui (coherence WARN 1 + gap 3/5 nonzero, signals 06-03) = candidato next Short (GOALS.md PROPOSTE).
 **Detail-pointer**: memory `project_vault_shared.md`. Privacy rationale (academic integrity UniUPO + curated narrative IP + cross-project strategic + prompt library) in archive/CLAUDE.md.
 
 ---
@@ -157,7 +160,7 @@ Dormant → Attivo: Eduardo segnala riattivazione → codemasterdd riprende trac
 |------|--------|---------|
 | **claude-supermemory-local** | Active dev. Local SDK replacement Supermemory cloud. | sovereign |
 | **compass-marketplace** | Active dev (compass plugin marketplace, direction-first lens Claude Code). | sovereign |
-| **Game-Database** | **Active monitored** -- Taxonomy CMS Evo-Tactics (Prisma + PG + Express + React MUI + Vite). Upstream content provider per Game (Vue3) via `npm run evo:import` + HTTP runtime API (`GAME_DATABASE_ENABLED=true`). Has own CLAUDE.md (multi-client ADR-0021) + WORKSPACE_MAP.md. PUBLIC, no LICENSE. Jules aggressive-maintenance source. Lenovo clone present (verificato 2026-05-28). Boundary: auth esplicita Eduardo per review/merge/close (sibling Evo-Tactics family). | public, cloud-OK |
+| **Game-Database** | **Active monitored** -- Taxonomy CMS Evo-Tactics (Prisma + PG + Express + React MUI + Vite). Upstream content provider per Game via `npm run evo:import` + HTTP runtime API (`GAME_DATABASE_ENABLED=true`). 12 PR merged 05-28->06-10 (Jules code-health: CWE-290 #170, rate-limit #169, JSDoc/test/docs). Has own CLAUDE.md (multi-client ADR-0021) + WORKSPACE_MAP.md. PUBLIC, no LICENSE. Jules aggressive-maintenance source. Lenovo clone behind 3 (verificato 2026-06-10). Boundary: auth esplicita Eduardo per review/merge/close (sibling Evo-Tactics family). | public, cloud-OK |
 | **Master-DD-Pathfinder-GPT** | Active Codex. Pathfinder GPT campaign tooling. | sovereign |
 | **torneo-cremesi-site** | Low-activity static site PF1e Torneo (main `016496e` PR #9, Ott-2025). | sovereign |
 
@@ -184,9 +187,10 @@ Dormant → Attivo: Eduardo segnala riattivazione → codemasterdd riprende trac
 
 | Data | Evento | Progetto | Azione |
 |------|--------|----------|--------|
+| **~2026-06-17** | **Claude Max scadenza** -> switch post-Max routing (tier-0 strategic on-demand, ADR-0023) | codemasterdd | Attiva budget cap $10-20/mese + tracking `logs/claude-api-spend-*` |
 | **~giugno-agosto 2026** | Synesthesia riattivazione | Synesthesia | Privacy validation 2/3 + esame prep |
 | **~2026-08-01** | **SDMG-gate quarterly review** (codemasterdd PR #194 narrow-pick 2-week empirical period -> 3 month review) | codemasterdd | Trigger: adoption rate < 30% qualifying decisions OR ADOPT-rate without executed experiment > 0 -> ADR-0026 amendment B/C |
-| **trigger-based** | **ADR-0036 ratify** (Proposed->Accepted, Unified Orchestration Doctrine) | codemasterdd | Trigger: >=1 clean external-merge-auto cycle/repo, zero bad-merge, ~2 weeks |
+| **trigger-based** | **ADR-0038 + ADR-0039 ratify** (Proposed -> decisione; doctrine carveout completion + R1 open-PR reconcile rung) | codemasterdd | Trigger: SDMG harsh-review + Eduardo ratify. (ADR-0036 ratify DONE: Accepted spine 2026-06-01, auto-merge rung Deferred; ADR-0037 Accepted 2026-06-03) |
 
 ---
 
