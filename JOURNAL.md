@@ -19,6 +19,23 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-06-11 (Game-DB Short start: versioned reads Biome/Species/Eco -- scope + Jules dispatch)
+
+### Completato
+- **Scope ground-truth Game-Database**: RFC versioning (docs/rfc/2026-05-21-schema-versioning.md) + PR #165 (goal-set) + codice post-#163. Esito: snapshot tables popolate per 4 entita' (FIELD_MAP versionSnapshot.js), `resolveReleasedVersion` riusabile as-is, pattern `?versionId` esistente solo su traits.js -- manca SOLO read-route per biomes/species/ecosystems. Contratto chiaro -> GO Jules (meccanico, riferimento in-repo).
+- **Tracking issue**: Game-Database #179 con contratto completo (7 file in scope, constraints backward-compat + no-liveFilter-on-snapshot, acceptance test unit+db-PG+CI step).
+- **Jules dispatch** via scripts/fleet/jules-dispatch.ps1 (post-fix gate-4 6ae338c): dry-run PASS (0 active session, 2 pagine scanned) -> DISPATCHED session `1234201908190712245` (QUEUED). Audit logs/jules-dispatch-2026-06.md. Session id registrato su #179.
+
+### Da fare
+- Triage PR Jules risultante via flusso jules-pr-triager; merge Eduardo-only.
+- Game-Database CLAUDE.md goal-set update (Short: versioned reads; Mid: rimuovere voce pulled-down) -- docs-only PR tipo #165, opzionale insieme al PR Jules o standalone.
+
+### Note
+- Chip "Game-DB versioned-reads dispatch" (sessione coordinatore 06-11) = ESEGUITO da questa sessione.
+- Task-file ADR-0035 self-contained (gate 2/3 verdi); prompt = contratto issue #179 verbatim.
+
+---
+
 ## 2026-06-11 (coordinatore: raccolta chip 7/7 + ratifiche Eduardo -- Short, X4, vault merge)
 
 ### Completato
