@@ -19,6 +19,22 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-06-11 (dedupe hook clv2 in ~/.claude/settings.json Lenovo)
+
+### Completato
+- Dedupe hook continuous-learning-v2 in `C:/Users/edusc/.claude/settings.json`: il fix del 06-08 ("append arg pre/post") era stato applicato come AGGIUNTA di nuove entry invece che modifica -> ogni tool-event sparava observe.sh 2 volte. Rimosse le 2 entry no-arg (stesso matcher `*` delle entry con arg -> non intenzionale), tenute solo `observe.sh pre` (PreToolUse) e `observe.sh post` (PostToolUse). Backup: `settings.json.bak-2026-06-10-clv2-dedupe`. JSON validato post-edit (node parse + struttura hook: 2 call observe.sh totali, commit-guard intatto).
+- Conferma semantica no-arg: observe.sh fallback su `CLAUDE_HOOK_EVENT_NAME`, altrimenti default `post` -> la entry no-arg su PreToolUse veniva misclassificata come `tool_complete` con output vuoto.
+- Evidenza empirica pre-fix (observations.jsonl progetto codemasterdd, 06-09/06-10): start=79, complete output-vuoto=63 (spurii da PreToolUse no-arg), complete reali=140 (~2x per doppio PostToolUse). Modello bug combacia.
+
+### Da fare
+- Replica dedupe clv2 su Ryzen (`C:/Users/Vgit/.claude/settings.json`): stessa anomalia probabile. Cross-PC write gated -> intervento dal Ryzen stesso.
+- Verifica post-fix in sessione successiva (hook config si carica a session start): in observations.jsonl attesi start ~ complete-reali ~ N per tool-event, ZERO `tool_complete` con output vuoto. Check: `python3` group-by event su righe nuove.
+
+### Note
+- tool_use_id e' parsato da observe.sh ma NON persistito nelle observation -> dedupe check per-tool-call impossibile via ID; usato pattern output-vuoto come discriminante.
+
+---
+
 ## 2026-06-10 (journal-land trailer fix + follow-up findings: PR #316/#317)
 
 ### Completato
