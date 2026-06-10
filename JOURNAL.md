@@ -19,6 +19,24 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-06-10 (fleet status check + hygiene cdd: COMPACT refresh + memory gap)
+
+### Completato
+- Status check cross-fleet ground-truth (gh, lane-aware): Ryzen ATTIVO su Game -- 14 PR merged solo 06-10, stream OD-058 wound cutover D1 probe (#2713) -> D2 read-apply flag-gated (#2714) -> D3 write-trigger flip ON (#2720) + follow-up (#2717/#2718/#2719), ER6 StressWave flag-OFF (#2712), 4 fix coop quorum role-aware vs TV-mirror, SPEC-I flip active (#2705), electric channel (#2715). Godot-v2: stream #2679 chiuso, AI playtest item-3 co-op PASS (#465). Residuo Game = Gate-5 #2716 + tracker OD-058-build #2531. Lane-rule: Game = Ryzen, da Lenovo NO push (memory fold-race L3).
+- COMPACT_CONTEXT.md refresh (stantio dal 06-03): HEAD 9bd8543, ADR 36->39 (0037 merge-autonomy / 0038 carveout / 0039 R1 rung), context-files reorg COMPLETE, focus fleet corrente + scadenza Max ~06-17, prossimi passi attualizzati.
+- Memory gap Lenovo colmato: le 2 memory Ryzen-authored stavano nella project-memory Game-Godot-v2 (NON codemasterdd) -- trovate via SSH read-only search, importate su Lenovo (feedback_mergetree_base_must_be_freshest_main + project_worktree_hygiene_cleanup_2026_06_07) + indice MEMORY.md aggiornato; mojibake em-dash da transfer normalizzato a `--`.
+
+### Da fare
+- Residui 06-08 invariati: clv2 hook fix (Eduardo-gated), vault gitlink Pathfinder-GPT, governance burn-down ~6 batch (#2614).
+- Compass: pilastro cross-fleet-reproducibility scoperto da 30 commit (candidato scripts/backup/**).
+
+### Note
+- Gotcha quoting: PS5.1 locale -> ssh -> cmd remoto mangia i double-quote (il pipe viene eseguito da cmd: "ForEach-Object non riconosciuto"); workaround = bash ssh con single-quote wrapper. Famiglia L-038/L-040 cross-shell.
+- Agent-scanner DELTA: 16 attivi + 5 dormant, 0 dup; repo-health-auditor esiste ma ask piu' stretto -> read diretti.
+- journal-land.ps1 hardcoda `Coding-Agent: claude-opus-4.8` (riga 213) -- stale vs agent reale; fix candidato (param o env-detect).
+
+---
+
 ## 2026-06-08 (Lenovo resume -- sync Ryzen 21 commit + vault hygiene)
 
 ### Completato
