@@ -48,11 +48,11 @@ Pattern di chiusura applicato: marker stale = anti-pattern #19 -> ground-truth v
 
 - [ ] **U0-test** — Step 0 quick-win: abilita `aider --browser`, prova 1-2 sessioni dev-loop. Gate: UX accettabile? Se sì → procedi. Se no → deferred step 1+. (No completion evidence.)
 
-### Cross-repo orchestrator (window elapsed -- re-verify)
+### Cross-repo orchestrator (Gate E re-verified 2026-06-10 -- decisione X4 a Eduardo)
 
-- [ ] **X3** Gate E empirical window 30gg post-Max (era 2026-05-20 -> 2026-06-19): **window elapsed al 2026-06-03**. Cross-repo `ESCALATION_GATES.md` ora live -> re-verify se la finestra empirica e' stata loggata o se ridefinire.
-- [ ] **X4** Gate E decision evaluation (~2026-06-20): BUILD full / BUILD MINIMAL / DEFER based on empirical events count. **Re-verify** contro eventi reali raccolti (window ormai trascorsa).
-- [ ] **X5** Component 1 dashboard implementation (CONDITIONAL on X4 outcome >=5 events/wk OR 2-5 events/wk minimal scope). Resta CONDITIONAL su X4 ri-valutato.
+- [x] **X3** Gate E empirical window 30gg post-Max (2026-05-20 -> 2026-06-19): **re-verify DONE 2026-06-10**. (a) Claim "window elapsed al 2026-06-03" ERRATO: la window scade il 06-19 (al 06-03 erano 2 settimane; al 10-06 sono 3 su 4.3). (b) Eventi REALI loggati in-window = **0**: `logs/coord-events-2026-05.md` contiene solo 2 probe del 05-14 pre-window (marcate "NOT a real event"); `coord-events-2026-06.md` inesistente; `logs/escalation-gates-2026-05.md` = template con placeholder `<fill in>` mai compilati; 0 reminder-marker in-window (solo W20 pre-window; schtask `GateELoggingReminder` attivo, last-run 06-01, next 06-14). (c) Verdetto: window NON instrumentata = L-016 materializzato nonostante design anti-L-016; conferma indipendente JOURNAL 2026-06-01 ground-truth ("Gate-E coord-pain log = 0 eventi reali... logging-gap, non zero-dolore: tutti e 4 i dolori confermati reali").
+- [ ] **X4** Gate E decision -- **decisione Eduardo entro ~06-20**. Dati: 0 eventi/wk loggati su 3 settimane elapsed (<2/wk). Framing "BUILD full / MINIMAL / DEFER" superato: Component 1 gia' shipped v0.2 (`c2cb816` 05-14) -> v0.3 (`bcd0f45`) -> unify in dogfood-ui (#196); Gate E reframed 05-14 a FEEDBACK METRIC (`ESCALATION_GATES.md`: <2/wk = "continue v0.2 stable, defer v0.3 iteration"). **Raccomandazione data-driven: DEFER + retire del counter** -- (1) criterio letterale: 0 < 2/wk; (2) il counter misura logging-discipline, non pain (zero = gap, non zero-dolore); (3) re-instrument = ripetere esperimento gia' fallito (auto-instrument ucciso da SDMG 06-01 come self-licking); (4) i 4 dolori reali hanno gia' canale segnale nel fleet governor R0/R1. Alternative: re-run window instrumentata / iterate v0.3 su segnale qualitativo.
+- [ ] **X5** Component 1 dashboard implementation: **MOOT come build** -- la dashboard e' stata implementata e iterata PRIMA della window (v0.2 -> v0.3 -> dogfood-ui unify #196); nessun esito X4 puo' piu' triggerare una build. Conseguenza: alla ratifica X4 chiudere X5 come superseded; se Eduardo sceglie il re-run della window, X5 si ridefinisce come "v0.3+ iteration priority", non build.
 
 ---
 

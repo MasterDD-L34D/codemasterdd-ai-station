@@ -19,6 +19,21 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-06-10 (Gate E X3/X4/X5 re-verify: 0 eventi in-window, window non instrumentata)
+
+### Completato
+- **X3 re-verify (BACKLOG cross-repo orchestrator)**: window Gate E = 2026-05-20 -> 2026-06-19, NON "elapsed al 06-03" come dichiarato (scade 06-19; oggi 3 settimane su 4.3). Eventi reali loggati in-window = **0**: `logs/coord-events-2026-05.md` = solo 2 probe pre-window del 05-14 (marcate "NOT a real event"); `coord-events-2026-06.md` inesistente; `escalation-gates-2026-05.md` = template placeholder mai compilato; 0 reminder-marker in-window (schtask attivo, last-run 06-01, next 06-14). Conferma indipendente: JOURNAL 06-01 ground-truth "0 eventi reali = logging-gap L-016, non zero-dolore (4 dolori reali confermati)".
+- **X4 raccomandazione data-driven** scritta in BACKLOG: **DEFER + retire counter** (0 < 2/wk criterio letterale; framing BUILD superato dal reframe 05-14 -- Component 1 gia' shipped v0.2 `c2cb816` -> v0.3 -> dogfood-ui unify #196; il counter misura logging-discipline, non pain; auto-instrument gia' ucciso da SDMG come self-licking; dolori reali gia' coperti da fleet governor R0/R1). Decisione NON chiusa qui (vincolo task: e' di Eduardo).
+- **X5 marcato MOOT come build** (dashboard esiste gia' e ha iterato); si chiude come superseded alla ratifica X4.
+
+### Da fare
+- Eduardo: decisione X4 entro ~06-20 (ratify DEFER+retire / re-run window instrumentata / iterate v0.3 su segnale qualitativo).
+
+### Note
+- Fonte conteggio = `logs/coord-events-*.md` (persistenza unica: `/api/coord-event` invoca `coord-event-log.ps1` che appende li'; la dashboard conta dagli stessi file). Nessun event store alternativo.
+
+---
+
 ## 2026-06-10 (journal-land trailer fix + follow-up findings: PR #316/#317)
 
 ### Completato
