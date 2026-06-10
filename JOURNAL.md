@@ -19,6 +19,24 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-06-11 (dossier ratifica ADR-0038/0039 -- evidence check + SDMG fresh + probe P1)
+
+### Completato
+- **Dossier ratifica** `docs/research/adr-0038-0039-ratify-dossier-2026-06.md` (PR #329, doctrine = merge Eduardo-only): evidence check ground-truth 2026-06-11 su ogni claim delle 2 ADR Proposed + falsificazione SDMG fresh (harsh-reviewer) + amendment proposti. Raccomandazioni: **0038 ACCEPT con 4 amendment** (core "tightens, grants nothing" regge clause-by-clause; principale = re-founding rationale GOALS.md/G1-G4 che vivono nel file jules-gaps, non in root GOALS.md; + sync actor-criteria sec 7 same-PR alla ratifica) / **0039 ACCEPT con amendment P1**.
+- **P1 headline (probe empirica CONFERMATA)**: claim "clock-free" di ADR-0039 falsificato per la gamba codemasterdd -- severity `eng-graph` time-derived a monte del render (`ingest.py:158 date.today()` -> `parse_eng_graph_moc(now)` -> payload_hash -> region). Contenuto byte-identico + 40 giorni di calendario = diff della region (info->warning). Safety NO-merge intatta (3-lock + negative test sul builder REALE, 40 test verdi); il leak tocca la qualita' dell'evidenza R2: cycle STATUS-leg calendar-manufacturable finche' non fixato.
+- **R1 rung de-facto OPERATIVO + primo earn banked**: finestre 7-day di #296 + vault #252 chiuse PULITE il 06-10 (no revert; #318 ha toccato STATUS_MULTI_REPO fuori region; vault lint-status mai ritoccato) -> **clean-R1-PR-cycles = 2/4** (2/2 repo, ~1.2/2 settimane). Entrambi bootstrap-class (create region/file): la review li pesa come evidenza piu' debole dei drift-PR steady-state.
+- **Fix fattuali** (stesso PR): header 0038+0039 "Pending: (a) SDMG falsification" stale vs body (falsificazione gia' done 2026-06-03) -> riscritti; pending = solo Eduardo ratify+merge. Cambi di sostanza NON applicati (= amendment nel dossier).
+- Re-verify al 2026-06-11: branch protection main ancora 403 (claim dec.4 regge); settings.json zero merge-rule; tutti i path citati esistono (eccezione prospettica `~/.claude/agents/` non su disco, fail-closed innocuo).
+
+### Da fare
+- **Eduardo**: decidere i 2 flip Proposed->Accepted (con/senza amendment) + merge PR #329; se ratifica 0038 -> sync actor-criteria sec 7 nello stesso PR; se ratifica 0039 -> scegliere fix-direction P1 (escludere severity staleness-class dal render STATUS vs emendare l'invariante) + verbalizzare annotazioni R2 (a-d del dossier).
+- Decidere cadenza run manuali `python -m governor.reconcile` (nessun run dal 06-03: silenzio = no-run, non no-drift) o accettare il silenzio come off-ramp.
+
+### Note
+- Pattern ricorrente n=2 (cross-cutting della review): header ADR "Pending: falsification" non aggiornato quando il body la documenta done -> convenzione proposta: aggiornare l'header nello STESSO commit della falsificazione.
+- Probe P1 eseguita con store sqlite temporaneo, zero write nel repo; script temp rimosso post-run.
+- Journal-land redo n=1: prima land abortita dal helper per edit concorrente su JOURNAL (sessione post-Max readiness #327, stesso insertion point) -- safety contract del worktree helper ha funzionato come da design.
+
 ## 2026-06-11 (post-Max readiness: runbook cutover + spend tracking + smoke tier-0, PR #327)
 
 ### Completato
