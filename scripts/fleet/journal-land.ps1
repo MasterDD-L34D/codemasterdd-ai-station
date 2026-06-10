@@ -30,6 +30,9 @@
   Conventional-commit subject, e.g. "docs(journal): coop-WS surface 3 PR".
 .PARAMETER Path
   Files to include in the commit. Default JOURNAL.md. Each must exist and not be gitignored.
+.PARAMETER CodingAgent
+  Agent id for the ADR-0011 "Coding-Agent:" commit trailer. Resolution order:
+  this parameter > $env:CLAUDE_MODEL > 'claude-code' (generic fallback).
 .PARAMETER NoMerge
   Create the PR but do not auto-merge (default = create PR + auto-merge squash).
 .PARAMETER AcceptMerge
@@ -44,6 +47,7 @@
 param(
   [Parameter(Mandatory)] [string] $Subject,
   [string[]] $Path = @('JOURNAL.md'),
+  [string] $CodingAgent = '',
   [switch] $NoMerge,
   [switch] $AcceptMerge,
   [switch] $DryRun
@@ -110,6 +114,17 @@ if ($Subject.EndsWith('.'))     { Fail "subject must not end with a period" }
 $desc = $Subject -replace '^(feat|fix|docs|style|refactor|perf|test|chore|ci|build|revert)(\(.+\))?!?:\s+', ''
 if ($desc.Length -gt 0 -and [char]::IsUpper($desc[0])) { Fail "description should start with a lowercase letter" }
 
+# --- resolve ADR-0011 "Coding-Agent:" trailer id: param > $env:CLAUDE_MODEL > generic ---
+if (-not $CodingAgent) { $CodingAgent = $env:CLAUDE_MODEL }
+if (-not $CodingAgent) { $CodingAgent = 'claude-code' }
+$CodingAgent = $CodingAgent.Trim()
+# trailer value must stay a single ASCII token: whitespace/control chars from a polluted
+# env var would corrupt the trailer block (and ADR-0021 wants ASCII-only)
+if ($CodingAgent -notmatch '^[A-Za-z0-9][A-Za-z0-9._/:+\[\]-]*$') {
+  Warn "CodingAgent value not a plain ASCII token -- falling back to 'claude-code'."
+  $CodingAgent = 'claude-code'
+}
+
 # --- validate -Path entries: must exist + not gitignored (a typo'd/ignored path must NOT 'succeed') ---
 foreach ($p in $Path) {
   if (-not (Test-Path -LiteralPath $p)) { Fail "path not found: $p (typo? run from repo root)" }
@@ -142,6 +157,7 @@ if ($DryRun) {
   Info "  branch     : $branch (in a throwaway worktree)"
   Info "  paths      : $($Path -join ', ')"
   Info "  subject    : $Subject"
+  Info "  agent      : $CodingAgent (Coding-Agent trailer)"
   Info "  auto-merge : $([bool](-not $NoMerge))"
   Info "  shared HEAD: '$origBranch' (never switched)"
   exit 0
@@ -210,7 +226,7 @@ if ($LASTEXITCODE -ne 0) {
   Fail "git add failed AND restore failed. Edit PRESERVED in 'git stash list' ($stashTag)."
 }
 $msgFile = [IO.Path]::GetTempFileName()
-$body = "$Subject`n`nCoding-Agent: claude-opus-4.8`nTrace-Id: $(New-TraceId)`n"
+$body = "$Subject`n`nCoding-Agent: $CodingAgent`nTrace-Id: $(New-TraceId)`n"
 [IO.File]::WriteAllText($msgFile, $body, (New-Object System.Text.UTF8Encoding($false)))  # no BOM
 & git -C $wt commit -F $msgFile
 $rc = $LASTEXITCODE
