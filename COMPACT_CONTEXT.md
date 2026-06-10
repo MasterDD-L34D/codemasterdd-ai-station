@@ -11,23 +11,22 @@
 - **Ruolo**: infrastructure-as-code + governance + dashboard operativa cross-repo
   per la fleet AI sovereign-first di Eduardo (vedi `CLAUDE.md` autoritativo).
 
-## Stato attuale (verificato git/ls 2026-06-03)
-- **HEAD origin/main**: `6a340ac` (2026-06-03) -- `docs(governance): context-files reorg Fase 1 -- slim CLAUDE.md (#270)`.
-- **Fase 1 context-files reorg**: DONE (PR #270, slim CLAUDE.md).
-- **Fase 2 governance reorg**: IN PROGRESS (slim dei file di contesto stantii;
-  questa sessione = slim di COMPACT_CONTEXT.md, history -> `docs/archive/`).
-- **ADR**: 36 totali in `docs/adr/` (verificato `ls | wc -l`). Cluster recente
-  Jules/orchestration = ADR-0032..0036:
-  - ADR-0032 Jules PR governance active model
-  - ADR-0033 Jules governance resolved
-  - ADR-0034 Jules autonomous-managed model (owner mandate, supersede ADR-0033)
-  - ADR-0035 Jules-from-CLI proactive dispatch (async-remote-agent tier)
+## Stato attuale (verificato git/ls/gh 2026-06-10)
+- **HEAD origin/main**: `9bd8543` (2026-06-08) -- `docs(journal): resume Lenovo + sync Ryzen + vault hygiene (#314)`. 0 PR open.
+- **Context-files reorg**: COMPLETE Fasi 1-6 (2026-06-03, 12+ PR; vedi memory
+  `project_context_files_reorg`). Nessun follow-up aperto.
+- **ADR**: 39 totali in `docs/adr/`. Cluster recente orchestration/autonomy:
   - ADR-0036 Unified Orchestration Doctrine (multi-LLM + Jules + Opus 4.8)
-- **Focus corrente** (derivato dai commit recenti origin/main): workstream
-  governance "governor" + Jules orchestration -- governor signal sources
-  (eng-graph, archon-learnings, least-priv token, R1 classifier +
-  issue-escalation actor), AI-smoke sovereign judge (vision + deterministic),
-  Jules digest/suggestions pipeline.
+  - ADR-0037 merge-autonomy model
+  - ADR-0038 doctrine carveout completion
+  - ADR-0039 R1 open-PR reconcile rung
+- **Focus corrente fleet** (verificato gh 2026-06-10): lane Game = Ryzen ATTIVA
+  (OD-058 wound cutover D1->D3 flip ON #2713/#2714/#2720 + ER6 StressWave +
+  coop quorum role-aware + SPEC-I active; 14 PR merged solo il 06-10; residuo =
+  Gate-5 #2716 + tracker #2531). Godot-v2: stream #2679 chiuso, AI playtest
+  item-3 co-op PASS (#465). Lane Lenovo = hygiene cdd + residui journal 06-08.
+- **Scadenza**: Claude Max ~2026-06-17 -> front-load task tier-0 (roadmap
+  journal 06-07: P1 SPEC / P2 K-tickets / P3 full-loop / P4 burn-down / P5 ADR-0036).
 - **Stack decommissionato** (NON piu' presente): `infra/` (LiteLLM+Langfuse+
   Postgres docker-compose) e `apps/dogfood-ui/` RIMOSSI (ADR-0017 SUPERSEDED da
   ADR-0030 Hybrid A1). `apps/` ora contiene solo `cross-repo-dashboard/` +
@@ -38,12 +37,11 @@
 
 ## Prossimi passi
 
-1. **Completare Fase 2 governance reorg**: continuare lo slim degli altri file di
-   contesto stantii a coppia "lean current snapshot + history archive"
-   (stesso pattern applicato qui a COMPACT_CONTEXT.md).
-2. **Consolidare la doctrine di orchestrazione**: allineare `ORCHESTRATION.md`
-   (154 righe) con il cluster ADR-0034..0036 (Jules autonomous-managed +
-   CLI proactive dispatch + Unified Orchestration Doctrine).
+1. **Residui journal 06-08** (non-blocking): clv2 hook fix settings.json
+   (Eduardo-gated), vault gitlink `Master-DD-Pathfinder-GPT` (vault-PR gate),
+   governance burn-down ~6 dir-batch (piano in Game BACKLOG #2614).
+2. **Compass**: pilastro `cross-fleet-reproducibility` scoperto da 30 commit
+   (path candidato `scripts/backup/**`).
 3. **Chiusura sessione**: aggiornare il blocco "Stato attuale" sopra (HEAD + ADR
    count + focus) via `git log`/`ls`, MAI copiare numeri stantii.
 
