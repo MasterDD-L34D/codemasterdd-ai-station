@@ -19,6 +19,22 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-06-10 (journal-land trailer fix + follow-up findings: PR #316/#317)
+
+### Completato
+- PR #316 MERGED (44b0855): trailer ADR-0011 `Coding-Agent:` in journal-land.ps1 non piu' hardcoded (claude-opus-4.8 stale) -> catena `-CodingAgent` param > `$env:CLAUDE_MODEL` > fallback `claude-code` + sanitizer ASCII-token anti env-pollution. Verifica: DryRun x3 varianti risoluzione + commit-guard.js pass-case/negative-control (exit 0/2/2) + pytest verde.
+- Follow-up findings PR #317 MERGED (cb0544a): pytest regression guard `test_journal_land_trailer.py` (5 assert statici anti reintro-hardcode), CLAUDE.md JOURNAL invocation con `-CodingAgent <model-id-sessione>`, testing baseline -> `py -m pytest` (user-PATH espone venv hermes senza pytest come `python`, persistente; PATH lasciato as-is per scelta Eduardo).
+- L-041 promossa in aa01 learnings: hook fail-open + BOM stdin PS5.1 = test vacuo false-PASS, negative control obbligatorio su test di guard (triade L-038 false-broken / L-040 false-fail / L-041 false-pass). Memorie: gotcha 8 variante test-hook + fold-race n=2 + indice.
+- Fold-race variante human-merge vissuta e recuperata: merge manuale #316 mid-session -> push follow-up ha ricreato il branch auto-deleted (orfano, no PR) -> recovery cherry-pick su branch fresco da main (#317) + delete orfano. Red flag operativo: output push `[new branch]` su branch "esistente".
+
+### Da fare
+- (nessun follow-up aperto su questo filone)
+
+### Note
+- Questa entry = primo land reale con `-CodingAgent claude-fable-5` (dogfood immediato del fix).
+
+---
+
 ## 2026-06-10 (refresh coordinamento hub: GOALS + STATUS ground-truth -> PR #318)
 
 ### Completato
