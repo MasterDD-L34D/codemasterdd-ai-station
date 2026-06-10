@@ -73,7 +73,7 @@ Definire quale strumento / modello / accesso usare per ogni fase. Evita: usare s
 | Review | QA edit recente | Claude Code Max | Opus | `git diff` audit + semantics |
 | Compact / Archivio | chiusura sessione | Claude Code | Opus / fs | COMPACT + JOURNAL + memory |
 
-**Post-Max (transition ~17/06+)**: "Capability-max" + "Planning strategico" -> **Groq 70B** (free) o **OpenAI gpt-4o** (paid overflow); Claude API on-demand pay-per-use per task critici, daily work shift verso Aider+cloud-free.
+**Post-Max (transition ~17/06+, ADR-0030 Hybrid A1)**: "Capability-max" + "Planning strategico" -> **Claude Code Pro $20/mo** (primary); se Pro daily-limit -> **Claude API on-demand** (overflow ad-hoc, cap $10-20/mese ADR-0023, log via `scripts/claude-api/log_spend.py`); routine fallback **Gemini CLI free**; emergency **OpenRouter**. Daily coding resta Aider local/cloud-free.
 
 ## Routing consigliato per scenario
 
@@ -84,7 +84,7 @@ NotebookLM browser (Gemini Pro) per corpus analysis -> synthesis back a repo com
 Claude Code nativa (Opus via Max; post-Max via API o Sonnet se costo eccessivo). Integrazione nativa filesystem + Glob/Grep/Edit/Read -> file scritti nel repo (file-first).
 
 ### Se devo scrivere documenti, backlog, ADR
-Claude Code Opus (Max). Post-Max: Claude API pay-per-use (ADR strategico) OR Groq 70B via `aider-groq-bypass` (ADR operativo semplice). Reasoning strategico + consistency di stile.
+Claude Code Opus (Max). Post-Max (ADR-0030): Claude Code Pro (primary strategico) OR Claude API on-demand (overflow, ADR-0023) OR Groq 70B via `aider-groq-bypass` (ADR operativo semplice). Reasoning strategico + consistency di stile.
 
 ### Se devo lavorare in locale per privacy o costo
 Aider + Ollama. Modello locale primario: `qwen2.5-coder:7b` (cosmetic) + `qwen2.5-coder:14b-q2_K` (behavior; su Ryzen preferire q4-full). Passa al cloud quando emerge task oltre capability 14B locale (safe-fail dopo 2 retry).
@@ -155,7 +155,7 @@ Dogfood Fase 6 (n=8) ha rivelato che la success-rate delega degrada col numero d
 **Scenario A full-sovereign confermato Accepted 2026-05-07** (ADR-0015), operativo dalla transition Max. Soft-override esteso n>=12 con 5 rationale empirici; cumulative al 2026-05-09 zero trigger attivati (PASS OpenCode 30B MoE 3/3, Aider Fase 6 fail rate 8.3%).
 
 - **Durante Max** (fino a transition ~17/06): Claude Code Opus per comprensione/planning/multi-file/strategic; Aider + Qwen local (o Ryzen q4) per coding 1-file routine; Aider + Groq/Cerebras cloud per coding 1-file speed-critical (privacy permitting); **OpenCode + qwen3-coder:30b** per multi-step agentic con tool calls.
-- **Post-transition (Fase 8 sovereign)**: Aider + Ollama daily-driver; OpenCode + Ollama 30B MoE per agentic multi-step; cloud free Aider-side per speed/capability marginale (NON OpenCode, rate-limited). Claude Code Max dismesso. **Tier 0 strategic** -> Claude API on-demand pay-per-use, budget cap $10-20/mese (ADR-0023); trigger reactivation Pro: utilizzo >$20/mese 2 mesi consecutivi. Per repo sensibili: Qwen 14B Q2 + diff locale.
+- **Post-transition (Fase 8 sovereign)**: Aider + Ollama daily-driver; OpenCode + Ollama 30B MoE per agentic multi-step; cloud free Aider-side per speed/capability marginale (NON OpenCode, rate-limited). Claude Code Max dismesso. **Tier 0 strategic** -> Claude Code Pro $20/mo primary (ADR-0030 Hybrid A1, supersede parziale ADR-0023); Claude API on-demand = overflow ad-hoc se Pro daily-limit, budget cap $10-20/mese (ADR-0023), tracking `logs/claude-api-spend-*` via `scripts/claude-api/log_spend.py`. Per repo sensibili: Qwen 14B Q2 + diff locale.
 - **Privacy validation Synesthesia** (criterio #3 ADR-0014): DEROGATO retroattivo, completamento post agosto 2026 (riattivazione pre-esame UniUPO).
 - **Trigger ri-evaluation soft-override**: silent-corruption working-tree >=1 caso reale -> ADR-0015 addendum + scenario B revisited; fail rate cumulative >15% -> revisione routing tier; privacy violation in repo non-sensitive -> ADR addendum reactive.
 - **Prossimo test** (deferred SPRINT_02): n>=3 data points constraint-count addizionali per ADR-0016 Accepted; dogfood organici OpenCode reali verso n>=20 cumulative.
