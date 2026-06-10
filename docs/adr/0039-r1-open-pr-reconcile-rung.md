@@ -1,7 +1,8 @@
 # ADR-0039 — R1 open-PR reconcile rung
 
-> Status: **Proposed** 2026-06-03. Pending: (a) 3rd SDMG harsh-reviewer falsification on the
-> BUILT code (Cognitive Protocol 7), (b) Eduardo ratify + merge -- this is a doctrine file
+> Status: **Proposed** 2026-06-03. 3rd SDMG harsh-reviewer falsification on the BUILT code
+> (Cognitive Protocol 7) done 2026-06-03 -- see "Falsification". Pending: Eduardo ratify +
+> merge -- this is a doctrine file
 > (`docs/adr/**`) = Eduardo-only-merge per ADR-0037 dec.2 / ADR-0038, so the hub does NOT
 > self-merge it. Implements the rung ADR-0037 dec.4 named as the (then-unbuilt) unblocker.
 > ASCII-first (ADR-0021). **This ADR grants NO autonomy by itself -- the rung only OPENS PRs;
