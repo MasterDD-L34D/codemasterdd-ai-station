@@ -12,14 +12,14 @@
 - **Priorita' bassa**: L1-L5 opportunistic, keep-with-trigger (no action proattiva).
 - **ADR-0017 rollout**: U0-scaffold/U1-U6 chiusi; stack DECOMMISSIONED via OD-009 opzione B 2026-05-28. **U0-test aider --browser** ancora open (no completion evidence).
 - **Bloccato da**: B1-B3 tutti chiusi 2026-05-28.
-- **X cross-repo orchestrator**: X1/X2 done. **X3/X4/X5 window elapsed** -- le finestre post-Max (2026-05-20..06-19) sono ormai trascorse; il tracking cross-repo `ESCALATION_GATES.md` e' live. Re-verificare scope/rilevanza.
+- **X cross-repo orchestrator**: X1/X2 done. **X3/X4/X5 CHIUSI** -- re-verify 2026-06-10 (0 eventi in-window, window mai instrumentata) + ratifica Eduardo 2026-06-11: X4 = DEFER + retire counter, X5 = superseded.
 
 **Cose che devi fare adesso** (8 item OPEN):
 - **U0-test** (~10min): prova aider --browser per 1-2 dev-loop session. Gate UX accettabile -> ADR-0017 step 1+ deferred.
 - **M5 Synesthesia**: dormant UniUPO -- riapri ago 2026.
 - **M14 AA01 Task D**: Eduardo-direct, vault Card 3/4 (sibling-peer boundary, non codemasterdd action).
 - **L1-L5**: opportunistic, no action proattiva.
-- **X3/X4/X5**: window elapsed -> re-verify contro `ESCALATION_GATES.md` live prima di decidere BUILD/DEFER.
+- **X3/X4/X5**: CHIUSI (X4 ratificato DEFER + retire counter 2026-06-11; dolori reali coperti dal canale fleet governor R0/R1).
 
 Pattern di chiusura applicato: marker stale = anti-pattern #19 -> ground-truth verify (log conteggi + ADR status + sprint scope) prima di assumere "open".
 
@@ -48,11 +48,11 @@ Pattern di chiusura applicato: marker stale = anti-pattern #19 -> ground-truth v
 
 - [ ] **U0-test** — Step 0 quick-win: abilita `aider --browser`, prova 1-2 sessioni dev-loop. Gate: UX accettabile? Se sì → procedi. Se no → deferred step 1+. (No completion evidence.)
 
-### Cross-repo orchestrator (Gate E re-verified 2026-06-10 -- decisione X4 a Eduardo)
+### Cross-repo orchestrator (Gate E CHIUSO -- X4 ratificato DEFER 2026-06-11)
 
 - [x] **X3** Gate E empirical window 30gg post-Max (2026-05-20 -> 2026-06-19): **re-verify DONE 2026-06-10**. (a) Claim "window elapsed al 2026-06-03" ERRATO: la window scade il 06-19 (al 06-03 erano 2 settimane; al 10-06 sono 3 su 4.3). (b) Eventi REALI loggati in-window = **0**: `logs/coord-events-2026-05.md` contiene solo 2 probe del 05-14 pre-window (marcate "NOT a real event"); `coord-events-2026-06.md` inesistente; `logs/escalation-gates-2026-05.md` = template con placeholder `<fill in>` mai compilati; 0 reminder-marker in-window (solo W20 pre-window; schtask `GateELoggingReminder` attivo, last-run 06-01, next 06-14). (c) Verdetto: window NON instrumentata = L-016 materializzato nonostante design anti-L-016; conferma indipendente JOURNAL 2026-06-01 ground-truth ("Gate-E coord-pain log = 0 eventi reali... logging-gap, non zero-dolore: tutti e 4 i dolori confermati reali").
-- [ ] **X4** Gate E decision -- **decisione Eduardo entro ~06-20**. Dati: 0 eventi/wk loggati su 3 settimane elapsed (<2/wk). Framing "BUILD full / MINIMAL / DEFER" superato: Component 1 gia' shipped v0.2 (`c2cb816` 05-14) -> v0.3 (`bcd0f45`) -> unify in dogfood-ui (#196); Gate E reframed 05-14 a FEEDBACK METRIC (`ESCALATION_GATES.md`: <2/wk = "continue v0.2 stable, defer v0.3 iteration"). **Raccomandazione data-driven: DEFER + retire del counter** -- (1) criterio letterale: 0 < 2/wk; (2) il counter misura logging-discipline, non pain (zero = gap, non zero-dolore); (3) re-instrument = ripetere esperimento gia' fallito (auto-instrument ucciso da SDMG 06-01 come self-licking); (4) i 4 dolori reali hanno gia' canale segnale nel fleet governor R0/R1. Alternative: re-run window instrumentata / iterate v0.3 su segnale qualitativo.
-- [ ] **X5** Component 1 dashboard implementation: **MOOT come build** -- la dashboard e' stata implementata e iterata PRIMA della window (v0.2 -> v0.3 -> dogfood-ui unify #196); nessun esito X4 puo' piu' triggerare una build. Conseguenza: alla ratifica X4 chiudere X5 come superseded; se Eduardo sceglie il re-run della window, X5 si ridefinisce come "v0.3+ iteration priority", non build.
+- [x] **X4** Gate E decision -- **RATIFICATO Eduardo 2026-06-11: DEFER + retire counter** (via AskUserQuestion strutturato, sessione coordinatore). Dati: 0 eventi/wk loggati su 3 settimane elapsed (<2/wk). Framing "BUILD full / MINIMAL / DEFER" superato: Component 1 gia' shipped v0.2 (`c2cb816` 05-14) -> v0.3 (`bcd0f45`) -> unify in dogfood-ui (#196); Gate E reframed 05-14 a FEEDBACK METRIC (`ESCALATION_GATES.md`: <2/wk = "continue v0.2 stable, defer v0.3 iteration"). **Raccomandazione data-driven: DEFER + retire del counter** -- (1) criterio letterale: 0 < 2/wk; (2) il counter misura logging-discipline, non pain (zero = gap, non zero-dolore); (3) re-instrument = ripetere esperimento gia' fallito (auto-instrument ucciso da SDMG 06-01 come self-licking); (4) i 4 dolori reali hanno gia' canale segnale nel fleet governor R0/R1. Alternative: re-run window instrumentata / iterate v0.3 su segnale qualitativo.
+- [x] **X5** Component 1 dashboard implementation: **CHIUSO superseded 2026-06-11** (conseguenza ratifica X4 DEFER) -- la dashboard era gia' implementata e iterata PRIMA della window (v0.2 -> v0.3 -> dogfood-ui unify #196); nessun esito X4 poteva piu' triggerare una build.
 
 ---
 

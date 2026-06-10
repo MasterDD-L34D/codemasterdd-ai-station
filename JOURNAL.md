@@ -19,6 +19,24 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-06-11 (coordinatore: raccolta chip 7/7 + ratifiche Eduardo -- Short, X4, vault merge)
+
+### Completato
+- **Raccolta chip 7/7 eseguiti** (verifica merge ground-truth gh): Godot #467 MERGED (mirror Gate-5, issue #466 closed, GUT verde) + Game #2726/#2728 MERGED (burn-down batch-2: 32 re-verified + 3 verdetti owner-gated) + cdd #316/#317/#318/#322 MERGED + vault #255/#256 OPEN (gate Eduardo) + cdd #321/#323 OPEN al momento della raccolta. Zero branch stranded. Seguito Ryzen rilevato: #2727 (forward overcharge ai phone) shippato a supporto del mirror Godot -- coordinamento cross-machine OK.
+- **Merge eseguiti** (merge-authority cdd): #323 (mirror org-discovery) squash a0a0e7d; #321 (Gate-E re-verify) squash ff35a1d previa risoluzione conflitto JOURNAL in worktree isolato (entrambi i lati, newest-first; merge-commit con trailer ADR-0011). Pulizia 6 branch locali merged.
+- **Ratifiche Eduardo** (3 round AskUserQuestion strutturato recommended-first): (1) vault #255+#256 -> merge entrambi (comandi consegnati a Eduardo); (2) #323 merge ora; (3) **X4 = DEFER + retire counter** -> BACKLOG X3/X4/X5 CHIUSI; (4) API_KEY in vault zip history = morta/test, ignora; (5) **next Short 6 repo ratificati** -> GOALS.md aggiornato: Game SPEC-I completion (lane Ryzen) / Godot AI playtest ladder / Game-DB versioned reads / vault eng-graph integration / **evo-swarm PARK esplicito** / cdd post-Max readiness + ADR-0038/0039 in-sprint.
+
+### Da fare
+- Eduardo: merge vault #255 + #256 (comandi in chat).
+- Chip nuovi Short (spawned questa sessione): Godot ladder item-4, cdd post-Max readiness, ADR-0038/0039 ratify-prep, Game-DB versioned-reads dispatch, vault eng-graph integration.
+- Replica dedupe clv2 su Ryzen (invariato, dal Ryzen).
+
+### Note
+- Fold-race evitato sul conflitto #321: risoluzione in worktree throwaway, HEAD condiviso mai switchato (Protocol 1).
+- Game next Short = ratify-reality (Ryzen gia' in esecuzione SPEC-I); nessun chip Game per non collidere con la lane.
+
+---
+
 ## 2026-06-11 (mirror backup: audit pilastro cross-fleet-reproducibility -> org-wide discovery, PR #323)
 
 ### Completato
