@@ -19,6 +19,23 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-06-11 (S1c delivered: sourceKey PR #191 MERGE-READY, ciclo Jules 4)
+
+### Completato
+- **OQ8 chiuso**: Game#2738 merged da Eduardo (1636814) -- authority rule 4.6 live.
+- **S1c ratificato** (AskUserQuestion: sourceKey recommended) + **dispatch ciclo 4**: issue #190, sessione `2637890920233166714`, COMPLETED ~25min, patch 9 file = contratto esatto INCLUSO schema-reference regen (lesson #185 codificata nel contratto e rispettata da Jules).
+- **Delivery full-auto**: patch-apply -> PR #191 -> pre-push verde (mocked suite + schema:doc:check) -> CI 10/10 PASS al primo giro.
+- **Triage MERGE-READY**; Codex P2 (sourceKey overwrite su re-import multi-source, ultima sorgente vince) = reale ma out-of-scope S1c -> tracciato **issue #192** (decisione design: quale source autoritativa; rivalutare col prossimo fidelity report, chiudere se zero collisioni).
+
+### Da fare
+- Eduardo: merge #191. Post-merge: re-run fidelity workflow (lo lancio io) -> matching atteso da 6 a ~ordine-reale -> decisione gate S2.
+- #192 follow-up post-report.
+
+### Note
+- 4 cicli Jules oggi su Game-DB, tutti shippati o MERGE-READY same-day; Codex 4/4 P2 fondati sullo stream.
+
+---
+
 ## 2026-06-11 (PRIMO fidelity report reale: finding S2-GATE-1 slug key-convention loss)
 
 ### Completato
