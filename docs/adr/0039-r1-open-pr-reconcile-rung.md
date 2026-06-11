@@ -1,10 +1,13 @@
 # ADR-0039 — R1 open-PR reconcile rung
 
-> Status: **Proposed** 2026-06-03. 3rd SDMG harsh-reviewer falsification on the BUILT code
-> (Cognitive Protocol 7) done 2026-06-03 -- see "Falsification". Pending: Eduardo ratify +
-> merge -- this is a doctrine file
+> Status: **Accepted** 2026-06-11 (Eduardo; ratify dossier
+> `docs/research/adr-0038-0039-ratify-dossier-2026-06.md` -- ACCEPT with amendment P1
+> clock-free rescope + 3 R2 annotations, applied below). Proposed 2026-06-03. 3rd SDMG
+> harsh-reviewer falsification on the BUILT code
+> (Cognitive Protocol 7) done 2026-06-03 -- see "Falsification". This is a doctrine file
 > (`docs/adr/**`) = Eduardo-only-merge per ADR-0037 dec.2 / ADR-0038, so the hub does NOT
-> self-merge it. Implements the rung ADR-0037 dec.4 named as the (then-unbuilt) unblocker.
+> self-merge it (ratify PR merge = Eduardo). Implements the rung ADR-0037 dec.4 named as the
+> (then-unbuilt) unblocker.
 > ASCII-first (ADR-0021). **This ADR grants NO autonomy by itself -- the rung only OPENS PRs;
 > auto-merge (R2) stays OFF, earned later via its own dedicated ADR.**
 >
@@ -19,7 +22,10 @@ yet exist." This ADR records that rung, now BUILT: deterministic, **clock-free**
 that OPEN (never merge) one branch+PR per drifted doc, so the R2 evidence stream (>=4 clean
 HUMAN-merged PR-cycles) can begin. Two legs: codemasterdd `STATUS_MULTI_REPO.md` and vault
 `Atlas/lint-status.md` (a new governor-owned doc, Eduardo OK 2026-06-03). It does NOT touch the
-shipped issue actor (`act.py:run_r1`); both coexist.
+shipped issue actor (`act.py:run_r1`); both coexist. **Clock-free rescope (ratify amendment P1,
+2026-06-11):** the clock-free claim holds for the RENDER and for the vault leg; the codemasterdd
+STATUS leg has time-derived severity UPSTREAM of the render (eng-graph staleness band), so
+STATUS-leg PR-cycles do NOT count toward R2 until that leak is fixed -- see dec.1.
 
 ## Context
 
@@ -43,6 +49,19 @@ judgement, no wall-clock**; (3) the doc is NON-doctrine per ADR-0038; (4) the ch
 (a marker-region edit, `git revert` clean) and low-risk (status/snapshot, not behaviour/rules).
 Explicitly OUT: code, behaviour, config, anything LLM-generated, anything time-derived, anything
 outside a marker region, and every doctrine file.
+
+**Ratify amendment P1 (2026-06-11, dossier P1-1 -- empirically confirmed).** Clause (2)'s "no
+wall-clock" holds for the RENDER (no `now` parameter) and for the vault leg (content-derived
+severity, dec.5). It does NOT yet hold end-to-end for the codemasterdd STATUS leg: the
+`vault-eng-graph` severity is time-derived UPSTREAM of the render (`ingest.py`
+`date.today()` -> `parse_eng_graph_moc(now)` -> staleness band info/warning/error ->
+`payload_hash`), so a byte-identical source can yield a calendar-only region diff and open a PR
+(probe 2026-06-11: same content, `now` +40 days -> severity info->warning, different region
+row). Consequence: **STATUS-leg PR-cycles do NOT count toward R2 until the leak is fixed**
+(equivalently: only vault-leg cycles count). The 2 cycles already banked (#296/#252) remain
+valid as bootstrap-class evidence (the #296 diff was the region CREATION, not a staleness
+flip). Safety is untouched: the no-merge 3-lock (dec.4) does not depend on clock-freedom; the
+leak affects R2 EVIDENCE QUALITY only.
 
 ### 2. Doctrine exclusion = static gate + a HUMAN review checkpoint (ADR-0038)
 
@@ -136,6 +155,29 @@ ADR (two real legs now exist; do not pre-decide).
   churn; only the open PR is reused. This is expected create-if-absent behavior, not a cadence
   violation; once Eduardo merges, the leg goes `unchanged` when stable.
 
+## Ratify annotations for the future R2 ADR (2026-06-11)
+
+Recorded at ratification (Eduardo 2026-06-11; source: ratify dossier, sec "Annotazioni R2").
+Binding inputs for the future R2 ADR, alongside (a) = the amendment P1 clock-free rescope in
+dec.1/TL;DR:
+
+- **(b) Evidence class -- bootstrap vs steady-state:** create-if-absent PRs (bootstrap) and
+  steady-state-drift PRs are DIFFERENT evidence classes; R2 needs the latter. The 2 banked
+  cycles (#296/#252) are bootstrap-class (the first run CREATED the region/file). Suggested
+  reading of dec.7/dec.8: "create-PRs and steady-state drift PRs are different evidence
+  classes; R2 needs the latter".
+- **(c) Human-merge attribution is not machine-provable:** no native git/gh signal
+  distinguishes "Eduardo at the keyboard" from a hub session using the same account's ambient
+  auth. The `merged_by_human` field of `reconcile_cycles_report.is_clean_cycle` is populated
+  EXTERNALLY; the R2 count is worth exactly as much as whoever populates it.
+  "Human-merge-only" remains operator discipline + post-hoc git audit, not enforcement by
+  construction (branch protection unavailable: HTTP 403 re-verified 2026-06-11).
+- **(d) Prolonged no-run = no-run, NOT no-drift (off-ramp honesty):** cadence is manual
+  (`python -m governor.reconcile`, no cron per dec.8); no re-run since 2026-06-03, so current
+  silence is absence of runs, not evidence of stability. Maturing the earn requires periodic
+  manual runs -- OR the prolonged non-run is read honestly as the off-ramp signal that the
+  class is unnecessary.
+
 ## Falsification (SDMG Protocol 7)
 
 The DESIGN passed two harsh-reviewer rounds (v1 REJECT -> v2 SURVIVE-WITH-CHANGES, all adopted;
@@ -175,3 +217,6 @@ externality, doctrine `__post_init__` fail-closed.
   sec 6 clean-cycle; sec 7 doctrine=Eduardo-merge) -- activation note added alongside this ADR.
 - The proven open-PR shape generalized: `tools/playtest2-board-sync.sh`.
 - memory `feedback_external_repo_action_boundary` (sovereign/external write boundary).
+- Ratify dossier `docs/research/adr-0038-0039-ratify-dossier-2026-06.md` (2026-06-11: evidence
+  check + harsh-review SDMG run + P1-1 empirical probe; source of amendment P1 and the R2
+  annotations (b)-(d)).
