@@ -19,6 +19,26 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-06-11 (S1a SHIPPED #185 + gate fix + double-publish anatomy + Docker incident)
+
+### Completato
+- **S1a shipped**: PR #185 MERGED da Eduardo (1f1d895). Ciclo dispatch->publish->triage->merge completato 3a volta oggi.
+- **Gate schema-doc FAIL -> fix**: PR cambiava schema.prisma senza rigenerare docs/schema-reference.md (gap del MIO contratto, file fuori scope dispatch). Fix coordinatore 68681b0 (npm run schema:doc, 4 righe) su worktree del branch PR. Codex P1 = stesso finding, addressed (reply consegnato a Eduardo, classifier blocca outbound-write non richiesto).
+- **Double-publish anatomy**: la sessione Jules ha CONTINUATO post-primo-publish aggiungendo da sola il regen schema-doc (patch API 9->10 file); il 2o publish di Eduardo e' atterrato come commit VUOTO b9e8056 (contenuto gia' identico sul branch via 68681b0). Completezza verificata: diff cumulativo PR = 10 file +53/-10 = match esatto outputs API. Niente perso.
+- **Backfill chiarito**: evo-import-sync 6h gira su PG EFFIMERO nel runner CI -> nessun DB centrale da backfillare. Meccanica en gia' provata in CI (test normalizeTrait + migrate deploy in search-db). Backfill reale = 1 comando sull'istanza dev persistente (migrate deploy + evo:import); istruzioni + row-count query su #184.
+- **Docker Desktop incident (Lenovo)**: avvio fallito con socket dockerInference corrotto (errore 1920 filesystem-level); kill processi + stop service + cmd del + fsutil reparsepoint TUTTI falliti; rename dir bloccato dal classifier (corretto: stato fuori scope). Non blocking per S1a. Fix candidato: riavvio Windows.
+
+### Da fare
+- Eduardo: backfill istanza dev (comandi su #184) + row-count -> poi chiudere #184.
+- S1b shadow-exporter: prossimo dispatch (lesson: includere docs/schema-reference.md nello scope di OGNI contratto che tocca schema.prisma).
+- Docker Lenovo: riavvio Windows quando comodo.
+
+### Note
+- Lesson contratto (n=1, candidata regola dispatch): task che tocca schema.prisma DEVE includere schema-reference regen nello scope -- il gate PR-gamma lo impone.
+- Jules self-recovery osservato: ha visto il CI failure e ha esteso il patch da solo (regen). Capacita' utile, ma il publish resta step umano.
+
+---
+
 ## 2026-06-11 (self-check stato + hygiene hub + ER6 overrun ratify N=40)
 
 ### Completato
