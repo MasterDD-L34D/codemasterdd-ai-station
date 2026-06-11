@@ -19,6 +19,26 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-06-11 (self-check stato + hygiene hub + ER6 overrun ratify N=40)
+
+### Completato
+- **Check stato cross-repo (refresh-verify ADR-0026 #1 + agent-scanner DELTA)**: Currency-Gate catch su me stesso -- snapshot locale senza fetch nascondeva 23 commit origin 06-09..11 (GOALS/STATUS gia' refreshati, X3-X5 gia' chiusi con X4 DEFER ratificato, ADR-0038/0039 gia' Accepted, post-Max runbook #327, Game-DB versioned-reads shipped). Verificato anche: nessuna sessione Claude Code concorrente su Ryzen (cluster 10:53 = Desktop app Electron, non lavoro) + Jules quiet (0 awaiting x3 digest).
+- **Hygiene hub (4/4)**: digest 06-09/10 -> PR #338 (MERGED Eduardo in-sessione; il 06-11 locale = dup byte-identico di quello landed da Lenovo, rimosso post-verifica blob); gate sostitutivo Codex-capped -> harsh-reviewer SURVIVE (probe 4/4: perimetro, template, ASCII byte-level redo dopo falso-pass grep -P, trailer ADR-0011); sync ff-only Godot `ca99e51` (8 .uid editor-locali stashati reversibili, tutti DIFFER dai canonici) + Game-DB `9ac14cf`; stash `ryzen-wip-monitor-2026-05-20` = MORTO (patcha dogfood-ui decommissionata OD-009; drop = comando Eduardo); 9 branch merged potati (SHA in reflog), 3 CLOSED-unmerged tenuti.
+- **ER6 overrun re-run N=40 (residuo #1 handoff Game 06-10) -> Game PR #2734**: 5 run dir (2 ratify-grade process-isolated). Meccanismo deterministico 40/40: griglia tick t2/5/8/11, +1 morde solo on-grid <=t8 (abisso (2,5,8,8) vs (2,5,8,11)); t9+ = tick cap-clamped no-op (atollo). Outcome-neutro al floor ISO; il "-17pp" della prima run = artefatto same-process (stesso fantasma +0.20 del pack 06-10). Ratifica master-dd (AskUserQuestion strutturato, ri-confermata DOPO la correzione artefatto): RATIFIED as-built, nicchia fast-escalation. + annotato gap board-6x6 dell'evidence 06-10 (#2725 misurava solo rescue) + 2 ticket P3 (TKT-ER6-CARRYOVER fork design; TKT-SIM-PROBE-ENTROPY floor atollo +0.33 tra armi identiche).
+
+### Da fare
+- Eduardo merge: Game #2734 (ER6 ratify) + triage Game #2683 (bot dist). Claude Pro subscribe pre-~06-17 (runbook #327).
+- Game next (handoff): ER7 flag-ON N=40 pilot badlands -- ATTENZIONE protocollo per-arm isolato + floor per-gamba (TKT-SIM-PROBE-ENTROPY).
+- Minori: Godot stash .uid droppabile quando vuoi; Game scratch `_pr-body-fase1-plan.md` (RECON maggio) candidato delete; cdd `git stash drop stash@{0}` comando pronto.
+
+### Note
+- **Probe gotcha (n=2 conferme)**: evidence-grade = UN processo node per arm + `--aggregate`; same-process contamina le armi via stato modulo-globale. Su board authored serve `--modulation duo_hardcore` (senza: grid 6x6, entry tiles off-grid, spawner muto). Ora documentato nell'header del probe, non solo nel pack 06-10.
+- Gate sostitutivo sano: arbitro read-only ha rifiutato SURVIVE cieco e chiesto probe all'invocatore (BLOCK-on-evidence) -- pattern da tenere.
+- Sessione parallela (Lenovo) ha landato in-flight #339..#344 (rung run1 + vault #258 CLOSED/GC + RFC4 + S1a dispatch) -- journal-land race n=2, helper abort+restore da contract, recovery ff-only + re-insert.
+- Memory `project_fleet_governor` aggiornata (ADR ratificati, R1 2/4, X-gates chiusi, cadenza weekly).
+
+---
+
 ## 2026-06-11 (S1a dispatch: i18n trait pipeline a Jules, issue #184)
 
 ### Completato
