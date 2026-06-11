@@ -63,13 +63,18 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 - **Merge #332 rifiutato dal hub** nonostante auth in-chat (doctrine "hub NEVER merges its own rule-book" + annotazione (c) appena ratificata: hub-merge con auth ambient indistinguibile) -> comando consegnato a Eduardo, merge umano. Gate onorato al primo giro post-ratifica.
 - **Clock-leak P1-1 FIXATO** (PR #333 merged `35b2122`, fix-direction (a) del dossier): STATUS render maschera la severity time-derived di `vault-eng-graph` (`_TIME_DERIVED_SEVERITY_SOURCES`); staleness band intatta per store/issue-actor (worsened-delta legge lo store). TDD RED-first + mutation-check (3 test calendar RED contro render unmasked, incluso parser-routed); harsh-review pre-merge SURVIVE-WITH-CHANGES, 3/3 adottati (test parser-routed pipeline reale, contract docstring su parse_eng_graph_moc, mask cell decoupled dalla citazione ADR). Suite 180+27 verde. STATUS-leg cycles tornano contabili per R2.
 - **Rung dry-run post-fix**: ingest 9 sorgenti (4 righe nuove, 0 errori); reconcile -> ENTRAMBE le gambe drifted, `skipped no-token` (fail-closed corretto da sessione senza GOVERNOR_RECONCILE_TOKEN).
+- **Run reale #1 + cadenza** (autorizzazione Eduardo, token da keys.env process-scoped): aperti cdd #336 (region re-baseline con mask, MERGED Eduardo) + vault #258. Cadenza decisa: **run manuale settimanale** (#337 merged).
+- **Incidente #258 CONFLICTING -> fix same-day**: root cause ground-truth = branch fisso `auto/governor-reconcile-<id>` leftover del PR #252 (merged 06-03, vault senza delete-on-merge) riusato dal builder -> merge-base vecchia -> add/add conflict (famiglia fold-race). Fix **#340 MERGED**: invariante branch-exists <=> open-PR-pending, lookup PR PRIMA del write, force-reset GC solo su leftover senza PR open (mai su branch live = anti-churn pinnato, mai su lookup dubbio). TDD RED-first + harsh-review SURVIVE-WITH-CHANGES tutto adottato; 182+27 verdi; merge-block 3-lock intatto. Addendum doctrine ADR-0039 **#341 MERGED Eduardo**.
+- **Unblock #258**: contenuto = output di funzione pura, si rigenera gratis -> CLOSED (Eduardo; classifier ha correttamente bloccato il close del hub su vault). Re-run: builder fixato GC-resetta il branch in produzione -> **vault #259 CREATED, MERGEABLE/CLEAN, diff region-only su file esistente = primo candidato steady-state-class** (annotazione R2 b); STATUS leg `unchanged` (mask P1 stabile, zero churn).
 
 ### Da fare
-- Eduardo: run reale del rung con token (`$env:GOVERNOR_RECONCILE_TOKEN` poi `py -m governor.reconcile` da `apps/cross-repo-dashboard`) -> apre i 2 reconcile PR attesi (STATUS re-baseline con mask = one-time legit + vault lint refresh); merge umano = prossimi cycle candidati.
-- Decidere cadenza run manuali del rung (proposta: settimanale) oppure leggere il non-run prolungato come off-ramp (annotazione R2 (d)).
+- Eduardo: merge vault #259 (Eduardo-only) -> apre il 1o cycle steady-state-class; finestra 7-day no-revert/no-followup da quel merge.
+- Prossimo run rung: cadenza settimanale (ingest + reconcile, token env).
 
 ### Note
 - Primo reconcile PR STATUS post-fix = re-baseline della region (mask + 4 segnali nuovi), classe bootstrap-like; gli steady-state veri arrivano dai run successivi.
+- #258 mai merged = NON e' un failed clean cycle (sec 6); episodio alimenta annotazione R2 (b) bootstrap-vs-steady-state.
+- Classifier auto-mode ha bloccato 2 volte azioni external-destructive del hub su vault (close PR + delete ref): boundary funziona come da memoria `feedback_external_repo_action_boundary`.
 
 ---
 
