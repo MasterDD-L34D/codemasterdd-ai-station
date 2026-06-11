@@ -10,15 +10,16 @@ import re
 
 
 def _recorder(responses):
-    """(http_fn, calls). http_fn pops a canned (status, data) per call, recording (method, url).
-    Drives the REAL open_or_update_pr with NO network."""
+    """(http_fn, calls). http_fn pops a canned (status, data) per call, recording
+    (method, url, body). Drives the REAL open_or_update_pr with NO network."""
     calls = []
     seq = list(responses)
 
     def http(method, url, token=None, json_body=None, timeout=20):
-        calls.append({"method": method, "url": url})
+        calls.append({"method": method, "url": url, "body": json_body})
         return seq.pop(0) if seq else (200, {})
 
+    http.remaining = seq   # tests assert it drains: a DROPPED http call must also go red
     return http, calls
 
 
@@ -55,10 +56,10 @@ def test_real_open_or_update_pr_never_emits_merge_route(monkeypatch):
     monkeypatch.setattr(reconcile, "_write_token", lambda environ=None: "wtok")
     http, calls = _recorder([
         (200, {"object": {"sha": "basesha"}}),            # GET base ref
-        (201, {}),                                         # POST create branch ref
+        (201, {}),                                         # POST create branch ref (fresh)
+        (200, []),                                         # GET open prs (none)
         (404, {"message": "Not Found"}),                   # GET contents?ref=branch (new file)
         (201, {"content": {}}),                            # PUT contents
-        (200, []),                                         # GET open prs (none)
         (201, {"number": 7, "html_url": "http://pr/7"}),   # POST create pr
     ])
     monkeypatch.setattr(reconcile, "_http", http)
@@ -69,19 +70,22 @@ def test_real_open_or_update_pr_never_emits_merge_route(monkeypatch):
     assert out["action"] == "created" and out["number"] == 7
     for c in calls:
         assert "/merge" not in c["url"], f"merge route emitted: {c}"
+    # fresh-branch path: never a ref force-reset (PATCH is the GC-only verb)
     assert all(c["method"] in ("GET", "POST", "PUT") for c in calls)
+    assert not http.remaining, "canned responses under-consumed (an http call was dropped)"
 
 
 def test_real_open_or_update_pr_reuse_path_also_no_merge(monkeypatch):
-    """Reuse path (an open PR already exists for the branch): still NEVER a merge route."""
+    """Reuse path (an open PR already exists for the branch): still NEVER a merge route,
+    and NEVER a ref force-reset (the open PR's branch is live, not stale -- anti-churn)."""
     from governor import reconcile
     monkeypatch.setattr(reconcile, "_write_token", lambda environ=None: "wtok")
     http, calls = _recorder([
         (200, {"object": {"sha": "basesha"}}),            # GET base ref
         (422, {"message": "Reference already exists"}),    # POST create branch ref (exists)
+        (200, [{"number": 9, "html_url": "http://pr/9"}]), # GET open prs -> live branch, reuse 9
         (200, {"sha": "filesha", "encoding": "base64", "content": "b2xk"}),  # GET file ("old")
         (200, {"content": {}}),                            # PUT contents (content differs)
-        (200, [{"number": 9, "html_url": "http://pr/9"}]), # GET open prs -> reuse 9
     ])
     monkeypatch.setattr(reconcile, "_http", http)
     out = reconcile._real_open_or_update_pr(
@@ -91,6 +95,77 @@ def test_real_open_or_update_pr_reuse_path_also_no_merge(monkeypatch):
     assert out["action"] == "reused" and out["number"] == 9
     for c in calls:
         assert "/merge" not in c["url"], f"merge route emitted: {c}"
+    assert all(c["method"] != "PATCH" for c in calls), "live open-PR branch must NOT be reset"
+    assert not http.remaining, "canned responses under-consumed (an http call was dropped)"
+
+
+def test_real_open_or_update_pr_resets_stale_branch_without_open_pr(monkeypatch):
+    """Stale-branch GC (vault #258 incident 2026-06-11): the actor's contract is
+    branch-exists <=> open-PR-pending. A branch that exists (422) with NO open PR is a
+    leftover from an already-merged/closed PR (vault has no delete-on-merge): reusing it
+    keeps the OLD merge-base -> add/add conflict with main (#252 -> #258). The builder must
+    force-reset the ref to the CURRENT base sha BEFORE writing, so the new PR diffs cleanly
+    against today's main."""
+    from governor import reconcile
+    monkeypatch.setattr(reconcile, "_write_token", lambda environ=None: "wtok")
+    http, calls = _recorder([
+        (200, {"object": {"sha": "basesha"}}),            # GET base ref
+        (422, {"message": "Reference already exists"}),    # POST create branch ref (stale)
+        (200, []),                                         # GET open prs -> NONE = stale leftover
+        (200, {}),                                         # PATCH ref force-reset to basesha
+        (200, {"sha": "mainsha", "encoding": "base64", "content": "b2xk"}),  # GET file (= main)
+        (200, {"content": {}}),                            # PUT contents (region drifted)
+        (201, {"number": 11, "html_url": "http://pr/11"}), # POST create pr (fresh diff)
+    ])
+    monkeypatch.setattr(reconcile, "_http", http)
+    out = reconcile._real_open_or_update_pr(
+        "MasterDD-L34D/vault", "auto/governor-reconcile-vault-lint-status", "main",
+        "Atlas/lint-status.md", "NEW CONTENT", "vault-lint-status")
+    assert out["action"] == "created" and out["number"] == 11
+    patches = [c for c in calls if c["method"] == "PATCH"]
+    assert len(patches) == 1, "exactly one ref force-reset for a stale branch"
+    assert patches[0]["url"].endswith(
+        "/git/refs/heads/auto/governor-reconcile-vault-lint-status")
+    assert patches[0]["body"] == {"sha": "basesha", "force": True}
+    # the reset happens BEFORE any content write
+    put_idx = next(i for i, c in enumerate(calls) if c["method"] == "PUT")
+    patch_idx = next(i for i, c in enumerate(calls) if c["method"] == "PATCH")
+    assert patch_idx < put_idx
+    for c in calls:
+        assert "/merge" not in c["url"], f"merge route emitted: {c}"
+    assert not http.remaining, "canned responses under-consumed (an http call was dropped)"
+
+
+def test_stale_reset_with_content_equal_to_main_fails_closed(monkeypatch):
+    """Documented fail-closed edge (harsh-review probe): UNREACHABLE via the actor (its
+    contract guarantees `content` differs from main -- it only calls on drift), but a direct
+    caller passing content identical to base must NOT open a junk/empty PR: post-reset the
+    dedup skips the PUT and the zero-diff PR create surfaces as a raise (per-leg isolated)."""
+    import base64 as _b64
+    from governor import reconcile
+    monkeypatch.setattr(reconcile, "_write_token", lambda environ=None: "wtok")
+    same = "SAME AS MAIN"
+    same_b64 = _b64.b64encode(same.encode("utf-8")).decode("ascii")
+    http, calls = _recorder([
+        (200, {"object": {"sha": "basesha"}}),            # GET base ref
+        (422, {"message": "Reference already exists"}),    # POST create branch ref (stale)
+        (200, []),                                         # GET open prs -> NONE = stale
+        (200, {}),                                         # PATCH ref force-reset
+        (200, {"sha": "ms", "encoding": "base64", "content": same_b64}),  # file == content
+        (422, {"message": "No commits between main and branch"}),         # POST pr -> empty
+    ])
+    monkeypatch.setattr(reconcile, "_http", http)
+    try:
+        reconcile._real_open_or_update_pr(
+            "MasterDD-L34D/vault", "auto/governor-reconcile-vault-lint-status", "main",
+            "Atlas/lint-status.md", same, "vault-lint-status")
+        assert False, "expected RuntimeError on zero-diff PR create"
+    except RuntimeError as e:
+        assert "create PR" in str(e)
+    assert not any(c["method"] == "PUT" for c in calls), "dedup must skip the no-op PUT"
+    for c in calls:
+        assert "/merge" not in c["url"], f"merge route emitted: {c}"
+    assert not http.remaining, "canned responses under-consumed (an http call was dropped)"
 
 
 def test_real_open_or_update_pr_failclosed_without_write_token(monkeypatch):

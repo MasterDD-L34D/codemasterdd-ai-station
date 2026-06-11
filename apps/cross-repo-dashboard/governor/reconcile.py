@@ -399,8 +399,25 @@ def _real_open_or_update_pr(repo, branch, base, path, content, rid):
     """Create/update `branch` with `content` at `path`, then open (or reuse) a PR base<-branch.
     NEVER merges. Requires GOVERNOR_RECONCILE_TOKEN (no ambient fallback for the WRITE).
 
-    Idempotent at the branch level: if the branch already carries identical content the PUT is
-    skipped (no new commit / no new trace-id -> no churn). Reuses an open PR for the branch."""
+    Idempotent at the branch level (LIVE branches; a stale branch is reset once, below): if
+    the branch already carries identical content the PUT is skipped (no new commit / no new
+    trace-id -> no churn). Reuses an open PR for the branch.
+
+    Stale-branch GC (vault #258 incident 2026-06-11): the actor's contract is
+    branch-exists <=> open-PR-pending. If the branch already exists (422) but NO open PR
+    points at it, it is a leftover from an already-merged/closed PR (repos without
+    delete-on-merge keep it): reusing it would diff against the OLD merge-base
+    (add/add conflict -- #252 -> #258). So the ref is force-reset to the CURRENT base sha
+    BEFORE any write; the discarded commits are the actor's own dead deterministic commits.
+    A LIVE branch (open PR present) is NEVER reset -- the dedup keeps it churn-free.
+    The GC assumes the `auto/governor-reconcile-*` namespace is ACTOR-EXCLUSIVE: a human
+    commit pushed there without an open PR is garbage-collected by the reset (by design;
+    humans own every other namespace).
+
+    Precondition (actor contract): `content` DIFFERS from the file on `base` (the actor
+    calls this only on drift), so post-reset the dedup always PUTs. A direct caller passing
+    content identical to base ends fail-closed: dedup skips the PUT and the PR create on a
+    zero-diff branch raises (isolated per-leg by the actor, never a junk PR)."""
     wtok = _write_token()
     if not wtok:
         raise RuntimeError(
@@ -415,6 +432,18 @@ def _real_open_or_update_pr(repo, branch, base, path, content, rid):
                        json_body={"ref": f"refs/heads/{branch}", "sha": base_sha})
     if status not in (201, 422):   # 201 created, 422 already-exists -> both fine
         raise RuntimeError(f"create branch {branch} -> HTTP {status}")
+    branch_existed = status == 422
+    owner = repo.split("/")[0]
+    status, data = _http("GET", f"{_API}/repos/{repo}/pulls?state=open&head={owner}:{branch}",
+                         token=wtok)
+    open_pr = data[0] if (status == 200 and isinstance(data, list) and data) else None
+    # Non-200 on the PR lookup -> open_pr unknown: do NOT reset (a live PR's branch must
+    # never be destroyed on a doubt); proceed as before, the per-leg isolation catches it.
+    if branch_existed and status == 200 and open_pr is None:
+        status, _d = _http("PATCH", f"{_API}/repos/{repo}/git/refs/heads/{branch}", token=wtok,
+                           json_body={"sha": base_sha, "force": True})
+        if status != 200:
+            raise RuntimeError(f"force-reset stale branch {branch} -> HTTP {status}")
     status, data = _http("GET", f"{_API}/repos/{repo}/contents/{path}?ref={branch}", token=wtok)
     existing_b64, file_sha = "", None
     if status == 200 and isinstance(data, dict):
@@ -430,12 +459,9 @@ def _real_open_or_update_pr(repo, branch, base, path, content, rid):
                            json_body=body)
         if status not in (200, 201):
             raise RuntimeError(f"put contents {path} -> HTTP {status}")
-    owner = repo.split("/")[0]
-    status, data = _http("GET", f"{_API}/repos/{repo}/pulls?state=open&head={owner}:{branch}",
-                         token=wtok)
-    if status == 200 and isinstance(data, list) and data:
-        return {"number": data[0]["number"], "action": "reused",
-                "url": data[0].get("html_url", "")}
+    if open_pr is not None:
+        return {"number": open_pr["number"], "action": "reused",
+                "url": open_pr.get("html_url", "")}
     pr_body = (f"Deterministic reconcile of the {rid} GOVERNOR-SYNC region (R1 open-PR rung). "
                f"Human-only disposition during the earn window (actor-activation-criteria sec "
                f"6); this PR is inert until a human merges it.")
