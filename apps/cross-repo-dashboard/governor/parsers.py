@@ -147,6 +147,12 @@ def parse_eng_graph_moc(md: str, ref: str, now: date | None = None) -> Signal:
     it crosses error/90d. This inherits the classifier's first-seen suppression (uniform
     with the noisy lint sources) rather than special-casing eng-graph in the pure
     classifier. An error-stale (>90d) MOC DOES escalate first-seen (severity == error).
+
+    CONTRACT (ADR-0039 ratify amendment P1 / reconcile._TIME_DERIVED_SEVERITY_SOURCES):
+    only `severity` and `payload_hash` may absorb `now`. Every other Signal field
+    (summary, produced_at, ref, counts) MUST stay content-only -- the STATUS render masks
+    ONLY the severity column, so folding `now` into any other field would reopen the
+    calendar-only-PR leak (guarded by the parser-routed render regression test).
     """
     text = md or ''
     m_lv = _RE_ENG_GRAPH_LAST_VERIFIED.search(text)
