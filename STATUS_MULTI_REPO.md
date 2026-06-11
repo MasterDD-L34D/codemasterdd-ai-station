@@ -36,7 +36,7 @@ _Auto-synced governor signal snapshot; human prose elsewhere is authoritative._
 
 | Repo | Status | Next action | Deadline/trigger | Blocker |
 |------|--------|-------------|------------------|---------|
-| **codemasterdd-ai-station** | HEAD `44b0855` (2026-06-10). 40 PR merged 05-28->06-10 (jules-dispatch fail-closed ADR-0037 #290, R1 rung #295, docs reorg #302, journal-land trailer #316). 0 PR open. SPRINT_02 archiviato in `docs/archive/` (no SPRINT_03). Stack ADR-0017 DOWN (scaffold opt-in, expected). Ollama DOWN al audit. | Ratify ADR-0038/0039 (Eduardo) + set next Short (GOALS.md PROPOSTE) | -- | Nessuno |
+| **codemasterdd-ai-station** | HEAD `44b0855` (2026-06-10). 40 PR merged 05-28->06-10 (jules-dispatch fail-closed ADR-0037 #290, R1 rung #295, docs reorg #302, journal-land trailer #316). 0 PR open. SPRINT_02 archiviato in `docs/archive/` (no SPRINT_03). Stack ADR-0017 DOWN (scaffold opt-in, expected). Ollama DOWN al audit. | Set next Short (GOALS.md PROPOSTE); ratify ADR-0038/0039 DONE 2026-06-11 (Accepted con amendment) | -- | Nessuno |
 | **Synesthesia** | Dormant, HEAD `05f8a92` (invariato, verificato 06-10) | Riattiva pre-esame UniUPO | ~agosto 2026 | Nessuno (dormant intenzionale) |
 | **Game (Evo-Tactics)** | HEAD main `55adfb4` (2026-06-10, #2722). ~297 PR merged 05-28->06-10 (daily-ship massivo). **OD-058 wound cutover SHIPPED flip-ON** (D1 probe #2713 -> D2 read-apply #2714 -> D3 write-trigger #2720 + vcSnapshot coop ledger #2722); ER6 StressWave flag-OFF #2712; **SPEC-I fork ratificato + flip active** #2705; Gate-5 #2716 + tracker OD-058-build #2531 CLOSED 06-10. Lenovo clone behind 15 + tmp files (lane = Ryzen). | Triage open: #2723 (ER7 biome tick, non-draft) + #2683 (DRAFT mission-console) -- lane Ryzen, NO push da Lenovo (fold-race L3) | -- | Nessuno |
 | **Game-Godot-v2** | HEAD `dc88167` = **#465 AI playtest item-3 co-op PASS** (2026-06-10). 105 PR merged 05-28->06-10, 465 cumulative. Sprint corrente: co-op + Form Pulse + phone chronicle M-7 MVP (#452) + AI playtest ladder (genetics Fase-2 conclusa). 0 PR open. | Monitor (Eduardo-driven) | -- | Nessuno |
@@ -74,7 +74,7 @@ Stack `Accepted` ma in modalita' **scaffold opt-in** (containers down per defaul
 - ADR-0016 (Proposed) awaiting n>=3 data points addizionali.
 - **ADR-0036 -- Unified Orchestration Doctrine: Accepted (spine) 2026-06-01 + Deferred (auto-merge rung)**. `ORCHESTRATION.md` single cross-executor routing authority. Consolida ADR-0013/0022/0023/0030/0034/0035.
 - **ADR-0037 -- merge-autonomy model: Accepted 2026-06-03** (jules-dispatch fail-closed wrapper #290).
-- **ADR-0038 (doctrine carveout completion) + ADR-0039 (R1 open-PR reconcile rung, built #295): Proposed** -- pending SDMG harsh-review + Eduardo ratify.
+- **ADR-0038 (doctrine carveout completion) + ADR-0039 (R1 open-PR reconcile rung, built #295): Accepted 2026-06-11** (Eduardo, dossier ratifica + amendment: 0038 4 testuali + sec-7 sync; 0039 P1 clock-free rescope -- STATUS-leg cycles non contano per R2 fino a fix clock-leak -- + 3 annotazioni R2).
 **Sub-agent ecosystem**: 16 agent attivi + 5 dormant (`.claude/agents/`, scan 06-10) coprono 4 repo + cross-cutting. Dettaglio: [.claude/agents/README.md](.claude/agents/README.md), fonti in `SOURCES.md`.
 
 ---
@@ -190,7 +190,7 @@ Dormant → Attivo: Eduardo segnala riattivazione → codemasterdd riprende trac
 | **~2026-06-17** | **Claude Max scadenza** -> switch post-Max routing (tier-0 strategic on-demand, ADR-0023) | codemasterdd | Attiva budget cap $10-20/mese + tracking `logs/claude-api-spend-*` |
 | **~giugno-agosto 2026** | Synesthesia riattivazione | Synesthesia | Privacy validation 2/3 + esame prep |
 | **~2026-08-01** | **SDMG-gate quarterly review** (codemasterdd PR #194 narrow-pick 2-week empirical period -> 3 month review) | codemasterdd | Trigger: adoption rate < 30% qualifying decisions OR ADOPT-rate without executed experiment > 0 -> ADR-0026 amendment B/C |
-| **trigger-based** | **ADR-0038 + ADR-0039 ratify** (Proposed -> decisione; doctrine carveout completion + R1 open-PR reconcile rung) | codemasterdd | Trigger: SDMG harsh-review + Eduardo ratify. (ADR-0036 ratify DONE: Accepted spine 2026-06-01, auto-merge rung Deferred; ADR-0037 Accepted 2026-06-03) |
+| ~~trigger-based~~ | ~~**ADR-0038 + ADR-0039 ratify**~~ **DONE 2026-06-11**: entrambi Accepted con amendment (0038: 4 testuali + actor-criteria sec-7 sync; 0039: P1 clock-free rescope + annotazioni R2 b-d). Dossier `docs/research/adr-0038-0039-ratify-dossier-2026-06.md` | codemasterdd | Residuo: fix clock-leak eng-graph (P1-1) prima che i cycle STATUS-leg contino per R2; cadenza run manuali rung (o off-ramp) |
 
 ---
 

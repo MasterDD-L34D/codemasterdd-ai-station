@@ -148,8 +148,21 @@ judgment that a verdict "looked plausible".
 - If a bad merge ever lands: revert + downgrade that class to human-gated + amend
   ADR-0036 + record the lesson.
 - **Governance-doctrine files = Eduardo-only-merge, regardless of repo** (ADR-0037
-  decision 2): `ORCHESTRATION.md`, `docs/adr/**`, this file, authoritative `CLAUDE.md`,
-  `.claude/settings.json`, the privacy-whitelist. The hub proposes (branch + PR) but NEVER
+  decision 2 as completed by ADR-0038, Accepted 2026-06-11; sec synced at ratify):
+  - GLOBS: `docs/adr/**`, `docs/governance/**` (incl. this file), repo `.claude/**`,
+    `Archivio_Libreria_Operativa_Progetti/07_CLAUDE_CODE_OPERATING_PACKAGE/**`, plus the
+    `~/.claude/` governance subpaths (explicit positive list in ADR-0038;
+    `~/.claude/agents/**` is prospective -- the live agents dir is the repo-level
+    `.claude/agents/**`).
+  - NAMED root rule/decision files: `CLAUDE.md` (authoritative, any level), `AGENTS.md`,
+    `ORCHESTRATION.md`, `GOALS.md`, `DECISIONS_LOG.md`, `OPEN_DECISIONS.md`; plus
+    `~/.config/aider-privacy-whitelist.txt`.
+  - CATCH-ALL (content-based, ADR-0038): ANY file whose content defines rules/gates/
+    decisions/charters the hub operates under is doctrine pending classification -- when in
+    doubt, treat as doctrine + ask Eduardo. Human-review-enforced: no path-classifier can
+    evaluate content (ADR-0039 dec.2).
+
+  The hub proposes (branch + PR) but NEVER
   merges its own rule-book -- a hub that can loosen its own gate voids the gate.
 
 ## 8. Current state (2026-06-02 -- R1 built)
