@@ -19,6 +19,25 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-06-11 (Game-DB Short CLOSED: versioned reads B/S/E shipped #180 + goal-set PR #181)
+
+### Completato
+- **Gap publish scoperto e risolto**: sessione Jules `1234201908190712245` COMPLETED in 11min MA zero PR/branch su GitHub -- patch completo solo in API `outputs.changeSet.gitPatch` (baseCommitId fresh). Jules via API non auto-pubblica: serve publish dalla UI. Eduardo ha premuto publish -> PR #180 creato (7 file, +310/-1, match esatto col patch API).
+- **Acceptance verificata con output**: CI verde inclusi job `checks` (unit mapper) e `search-db` con nuovo step eseguito davvero -- `taxonomyVersionRead.db.test.js` **5/5 PASS su Postgres reale** (mapping fk-id, 404 unknown, 400 draft, q-filter, live-path regression guard).
+- **Triage jules-pr-triager**: MERGE-READY, zero P1/P2 (pattern byte-identico a traits.js, no liveFilter su snapshot, backward-compat intatta, no scope creep). Verdetto su #179.
+- **Merge Eduardo** `34feb13` -> issue #179 CLOSED (shipped end-to-end: contratto -> dispatch -> publish UI -> triage -> merge). Clone locale synced.
+- **Goal-set PR #181** (docs-only, pattern #165): Short B/S/E -> DONE, voce rimossa dal Mid, slot Short aperto per ratifica (candidati: bidi-sync RFC #4 scoping / audit-UI hardening). Trailer ADR-0011.
+
+### Da fare
+- Eduardo: merge #181 (docs-only; check eventuali commenti Codex prima).
+- Ratifica prossimo Short Game-DB (candidati dal Mid).
+- Lesson candidata AA01: "Jules API-created session non pubblica PR da sola -- publish e' uno step UI umano; il vincolo 'deliver as PR' nel prompt non basta" (famiglia segnale-indipendente L-034).
+
+### Note
+- Jules PR-review responder bot attivo sui PR Jules (commento "reporting for duty"): legge i review comment e pusha fix. Raccomandato Reactive Mode (azione solo su mention @jules) -- coerente con governance esplicita-only.
+
+---
+
 ## 2026-06-11 (status check chip Short 5/5 + ratifica ADR-0038/0039 + merge #327)
 
 ### Completato
