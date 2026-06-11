@@ -1,7 +1,7 @@
 # ADR-0038 — Doctrine carve-out completion (amends ADR-0037 decision 2)
 
-> Status: **Proposed** 2026-06-03. Pending: (a) SDMG harsh-reviewer falsification
-> (Cognitive Protocol 7), (b) Eduardo ratify + merge -- this is a doctrine file
+> Status: **Proposed** 2026-06-03. SDMG harsh-reviewer falsification (Cognitive Protocol 7)
+> done 2026-06-03 -- see "Falsification". Pending: Eduardo ratify + merge -- this is a doctrine file
 > (`docs/adr/**`) = Eduardo-only-merge per ADR-0037 dec.2, so the hub does NOT self-merge it.
 > Amends ADR-0037 decision 2 only; everything else in ADR-0037 stands. ASCII-first (ADR-0021).
 > **This amendment RESTRICTS hub self-merge (anti-self-licensing). It grants NOTHING.**
