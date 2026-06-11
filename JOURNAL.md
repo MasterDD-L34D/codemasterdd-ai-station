@@ -19,6 +19,21 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-06-11 (S2 prerequisiti: fidelity-report workflow PR GDB#188 + authority-map 4.6 Game#2738)
+
+### Completato
+- **Fidelity report portato in CI** (Docker Lenovo KO -> niente PG locale): nuovo workflow `fidelity-report.yml` (workflow_dispatch) su Game-DB **PR #188** -- PG effimero, evo:import da Game checkout (i18n-aware), release snapshot effimero `v0.0.0-fidelity-<runid>` via stesso `snapshotAllMasters` condiviso (audit skip dichiarato), `evo:export --diff` vs stesso checkout, report = artifact 30gg + jq summary. DB ricostruito DA Game e diffato indietro = misura model-gap puro, il numero che il gate S2 chiede. YAML validato PyYAML. Su #188: ZERO check CI (PR tocca solo .github/workflows -> nessun workflow triggera; MERGEABLE).
+- **Authority-map OQ8** su Game **PR #2738**: regola 4.6 "Provenienza taxonomy content" (Game-DB released version = upstream SoT; fasi oneste S1 import-only invariato / S2 generated-via-PR + gate + drift-rule) + riga matrice sez.5. Required verdi (governance + ci-gate PASS). Worktree pulito da origin/main (clone Game Lenovo SPORCO con lane altrui: governance_drift_report.json blocca pull -- NON toccato).
+
+### Da fare
+- Eduardo: merge GDB#188 + Game#2738 (entrambi pronti). Post-merge #188: primo dispatch del workflow = validazione + primo fidelity report reale (posso lanciarlo e monitorarlo io).
+- Con report verde su traits: decisione gate S2 (export-on-release).
+
+### Note
+- Game clone Lenovo dirty (8 file modificati + 3 stash di lane precedenti): da riconciliare in una sessione dedicata, non qui.
+
+---
+
 ## 2026-06-11 (S1b SHIPPED: #187 merged 25b0545, issue #186 closed -- Short RFC #4 S1 COMPLETO)
 
 ### Completato
