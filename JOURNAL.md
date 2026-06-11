@@ -19,6 +19,25 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-06-11 (fidelity run-2: GATE-1 chiuso, matching 6->478/2075; nuovi GATE-2/3/4)
+
+### Completato
+- **#191 merged da Eduardo** (0bf0d60) -> re-run fidelity workflow (run 27367981657, verde).
+- **S2-GATE-1 CHIUSO, sourceKey funziona**: pack glossary matching 6->478 (unexpected 668->0), pack reference 31->2075 (unexpected 2228->156), core glossary 6->470. Artifact archiviato logs/fidelity/run-27367981657.
+- **3 finding nuovi, root cause verificate** (registrati su #186, GATE-2 anche su #192):
+  - **GATE-2 description contention** (202 divergent): ordine import [glossary, reference, env_traits] -> reference.uso_funzione SOVRASCRIVE glossary.description_it (sampleDivergent inequivocabile). #192 si allarga a per-field source precedence. DESIGN CALL.
+  - **GATE-3 empty-array vs absent** (156 unexpected: conflitti 150): Game ha `[]`, import normalizza a null, export omette -> falso positivo del differ. MECCANICO (tweak classifier/exporter).
+  - **GATE-4 per-file membership** (exported_only 880/216/516): DB = unione di tutte le sorgenti, ogni file = sottoinsieme; l'export emette tutto ovunque. Serve membership tracking (sourceFiles) o export additivo dichiarato. DESIGN CALL. NB: core glossary ha ~343 trait che la rebuild-union NON ha (sorgente non letta dall'importer? da indagare).
+
+### Da fare
+- Eduardo ratifica: GATE-2 precedence (quale sorgente vince per description?) + GATE-4 membership model. GATE-3 dispatch-abile subito su OK.
+- Post GATE-2/3/4: run-3 -> decisione finale S2.
+
+### Note
+- Ladder shadow = lista di lavoro finita e misurata invece di sorprese in produzione: 2 run, 4 finding, zero write su Game.
+
+---
+
 ## 2026-06-11 (S1c delivered: sourceKey PR #191 MERGE-READY, ciclo Jules 4)
 
 ### Completato
