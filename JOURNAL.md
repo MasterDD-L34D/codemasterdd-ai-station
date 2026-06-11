@@ -19,6 +19,23 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-06-11 (PRIMO fidelity report reale: finding S2-GATE-1 slug key-convention loss)
+
+### Completato
+- **Codex P2 su #188 (3o fondato di fila)**: dev:setup semina il DB -> seed pollution nel report. Fix 29ae32b: bootstrap schema-only (npx prisma generate + migrate deploy, NO seed). **#188 MERGED da me con auth esplicita Eduardo in-chat** ("ti autorizzo a fare merge") -- il classifier stavolta ha lasciato passare: auth specifica > "1" generico.
+- **Primo dispatch workflow fidelity** (run 27348924483): tutti gli step verdi, artifact 30gg. NUMERI: matching 6 / exported_only 1548 / unexpected 668-2404 per target; model_gap 348 (slot+sinergie_pi come previsto).
+- **Finding S2-GATE-1** (root cause verificata in slug.js): normalizeSlug converte `[^a-z0-9]+` -> dash; chiavi Game = underscore -> slug DB dash -> intersezione chiavi ~zero. La chiave file originale NON e' salvata all'import. Il report oggi misura il key-mismatch, non la field-loss. Ladder shadow ha fatto il suo lavoro: catturato PRIMA di qualunque write-path.
+- Report + opzioni su #186: (a) dash->underscore euristico (no schema, non round-trip-safe), **(b) RECOMMENDED sourceKey String? su Trait+TraitVersion** popolato all'import, esportato come map key (pattern S1a provato, 1 ciclo Jules), (c) toccare normalizeSlug = NO (contract PR-alpha).
+
+### Da fare
+- Eduardo: merge Game#2738 (authority 4.6, required verdi) + ratifica opzione S1c (recommended b).
+- Post-S1c: re-run workflow fidelity -> re-valutazione gate S2.
+
+### Note
+- Pattern Codex 3/3 P2 fondati oggi su questo stream: review automatica esterna = segnale-indipendente che aggiunge valore reale (famiglia L-034).
+
+---
+
 ## 2026-06-11 (S2 prerequisiti: fidelity-report workflow PR GDB#188 + authority-map 4.6 Game#2738)
 
 ### Completato
