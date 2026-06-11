@@ -19,6 +19,24 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-06-11 (status check chip Short 5/5 + ratifica ADR-0038/0039 + merge #327)
+
+### Completato
+- **Status check chip Short (5/5 consegnati)**: Godot #468 OPEN (item-4 combat loop PASS + ladder formale); cdd #327 OPEN->MERGED; cdd #329 OPEN (dossier ADR, doctrine no-self-merge); Game-DB issue #179 + Jules session QUEUED (dispatch ok, digest 0 awaiting); vault #257 OPEN (vault-graph CLI). Vault #255/#256 di ieri ancora open (reminder a Eduardo).
+- **Ratifiche Eduardo** (AskUserQuestion recommended-first): **ADR-0038 ACCEPT con 4 amendment + follow-up actor-criteria sync**; **ADR-0039 ACCEPT con amendment P1 clock-free rescope + 3 annotazioni R2**. Esecuzione delegata a chip "apply ratifica" (post-merge #329). **#327 merge ratificato** -> squash fe489e3 + cleanup worktree post-max-cutover + 2 branch locali.
+- **Hygiene clone condiviso**: HEAD era rimasto sul branch chip adr-dossier -> rimesso su main + sync. Digest Jules 2026-06-11 orfano (untracked perche' HEAD fuori main al run del job) -> landed con questo PR.
+
+### Da fare
+- Eduardo: merge #329 (doctrine) + vault #255/#256/#257 + Godot #468 (comandi in chat).
+- Chip "apply ratifica ADR-0038/0039" dopo merge #329.
+- Triage PR Jules versioned-reads quando arriva (flusso jules-pr-triager).
+
+### Note
+- Push diretto digest a main bloccato dal classifier (sessione status-only) -> correttamente landed via PR journal-land.
+- Compass DI 88/100, 5/5 pilastri (chip mirror ha chiuso cross-fleet-reproducibility).
+
+---
+
 ## 2026-06-11 (dossier ratifica ADR-0038/0039 -- evidence check + SDMG fresh + probe P1)
 
 ### Completato
