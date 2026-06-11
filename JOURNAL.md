@@ -19,6 +19,27 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-06-11 (Game-DB: #180 merged + Jules Reactive Mode + ratifica 2o Short RFC #4 scoping)
+
+### Completato
+- **PR #180 merged da Eduardo** (34feb13) -> issue #179 CLOSED shipped. Goal-set PR #181 merged. Short "versioned reads B/S/E" CHIUSO same-day (ratifica mattina -> ship sera).
+- **Jules Reactive Mode ON** via Chrome MCP su jules.google/settings (checkbox "Only respond to comments that mention @jules", salvata + verificata persistita su reload). Razionale: PR-responder bot di default agisce su OGNI review comment -> rumore/push indesiderati durante triage; esplicito-only coerente con doctrine L-034. Nota: renderer freeze transitorio + click su layout shiftato = verifica visiva obbligatoria pre-save (find/read_page > coordinate stantie).
+- **Check ADR-0011 su squash Jules**: 34feb13 porta 2 trailer Co-authored-by ereditati dai commit bot via squash GitHub. Verdetto: NON violazione (commit del bot esterno; enforcement nostro = agent locali). Eduardo ratifica: lasciare settings "Co-authored (Jules + User)".
+- **Ratifica 2o Short Game-DB (AskUserQuestion 3 domande)**: scoping RFC #4 bidi-sync (recommended) + esecuzione immediata + Jules authoring invariato.
+- **RFC #4 scoping draft eseguito**: research ground-truth (Explore agent su Game: pack catalog = export surface, evo-import-gate = round-trip validator; lato DB: import i18n lossy pickText, Ecosystem model gap vs YAML, evo-import-sync 6h ping-pong risk) -> `docs/rfc/2026-06-11-bidirectional-sync.md` su Game-DB **PR #182**: 3 opzioni (B export-on-release RECOMMENDED, C dual-write rejected YAGNI), ladder S0->S3 con gate Eduardo, invariante round-trip import(export(DB))=identity, 8 open question, acceptance S1 shadow-exporter. + CLAUDE.md Short slot.
+- **GOALS.md hub**: riga Game-Database aggiornata (DONE same-day + 2a ratifica).
+
+### Da fare
+- Eduardo: review + merge PR #182 (Game-DB, docs-only) + ratifica delle 8 open question RFC (gate S1).
+- Post-ratifica RFC: S1 shadow-exporter (candidato dispatch Jules: contratto meccanico exporter+diff una volta fissate le OQ).
+- Gotcha hook scoperto: commit-msg Game-DB richiede description lowercase -- primo commit bloccato, branch pushato vuoto poi sanato (subject "rfc #4..." lowercase).
+
+### Note
+- Pattern validato 2x oggi: contratto self-contained -> dispatch -> publish UI (step umano obbligatorio, lesson) -> triage -> merge Eduardo. Ciclo completo in giornata.
+- Dashboard Jules mostra 3 suggestion security pre-scoped su Game-DB (Sensitive Info Exposure / CORS permissive / Weak Default Config): candidato wave futura, non ratificato.
+
+---
+
 ## 2026-06-11 (ratifica ADR-0038/0039 applicata #332 + clock-leak P1-1 fix #333)
 
 ### Completato
