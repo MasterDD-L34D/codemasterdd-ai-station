@@ -19,6 +19,23 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-06-12 (fidelity run-3: MEASUREMENT PHASE COMPLETE -- S1 a/b/c/d shipped, S2 decidibile)
+
+### Completato
+- **Codex thread su #194**: era lo STESSO P2 gia' fixato (timestamp 4min pre-fix; Codex non ri-reviewa i push). Verifica ground-truth sul branch remoto + reply addressed pubblicato (classifier ha lasciato passare con auth contestuale). **#194 merged da Eduardo** (4e6d1a1).
+- **Fidelity run-3** (27384778750): glossary 631 matching / 49 divergent / 16 exported_only / 0 unexpected (**90.7%**); reference 2061/33/4/0, model_gap 183 (**98.2%**); core 2381/35/16/0 (**97.9%**). GATE-2/3/4 tutti verificati a misura: unexpected 0 ovunque, exported_only 1612->36 totali, core matching 470->2381.
+- **Lettura residui**: i divergent rimasti (117 totali) = DRIFT REALE tra i file Game stessi (pack vs core glossary in disaccordo); il DB sceglie la precedenza ratificata -> il primo export PR S2 RICONCILIA i file Game. Il tool ora misura le incoerenze interne di Game, non i propri artifact.
+- **Issue #193 CLOSED** con i numeri. Artifact run-3 archiviato logs/fidelity/run-27384778750.
+
+### Da fare
+- **Eduardo: decisione gate S2** (export-on-release traits): GO -> primo export PR su Game con review dei 117 divergent (sample nell'artifact); NO-GO/HOLD -> resta shadow. RFC ladder S1 COMPLETO in 24h (5 cicli Jules: #185 i18n, #187 exporter, #191 sourceKey, #194 refinements + #188 workflow).
+- Pending storici: backfill istanza dev #184, #192 P2 follow-up (probabilmente chiudibile: run-3 unexpected=0), Docker Lenovo reboot, Game clone Lenovo dirty.
+
+### Note
+- Pattern giornata: misura -> finding -> ratifica -> dispatch -> misura. Ogni numero del report ha una causa nota e ogni fix una verifica quantitativa. Zero write su Game in tutta la fase S1.
+
+---
+
 ## 2026-06-12 (S1d delivered: GATE-2/3/4 + core source, PR #194 MERGE-READY, ciclo Jules 5)
 
 ### Completato
