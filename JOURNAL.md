@@ -19,6 +19,24 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-06-12 (S1d delivered: GATE-2/3/4 + core source, PR #194 MERGE-READY, ciclo Jules 5)
+
+### Completato
+- **Ratifica 5/5** (AskUserQuestion): GATE-2 per-field precedence (editorial=glossary-rank, mechanics=reference-rank) + GATE-3 nel ciclo unico + GATE-4 sourceFiles membership + GATE-4-bis core glossary come sorgente import + indagine 343 fatta da me read-only.
+- **Indagine core**: 604 trait (297 ancestor_* + 307 normali) vs pack ~170; fonte = data/traits/ 264 file che l'importer non legge -> ratifica GATE-4-bis.
+- **Ciclo 5**: issue #193 (contratto A-D, chiude #192) -> sessione `609334794262755848` COMPLETED ~28min -> patch 9 file -> **PR #194**. Fix coordinatore in-apply: rename migration dir 20260611000000 -> 20260611231500 (ordine cronologico post-S1a/S1c, Jules aveva messo timestamp retrodatato).
+- **2 P2 fixati** (7d6cd02): Codex 5/5 oggi (evo-import.config.json senza il core glob -> entry-point bare-npm vs pipeline incoerenti) + triage P2 (negative control differ: array NON-vuoto vs absent = exported_only, asserito end-to-end). CI verde, export db test 8/8.
+- **Falso allarme path**: Grep mostrava backslash nei comandi execSync del test (path rotto su Linux) -- probe + Read: il file vero ha forward slash, artifact di render Grep. Lesson micro: Read > Grep per verdetti su contenuto esatto.
+- Triage: MERGE-READY (P3 nota: mechanics rank pack_glossary>core invece di pari -- impatto zero, annotato su #193).
+
+### Da fare
+- Eduardo: merge #194. Post-merge: fidelity run-3 (attese: glossary divergent 202->~0, reference unexpected 156->~6, exported_only collasso, core matching ->~604) -> decisione gate S2.
+
+### Note
+- Doctrine multi-firma confermata: Jules (build) + Codex (review esterna 5/5 fondati) + triager (harsh) + coordinatore (fix mirati) = catena con zero P1 sfuggiti in 5 cicli.
+
+---
+
 ## 2026-06-12 (G2: item-5/6 GIA' BUILT -- ETL dataset fix #470, ladder run = gate finale)
 
 ### Completato
