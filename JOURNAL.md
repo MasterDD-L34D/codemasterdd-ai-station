@@ -19,6 +19,22 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-06-11 (RFC #4 ratificato 8/8 -- OQ resolutions registrate, PR #183)
+
+### Completato
+- **RFC #4 ratifica completa** (#182 merged da Eduardo, poi 8 OQ via AskUserQuestion recommended-first 2 round): 6/8 recommended + **2 override** -- OQ2 i18n fields SUBITO (nameEn/descriptionEn su Trait+TraitVersion; en re-importabile dai file Game) e OQ6 export surface INCLUDE data/core/* (non-goal respinto). Direzione override coerente: fedelta' completa end-to-end fino al runtime Game.
+- **Resolutions registrate** su Game-DB **PR #183** (docs-only): status RATIFIED, tabella 8 righe, ladder S1 -> S1a (i18n extension, prima) + S1b (shadow-exporter + fidelity report su pack catalog E data/core), acceptance riscritte, CLAUDE.md Short aggiornato.
+
+### Da fare
+- Eduardo: merge #183.
+- S1a = prossimo lavoro implementativo Game-DB (migration nameEn/descriptionEn + FIELD_MAP + import en split + backfill re-import). Candidato dispatch Jules a contratto post-#183; nota migration discipline #159 (prisma migrate diff, MAI migrate dev).
+- S2 prerequisito cross-repo: authority-map entry su Game (OQ8) -- da fare al gate S2, non ora.
+
+### Note
+- OQ6 override implica co-design con sessione Game-side per index.json/_versions (registrato in tabella come vincolo S2).
+
+---
+
 ## 2026-06-11 (Game-DB: #180 merged + Jules Reactive Mode + ratifica 2o Short RFC #4 scoping)
 
 ### Completato
