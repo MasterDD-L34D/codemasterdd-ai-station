@@ -19,6 +19,24 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-06-12 (G2: item-5/6 GIA' BUILT -- ETL dataset fix #470, ladder run = gate finale)
+
+### Completato
+- **Indagine encounter-loader (Explore + verifica diretta)**: catena backend COMPLETA (encounterLoader + /campaign/choose + route-vote WS #2593/#2597 MERGED). RIBALTONE vs audit di ieri: `MainEncounterRoster` + wiring main.gd **GIA' LIVE** (plan/seed/start/register) e **item-5 chronicle GIA' BUILT** (View/Api/formatter/mount, GUT-tested). L'Explore aveva mancato file esistenti -- lesson n+1: agent-report < filesystem check.
+- **Dataset encounter fix (GGv2 PR #470, CI verde)**: il run ETL canonico 2-dir avrebbe REGREDITO il dataset 19->16 (i 5 draft GAP-C shipped nel JSON dal Q.1 non erano input del tool) -- il pin test `test_load_19_encounters` l'ha beccato. Fix: input opzionale `--in-draft` a precedenza minima (last-wins documentato) + rigenerazione da Game origin/main fresco via worktree read-only = **21 id, zero persi, +enc_escape_01 +enc_sabotage_01** + pin 19->21 con provenienza. Suite 3359/0.
+- **Contract /choose verificato** (#2593/#2597 MERGED): /advance -> choice_required + candidates; /choose {id,node_id} -> next_encounter_id. Rischio #1 indagine sgonfiato.
+- **Re-check item-4 ridotto a procedura**: host_driver.mjs e' generico (frame via `raw`) -- la parity post-#2739 sta nei frame autorati, zero codice; assert R1-R3 accorpati al prossimo run ladder.
+- **Handoff run ladder**: chip spawn-task pronto (sessione dedicata su GGv2): re-check item-4 (R1-R3) + item-5 (B1-B4) + item-6 (C1-C4, flag META_NETWORK_ROUTING via env, gate WS soddisfatto da #2597); prompt include parity payload, lane rules, cap 1100 composer, fallback release.
+
+### Da fare
+- Eduardo: merge **GGv2 #470** (CI verde) -> poi avvia il chip "Run AI playtest ladder".
+- Decision point G3 di fatto RISOLTO: item-6 GO (build done; resta solo il playtest gate). Stima cut full: ~2-3 giorni con buffer.
+
+### Note
+- Il pin-test sul dataset (count esatto) ha pagato due volte in 24h: regressione ETL silenziosa beccata + provenienza documentata. Pattern da replicare sui dataset ETL futuri.
+
+---
+
 ## 2026-06-11 (G1 game CHIUSO: #469 + #2739 merged, i18n #2741 ready -- giro Codex completo)
 
 ### Completato
