@@ -19,6 +19,20 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-06-11 (S1b dispatch: shadow exporter + fidelity report, issue #186)
+
+### Completato
+- **Contratto S1b** da ground-truth shape (letti i 3 file target reali su C:/dev/Game: pack trait_glossary schema 1.0, trait_reference schema 2.0 con campi NON-model `sinergie_pi`/`slot`, data/core glossary 2.0): issue Game-DB **#186** -- CLI `evo:export --version --out [--diff] [--report]`, diff semantico 5 classi (matching/divergent/exported_only/game_only_model_gap/game_only_unexpected + header_drift), round-trip test CI (validate-only sull'export = 0 errori), MODEL_GAP constant = single-source per classifier e field inventory. Exit 0 con gap (shadow = misura, non gate).
+- **Jules dispatch**: dry-run 5 gate PASS -> session `8894943106538383552` QUEUED. Session id + reminder publish-UI su #186. Lesson #185 applicata: zero schema.prisma in scope (gate schema-doc non puo' scattare).
+
+### Da fare
+- A COMPLETED: Eduardo publish da UI -> triage -> merge. Poi report fidelity v1.0.0 vs Game checkout = input per gate S2.
+
+### Note
+- S2 resta gated su: fidelity report verde per traits + authority-map entry su Game (OQ8).
+
+---
+
 ## 2026-06-11 (S1a SHIPPED #185 + gate fix + double-publish anatomy + Docker incident)
 
 ### Completato
