@@ -19,6 +19,27 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-06-11 (game release: cut deciso + G1 eseguito -- finding-5 fix #469 + 2 Jules dispatch)
+
+### Completato
+- **Pivot "autonomia lungo raggio" -> wartime mode scoped**: frame corretto (doctrine hub != velocity gioco; Game/Godot gia' iper-autonomi); proposta batch-grant giornaliero + merge-sweep accettata da Eduardo.
+- **Audit cut (2 Explore paralleli, Game + Godot-v2)**: ladder item-3/4 PASS = core co-op end-to-end giocabile; blocker reali = Game #2733 (publishWorld senza phase/actor key) + finding-5 (round-hints kickano composer). Riconciliata nomenclatura: K-02..K-05 device-authority = SPEC full post-release, NON blocker ladder.
+- **Cut deciso (Eduardo)**: item-5 Chronicle+Nido DENTRO (2-3gg, spec pronta) + **item-6 descent RIPESCATO** (3-4gg, serve encounter loader) + cut confermato per mating-UI/Tri-Sorgente/evolution-tree/main-menu. Carico onesto: 6-9gg lavoro in 6 -> decision point G3: loader non verde = item-6 scivola.
+- **Design-call finding-5 (opzione B, Eduardo)**: round-hints planning/ready/resolving = sub-stati combat -> MODE_COMBAT. Hotfix shippato: **GGv2 PR #469** (TDD RED 5 test -> GREEN; full GUT 3354/0; incidente gdlint max-file-lines 1100: match -> const PHASE_TO_MODE lookup, net -11 righe, file AL cap = split composer candidato post-release). CI verde, merge Eduardo.
+- **Jules dispatch x2 su Game** (wrapper 5-gate, dopo check anti-collisione col Ryzen: ER6 OVERRUN gia' ratificato da Eduardo #2734, tolto dal batch; governance-residuo congelato per non pestare il burn-down Ryzen): `4699...360` fix #2733 (phase + active_id alias) + `1511...804` i18n NF3 PR-7 (4 pannelli). #2733 AWAITING_FEEDBACK -> risposto via sendMessage (ground-truth verificato: `lobbyBridge._currentPhase` = room phase autoritativa; fallback 'combat'); sessione ripartita.
+- Task file contratti in `docs/jules-batch/tasks/2026-06-11-*.md` (landati con questo journal).
+
+### Da fare
+- Eduardo merge-sweep: **GGv2 #469** (CI verde) + PR Jules #2733/i18n quando arrivano + Game #2735 (ER7 evidence, filone Ryzen).
+- G2: verifica end-to-end payload post-#2733 (ladder re-check item-4 surfaces) + contratto encounter-loader (io) -> G3-G5 item-5 TDD + item-6.
+- Cadenza rung governor: prossimo run settimanale ~18/06 (+ check finestra 7-day vault #259).
+
+### Note
+- Lane rispettate: zero push su Game da Lenovo (Jules remoto aggira il vincolo fold-race); Godot-v2 da Lenovo OK (clone allineato).
+- Composer phone a 1100 righe ESATTE (cap gdlint): prossima aggiunta = rosso; split = chore candidato.
+
+---
+
 ## 2026-06-11 (S1b dispatch: shadow exporter + fidelity report, issue #186)
 
 ### Completato
