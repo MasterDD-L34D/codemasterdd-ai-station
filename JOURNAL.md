@@ -19,6 +19,23 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-06-11 (S1b SHIPPED: #187 merged 25b0545, issue #186 closed -- Short RFC #4 S1 COMPLETO)
+
+### Completato
+- **#187 merged da Eduardo** (squash 25b0545; "1" in-chat NON basta al classifier per merge esterno -- pattern confermato 2a volta, comando consegnato e eseguito da Eduardo via terminale/UI). Codex check finale: ZERO commenti nuovi -- i "diversi commenti" visti in UI erano la review-wrapper + i 2 P2 gia' fixati in c59f7c1.
+- **Issue #186 CLOSED** shipped. **RFC #4 fase S1 COMPLETA**: S1a (#185 i18n pipeline) + S1b (#187 shadow exporter + fidelity diff + round-trip CI). Short ratificato stamattina -> shipped in giornata, 3 cicli Jules.
+- Clone synced 25b0545.
+
+### Da fare (gate S2 -- prossima sessione Game-DB)
+- **Fidelity report reale** (su istanza con Postgres: dev Ryzen o Lenovo post-Docker-reboot): dev:setup -> evo:import da C:/dev/Game (ora i18n-aware, fa anche il backfill #184) -> create+release TaxonomyVersion -> `npm run evo:export -- --version <tag> --diff <game-root> --report fidelity.json`. Il report = input decisione S2.
+- **Authority-map entry su Game** (OQ8, cross-repo doc PR, merge Eduardo).
+- Eduardo: reply opzionale ai 2 Codex P2 come addressed (classifier-gated 2x).
+
+### Note
+- Giornata Game-DB completa: #180 versioned-reads + #181/#182/#183 goal-set/RFC/ratifica + #185 S1a + #187 S1b = 2 Short ratificati e shippati same-day.
+
+---
+
 ## 2026-06-11 (S1b delivered FULL-AUTO: PR #187 via API patch, Codex P2 fixati)
 
 ### Completato
