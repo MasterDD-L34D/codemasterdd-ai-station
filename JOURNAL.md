@@ -19,6 +19,23 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-06-11 (ratifica ADR-0038/0039 applicata #332 + clock-leak P1-1 fix #333)
+
+### Completato
+- **Ratifica applicata** (PR #332, merge Eduardo 09:20Z): ADR-0038 -> **Accepted** con 4 amendment testuali (re-founding GOALS.md: G1/G4 vivono in jules-autonomy-gaps NON-doctrine inputs; nota prospettica `~/.claude/agents/**`; CATCH-ALL human-review-enforced ref 0039 dec.2; principle nuovo write-path = doctrine gate + human checkpoint) + sync actor-activation-criteria sec 7 same-PR. ADR-0039 -> **Accepted** con amendment P1 clock-free rescope (STATUS-leg cycles non contano per R2 fino a fix) + 3 annotazioni R2 (b/c/d). Indici DECISIONS_LOG + STATUS_MULTI_REPO sincronizzati.
+- **Merge #332 rifiutato dal hub** nonostante auth in-chat (doctrine "hub NEVER merges its own rule-book" + annotazione (c) appena ratificata: hub-merge con auth ambient indistinguibile) -> comando consegnato a Eduardo, merge umano. Gate onorato al primo giro post-ratifica.
+- **Clock-leak P1-1 FIXATO** (PR #333 merged `35b2122`, fix-direction (a) del dossier): STATUS render maschera la severity time-derived di `vault-eng-graph` (`_TIME_DERIVED_SEVERITY_SOURCES`); staleness band intatta per store/issue-actor (worsened-delta legge lo store). TDD RED-first + mutation-check (3 test calendar RED contro render unmasked, incluso parser-routed); harsh-review pre-merge SURVIVE-WITH-CHANGES, 3/3 adottati (test parser-routed pipeline reale, contract docstring su parse_eng_graph_moc, mask cell decoupled dalla citazione ADR). Suite 180+27 verde. STATUS-leg cycles tornano contabili per R2.
+- **Rung dry-run post-fix**: ingest 9 sorgenti (4 righe nuove, 0 errori); reconcile -> ENTRAMBE le gambe drifted, `skipped no-token` (fail-closed corretto da sessione senza GOVERNOR_RECONCILE_TOKEN).
+
+### Da fare
+- Eduardo: run reale del rung con token (`$env:GOVERNOR_RECONCILE_TOKEN` poi `py -m governor.reconcile` da `apps/cross-repo-dashboard`) -> apre i 2 reconcile PR attesi (STATUS re-baseline con mask = one-time legit + vault lint refresh); merge umano = prossimi cycle candidati.
+- Decidere cadenza run manuali del rung (proposta: settimanale) oppure leggere il non-run prolungato come off-ramp (annotazione R2 (d)).
+
+### Note
+- Primo reconcile PR STATUS post-fix = re-baseline della region (mask + 4 segnali nuovi), classe bootstrap-like; gli steady-state veri arrivano dai run successivi.
+
+---
+
 ## 2026-06-11 (Game-DB Short CLOSED: versioned reads B/S/E shipped #180 + goal-set PR #181)
 
 ### Completato
