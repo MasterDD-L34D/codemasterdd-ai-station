@@ -19,6 +19,26 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-06-11 (S1b delivered FULL-AUTO: PR #187 via API patch, Codex P2 fixati)
+
+### Completato
+- **Nuova modalita' delivery validata** (mandato Eduardo "monitora e procedi in auto"): poll API sessione 30s -> COMPLETED in ~19min -> patch applicato VERBATIM da outputs.changeSet.gitPatch su branch fresco (base 1f1d895 = main HEAD) -> **PR #187** SENZA publish UI. Lesson #180 superata: il publish umano e' bypassabile via patch-apply quando c'e' mandato esplicito.
+- **Pre-push verify**: 5 file = match esatto contratto #186; node --check 3 file nuovi PASS; suite mocked locale verde (richiesto npm ci -- node_modules assente nel clone, primo uso test locale).
+- **CI verde + anti-false-PASS**: step "Run export-taxonomy DB tests" eseguito davvero, 4/4 -> 5/5 post-fix (incluso round-trip validate-only = 0 errori).
+- **Triage**: MERGE-READY, 3 P3 cosmetici. **Codex 2 P2 FONDATI**: (1) deepEqual JSON.stringify = falsi divergent su key-order (slot_profile caso reale); (2) target mancante nel diff root = report silently-empty. Fix coordinatore c59f7c1: canonicalize ricorsivo (array order resta significativo by design) + targetMissing flag con exported_only counts; entrambi con negative-control subtests (CI 5/5). Pattern L-041 rispettato.
+- Tracking completo su #186.
+
+### Da fare
+- Eduardo: reply ai 2 Codex P2 come addressed (classifier blocca outbound 2x, testo pronto in #186-flow) + merge #187: `gh pr merge 187 --repo MasterDD-L34D/Game-Database --squash --delete-branch`.
+- Post-merge #187: run fidelity report reale (evo:export v-latest --diff C:/dev/Game) = input gate S2; + authority-map entry su Game (OQ8) prima di S2.
+- Sempre pending: backfill istanza dev (#184) + Docker Lenovo reboot.
+
+### Note
+- Per fidelity-tool i falsi-positivi/silenzi sono difetti P2 reali, non nit: Codex review ha aggiunto valore concreto (2/2 fondati su 2).
+- aider non usato per i fix P2: cross-repo branch + test extension = contesto strategic (classify rispettata).
+
+---
+
 ## 2026-06-11 (game release: cut deciso + G1 eseguito -- finding-5 fix #469 + 2 Jules dispatch)
 
 ### Completato
