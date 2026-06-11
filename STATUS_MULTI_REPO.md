@@ -5,15 +5,15 @@
 | --- | --- | --- | --- | --- |
 | archon-learnings | info | 36 ARCHON lessons, latest L-2026-05-038 | 2026-05 | https://api.github.com/repos/MasterDD-L34D/vault/contents/Vault-ops-remote/claude-global/aa01-system/learnings |
 | evo-swarm-digest | info | 0 cycles, 20 coverage gaps | 2026-05-27 | https://api.github.com/repos/MasterDD-L34D/evo-swarm/contents/docs/exports/EXPORT-FOR-GAME-REPO-2026-05-27.md?ref=main |
-| game-governance-drift | warning | 0 errors, 297 warnings (297 total) | 2026-05-25T07:19:51+00:00 | https://raw.githubusercontent.com/MasterDD-L34D/Game/main/reports/docs/governance_drift_report.json |
+| game-governance-drift | warning | 0 errors, 362 warnings (362 total) | 2026-06-10T23:03:01+00:00 | https://raw.githubusercontent.com/MasterDD-L34D/Game/main/reports/docs/governance_drift_report.json |
 | game-sot-drift | ok | 0 open SoT drift candidate(s) |  | https://api.github.com/repos/MasterDD-L34D/Game/issues?labels=sot-drift-candidate&state=open |
-| jules-digest | ok | jules digest 2026-06-03: 0 awaiting | 2026-06-03 | https://api.github.com/repos/MasterDD-L34D/codemasterdd-ai-station/contents/docs/jules-batch/2026-06-03-digest.md?ref=main |
-| vault-coherence | warning | coherence report 2026-06-03: BLOCK 0 WARN 1 | 2026-06-03 | https://api.github.com/repos/MasterDD-L34D/vault/contents/Extras/lint-reports/coherence-2026-06-03.md?ref=main |
-| vault-eng-graph | info | eng-graph MOC: 5 repos indexed, last_verified 2026-05-31 | 2026-05-31 | https://api.github.com/repos/MasterDD-L34D/vault/contents/Atlas/engineering-moc.md |
-| vault-gap | warning | gap report 2026-06-03: 3/5 summary metrics nonzero | 2026-06-03 | https://api.github.com/repos/MasterDD-L34D/vault/contents/Extras/lint-reports/gap-2026-06-03.md?ref=main |
+| jules-digest | ok | jules digest 2026-06-11: 0 awaiting | 2026-06-11 | https://api.github.com/repos/MasterDD-L34D/codemasterdd-ai-station/contents/docs/jules-batch/2026-06-11-digest.md?ref=main |
+| vault-coherence | ok | coherence report present 2026-06-11 | 2026-06-11 | https://api.github.com/repos/MasterDD-L34D/vault/contents/Extras/lint-reports/coherence-2026-06-11.md?ref=main |
+| vault-eng-graph | (masked: time-derived) | eng-graph MOC: 5 repos indexed, last_verified 2026-05-31 | 2026-05-31 | https://api.github.com/repos/MasterDD-L34D/vault/contents/Atlas/engineering-moc.md |
+| vault-gap | warning | gap report 2026-06-11: 3/5 summary metrics nonzero | 2026-06-11 | https://api.github.com/repos/MasterDD-L34D/vault/contents/Extras/lint-reports/gap-2026-06-11.md?ref=main |
 | vault-whatsmissing | warning | whatsmissing report 2026-05-22: 3/5 summary metrics nonzero | 2026-05-22 | https://api.github.com/repos/MasterDD-L34D/vault/contents/Extras/lint-reports/whatsmissing-2026-05-22.md?ref=main |
 
-_Auto-synced governor signal snapshot; human prose elsewhere is authoritative._
+_Auto-synced governor signal snapshot; human prose elsewhere is authoritative. Time-derived severities are masked (ADR-0039 amendment P1)._
 <!-- GOVERNOR-SYNC:signals END -->
 
 > Direction layer: vedi [`GOALS.md`](GOALS.md) per goal cross-repo Short/Mid/Long.
