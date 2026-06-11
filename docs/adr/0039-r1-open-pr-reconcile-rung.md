@@ -178,6 +178,30 @@ dec.1/TL;DR:
   manual runs -- OR the prolonged non-run is read honestly as the off-ramp signal that the
   class is unnecessary.
 
+## Addendum 2026-06-11 -- stale-branch GC (vault #258 incident, same-day P2)
+
+First post-ratify cadence run, same day as the ratification: the codemasterdd leg opened
+cleanly (#336, human-merged), but the vault leg opened PR #258 CONFLICTING. Root cause
+(ground-truth verified): the actor reuses the FIXED branch `auto/governor-reconcile-<id>`;
+the vault branch was a leftover of merged PR #252 (2026-06-03 -- vault has no
+delete-on-merge), so the new PR carried the OLD merge-base -> add/add conflict
+(`Atlas/lint-status.md` exists on main since #252). Same failure family as the fold-race
+lesson (push onto a branch whose PR already merged).
+
+Fix shipped same day (PR #340, TDD + harsh-review SURVIVE-WITH-CHANGES adopted): the
+builder enforces the invariant **branch-exists <=> open-PR-pending** -- the open-PR lookup
+moved BEFORE any write; on branch-already-exists with ZERO open PRs the ref is force-reset
+to the current base sha (garbage-collecting the actor's own dead commits); a LIVE branch
+(open PR) is never reset (anti-churn); a failed lookup never resets (no destruction on
+doubt). The `auto/governor-reconcile-*` namespace is actor-exclusive by contract: a human
+commit parked there without an open PR is GC'd by design. The dec.4 merge-block is
+untouched: `PATCH git/refs` is not a merge route; the negative tripwire + the pinned
+`real_gh_api` surface stay green. Operationally: the conflicted #258 is closed (Eduardo)
+and replaced by a fresh-branch PR from the fixed builder; the conflicted-PR episode is NOT
+a failed clean cycle (sec 6 counts merged-then-reverted/followed-up PRs, not a never-merged
+artifact PR), but it IS evidence for annotation (b): bootstrap/create-class mechanics carry
+sharp edges that steady-state cycles must not inherit.
+
 ## Falsification (SDMG Protocol 7)
 
 The DESIGN passed two harsh-reviewer rounds (v1 REJECT -> v2 SURVIVE-WITH-CHANGES, all adopted;
