@@ -19,6 +19,24 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-06-11 (G1 game CHIUSO: #469 + #2739 merged, i18n #2741 ready -- giro Codex completo)
+
+### Completato
+- **GGv2 #469 MERGED** (12:58Z): finding-5 opzione B + Codex P2 input-gating (INPUT_BLOCKED_SUBPHASES ready/resolving nella CombatView + forward sub-phase dal composer su phase_change; TDD 6 test nuovi, suite 3359/0; composer mantenuto a 1100 esatte).
+- **Game #2739 MERGED** (23:03Z, `d6a5fe5a`): fix #2733 publishWorld via Jules con 2 giri Codex -- giro 1: alias `active_id: active_unit` + additive + `phase: _currentPhase`; giro 2 (Codex P2 fondato): normalizzazione `'idle' -> 'combat'` (il fallback truthy non scattava sul default-string del bridge -- indicazione MIA nel reply a Jules = miss di contratto, Codex giusto). Double-publish UI Eduardo x2 + 3x update-branch (BEHIND ripetuto da daily-ship; update-branch via API passa il classifier = pattern utile). **Blocker payload CHIUSO**: la coppia #2739+#469 sistema entrambi i contract-gap del playtest item-4.
+- **Jules i18n PR-7 -> Game #2741 OPEN merge-ready**: 4 pannelli + locale en/it +48/+48 parity esatta + test parity; scope-creep emoji intercettato pre-publish (rollback chiesto via sendMessage, verificato nel diff: zero righe rimosse). 0 commenti Codex, CI verde.
+- Triage Codex completo giornata: #469 P2 fixato, #2739 P2 fixato, #2735 P2 (gia' fixato da Eduardo), #2737/#2738/#2741 puliti, tutti mergiati da Eduardo.
+
+### Da fare
+- Eduardo: merge #2741 (ultimo della sweep).
+- G2: verifica end-to-end ladder (payload phase-normalizzato + composer gating insieme) + contratto encounter-loader item-6 (decision point G3).
+- Lesson candidata AA01: "fallback truthy su variabile che ha un default-string ('idle') = trappola; nei contratti dispatch specificare la normalizzazione esplicita dei sentinel value" (famiglia contract-precision).
+
+### Note
+- mergeStateStatus BEHIND con strict=true + daily-ship = rincorsa: armare auto-merge (Eduardo) appena CI parte e' la mossa giusta la prossima volta.
+
+---
+
 ## 2026-06-11 (fidelity run-2: GATE-1 chiuso, matching 6->478/2075; nuovi GATE-2/3/4)
 
 ### Completato
