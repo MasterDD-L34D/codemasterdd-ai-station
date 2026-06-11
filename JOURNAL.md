@@ -19,6 +19,22 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-06-11 (S1a dispatch: i18n trait pipeline a Jules, issue #184)
+
+### Completato
+- **#183 merged da Eduardo** (RFC #4 RATIFIED su main, e8a014f).
+- **Contratto S1a** scopato da ground-truth (schema Trait/TraitVersion, normalizeTrait pickText 287/306, glossary 2 branch, FIELD_MAP): issue Game-DB **#184** -- nameEn/descriptionEn end-to-end (schema + migration hand-authored #159-compliant + FIELD_MAP amend + import split + glossary fallback en||it + test), backfill ESCLUSO dal PR (operatore post-merge via evo:import).
+- **Jules dispatch**: dry-run 5 gate PASS -> session `14571251721003908597` QUEUED. Audit logs/jules-dispatch-2026-06.md; session id + lesson publish-UI su #184.
+
+### Da fare
+- A COMPLETED: Eduardo publish PR da UI Jules -> triage jules-pr-triager -> merge Eduardo.
+- Post-merge: backfill operatore (evo:import da Game checkout) + row-count su #184. Poi S1b (shadow-exporter).
+
+### Note
+- Migration discipline #159 codificata nel prompt (mai migrate dev; SQL hand-authored, CI applica).
+
+---
+
 ## 2026-06-11 (RFC #4 ratificato 8/8 -- OQ resolutions registrate, PR #183)
 
 ### Completato
