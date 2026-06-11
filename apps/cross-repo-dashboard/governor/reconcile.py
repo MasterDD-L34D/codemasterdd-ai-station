@@ -162,6 +162,24 @@ def splice(doc_text, marker, new_region, anchor=None, create_header=None) -> str
 
 _STATUS_COLS = ("source", "severity", "summary", "produced_at", "ref")
 
+# Sources whose STORED severity is time-derived UPSTREAM of the render: ingest passes `now`
+# into the parser, which folds a staleness band (info/warning/error) into severity AND
+# payload_hash (parse_eng_graph_moc). Rendering that severity leaks the calendar into the
+# STATUS region -- a byte-identical source could open a calendar-only PR (ADR-0039 ratify
+# amendment P1 / dossier P1-1, empirically probed 2026-06-11). The STATUS render MASKS the
+# severity cell for these sources; all other columns are content-derived. The staleness band
+# itself keeps working for the ISSUE actor (worsened-delta reads the store, not this render).
+# Pinned to the now-aware parsers by test_time_derived_severity_sources_pin_matches_parsers.
+# CONTRACT with parse_eng_graph_moc (parsers.py): only `severity` and `payload_hash` may
+# absorb `now`; every OTHER Signal field the STATUS render emits (source, summary,
+# produced_at, ref) MUST stay content-only -- the mask is column-granular (severity), so a
+# parser that leaks the calendar into summary/produced_at would reopen P1-1. Guarded by the
+# parser-routed regression test_render_status_stable_across_staleness_boundary.
+_TIME_DERIVED_SEVERITY_SOURCES = frozenset({"vault-eng-graph"})
+# Cell text deliberately carries NO ADR citation (the footer note cites it once): the cell is
+# rendered payload, so every wording change = a cosmetic drift-PR. Keep it stable.
+_TIME_DERIVED_SEVERITY_MASK = "(masked: time-derived)"
+
 
 def _md_cell(value) -> str:
     """Single-line markdown table cell (escape pipes/newlines). Pure."""
@@ -176,21 +194,31 @@ def _md_table(columns, rows_cells) -> str:
     return "\n".join([header, sep] + body)
 
 
+def _status_cell(row, col):
+    """One STATUS cell; masks the time-derived severity of staleness-class sources so the
+    rendered region stays a pure function of non-time-derived content (amendment P1)."""
+    if col == "severity" and row.get("source") in _TIME_DERIVED_SEVERITY_SOURCES:
+        return _md_cell(_TIME_DERIVED_SEVERITY_MASK)
+    return _md_cell(row.get(col))
+
+
 def render_status_multi_repo(store):
     """Deterministic, CLOCK-FREE governor signal snapshot from store.latest_per_source().
 
     Columns source|severity|summary|produced_at|ref, ordered by source (the store returns rows
     ORDER BY source). NO wall-clock / no time-derived value -- the change-key is signal STATE
-    only (spec sec 5.1 / 6.3). produced_at is the artifact's own timestamp (from the signal),
-    never the current time. Returns None when the store holds no signals (cannot compute).
+    only (spec sec 5.1 / 6.3); the time-derived severity of staleness-class sources is MASKED
+    (see _TIME_DERIVED_SEVERITY_SOURCES) so the calendar alone can never produce drift.
+    produced_at is the artifact's own timestamp (from the signal), never the current time.
+    Returns None when the store holds no signals (cannot compute).
     """
     rows = store.latest_per_source()
     if not rows:
         return None
-    cells = [[_md_cell(r.get(c)) for c in _STATUS_COLS] for r in rows]
+    cells = [[_status_cell(r, c) for c in _STATUS_COLS] for r in rows]
     table = _md_table(_STATUS_COLS, cells)
     note = ("\n\n_Auto-synced governor signal snapshot; human prose elsewhere is "
-            "authoritative._")
+            "authoritative. Time-derived severities are masked (ADR-0039 amendment P1)._")
     return table + note
 
 
