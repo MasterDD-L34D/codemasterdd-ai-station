@@ -19,6 +19,24 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-06-12 (seed-leak root cause CHIUSA: run-6 glossary 100% fidelity -- S2 loop PROVATO)
+
+### Completato
+- **Recovery merge anticipati**: Eduardo aveva mergiato 2745 e 196 con Codex pending. #196: ZERO commenti (Codex mai partito, falso allarme). #2745: 2 P2 reali -> cleanup **Game#2747** (rimozione 4 trait spuri da entrambi i glossary + mirror docs/public sync via sync_evo_pack_assets + QA regen) MERGED; reply pubblicati su entrambi i thread.
+- **Caccia al fantasma (i 4 tornavano in run-5 post-tutti-i-fix)**: catena di falsi sospetti eliminati con ground-truth (junction fixata ✓, file Game puliti ✓, clone locale behind-36 invalidava le prime ricerche -> git grep su origin/main). Svolta: campi ricchi nel bundle ('Lunghezza media dal muso...') = testo che esiste SOLO in server/prisma/seed.js. Log run-5: 'Running seed command' DENTRO lo step Import.
+- **ROOT CAUSE VERA**: `npm run evo:import` -> wrapper evo-import.js -> esegue dev:setup (CON prisma db seed + backfill) salvo flag `--no-setup`. Il fix #188 (Bootstrap schema-only) era aggirato dal wrapper DA SEMPRE; i 4 trait = dati SEED con membership null -> everywhere-rule. #196 (junction) valido ma percorso diverso.
+- **Fix #197 MERGED** (--no-setup, 1 parola + commento load-bearing) -> **run-6: pack glossary 680/0/0/0 (100%), core glossary 2416/0/0/0 (100%), reference 2061/33/0/0** (+183 model_gap noto). Export bundle = 170 chiavi esatte. Round-trip DB->Game = IDENTITA' sui target attivi.
+
+### Da fare
+- Ciclo reference (ultimo pezzo traits): model gap slot/sinergie_pi (estensione modello vs sourceExtras) + 33 divergent residui da campionare -> export reference -> RFC #4 traits COMPLETO.
+- Pending: backfill #184 istanza dev, Docker Lenovo reboot, Game clone Lenovo dirty (behind 36 + working tree sporco: ha quasi depistato la diagnosi -- L-candidata: ricerche su clone = currency check PRIMA).
+
+### Note
+- 3 fix stratificati sulla stessa sindrome (membership #194, junction #196, seed-wrapper #197): ogni fix era reale ma il sintomo persisteva finche' il log forensics non ha esposto il percorso nascosto. Lesson: il sintomo identico non implica la stessa causa; exit solo a misura pulita (run-6).
+- Fidelity tool maturato: 6 run in 24h, da strumento di misura a detector di leak infrastrutturali.
+
+---
+
 ## 2026-06-12 (S2 GO: PRIMO export DB->Game, PR Game#2745 CLEAN -- loop bidirezionale APERTO)
 
 ### Completato
