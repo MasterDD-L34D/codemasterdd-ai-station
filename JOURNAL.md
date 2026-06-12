@@ -19,6 +19,24 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-06-13 (ciclo 7 reference: PR #199 MERGE-READY -- sourceExtras + junction name fix)
+
+### Completato
+- **Residui run-6 analizzati**: 33 divergent tutti su label, 2 nature (drift reale core-vs-ref + BUG junction update name=raw-slug); model_gap = sinergie_pi 174 + slot 9.
+- **Ratifica** (AskUserQuestion): sourceExtras Json catch-all (vs campi espliciti) + ciclo unico. Issue #198.
+- **Ciclo Jules 7**: sessione `1309107484653253225` COMPLETED ~20min -> patch 9 file -> **PR #199** (junction update non tocca piu' name; sourceExtras end-to-end: CONSUMED set, merge mechanics-precedence, renderReference spread, glossary intatti, MODEL_GAP svuotato).
+- **2 fix coordinatore in review**: (1) search-db rosso al 1o giro -- Jules ha svuotato MODEL_GAP senza aggiornare gli assert del subtest diff-classes (slot fixture ora unexpected); (2) **Codex P1 fondato** -- `null ?? undefined` sull'update = extras rimossi upstream restavano stale; fix: buildTraitUpsertArgs refactored a builder PURO (prima eseguiva l'upsert -- nome storico fuorviante) + null passthrough su sourceFiles/sourceExtras + unit test negativo/positivo. CI CLEAN finale, export db test 8/8, reply Codex pubblicato.
+- Gotcha hook ripetuto: subject 74>72 char -> commit bloccato ma push branch vuoto parziale gia' avvenuto -- recovery checkout+commit corto (2a volta: candidata regola pre-commit length check nei miei commit message).
+
+### Da fare
+- Eduardo: merge #199 -> run-7 fidelity (attese: model_gap 183->0, divergent 33->drift legittimo) -> export reference PR su Game -> **RFC #4 traits COMPLETO**.
+- Pending: backfill #184, Docker reboot, Game clone Lenovo dirty.
+
+### Note
+- Codex 6/6 P2-P1 fondati sullo stream Game-DB in 48h. Review esterna = layer che continua a pagare.
+
+---
+
 ## 2026-06-12 (seed-leak root cause CHIUSA: run-6 glossary 100% fidelity -- S2 loop PROVATO)
 
 ### Completato
