@@ -19,6 +19,25 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-06-12 (S2 GO: PRIMO export DB->Game, PR Game#2745 CLEAN -- loop bidirezionale APERTO)
+
+### Completato
+- **Ratifica S2 4/4** (AskUserQuestion): GO + tutti e 3 i target + meccanica CI-artifact/operator-PR (OQ5 rispettato, no PAT) + #192 chiusa (gia' auto-closed dal merge #194).
+- **PR #195 merged** (f3beed8): workflow fidelity ora uploada anche taxonomy-export bundle.
+- **Finding pre-PR (STOP onesto)**: diff reference = -4212 righe -> l'export AVREBBE CANCELLATO slot/sinergie_pi (183 occorrenze model-gap che vivono solo nel file Game). Re-ratifica lampo: **PR solo 2 glossary** (model_gap 0 = riconciliazione pura), reference deferred finche' il model gap non chiude (regola RFC lossy-entity). La premessa "tutti e 3" e' caduta davanti al diff reale -- ground-truth > ratifica.
+- **PRIMO export DB->Game**: run 27385326830 -> bundle artifact -> **Game PR #2745** (2 glossary riconciliati verso precedenza core>pack, +414/-369, marker GENERATED in commit/body). Gate QA baselines FAIL -> rigenerati (export:qa) e committati. Esito: **import-dry-run SUCCESS (round-trip closure sul PR reale), required verdi, 0 failure, mergeState CLEAN**.
+- Artifact run archiviati logs/fidelity/run-27385326830.
+
+### Da fare
+- **Eduardo: review + merge Game#2745** (review = le ~49 descrizioni pack riallineate al core; sample nel fidelity-report artifact). Merge = primo contenuto DB->Game in produzione.
+- Prossimo ciclo Game-DB: chiudere il model gap reference (estensione modello slot/sinergie_pi vs sourceExtras) -> export reference -> RFC #4 traits COMPLETO.
+- Pending: backfill #184 istanza dev, Docker Lenovo reboot, Game clone Lenovo dirty.
+
+### Note
+- RFC #4: da ratifica scoping a primo export live in ~36h, 5 cicli Jules + 2 workflow CI + 3 fidelity run. Ogni passaggio misurato, zero perdite dati (il lossy-save sul reference l'ha fermato il diff, non la fortuna).
+
+---
+
 ## 2026-06-12 (fidelity run-3: MEASUREMENT PHASE COMPLETE -- S1 a/b/c/d shipped, S2 decidibile)
 
 ### Completato
