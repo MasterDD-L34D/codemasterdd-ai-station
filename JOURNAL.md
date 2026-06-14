@@ -19,6 +19,25 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-06-14 (chiusura: chip mirror verde + Game-DB PAUSA ratificata)
+
+### Completato
+- **Chip mirror CONCLUSO**: la session spawnata (task_54d91f5e) ha shippato Game#2758 (sync docs/public mirror post #2750/#2752/#2755), MERGED, solo i 4 file mirror (canonical intatto). Lesson check-sessioni: un chip concluso NON e' visibile in `gh pr list --open` (PR gia' merged) ne' nei worktree (auto-puliti) -> usa list_sessions (PR# + state) per il ground-truth, non solo open-PR.
+- **Pulizia**: rimosso mio worktree stale game-wt-cleanup (#2747 merged).
+- **Ratifica Game-DB = PAUSA** (AskUserQuestion): RFC #4 traits chiuso end-to-end, valore shipped, riapertura Eduardo-gated. Registrato goal-set canonico (Game-DB CLAUDE.md, PR #208) + questo hub.
+- **Approccio-per-riapertura species/biome/eco registrato** (cosi una sessione futura non ri-litiga): species-FIRST JSON (riusa pipeline GATE) -> biome/eco DOPO (YAML: js-yaml dump + order-preserve + eco model-gap extend-vs-sourceExtras); SEMPRE scope-doc RFC + ratifica prima del dispatch. Records = non-goal.
+
+### Da fare (non blockers)
+- Game clone Lenovo BEHIND (6516a981 vs origin 9bd883b) + altri worktree _gamewt-* di lane concorrenti: riconciliazione in sessione dedicata.
+- Archive sessione chip #2758 (richiede approvazione interattiva UI; oppure Settings "Auto-archive on PR close").
+- Aperti cross-repo: Godot #468, cdd #329.
+
+### Note
+- 2 chip-decision corrette: mirror = spawnato+concluso; mojibake = NON spawnato (verificato 0 marker nei source, era transitorio DB). No chip su ipotesi.
+- Species/biome/eco export NON e' un chip (wrong-size) ma un next-Short da ratificare con scope-doc -- registrato come PARKED, non dispatchato.
+
+---
+
 ## 2026-06-14 (RFC #4 TRAITS COMPLETO: loop DB->Game chiuso su 3 target)
 
 ### Completato
