@@ -19,6 +19,27 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-06-14 (RFC #4 TRAITS COMPLETO: loop DB->Game chiuso su 3 target)
+
+### Completato
+- **RFC #4 traits CHIUSO**. Loop bidirezionale Game-Database->Game live su tutti e 3 i target trait: glossary (Game #2750), canon-fix filamenti (#2752), reference (#2755, merge 9bd883b). Ratifica scoping 06-11 -> completo in ~3 giorni.
+- **Catena GATE completa** (tutto trovato dal fidelity report, ZERO rotture su Game): G1 sourceKey (#191) -> G2 per-field precedence + G3 empty-array + G4 sourceFiles membership + G4bis core-source (#194) -> G5 placeholder (#202) -> G6 identifier-shaped predicate (#205) -> G6+ humanized-fallback (Codex) -> order-preserving export (#207). 10 cicli Jules + 10 fidelity run.
+- **Fidelity run finale (run-10)**: reference 2 divergent (solo variazioni reali ali_membrana_sonica/sensori_geomagnetici), glossary/core riconciliati, exported_only/model_gap/unexpected = 0 ovunque. 31 placeholder-label upgradati a label reali in-game (#2750).
+- **Reference export**: diff 5100-righe = reformat one-time (JSON.stringify array-multiline + nested key-order); key-order top-level preservato via feature #207. Gate accettato = fidelity (semantico) + evo-import-gate (round-trip errori=0), NON review riga-per-riga (infeasible, decisione Eduardo ratificata).
+
+### Da fare (follow-up, non blockers)
+- docs/public trait-glossary + trait-reference MIRROR staleness (pre-esistente, non-gated CI) -> cleanup mirror-resync separato.
+- Mojibake residui altri trait (es. "CavitÃ ") = data-fix Game lato sorgente.
+- G6+ / order-preserve edge-tests (template-key-absent, proto-key) gia' aggiunti; nessun debito aperto.
+
+### Note / lessons
+- **Codex review esterna = layer ad alto valore**: 8/8 P1-P2 fondati sullo stream Game-DB (key-order deepEqual, missing-target, null-erasure update, seed-leak indiretto, placeholder false-positive, humanized-fallback, prototype-pollution, filamenti canon-disagreement). Ogni fondato risolto in-cycle.
+- **Sintomo identico != stessa causa** (riconfermato): i 4 trait fantasma = 3 cause stratificate (membership, junction, seed-wrapper); i placeholder-residui = predicate false-positive su Title-Case che slugifica al proprio slug. Exit solo a misura pulita.
+- **Encoding gotcha mia**: PS Get-Content/WriteAllText corrompe UTF-8 accenti -> per replace su file con accenti usare SEMPRE node fs utf8 (mai PS round-trip). Beccato dal diff (338 righe invece di 1).
+- **Doppio-publish Jules**: API-create + UI-publish della stessa sessione = PR duplicati (#201/#202 vs #199/#203). Regola: o publish UI (Eduardo) o patch-apply (hub), MAI entrambi.
+
+---
+
 ## 2026-06-13 (ciclo 7 reference: PR #199 MERGE-READY -- sourceExtras + junction name fix)
 
 ### Completato
