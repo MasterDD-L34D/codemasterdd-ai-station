@@ -21,7 +21,7 @@ Contesto progetto:
 - Owner: Eduardo Scarpelli, solo-dev
 - Stato corrente: NON inline qui (evita drift). Stato/fase/ADR-count/stack vivono in `COMPACT_CONTEXT.md`
   (snapshot autoritativo) + `STATUS_MULTI_REPO.md` (cross-repo). Direzione live = `GOALS.md`.
-- Hardware: Lenovo LOQ Tower, Intel Core Ultra 7 255HX + RTX 5060 8GB VRAM + 64GB DDR5-5600
+- Hardware: Lenovo desktop, Intel Core Ultra 7 255HX + RTX 5060 8GB VRAM + 64GB DDR5-5600
 - Per agent multi-client (Codex Cloud, OpenCode, sandbox-based): leggere `AGENTS.md` PRIMA per anti-confusion preamble
 - Per onboarding rapido: leggi `CLAUDE.md` + `COMPACT_CONTEXT.md` + `STATUS_MULTI_REPO.md` + `GOALS.md` in quest'ordine
 

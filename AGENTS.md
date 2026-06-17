@@ -4,7 +4,7 @@ Entry point per agent multi-client (Codex, OpenCode, agent web-based o sandbox-c
 
 ## Anti-confusion preamble (leggere prima di tutto)
 
-Questo repo gira su **CodeMasterDD**, una workstation Windows reale (Lenovo LOQ Tower 17IAX10). I path assoluti `C:\dev\...` e `C:\Users\edusc\...` referenziati nei doc **sono validi e i file esistono**.
+Questo repo gira su **CodeMasterDD**, una workstation Windows reale (Lenovo desktop). I path assoluti `C:\dev\...` e `C:\Users\edusc\...` referenziati nei doc **sono validi e i file esistono**.
 
 Se stai operando da Codex Cloud / sandbox web / container senza accesso al filesystem locale Windows e non riesci a verificare i path assoluti, **non concludere che siano "missing", "transplanted", o "obsoleti"**. Significa solo che tu non hai accesso al filesystem reale. Il PC corretto vede tutto.
 

@@ -27,7 +27,7 @@ Il mio ecosistema ha 4 identificatori diversi potenzialmente rilevanti:
 4. **Email**: `<email-redacted>`
 
 Il nome repo iniziale `lenovo-ai-station` era coerente con il modello
-hardware (LOQ Tower 17IAX10, brand Lenovo) ma **non rifletteva l'identità
+hardware (desktop, brand Lenovo) ma **non rifletteva l'identita
 che io avevo scelto** per il PC (`CodeMasterDD`).
 
 ### Il problema
@@ -68,11 +68,11 @@ nome ufficiale, la cartella locale è implementation detail.
 
 **README.md**:
 ```diff
--# Lenovo LOQ Tower 17IAX10 AI Workstation
+-# Lenovo desktop AI Workstation
 +# CodeMasterDD AI Workstation
 
--**Infrastructure-as-code** del desktop Lenovo LOQ Tower 17IAX10 dedicato allo sviluppo AI agentic.
-+**Infrastructure-as-code** del desktop CodeMasterDD (Lenovo LOQ Tower 17IAX10) dedicato allo sviluppo AI agentic.
+-**Infrastructure-as-code** del desktop Lenovo desktop dedicato allo sviluppo AI agentic.
++**Infrastructure-as-code** del desktop CodeMasterDD (Lenovo desktop) dedicato allo sviluppo AI agentic.
 ```
 
 **CLAUDE.md**:
@@ -81,13 +81,13 @@ nome ufficiale, la cartella locale è implementation detail.
 +# CLAUDE.md — CodeMasterDD AI Station
 
  ## Hardware (definitivo)
--- **Lenovo LOQ Tower 17IAX10** (desktop)
-+- **CodeMasterDD** (Lenovo LOQ Tower 17IAX10, desktop)
+-- **Lenovo desktop** (desktop)
++- **CodeMasterDD** (Lenovo desktop, desktop)
 
  ## Ecosistema device
--- **Lenovo LOQ Tower 17IAX10**: workstation primaria AI agentic
+-- **Lenovo desktop**: workstation primaria AI agentic
 -- **Ryzen 9600X desktop**: PC appoggio corrente, dismissione graduale quando Lenovo ha tutto
-+- **CodeMasterDD** (Lenovo LOQ Tower 17IAX10): workstation primaria AI agentic
++- **CodeMasterDD** (Lenovo desktop): workstation primaria AI agentic
 +- **Ryzen 9600X desktop**: PC appoggio corrente, dismissione graduale quando CodeMasterDD ha tutto
 ```
 
@@ -223,7 +223,7 @@ Ma **non è identity** per me.
 
 Separare questi due livelli mi aiuta mentalmente:
 - "CodeMasterDD" = identity layer (personale)
-- "LOQ Tower 17IAX10" = hardware layer (tecnico)
+- "desktop" = hardware layer (tecnico)
 
 ### L'importanza di essere "pickable"
 

@@ -14,7 +14,7 @@
 ### Situazione iniziale (aprile 2026)
 
 Dopo il trauma Victus del 17 aprile 2026 (perdita PC per bug BitLocker +
-OneDrive), ho acquistato Lenovo LOQ Tower 17IAX10 come sostituzione.
+OneDrive), ho acquistato Lenovo desktop come sostituzione.
 Questa workstation (ribattezzata CodeMasterDD) diventa la mia piattaforma
 dev primaria.
 
@@ -391,7 +391,7 @@ significativamente post-transizione.
 
 ## Appendice: situazione di partenza dettagliata
 
-### Hardware Lenovo LOQ Tower 17IAX10 ("CodeMasterDD")
+### Hardware Lenovo desktop ("CodeMasterDD")
 - CPU: Intel Core Ultra 7 255HX (24 core Arrow Lake HX, 2.40 GHz base)
 - GPU: NVIDIA RTX 5060 8GB VRAM (Blackwell sm_120)
 - RAM: 16GB DDR5 5600 MT/s

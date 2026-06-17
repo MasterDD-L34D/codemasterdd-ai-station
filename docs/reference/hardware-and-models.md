@@ -4,7 +4,7 @@
      Tabelle tok/s misurate (metodologia: docs/research/bench-*). Verifica modelli: ollama list. -->
 
 ## Hardware (definitivo)
-- **CodeMasterDD** (Lenovo LOQ Tower 17IAX10, desktop)
+- **CodeMasterDD** (Lenovo desktop, desktop)
   - Intel Core Ultra 7 255HX (24 core Arrow Lake HX, 2.40 GHz base)
   - NVIDIA RTX 5060 8GB VRAM (Blackwell sm_120, CUDA 13.2)
   - **64GB DDR5-5600** (2×32GB Micron CT32G56C46S5.C16D, dual channel ChannelA+ChannelB DIMM1) — upgrade 2026-04-22 da 16GB originali, vedi `docs/adr/0012-ram-upgrade-64gb-impact.md`

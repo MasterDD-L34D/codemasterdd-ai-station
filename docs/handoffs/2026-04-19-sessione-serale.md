@@ -219,7 +219,7 @@ ribaltabile con 1 click su GitHub settings.
 
 ### Description impostata
 ```bash
-gh repo edit --description "Infrastructure-as-code e journal della workstation CodeMasterDD (Lenovo LOQ Tower 17IAX10) — setup, scripts, config, decisioni architetturali. Target: AI dev workstation sovereign."
+gh repo edit --description "Infrastructure-as-code e journal della workstation CodeMasterDD (Lenovo desktop) -- setup, scripts, config, decisioni architetturali. Target: AI dev workstation sovereign."
 ```
 
 Description in **italiano** (coerente con CLAUDE.md: docs italiano).

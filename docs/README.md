@@ -40,7 +40,7 @@ Note sul riassetto 2026-06-04:
 ## Cronologia temporale
 
 - **17/04/2026**: disastro Victus (BitLocker + KB5083769)
-- **18/04/2026**: negoziazione Euronics, sostituzione -> Lenovo LOQ Tower
+- **18/04/2026**: negoziazione Euronics, sostituzione -> Lenovo desktop
 - **19/04/2026** (notte): sessione di hardening sistema, Claude Code install
 - **19/04/2026** (sera): GitHub setup, dev stack, Ollama bonus
 

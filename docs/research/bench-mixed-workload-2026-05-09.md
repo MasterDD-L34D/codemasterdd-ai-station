@@ -9,7 +9,7 @@
 - Bench script: `scripts/bench-mixed-workload/run-bench.ps1`
 - Prompts: `scripts/bench-mixed-workload/prompts.json` (12 task realistici)
 - Output: `scripts/bench-mixed-workload/results/results-2026-05-09-maxloaded1.json`
-- Hardware: Lenovo LOQ Tower 17IAX10, Intel Ultra 7 255HX, RTX 5060 8GB VRAM, 64GB DDR5
+- Hardware: Lenovo desktop, Intel Ultra 7 255HX, RTX 5060 8GB VRAM, 64GB DDR5
 - Ollama daemon v0.23.2
 - Config attuale: `OLLAMA_MAX_LOADED_MODELS=1`, `OLLAMA_FLASH_ATTENTION=1`, `OLLAMA_KV_CACHE_TYPE=q8_0`, `OLLAMA_CONTEXT_LENGTH=8192`
 
