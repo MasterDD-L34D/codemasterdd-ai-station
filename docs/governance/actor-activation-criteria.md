@@ -73,6 +73,16 @@ Climb to R2 only when ALL hold (granted by a dedicated R2 ADR, never by this fil
 - [ ] `.claude/settings.json` is amended to add the narrow auto-merge permission for the
       one class only (today the ceiling is `git push origin claude/*`, no merge).
 
+> **Addendum 2026-06-17 (Rule-of-Two precondition, recorded for the R2 ADR).** Per the
+> "Agents Rule of Two" (Meta, 2025-10-31, ai.meta.com/blog/practical-ai-agent-security): an
+> agent should hold no more than two of [A] untrusted input, [B] secret / private-data access,
+> [C] state-change / external-comms. Granting STANDING auto-merge to the governor while a
+> session also reads untrusted PR-content [A] AND holds keys.env [B] AND can merge [C] puts all
+> three live at once. So an R2 precondition (to be ratified IN the R2 ADR, not by this file
+> alone) is session-isolation: the auto-merge actor runs with NO keys.env in context, OR merges
+> only on a clean/separate context. This makes explicit a constraint ADR-0037 + sec 1
+> (irreducible residue) already imply; by itself it climbs no rung.
+
 ## 4. Advisory vs gate -- the severed self-licking loop (load-bearing)
 
 A harsh-reviewer falsification (2026-06-01, P0.3) killed the v1 idea of the actor
