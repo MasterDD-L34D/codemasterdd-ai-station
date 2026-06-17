@@ -50,7 +50,7 @@ Smoke a screenshot (autonomous, no human, no Claude):
 ```
 python scripts/ai-smoke/judge_screen.py \
   --image <screenshot.png> --screen lobby \
-  --host 192.168.1.10:11434 --model gemma4:latest [--threshold 40]
+  --host <hub-ip>:11434 --model gemma4:latest [--threshold 40]
 ```
 
 Prints the merged per-item verdict array as JSON; **exits non-zero iff any item

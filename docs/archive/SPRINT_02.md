@@ -56,7 +56,7 @@ Refresh-verify pre-trigger SPRINT_02 attivo. Cluster 12-13/5 (8 PR cumulative) h
 | Wrapper aider-* operativi | ✅ | 4 cloud + 2 local + OpenCode v1.14.41 attivo |
 | API keys cloud (Groq + Cerebras + Gemini) | ✅ | + **ANTHROPIC tier-0 added 12/5 H7 DONE** |
 | Privacy policy per-repo | ✅ | + Ryzen whitelist propagation R4 DONE 13/5 |
-| **NEW DHCP reservation locked** | ✅ | Lenovo `.10` Wi-Fi + Ryzen `.11` Ethernet (TIM HUB AGTHP, drift class permanent kill) |
+| **NEW DHCP reservation locked** | ✅ | Lenovo `.10` Wi-Fi + Ryzen `.11` Ethernet (<home-router>, drift class permanent kill) |
 | **NEW SSH key-based auth Lenovo->Ryzen** | ✅ | ed25519 passwordless + admin keys file |
 | **NEW Vault sync 3-way** | ✅ | HEAD `1abaa743` Ryzen+Lenovo+origin (R5 DONE) |
 | **NEW BACKLOG R1-R5 cleanup** | ✅ | TUTTI RESOLVED (R1 via ADR-0027 narrative drift) |

@@ -6,7 +6,7 @@
 - **Nome progetto**: CodeMasterDD AI Station (repo: `codemasterdd-ai-station`)
 - **Tipo di progetto**: infrastructure-as-code personale + registry decisionale di transizione strategica AI (NON un prodotto, NON una libreria, NON codice di progetti reali — quelli vivono in `Evo-Tactics` e `Synesthesia` separati)
 - **Stato attuale**: NON inline qui (evita drift). Snapshot stato/fase/metriche -> `COMPACT_CONTEXT.md` + `STATUS_MULTI_REPO.md`. Direzione live -> `GOALS.md`.
-- **Owner / team**: solo-dev — Eduardo Scarpelli (`eduscarpelli@gmail.com`), GitHub `@MasterDD-L34D`
+- **Owner / team**: solo-dev -- Eduardo Scarpelli (`<email-redacted>`), GitHub `@MasterDD-L34D`
 
 ## Scopo
 - **Problema che risolve**: sostituire Claude Max (€200/mese, scade 2026-05-19) con stack AI agentic sovereign a costo ~zero ($0-50/anno), senza perdita materiale di produttività

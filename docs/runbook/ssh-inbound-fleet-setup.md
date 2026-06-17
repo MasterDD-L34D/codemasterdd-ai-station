@@ -74,13 +74,13 @@ elevato, logga su file, leggi l'esito dal log. (`logs/` è gitignored.)
 ### Passo 3 — verifica (dal peer)
 
 ```
-ssh edusc@192.168.1.10            # IP target stampato a fine script
+ssh edusc@<hub-ip>            # IP target stampato a fine script
 # prima volta: accetta il fingerprint host (yes)
 ```
 
 Verifica annidata (se hai accesso al peer via un terzo canale):
 ```
-ssh -i <fleetkey> Vgit@<peer-ip> "ssh -i C:/Users/Vgit/.ssh/id_ed25519 -o StrictHostKeyChecking=accept-new edusc@192.168.1.10 whoami"
+ssh -i <fleetkey> Vgit@<peer-ip> "ssh -i C:/Users/Vgit/.ssh/id_ed25519 -o StrictHostKeyChecking=accept-new edusc@<hub-ip> whoami"
 ```
 
 ---
@@ -113,50 +113,12 @@ peer; rimuovi eventuali copie locali post-trasferimento.
 
 ---
 
-# Appendice A — Inventario fleet + stato SSH (ground-truth 2026-05-17)
+# Appendice A -- Inventario fleet (PRIVATO)
 
-> **Ground-truth vs doc-stale**: i doc committati (CLAUDE.md/memory/JOURNAL) NON registravano la connessione Ryzen->Lenovo (la sessione 2026-05-17 ha JOURNALato solo il lavoro Jules). Questa tabella usa la **verita' empirica di questa sessione** (test annidato verificato), non la vista doc-stale (che riporterebbe Ryzen->Lenovo PENDING). Drift da chiudere: aggiornare CLAUDE.md "Ecosistema device".
-
-## A.1 Inventario macchine
-
-| Hostname | Ruolo | IP LAN finale | IP history | OS | User | HW | MAC |
-|---|---|---|---|---|---|---|---|
-| **CodeMasterDD** (Lenovo LOQ Tower 17IAX10) | Workstation AI primaria / agentic hub | **192.168.1.10** (DHCP res. 2026-05-13) | .121->.124->**.10** | Win 11 Home 25H2 b26200 | `edusc` (admin) | Core Ultra 7 255HX 24c, RTX 5060 8GB, 64GB DDR5, 1TB NVMe | e8:bf:e1:18:81:ca |
-| **DESKTOP-T77TMKT** (Ryzen 9600X, MSI MS-7E26) | Inference secondaria 14B/22B + image gen | **192.168.1.11** (DHCP res. 2026-05-13) | .222->.225->**.11** | Win 11 Pro b26200 | `Vgit` (admin) | Ryzen 9600X, RTX 4070 SUPER 12GB, 31GB RAM, C: 157GB | d8:43:ae:b7:c4:e5 |
-| **DESKTOP-B9L203E** | Desktop moglie — ruolo TBD | 192.168.1.37 | — | Win | TBD | TBD | OUI Samsung 2C:F0:5D |
-| **LAPTOP-D73A8DIE** | Laptop moglie — ruolo TBD | 192.168.1.130 | — | Win | TBD | TBD | OUI A0:A4:C5 |
-
-LAN `192.168.1.0/24`. Router TIM HUB DGA4132 AGTHP. DHCP pool `.100-.200`, reservation FUORI pool. IP vecchi (.121/.124/.222/.225) = STALE.
-
-## A.2 Matrice connettivita SSH (PC collegati almeno una volta)
-
-| Da -> A | Stato | Auth file server-side | Chiave | Stabilito |
-|---|---|---|---|---|
-| **Lenovo `edusc` -> Ryzen `Vgit`** | **WORKING** | Ryzen `C:\ProgramData\ssh\administrators_authorized_keys` (Vgit=admin) | priv Lenovo `~/.ssh/id_ed25519_fleet`; pub su Ryzen | 2026-05-12, re-verify 05-13, usata estensiva 05-17 |
-| **Ryzen `Vgit` -> Lenovo `edusc`** | **WORKING** (stabilito 2026-05-17, motivo di questo script) | Lenovo `C:\ProgramData\ssh\administrators_authorized_keys` (edusc=admin, stesso gotcha) | priv su Ryzen `C:\Users\Vgit\.ssh\id_ed25519` (keypair `vgit-ryzen-to-lenovo-2026-05-17`); pub su Lenovo | 2026-05-17 — keygen locale Lenovo -> scp privata su Ryzen -> setup-ssh-inbound.ps1 elevato+UAC. Verificato test annidato: `OK_RYZEN_TO_LENOVO / codemasterdd\edusc / CodeMasterDD` |
-| Qualunque -> DESKTOP-B9L203E (moglie) | **PENDING** — OpenSSH non attivo | — | — | install pending Eduardo |
-| Qualunque -> LAPTOP-D73A8DIE (moglie) | **PENDING** — OpenSSH non attivo | — | — | install pending Eduardo |
-
-Lenovo<->Ryzen bidirezionale completo. Igiene: copia privata `ryzen2lenovo` rimossa da Lenovo post-scp (privata vive SOLO su Ryzen).
-
-## A.3 Chiavi & path
-
-- **id_ed25519_fleet** — priv Lenovo `C:\Users\edusc\.ssh\id_ed25519_fleet`; pub autorizzata su Ryzen admin file. Serve Lenovo->Ryzen + canale fleet (scp/probe). Empirico 2026-05-17, NON nei doc = doc-gap.
-- **vgit-ryzen-to-lenovo-2026-05-17** — keypair generato su Lenovo 2026-05-17; priv trasferita Ryzen `C:\Users\Vgit\.ssh\id_ed25519`; pub in Lenovo `administrators_authorized_keys`. Serve Ryzen->Lenovo.
-
-## A.4 Gotcha & drift consolidati
-
-1. **Admin-account gotcha** (load-bearing): account admin -> sshd legge SOLO `C:\ProgramData\ssh\administrators_authorized_keys` (ACL SYSTEM+Administrators). `~/.ssh/authorized_keys` IGNORATO. Vale Vgit@Ryzen E edusc@Lenovo. Lo script gestisce.
-2. **IP drift KILLED** 2026-05-13 via DHCP reservation MAC-bound fuori pool. Usa .10/.11.
-3. **vault llm-routing.json** hardcodeava .121 -> fixato .10 (vault 1abaa743). Check altri config IP vecchi.
-4. **wincredman** blocca git push SSH non-interattivo da Ryzen -> push Eduardo-direct locale.
-5. **No core.hooksPath su Ryzen** -> commit-guard bypassato Ryzen-side.
-6. **Username** `Vgit`/`VGit` case-inconsistente; home `C:\Users\VGit\`. Tratta `Vgit`.
-7. **Doc-gap**: connessione Ryzen->Lenovo 2026-05-17 assente da CLAUDE.md/JOURNAL — aggiornare "Ecosistema device" (Eduardo o sessione futura).
-
-Fonti: CLAUDE.md project+global, memory project_multi_repo_overview / project_vault_shared, JOURNAL 2026-05-13/05-17, ground-truth empirico sessione 2026-05-17.
-
----
+> L'inventario fleet dettagliato (hostname, IP, MAC, HW, chiavi SSH, matrice
+> connettivita) e' stato spostato nello store privato sovrano per la pubblicazione
+> del repo (2026-06-17). Vedi: `<private fleet store: ~/.claude/reference/fleet-topology.md>`
+> (sincato cross-fleet via scripts/fleet/sync-claude-global.ps1, NON nel repo pubblico).
 
 # Appendice B — Sorgente completo `scripts/setup/setup-ssh-inbound.ps1`
 

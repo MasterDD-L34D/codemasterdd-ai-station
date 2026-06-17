@@ -105,7 +105,7 @@ Log daemon: `[NETWORK] -> Elected for pulse round`
 
 - **120149 pkt outbound** in 3 min daemon run
 - **30+ destinazioni IP uniche, TUTTE PUBBLICHE**
-- **Zero traffic LAN** 192.168.1.0/24 fleet despite `--pod eduardo-trial-1node` flag
+- **Zero traffic LAN** <fleet-lan> fleet despite `--pod eduardo-trial-1node` flag
 
 ### 3.3 Provider mappati
 

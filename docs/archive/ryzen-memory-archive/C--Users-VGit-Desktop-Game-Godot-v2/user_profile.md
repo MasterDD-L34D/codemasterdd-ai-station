@@ -4,7 +4,7 @@ description: Eduardo (MasterDD-L34D), solo developer porting Evo-Tactics web sta
 type: user
 originSessionId: 585dba96-6d14-4988-ab48-b6cb8dcaf004
 ---
-Eduardo Scarpelli (eduscarpelli@gmail.com, GitHub MasterDD-L34D). Solo dev.
+Eduardo Scarpelli (<email-redacted>, GitHub MasterDD-L34D). Solo dev.
 
 Currently leading post-pivot 2026-04-29 port of Evo-Tactics web stack v1 (`MasterDD-L34D/Game/`) to Godot 4.x (`Game-Godot-v2/`). Project is co-op tactical RPG d20-based with 6 design pillars (P1 Tattica/P2 Spore/P3 Specie×Job/P4 MBTI/P5 Co-op/P6 Fairness).
 

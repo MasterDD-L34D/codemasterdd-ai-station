@@ -64,7 +64,7 @@ Principio: *governance colleziona, ADR delimita, YAML prova, freeze decide, agen
 
 ## 4. Ryzen memory archive -- inventario (139 file, captured 2026-05-27)
 
-**Provenance**: `Vgit@192.168.1.11:C:/Users/VGit/.claude/projects/*/memory/` via scp. Erano memory
+**Provenance**: `Vgit@<ryzen-ip>:C:/Users/VGit/.claude/projects/*/memory/` via scp. Erano memory
 auto-generate da Claude Code lato Ryzen, **fuori da ogni git** (single-disk) e gia semi-orfane
 (chiave progetto `C--Users-VGit-Desktop-Game` = vecchio path; Game migrato a `C:/dev/Game` ->
 nuove sessioni usano chiave `C--dev-Game`, set vecchio non piu auto-caricato). Snapshot punto-nel-tempo;
@@ -91,7 +91,7 @@ Snapshot statico -- per ri-allineare, da Lenovo (read-only su Ryzen, overwrite l
 Runbook diretto invece di script (anti-pattern #11: 1-comando-robusto > helper fragile):
 
 ```powershell
-$base = "Vgit@192.168.1.11:C:/Users/VGit/.claude/projects"
+$base = "Vgit@<ryzen-ip>:C:/Users/VGit/.claude/projects"
 $dst  = "C:/dev/codemasterdd-ai-station/docs/archive/ryzen-memory-archive"
 $map  = [ordered]@{
   "Game-Desktop-old"="C--Users-VGit-Desktop-Game"; "C--dev-Game"="C--dev-Game";

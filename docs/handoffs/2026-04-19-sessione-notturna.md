@@ -255,7 +255,7 @@ Versione installata: **Git 2.53.0.windows.3**.
 ### Configurazione globale
 ```powershell
 git config --global user.name "Eduardo Scarpelli"
-git config --global user.email "eduscarpelli@gmail.com"
+git config --global user.email "<email-redacted>"
 git config --global init.defaultBranch main
 git config --global core.autocrlf input
 git config --global pull.rebase false
@@ -311,9 +311,9 @@ claude
 Prima esecuzione apre wizard setup:
 1. Theme: **Dark** (scelto)
 2. Security notes: lette e accettate
-3. OAuth flow: apre browser, login con eduscarpelli@gmail.com
+3. OAuth flow: apre browser, login con <email-redacted>
 4. Conferma Claude Max attivo (Opus 4.7 con 1M context)
-5. Organizzazione: eduscarpelli@gmail.com (personal)
+5. Organizzazione: <email-redacted> (personal)
 6. Trust folder: `C:\dev\lenovo-ai-station` (da creare)
 
 ### Lezione appresa
