@@ -37,7 +37,7 @@
 1. Build MAIN web: `GODOT_BIN=/c/.../godot.cmd ./tools/web/build_web.sh --mode=main --output-dir=dist/web-main`
 2. Mount: `cp -R dist/web-main/. /c/dev/Game-golive/apps/backend/public/`
 3. Boot backend (above). Capture: `cd tools/playtest/playwright && PLAYTEST_BASE_URL=http://localhost:3334 PLAYTEST_PHASE=<phase> npx playwright test specs/lobby_populated.spec.ts --project=chromium-desktop` -> `captures/<phase>.png`.
-4. Judge: `python scripts/ai-smoke/judge_screen.py --image captures/<phase>.png --screen <phase> --host 192.168.1.10:11434 --model gemma4:latest`.
+4. Judge: `python scripts/ai-smoke/judge_screen.py --image captures/<phase>.png --screen <phase> --host <hub-ip>:11434 --model gemma4:latest`.
 5. Look at the PNG (vision misses tofu -- eyeball it). Fix at source. Rebuild -> re-capture -> re-judge.
 
 ## Next tasks (GDScript -> do them HERE in the Godot session)

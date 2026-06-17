@@ -1,7 +1,7 @@
 # Recap -- SoT Drift Sentinel (shipped + live) -- per uso su Ryzen
 
-> **Authored-from**: Lenovo (CodeMasterDD / edusc / 192.168.1.10), 2026-05-28.
-> **For-use-on**: Ryzen (DESKTOP-T77TMKT / Vgit / 192.168.1.11) o qualsiasi PC fleet.
+> **Authored-from**: Lenovo (CodeMasterDD / edusc / <hub-ip>), 2026-05-28.
+> **For-use-on**: Ryzen (DESKTOP-T77TMKT / Vgit / <ryzen-ip>) o qualsiasi PC fleet.
 > **Come arriva qui**: codemasterdd e' PRIVATE + synced -> su Ryzen `git -C C:/dev/codemasterdd-ai-station pull` (se clonato) e leggi questo file.
 > Companion: handoff originale `docs/handoffs/2026-05-28-handoff-sot-drift-A.md` + spec/plan in `docs/superpowers/` (entrambi codemasterdd).
 

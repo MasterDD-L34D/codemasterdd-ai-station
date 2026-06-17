@@ -60,7 +60,7 @@ File governance root-level (schema framework archivio adottato 2026-04-23):
 Framework universale multi-progetto: `Archivio_Libreria_Operativa_Progetti/` (libreria, template, workflow, regole meta Claude Code).
 
 ## Autore
-Eduardo Scarpelli · `eduscarpelli@gmail.com` · GitHub: [@MasterDD-L34D](https://github.com/MasterDD-L34D)
+Eduardo Scarpelli - `<email-redacted>` - GitHub: [@MasterDD-L34D](https://github.com/MasterDD-L34D)
 
 ## Data creazione
 19 aprile 2026

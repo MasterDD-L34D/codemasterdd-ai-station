@@ -24,7 +24,7 @@ Il mio ecosistema ha 4 identificatori diversi potenzialmente rilevanti:
 1. **GitHub username**: `MasterDD-L34D` (con leet speak "L Three Four D")
 2. **Nome PC Windows**: `CodeMasterDD` (chosen da me, non default Lenovo)
 3. **Windows user account**: `edusc`
-4. **Email**: `eduscarpelli@gmail.com`
+4. **Email**: `<email-redacted>`
 
 Il nome repo iniziale `lenovo-ai-station` era coerente con il modello
 hardware (LOQ Tower 17IAX10, brand Lenovo) ma **non rifletteva l'identità

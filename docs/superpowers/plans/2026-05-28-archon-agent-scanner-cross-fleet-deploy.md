@@ -1754,7 +1754,7 @@ Data captured for Task 15 token baseline + Task 18 QUALITY.md.
 
 - [ ] **Step 1: Eduardo on Ryzen: git pull**
 
-On Ryzen (`Vgit@192.168.1.11`, COMPUTERNAME `DESKTOP-T77TMKT`):
+On Ryzen (`Vgit@<ryzen-ip>`, COMPUTERNAME `DESKTOP-T77TMKT`):
 
 ```powershell
 git -C C:/dev/codemasterdd-ai-station pull origin main
@@ -1782,7 +1782,7 @@ On Lenovo, capture deployed hashes:
 On Ryzen, capture deployed hashes (manual: paste them back to Lenovo session or compare via SSH):
 
 ```powershell
-ssh Vgit@192.168.1.11 "powershell -Command (Get-FileHash 'C:\Users\Vgit\.claude\skills\agent-scanner\SKILL.md').Hash"
+ssh Vgit@<ryzen-ip> "powershell -Command (Get-FileHash 'C:\Users\Vgit\.claude\skills\agent-scanner\SKILL.md').Hash"
 ```
 
 Expected: same SHA256 hash on both PCs. (CLAUDE.md will differ because each PC has its own pre-existing content, but the directive section content is identical -- harder to diff; the line delta should be +35 on both.)

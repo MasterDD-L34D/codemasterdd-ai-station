@@ -190,8 +190,8 @@ Contenuto integrale (verbatim approvato in brainstorming):
      Authority file citati = SoT. Target <200 righe (Anthropic memory best-practice). -->
 
 ## Fleet (2 macchine, profili opposti)
-- **Lenovo** `CodeMasterDD` / `edusc` / `192.168.1.10` -- AI-hub, Ollama primario, keys.env. 64GB RAM / RTX 5060 8GB VRAM (RAM-rich). Canonical host.
-- **Ryzen** `DESKTOP-T77TMKT` / `Vgit` / `192.168.1.11` -- inference-2nd. 31GB RAM / RTX 4070S 12GB VRAM (VRAM-rich).
+- **Lenovo** `CodeMasterDD` / `edusc` / `<hub-ip>` -- AI-hub, Ollama primario, keys.env. 64GB RAM / RTX 5060 8GB VRAM (RAM-rich). Canonical host.
+- **Ryzen** `DESKTOP-T77TMKT` / `Vgit` / `<ryzen-ip>` -- inference-2nd. 31GB RAM / RTX 4070S 12GB VRAM (VRAM-rich).
 - **PRE azione cross-PC** (deploy/SSH/AA01-write/lesson-promote): verifica identita ->
   `powershell -NoProfile -Command "Write-Output ('PC=' + $env:COMPUTERNAME + ' USER=' + $env:USERNAME)"`.
   Mismatch -> STOP + re-verify. Cross-PC action authoring = dal PC che possiede il canonical, o SSH read-only verify. Wife-PC `.37`/`.130` = SSH-PENDING.

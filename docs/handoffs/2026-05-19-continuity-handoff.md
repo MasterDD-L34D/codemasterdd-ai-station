@@ -30,7 +30,7 @@ proxy** (Eduardo l'ha flaggato ripetutamente → currency-gate encoded).
 | Step-3 P5 playtest umano | Eduardo | dopo client conforme |
 | Vault handoff cross-link a questo doc | Eduardo (vault sibling, merge suo) | testo fornito sotto |
 
-## Ryzen runtime state (192.168.1.11 Vgit, REORG-FRAGILE)
+## Ryzen runtime state (<ryzen-ip> Vgit, REORG-FRAGILE)
 - **Godot**: `C:\Users\VGit\AppData\Local\Godot\Godot_v4.6.2-stable_win64.exe` (172MB GUI) + `_console.exe` (wrapper). Export templates `%APPDATA%\Godot\export_templates\4.6.2.stable\` (8 web tpl).
 - **Scheduled Tasks** (PERSISTENTI, da cleanup a fine): `evo-deploy-quick` (git-bash → `.dqlaunch.sh`), `evo-godot-install` (one-shot, done — rimovibile).
 - `C:\Users\VGit\Desktop\Game-Godot-v2\.dqlaunch.sh` (launcher: prisma generate + GODOT_BIN + deploy-quick.sh, NO SKIP_REBUILD).
@@ -578,7 +578,7 @@ Empirical confirmation: durable scheduled-task survives Claude Code REPL idle + 
 ### Paste-ready prompt for next session start
 
 ```
-Sessione 2026-05-21 (o successiva). Coordinator-lane Ryzen (192.168.1.11 Vgit, edusc on Lenovo .10).
+Sessione 2026-05-21 (o successiva). Coordinator-lane Ryzen (<ryzen-ip> Vgit, edusc on Lenovo .10).
 
 CONTEXT: D-sequence E to A to B (browser-agentic-loop OD-051 + OD-052 + OD-053) COMPLETE end-to-end 2026-05-20. 8 PR merged. 5 lessons L-DRAFT-F..J in codemasterdd/docs/handoffs/2026-05-19-continuity-handoff.md awaiting promotion.
 

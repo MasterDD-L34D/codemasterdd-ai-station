@@ -48,10 +48,10 @@ Output finale Phase 5 opzionali (PR atomiche post questa research doc):
 
 `Extras/config/llm-routing.json` schema v1.0 Ollama endpoint:
 ```
-"endpoint": "http://192.168.1.121:11434"
+"endpoint": "http://<stale-lan-ip>:11434"
 ```
 
-`192.168.1.121` = IP Lenovo CodeMasterDD nel fleet codemasterdd (CLAUDE.md fleet section). Vault USA Ollama runtime DI codemasterdd.
+`<stale-lan-ip>` = IP Lenovo CodeMasterDD nel fleet codemasterdd (CLAUDE.md fleet section). Vault USA Ollama runtime DI codemasterdd.
 
 8/8 modelli routing vault sono presenti su Lenovo Ollama:
 - qwen3-coder:30b, qwen2.5-coder:7b, mistral:latest, qwen3.5:latest, qwen3:8b, nomic-embed-text:latest, deepseek-r1:14b (riferimento llm-routing.json)

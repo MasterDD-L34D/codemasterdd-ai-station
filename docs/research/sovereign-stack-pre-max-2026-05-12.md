@@ -26,7 +26,7 @@ Vault commits (audit-only, NO clone):
 {
   "endpoints": [
     { "p": 1, "name": "local", "url": "http://localhost:11434", "use_for": ["fallback", "embed", "chat", "tagging", "summary-light", "offline-dev"] },
-    { "p": 2, "name": "remote-lan", "url": "http://192.168.1.121:11434", "use_for": ["primary", "heavy-models", "bulk-jobs"] },
+    { "p": 2, "name": "remote-lan", "url": "http://<stale-lan-ip>:11434", "use_for": ["primary", "heavy-models", "bulk-jobs"] },
     { "p": 3, "name": "secondary-lan", "url": "http://172.22.160.1:11434", "use_for": ["fallback"] }
   ],
   "fallback_strategy": "priority-ordered: try local first if running, else LAN remote, else fail soft"
@@ -39,18 +39,18 @@ Plus `Vault-ops/scripts/ollama-health.py`: probe `/api/tags` per endpoint, retur
 
 Vault commit message indica: "Discovered Ollama already installed on this PC (VGit Win11)". Quindi pattern motivato da:
 - **Workstation secondary** (VGit) con Ollama local appena scoperto/configurato
-- Workstation primary (codemasterdd Lenovo 192.168.1.121) come fallback LAN
+- Workstation primary (codemasterdd Lenovo <stale-lan-ip>) come fallback LAN
 - Resilience cross-device: se local off -> LAN -> secondary-LAN -> fail soft
 
 ### Codemasterdd applicability assessment
 
 **Memory CLAUDE.md fleet section (2026-05-10 LAN discovery)**:
-- Lenovo (codemasterdd): `192.168.1.121` primary AI workstation
-- DESKTOP-T77TMKT (Ryzen 9600X + RTX 4070 SUPER 12GB): `192.168.1.222` -- AI stack NOT installed (Ollama/Python/Aider pending)
-- DESKTOP-B9L203E (moglie): `192.168.1.37` -- capability TBD, OpenSSH not active
-- LAPTOP-D73A8DIE (moglie): `192.168.1.130` -- capability TBD, OpenSSH not active
+- Lenovo (codemasterdd): `<stale-lan-ip>` primary AI workstation
+- DESKTOP-T77TMKT (Ryzen 9600X + RTX 4070 SUPER 12GB): `<stale-lan-ip>` -- AI stack NOT installed (Ollama/Python/Aider pending)
+- DESKTOP-B9L203E (moglie): `<wife-desktop-ip>` -- capability TBD, OpenSSH not active
+- LAPTOP-D73A8DIE (moglie): `<wife-laptop-ip>` -- capability TBD, OpenSSH not active
 
-**Codemasterdd current routing**: tutti i wrapper Aider + OpenCode + Ollama config puntano direct a `http://localhost:11434` (= 192.168.1.121 da Lenovo perspective).
+**Codemasterdd current routing**: tutti i wrapper Aider + OpenCode + Ollama config puntano direct a `http://localhost:11434` (= <stale-lan-ip> da Lenovo perspective).
 
 **Need fallback chain?**:
 - **Single-host primary Lenovo**: NO benefit fallback diretto (Lenovo down = lavoro inutilizzabile comunque)

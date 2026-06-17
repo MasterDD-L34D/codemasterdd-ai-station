@@ -335,7 +335,7 @@ Indice completo in `DECISIONS_LOG.md`. Path: `docs/adr/NNNN-topic.md`.
 
 ### REF-D01 — ChatGPT Business Workspace recovery archive (OD-033, 2026-05-16)
 - **Path**: Lenovo `C:/dev/backup/chatgpt-full-export-2026-05-14.zip` (**2.45 GB**)
-- **Cross-PC**: Lenovo `192.168.1.10` host. Accessibile via LAN da Ryzen `192.168.1.11` (DESKTOP-T77TMKT, OpenSSH attivo) — copy command: `scp Vgit@192.168.1.11:... ` o reverse, fleet on-LAN 192.168.1.0/24
+- **Cross-PC**: Lenovo `<hub-ip>` host. Accessibile via LAN da Ryzen `<ryzen-ip>` (DESKTOP-T77TMKT, OpenSSH attivo) -- copy command: `scp Vgit@<ryzen-ip>:... ` o reverse, fleet on-LAN <fleet-lan>
 - **Content**: 1361 conv (1229 regular + 132 across 12 projects) + 83 memory items + Custom Instructions + 2032 file assets (DALL-E webp/png, uploads, audio wav, docx, mp4, pdf). Raw brianjlacy export + _processed (39220 atomized cards + classification-final 72-topic + bertopic-model)
 - **Provenance**: codemasterdd ADR-0030 + JOURNAL 2026-05-14/15 + `chatgpt-recovery/` (18 pipeline scripts + agent-lessons). Vault OD-033 doc + commit `ba115b08` (provenance subset, bulk gitignored)
 - **Complementary to**: vault OD-032 (personal/narrow ChatGPT export, deferred — different account+scope+tool)

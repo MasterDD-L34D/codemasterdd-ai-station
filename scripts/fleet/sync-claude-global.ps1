@@ -21,10 +21,11 @@
   powershell -File scripts/fleet/sync-claude-global.ps1 -Apply     # push to Ryzen + verify
 #>
 param(
-  [string]$Target     = 'Vgit@192.168.1.11',
+  # Ryzen SSH target: set $env:FLEET_RYZEN_SSH (real value in private store ~/.claude/reference/fleet-topology.md) or pass -Target.
+  [string]$Target     = $env:FLEET_RYZEN_SSH,
   [string]$TargetHome = 'C:/Users/Vgit/.claude',
   [string]$SourceHome = "$env:USERPROFILE/.claude",
-  [string[]]$Files    = @('CLAUDE.md', 'rules/encoding.md', 'reference/anti-patterns.md'),
+  [string[]]$Files    = @('CLAUDE.md', 'rules/encoding.md', 'reference/anti-patterns.md', 'reference/fleet-topology.md'),
   [switch]$Apply,
   [switch]$NoBackup
 )
@@ -39,6 +40,11 @@ Write-Host "[sync] source=$sourceId  target=$Target  apply=$Apply"
 # Identity guard: only push FROM the canonical host (avoids pushing a stale clone over the canonical).
 if ($env:COMPUTERNAME -ne 'CODEMASTERDD') {
   Write-Warning "[sync] ABORT: canonical host is CODEMASTERDD, you are on $sourceId. Run the push from the canonical owner."
+  exit 2
+}
+
+if (-not $Target) {
+  Write-Warning "[sync] ABORT: no target. Set `$env:FLEET_RYZEN_SSH or pass -Target (real value in ~/.claude/reference/fleet-topology.md)."
   exit 2
 }
 

@@ -86,7 +86,7 @@ Tutti i 3 finding architetturali emersi durante empirical trial 30s daemon Hyper
 Empirical network monitoring durante 3-min daemon run con `--pod eduardo-trial-1node --no-agent --no-research --no-causes --no-api --profile relay --mode chill --headless`:
 
 - **120149 pkt outbound** in 3 min
-- **30+ destinazioni IP uniche, TUTTE PUBBLICHE** (zero traffic LAN 192.168.1.0/24 fleet)
+- **30+ destinazioni IP uniche, TUTTE PUBBLICHE** (zero traffic LAN <fleet-lan> fleet)
 - Provider mappati: DigitalOcean (5+ IPs Hyperspace bootstrap pool), GitHub Releases CDN (auto-update download), Cloudflare (assets hyperspace.sh), Google Cloud, Contabo VPS, CherryServers VPS
 - Top destinations: 138.197.168.9 (DO, 26460 pkt), 64.225.82.25 (DO, 25065 pkt), 185.199.110.133 (cdn-185-199-110-133.github.com, 14112 pkt)
 - **Implicazione**: `--pod <name>` flag NON isola routing-level. Daemon partecipa al global P2P regardless.

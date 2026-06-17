@@ -57,7 +57,7 @@ Expected:
 1. **T13 Ryzen cross-fleet deploy** (~5min). Cose pratiche:
    ```powershell
    # da Lenovo, oppure dirett su Ryzen
-   ssh Vgit@192.168.1.11
+   ssh Vgit@<ryzen-ip>
    cd C:/dev/codemasterdd-ai-station
    git pull origin main   # ~13 commit pending
    .\scripts\setup\deploy-global-skills.ps1 -Apply

@@ -1,6 +1,6 @@
 # Ryzen memory archive
 
-Snapshot delle memory Claude Code lato **Ryzen** (`Vgit@192.168.1.11:C:/Users/VGit/.claude/projects/*/memory/`),
+Snapshot delle memory Claude Code lato **Ryzen** (`Vgit@<ryzen-ip>:C:/Users/VGit/.claude/projects/*/memory/`),
 catturate **2026-05-27** via scp per chiudere il rischio-perdita (erano fuori da ogni git, single-disk,
 e gia semi-orfane dopo il re-key dei path progetto).
 

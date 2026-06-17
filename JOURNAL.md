@@ -1623,7 +1623,7 @@ Sessione cross-day Ryzen .11 (VGit). Branch `claude/observability-dashboard-inte
 
 ### Completato
 - Verifica ambiente: Lenovo LOQ Tower 17IAX10, RTX 5060 8GB, Core Ultra 7 255HX, CUDA 13.2, Claude Code 2.1.114
-- Conferma configurazione Git (Eduardo Scarpelli <eduscarpelli@gmail.com>)
+- Conferma configurazione Git (Eduardo Scarpelli <<email-redacted>>)
 - Hardening iniziale della workstation:
   - BitLocker (triplo layer) disabilitato
   - OneDrive scollegato e sync bloccato
@@ -4743,9 +4743,9 @@ Continuazione sessione 12/5 notte. Eduardo "voglio chiarirmi le idee abbiamo cir
 
 ### Phase 1 (~30min) -- R2 + R4 + R5
 
-- **R2 DHCP reservation router**: TIM HUB DGA4132 AGTHP, Metodo A forum-validated (reservation FUORI DHCP pool `.100-.200`). Lenovo `e8:bf:e1:18:81:ca` -> `192.168.1.10` + Ryzen `d8:43:ae:b7:c4:e5` -> `192.168.1.11`. Drift class IPs PERMANENTLY KILLED.
+- **R2 DHCP reservation router**: <home-router>, Metodo A forum-validated (reservation FUORI DHCP pool `.100-.200`). Lenovo `<mac-redacted>` -> `<hub-ip>` + Ryzen `<mac-redacted>` -> `<ryzen-ip>`. Drift class IPs PERMANENTLY KILLED.
 - **R4 Aider whitelist Ryzen**: scp Lenovo -> Ryzen + 3 mirror Ryzen path entries (codemasterdd + Game + Game-Godot-v2 Ryzen clones). 9 Ryzen-only repos DEFAULT SOVEREIGN. Vault Ryzen exclusion explicit.
-- **R5 vault llm-routing.json IP fix**: hardcoded `192.168.1.121:11434` -> `192.168.1.10:11434` (post-DHCP reservation Lenovo). Vault commit `1abaa743` Ryzen-side via L-012 per-task auth + Eduardo-direct local push (wincredman blocked non-interactive SSH). Sync 3-way validated (Ryzen + GitHub + Lenovo all at `1abaa743`).
+- **R5 vault llm-routing.json IP fix**: hardcoded `<stale-lan-ip>:11434` -> `<hub-ip>:11434` (post-DHCP reservation Lenovo). Vault commit `1abaa743` Ryzen-side via L-012 per-task auth + Eduardo-direct local push (wincredman blocked non-interactive SSH). Sync 3-way validated (Ryzen + GitHub + Lenovo all at `1abaa743`).
 
 PR #71 + #72 merged. Phase 1 effort ~30min vs ~3h trial-and-error pre-autoresearch.
 
