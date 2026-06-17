@@ -23,7 +23,7 @@ Questa è la workstation **primaria e autosufficiente** di Eduardo Scarpelli: tu
 - **Claude Code 2.1.179** -- agente CLI di sviluppo (OAuth Claude Max ~fino 2026-06-17)
 - **Git 2.53.0.windows.3** + **GitHub CLI 2.90.0**
 - **NVIDIA Driver 595.95 + CUDA 13.2**
-- **Node.js 22.22.3** + npm 10.9.8
+- **Node.js 24.15.0 LTS** + npm 11.12.1 (sistema canonico, ADR-0003)
 - **Python 3.12.10**
 - **VS Code 1.120.0**
 - **Ollama 0.30.8** con modelli locali tier-based (cosmetic 7B / behavior 14B Q2 / escalation qwen3-coder:30b MoE / reasoning deepseek-r1 / multimodal gemma4)
