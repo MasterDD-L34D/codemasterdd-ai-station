@@ -1,5 +1,11 @@
 # Standards Comparison Audit -- repo vs novita ultimi 30 giorni (2026-06-17)
 
+> NOTA (2026-06-17): le conclusioni di questo audit cloud sono state ri-verificate
+> su fonte primaria + ground-truth fleet live. Diverse azioni risultano MOOT o
+> mis-attribuite (Ollama gia' 0.30.8; baseline Claude Code 2.1.118; no MCP remoto;
+> Rule-of-Two = Meta non Microsoft; numeri Qwen fabbricati). Vedi il companion
+> evidence-graded: `docs/research/evidence-based-reaudit-2026-06-17.md`.
+
 > Ricerca multi-source fan-out (6 assi paralleli, recency mid-May -> mid-June 2026)
 > che confronta contenuti e METODI di questo repo + fleet con lo stato dell'arte.
 > Metodologia: ADR-0026 Protocol 2 (autoresearch multi-source, mai one-shot). Ogni
