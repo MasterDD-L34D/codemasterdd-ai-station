@@ -19,6 +19,24 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-06-17 (RFC #4 species: scope ratified, Sp1a shipped, Sp1b dispatched)
+
+### Completato
+- **Currency Gate + cleanup**: live state verified; Game-DB #189 (stale duplicate of merged #187) closed; codemasterdd + Game-DB main synced.
+- **RFC #4 species-export scope RATIFIED** (Game-DB #209, merged). species-FIRST: S-Q1 sourceExtras parity; S-Q2 description = non-exported model-gap (Game uses i18n ref-keys, DB synthesizes); S-Q3 per-file species/*.json + index.json, canonical-index stays Game-generated downstream (69 vs 21, update_evo_pack_catalog.js). Scope-doc landed after a 6-verifier adversarial pass (0 refuted) that surfaced the snapshot-determinism finding (speciesVersion snapshots only scalar/Json cols, not junctions).
+- **Sp1a SHIPPED** (Game-DB #214, merged 36d23b4): provenance + snapshot determinism. Jules (issue #210) flagged a Prisma collision mid-session (biomes = existing SpeciesBiome relation) -> dedicated `biomeSlugs` col (answered via sendMessage). Patch-applied; jules-pr-triager fixed 2 P1 (redundant sourceExtras spread + update ?? null); schema-doc-check fixed (schema-reference.md regen); Codex P2 (founded, biomeSlugs cache stale vs /species-biomes routes) fixed via recompute-at-snapshot + unit test. All CI green.
+- **Sp1b DISPATCHED** (Jules, issue #215): species shadow exporter + fidelity report; monitoring.
+
+### Da fare
+- Sp1b: monitor -> patch-apply -> triage -> PR -> Eduardo merge.
+- Post-Sp1b: biome/eco export (YAML) -- scope-doc + ratifica before dispatch (parked).
+
+### Note
+- Lesson: schema-change Jules dispatches must include `npm run schema:doc` regen (schema-doc-check CI gate); Sp1a's contract missed it, CI caught it.
+- Lesson: relation membership = recompute-at-snapshot, not a cached-column copy (a cache the mutation routes do not maintain drifts).
+
+---
+
 ## 2026-06-14 (chiusura: chip mirror verde + Game-DB PAUSA ratificata)
 
 ### Completato
