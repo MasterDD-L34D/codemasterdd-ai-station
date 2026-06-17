@@ -22,13 +22,15 @@
 I **metodi** (la dottrina) sono allineati-o-avanti rispetto al consenso 2026.
 Le **versioni concrete** (tool + modelli + label di standard) sono indietro di una
 generazione. Nessun cambio di architettura richiesto; serve un **version-refresh** +
-3 gap di security/governance da chiudere. Due item hanno urgenza con scadenza.
+3 gap di security/governance da chiudere. (Revisione 2026-06-17: il P0 originale "scadenza
+18/06" e' stato FALSIFICATO in review evidence-based -- vedi sez. P0. Nessuna azione con
+scadenza imminente.)
 
 | Asse | Dottrina/metodo | Versioni/contenuti | Verdetto sintetico |
 |------|-----------------|--------------------|--------------------|
 | Orchestration | ALIGNED / AHEAD | n/a | mantenere; 1 upgrade opzionale (agent-as-judge) |
 | Modelli locali | metodo llmfit AHEAD | OUTDATED (1 gen) | version-refresh: Ollama + Qwen 3.6 / IQ-quants |
-| Tool agentici | pattern on-trend | OUTDATED + 1 break | aggiorna Claude Code; fix aider-gemini PRIMA del 18/06 |
+| Tool agentici | pattern on-trend | OUTDATED (no break) | aggiorna Claude Code; aider-gemini usa Gemini API, NON colpito dal ritiro CLI 18/06 |
 | MCP | scoping CORRECT | CURRENT | watch RC 2026-07-28; pin server github |
 | Security | posture buona | 3 GAP nuovi | Rule-of-Two, tool-output-untrusted, label OWASP |
 | Governance/ADR | AHEAD su ADR | 1 GAP convergente | single-source CLAUDE.md/AGENTS.md |
@@ -36,15 +38,22 @@ generazione. Nessun cambio di architettura richiesto; serve un **version-refresh
 ## Azioni prioritizzate
 
 ### P0 -- urgente (scadenza imminente)
-1. **`aider-gemini` si rompe il 2026-06-18.** Google ritira Gemini CLI per utenti
-   free/Pro/Ultra il 18/06 (folding in Antigravity CLI, annuncio I/O 2026 ~19/05). Il
-   wrapper sopravvive SOLO con una API key Gemini paid. Decidere oggi: (a) puntare il
-   wrapper su key paid, oppure (b) ritirarlo e spostare quel ruolo su Groq/Cerebras.
-   Fonte: Google Developers Blog (ritiro 18/06/2026); The Register (20/05/2026).
-2. **Patch hygiene Claude Code GitHub Action.** Se si usa `claude-code-action` /
-   `@anthropic-ai/claude-code`, verificare versioni patchate (action v1.0.94 / CLI
-   >=2.1.128): prompt-injection da issue/PR untrusted leggeva `/proc/self/environ` e
-   leakava `ANTHROPIC_API_KEY` (reported 29/04, patched 05/05; Microsoft Security 05/06/2026).
+**REVISIONE 2026-06-17 (evidence-based, harsh-review + verifica wrapper): il P0 originale e'
+stato FALSIFICATO. Nessuna azione con scadenza 18/06.** Dettaglio della falsificazione:
+
+1. ~~`aider-gemini` si rompe il 2026-06-18~~ -- **FALSO, errore di categoria CLI vs API.**
+   Il ritiro 18/06 e' REALE ma colpisce il `gemini` CLI tool + Code Assist (free/Pro/Ultra),
+   NON la Gemini API. Il wrapper `scripts/wrappers/aider-gemini.cmd` invoca
+   `aider --model gemini/gemini-2.5-flash` = Gemini API via LiteLLM + API key, NON il CLI.
+   -> il wrapper NON si rompe; nessuna decisione urgente. Residuo non-urgente: monitorare
+   eventuali strette quota free-tier AI Studio (evento separato dal ritiro CLI).
+   Fonti: Google Developers Blog (ritiro CLI 18/06); The Register (20/05); GitHub
+   google-gemini/gemini-cli#27274.
+2. ~~Patch hygiene Claude Code GitHub Action~~ -- **DEMOTED a P3** (vedi watch-list). Il fleet
+   non usa `claude-code-action` (setup = OAuth Max CLI locale); l'advisory action v1.0.94 /
+   CLI >=2.1.128 (prompt-injection `/proc/self/environ` -> leak `ANTHROPIC_API_KEY`, reported
+   29/04 patched 05/05, Microsoft Security 05/06/2026) e' rilevante solo SE/quando l'action
+   entra in CI. Non e' una scadenza.
 
 ### P1 -- alto valore, basso rischio
 3. **Aggiornare Claude Code 2.1.116 -> 2.1.179** (~63 versioni). Sblocca primitive che
@@ -67,11 +76,15 @@ generazione. Nessun cambio di architettura richiesto; serve un **version-refresh
 ### P2 -- da valutare (eval prima di adottare)
 6. **Modelli: version-refresh (famiglia Qwen confermata leader locale).**
    - behavior-slot (oggi `qwen2.5-coder:14b-q2_K`): candidato **Qwen 3.6-27B** (77.2%
-     SWE-bench Verified) in Q2/Q3 sul Ryzen 12GB -- stessa giocata "Q2 su VRAM-bound",
-     modello piu' forte. Simon Willison: 25.6 tok/s @ 65K ctx (22/04/2026).
+     SWE-bench Verified [UNVERIFIED, fonte secondaria]) in Q2/Q3 sul Ryzen 12GB -- stessa
+     giocata "Q2 su VRAM-bound", modello piu' forte. Simon Willison: 25.6 tok/s @ 65K ctx (22/04/2026).
    - escalation-slot (oggi `qwen3-coder:30b` MoE): candidato **Qwen3-Coder-Next** (80B/3B
-     MoE, 58.7% SWE-bench, 256K ctx) -- stessa architettura expert-offload, drop-in da
-     valutare via llmfit + task-eval N>=10.
+     MoE, 58.7% SWE-bench [UNVERIFIED], 256K ctx) -- stessa architettura expert-offload,
+     drop-in da valutare via llmfit + task-eval N>=10.
+   - **CAVEAT numeri (harsh-review 2026-06-17)**: i due SWE-bench sopra NON sono comparabili
+     cosi' come scritti -- un 27B dense @77.2% sopra un 80B MoE @58.7% implica harness/varianti
+     diverse (Verified vs full, o setup diverso). NON citare in un ADR finche' non riconciliati
+     sul primario.
    - **Quant: testare IQ-quants (IQ3/IQ2 i-quants) al posto di Q2_K** -- il finding
      storico "Q2_K > Q3" va ri-validato contro IQ-series (codebook non-lineari, miglior
      qualita' a parita' di VRAM). Eventuale backend alternativo: `ik_llama.cpp`.
