@@ -73,7 +73,7 @@ Definire quale strumento / modello / accesso usare per ogni fase. Evita: usare s
 | Review | QA edit recente | Claude Code Max | Opus | `git diff` audit + semantics |
 | Compact / Archivio | chiusura sessione | Claude Code | Opus / fs | COMPACT + JOURNAL + memory |
 
-**Post-Max (transition ~17/06+, ADR-0030 Hybrid A1)**: "Capability-max" + "Planning strategico" -> **Claude Code Pro $20/mo** (primary); se Pro daily-limit -> **Claude API on-demand** (overflow ad-hoc, cap $10-20/mese ADR-0023, log via `scripts/claude-api/log_spend.py`); routine fallback **Gemini CLI free**; emergency **OpenRouter**. Daily coding resta Aider local/cloud-free.
+**Post-Max (transition ~17/06+, ADR-0030 Hybrid A1)**: "Capability-max" + "Planning strategico" -> **Claude Code Pro $20/mo** (primary); se Pro daily-limit -> **Claude API on-demand** (overflow ad-hoc, cap $10-20/mese ADR-0023, log via `scripts/claude-api/log_spend.py`); routine fallback **Groq/Cerebras cloud-free** (era Gemini CLI free; il path OAuth-login free e' RITIRATO 2026-06-18 -- vedi ADR-0030 addendum; resta `aider-gemini` via API-key); emergency **OpenRouter**. Daily coding resta Aider local/cloud-free.
 
 ## Routing consigliato per scenario
 
