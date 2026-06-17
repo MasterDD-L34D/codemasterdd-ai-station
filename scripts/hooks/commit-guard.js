@@ -22,15 +22,15 @@ process.stdin.on('end', () => {
   if (toolName !== 'Bash') process.exit(0);
   if (!/(^|[;&|]\s*)git\s+commit/.test(command)) process.exit(0);
 
-  // ADR-0011 Addendum 2026-05-17 (policy-C, Eduardo-decided): ban GitHub
-  // "Co-Authored-By:" trailer. ALWAYS-ON -- applies even to HEREDOC commits
-  // (orthogonal to the Conventional format-check which stays HEREDOC-skip).
-  // Cheap content check on full command, zero false-positive.
-  if (/co-authored-by\s*:/i.test(command)) {
+  // ADR-0011 policy-C (Addendum 2026-05-17, scoped 2026-06-17): ban a GitHub
+  // "Co-Authored-By:" trailer that credits an AI agent (Claude/LLM/bot). ALWAYS-ON,
+  // even for HEREDOC commits. Human co-authors (e.g. gh squash-merge crediting Eduardo)
+  // are ALLOWED -- the ban targets false AI credit (ADR-0011: "VIETATO Co-Authored-By: Claude").
+  if (/co-authored-by\s*:[^\n]*(claude|anthropic|openai|gpt|copilot|gemini|jules|\[bot\])/i.test(command)) {
     process.stderr.write(
-      'commit-guard.js block -- ADR-0011 policy-C: "Co-Authored-By:" trailer VIETATO.\n' +
-      '  Usa trailer metadata: "Coding-Agent: <agent-id>" + "Trace-Id: <uuidv7>".\n' +
-      '  Rif: codemasterdd docs/adr/0011 Addendum 2026-05-17.\n'
+      'commit-guard.js block -- ADR-0011 policy-C: AI "Co-Authored-By:" trailer VIETATO.\n' +
+      '  Agent attribution -> "Coding-Agent: <agent-id>" + "Trace-Id: <uuidv7>", mai Co-Authored-By.\n' +
+      '  (Human co-author OK.) Rif: docs/adr/0011 Addendum 2026-05-17 + scope 2026-06-17.\n'
     );
     process.exit(2);
   }

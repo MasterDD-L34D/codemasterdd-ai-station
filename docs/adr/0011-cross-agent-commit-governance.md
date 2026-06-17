@@ -253,3 +253,19 @@ policy. Cross-link bidirezionale.
 - Wrapper: `C:\Users\edusc\.local\bin\aider-cosmetic.cmd`, `aider-refactor.cmd`
 - ADR-0008 (delega baseline): `docs/adr/0008-aider-whole-format-silent-corruption.md`
 - ADR-0010 (format policy MADR): `docs/adr/0010-madr-format-adoption-and-skill-policy.md`
+
+## Addendum 2026-06-17 -- policy-C scoped to AI co-authors (rule = original intent)
+
+Session re-audit P2.4: `gh pr merge --squash` injects a server-side `Co-Authored-By: Eduardo
+Scarpelli <noreply>` trailer (the human himself), which the blanket guard regex
+(`/co-authored-by:/i`) flagged as VIETATO. But this policy's own intent (above) targets the FALSE
+AI credit ("VIETATO Co-Authored-By: Claude ..."), not human co-authors. The guard was
+over-implemented as blanket. Scoped to match intent:
+
+- **VIETATO**: `Co-Authored-By:` that credits an AI agent (Claude / Anthropic / OpenAI / GPT /
+  Copilot / Gemini / Jules / `[bot]`). Agent attribution MUST use `Coding-Agent:` + `Trace-Id:`,
+  never `Co-Authored-By:`.
+- **CONSENTITO**: human co-authors (e.g. the gh squash-merge self-credit, or a real collaborator).
+- Enforcement updated to match: `scripts/hooks/commit-guard.js` (PreToolUse) + `scripts/hooks/commit-msg`
+  (Layer 2) now block ONLY AI co-author trailers. The positive check (`Coding-Agent:` + `Trace-Id:`
+  on agent commits) remains the load-bearing attribution guarantee.
