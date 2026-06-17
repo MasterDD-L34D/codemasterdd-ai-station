@@ -82,6 +82,27 @@ Pattern utili:
 
 La mini-app Flask `apps/dogfood-ui/` ha endpoint `/bench/latest` che parsea `results/promptfoo-latest.json` e mostra trend side-by-side con dogfood stack metrics. Vedi `../../apps/dogfood-ui/README.md`.
 
+## Reproducibility (provenance)
+
+Cosa e' pinnato per run riproducibili:
+- **Decoding deterministico**: `temperature: 0` + `seed: 42` (entrambi i path: promptfoo
+  providers + `run-bench.ps1` Ollama options/cloud payload). Caveat: il seed-passthrough
+  promptfoo -> LiteLLM -> Ollama non e' garantito; `run-bench.ps1` lo passa diretto (affidabile).
+- **Problem-set versionato**: `problems.json` / `problems-hard.json` sono git-tracked.
+  `run-bench.ps1` registra `problems_sha256` nel sidecar provenance (sotto).
+- **Provenance sidecar** (`run-bench.ps1`): ogni run scrive `results-<ts>.meta.json` con
+  `git_commit` + `problems_file/sha256` + `models` + `ollama_digests` (da `ollama list`) +
+  `decoding {temperature, seed, num_ctx, num_predict}`. Ricostruisce l'esatto setup di un run
+  storico (bus-factor + N-sample audit, anti lucky-sample).
+
+Cosa NON e' pinnato (gap noto, lightweight-by-design):
+- **promptfoo path**: il mapping virtual-key -> modello reale vive in `infra/litellm/config.yaml`
+  (LiteLLM proxy), che NON finisce nel provenance sidecar. Per un run pienamente riproducibile e
+  auto-documentato usa `run-bench.ps1` (cattura i digest), oppure pinna i tag Ollama in
+  `infra/litellm/config.yaml` e annota la sua revisione git.
+- Niente DVC/W&B by design: problem-set piccoli + git-tracked, risultati = snapshot datati in
+  `results/`. La disciplina (seed + sha + digest) basta; il tooling pesante sarebbe gold-plating (YAGNI).
+
 ## Limitazioni note
 
 - **Subprocess Python isolation non completa**: i tests sharing global namespace via import. Per workload untrusted, wrappare in docker-sandbox.
