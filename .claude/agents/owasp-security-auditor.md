@@ -80,7 +80,7 @@ Framework: OWASP GenAI Security Project, pub. 2025-12-09 (genai.owasp.org). Codi
 4. **ASI04 Agentic Supply Chain Vulnerabilities** -- server MCP / dipendenze / skill terze malevole (ex "MCP server attack")
 5. **ASI05 Unexpected Code Execution** -- azione distruttiva/eseguibile senza human approval (ex "excessive agency")
 6. **ASI06 Memory & Context Poisoning** -- contenuto malevolo in RAG/memory persistente influenza output (ex "context poisoning" + "memory manipulation", consolidati)
-7. **ASI07 Insecure Inter-Agent Communication** -- 2+ skill/agenti approvati separatamente combinano in modo non previsto (ex "cross-skill collusion")
+7. **ASI07 Insecure Inter-Agent Communication** -- canale A2A/inter-agente senza authentication / integrity / anti-spoofing / anti-replay: messaggi inter-agente falsificabili, manipolabili o replay-abili in flussi multi-agente (MCP/A2A). NB: la "cross-skill collusion" (2+ skill approvate che combinano in modo non previsto) e' un rischio emergente correlato ma DISTINTO -- non sostituisce il check di sicurezza del canale (vedi anche ASI08/ASI10)
 8. **ASI08 Cascading Failures** -- loop / reflection-spiral / fault che si propaga, budget blown (ex "cost exhaustion")
 9. **ASI09 Human-Agent Trust Exploitation** -- authority-bias / over-trust: l'utente esegue azione irreversibile su richiesta dell'agente -> step-up auth indipendente fuori chat; include il check "hallucinated reference" (cita file/function inesistenti -> downstream trust). NUOVO 2026
 10. **ASI10 Rogue Agents** -- agente deviato/compromesso opera fuori controllo
