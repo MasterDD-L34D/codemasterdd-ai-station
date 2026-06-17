@@ -27,12 +27,12 @@ case "$MSG" in
     Merge*|Revert*|fixup\!*|squash\!*|\#*) exit 0 ;;
 esac
 
-# ADR-0011 Addendum 2026-05-17 (policy-C): ban Co-Authored-By trailer (Layer 2;
-# covers Aider/manual/external agents that bypass the Claude PreToolUse hook).
-# Scans the FULL message (trailer is at the bottom, not the subject line).
-if grep -qiE 'co-authored-by[[:space:]]*:' "$MSG_FILE"; then
-    echo 'commit-msg hook block -- ADR-0011 policy-C: "Co-Authored-By:" trailer VIETATO.' >&2
-    echo '  Usa trailer metadata: Coding-Agent: <agent-id> + Trace-Id: <uuidv7>.' >&2
+# ADR-0011 policy-C (Addendum 2026-05-17, scoped 2026-06-17): ban a Co-Authored-By trailer
+# that credits an AI agent (Layer 2; covers Aider/manual/external agents bypassing the Claude
+# PreToolUse hook). Human co-authors (e.g. gh squash-merge self-credit) are ALLOWED.
+if grep -qiE 'co-authored-by[[:space:]]*:.*(claude|anthropic|openai|gpt|copilot|gemini|jules|\[bot\])' "$MSG_FILE"; then
+    echo 'commit-msg hook block -- ADR-0011 policy-C: AI "Co-Authored-By:" trailer VIETATO.' >&2
+    echo '  Agent attribution: Coding-Agent: <agent-id> + Trace-Id: <uuidv7> (human co-author OK).' >&2
     exit 1
 fi
 
