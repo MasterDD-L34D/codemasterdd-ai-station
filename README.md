@@ -1,6 +1,6 @@
 # CodeMasterDD AI Workstation
 
-**Infrastructure-as-code** del desktop CodeMasterDD (Lenovo LOQ Tower 17IAX10) dedicato allo sviluppo AI agentic.
+**Infrastructure-as-code** del desktop CodeMasterDD dedicato allo sviluppo AI agentic.
 
 Questa è la workstation **primaria e autosufficiente** di Eduardo Scarpelli: tutti i workflow di sviluppo e i modelli AI locali girano qui, senza dipendenze da altri device.
 
@@ -12,12 +12,11 @@ Questa è la workstation **primaria e autosufficiente** di Eduardo Scarpelli: tu
 
 > **Nota**: questo repo non contiene codice di progetti reali. Quelli vivono in repository separati (Evo-Tactics, Synesthesia, ecc.).
 
-## Hardware
-- **Modello**: Lenovo LOQ Tower 17IAX10 (desktop)
-- **CPU**: Intel Core Ultra 7 255HX (24 core Arrow Lake HX, 2.40 GHz base)
+## Hardware (classe, dettagli specifici nel private fleet store)
+- **CPU**: Intel Core Ultra 7 255HX class (24 core Arrow Lake HX)
 - **GPU**: NVIDIA RTX 5060 8GB VRAM (Blackwell sm_120, CUDA 13.2)
-- **RAM**: **64GB DDR5-5600** dual channel (2×32GB Micron CT32G56C46S5.C16D, upgrade 2026-04-22, vedi ADR-0012)
-- **Storage**: SSD 1TB Micron NVMe
+- **RAM**: 64GB DDR5-5600 dual channel (upgrade 2026-04-22, vedi ADR-0012)
+- **Storage**: SSD 1TB NVMe
 - **OS**: Windows 11 Home 25H2 (build 26200)
 
 ## Stack attivo (aggiornato 2026-05-13)
@@ -58,6 +57,13 @@ File governance root-level (schema framework archivio adottato 2026-04-23):
 - [MODEL_ROUTING.md](./MODEL_ROUTING.md) — routing strategico strumenti/modelli
 
 Framework universale multi-progetto: `Archivio_Libreria_Operativa_Progetti/` (libreria, template, workflow, regole meta Claude Code).
+
+## Licenza
+
+Repo pubblico per backstop di piattaforma e trasparenza -- NON un template da riusare.
+Tutti i diritti riservati: nessuna licenza di riuso/ridistribuzione concessa (assenza di
+file LICENSE = all-rights-reserved di default). Il codice dei progetti reali vive in repo
+separati.
 
 ## Autore
 Eduardo Scarpelli - `<email-redacted>` - GitHub: [@MasterDD-L34D](https://github.com/MasterDD-L34D)
