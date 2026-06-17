@@ -1,17 +1,18 @@
 # Stack installato -- CodeMasterDD AI Station
 
 <!-- Spostato da CLAUDE.md 2026-06-03 (context-files reorg Fase 1). On-demand reference.
-     Verifica runtime: <tool> --version, ollama list. Modelli locali catalog -> hardware-and-models.md. -->
+     Verifica runtime: <tool> --version, ollama list. Modelli locali catalog -> hardware-and-models.md.
+     Ultimo refresh 2026-06-17 (post session re-audit; versioni ground-truth-probed). -->
 
 ## Stack installato
 - Git 2.53.0.windows.3
-- Claude Code 2.1.116 (OAuth Claude Max, Opus 4.7)
-- NVIDIA Driver 595.79 + CUDA 13.2
+- Claude Code 2.1.179 (OAuth Claude Max, Opus 4.8)
+- NVIDIA Driver 595.95 + CUDA 13.2
 - GitHub CLI 2.90.0 (installato 2026-04-19, auth MasterDD-L34D)
-- Node.js 24.15.0 LTS + npm 11.12.1 (installato 2026-04-19, Active LTS fino aprile 2029)
+- Node.js via nvm-windows v1.2.2: **22.22.3 ATTIVO** (Game-canonical, engines `>=22 <23`, AI-playtest calibration runtime-sensitive -- **MAI `nvm use 24` per lavoro Game**) + 24.15.0 disponibile (ADR-0003 addendum 2026-06-17). npm 11.12.1 (su node 24) / 10.9.8 (su node 22)
 - Python 3.12.10 (installato 2026-04-19)
-- VS Code 1.116.0 x64 (installato 2026-04-19, commit `560a9dba96f961efea7b1612916f89e5d5d4d679`)
-- Ollama 0.21.0 (installato 2026-04-19, servizio Windows auto-start)
+- VS Code 1.120.0 x64 (installato 2026-04-19, aggiornato 2026-06-17)
+- Ollama 0.30.8 (installato 2026-04-19, aggiornato; servizio Windows auto-start; QAT 0.30.6 + speculative-decoding 0.30.8 gia' presenti)
 - Modelli locali: -> vedi `docs/reference/hardware-and-models.md`
 - Aider 0.86.2 (installato 2026-04-20 via `python -m pip install aider-install && aider-install`, binary `C:\Users\edusc\.local\bin\aider.exe`) — **client agentic consigliato per workflow sovereign**
 - VSCode Cline extension `saoudrizwan.claude-dev` v3.79.0 (installata 2026-04-20) — **NOT viable come agentic con Qwen 7B**, vedi `docs/adr/0006-cline-qwen-viability.md`
@@ -20,7 +21,7 @@
 - **claude-mem v13.2.0** plugin Claude Code (installato 2026-05-12 via `claude plugin install claude-mem@thedotmack`, cache `C:\Users\edusc\.claude\plugins\cache\thedotmack\claude-mem\13.2.0\`) — **persistent memory compression system cross-session** (6 lifecycle hooks: Setup + SessionStart + UserPromptSubmit + PreToolUse + PostToolUse + Stop). Apache-2.0 74880 stars. M12 INSTALLED post Archon CALIBRATE PIVOT (3 blocker auto-resolved): (a) Bun v1.3.13 installed pre-req, (b) hook collision NO conflict empirical (plugin scope vs project scope codemasterdd .claude/settings.json separato, parallel merge SessionStart), (c) privacy SAME-TIER come Claude Code attuale (claude-agent-sdk = official Anthropic SDK, NON new data exposure). Worker service Bun port 37700+(uid%100) + SQLite `~/.claude-mem/` + Chroma vector DB. Reversibility test PASS (disable/enable cycle clean).
 - **Bun v1.3.13** (installato 2026-05-12 via `irm bun.sh/install.ps1 | iex`, binary `C:\Users\edusc\.bun\bin\bun.exe`) — runtime JavaScript/TypeScript fast (alternative Node.js). Pre-req per claude-mem worker service. ALL future tools che richiedono Bun engines.
 - **opencode-with-claude v1.6.11** plugin OpenCode (installato 2026-05-15 via `npm install -g opencode-with-claude`, registrato in `~/.config/opencode/opencode.json` plugin[] + provider.anthropic baseURL http://127.0.0.1:3456) — **Meridian bridge per Pro subscription Hybrid A1** (ADR-0030). Senza Pro attivo il bridge non auth, ma config preparato. Reversibile via `npm uninstall -g opencode-with-claude` + remove entries opencode.json.
-- **Gemini CLI v0.42.0** (installato 2026-05-15 via `npm install -g @google/gemini-cli`, binary `~/AppData/Roaming/npm/gemini.ps1`) — tier 3 cloud free 1M context. Auth via `GEMINI_API_KEY` env var (path API key, no OAuth needed). `GEMINI_CLI_TRUST_WORKSPACE=true` user-scope persistent settato. Quota: 60 req/min via API key path OR 1000 req/day via OAuth path post `gemini auth login` browser interactive.
+- **Gemini CLI v0.42.0** (installato 2026-05-15 via `npm install -g @google/gemini-cli`, binary `~/AppData/Roaming/npm/gemini.ps1`) -- tier 3 cloud free 1M context. Auth via `GEMINI_API_KEY` env var (path API key, no OAuth needed). `GEMINI_CLI_TRUST_WORKSPACE=true` user-scope persistent settato. Quota: 60 req/min via API key path. **RETIREMENT 2026-06-18**: il path OAuth login free/Pro/Ultra (1000 req/day) CESSA (Google Dev Blog / gemini-cli#27274); sopravvive solo il path API-key. Vedi reconcile ADR-0030.
 - **notebooklm-py v0.4.1** (installato 2026-05-15 via `pip install --user notebooklm-py[browser]`, binary `~/AppData/Roaming/Python/Python312/Scripts/notebooklm.exe`) + **notebooklm-mcp-cli v0.6.9** (installato via `uv tool install notebooklm-mcp-cli`, binari `~/.local/bin/nlm.exe` + `notebooklm-mcp.exe`) — **NotebookLM programmatic access** via personal Google OAuth Playwright. Capacità unlocked vs web UI: create/ask/source-add/generate (audio/video/quiz/flashcards/slide-deck/infographic/mind-map/data-table)/download. Auth pending Eduardo `notebooklm login` browser. Unofficial wrapper Apache-compatible (13.2k + 4.4k stars MIT, undocumented Google API ToS gray, mitigation: pin version + web UI fallback always available).
 - **Playwright chromium v1.59.0** + **chromium-1217 cached** (`~/AppData/Local/ms-playwright/`) — browser engine richiesto da notebooklm-py per OAuth flow.
 - **faster-whisper** (CTranslate2) + **GPU enable** `nvidia-cublas-cu12` + `nvidia-cudnn-cu12` + `nvidia-cuda-nvrtc-cu12` (installati 2026-05-21 via `pip install --user`, Ryzen) — **sovereign-local audio transcription** nello stack (future: voice memo, meeting, video, podcast). Wrapper canonico `scripts/whisper_transcribe.py` (auto-aggiunge nvidia wheel DLL-dir via `os.add_dll_directory` + PATH; GPU CUDA con fallback CPU; `--model large-v3` default IT-multilingue). **QG Step-1 smoke PASS 2026-05-21**: GPU device=cuda 0.5s su .wav reale, lang=it 0.99, output UTF-8 corretto. **GPU gotcha Windows**: CTranslate2 cerca `cublas64_12.dll`/cuDNN su PATH -> i nvidia wheel li forniscono in `site-packages/nvidia/*/bin`, il wrapper li registra a runtime (CUDA toolkit system NON necessario). Uso: `python scripts/whisper_transcribe.py <file|dir> [--model] [--lang it]` -> .txt sidecar. NON usato per ChatGPT-export 2026-05-13 (voce gia trascritta da OpenAI `audio_transcription` nell'export = whisper ridondante li; tool tenuto per audio futuro NON-pre-trascritto).
