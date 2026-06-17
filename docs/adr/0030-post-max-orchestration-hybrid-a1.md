@@ -218,3 +218,18 @@ This decision is falsifiable via 1 mese empirical post-Max. Specifically:
 ## Effective date
 
 **Active from 2026-05-15 sera-tardi-ultra-3** post Eduardo authorization "AUTORIZZA setup + ADR-0030 ship NOW".
+
+---
+
+## Addendum 2026-06-17 -- Gemini CLI free path RITIRATO (componente Hybrid A1 da sostituire)
+
+Re-audit di sessione (currency-violation, classe node-drift): questa decisione cita "Gemini CLI
+free 1000 req/day (routine fallback)" come componente Hybrid A1. Google RITIRA il path CLI /
+Code-Assist free/Pro/Ultra login-based il **2026-06-18** (Google Dev Blog; gemini-cli#27274);
+sopravvive solo l'accesso via paid-API-key. Impatto:
+- La decisione Hybrid A1 (CC Pro + Meridian + OpenCode) NON cambia; cambia il SOLO componente
+  "Gemini CLI free 1000 req/day", ora dead-on-arrival sulla data di transizione (~17-18/06).
+- Sostituto routine-fallback: **Groq / Cerebras cloud-free** (gia' in stack) oppure Antigravity
+  CLI free tier (cap ~20 req/giorno, molto piu' basso). Il wrapper `aider-gemini.cmd` usa la Gemini
+  **API** (key) ed e' INALTERATO (PR364 / docs/research/evidence-based-reaudit-2026-06-17.md).
+- MODEL_ROUTING.md aggiornato di conseguenza (riga routine-fallback).

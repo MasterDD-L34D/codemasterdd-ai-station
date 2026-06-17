@@ -210,7 +210,10 @@ judgment that a verdict "looked plausible".
 > rung OPENS PRs only -- auto-merge (R2) stays **OFF**; `.claude/settings.json` ceiling UNCHANGED.
 > The merge-block is code (a negative test on the REAL builder) + the human-merge-only invariant +
 > the settings ceiling -- codemasterdd has NO branch protection (free-tier 403), so there is NO
-> platform backstop (the R2 ADR must weigh this). Clean-cycle accounting stays EXTERNAL (read-only
+> platform backstop (the R2 ADR must weigh this). [Update 2026-06-17: branch-protection ADDED when
+> the repo went public -- enforce_admins + force-push/deletion blocked, but NO required-PR, so it
+> blocks history-rewrite/force-push NOT merge-review = NOT a merge backstop; the human-merge invariant
+> + negative test remain load-bearing.] Clean-cycle accounting stays EXTERNAL (read-only
 > `reconcile_cycles_report.py`, never in the actor -- sec 4). **clean-R1-PR-cycles still 0** until
 > the FIRST reconcile PR is human-merged AND survives the 7-day no-revert / no-same-line-followup
 > windows (sec 6); cadence is change-triggered, so the rung is SILENT when nothing drifts (silence

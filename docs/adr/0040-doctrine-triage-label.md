@@ -62,3 +62,13 @@ PR label. It informs scrutiny level; it does not change who merges.
   merge-decision path).
 - Tier-A/Tier-B doctrine split (hub merges "operational" doctrine): REJECTED -- reopens
   the "frame a loosening edit as operational" hole ADR-0038 closed.
+
+## Update 2026-06-17 -- branch-protection added (premise superseded, conclusion unchanged)
+
+The Context above says codemasterdd "had no platform backstop". Later the SAME day the repo went
+PUBLIC and got branch-protection (enforce_admins + force-push/deletion blocked, NO required-PR). The
+"no backstop" premise is thus superseded, but the DECISION (blanket human-merge on doctrine) is
+UNCHANGED: it rests on the self-licensing-loop (ADR-0037: a hub must not merge its own rule-book) +
+the Rule-of-Two leg-C invariant, NOT on the backstop. The new protection has NO required-PR, so it
+does NOT enforce doctrine review and is not a substitute for human-merge. Authoritative current
+branch-protection state: docs/governance/actor-activation-criteria.md (update 2026-06-17).
