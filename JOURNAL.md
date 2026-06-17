@@ -19,6 +19,23 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-06-18 (RFC #4 species S2: first export attempted -> RESCOPED to fidelity-shadow on SoT inversion)
+
+### Completato
+- **Currency Gate + cleanup**: live state verified (PC=CODEMASTERDD; codemasterdd ff-synced to #381; Game-DB Sp1a/b/c + S2-scope landed). 3 stale Jules-bot PRs Game-DB #211/#212/#213 ground-truthed as duplicates of merged #199/#205/#207 (single-commit branches, identical titles, forked pre-merge) -> close commands delivered to Eduardo.
+- **S2 step-1 (Q8) SHIPPED** (Game #2812, merged): extended `EVO_FINAL_DESIGN_SOURCE_AUTHORITY_MAP.md` section 4.6 to name species as the second export wave (after traits) under Game-Database SoT. Marker-only doc PR; worktree-isolated (Game shared-clone); CI green.
+- **S2 exporter chain SHIPPED** (Game-DB, all Codex-vetted + CI-gated, coordinator-direct): #221 `_generated_from`/`generated_at` provenance marker (S2-Q1); #222 `taxonomy-export.yml` workflow_dispatch (route B, no local DB, green-gate fail-closed, injection-safe tag); #223 template-faithful render (recursive orderObjKeys + renderBiomes preserving the underscore biome separator -- Codex P2 diacritics fixed via shared normalizeSlug in exporter AND differ); #224 non-destructive overlay (preserve MODEL_GAP fields + empty-array repr -- Codex P1 fixed: load templates for report-only diffs). First real export (release v1.1.0) reached a clean **marker-only diff** (17 species, +2/file, fidelity-green).
+- **RFC #4 amendment SHIPPED** (Game-DB #225, merged): recorded the SoT-inversion finding + the ratified rescope.
+
+### Da fare
+- **DB-as-SoT for species = S3+**: deferred; needs a Game-side co-design to migrate the authoring (species_catalog.json + per-species YAML) into the DB so a single generator owns the per-file surface. Do NOT re-attempt the species export-back / per-file marker PR before that.
+- **Parked-code follow-up** (chip task_072c7f0c): the overlay (#224) makes MODEL_GAP fields classify as matching in the fidelity shadow (0 model-gap), masking real representation loss. Revert or flag-gate the marker/faithful/overlay so the shadow measures raw fidelity again.
+
+### Note
+- **SoT inversion (the load-bearing finding)**: the first export attempt revealed the per-file species catalog `docs/catalog/species/<slug>.json` is a GENERATED artifact, not a DB-owned surface. Game's `sync:evo-pack` (update_evo_pack_catalog.js) generates it from the authored upstream (`data/core/species/species_catalog.json` v0.4.x ADR-2026-05-15 Option A + per-species YAML). `evo:import` reads those generated files -> DB is downstream; `evo:export` writing them back = second generator on the same surface (collision). RFC S-Q3 had vetoed only the canonical-index and was silent on the per-file species + index. Traits S2 shipped fine because traits have no competing Game generator -- species is the special case.
+- **Rescope ratified (Eduardo)**: species export = fidelity-shadow ONLY. The "first export" + "sync-narrow" species ladder steps cancelled; Game #2819 (per-file marker) closed as wrong-surface. Honest outcome: the first export did its job -- it surfaced the wrong surface before shipping destructive churn.
+- Process: 2 recon workflows (export mechanism + species data-flow ownership) drove the decisions; every Codex P1/P2 on this stream stayed founded and was fixed in-cycle (no force-push). Memory `project_rfc4_species_s2` saved so a future session does not re-attempt the cancelled export-back.
+
 ## 2026-06-17 (RFC #4 species: scope ratified, Sp1a/Sp1b/Sp1c shipped, fidelity GREEN)
 
 ### Completato
