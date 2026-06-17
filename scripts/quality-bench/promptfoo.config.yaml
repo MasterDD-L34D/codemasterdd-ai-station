@@ -29,6 +29,7 @@ providers:
       # apiKey: read from OPENAI_API_KEY env var (LiteLLM virtual key).
       # Create via http://localhost:4000/ui/ Virtual Keys → export OPENAI_API_KEY=sk-...
       temperature: 0
+      seed: 42
       max_tokens: 2000
 
   # TIER 2 local behavior
@@ -39,6 +40,7 @@ providers:
       # apiKey: read from OPENAI_API_KEY env var (LiteLLM virtual key).
       # Create via http://localhost:4000/ui/ Virtual Keys → export OPENAI_API_KEY=sk-...
       temperature: 0
+      seed: 42
       max_tokens: 2000
 
   - id: openai:ollama-refactor-30b-moe
@@ -48,6 +50,7 @@ providers:
       # apiKey: read from OPENAI_API_KEY env var (LiteLLM virtual key).
       # Create via http://localhost:4000/ui/ Virtual Keys → export OPENAI_API_KEY=sk-...
       temperature: 0
+      seed: 42
       max_tokens: 2000
 
   # TIER reasoning local
@@ -57,6 +60,7 @@ providers:
       apiBaseUrl: http://localhost:4000/v1
       # apiKey: read from OPENAI_API_KEY env var (LiteLLM virtual key).
       temperature: 0
+      seed: 42
       max_tokens: 4000    # R1 emette thinking → extra budget
 
   # TIER 3 cloud free
@@ -67,6 +71,7 @@ providers:
       # apiKey: read from OPENAI_API_KEY env var (LiteLLM virtual key).
       # Create via http://localhost:4000/ui/ Virtual Keys → export OPENAI_API_KEY=sk-...
       temperature: 0
+      seed: 42
       max_tokens: 2000
 
   - id: openai:cerebras-8b
@@ -76,6 +81,7 @@ providers:
       # apiKey: read from OPENAI_API_KEY env var (LiteLLM virtual key).
       # Create via http://localhost:4000/ui/ Virtual Keys → export OPENAI_API_KEY=sk-...
       temperature: 0
+      seed: 42
       max_tokens: 2000
 
 # ====================================================================

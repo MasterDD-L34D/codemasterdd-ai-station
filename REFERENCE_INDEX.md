@@ -171,6 +171,14 @@ Indice completo in `DECISIONS_LOG.md`. Path: `docs/adr/NNNN-topic.md`.
 - **Funzione**: hardware + tabelle bench tok/s + catalogo modelli Ollama spostato da CLAUDE.md
 - **Stato**: on-demand reference (verifica modelli: `ollama list`)
 
+### REF-DOC-03 (gap-audit G1 2026-06-17, sweep multi-source 6-reader)
+- **Codice**: REF-DOC-03
+- **Titolo**: `docs/reference/ai-tools-manifest.md`
+- **Funzione**: vista unica "quale AI, quale licenza, per cosa" del fleet (dev-tool hub + 9 provider cloud + 8 wrapper aider + fleet-tools MCP + plugin/MCP env) + pointer agli AI-stack per-repo (Game/Godot-v2/vault/Dafne) e ai loro provenance nativi
+- **Stato**: live, on-demand reference (scope HUB+POINTER; non duplica i provenance per-repo)
+- **Uso consigliato**: bus-factor + sovereign-audit licenze; quando serve sapere quale tool/modello AI gira dove e sotto quale licenza
+- **Note**: creato da gap-audit report AI-gamedev-standards. NON e' un consumer AI-STANDARDS.md (no bias/watermark: il fleet non shippa contenuto creativo generato). Currency caveat: stack-installed.md claude-mem reconcile (RECONCILE-1)
+
 ### REF-E01
 - **Codice**: REF-01
 - **Titolo**: `docs/reference/commands-cheatsheet-windows.md`

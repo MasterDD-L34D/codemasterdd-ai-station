@@ -42,7 +42,8 @@ param(
     'groq:llama-3.3-70b-versatile',
     'cerebras:llama3.1-8b'
   ),
-  [string]$OutputDir = (Join-Path $PSScriptRoot 'results')
+  [string]$OutputDir = (Join-Path $PSScriptRoot 'results'),
+  [int]$Seed = 42
 )
 
 $ErrorActionPreference = 'Stop'
@@ -126,7 +127,7 @@ function Invoke-Model {
         @{ role = 'user'; content = $userPrompt }
       )
       stream = $false
-      options = @{ num_ctx = 8192; num_predict = 2000; temperature = 0 }
+      options = @{ num_ctx = 8192; num_predict = 2000; temperature = 0; seed = $Seed }
     } | ConvertTo-Json -Depth 6
     $r = Invoke-ModelRequest -Uri 'http://127.0.0.1:11434/api/chat' -Body $payload -ContentType 'application/json' -TimeoutSec 300
     return $r.message.content
@@ -142,6 +143,7 @@ function Invoke-Model {
       )
       max_tokens = 2000
       temperature = 0
+      seed = $Seed
     } | ConvertTo-Json -Depth 5
     $headers = @{ 'Authorization' = "Bearer $apiKey"; 'Content-Type' = 'application/json' }
     $r = Invoke-ModelRequest -Uri $endpoints[$Provider] -Headers $headers -Body $payload -TimeoutSec 120
@@ -237,6 +239,42 @@ foreach ($modelSpec in $Models) {
 
 $jsonPath = Join-Path $OutputDir ("results-{0}.json" -f (Get-Date -Format 'yyyyMMdd-HHmmss'))
 $results | ConvertTo-Json -Depth 5 | Out-File -FilePath $jsonPath -Encoding utf8
+
+# Provenance sidecar (reproducibility: pin problem-set + model digests + decoding + commit).
+# Additive (does NOT change results array schema). Guarded EAP=Continue + $LASTEXITCODE per
+# L-040 (native git/ollama stderr under -Stop would false-fail). Failure here never aborts:
+# results JSON is already written above.
+$prevEAP = $ErrorActionPreference
+$ErrorActionPreference = 'Continue'
+try {
+  $sha = (Get-FileHash -Path $ProblemsFile -Algorithm SHA256).Hash
+  $gitCommit = (git -C $PSScriptRoot rev-parse --short HEAD)
+  if ($LASTEXITCODE -ne 0 -or -not $gitCommit) { $gitCommit = 'unknown' }
+  $digests = @{}
+  $ollamaRaw = (& ollama list)
+  if ($LASTEXITCODE -eq 0 -and $ollamaRaw) {
+    foreach ($line in ($ollamaRaw | Select-Object -Skip 1)) {
+      $cols = $line -split '\s{2,}'
+      if ($cols.Count -ge 2 -and $cols[0].Trim()) { $digests[$cols[0].Trim()] = $cols[1].Trim() }
+    }
+  }
+  $meta = [PSCustomObject]@{
+    generated_at    = (Get-Date).ToString('o')
+    git_commit      = $gitCommit
+    problems_file   = (Split-Path $ProblemsFile -Leaf)
+    problems_sha256 = $sha
+    models          = $Models
+    ollama_digests  = $digests
+    decoding        = @{ temperature = 0; seed = $Seed; num_ctx = 8192; num_predict = 2000 }
+  }
+  $metaPath = $jsonPath -replace '\.json$', '.meta.json'
+  $meta | ConvertTo-Json -Depth 5 | Out-File -FilePath $metaPath -Encoding utf8
+  Write-Host "Provenance:  $metaPath"
+} catch {
+  Write-Host "WARN: provenance capture skipped: $($_.Exception.Message)"
+} finally {
+  $ErrorActionPreference = $prevEAP
+}
 
 Write-Host "`n`n===== SUMMARY (pass@1) ====="
 $grouped = $results | Group-Object model
