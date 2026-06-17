@@ -19,6 +19,27 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-06-18 (Ferrospora local-SD spike: probe PASS on medallions, delegability boundary -> ADR-0041)
+
+### Completato
+- **Refresh-verify + anti-overlap map** (tutti i repo, live git/worktree): Godot-v2 Ferrospora = unico target disgiunto dalle sessioni attive (Game 4 worktree: g2-p4 / species-export-v110c / spec-j-lethal; Game-DB species-export #211-213). Delegability map: gran parte del "materiale mancante" NON delegabile pulito (Godot prep-done/manual-gated, Game traits canon-gated + EchoWake-demote, Game-DB parked).
+- **Standards eval** (last30days + web multi-source): Steam AI-disclosure 2-tier (ship-time) + C2PA/EU-AI-Act + community anti-"slop". License gate verificato: SDXL OpenRAIL++-M + LayerDiffuse OpenRAIL-M = commercial OK (smentito il claim second-hand "non-commercial"); IP-Adapter Apache-2.0. Nessun blocker spike/ship.
+- **Spike local-SD su Ryzen** (4070S, supervised, Eduardo-gated): ComfyUI portable v0.25.0 + SDXL + LayerDiffuse Conv-Injection + IP-Adapter, tutto PINNATO (lock-commit-at-import; il classifier ha bloccato l'untrusted-code -> autorizzazione esplicita Eduardo, gate corretto non aggirato). Install C:\AI\ferrospora-spike (KEEP, riusabile).
+- **Probe ct_medallion PASS**: 8 seed, falsification pre-registrata (4 hard-gate + style-fidelity), bar >=4/8 -> 6/8 PASS, transparency 8/8, style alta (best 00005/00007). Conv-Injection ha risolto la transparency (conflitto IP-Adapter<->Attention era il bug); workflow rewired attorno all'incompat layerdiffuse-pin <-> ComfyUI core v3 (no patch third-party).
+- **ADR-0041 (Proposed)**: capability local-SD adottata BOUNDED a asset ornate-decorative single-object; flat-tactical-markers + functional-UI-panels OUT (restano manual).
+
+### Da fare
+- Eduardo: ratifica ADR-0041 (merge); decisione promote dei medaglioni cherry-picked (staging in ~/ferrospora-out, NO auto-promote); Steam-disclosure + C2PA provenance a ship-time.
+- Pre-ship: different-model vision judge (fleet-tools cross_check) sui final asset (anti-monoculture, deferred).
+- Stop ComfyUI server idle su Ryzen (install resta).
+
+### Note
+- **Negative result = result**: lo scale ai 6 Tier1 ha mappato il boundary -- board_overlays 0/12 (blob organici, "fungal" ha vinto sul "flat glyph"), combat_panels 1-2/6 (no layout controllato). Local-SD ottimo per ornate single-object, non per iconografia flat ne' UI funzionale.
+- Lesson tecniche durature in ADR-0041 ("Technical findings"): Conv-Injection vs Attention quando coesiste IP-Adapter; verify node-schema via /object_info; pin puo' essere incompat con ComfyUI core v3 (rewire > patch third-party).
+- Supervision-only rispettato: Opus = hub/verdetto; gen su local-fleet Ryzen; ogni gate cross-PC + untrusted-code passato per autorizzazione Eduardo.
+
+---
+
 ## 2026-06-18 (RFC #4 species S2: first export -> RESCOPED to fidelity-shadow on SoT inversion; S2 CLOSED across 4 entities)
 
 ### Completato
