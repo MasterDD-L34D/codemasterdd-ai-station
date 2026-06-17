@@ -10,7 +10,7 @@
 |--:|-------|--------|------|------------------------------|
 | 0001 | Sovereign AI strategy | Accepted (target $0-50 **SUPERSEDED-by-0030** 2026-05-18; filosofia sovereign-first invariata) | 2026-04-20 | ~~Target $0-50/anno~~ -> Hybrid A1 $240-600/anno (ADR-0030). Principio locale-first/no-lock-in invariato |
 | 0002 | Workstation naming CodeMasterDD | Accepted | 2026-04-19 | Label "Lenovo AI Station" → "CodeMasterDD AI Station" |
-| 0003 | Node 24 vs 22 | Accepted | 2026-04-19 | Node 24 LTS vanilla, `nvm-windows` deferred YAGNI |
+| 0003 | Node 24 vs 22 | Accepted (addendum 2026-06-17) | 2026-04-19 | Node 24 LTS system; addendum: `nvm-windows` ADOTTATO + Game richiede Node 22 (calibration-canonical) -> active 22, MAI `nvm use 24` per Game |
 | 0004 | Ollama RTX 5060 config | Accepted (partial, `num_ctx` superseded da 0012) | 2026-04-20 | FA=1, KV q8_0, MAX_LOADED=1, ctx 8192 default |
 | 0005 | YAGNI minimalism approach | Accepted | 2026-04-20 | No pre-config, no abstraction anticipate |
 | 0006 | Cline + Qwen 7B viability | Accepted (NOT viable agentic) | 2026-04-20 | Scartato Cline, fallback Aider |

@@ -32,7 +32,7 @@ Provider: Groq/Cerebras/Gemini/OpenAI/Anthropic. Load bash: `set -a; source ~/.c
 Detail -> memory `reference_api_keys` + ADR-0013.
 
 ## Stack (essenziale)
-Git, Claude Code (OAuth Max, Opus), Node 24 LTS, Python 3.12, Ollama, Aider, OpenCode, Bun.
+Git, Claude Code (OAuth Max, Opus), Node 22 attivo (Game-canonical; +24.15.0 via nvm-windows, ADR-0003 addendum 2026-06-17 -- MAI `nvm use 24` per lavoro Game), Python 3.12, Ollama, Aider, OpenCode, Bun.
 Lista esaustiva (versioni + tool + plugin) -> `docs/reference/stack-installed.md`.
 
 ## Capacita AI locali
