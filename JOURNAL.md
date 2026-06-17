@@ -19,7 +19,7 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
-## 2026-06-17 (RFC #4 species: scope ratified, Sp1a + Sp1b shipped, fidelity measured)
+## 2026-06-17 (RFC #4 species: scope ratified, Sp1a/Sp1b/Sp1c shipped, fidelity GREEN)
 
 ### Completato
 - **Currency Gate + cleanup**: live state verified; Game-DB #189 (stale duplicate of merged #187) closed; codemasterdd + Game-DB main synced.
@@ -28,8 +28,11 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 - **Sp1b SHIPPED** (Game-DB #216, merged 9785ea5): species shadow exporter + fidelity report. Jules session FAILED ("unable to complete") -- work NOT lost: recovered the 3-file diff from an activities changeSet snapshot (~25 scratch files had ballooned the change-set and killed delivery). Filtered scratch, triaged (jules-pr-triager 2 P1: per-file path missing the packs/ prefix -> vacuous round-trip L-041; fixed via PATHS.SPECIES_DIR + totali_letti guard). S-Q3 refined (Eduardo): index.json is a generated summary like canonical-index -> dropped from the exporter (downstream); per-file is the DB surface. CI green (real round-trip DB test).
 - **Species fidelity RUN** (fidelity-report.yml, run 27697871099, on a real released snapshot): NOT green -- gap measured (the S1-shadow purpose). Species: matching 258 / divergent 8 (biomes set mismatch, junction-vs-Game) / game_only_model_gap 17 (description OK) / game_only_unexpected 53 (id x17, last_synced_at x17, sourceExtras-not-populated for derived_from_environment/receipt/genetic_traits/services_links) / targetMissing 22 (DB has 39 species from catalog_data.json vs ~17 Game per-file -- the 39-vs-17 superset, like canonical 69-vs-21).
 
+- **Sp1c SHIPPED** (Game-DB #219, merged 412d954): closed all 5 fidelity gaps (id emit, last_synced_at model-gap, mergeSpeciesRecords field-precedence, source-faithful sourceFiles, catalog-tier export filter, biomes slug-normalized diff). Jules COMPLETED (filtered 8 scratch .py); jules-pr-triager 2 P1 + CI surfaced 2 test bugs (FK cleanup + bad 'de_sert' fixture) -- all fixed.
+- **Species fidelity GREEN** (run 27706615133, real released snapshot): catalog-tier 17 species; matching 302, divergent 0, game_only_unexpected 0, targetMissing 0; only the 2 intended model-gaps (description x17, last_synced_at x17). Species DB->Game loop fidelity-complete on the catalog-tier. S2 precondition MET.
+
 ### Da fare
-- **Close species fidelity gaps before S2** (Eduardo-gated; evidence in run 27697871099): emit `id`; decide last_synced_at (model-gap vs sourceExtras); fix sourceExtras population for catalog_data.json-sourced species; resolve the biomes set divergence (junction-vs-Game); decide the 22-species superset (catalog_data.json species without a per-file -- per-file-ize vs DB-only-skip). S2 (export-on-release PR-to-Game) gated on green fidelity + Q8 canon-authority + cross-repo actor (OQ5).
+- **S2 export-on-release (species)** -- unblocked on fidelity; still gated on Q8 (a Game EVO_FINAL_DESIGN_SOURCE_AUTHORITY_MAP entry for DB-origin species; cross-repo doc PR, Eduardo-merge) + OQ5 (cross-repo actor = local operator CLI) + OQ7 (narrow the 6h sync to non-exported / drift-check). Scope-doc in the RFC + ratifica before dispatch.
 - biome/eco export (YAML) -- scope-doc + ratifica before dispatch (parked).
 
 ### Note
