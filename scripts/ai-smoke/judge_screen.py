@@ -269,7 +269,7 @@ def _vision_post(image_path, screen, host, model="gemma4:latest",
 
 
 def run(image_path, screen, det_threshold, sampler, vision_post,
-        accent_sampler=None, host="192.168.1.10:11434", model="gemma4:latest"):
+        accent_sampler=None, host="localhost:11434", model="gemma4:latest"):
     """End-to-end combined judge: deterministic bg (sampler -> _is_dark_bg) +
     deterministic accent (accent_sampler -> _is_teal_accent) + vision
     (vision_post -> _extract_json) merged (deterministic wins for the measurable
@@ -312,7 +312,7 @@ def main(argv=None, run_fn=run, sampler=sample_bg, vision_post=_vision_post,
     ap = argparse.ArgumentParser(description="AI-driven Godot-v2 screen smoke judge")
     ap.add_argument("--image", required=True, help="screenshot PNG to judge")
     ap.add_argument("--screen", default="lobby", help="SPECS screen key")
-    ap.add_argument("--host", default="192.168.1.10:11434", help="Ollama host:port")
+    ap.add_argument("--host", default="localhost:11434", help="Ollama host:port (override for cross-machine)")
     ap.add_argument("--model", default="gemma4:latest", help="vision model tag")
     ap.add_argument("--threshold", type=int, default=40, help="dark-bg brightness cutoff")
     a = ap.parse_args(argv)
