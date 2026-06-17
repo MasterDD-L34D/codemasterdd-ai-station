@@ -280,7 +280,7 @@ Backup, documentation, reversibility plan.
 ### 1. Attivazione Codice Consumo
 
 Conoscenza legale + evidence pubblica (bug noto) + articolazione chiara
-hanno permesso **negoziazione sostituzione gratuita** con Lenovo LOQ Tower
+hanno permesso **negoziazione sostituzione gratuita** con Lenovo desktop
 (superiore) + extra.
 
 **Lesson**: diritti consumatore valgono quando:

@@ -37,7 +37,7 @@ pubblica del bug KB5083769 (segnalato su Reddit, GitHub issues, forum
 Microsoft) per argomentare difetto di conformità.
 
 **Risultato negoziazione**:
-- Sostituzione gratuita con Lenovo LOQ Tower 17IAX10 (CodeMasterDD)
+- Sostituzione gratuita con Lenovo desktop (CodeMasterDD)
 - Hardware migliore: Intel Core Ultra 7 255HX + RTX 5060 8GB + 16GB DDR5 + SSD 1TB
 - Extra gratuiti: microfono valore €70 + chiavetta USB 128GB valore €30
 - A parità prezzo del Victus (€1003)
