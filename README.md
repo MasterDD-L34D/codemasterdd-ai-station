@@ -19,16 +19,16 @@ Questa è la workstation **primaria e autosufficiente** di Eduardo Scarpelli: tu
 - **Storage**: SSD 1TB NVMe
 - **OS**: Windows 11 Home 25H2 (build 26200)
 
-## Stack attivo (aggiornato 2026-05-13)
-- **Claude Code 2.1.116** — agente CLI di sviluppo (OAuth Claude Max fino 2026-05-19)
+## Stack attivo (aggiornato 2026-06-17)
+- **Claude Code 2.1.179** -- agente CLI di sviluppo (OAuth Claude Max ~fino 2026-06-17)
 - **Git 2.53.0.windows.3** + **GitHub CLI 2.90.0**
-- **NVIDIA Driver 595.79 + CUDA 13.2**
-- **Node.js 24.15.0 LTS** + npm 11.12.1
+- **NVIDIA Driver 595.95 + CUDA 13.2**
+- **Node.js 22.22.3** + npm 10.9.8
 - **Python 3.12.10**
-- **VS Code 1.116.0**
-- **Ollama 0.21.0** con modelli locali tier-based (cosmetic 7B / behavior 14B Q2 / escalation qwen3:30b MoE / reasoning deepseek-r1 / multimodal gemma4)
+- **VS Code 1.120.0**
+- **Ollama 0.30.8** con modelli locali tier-based (cosmetic 7B / behavior 14B Q2 / escalation qwen3-coder:30b MoE / reasoning deepseek-r1 / multimodal gemma4)
 - **Aider 0.86.2** con wrapper CLI (`aider-cosmetic`, `aider-refactor`, `aider-groq-bypass`, `aider-cerebras`, `aider-gemini`, `aider-openai`)
-- **Cloud tier 3** (free tier): Groq llama-3.3-70b (630 tok/s) + Cerebras llama-3.1-8b (733 tok/s) + Gemini 2.5 Flash + OpenAI gpt-4o-mini
+- **Cloud tier 3** (free tier): Groq llama-3.3-70b + Cerebras llama-3.1-8b + Gemini 2.5 Flash + OpenAI gpt-4o-mini
 
 ## Roadmap sintetica (aggiornata post ADR-0014)
 - **19/04**: ✅ setup base completato
@@ -37,7 +37,7 @@ Questa è la workstation **primaria e autosufficiente** di Eduardo Scarpelli: tu
 - **Fino 19/05 (Claude Max expiration)**: Fase 6 CLOSED 2026-05-07 (n=12 con soft-override esteso, ADR-0015 Accepted)
 - **~20/05/2026**: ADR-0015 Accepted 2026-05-07: scenario A full-sovereign confermato
 
-Per i dettagli operativi e le convenzioni di lavoro con Claude Code, vedi [CLAUDE.md](./CLAUDE.md). Per storia decisionale completa, `docs/adr/` (28 ADR: 0001-0028).
+Per i dettagli operativi e le convenzioni di lavoro con Claude Code, vedi [CLAUDE.md](./CLAUDE.md). Per storia decisionale completa, `docs/adr/` (40 ADR: 0001-0040).
 
 ## Governance & navigazione
 
@@ -71,4 +71,4 @@ Eduardo Scarpelli - `<email-redacted>` - GitHub: [@MasterDD-L34D](https://github
 ## Data creazione
 19 aprile 2026
 
-Ultimo refresh stack: 2026-05-13.
+Ultimo refresh stack: 2026-06-17.
