@@ -19,21 +19,23 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
-## 2026-06-17 (RFC #4 species: scope ratified, Sp1a shipped, Sp1b dispatched)
+## 2026-06-17 (RFC #4 species: scope ratified, Sp1a + Sp1b shipped, fidelity measured)
 
 ### Completato
 - **Currency Gate + cleanup**: live state verified; Game-DB #189 (stale duplicate of merged #187) closed; codemasterdd + Game-DB main synced.
 - **RFC #4 species-export scope RATIFIED** (Game-DB #209, merged). species-FIRST: S-Q1 sourceExtras parity; S-Q2 description = non-exported model-gap (Game uses i18n ref-keys, DB synthesizes); S-Q3 per-file species/*.json + index.json, canonical-index stays Game-generated downstream (69 vs 21, update_evo_pack_catalog.js). Scope-doc landed after a 6-verifier adversarial pass (0 refuted) that surfaced the snapshot-determinism finding (speciesVersion snapshots only scalar/Json cols, not junctions).
 - **Sp1a SHIPPED** (Game-DB #214, merged 36d23b4): provenance + snapshot determinism. Jules (issue #210) flagged a Prisma collision mid-session (biomes = existing SpeciesBiome relation) -> dedicated `biomeSlugs` col (answered via sendMessage). Patch-applied; jules-pr-triager fixed 2 P1 (redundant sourceExtras spread + update ?? null); schema-doc-check fixed (schema-reference.md regen); Codex P2 (founded, biomeSlugs cache stale vs /species-biomes routes) fixed via recompute-at-snapshot + unit test. All CI green.
-- **Sp1b DISPATCHED** (Jules, issue #215): species shadow exporter + fidelity report; monitoring.
+- **Sp1b SHIPPED** (Game-DB #216, merged 9785ea5): species shadow exporter + fidelity report. Jules session FAILED ("unable to complete") -- work NOT lost: recovered the 3-file diff from an activities changeSet snapshot (~25 scratch files had ballooned the change-set and killed delivery). Filtered scratch, triaged (jules-pr-triager 2 P1: per-file path missing the packs/ prefix -> vacuous round-trip L-041; fixed via PATHS.SPECIES_DIR + totali_letti guard). S-Q3 refined (Eduardo): index.json is a generated summary like canonical-index -> dropped from the exporter (downstream); per-file is the DB surface. CI green (real round-trip DB test).
+- **Species fidelity RUN** (fidelity-report.yml, run 27697871099, on a real released snapshot): NOT green -- gap measured (the S1-shadow purpose). Species: matching 258 / divergent 8 (biomes set mismatch, junction-vs-Game) / game_only_model_gap 17 (description OK) / game_only_unexpected 53 (id x17, last_synced_at x17, sourceExtras-not-populated for derived_from_environment/receipt/genetic_traits/services_links) / targetMissing 22 (DB has 39 species from catalog_data.json vs ~17 Game per-file -- the 39-vs-17 superset, like canonical 69-vs-21).
 
 ### Da fare
-- Sp1b: monitor -> patch-apply -> triage -> PR -> Eduardo merge.
-- Post-Sp1b: biome/eco export (YAML) -- scope-doc + ratifica before dispatch (parked).
+- **Close species fidelity gaps before S2** (Eduardo-gated; evidence in run 27697871099): emit `id`; decide last_synced_at (model-gap vs sourceExtras); fix sourceExtras population for catalog_data.json-sourced species; resolve the biomes set divergence (junction-vs-Game); decide the 22-species superset (catalog_data.json species without a per-file -- per-file-ize vs DB-only-skip). S2 (export-on-release PR-to-Game) gated on green fidelity + Q8 canon-authority + cross-repo actor (OQ5).
+- biome/eco export (YAML) -- scope-doc + ratifica before dispatch (parked).
 
 ### Note
 - Lesson: schema-change Jules dispatches must include `npm run schema:doc` regen (schema-doc-check CI gate); Sp1a's contract missed it, CI caught it.
 - Lesson: relation membership = recompute-at-snapshot, not a cached-column copy (a cache the mutation routes do not maintain drifts).
+- Lesson (Eduardo-corrected): a Jules session in state FAILED != work lost -- recover the diff from an activities changeSet snapshot (last stable unidiffPatch under `artifacts`), drop scratch files, apply only the contracted targets. Memory: feedback_jules_failed_recovery.
 
 ---
 
