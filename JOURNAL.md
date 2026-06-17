@@ -19,17 +19,18 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
-## 2026-06-18 (RFC #4 species S2: first export attempted -> RESCOPED to fidelity-shadow on SoT inversion)
+## 2026-06-18 (RFC #4 species S2: first export -> RESCOPED to fidelity-shadow on SoT inversion; S2 CLOSED across 4 entities)
 
 ### Completato
 - **Currency Gate + cleanup**: live state verified (PC=CODEMASTERDD; codemasterdd ff-synced to #381; Game-DB Sp1a/b/c + S2-scope landed). 3 stale Jules-bot PRs Game-DB #211/#212/#213 ground-truthed as duplicates of merged #199/#205/#207 (single-commit branches, identical titles, forked pre-merge) -> close commands delivered to Eduardo.
 - **S2 step-1 (Q8) SHIPPED** (Game #2812, merged): extended `EVO_FINAL_DESIGN_SOURCE_AUTHORITY_MAP.md` section 4.6 to name species as the second export wave (after traits) under Game-Database SoT. Marker-only doc PR; worktree-isolated (Game shared-clone); CI green.
 - **S2 exporter chain SHIPPED** (Game-DB, all Codex-vetted + CI-gated, coordinator-direct): #221 `_generated_from`/`generated_at` provenance marker (S2-Q1); #222 `taxonomy-export.yml` workflow_dispatch (route B, no local DB, green-gate fail-closed, injection-safe tag); #223 template-faithful render (recursive orderObjKeys + renderBiomes preserving the underscore biome separator -- Codex P2 diacritics fixed via shared normalizeSlug in exporter AND differ); #224 non-destructive overlay (preserve MODEL_GAP fields + empty-array repr -- Codex P1 fixed: load templates for report-only diffs). First real export (release v1.1.0) reached a clean **marker-only diff** (17 species, +2/file, fidelity-green).
 - **RFC #4 amendment SHIPPED** (Game-DB #225, merged): recorded the SoT-inversion finding + the ratified rescope.
+- **Shadow raw-mode restored** (Game-DB #226, merged via chip task_072c7f0c): rather than revert, the species shipping-mode transforms (marker/overlay/template-faithful) are gated on `--out` (shippingMode); fidelity-report.yml runs report-only -> raw shadow restores the description + last_synced_at model-gaps; taxonomy-export.yml keeps --out for an S3 revival. Codex P1 (#224) thereby scoped to traits.
+- **Biome/ecosystem S2 verdict** (Game-DB #227, merged): a SoT-check confirmed export-on-release is NOT viable (no per-file catalog surface; no exporter code; same SoT inversion; already parked via OQ3 + ecosystem model thinner than YAML) -> biome + ecosystem stay import-only. **RFC #4 S2 is now RESOLVED across all 4 entities**: traits export-shipped (live) / species fidelity-shadow (raw) / biome + ecosystem import-only.
 
 ### Da fare
-- **DB-as-SoT for species = S3+**: deferred; needs a Game-side co-design to migrate the authoring (species_catalog.json + per-species YAML) into the DB so a single generator owns the per-file surface. Do NOT re-attempt the species export-back / per-file marker PR before that.
-- **Parked-code follow-up** (chip task_072c7f0c): the overlay (#224) makes MODEL_GAP fields classify as matching in the fidelity shadow (0 model-gap), masking real representation loss. Revert or flag-gate the marker/faithful/overlay so the shadow measures raw fidelity again.
+- **DB-as-SoT (any entity) = S3+**: the single remaining path. A Game-side co-design to migrate the authoring (species_catalog.json + per-species YAML; biome/ecosystem YAML) INTO the DB so one generator owns each surface. Until then traits ship from the DB; species/biome/eco stay Game-authored + DB-shadowed. Do NOT re-attempt any species/biome/eco export-back before that.
 
 ### Note
 - **SoT inversion (the load-bearing finding)**: the first export attempt revealed the per-file species catalog `docs/catalog/species/<slug>.json` is a GENERATED artifact, not a DB-owned surface. Game's `sync:evo-pack` (update_evo_pack_catalog.js) generates it from the authored upstream (`data/core/species/species_catalog.json` v0.4.x ADR-2026-05-15 Option A + per-species YAML). `evo:import` reads those generated files -> DB is downstream; `evo:export` writing them back = second generator on the same surface (collision). RFC S-Q3 had vetoed only the canonical-index and was silent on the per-file species + index. Traits S2 shipped fine because traits have no competing Game generator -- species is the special case.
