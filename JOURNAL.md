@@ -19,7 +19,21 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
-## 2026-06-18 (Ferrospora UI integration: ChatGPT-Pro icons + carapace dock mounted in HUD; Godot render-verify capability)
+## 2026-06-18 (Chip triage + honest-stub deploy of 5 species #2850; rejected fabricating chip #2845)
+
+### Completato
+- **Chip triage** (post-Phase-B, Eduardo asked to check finished chips): 2 taxonomy chips found. **#2846** (test sandbox) = real regression from my Phase A #2832 -- the update_evo_pack_catalog test buildFixture copied generator+jsonio but not generatedMarker.js -> require broke; +2-line fix, merged-pending (auto-merge). **#2845** (promote ghost species) = chip diverged from the task_711be05f cleanup intent into a design-laden DEPLOY with HAND-FABRICATED balance/vc/foodweb-edges/cosmetic-provenance -- harsh-reviewer CLOSE-AND-REDO (violates AI-driven-calibration; inverted core-is-clean; baseline force-emptied).
+- **Eduardo ratified the DIRECTION** (deploy the 5, not remove -- they stay in canon) but demanded honest method. **Honest-stub deploy SHIPPED** (Game #2850, squash 5e10825d, merged): the 5 (rubrospina-velox/ferrimordax-rutilus/ferriscroba-detrita [badlands]; nebulocornis-mollis/arboryxis-lenis [foresta]) deployed via the EXISTING stub convention (glowcap-weaver: balance=encounter_role only + vc:{} + honest receipt). Canon-truth only (id/clade/role/biome; ferrimordax trait_refs canon; other 4 empty -> empty genetic_traits, NOT invented); flags from canon clade; NO foodweb fabrication; baseline shrunk to [] (ecosystem-roster-parity passes legitimately). #2845 closed as superseded.
+- Verified: canon-consistency total=0 new=0; tests green (canon 30 / speciesIndex 37 / traitRefs 3 / marker 3 / tutorial 3 / foodweb 8+10 / badlands-pilot 8); validate_datasets valid; regenerate idempotent; prettier clean; CI all-green; harsh-reviewer SHIP. Cleanup: 2 chip worktrees + branches removed.
+- **Calibration follow-up spawned** (task_c47c61d1): real balance (rarity/threat_tier) + vc via AI-playtest N-ladder (canonical-suite.yaml + calibrate_orchestrator.py) + master-dd authoring of the deferred traits/interactions.
+
+### Da fare
+- Calibrazione dei 5 (task_c47c61d1) -- placeholder onesti finche' non calibrati.
+- Taxonomy plan #2827: Fase C (L2 tier-as-flag + collapse playable, GATED su tier-semantics) + Fase D (L4 schema biome/eco).
+
+### Note
+- **Lesson**: un chip lasciato interpretare un task cleanup-framed puo' divergere in una decisione di design + fabbricare dati (balance a occhio, provenance cosmetico). Output dei chip = scrutinio harsh-review PRIMA del merge; "deploy specie" != hand-balance (evo-playtest = AI-driven). Honest-stub convention (encounter_role + vc:{} + receipt onesto) = pattern per deployed-ma-non-calibrato.
+- Deploy species: il roster vive in catalog_data.json (species[] + biomi[].species, seed {id,path,biomes}); il generatore enrichisce, non auto-discover -> seminare la roster + sync:evo-pack.
 
 ### Completato
 - **Cont. del filone local-SD** (post ADR-0041 / SD-spike, vedi entry sotto): Eduardo ha fornito 2 zip ChatGPT-Pro (IMG REf 39 img + additional-reference). Capito/catalogato/rinominato: 24 = libreria icone produzione (6 funzioni x 4 stati: base/disabled/selected/hover), + 2 frame (actiondock/unit_panel) + 9 board + 3 master. Confermato boundary: iconografia precisa = ChatGPT-Pro >> SD (le mie icone SD erano frame-vuoti/blob).
