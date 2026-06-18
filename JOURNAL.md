@@ -19,6 +19,22 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-06-18 (Ferrospora UI integration: ChatGPT-Pro icons + carapace dock mounted in HUD; Godot render-verify capability)
+
+### Completato
+- **Cont. del filone local-SD** (post ADR-0041 / SD-spike, vedi entry sotto): Eduardo ha fornito 2 zip ChatGPT-Pro (IMG REf 39 img + additional-reference). Capito/catalogato/rinominato: 24 = libreria icone produzione (6 funzioni x 4 stati: base/disabled/selected/hover), + 2 frame (actiondock/unit_panel) + 9 board + 3 master. Confermato boundary: iconografia precisa = ChatGPT-Pro >> SD (le mie icone SD erano frame-vuoti/blob).
+- **Godot-v2 5 PR MERGED** (tutti CI-verde, Eduardo-merge): #480 ct_medallion (SD ornate-decorative) | #483 action_icons_v2 (72 PNG alpha-cut da bg bianco + wire ICON_DIR) | #484 frames_v2 + canonical reference (board esplorativi local-only = repo-lean) | #485 ActionDock carapace rework (6-socket + icone CIRCOLARI via circle_mask.gdshader -- le icone sono cerchio-in-quadrato dual-use) | #487 mount ActionDock in HudView (era orfano! HUD usava 4 sigil nudi) con 5 azioni attive + WAIT nuovo + ritual locked; action_selected preservato; full GUT 3456 pass/0 fail.
+- **Capability sbloccata: Godot 4.6.2 LOCALE** (C:\dev\tools\godot) -> auto-verify visivo (render scene->PNG + GUT locale + gdformat/gdlint) PRIMA di pushare. Ha PRESO la regressione dock (icone square su socket tondi) E validato i fix, senza scaricare la verifica su Eduardo.
+
+### Da fare
+- Eduardo: prossimo polish UI = UnitInfoPanel/ForecastPanel col frame_unit_panel (design-heavy, content-region mapping su frame ornato) + boards (socket-rim/glow/HUD-layout da combat_component_map). Tracciato in memory project_ferrospora_sd_spike + continuation chip.
+
+### Note
+- **GOTCHA Godot render (load-bearing)**: i capture-script SceneTree DEVONO avere safety-quit (timer force-quit parallelo) -- uno script che erra PRIMA di quit() lascia Godot vivo all'infinito (hung process che consuma CPU, Eduardo l'ha notato). Altri: HudView e' CanvasLayer (no cast Control); `var x := load().instantiate()` = parse error (serve `: Node`); GUT locale `-gdir` non `-gtest=$var` in PS.
+- 0 overlap con sessioni attive (ghost-species promotion #2845/#2846, weekly-drift #2765, spec-j-lethal -- tutte in Game; io ero in Godot-v2 UI).
+
+---
+
 ## 2026-06-18 (Taxonomy reconciliation Phase B / L3: canon cross-ref rules SHIPPED #2837)
 
 ### Completato
