@@ -19,6 +19,28 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-06-18 (Taxonomy reconciliation Phase A / L1: species generation-enforcement SHIPPED #2832)
+
+### Completato
+- **Currency Gate**: PC=CODEMASTERDD; Game origin/main fc4418da (#2828), local main 4-behind (read plan from origin/main); Game-DB #228; concurrent sessions (Godot, spec-h/j) -> worktree-isolation mandatory. Plan = Game `docs/planning/2026-06-18-taxonomy-reconciliation-plan.md` (#2827, merged) = SoT; read + memory `project_rfc4_species_s2`.
+- **Phase A SHIPPED** (Game #2832, squash `77159f6b`, merged): L1 generation-enforcement for the species catalog. Generator `scripts/update_evo_pack_catalog.js` now emits a static `_generated` DO-NOT-EDIT marker (`scripts/utils/generatedMarker.js`) into catalog_data.json + 22 per-file species/*.json + species/index + species-index + species-canonical-index. CI `dataset-checks` gate regenerates (`npm run sync:evo-pack`) + fails on drift via `git status --porcelain` (catches untracked); placed after `npm ci`, before tree-mutating trait steps. Guard test `tests/scripts/generatedMarkerPresence.test.js`. `data` path-filter extended to generator+jsonio+marker utils. 2-commit split (style canonicalize / feat marker+gate) + 1 fix.
+- **Recon-before-build** (workflow, 4 parallel Explore agents) + own reads: `writeJsonFileFormatted` skips writes on semantic-equality (ignoreKeys=TIMESTAMP_KEYS); `species_catalog.schema.json` additionalProperties:true (marker safe); `ci-gate` aggregates `dataset-checks` (gate has merge-block teeth).
+- **harsh-reviewer** (Codex over-quota -> substitute, ADR-0026 #5): P2 untracked fail-open fixed in-cycle (`git diff` -> `git status --porcelain`); P3 comment accuracy fixed.
+- Eduardo authorized merge after deep checks; all green -> auto-merge SQUASH + update-branch (strict, BEHIND). Cleanup: worktree + local/remote branch removed; origin/main marker verified.
+
+### Da fare
+- **Phase B** (L3 cross-ref checker): roster-species in catalog OR is_event (4 evento_*); biome enrollment (biomes_expansion registered); ecosystem roster equivalence (badlands 5->8); trait-keeper back-concordance.
+- **Phase C** (L2 tier-as-flag + collapse playable): GATED on tier-semantics decision (Eduardo).
+- **Phase D** (L4 schema biome/eco).
+- biome/eco generation-enforcement (Phase A bundle deferred): biome 4 reps + biomes_expansion unregistered -> recon/Phase B first.
+
+### Note
+- **Key finding**: the evo-pack generator's prettier path is INPUT-SENSITIVE -- `prettier.format(JSON.stringify(data))` (compact input) COLLAPSES short arrays, while committed files were legacy-expanded; `prettier --write` on them is a no-op (a different prettier fixed-point). The skip-on-no-change writer hid the drift; it only surfaces when content changes. A textual golden-file gate therefore REQUIRES a one-time canonicalization to the generator's output (72 files, zero data change, verified deep-equal). Commit 1 used a one-off `prettier.format(JSON.stringify(parsed))` canonicalizer (same key order as the generator, verified).
+- Gate gotcha: `git diff --exit-code` ignores untracked -> fail-open on net-new generated files; use `git status --porcelain`.
+- Worktree ran sync:evo-pack via `NODE_PATH=/c/dev/Game/node_modules` (worktree has no node_modules); CI uses `npm ci` (prettier 3.8.3 locked). CI all-green confirmed LF/CRLF + prettier cross-platform = moot.
+
+---
+
 ## 2026-06-18 (Ferrospora local-SD spike: probe PASS on medallions, delegability boundary -> ADR-0041)
 
 ### Completato
