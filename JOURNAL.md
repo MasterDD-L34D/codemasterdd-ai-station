@@ -19,7 +19,21 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
-## 2026-06-18 (Chip triage + honest-stub deploy of 5 species #2850; rejected fabricating chip #2845)
+## 2026-06-18 (Taxonomy reconciliation COMPLETE: Phase C skipped + Phase D schemas shipped #2853)
+
+### Completato
+- **Phase D / L4 SHIPPED** (Game #2853, squash `a24549c5`, merged): per-entity shape schemas `schemas/evo/biome.schema.json` (data/core/biomes.yaml records) + `schemas/evo/ecosystem.schema.json` (data/ecosystems/*.ecosystem.yaml), validated in `tools/py/validate_datasets.py` (`validate_biome_schema` + `validate_ecosystem_schema`, mirroring `validate_species_catalog_schema`). Required = universal-field set; additionalProperties:true. Verified with REAL jsonschema 4.26: real data 0 errors, bad-docs 13 biome / 8 eco caught (non-vacuous).
+- **Phase C SKIPPED** (documented, plan section 8): the "playable overload" premise does NOT hold -- recon found the 3 "playable" signals are near-disjoint distinct concepts: `clade_tag: Playable` (7, taxonomy) / `role_tags: 'playable'` (8, design-intent) / `playable_unit: true` (8 roster, deploy), with ZERO overlap between role_tags:playable and playable_unit. Collapsing = over-unify (rule 5); tier is derivable so a stored field = YAGNI; no conflation/drift today. Same lean-honest premise-falsification as Phase B inv2/inv4.
+- **harsh-reviewer SHIP** + 3 P2 founded fixed in-cycle: scope-doc on both schemas (biome = top-level-only, nested via validate_biomes; ecosystem = data/ecosystems/ only, 22 pack files governed by run_all_validators.py) + negative-control test deferred to the shadow cleanup (verified manually meanwhile).
+- CI all-green; merge auto-squash + update-branch (strict/BEHIND), Eduardo authorized. Cleanup worktree+branch.
+- **Taxonomy reconciliation workstream COMPLETE**: Phase A (#2832 gen-enforcement) + Phase B (#2837 cross-ref checker) + 5-ghost honest-stub deploy (#2850) + Phase C skipped + Phase D (#2853 schemas). Plan #2827 closed.
+
+### Da fare
+- Follow-up tasks spawned (not blocking): `task_c47c61d1` (AI-playtest calibration of the 5 deployed stub species) + `task_c5a6e871` (remove tracked repo-root `jsonschema/` shadow dir + add the deferred negative-control test once the real lib resolves).
+
+### Note
+- **Discovered footgun**: a tracked repo-root `jsonschema/` package shadows the real jsonschema lib when cwd is on sys.path (`python -c`/`-m` from repo root) -> Draft202012Validator becomes a silent no-op (0 errors, no `__version__`). CI runs validate_datasets.py in SCRIPT mode (sys.path[0]=tools/py) so the real lib is used + the gate is real -- but local `python -c` validation is vacuous. Verify schemas from a non-repo-root cwd (e.g. cd /tmp) with the real lib. Cleanup = task_c5a6e871.
+- `py` launcher mis-runs scripts ("Unable to create process python3.exe"); use the explicit Python312 path or `py -c`.
 
 ### Completato
 - **Chip triage** (post-Phase-B, Eduardo asked to check finished chips): 2 taxonomy chips found. **#2846** (test sandbox) = real regression from my Phase A #2832 -- the update_evo_pack_catalog test buildFixture copied generator+jsonio but not generatedMarker.js -> require broke; +2-line fix, merged-pending (auto-merge). **#2845** (promote ghost species) = chip diverged from the task_711be05f cleanup intent into a design-laden DEPLOY with HAND-FABRICATED balance/vc/foodweb-edges/cosmetic-provenance -- harsh-reviewer CLOSE-AND-REDO (violates AI-driven-calibration; inverted core-is-clean; baseline force-emptied).
