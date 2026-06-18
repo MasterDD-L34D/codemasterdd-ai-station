@@ -19,6 +19,27 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-06-18 (Taxonomy reconciliation Phase B / L3: canon cross-ref rules SHIPPED #2837)
+
+### Completato
+- **Currency Gate** (resume): PC=CODEMASTERDD; Game origin/main = #2832 (Phase A, still top); Game-DB/codemasterdd unchanged; worktree-isolated from origin/main.
+- **Recon-before-build** (workflow, 5 Explore agents) reshaped Phase B -- 2 of the plan's 4 invariants yield no real check. inv1 (roster in catalog OR event) CLEAN; inv2 (biome enrollment) = 20 expansion biomes dead-def (only deprecated archive refs), overlaps existing biome-refs, S3 -> SKIP; inv3 (ecosystem roster parity) = 5 real ghost legacy_slug refs; inv4 (trait-keeper) = empty stub sidecars + the "violations" are services_links (ecosystem-service refs, NOT traits) -> DROP as category error.
+- **Phase B SHIPPED** (Game #2837, squash `69bf4b17`, merged): 2 rules extended in check-canon-consistency.cjs (G3 registry) -- roster-species-canon (inv1, CLEAN, anti-drift) + ecosystem-roster-parity (inv3, 5 ghost baselined as known-debt, gate NO-NEW). loadCanonIndex extended (deployedRoster/canonicalIds/ecosystemRosters). Unit tests + 2 e2e negative-controls (inject inv1/inv3 into the real index, L-041 non-vacuous). stack path-filter -> checker+baseline. spec section 10.
+- **harsh-reviewer SHIP IT** (Codex over-quota): inv1 traced 21/21 clean, baseline = exactly the 5 ghosts, inv2/inv4 drops verified (expansion biome only in prose classification.habitat, not a typed FK; services_links = services). 3 optional non-blocking P3.
+- CI all-green (stack-quality/ci-gate/dataset-checks); ci-gate aggregates dataset-checks+stack -> gate has merge-block teeth. Merge auto-squash + update-branch (strict/BEHIND). Cleanup worktree + branch (local+remote).
+
+### Da fare
+- **Phase C** (L2 tier-as-flag + collapse playable): GATED on the tier-semantics decision (Eduardo).
+- **Phase D** (L4 schema biome/eco).
+- **Debt**: remap/remove the 5 ghost legacy_slug species from the 2 pack ecosystem.yaml (badlands x3, foresta_temperata x2) -> shrink the baseline. Separate data task (spawned).
+
+### Note
+- lint-staged (husky) does NOT format in this worktree (npx ENOENT under git-bash) -> manual `prettier --write` pre-commit is mandatory (first CI red = prettier --check on test+spec).
+- commit-guard: a Conventional Commit description must start lowercase.
+- G3 baseline pattern: `--write-baseline` captures current violations; gate = NO-NEW; baseline shrinks as debt closes.
+
+---
+
 ## 2026-06-18 (Taxonomy reconciliation Phase A / L1: species generation-enforcement SHIPPED #2832)
 
 ### Completato
