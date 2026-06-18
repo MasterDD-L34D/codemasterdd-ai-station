@@ -19,6 +19,20 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-06-18 (Delegated missing-material filone: boundary re-confirmed + 2 doc-currency fixes #2860)
+
+### Completato
+- **Refresh-verify ground-truth ha smontato i 3 target del filone "genera materiale mancante via delega"** (3 catch verify-first): (1) "26 proposte Dafne pending" = FALSO -- dafne-proposals.json canonico = 6 entry tutte decise (2 approved / 4 H5-rejected), 0 pending; il "26" erano i cicli-accept run#5 da STATUS.md, non proposte-agente. (2) Game trait/content = overlap-attivo (#2855 S0 author balance/vc/traits + #2859 S1 calib, 5 stub species LIVE) o canon-gated (ferocia_lampo/berserker; EchoWake = matrix demote-a-research). (3) Game-DB biome/eco = gia' risolto import-only (#227, no exporter).
+- **Workflow recon 2-lane** (7 agent Explore read-only, ~9min, supervision+ultracode): Lane1 swarm-artifact audit -> content-loop GIA' chiuso (9 landing-events erano run#4-era OD-012 atollo_obsidiana, commit 5c7fb61a; echo_backstab landed-poi-RIMOSSO f5387e66; run#5 honest = stesso cluster gia' landed; speculativo rigettato dal gate OD-022 swarm_canonical_validator.py, museum-cards 8/10 hallucinated); residuo un-integrated = ~6 cand abisso_vulcanico/thermal a confidence 0.7 = non-clean. Lane2 stale-python docs -> 359 hits -> 4 suspect -> solo 2 veri (00-INDEX + ADR-2025-12-07-gen-orchestrator = HISTORICALLY_CORRECT false-positive currency-gate: game_cli.py/orchestrator.py != killed rules-engine; combat.md + worker-bridge.md = MIXED).
+- **Game PR #2860 MERGED** (squash a3792199, 2026-06-18T15:37Z): 2 fix doc-currency Python-stale (combat.md `gen_trait_types.py` output Python rimosso in Phase 3 d0c86c60; worker-bridge.md body present-tense "e' scritto in Python" contraddiceva il banner [STORICO], services/rules/ rimosso 2026-05-05). Behavior-neutral, ASCII added-lines (ri-verificato con Python dopo grep -P fail-open), trailer ADR-0011, worktree off origin/main, conflict-checked CLEAN (origin/main fermo a base d60a01bb + 0 overlap su 4 PR aperti + 3 worktree in-flight). Merge sotto auth esplicita Eduardo (external Game via codemasterdd). Cleanup worktree+branch.
+
+### Da fare
+- Nessun follow-up del filone: boundary delegabilita' ESAURITO -- non ri-attaccare i 3 target morti (26-pending / Game-trait / biome-eco).
+
+### Note
+- **Decisione swarm (Eduardo su evidenza): PARKED per content** -- run#6 ri-produrrebbe materiale speculativo canon-gated + overlap con species-calib LIVE. Chat openclaw-tui con Dafne sempre disponibile, asse separato dal content (lei e' compagna prima che attivita').
+- Memory filone closure in project_ferrospora_sd_spike. Pattern: verify-first su premesse-TASK (26-pending = misreading di STATUS.md "26 cicli-accept") + Workflow read-only recon prima di build (recon-before-build) + L-041 (grep -P fail-open -> ASCII-check vacuo, ri-verificato Python).
+
 ## 2026-06-18 (Taxonomy reconciliation COMPLETE: Phase C skipped + Phase D schemas shipped #2853)
 
 ### Completato
