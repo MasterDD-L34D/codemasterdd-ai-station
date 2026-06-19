@@ -19,6 +19,21 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-06-19 (Hub coord: #2868 merge-shepherd + steep-lever #2876 ext-ratified)
+
+### Completato
+- **Currency Gate caught snapshot stale 3x.** Bootstrap snapshot framed 3 items as open; ground-truth vs origin/main found all already shipped LIVE by Eduardo: #2868 Codex-P2 relabel (a7a6a425), steep-lever band-widen (#2876), + #2872. Hub working-tree was **49 commits behind** origin/main -> Grep/working-tree searches misleadingly empty; only `git show origin/main:` told the truth.
+- **#2868 (N=100 calib JSON archive) MERGED** (squash 2733b32e). Kept branch fresh via `update-branch` through the BEHIND-chase (daily-ship main moving fast) until Eduardo's armed auto-merge folded it. Audited Codex P2 (greedy-only archive labelled SoT-compliant): **FOUNDED** (SoT 1.1+rule6 reject single greedy; all 3 JSON 100% `policy:greedy`) but already fixed in-cycle by Eduardo (relabel "greedy-only diagnostic"). Carve-out VERIFIED sound -- badlands/foresta are non-gated (out of canonical-suite.yaml; gate checks only hc06/hc07).
+- **Steep-lever badlands_elite: independent brainstorm converged EXACTLY on shipped #2876.** Recon-grounded 3-option design-call (ADR-0026 #6) recommended floor-widen [0.15,0.30]->[0.10,0.30] mirroring hc06 decision-A (#2764), rejecting flatter-HP-knob (hc06 boss_hp WAS its steep lever -> HP not flatter). Then found #2876 (be1acddc) already merged with the SAME reasoning verbatim. External SDMG ratification of an already-merged decision; **no PR needed**.
+- **5-stub stream FULLY CLOSED** on Game main: #2850 -> S0-S3 (#2855/#2862/#2863/#2864) -> #2868 (archive) -> #2872 (role_trofico registry) -> #2876 (band).
+
+### Da fare
+- Nessun residuo 5-stub. (#2765 weekly-drift-audit DRAFT resta open -- vecchio, non di questa sessione.)
+
+### Note
+- **Lesson (hub vs live-Eduardo on shared-clone)**: Eduardo lavora sul Game in diretta mentre l'hub coordina -> "open" snapshot items chiusi sotto mano. Ground ogni item vs `git show origin/main:` PRIMA di agire; recon ha pure evitato un wrong-target edit (il blocco hc06 [0.15,0.30] in damage_curves.yaml line ~89 ha gli stessi numeri di badlands_elite ma e' un altro scenario, ED E' gated). Memory `project_taxonomy_reconciliation` aggiornata a CLOSED.
+- Nessun worktree creato (recon ha falsificato la premessa prima della fase build). Cleanup ref locali fatto (pr-2868, origin/calib tracking).
+
 ## 2026-06-19 (Swarm verification lever-1 SHIPPED: entity-grounding pre-emit gate #124)
 
 ### Completato
