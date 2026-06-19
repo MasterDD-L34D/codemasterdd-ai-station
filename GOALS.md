@@ -2,7 +2,7 @@
 
 > Read-only hub synthesis. Canonical goals live per-repo (each repo's `## Goals (S/M/L)`).
 > Refreshed by repo-health-auditor agent. Horizons: Short=sprint(weeks) / Mid=epic(1-2mo) / Long=vision(3-6mo).
-> Last refresh: 2026-06-10 (ground-truth audit repo-health-auditor: **tutti i 6 Short del 2026-05-22 COMPLETATI** -- PR canonici #2384/#352/#165/#176/#122 tutti MERGED ~2026-05-25, outcome superati dall'evidenza successiva). **Next Short RATIFICATI da Eduardo 2026-06-11** (AskUserQuestion strutturato, sessione coordinatore -- vedi "Short ratificati 2026-06-11"). Sources precedenti: docs/superpowers/specs/2026-05-21-cross-repo-goals-coordination-design.md + docs/superpowers/specs/2026-05-22-four-repo-short-directions-design.md
+> Last refresh: **2026-06-19** (delta sotto la Snapshot supersedes il baseline 06-11 dove diverge). Precedente 2026-06-10 (ground-truth audit repo-health-auditor: **tutti i 6 Short del 2026-05-22 COMPLETATI** -- PR canonici #2384/#352/#165/#176/#122 tutti MERGED ~2026-05-25, outcome superati dall'evidenza successiva). **Next Short RATIFICATI da Eduardo 2026-06-11** (AskUserQuestion strutturato, sessione coordinatore -- vedi "Short ratificati 2026-06-11"). Sources precedenti: docs/superpowers/specs/2026-05-21-cross-repo-goals-coordination-design.md + docs/superpowers/specs/2026-05-22-four-repo-short-directions-design.md
 
 ## Snapshot
 
@@ -14,6 +14,21 @@
 | vault | **DONE** (synthesis fidelity-verify, #176 merged 05-25). Post-Short: 40+ PR (eng-graph SSE daemon #243, OD-059 cloud judge #241, gap-capture daily backstop). **Next Short (ratificato 06-11): eng-graph daemon integration** nei workflow quotidiani | KB coverage; 7/7 agents stable (already met) | Complete personal/project knowledge layer, agent-queryable | -- |
 | evo-swarm (Dafne) | **DONE** (integration loop close, #122 merged 05-25; digest #123 merged 05-28). **Repo IDLE dal 05-28**. **PARKED esplicito (ratificato 06-11)** -- reactivation = decisione Eduardo (candidati trigger: post-Max routing attivo / SPEC-I closed) | Integrable game content low-manual-validation | Trusted AI content-orchestration meta-layer at scale | feeds Game |
 | codemasterdd | **DONE** (Gate-E evidence-logging -> gate review ~06-03 ESEGUITO): ADR-0036 Accepted (spine) 06-01 + ADR-0037 Accepted 06-03; ADR-0038/0039 Proposed (pending ratify). **Next Short (ratificato 06-11): post-Max readiness** (attivazione ADR-0023, Max scade ~06-17) + ADR-0038/0039 ratify in-sprint | Sovereign stack maturity (ADR-0030 Hybrid A1); coordination tooling (gated) | Self-sufficient sovereign AI dev station + ecosystem governance | hub |
+
+## 2026-06-19 refresh delta (vs 06-11 baseline)
+
+Ground-truth audit 2026-06-19 (repo-health-auditor). Supersedes la Snapshot 06-11 dove diverge:
+
+- **Game**: taxonomy reconciliation (Phase A/B/D) + 5-stub honest-stub deploy + S0-S3 calibration + steep-lever band-widen + jsonschema-shadow ALL MERGED. **RFC#4 CHIUSO end-to-end** (S1 traits / S2 species fidelity-shadow + biome/eco import-only / S3 NO-GO ratified `ADR-2026-06-19` #2877). **PE_ratio PR2/PR2b DONE** (#2867/#2869; finding: signal marginale -> decisione band residua). Open: solo #2765 DRAFT weekly-drift.
+- **Game-Database**: RFC#4 S2 chiuso (#226/#227) + S3 stamp (#230, pointer Game ADR). 0 open.
+- **evo-swarm**: **REACTIVATED** (non piu' IDLE) -- entity-grounding pre-emit gate Lever-1 #124 + 2 fix trait-source #125/#126 (06-19, suite 471 green). Runtime ancora PARKED. Lever-2/Lever-3 = spec future.
+- **Game-Godot-v2**: Ferrospora UI art-pass v2 + style-LoRA v1 DONE; SPEC-K K-05 phone/TV client #507. 2 PR open (#509 ForecastPanel frame, #510 K-05 QA).
+- **vault**: ADR-2026-06-03 asset-pipeline ratificato 06-18; 7 WARN carry-forward.
+- **codemasterdd**: **Claude Max scaduto ~06-17 -> post-Max routing ADR-0023 ATTIVO** (`logs/claude-api-spend-2026-06.md`, spend ~$0). ADR-0038/0039 Accepted 06-11.
+
+**Pending trigger-gated / deferred** (nessuna azione ora): RFC#4 GO_NARROW (3 trigger); swarm Lever-2/Lever-3 spec; gap-audit P5 live-emission + SDMG corpus run; ferrospora SD spike (Ryzen .11); GD1 Godot TV LobbyView; prod-auto-restart residue (Game chip task_3ce69e8d). **Scheduled**: SDMG quarterly review ~2026-08-01; governor reconcile settimanale (R2 earn-window).
+
+I 'Next Short (ratificato 06-11)' nella tabella sopra restano il baseline d'intento; il setting dei prossimi Short = decisione Eduardo.
 
 ## Cross-cutting initiatives
 
