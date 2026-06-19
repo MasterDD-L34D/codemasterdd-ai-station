@@ -19,7 +19,20 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
-## 2026-06-18 (Delegated missing-material filone: boundary re-confirmed + 2 doc-currency fixes #2860)
+## 2026-06-19 (Chip-output audit: jsonschema-shadow fix merged + 5-stub calibration substance-audit)
+
+### Completato
+- **#2857 (jsonschema shadow removal) MERGED** (Eduardo, e38931c5) -- spawned by me (task_c5a6e871). Exemplary chip output: removed the tracked repo-root `jsonschema/__init__.py` offline-shim (added 2025-11-03, rationale dead) that **silently no-op'd JSON-schema validation across the entire pytest suite in CI** -- corrected my ticket's wrong "CI unaffected" claim. Surfaced + fixed 57 masked failures: the dominant 50 = `schemas/evo/trait.schema.json` had a wrong `^TR-\d{4}$` pattern for sinergie/conflitti (traits reference by glossary slug; 0 ever used TR-id) -> the SCHEMA was the defect, fixed to slug pattern; 5 TR-200x metrics-gap + 2 aliases QUARANTINED (xfail + tracked, NOT fabricated). CI 854->856 pass / 0 fail.
+- **5-stub-species calibration substance-audit** (workflow, 4 auditors) on the series Eduardo merged (#2855/2862/2863/2864): **3/4 SOUND** -- #2855 S0 ratification-compliant (matches the AskUserQuestion ratification doc exactly, 26 traits resolve in active_effects.yaml, foodweb validator-safe, provenance honest `master-dd-ratified` no fake trace_hash); #2864 S3 vc-telemetry real (N=60 sessions seed 424242, YAML==evidence doc, reproducible); main gate-health all 9 green (canon 0-new, 30/37/3/3/3, foodweb 8/10, badlands 8, validate_datasets real post-#2857).
+- **1 real gap found**: #2862/#2863 (badlands S1 + foresta S2) = SUSPECT/MEDIUM. Code+scenarios+tests authentic, but the asserted N-ladder win-rates (badlands_elite N=100 0.16, foresta 0.50) are in MARKDOWN TABLES ONLY -- the archived JSON measurement outputs that CANONICAL-AI-PLAYTEST.md L122 REQUIRES are missing (prior calibrations have them). Not proven-fabricated, but evidence not materialized -> WR unverifiable. -> spawned `task_5b639fb8` to reproduce N=100 (seed 424242) + archive JSON + flag if the merged numbers diverge (P1 if so).
+
+### Da fare
+- `task_5b639fb8` (materialize/verify S1/S2 calibration JSON) + `task_c47c61d1` (broader 5-species calibration, partly subsumed by the merged S1-S3).
+- Other chip streams still OPEN (not mine, mapped not triaged): Game #2861 (register tournament-survivor agents mechanic_connector + playtest-coordinator, H7); codemasterdd #392 (evo-swarm entity-grounding pre-emit gate spec).
+
+### Note
+- **Lesson (reinforced)**: the anti-fabrication discipline (#2845) held on S0/S3 (ratified + telemetry-real) but S1/S2 skipped the REQUIRED evidence-archiving (JSON outputs) -- markdown-table WR claims are NOT a substitute. Audit chip calibration output against the SoT-contract artifact requirement, not just plausibility. Eduardo merging != evidence materialized.
+- The jsonschema shadow was worse than flagged: it neutralized the WHOLE pytest schema validation in CI (not just local `python -c`). Verify schema gates run the REAL lib (script-mode / non-repo-root cwd).
 
 ### Completato
 - **Refresh-verify ground-truth ha smontato i 3 target del filone "genera materiale mancante via delega"** (3 catch verify-first): (1) "26 proposte Dafne pending" = FALSO -- dafne-proposals.json canonico = 6 entry tutte decise (2 approved / 4 H5-rejected), 0 pending; il "26" erano i cicli-accept run#5 da STATUS.md, non proposte-agente. (2) Game trait/content = overlap-attivo (#2855 S0 author balance/vc/traits + #2859 S1 calib, 5 stub species LIVE) o canon-gated (ferocia_lampo/berserker; EchoWake = matrix demote-a-research). (3) Game-DB biome/eco = gia' risolto import-only (#227, no exporter).
