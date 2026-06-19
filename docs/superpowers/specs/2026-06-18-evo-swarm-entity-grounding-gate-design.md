@@ -237,3 +237,42 @@ behavior. No canon is mutated; the gate is read-only against the SoT.
 - last30days research 2026-06-18 (MARCH info-asymmetry; entity-grounding; framework
   not the bottleneck)
 - ADR-0026 Protocol 7 (SDMG); L-041 (fail-open / vacuous-test negative control)
+
+## 11. Correction (2026-06-19) -- implementation recon superseded the build premise
+
+Recon during the implementation (writing-plans phase) found that the verifier this
+spec proposed to BUILD already exists and is mature: `scripts/verify-swarm-claims.py`
+(swarm-local, Tier-1 fuzzy + categories C1-C4, 106 tests). It already does ref
+parsing (`parse_canonical_ref`), entity#field value resolution
+(`lookup_canonical_value`), per-ref classification (`verify_canonical_ref` ->
+verified/contradicted/unverified/malformed_ref), and declared-ref extraction
+(`extract_canonical_refs_from_artifact`). The spec's recon (sec 1) found only the
+DEPRECATED Game validator + the Node checker and missed this live swarm-side verifier
+-- a recon gap.
+
+Consequences for the implementation (evo-swarm PR #124):
+- No new `canon_resolver.py` was built. Lever-1 = build-on-existing: a thin gate
+  wrapper (`orchestrator.entity_grounding_gate`) wiring the existing verifier
+  PRE-SCORE in `swarm_loop._run`, plus one helper (`is_invented_entity`) for the
+  pure-invention class.
+- Sec 4.1 locus refined: the gate runs in `swarm_loop._run` (reusing the existing
+  reject machinery) rather than inside `run_agent`'s write path. The artifact is
+  still written to the gitignored `artifacts/` dir for audit but is never
+  scored/accepted/queued -- satisfying the "pre-emit" intent (never enters the
+  candidate pool).
+- Sec 5 error-handling refined: fail-OPEN-but-loud on empty/unavailable canon, NOT
+  fail-closed. The spec's fail-closed suited a CI gate; a live-loop gate that
+  rejects-all on a transient/partial canon load would halt the swarm. Empty/None
+  canon -> loud-skip + pass; the merge-gate `--strict` verify remains the backstop.
+- SDMG (sec 6): 2 harsh-review rounds. Round 1 falsified the first cut (caught only
+  'contradicted', missed pure-invention = 4/8 of the run-5 corpus) -> added
+  `is_invented_entity`. Round 2 SHIP-IT (OD-012 known-good trio not false-rejected
+  vs real canon). The run-5 corpus is exercised via targeted tests, not a separate
+  harness (the existing 106 + new tests already cover the patterns).
+- Follow-up (P2, latent, not triggered today): a trait authored in
+  `active_effects.yaml`/`index.json` but not back-filled into `glossary.json` would
+  false-reject; union the trait sources or add a CI invariant.
+
+Lesson: build-on-existing recon must grep the TARGET repo's `scripts/`, not only the
+cross-repo deps -- the spec premise "build a resolver" was a recon gap, caught before
+any code by the writing-plans recon. See [[feedback_recon_before_build]].
