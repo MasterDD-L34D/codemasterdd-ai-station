@@ -19,6 +19,22 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-06-19 (RFC#4 S3 DB-as-SoT: falsified -> NO-GO ratified, ADR + stamp landed)
+
+### Completato
+- **RFC#4 S3 (DB-as-SoT taxonomy authoring) CLOSED NO-GO.** Il brief #228 raccomandava NO-GO ma SDMG-flaggava la propria reco come ipotesi single-recon -> falsificazione esterna obbligatoria prima di trattarla come decisione.
+- **Workflow fan-out 6-agent** (ultracode ON, run `wf_e8d9bf91-f80`): 3 verify ground-truth (Game+Game-DB) + steelman PRO vs red-team NO-GO + synthesis. Verdetto **NO_GO_STEADY_STATE high-conf**: CONFERMA (non ribalta) il brief + corregge i suoi numeri (DB 32/16/9 col scalari vs 59/122/35 leaf-path; biome ~122 non ~150; active roster 22 non 21; `*.biome.yaml` zero reader runtime; no biome/eco exporter + no YAML emitter). GO_NARROW (DB autore del solo subset gameplay, forward-generate nel file-snapshot, no export-back) preservato dietro 3 trigger falsificabili.
+- **ADR-2026-06-19** (Game #2877, 9df35b8b MERGED): decision record. Governance gate: decisions-log auto-gen rigenerato (73 ADR via generate_decisions_log.py). Gotcha: prettier proseWrap:always trasformava ` + ` a inizio-riga in bullet `-` spuri -> rimossi i ` + ` dalla prosa.
+- **Stamp RFC#4** (Game-DB #230, 4e978417 MERGED): RFC#4 status S3-verdict line + brief #228 status SCOPING->RESOLVED + sezione Verdict.
+- **Pre-build check (Eduardo-flagged, ground-truth)**: sweep committed+uncommitted (branch/stash/worktree/PR all-state, 3 repo) -> nessuna impl RFC#4-S3 in-flight; `species-calib-s3`/Jules-S3/#171 = altri "S3" non-correlati; dashboard/versioning/audit shippata = ladder S1/S2 shadow (la GO_NARROW dell'ADR la cita come asset).
+
+### Da fare
+- Nessun residuo S3. Non re-aprire senza un trigger (2o editor umano / content-tool live / scaffolding integrity file-side piu' caro di un pilot DB 1-entita').
+
+### Note
+- SDMG validato in pratica: una reco single-recon NON e' decisione finche' falsificata esternamente; qui la falsificazione ha confermato + raffinato (correzioni numeri) + estratto la GO_NARROW che il brief sotto-valutava. Convergenza indipendente sullo stesso esito = +confidence.
+- Worktree-isolation per entrambi i PR (Game + Game-DB shared-clone), cleanup completo (worktree/branch local+remote, main non parcheggiato). Game-DB commit-msg hook (subject<=72) ha bloccato un subject 77 -> accorciato. Memory `project_rfc4_species_s2` aggiornata a S3 CLOSED.
+
 ## 2026-06-19 (Hub coord: #2868 merge-shepherd + steep-lever #2876 ext-ratified)
 
 ### Completato
