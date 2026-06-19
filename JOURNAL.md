@@ -19,7 +19,20 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
-## 2026-06-19 (Chip-output audit: jsonschema-shadow fix merged + 5-stub calibration substance-audit)
+## 2026-06-19 (Session close: S1/S2 calib gap RESOLVED + 2 chip streams triaged/merged)
+
+### Completato
+- **S1/S2 calibration evidence-gap RESOLVED** (task_5b639fb8 -> Game #2868, OPEN): reproduced all 3 N=100 runs (seed 424242, node 22, canonical repro contract) and archived the missing measurement JSON (SoT CANONICAL-AI-PLAYTEST line-122). **All 3 WR reproduce the merged claims EXACTLY -- NO P1**: badlands_elite 0.16 (band [0.15,0.30]), badlands_ambient 1.0 ([0.70,1.00]), foresta_pilot 0.50 ([0.40,0.60]), all GREEN. So the audit's SUSPECT/MEDIUM verdict closes clean: the numbers were measured-accurate, just never archived (no fabrication). #2868 is pure-additive (3 JSON + 2 doc notes), prettier-clean, governance errors=0, ADR-0011 trailers -> ready to merge.
+- **2 chip streams triaged + merged** (explicit Eduardo auth per-PR after classifier correctly blocked the vague "si"): Game #2861 (register tournament-survivor agents mechanic_connector + playtest-coordinator, H7 -- was DRAFT, marked ready; dup-check clean vs the 11 existing swarm roles; pre-approved 2026-04-26) -> MERGED b1a6f371; codemasterdd #392 (evo-swarm entity-grounding pre-emit gate design spec) -> MERGED 92405d0b.
+
+### Da fare
+- **Merge #2868** (S1/S2 JSON archive, sound, OPEN) -- Eduardo or next session.
+- `task_c47c61d1` (broader 5-species calibration) largely subsumed by the merged S0-S3 + #2868; review/dismiss.
+- Steep-lever caveat on badlands_elite (band-mid unreachable, ratified ~1pp off floor) = master-dd follow-up flagged in #2868 report.
+
+### Note
+- Doctrine held: classifier hard-blocked merge of PRs not-created-by-me on a vague "si" -> required explicit "ok mergia". External-repo merge stays Eduardo-gated even mid-session.
+- Anti-fabrication discipline (#2845 lesson) vindicated end-to-end: the only "suspect" calibration slice (S1/S2) turned out measured-real once the required evidence artifact was materialized -- the gap was process (missing archive), not fabrication.
 
 ### Completato
 - **#2857 (jsonschema shadow removal) MERGED** (Eduardo, e38931c5) -- spawned by me (task_c5a6e871). Exemplary chip output: removed the tracked repo-root `jsonschema/__init__.py` offline-shim (added 2025-11-03, rationale dead) that **silently no-op'd JSON-schema validation across the entire pytest suite in CI** -- corrected my ticket's wrong "CI unaffected" claim. Surfaced + fixed 57 masked failures: the dominant 50 = `schemas/evo/trait.schema.json` had a wrong `^TR-\d{4}$` pattern for sinergie/conflitti (traits reference by glossary slug; 0 ever used TR-id) -> the SCHEMA was the defect, fixed to slug pattern; 5 TR-200x metrics-gap + 2 aliases QUARANTINED (xfail + tracked, NOT fabricated). CI 854->856 pass / 0 fail.
