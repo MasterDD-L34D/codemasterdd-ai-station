@@ -19,6 +19,23 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-06-19 (Swarm verification lever-1 SHIPPED: entity-grounding pre-emit gate #124)
+
+### Completato
+- **"Sistemare lo swarm" = anti-hallucination via verifica, NON framework-rewrite** (last30days 2026-06-18: "il gap non e' il framework, e' eval/verifica"; MARCH info-asymmetry + entity-grounding). 3 lever; lever-1 SHIPPED questa sessione.
+- **KEY recon catch (anti-rebuild)**: il verificatore `scripts/verify-swarm-claims.py` ESISTE gia' maturo (parse_canonical_ref + lookup_canonical_value + verify_canonical_ref + 106 test). Lo spec #392 proponeva un nuovo canon_resolver.py = recon gap (manco' il verifier swarm-local vivo, trovo' solo Game-validator deprecated + Node checker). Lever-1 = build-on-existing (wiring), NON resolver nuovo. Corretto in spec sez.11.
+- **evo-swarm #124 MERGED** (squash 84fe33d): `entity_grounding_gate` wirato PRE-SCORE in swarm_loop._run (riusa macchina reject). Fail su `contradicted` OR (`unverified` AND `is_invented_entity`); fail-OPEN-but-loud su canon empty/unavailable (live-loop != CI fail-closed); hallucination_ratio per-ciclo. TDD: 10 gate + 9 unit + real-canon regression, full-suite verde, CI 3.12 pass.
+- **codemasterdd #395 MERGED**: correzione onesta spec #392 (sez.11: verifier pre-esisteva, locus refinement, fail-open deviation, 2-round SDMG).
+- **SDMG 2 round harsh-review**: round-1 FALSIFICO' (gate prendeva solo value-mismatch, mancava pure-invention = 4/8 corpus run-5, classificate `unverified`) -> aggiunto is_invented_entity; round-2 SHIP-IT (trio OD-012 known-good NON false-rejected vs canon reale). Ground-truth ad ogni passo (ri-eseguito i test io, no blind-trust subagent).
+
+### Da fare
+- **P2 chip task_4a645eaf** (Eduardo l'ha AVVIATO, branch claude/entity-grounding-trait-sources-union, sessione concorrente su checkout swarm): union trait-sources (active_effects.yaml/index.json -> canonical['traits']) per chiudere il vettore latente false-reject. Non triggerato oggi.
+- **Lever-2** (checker asimmetrico cross_check Gemini/Groq) + **Lever-3** (constrained schema-output Ollama format) = follow-up spec futuri.
+
+### Note
+- Swarm resta PARKED in tutto (gate validato OFFLINE, non triggera reattivazione). Reframe: lo swarm non era rotto come dice l'8/10 -- il verifier esisteva, girava a valle; ora gatea pre-emit.
+- Pattern: build-on-existing recon deve grep gli scripts/ del repo TARGET, non solo i dep cross-repo. Memory: project_swarm_verification. PR precedenti sessione (anti-overlap, merged): #2860 doc-currency + #2861 H7 + #392 spec.
+
 ## 2026-06-19 (Session close: S1/S2 calib gap RESOLVED + 2 chip streams triaged/merged)
 
 ### Completato
