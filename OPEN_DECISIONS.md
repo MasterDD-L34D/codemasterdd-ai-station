@@ -26,6 +26,7 @@
 | OD-008 | Cross-repo Phase B Day 7 closure tracking? | ✅ CLOSED 2026-05-28 (codemasterdd-side: Phase B closure 2026-05-14 confermata in STATUS_MULTI_REPO + Game [OD-024..031] post-cutover audit ✅ SHIPPED + ADR-0024 addendum shipped PR #55) | **Lato codemasterdd niente**. Side-note opzionale: Game `OPEN_DECISIONS.md` ha ancora OD-023 marcata "APERTA 2026-05-12" -- housekeeping Game-side quando vuoi (non blocca nulla) |
 | OD-009 | Stack ADR-0017 (LiteLLM+Langfuse+Postgres+dogfood-ui) post-Hybrid-A1 value review? | ✅ CLOSED 2026-05-28 sera (Decommission codice shipped: `git rm -r infra/ apps/dogfood-ui/` + ADR-0017 status SUPERSEDED-by-ADR-0030 + runbook hot-restart DEPRECATED) | Nessuna. Reversibile via git history se future need emerge |
 | OD-010 | Re-visit-trigger combat Godot (tutorial->generale = N=40) orfano? | OPEN (monitoring) 2026-06-08 | Sorveglianza hub; nessuna azione finche' combat Godot = tutorial/preview. Trigger: Godot-combat -> general -> N=40 re-validation + ADR (body sotto) |
+| OD-011 | Biome-SoT cross-repo: contro quale file biome validano i canonical_refs swarm/Game? | OPEN (hub-watch) 2026-06-20 | Owner decisione = Game-canon. Hub sorveglia; nessuna azione codemasterdd finche' swarm PARKED. Body sotto; autoritativo = evo-swarm OD-007 (#127) + RFC#4-S3 finding F2 |
 
 **Decisioni vision/architettura**: vivono in `docs/adr/` (24+ ADR Accepted). Per cose nuove rilevanti usa ADR-NNNN MADR format (vedi `docs/adr/0000-template.md` se esiste oppure copia struttura ADR esistente).
 
@@ -57,6 +58,18 @@ Quando chiudi una OD: aggiorna la riga in tabella + sposta il body in `docs/arch
 - **File/moduli**: `Game-Godot-v2/scripts/session/combat_session.gd` + `scripts/combat/d20_resolver.gd` + `tests/unit/test_combat_engine_parity_contract.gd`; doc `Game-Godot-v2/docs/godot-v2/architecture/combat-engine-divergence.md`; origine codemasterdd ADR-0024 addendum reconcile.
 - **Prossima azione**: nessuna finche' combat Godot resta tutorial/preview.
 - **Trigger reactivation**: PR/commit che porta Godot-combat fuori tutorial/preview (general combat / enemy roster reale / ranked) -> apri N=40 re-validation + ADR. Check opportunistico al prossimo audit cross-repo (repo-health-auditor).
+
+### OD-011 -- Biome-SoT cross-repo: contro quale file biome validano i canonical_refs?
+
+- **Livello**: cross-repo (codemasterdd hub-watch; owner decisione = Game canon)
+- **Stato**: OPEN (hub-watch) 2026-06-20
+- **Ambiguita' originale**: swarm e Game leggono SoT biome DIVERSI (ground-truth verificato 2026-06-20, entrambi i loader letti). Swarm `verify-swarm-claims.py` (`load_canonical_index`, `glob biomes*.yaml`) -> `data/core/biomes.yaml` + `biomes_expansion.yaml` + `biome_aliases.yaml` (~40 id, con artefatto loader: il literal 'aliases' nel set). Game `check-canon-consistency.cjs` (`loadCanonIndex` :274) -> `packs/evo_tactics_pack/data/biomes.yaml` (~27 id; varianti che lo swarm non ha: deserto_caldo, caverna_risonante, sinaptic_trench; spelling pack `savanna` vs core `savana`).
+- **Perche' conta**: il gate entity-grounding swarm (lever-1, evo-swarm #124) hard-rejecta i canonical_refs hallucinated; sul biome dimension puo' false-reject un ref pack legittimo o false-accept uno slug expansion. Stessa classe-bug del Game #2813 ma a livello SOURCE-FILE. Converge col finding F2 del workflow RFC#4-S3 (`*.biome.yaml` zero reader runtime; biomeAdapter legge `data/core/biomes.yaml`): multi-source biome reale.
+- **Miglior default proposto**: Game-canon-owner decide quale file e' la SoT autorevole -- 3 ipotesi: (a) core+expansion = forward-SoT, pack runtime-derivato; (b) pack = runtime-SoT, core/expansion draft; (c) due viste legittime con mapping esplicito (savana<->savanna alias cross-file). Poi parity-test come regression-guard verde (non xfail-dalla-nascita).
+- **Rischio se ignorata**: drift silenzioso biome-dimension del gate. Impatto MINORE (hallucination run-5 = species/trait, non biome) -> non urgente.
+- **File/moduli**: evo-swarm `scripts/verify-swarm-claims.py`; Game `scripts/check-canon-consistency.cjs` + `data/core/biomes.yaml` + `biomes_expansion.yaml` + `packs/evo_tactics_pack/data/biomes.yaml`.
+- **Prossima azione**: nessuna codemasterdd-side finche' swarm PARKED. Body autoritativo = evo-swarm `OPEN_DECISIONS.md` OD-007 (#127, mergiato 2026-06-20). Hub-watch.
+- **Trigger reactivation**: riattivazione swarm runtime OR Game-canon-owner apre la decisione SoT-biome OR prossimo audit cross-repo opportunistico.
 
 ---
 
