@@ -10,12 +10,12 @@
 - **Priorita' alta**: H1-H12 chiuse (12/12). Residui = nessuno open in alta.
 - **Priorita' media**: M1-M13 chiusi. Residui OPEN = **M5 dormant** (Synesthesia UniUPO ago 2026) + **M14 deferred** Eduardo-direct (AA01 Task D, vault Card 3/4 sibling-peer boundary).
 - **Priorita' bassa**: L1-L5 opportunistic, keep-with-trigger (no action proattiva).
-- **ADR-0017 rollout**: U0-scaffold/U1-U6 chiusi; stack DECOMMISSIONED via OD-009 opzione B 2026-05-28. **U0-test aider --browser** ancora open (no completion evidence).
+- **ADR-0017 rollout**: U0-scaffold/U1-U6 chiusi; stack DECOMMISSIONED via OD-009 opzione B 2026-05-28. **U0-test SUPERSEDED 2026-06-20** (ADR-0017 step 1+ morto via ADR-0030; non piu' task).
 - **Bloccato da**: B1-B3 tutti chiusi 2026-05-28.
 - **X cross-repo orchestrator**: X1/X2 done. **X3/X4/X5 CHIUSI** -- re-verify 2026-06-10 (0 eventi in-window, window mai instrumentata) + ratifica Eduardo 2026-06-11: X4 = DEFER + retire counter, X5 = superseded.
 
-**Cose che devi fare adesso** (8 item OPEN):
-- **U0-test** (~10min): prova aider --browser per 1-2 dev-loop session. Gate UX accettabile -> ADR-0017 step 1+ deferred.
+**Cose che devi fare adesso** (7 item OPEN; U0-test superseded 2026-06-20):
+- ~~U0-test~~: **SUPERSEDED 2026-06-20** -- ADR-0017 step 1+ morto via ADR-0030; aider --browser usabile ad-hoc, non e' un task.
 - **M5 Synesthesia**: dormant UniUPO -- riapri ago 2026.
 - **M14 AA01 Task D**: Eduardo-direct, vault Card 3/4 (sibling-peer boundary, non codemasterdd action).
 - **L1-L5**: opportunistic, no action proattiva.
@@ -46,7 +46,7 @@ Pattern di chiusura applicato: marker stale = anti-pattern #19 -> ground-truth v
 
 ### ADR-0017 rollout (residuo)
 
-- [ ] **U0-test** — Step 0 quick-win: abilita `aider --browser`, prova 1-2 sessioni dev-loop. Gate: UX accettabile? Se sì → procedi. Se no → deferred step 1+. (No completion evidence.)
+- [x] **U0-test** -- **SUPERSEDED 2026-06-20** (ground-truth audit): il test sbloccava ADR-0017 step 1+, ma ADR-0017 e' SUPERSEDED-by-ADR-0030 (stack DECOMMISSIONED `672728c`, OD-009 closed 2026-05-28). Il downstream e' morto -> nessun razionale live. `aider --browser` resta usabile ad-hoc ma non e' piu' un task backlog.
 
 ### Cross-repo orchestrator (Gate E CHIUSO -- X4 ratificato DEFER 2026-06-11)
 

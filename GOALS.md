@@ -22,7 +22,7 @@ Ground-truth audit 2026-06-19 (repo-health-auditor). Supersedes la Snapshot 06-1
 - **Game**: taxonomy reconciliation (Phase A/B/D) + 5-stub honest-stub deploy + S0-S3 calibration + steep-lever band-widen + jsonschema-shadow ALL MERGED. **RFC#4 CHIUSO end-to-end** (S1 traits / S2 species fidelity-shadow + biome/eco import-only / S3 NO-GO ratified `ADR-2026-06-19` #2877). **PE_ratio PR2/PR2b DONE** (#2867/#2869; finding: signal marginale -> decisione band residua). Open: solo #2765 DRAFT weekly-drift.
 - **Game-Database**: RFC#4 S2 chiuso (#226/#227) + S3 stamp (#230, pointer Game ADR). 0 open.
 - **evo-swarm**: **REACTIVATED** (non piu' IDLE) -- entity-grounding pre-emit gate Lever-1 #124 + 2 fix trait-source #125/#126 (06-19, suite 471 green). Runtime ancora PARKED. Lever-2/Lever-3 = spec future.
-- **Game-Godot-v2**: Ferrospora UI art-pass v2 + style-LoRA v1 DONE; SPEC-K K-05 phone/TV client #507. 2 PR open (#509 ForecastPanel frame, #510 K-05 QA).
+- **Game-Godot-v2**: Ferrospora UI art-pass v2 + style-LoRA v1 DONE; SPEC-K K-05 phone/TV client #507. #509 (ForecastPanel frame) + #510 (K-05 QA) **MERGED 2026-06-19** -- 0 PR open da questo batch.
 - **vault**: ADR-2026-06-03 asset-pipeline ratificato 06-18; 7 WARN carry-forward.
 - **codemasterdd**: **Claude Max scaduto ~06-17 -> post-Max routing ADR-0023 ATTIVO** (`logs/claude-api-spend-2026-06.md`, spend ~$0). ADR-0038/0039 Accepted 06-11.
 
