@@ -62,7 +62,7 @@ campi esistenti; riattivare lo swarm (PARKED; validazione A/B offline).
 
 | # | Decisione | Razionale |
 |---|-----------|-----------|
-| D1 | Schema = FULL response object (tutti i 13 campi live `_JSON_SCHEMA` + `canonical_refs`), con `required = [canonical_refs]` SOLO | (P1-B) Ollama `format` DROPPA i campi non dichiarati. I 13 campi sono consumati da handoff (swarm_loop:978-987), dispatch Aider (:1104-1108), scoring (:604-613). Dichiararli tutti = no data-loss; required-solo-canonical_refs = vincolo targeted senza forzare prosa. "targeted" = un solo campo required, NON un sub-schema. |
+| D1 | Schema = FULL response object (tutti i 13 campi live `_JSON_SCHEMA` + `canonical_refs`); `required` = TUTTE le chiavi consumate (non solo canonical_refs), con TIPI nullable/empty per i campi a valore-opzionale (`assigned_agent`/`aider_task` -> `["string","null"]`; `aider_files`/`target_files`/`gaps`/`findings` -> array default `[]`) | (P1-B) Ollama `format` DROPPA i campi non dichiarati -> dichiarali tutti. (codex bot P2 #402) Un campo dichiarato ma NON-required resta OPZIONALE -> il modello PUO' ometterlo -> reintroduce la data-loss su handoff (swarm_loop:978-987) / Aider (:1104-1108) / scoring (:604-613). Mettere le chiavi consumate in `required` GARANTISCE la presenza della chiave; i tipi nullable/empty evitano di FORZARE prosa/valori fabbricati (assigned_agent puo' restare null = rotazione normale, aider_task null = no code-task). "targeted" si riferisce all'INTENTO (canonical_refs e' il nuovo vincolo), non a un sub-schema. |
 | D2 | `canonical_refs: []` AMMESSO (array vuoto valido) | Task no-citation legittimi; non si forza non-empty senza false-positive. Il contenuto e' lever-1. |
 | D3 | Locus = `swarm_loop._run` (:1245), NON run_agent | (P1-A) Il loop live chiama `orch.call_ollama(profile, task, model)` diretto. Passare `response_format` a run_agent = effetto ZERO sul live. |
 | D4 | Fallback live = porta una mini-auto-populate nel post-process di `_run` (dopo :1259) OPPURE nessun fallback (honest) -- `_auto_populate` di run_agent NON gira sul live | (P1-A) Il "defense in depth" via _auto_populate era fittizio sul live. Decisione impl: MVP = nessun fallback live (format e' il meccanismo); auto-populate-live = follow-up se l'A/B mostra residuo. |
@@ -82,8 +82,13 @@ posizionali -- verificato SDMG).
 Schema dell'INTERO response object = i 13 campi di `_JSON_SCHEMA` (summary, findings, proposal,
 gaps, priority, next_action, trigger_reason, target_files, coherence_check{references_existing,
 conflicts_with, assumes_pending}, assigned_agent, aider_task, aider_files) + `canonical_refs`
-(array di `{ref:str, claim:str}`). `coherence_check` = oggetto nested tipato. `required:
-["canonical_refs"]`. Valutare `additionalProperties: true` come difesa anti-data-loss.
+(array di `{ref:str, claim:str}`). `coherence_check` = oggetto nested tipato (sub-keys required). `required` = TUTTE le chiavi
+consumate dai consumer (D1): `[summary, findings, proposal, gaps, priority, next_action,
+trigger_reason, target_files, coherence_check, assigned_agent, aider_task, aider_files,
+canonical_refs]`. I campi a valore-opzionale usano tipi nullable/empty (`assigned_agent`/
+`aider_task`: `["string","null"]`; gli array default `[]`) cosi' la CHIAVE e' garantita senza
+forzare contenuto fabbricato (codex bot P2 #402). `additionalProperties: true` come cintura
+ulteriore anti-data-loss.
 **Pre-impl blocker (P1-B, era OQ-1)**: dump dei field reali emessi dal loop live + diff vs schema,
 committato, PRIMA dell'impl -- un campo mancante dallo schema viene DROPPATO dall'output.
 Aggiungere `canonical_refs` anche a `_JSON_INSTRUCTION`/`_JSON_SCHEMA` (oggi assente) cosi' il
