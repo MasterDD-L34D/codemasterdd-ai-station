@@ -105,8 +105,14 @@ swarm_loop._run (canon-touching) -> call_ollama(profile, task, response_format=S
 
 ## 5. Error handling e edge case
 
-- **HTTP-400 schema-reject / output non-JSON** (D5): branch dedicato -> retry immediato SENZA
-  `payload["format"]`, log WARNING. Mai 3x stesso payload-format. Generazione non si ferma.
+- **HTTP-400 schema-reject** (D5, site = `call_ollama` orchestrator.py:439): l'API Ollama rifiuta
+  lo `format` -> DENTRO `call_ollama` retry immediato SENZA `payload["format"]`, log WARNING. Mai
+  3x stesso payload-format. Generazione non si ferma.
+- **output 200 non-JSON / parse-fail** (D5, site = `_run` attorno a `_try_parse_json` :1259): un
+  200 con body malformato NON e' visibile a `call_ollama` (il parse avviene dopo, nel loop a
+  :1259) -> il retry-senza-format va fatto in `_run` quando `_try_parse_json` fallisce,
+  ri-chiamando `call_ollama(..., response_format=None)`. (codex bot P2 #402: i due failure-mode
+  vivono a due call-site diversi e NON sono accorpabili in `call_ollama`.)
 - **campo mancante dallo schema -> DROPPATO** (P1-B): mitigato dichiarando tutti i 13 campi +
   field-dump pre-impl. `additionalProperties:true` come cintura.
 - **canonical_refs `[]` su task canon-touching**: residuo noto (MVP no fallback live, D4).
@@ -115,8 +121,12 @@ swarm_loop._run (canon-touching) -> call_ollama(profile, task, response_format=S
 
 ## 6. Measurement / Quality Gate (load-bearing)
 
-A/B OFFLINE su generazione campione (`run_agent`/_run invocabili standalone, `__main__`), schema
-ON vs OFF. **Harness specificato (P2-D)**: corpus FROZEN di N prompt+agent canon-touching
+A/B OFFLINE su generazione campione, schema ON vs OFF. **Path-gate (codex bot P2 #402)**: il gate
+DEVE esercitare il call-site LIVE `swarm_loop._run -> call_ollama(..., response_format=SCHEMA)`
+(§4.1), NON `run_agent`. `run_agent` non e' il path live e ha behavior canonical_refs diverso:
+un A/B su `run_agent` ratificherebbe lever-3 senza toccare il wiring reale (well-formed-ref rate
+verde mentre il loop live emette ancora il vecchio schema). Harness = `_run` invocabile standalone
+(`__main__`) o test-harness che colpisce esattamente quel path `_run -> call_ollama(format=...)`. **Harness specificato (P2-D)**: corpus FROZEN di N prompt+agent canon-touching
 committato accanto all'harness; paired prompts; model-id pinnato (qwen3-coder:30b); temperature
 fissa (call_ollama hardcoda 0.3); sample/cella dichiarati.
 
