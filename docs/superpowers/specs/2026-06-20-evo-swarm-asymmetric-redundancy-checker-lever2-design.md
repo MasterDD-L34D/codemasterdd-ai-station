@@ -1,6 +1,6 @@
 ---
 title: evo-swarm asymmetric redundancy checker -- design (lever 2 of 3)
-status: proposed
+status: rejected (SDMG falsification 2026-06-20) -- pending rework decision
 date: 2026-06-20
 owner: Eduardo
 author: claude-opus-4-8 (hub, supervised)
@@ -308,3 +308,38 @@ coefficiente redundancy_ratio degrada a 1.0 = no-op). Nessun canon mutato; read-
 - research: last30days 2026-06-20 (LLM-as-judge self-preference bias +10-25%, no judge uniforme,
   retrieve-then-judge multi-stage, embedding dedup FP/threshold pitfalls)
 - recon: cross-repo synthesis 2026-06-20 (5 aree, 484k tok, shadow-duplicate finding)
+
+## 11. Falsification outcome (SDMG, 2026-06-20) -- VERDETTO REJECT
+
+Panel adversariale a 3 lenti (feasibility / metodologia / sicurezza), verificato su codice
+reale. Verdetto: **REJECT**. Per SDMG i finding si adottano, non si difendono. 10 P1
+ship-blocking; i 4 temi:
+
+1. **Meccanismo sbagliato per il target (P1-A/B/C, P1-G).** I casi run-5 #8/#9/#10 sono
+   redundancy STRUTTURALE di schema biome (`hazard.stress_modifiers` + `stresswave`), sull'asse
+   A-Ambiente -- la spec ha droppato A confondendo A-Ambiente con A-Ancoraggio narrativo, e ha
+   puntato l'embedding sugli assi SPECIE I/E/L. Inoltre: `load_canonical_index` harvesta solo
+   IDs/names (0 match su hazard.stress_modifiers -> niente da recuperare); gli artifact reali
+   sono prosa non strutturata (nessun asse da estrarre). E "different-family" (LLM su prosa LLM)
+   non da' indipendenza di MECCANISMO (L-034) -- serve un asse non-LLM strutturale come segnale
+   primario, judge LLM demoto a secondario.
+2. **Judge irraggiungibile + safety falsa (P1-D, P1-J).** `cross_check` e' MCP-only, non
+   invocabile dal runtime Python detached -> la ladder collassa a Groq (anti-monoculture
+   fallisce). L'unico path Gemini in-swarm mette la key in URL (viola D6). La R2-mitigation
+   "key at-call mai persistita" e' falsa (`dafne_groq` legge os.environ; START-SWARM carica tutti
+   gli 11 secret nell'env detached); una spec non puo' auto-concedersi il drop R2 (serve ADR).
+3. **Validazione impossibile come scoped (P1-F/H/I, P3).** Corpus positivo = N=1 (3 istanze
+   quasi-identiche, #8 mislabeled HALLUCINATED). 223 artifact storici tutti rejected -> zero
+   positivi novel-and-good per calibrare precision/score. La formula score attribuita a
+   DECISIONS_LOG 008 NON esiste (grep). Advisory + fail-open + override = metrica live
+   infalsificabile (no-op e gate-funzionante indistinguibili).
+4. **OD-007 = blocker di correttezza (P1-E), non differibile.** Lo swarm legge un corpus biome
+   corrotto (40 ids incluso il sentinel 'aliases', vs 27 pack reali) -> flag DUPLICATE contro
+   ~13 phantom + miss dei duplicati pack-only reali.
+
+Cosa regge: locus + primitive judge-ladder esistono; recon build-on-existing onesto (cosine/
+jaccard/tokenize riusabili); OD-007 reale; GEMINI key presente. Postura advisory sana come
+intento (il difetto e' la non-falsificabilita', non la prudenza).
+
+Conseguenza: lo spec NON procede a writing-plans. Decisione di rework/park aperta (vedi PR
+codemasterdd#400 + sessione 2026-06-20).
