@@ -78,7 +78,7 @@ il param opzionale `response_format: dict | None = None` -> se valorizzato `payl
 response_format`. Backward-compat: default None invariato (call-site a :535/:561 passano max 3
 posizionali -- verificato SDMG).
 
-### 4.2 Schema (14 campi, required-solo-canonical_refs)
+### 4.2 Schema (14 campi, required = tutti i campi consumati dai consumer)
 Schema dell'INTERO response object = i 13 campi di `_JSON_SCHEMA` (summary, findings, proposal,
 gaps, priority, next_action, trigger_reason, target_files, coherence_check{references_existing,
 conflicts_with, assumes_pending}, assigned_agent, aider_task, aider_files) + `canonical_refs`
