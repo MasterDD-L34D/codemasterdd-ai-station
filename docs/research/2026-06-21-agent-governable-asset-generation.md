@@ -86,6 +86,29 @@ ControlNet silhouette-lock and, for a stable roster across stages, the 3D-to-pix
 (Blender ortho / Hunyuan3D). The human-authorship cleanup layer remains (zero-cost/legal
 policy) but becomes a REVIEW-GATE over generated output, not manual generation.
 
+## Fleet feasibility (verified 2026-06-21) + deferred animated-sprite option (REMINDER)
+
+Verified GPU/RAM: **Lenovo (.10)** RTX 5060 **8GB VRAM + 63.4GB RAM** (RAM-rich);
+**Ryzen (.11)** RTX 4070 SUPER **12GB VRAM + 31GB RAM** (VRAM-rich). Opposite profiles
+-> pipeline-split (VRAM-dense stage -> Ryzen; offload-heavy stage -> Lenovo's 63GB RAM).
+
+**CHOSEN NOW (option 2 -- light / static):** SDXL + the trained Ferrospora style-LoRA,
+driven via ComfyUI `/prompt`, for STATIC creature portraits / UI assets. Fits 12GB
+easily; ComfyUI + `ferrospora_style_v1_ADOPTED.safetensors` already present on Ryzen
+(`C:\AI\ferrospora-spike\ComfyUI_windows_portable`). This is the active spike.
+
+**REMINDER -- option 1 (mor-o animated-sprite pipeline) IS feasible on this fleet** when
+layered animated sprites are actually needed. An earlier "infeasible" call was WRONG: 24GB
+is the COMFORTABLE tune, not a floor. The repo is built to run on less:
+- two-stage VRAM-eviction (`VRAMUnloadModel` -- the WAN MoE experts never coexist) ->
+  real per-stage peak ~10-16GB, not 25GB;
+- documented down-path = Q4_K_M GGUF (~15% smaller); do NOT go below Q4 (quality cliff);
+- ComfyUI offloads the text encoders to RAM (Ryzen 31GB / Lenovo 63GB).
+So W2 (video stage) runs on Ryzen 12GB (single 14B Q4 ~8.5GB + offload), tight/slow; W1
+pose-edit (~19GB, the heaviest) runs via aggressive eviction OR Lenovo's 63GB RAM offload.
+Real costs = **~80GB model download + slow gen (offload)**, NOT impossibility. Revisit
+when the game needs ANIMATED creature sprites; for static portraits it is overkill.
+
 ## Reuse / recall
 
 - Raw evidence: the last30days file in `related` above.
