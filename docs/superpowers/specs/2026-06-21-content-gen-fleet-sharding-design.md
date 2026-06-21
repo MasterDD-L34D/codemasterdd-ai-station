@@ -1,8 +1,27 @@
 # Content-gen fleet-sharding -- design spec (scoped, SDMG-disciplined)
 
-> Status: DRAFT v1 2026-06-21 -- NOT yet falsified. Author: Claude (Opus 4.8) on
-> Lenovo (CodeMasterDD). Awaiting harsh-reviewer falsification (SDMG P7 step 3)
-> before any build.
+> Status: **SUPERSEDED 2026-06-21** by
+> `Game-Godot-v2/docs/superpowers/specs/2026-06-21-evo-content-mcp-creature-lore-design.md`
+> (status `approved-design`, commit 6ad2682). Harsh-reviewer verdict = **KILL**: this
+> is a shadow-duplicate of an already-approved design that the owner commissioned (an
+> agent-scanner / anti-shadow-duplicate miss -- I did not check the existing spec that
+> was literally the branch HEAD at session start). The sibling already owns: the MCP
+> server (Goal A), the 75-species lore generator (Goal B), and -- critically -- a shared
+> `llm_router` reading the llmfit JSON lists (Decision D) = exactly the "router" this
+> spec re-derived. **This spec is NOT built.**
+>
+> Unique value to FOLD INTO the sibling if useful (not auto-applied -- owner/the
+> evo-content-mcp build decides): (1) the Fase-1 held-out quality experiment (N>=10
+> direction-probe / N>=40 ratify, fleet-output vs hub-per-item on a held-out sample) as
+> the sibling's QUALITY gate; (2) the doctrine-fit analysis in sec 3 (why local-bulk
+> content-gen is NOT the SDMG-rejected completion-router of ADR-0036 Decision 5 -- the
+> reviewer confirmed this distinction is real); (3) the sec 6 off-ramp. The asset-prompt
+> batch idea (out of the sibling's text-lore scope) may justify a SEPARATE, later spec
+> only when a concrete asset caller exists.
+>
+> ---
+> Original draft below (retained for the folded-value sections; do not build).
+> Author: Claude (Opus 4.8) on Lenovo (CodeMasterDD).
 > Scope of THIS spec: a NARROW tool to generate bulk game CONTENT (creature
 > lore/flavor, asset prompts) over the local Ollama fleet, sharded. NOT a general
 > LLM router (SDMG-rejected, ADR-0036 Decision 5). NOT for code (existing tools).
