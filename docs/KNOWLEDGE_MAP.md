@@ -54,6 +54,7 @@ Principio: *governance colleziona, ADR delimita, YAML prova, freeze decide, agen
 | **Games Source Index** | Game `docs/guide/games-source-index.md` | Catalogo completo Tier S/A/B/C/D/E + anti-ref + persona + GDD pubblici + **mappa 37 repo OSS** + agent illuminator owner | OK (public) |
 | **Museum cards** | Game `docs/museum/cards/` (~45) + indice `MUSEUM.md` | Alternative scartate/parcheggiate Dublin Core + ROI + reuse-path | OK (public) |
 | **Research cluster** | Game `docs/research/2026-04-2x-*` (cross-game extraction, indie-synthesis, tier-matrix) | Estrazione pattern multi-gioco | OK (public) |
+| **Content-gen / asset-gen research** | codemasterdd `docs/research/2026-06-21-agent-governable-asset-generation.md` (+ Game-Godot-v2 `docs/research/2026-06-03-asset-generation-pipeline.md`) | Path agent-governabile per gen asset: ComfyUI `/prompt` API + MCP + repo validati (mor-o sprite pipeline) + C2PA/EU-AI-Act provenance. Sostituisce l'assunzione ChatGPT-Pro-manuale | OK (public) |
 | **Reports synthesis** | Game `docs/reports/2026-04-27-*synthesis*` | Sintesi ricerca strategica | OK (public) |
 | **vault Cards/Atlas** | vault `Cards/`, `Atlas/`, `Spaces/Dev/Evo-Tactics/` | Knowledge atomizzato ACCESS (es. `game-design-references-direction-5`, `masterizzazionedigiochi-moc`) | OK (sovereign) |
 | **Asset refs** | `evo-tactics-refs-meta/` (SKIV_REFS, CATALOG, CC0_SOURCES, HANDOFF) | Provenance asset 100% classificata (32136 file) | OK (private remote) |
