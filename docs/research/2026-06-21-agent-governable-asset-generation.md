@@ -95,7 +95,8 @@ Verified GPU/RAM: **Lenovo (.10)** RTX 5060 **8GB VRAM + 63.4GB RAM** (RAM-rich)
 **CHOSEN NOW (option 2 -- light / static):** SDXL + the trained Ferrospora style-LoRA,
 driven via ComfyUI `/prompt`, for STATIC creature portraits / UI assets. Fits 12GB
 easily; ComfyUI + `ferrospora_style_v1_ADOPTED.safetensors` already present on Ryzen
-(`C:\AI\ferrospora-spike\ComfyUI_windows_portable`). This is the active spike.
+(`C:\AI\ferrospora-spike\ComfyUI_windows_portable`). **This spike was EXECUTED 2026-06-21
+-- see `## SPIKE EXECUTED -- 2026-06-21 (result)` below.**
 
 **REMINDER -- option 1 (mor-o animated-sprite pipeline) IS feasible on this fleet** when
 layered animated sprites are actually needed. An earlier "infeasible" call was WRONG: 24GB
@@ -114,5 +115,28 @@ when the game needs ANIMATED creature sprites; for static portraits it is overki
 - Raw evidence: the last30days file in `related` above.
 - This supersedes the implicit "manual ChatGPT-Pro is the path" assumption in
   `FERROSPORA_IMAGE_PIPELINE_DECISION_GUIDE.md` -- flag for that doc's owner.
-- Next step (owner-chosen): evidence-first SPIKE of `mor-o/comfyui-2d-character-pipeline`
-  on the fleet to validate the Ferrospora creature look before writing the spec.
+- SPIKE DONE 2026-06-21 -- opt-2 seam validated (see `## SPIKE EXECUTED -- 2026-06-21`
+  below). Next: write the asset-content-gen spec.
+
+## SPIKE EXECUTED -- 2026-06-21 (result)
+
+**Verdict: SEAM VALIDATED.** Agent-governable ComfyUI `/prompt` API + Ferrospora style-LoRA
+on Ryzen RTX 4070S, end-to-end, zero manual ChatGPT-Pro step.
+
+- **Seam**: ComfyUI launched localhost-only on Ryzen (`--port 8188`, no `--listen`); a stdlib
+  urllib driver POSTs the API-JSON workflow to `/prompt`, polls `/history`; the output image is
+  pulled to Lenovo. Graph = CheckpointLoaderSimple(sd_xl_base_1.0) -> LoraLoader(
+  ferrospora_style_v1_ADOPTED @ 0.75) -> 2x CLIPTextEncode -> EmptyLatentImage(1024x1024) ->
+  KSampler(euler_a, 28 steps, cfg 7) -> VAEDecode -> SaveImage.
+- **Throughput**: ~18s/img on the 4070S.
+- **Output**: 1 static creature portrait, end-to-end (artifact: Lenovo
+  `C:/dev/_ferro_scratch/ferrospora_spike_00001.png`; driver `C:/dev/_ferro_scratch/ferrospora_driver.py`).
+- **KEY finding**: the v1 LoRA is **UI-frame-domain** (trigger `ferrospora ui`, trained on 36 UI
+  frames), so creature generation is working **style-bleed**, NOT in-domain fidelity. The Ferrospora
+  signature (teal spore-glow gemstones + bronze chitin) transfers recognizably onto a creature, and
+  anti-frame negatives beat the 100%-frame training set. For production creature assets: a dedicated
+  creature-LoRA gives in-domain fidelity; ControlNet silhouette-lock gives cross-evolution roster
+  coherence (consistent with the Caveat above). This spike validates the SEAM + style transfer ONLY.
+- **Cleanup**: ComfyUI killed on Ryzen (port 8188 down, verified); Ryzen clean. Driver + ADOPTED LoRA
+  kept staged under `C:/AI/` for future runs.
+- **Memory**: Game-Godot-v2 auto-memory `ferrospora-asset-gen-seam-validated` (links `ferrospora-lora-v1-trained`).

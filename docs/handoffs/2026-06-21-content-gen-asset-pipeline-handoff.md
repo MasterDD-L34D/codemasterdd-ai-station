@@ -19,8 +19,9 @@ source_of_truth: false
 - Ricerca asset-gen salvata + recallable (hub KNOWLEDGE_MAP A5). Scelto path asset =
   **opzione 2 (SDXL+LoRA static via ComfyUI /prompt)**; opzione 1 (mor-o animati) =
   reminder feasible-ma-lento.
-- **NEXT #1 = lo SPIKE opzione-2** (recipe sotto, cold-runnable). Owner ha gia
-  autorizzato la variante localhost.
+- **NEXT #1 = SPIKE opzione-2 EXECUTED + DONE 2026-06-21** (seam validato, 1 ritratto
+  creatura, ComfyUI killed). Vedi research doc `## SPIKE EXECUTED -- 2026-06-21`.
+  Next = scrivere la spec asset-content-gen.
 
 ## PR mergiati (Game-Godot-v2, questa sessione)
 
@@ -48,7 +49,9 @@ source_of_truth: false
 - `docs/research/2026-06-21-agent-governable-asset-generation.md` (branch `claude/research-agent-asset-gen`, commit e4d251f) -- ComfyUI /prompt + MCP + repo validati + C2PA/EU-AI-Act + **specs fleet verificate + feasibility opzione-1**. Registrato in `docs/KNOWLEDGE_MAP.md` A5.
 - Raw: `~/Documents/Last30Days/agent-governable-automated-game-asset-generation-comfyui-mcp-local-diffusion-raw-v3.md`.
 
-## NEXT ENTRY POINT #1 -- SPIKE opzione-2 (cold-runnable)
+## DONE -- SPIKE opzione-2 (executed 2026-06-21)
+
+> **RESULT: SEAM VALIDATED.** SDXL-base + `ferrospora_style_v1_ADOPTED` LoRA su Ryzen 4070S, ~18s/img, 1 ritratto creatura statico generato end-to-end (agent-governed: POST `/prompt` -> poll `/history` -> SaveImage -> pull Lenovo). KEY: la v1 LoRA e' UI-frame-domain -> creature gen = style-bleed funzionante (creature-fidelity reale richiede creature-LoRA + ControlNet). ComfyUI killed, Ryzen pulito. La recipe 6-step sotto resta come record della procedura eseguita.
 
 Obiettivo: provare il seam agent-governable ComfyUI `/prompt` + Ferrospora-LoRA su Ryzen, 1 ritratto creatura statico. Owner: variante **localhost** (no `--listen`), driver gira su Ryzen.
 
@@ -68,10 +71,11 @@ Caveat: raw diffusion non tiene coerenza cross-evoluzione da solo -> per roster 
 
 ## Cleanup pendente (worktrees / cloni)
 
-- Hub worktree `C:/dev/_wt-hub-research` (branch claude/research-agent-asset-gen) -- rimuovi a fine (branch su remote = record).
-- Hub branch record: `claude/content-gen-fleet-sharding-spec` (superseded), `claude/research-agent-asset-gen` (research+reminder).
+- Hub worktree `C:/dev/_wt-hub-research` (branch claude/research-agent-asset-gen) -- RIMOSSO a fine sessione spike-record (branch su remote = record).
+- Hub branch record: `claude/content-gen-fleet-sharding-spec` (superseded), `claude/research-agent-asset-gen` (research + spike-record).
 - Game branch record: `docs/coord-routing-resolution-asset-gen` (b9c0260).
-- Clone spike: `C:/dev/_spike-comfyui` (mor-o repo, per il driver-pattern).
+- Clone spike: `C:/dev/_spike-comfyui` -- gia rimosso.
+- ComfyUI server Ryzen STOPPATO (porta 8188 down, verificato 2026-06-21); install `C:/AI/ferrospora-spike` + driver + ADOPTED LoRA TENUTI per run futuri.
 - NOTA: il game shared tree `C:/dev/Game-Godot-v2` e sul branch del PARALLEL session (`docs/evo-content-mcp-creature-lore-spec`) -- NON toccare il suo HEAD.
 
 ## Memory candidates (chiedi conferma prima di salvare)
