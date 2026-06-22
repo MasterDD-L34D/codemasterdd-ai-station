@@ -173,3 +173,39 @@ Dafne-active-Groq) and hits the 120s timeout -- a probe-config artifact, not a s
 Game repo CI so docs/PRs that cite canonical entities are linted for canon-grounding before merge
 (catches hallucinate-by-association regardless of author -- human or AI). This is the agreed
 continuation; it runs as a dedicated chip on Eduardo's go.
+
+## 7. Resolution -- linter integrated + generator RETIRE reconfirmed (2026-06-21)
+
+The Sec 6 follow-up SHIPPED. The linter is vendored into Game CI: PR #2915 (squash `4ce1d0cb`)
+added `scripts/verify-swarm-claims.py` + a markdown adapter (lint design-doc/PR prose, not only
+JSON artifacts) + `contradicted`-gating (the real hallucinate-by-association bucket, which the
+bare upstream exit-code missed) + retired the deprecated `tools/py/swarm_canonical_validator.py`;
+PR #2926 (`66e76e42`) fixed a markdown heading-bigram false-positive; PR #2920 recorded it in the
+Game reference docs. Two CI tiers (JSON `--strict` hard-fail on `docs/research/swarm/**.json`;
+markdown advisory on `docs/research/**/*.md`); 169 tests run in Game `python-tests`. Codex was
+rate-limited throughout, so a compensating harsh self-review caught + fixed 2 P1 false-greens.
+
+Before archiving evo-swarm, the revive-vs-retire question was RE-LITIGATED with fresh evidence
+(Eduardo's call), since stronger open-weight models had shipped:
+- **last30days**: Qwen3 Coder Next / GLM-5.2 / MiniMax M3 shipped, but the 2026 consensus is
+  ground -> judge -> gate (= the linter) and hallucination is inherent to autoregressive LLMs.
+- **deep-research** (adversarially verified, ~10M tokens over 2 runs; the 1st was rate-limited and
+  resumed after editing the workflow to serialize verification + make verifiers throttle-resilient):
+  the standing thesis HOLDS (verification != generation); MULTI-agent is the WRONG lever (MAD does
+  not beat single-agent CoT, replicated by 2026 compute-matched studies); model-swap + RAG is NOT
+  the lever (RAG lifts factual recall, not creative usefulness); the ONLY regime that rescues
+  self-correction is an external sound verifier + narrow scope + cheap re-rolls.
+- **Narrow probe** (the only evidence-defensible revive shape) built + run:
+  `evo-swarm scripts/probe-narrow-single-agent.py` (branch merged to main, Decisione 014) --
+  single-agent + narrow constrained-recombination (pick ONE existing canon trait per species) +
+  the canon linter as the external sound gate + 3 re-rolls + the CURRENT model qwen3.6 + same
+  net-actionable kill-criterion, N=15. **RESULT: 0/15 clean, net-actionable upper-bound = 0 ->
+  RETIRE-CONFIRMED.** Dominant failure `invented_trait` = 35/39 successful attempts (the current
+  model invents non-canon traits despite an explicit pick-existing instruction + the species'
+  canon record in-context); 6 timeouts were a run artifact (qwen3.6 23GB heavy-offload), not signal.
+
+**Verdict: triple-confirmed RETIRE** (the dossier prior + external literature + a fresh local probe
+that measured the exact previously-unmeasured configuration -> 0). evo-swarm is archived read-only
+(reversible via `gh repo unarchive`). The autonomous generator is dead as a production hypothesis;
+the canon entity-grounding linter is the durable value of the arc. The narrow probe is reusable +
+falsifiable (kill < 2) for any future re-litigation with stronger models. Capstone remains ADR-0042.
