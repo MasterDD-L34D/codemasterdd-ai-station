@@ -26,7 +26,7 @@ Ground-truth audit 2026-06-19 (repo-health-auditor). Supersedes la Snapshot 06-1
 - **vault**: ADR-2026-06-03 asset-pipeline ratificato 06-18; 7 WARN carry-forward.
 - **codemasterdd**: **Claude Max scaduto ~06-17 -> post-Max routing ADR-0023 ATTIVO** (`logs/claude-api-spend-2026-06.md`, spend ~$0). ADR-0038/0039 Accepted 06-11.
 
-**Pending trigger-gated / deferred** (nessuna azione ora): RFC#4 GO_NARROW (3 trigger); swarm Lever-2/Lever-3 spec; gap-audit P5 live-emission + SDMG corpus run; ferrospora SD spike (Ryzen .11); GD1 Godot TV LobbyView; prod-auto-restart residue (Game chip task_3ce69e8d). **Scheduled**: SDMG quarterly review ~2026-08-01; governor reconcile settimanale (R2 earn-window).
+**Pending trigger-gated / deferred** (nessuna azione ora): RFC#4 GO_NARROW (3 trigger); swarm Lever-2/Lever-3 spec; gap-audit P5 live-emission + SDMG corpus run; ferrospora creature-LoRA + ControlNet silhouette-lock / roster coherence (Ryzen .11 -- opt-2 ComfyUI/`/prompt` seam-spike DONE 2026-06-21); GD1 Godot TV LobbyView; prod-auto-restart residue (Game chip task_3ce69e8d). **Scheduled**: SDMG quarterly review ~2026-08-01; governor reconcile settimanale (R2 earn-window).
 
 I 'Next Short (ratificato 06-11)' nella tabella sopra restano il baseline d'intento; il setting dei prossimi Short = decisione Eduardo.
 
