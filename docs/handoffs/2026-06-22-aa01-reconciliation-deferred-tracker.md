@@ -5,6 +5,11 @@
 > codemasterdd hub for cross-repo visibility. aa01 / L'Impronta is its own reconciliation
 > track, NOT part of the Game SPEC-A..Q reconstruction suite; SPEC / meta-network links
 > are noted only where a deferred item genuinely touches them.
+>
+> **Update 2026-06-22 (chip done):** D1 phone surface + cosmetic hint chip DONE -- GGv2
+> #531 MERGED (stage 1; TV cinematic = follow-up). D2 (flip `IMPRINT_BEAT_ENABLED`) is now
+> the NEXT gate -- consumer exists, gated only on playtest + master-dd. All 4 Game PR
+> merged (#2958 / #2970 / #2959 / #2972).
 
 ## 1. Shipped this session (Game PRs)
 
@@ -23,8 +28,8 @@ museum-reference; CAP-14/15/15b reconciled into the additive imprint beat (built
 
 | # | Item | What | Gated on | Track / link |
 | --- | --- | --- | --- | --- |
-| D1 | C2-imprint Godot surface | phone/TV client + hint chip (cross-repo Game-Godot-v2) | chip `task_76c18156`; prereq #2970 merged (done) | aa01 / build-spec sec.6 |
-| D2 | `IMPRINT_BEAT_ENABLED` flip | turn the beat ON in prod | D1 + playtest + master-dd | aa01 (Gate-5) |
+| D1 | C2-imprint Godot surface | phone input + hint chip **DONE** (GGv2 #531 merged); TV cinematic = follow-up | TV cinematic = GGv2 follow-up | aa01 / build-spec sec.6; GGv2 #531 |
+| D2 | `IMPRINT_BEAT_ENABLED` flip | turn the beat ON in prod | **D1 surface landed -> playtest + master-dd (NEXT gate)** | aa01 (Gate-5) |
 | D3 | publicSessionView in-match field | additive combat-session hint field (today the hint rides coop-state) | a combat-only consumer | aa01 / build-spec STEP 3 |
 | D4 | imprint auto-timer defaulting | silent auto-default of unmarked axes (host `force` exists) | master-dd design call | aa01 open-risk |
 | D5 | route-vote affinity weighting | 2nd affinity consumer (master-dd picked hint + route-vote; only hint built) | `META_NETWORK_ROUTING` flip + Godot route-UI | aa01 + meta-network / GAP-C |
