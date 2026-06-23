@@ -1,5 +1,7 @@
 # Spec -- journal-land cross-fleet (kill recurring journal-branch drift)
 
+> **Status (2026-06-23):** shipped -- journal-land.ps1 live (CLAUDE.md helper)
+
 Date: 2026-05-29
 Status: Design (pending Eduardo review)
 Scope repo: codemasterdd-ai-station (own repo, branch+PR, auto-merge per ORCHESTRATION.md sec 5)

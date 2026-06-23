@@ -1,5 +1,7 @@
 # 4-Repo Short Direction-Setting -- Design (2026-05-22)
 
+> **Status (2026-06-23):** shipped -- directions realized; all 6 Short DONE (GOALS audit 2026-06-10)
+
 > Brainstorming artifact + GOALS-layer audit trail. Sets the next **Short** goal
 > for the 4 repos that had Short done but no direction after the 2026-05-21
 > GOALS-layer cycle. Companion to `2026-05-21-cross-repo-goals-coordination-design.md`.

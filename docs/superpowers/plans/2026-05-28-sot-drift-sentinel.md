@@ -1,5 +1,7 @@
 # SoT Drift Sentinel Implementation Plan
 
+> **Status (2026-06-23):** shipped -- sot-drift-verifier agent live (NB internal 'Status: not run' for one prod test)
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Detect when a Game (public) merge touches a watched runtime area mapped to a vault SoT doc, flag it deterministically (Game issue), and provide a sovereign gated subagent to verdict + reconcile the SoT.

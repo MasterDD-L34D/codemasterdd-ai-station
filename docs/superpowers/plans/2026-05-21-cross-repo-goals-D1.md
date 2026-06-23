@@ -1,5 +1,7 @@
 # Cross-Repo Goals D1 Implementation Plan
 
+> **Status (2026-06-23):** shipped -- goals layer live (GOALS.md)
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:executing-plans or subagent-driven-development. Steps use checkbox (`- [ ]`) syntax.
 
 **Goal:** Build the D1 read-only goals layer -- a `codemasterdd/GOALS.md` hub synthesis + per-repo `## Goals (S/M/L)` canonical sections -- so every session reads shared direction. No automation (D2 gated separately).

@@ -1,5 +1,7 @@
 # SPEC -- `jules-dispatch.ps1` fail-closed wrapper (design, pre-build)
 
+> **Status (2026-06-23):** shipped -- jules-dispatch.ps1 fail-closed live (ADR-0035)
+
 > Status: DRAFT for harsh-reviewer FALSIFICATION (SDMG Protocol 7, adopt-not-defend).
 > Authority: ADR-0037 (path-to-standing clause) + ADR-0035 (Jules dispatch hard-constraints
 > + REST `:create` schema) + goal `docs/superpowers/jules/2026-06-03-jules-dispatch-wrapper.md`.

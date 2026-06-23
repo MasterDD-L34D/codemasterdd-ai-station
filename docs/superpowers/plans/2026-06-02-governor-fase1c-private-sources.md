@@ -1,5 +1,7 @@
 # Governor Fase 1c -- private-authed sources (evo + vault) Implementation Plan
 
+> **Status (2026-06-23):** shipped -- governor private-sources 1c live
+
 > **For agentic workers:** REQUIRED SUB-SKILL: superpowers:subagent-driven-development or executing-plans. tdd-guard ACTIVE + STRICT (one test at a time: write 1 -> run -> fail -> impl -> run -> pass).
 
 **Goal:** Add the PRIVATE-repo signal sources to the governor: re-activate evo-swarm (deferred from 1b) and add the 3 vault lint reports (gap-scan / coherence-pass / whats_missing). All via an authed GitHub contents-API fetch (base64) using `gh auth token`. Report-only (R0).

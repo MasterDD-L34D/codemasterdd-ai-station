@@ -1,5 +1,7 @@
 # SPRINT_02 weekly cadence DELTA — T8/T9/T10 + Gate E + Week 4 audit
 
+> **Status (2026-06-23):** shipped -- sprint-02 tasks landed (historical)
+
 > **DELTA — NOT REPLACEMENT.** This plan AMENDS the T8/T9/T10 sub-task breakdown in `SPRINT_02.md` with weekly cadence + Gate E logging integration + Week 4 harsh-reviewer audit. `SPRINT_02.md` rimane AUTORITATIVO per T1/T2/T5/T7 (no duplication here).
 
 > **For agentic workers post-Max**: REQUIRED SUB-SKILL: superpowers:subagent-driven-development OR superpowers:executing-plans. Use checkbox tracking.

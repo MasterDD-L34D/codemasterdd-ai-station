@@ -1,5 +1,7 @@
 # SoT Drift Sentinel -- design
 
+> **Status (2026-06-23):** shipped -- sot-drift-verifier agent live; Game sot-drift-candidate flow
+
 - **Status**: Approved (design) 2026-05-28 -- **IMPLEMENTED + LIVE same day**. Plan `docs/superpowers/plans/2026-05-28-sot-drift-sentinel.md` Tasks 1-8 executed end-to-end. Component A merged Game PR #2406 (`29ac9102`), Component B `codemasterdd/.claude/agents/sot-drift-verifier.md` QG-PASS via live dispatch smoke + verified on a real case (epigenome NO-DRIFT verdict, vault `40992953` already reconciled).
 - **Owner**: Eduardo
 - **Brainstorm**: questa sessione (superpowers:brainstorming)

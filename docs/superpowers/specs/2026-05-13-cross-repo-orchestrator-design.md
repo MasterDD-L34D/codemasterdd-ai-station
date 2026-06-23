@@ -1,5 +1,7 @@
 # Design spec — Cross-repo orchestrator evolution (Opt 1.5 REDUCED)
 
+> **Status (2026-06-23):** superseded -- evolved into unified-fleet-governor; X3/X4/X5 closed (X4 DEFER 2026-06-11)
+
 **Date**: 2026-05-13
 **Status**: Draft V3 post Archon ciclo 2 (Eduardo "Riavvio Archon ciclo 2" → "Vai con Opt 1.5 REDUCED")
 **Cross-ref**: ADR-0021 (multi-client pattern) + ADR-0026 (cognitive protocols P1-P6) + L-012 (vault sibling-peer write under explicit auth) + L-016 (cognitive protocols measurement anti-aspirational, applied retroactively as Gate E discipline)

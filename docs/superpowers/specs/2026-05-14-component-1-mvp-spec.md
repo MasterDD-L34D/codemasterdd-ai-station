@@ -1,5 +1,7 @@
 # Design spec V4 — Component 1 cross-repo dashboard MVP
 
+> **Status (2026-06-23):** superseded -- shipped v0.2->v0.3->dogfood-ui #196, then dogfood-ui decommissioned (OD-009 / ADR-0030)
+
 **Date**: 2026-05-14
 **Status**: BUILD AUTHORIZED (trigger #1 verified empirical, methodology re-evaluation post Eduardo daily-use confirmation)
 **Cross-ref**: Spec V3 cross-repo orchestrator (PR #87) + archived pre-design (PR #88, `docs/research/component-1-design-options-archived-2026-05-13.md`)

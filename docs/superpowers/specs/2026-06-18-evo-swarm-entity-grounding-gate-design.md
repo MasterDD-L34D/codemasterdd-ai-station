@@ -1,6 +1,6 @@
 ---
 title: evo-swarm entity-grounding pre-emit gate -- design
-status: proposed
+status: shipped -- lever-1 shipped evo-swarm #124 (84fe33d) (verified 2026-06-23)
 date: 2026-06-18
 owner: Eduardo
 author: claude-opus-4-8 (hub, supervised)

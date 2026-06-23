@@ -1,5 +1,7 @@
 # Orchestration Doctrine Rollout Implementation Plan
 
+> **Status (2026-06-23):** shipped -- ADR-0036 Accepted + ORCHESTRATION.md + fleet-tools-mcp live
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Consolidate the fragmented multi-LLM/Jules/Opus-4.8 coordination surface into one authoritative orchestration doctrine (ADR-0036 + ORCHESTRATION.md), enable evidence-based autonomy (auto-merge gate + allow-rules, full rollout), and add the missing first-class cloud-key tooling (MCP llm-fleet, SDMG-gated), deployed cross-fleet.

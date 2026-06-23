@@ -1,5 +1,7 @@
 # Governor Fase 1a -- Signal Ingestion (R0 observability) Implementation Plan
 
+> **Status (2026-06-23):** shipped -- governor signal-ingestion live
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Add R0 (report-only) signal ingestion to the cross-repo-dashboard: persist a normalized view of two public island signals into SQLite and render a read-only consolidated pane, with an advisory auto-observed log that is SEVERED from every autonomy gate.

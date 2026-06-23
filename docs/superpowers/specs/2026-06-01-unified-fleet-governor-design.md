@@ -1,5 +1,7 @@
 # Unified Fleet Governor -- design spec (phased, SDMG-disciplined)
 
+> **Status (2026-06-23):** shipped-partial -- phased; R0/R1 live + weekly reconcile scheduled; later rungs deferred
+
 > Status: DRAFT v2 2026-06-01 -- FALSIFIED by harsh-reviewer (SDMG P7 step 3),
 > verdict SURVIVE-WITH-CHANGES, all 4 P0 + P1 adopted (adopt-not-defend). Author:
 > Claude (Opus 4.8) on Ryzen.

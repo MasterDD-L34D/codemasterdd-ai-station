@@ -1,5 +1,7 @@
 # ARCHON Agent Scanner cross-fleet deploy Implementation Plan
 
+> **Status (2026-06-23):** shipped -- OD-007 3-layer deploy + agent-scanner skill
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Deploy the ARCHON Agent Scanner as a cross-fleet discoverable Claude Code skill (LITE) plus a STRONG-PURE directive in `~/.claude/CLAUDE.md` so the model auto-invokes it before any subagent/skill/agent selection, on every Claude Code session across Lenovo + Ryzen + future PCs.

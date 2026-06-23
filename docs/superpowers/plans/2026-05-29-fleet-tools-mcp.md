@@ -1,5 +1,7 @@
 # fleet-tools MCP Implementation Plan
 
+> **Status (2026-06-23):** shipped -- apps/fleet-tools-mcp live
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Build a scoped stdio MCP server exposing three tools the hub lacks or needs a different model for -- `tavily_search`, `openai_image`, `cross_check` -- and register it in Claude Code.

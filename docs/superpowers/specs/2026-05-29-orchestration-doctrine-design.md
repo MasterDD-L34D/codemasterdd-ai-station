@@ -1,5 +1,7 @@
 # Design spec -- Unified Orchestration Doctrine (multi-LLM + Jules + Opus 4.8, cross-repo)
 
+> **Status (2026-06-23):** shipped -- ADR-0036 Accepted 2026-06-01 + ORCHESTRATION.md live
+
 > Status: DESIGN (brainstorming output, pending user review -> writing-plans).
 > Date: 2026-05-29. Author: Claude Code hub (Opus 4.8), Lenovo.
 > Approach chosen: **A -- Streamline/unify** (evidence-driven; reject heavy frameworks).

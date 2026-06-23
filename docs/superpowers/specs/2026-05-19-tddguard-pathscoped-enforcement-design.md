@@ -1,5 +1,7 @@
 # Design Spec -- tdd-guard path-scoped enforcement (C-raffinato)
 
+> **Status (2026-06-23):** proposed -- design-only; build Eduardo-gated (regola-0); not implemented as of 2026-06-23
+
 - Date: 2026-05-19
 - Status: PROPOSED (design only; impl Eduardo-gated, regola-0)
 - Cross-link: vault OD-050 (PR #130) §1a/1b/1c + M0/M1/M2/M3, canonical-config

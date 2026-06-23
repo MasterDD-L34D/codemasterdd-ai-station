@@ -1,5 +1,7 @@
 # ARCHON Agent Scanner -- cross-fleet deploy design
 
+> **Status (2026-06-23):** shipped -- OD-007 3-layer deploy + agent-scanner skill live
+
 - **Status**: Approved (design) 2026-05-28 -- pending implementation plan
 - **Owner**: Eduardo
 - **Brainstorm**: questa sessione (superpowers:brainstorming, Protocol 6)

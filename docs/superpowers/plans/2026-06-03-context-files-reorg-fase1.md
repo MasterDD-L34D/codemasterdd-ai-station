@@ -1,5 +1,7 @@
 # Context-Files Reorg Fase 1 — Implementation Plan
 
+> **Status (2026-06-23):** shipped -- context reorg Fasi 1-6 complete
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:executing-plans (inline) or
 > superpowers:subagent-driven-development to implement this plan task-by-task. Steps use
 > checkbox (`- [ ]`) syntax for tracking.

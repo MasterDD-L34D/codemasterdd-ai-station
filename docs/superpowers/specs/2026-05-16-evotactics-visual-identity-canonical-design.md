@@ -1,5 +1,7 @@
 # Design: Evo-Tactics Visual Identity Canonical Consolidation
 
+> **Status (2026-06-23):** shipped-partial -- canonical index + collection done; production art-swap not shipped; shell layer superseded by Godot-v2
+
 **Date**: 2026-05-16
 **Author**: Claude Code (auto-mode con metodo) + Eduardo (approval)
 **Status**: DRAFT v3 (v2 + harsh-reviewer REWORK applied: P0 index/canonical contradiction resolved, P1a Direction-A claim corrected via repo audit, P1b direct content-validity proof; awaiting Eduardo spec review -> implementation)

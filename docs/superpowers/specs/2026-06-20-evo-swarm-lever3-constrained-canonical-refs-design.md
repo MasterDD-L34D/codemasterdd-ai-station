@@ -1,6 +1,6 @@
 ---
 title: evo-swarm constrained canonical_refs output -- design (lever 3 of 3)
-status: proposed (revised post-SDMG 2026-06-20 -- FIX-THEN-SHIP)
+status: parked -- proposed FIX-THEN-SHIP; swarm runtime PARKED (verified 2026-06-23)
 date: 2026-06-20
 owner: Eduardo
 author: claude-opus-4-8 (hub, supervised)

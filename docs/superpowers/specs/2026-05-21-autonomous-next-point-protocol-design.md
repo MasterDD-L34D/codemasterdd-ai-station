@@ -1,5 +1,7 @@
 # Autonomous Next-Point Protocol -- Design (REJECTED-HYPOTHESIS)
 
+> **Status (2026-06-23):** rejected -- SDMG falsification 2026-05-21; not integrated
+
 > Status: **REJECTED** 2026-05-21 by harsh-reviewer falsification (SDMG Protocol 7 step 3). NOT integrated. Archived as rejected-hypothesis (same disposition as HSGF F-FULL).
 > Verdict rationale: (H5) no empirical problem -- improvised next-point selection worked fine across ~6 go-signals this session, zero failures a protocol would have prevented; (H4) fully redundant with existing Protocol 1 + verification-before-completion + Protocols 5/6/7 + narrow-pick discipline = accretion bloat; (H3) "highest-value" selection = residual heuristic-as-decider (P7 step 6 violation). Meta: premature codification driven by Eduardo's recall gap (thought it existed), not a capability gap.
 > Adopted rejection per pre-commit stance ("if harsh-reviewer rejects, adopt non-defend") + L-2026-05-033.

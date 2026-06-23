@@ -1,5 +1,7 @@
 # SEED — Governor R1->open-PR rung (brainstorm -> spec -> build, NEXT session)
 
+> **Status (2026-06-23):** superseded -- seed brainstorm; superseded by design + plan (both shipped)
+
 > **This is a SEED / kickoff brief, NOT a spec.** A fresh session reads this to start the
 > brainstorming flow for the missing earn-path rung, without re-deriving the 2026-06-03 marathon.
 > Created 2026-06-03. Non-doctrine (design brief; defines no rules). ASCII-first (ADR-0021).

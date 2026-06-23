@@ -1,5 +1,7 @@
 # fleet-tools MCP -- scoped design spec (2026-05-29)
 
+> **Status (2026-06-23):** shipped -- apps/fleet-tools-mcp live (MCP server)
+
 > Status: APPROVED (Eduardo 2026-05-29). Scope GO'd via SDMG human-reframe.
 > Authority chain: `docs/research/2026-05-29-mcp-llm-fleet-eval.md` (CORRECTION section)
 > + `docs/adr/0036-unified-orchestration-doctrine.md` (Decision 5) + `ORCHESTRATION.md` (sec 7).

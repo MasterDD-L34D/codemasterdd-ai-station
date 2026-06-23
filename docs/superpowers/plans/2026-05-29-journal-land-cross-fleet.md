@@ -1,5 +1,7 @@
 # journal-land cross-fleet Implementation Plan
 
+> **Status (2026-06-23):** shipped -- journal-land.ps1 live
+
 > **For agentic workers:** REQUIRED SUB-SKILL: superpowers:executing-plans (inline; single-author ops change). Steps use checkbox (`- [ ]`).
 
 **Goal:** Stop the recurring cross-fleet journal-branch drift by landing JOURNAL.md edits to origin/main via a canonical, pushable `claude/journal-<host>-<date>` branch identical on both PCs.

@@ -1,5 +1,7 @@
 # Spec — Context-Files Governance Reorg (CLAUDE.md + rules + reference)
 
+> **Status (2026-06-23):** shipped -- Fasi 1-6 complete 2026-06-03
+
 - **Status**: PROPOSED (brainstorming-approved 2026-06-03, design shape + global example approved by Eduardo)
 - **Author**: Claude Opus 4.8 (1M) hub session
 - **Date**: 2026-06-03

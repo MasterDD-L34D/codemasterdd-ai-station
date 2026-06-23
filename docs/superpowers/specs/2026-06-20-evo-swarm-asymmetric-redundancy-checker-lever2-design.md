@@ -1,6 +1,6 @@
 ---
 title: evo-swarm asymmetric redundancy checker -- design (lever 2 of 3)
-status: rejected (SDMG falsification 2026-06-20) -- pending rework decision
+status: rejected -- SDMG falsification 2026-06-20; no rework adopted (verified 2026-06-23)
 date: 2026-06-20
 owner: Eduardo
 author: claude-opus-4-8 (hub, supervised)

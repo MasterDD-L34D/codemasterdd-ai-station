@@ -1,5 +1,7 @@
 # Cross-repo orchestrator pre-Max implementation plan
 
+> **Status (2026-06-23):** superseded -- mirrors cross-repo-orchestrator-design; evolved into unified-fleet-governor
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Build Component 2 (workflow + tracking + dry-run) + Component 3 (escalation gates + Gate E discipline) pre-Max. Component 1 dashboard NOT in scope (gated Gate E 30gg post-Max empirical).

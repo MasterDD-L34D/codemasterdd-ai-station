@@ -1,5 +1,7 @@
 # Governor Fase 1b -- evo URL-resolver + sot-drift adapter Implementation Plan
 
+> **Status (2026-06-23):** shipped -- governor signal-ingestion 1b live
+
 > **POST-IMPLEMENTATION NOTE (2026-06-01):** live ground-truth at build time found
 > **evo-swarm is a PRIVATE repo** (this plan assumed public). It cannot ingest
 > anonymously, so evo was DEFERRED to Fase-1c (with the vault private sources -- same

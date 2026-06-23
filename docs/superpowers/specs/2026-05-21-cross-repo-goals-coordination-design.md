@@ -1,5 +1,7 @@
 # Cross-Repo Goals + Coordination -- Design Spec
 
+> **Status (2026-06-23):** shipped -- goals layer live (GOALS.md); auto-orchestration D2c rejected
+
 > Status: DRAFT (brainstorming output 2026-05-21, awaiting Eduardo review)
 > Author: Claude Code (hub session, Ryzen)
 > Method: superpowers brainstorming -> writing-plans (D1); D2 gated via harsh-reviewer

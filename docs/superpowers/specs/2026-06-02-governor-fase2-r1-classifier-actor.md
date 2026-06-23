@@ -1,5 +1,7 @@
 # Governor Fase 2 / R1 -- classifier + escalation actor (hub-only) design spec (v2)
 
+> **Status (2026-06-23):** shipped -- R1 classifier + escalation actor live
+
 > Status: DRAFT v2 2026-06-02 -- REJECTED v1 by harsh-reviewer (SDMG step 3), redesigned
 > to the 6 survive-conditions + 1 improvement (escalate via GH ISSUE, not PR). Author:
 > Claude (Opus) on Ryzen. First autonomy increment (R0 report-only -> R1 actor emits).

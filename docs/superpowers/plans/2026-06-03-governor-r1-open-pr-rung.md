@@ -1,5 +1,7 @@
 # Governor R1 open-PR reconcile rung -- Implementation Plan
 
+> **Status (2026-06-23):** shipped -- R1 open-PR reconcile rung live
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:test-driven-development to
 > implement this plan task-by-task (tdd-guard active). Steps use checkbox (`- [ ]`) syntax.
 

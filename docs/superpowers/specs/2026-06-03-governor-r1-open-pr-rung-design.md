@@ -1,5 +1,7 @@
 # Governor R1->open-PR rung -- design spec (the reconcile-PR earn-path)
 
+> **Status (2026-06-23):** shipped -- R1 open-PR reconcile rung live (R2 earn-window active)
+
 > Status: DRAFT v4 2026-06-03. Author: Claude (Opus 4.8) on Lenovo.
 > SDMG (Cognitive Protocol 7) gate PASSED: v1 -> REJECT, v2 -> SURVIVE-WITH-CHANGES; all
 > surviving harsh-reviewer findings adopted; ground-truth re-verified via gh api. **Eduardo

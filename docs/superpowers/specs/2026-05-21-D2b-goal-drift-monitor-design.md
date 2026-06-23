@@ -1,5 +1,7 @@
 # D2b -- Goal-Drift Monitor -- Design (GATED, design-only)
 
+> **Status (2026-06-23):** design-only -- not approved for build (SDMG-gated); not built as of 2026-06-23
+
 > Status: DESIGN-ONLY HYPOTHESIS. **NOT approved for build.**
 > Gate: Protocol 7 (SDMG). Build requires harsh-reviewer falsification + 2-week empirical (SDMG-gate landed 2026-05-20; not before ~2026-06-03) + new evidence. See cross-repo-goals spec section 6.
 > Author: Claude Code hub (Ryzen). Refs: ADR-0026 P5/P7, L-066, HSGF rejection 2026-05-20, GOALS.md.
