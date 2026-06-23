@@ -34,7 +34,7 @@ I 'Next Short (ratificato 06-11)' nella tabella sopra restano il baseline d'inte
 
 Ground-truth gh/git 7 repo (repo-health-auditor manuale, post tool-fix):
 
-- **Game**: open-PR set ruotato -- #2765 (weekly-drift) chiuso; ora 4 PR content/chore (#2981 bestiary canonize, #2980 aa01 imprint disposition, #2957 lore-name polish, #2918 tracker). Working tree su detached HEAD (leftover shared-clone -> cleanup).
+- **Game**: open-PR set ruotato -- #2765 (weekly-drift) chiuso; ora 4 PR content/chore (#2981 bestiary canonize, #2980 aa01 imprint disposition, #2957 lore-name polish, #2918 tracker). Working tree su detached HEAD (#2973 merged) ma con WIP attivo master-dd + 8 worktree concorrenti -> sessione ATTIVA, non un cleanup target.
 - **Godot-v2**: branch `feat/creature-lora-fase2` attivo (creature-LoRA); 1 PR open #512 (Ferrospora UI canonical).
 - **codemasterdd / Game-DB / evo-swarm / vault / Synesthesia**: 0 PR open.
 - I 'Next Short (ratificato 06-11)' SPEC-I (Game) / AI-playtest-ladder (Godot) / eng-graph daemon (vault) NON ri-confermati questo giro -- verifica status al prossimo audit.

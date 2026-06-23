@@ -33,7 +33,7 @@ _Auto-synced governor signal snapshot; human prose elsewhere is authoritative. T
 ### Audit delta 2026-06-23 (gh/git ground-truth, 7 repo, repo-health-auditor manuale)
 
 - **codemasterdd**: HEAD `b9064c9`. 0 PR open.
-- **Game**: working tree su **detached HEAD `87fc3d9b`** (leftover shared-clone -- verifica-merged + `git switch main` prima di lavorarci). **4 PR open** (#2765 weekly-drift chiuso dal 06-19): #2981 bestiary canonize, #2980 aa01 imprint disposition, #2957 lore-name polish, #2918 tracker refresh (content/chore).
+- **Game**: working tree su detached HEAD `87fc3d9b` (= #2973 merged) MA con **WIP attivo** (master-dd: `docs/planning/2026-06-23-residual-gate-register.md` doc_status:active + BACKLOG/drift edits) + **8 worktree concorrenti** -> checkout di sessione ATTIVA, NON un leftover; non toccare. **4 PR open** (#2765 weekly-drift chiuso dal 06-19): #2981 bestiary canonize, #2980 aa01 imprint disposition, #2957 lore-name polish, #2918 tracker refresh (content/chore).
 - **Godot-v2**: branch `feat/creature-lora-fase2` (creature-LoRA in corso). **1 PR open** #512 Ferrospora UI canonical (#509/#510 chiusi dal 06-19).
 - **Game-DB / evo-swarm / vault / Synesthesia**: 0 PR open.
 - Tool-fix questo giro: repo-health-auditor riscritto (7 repo, servizi ADR-0017 morti rimossi); governor `ingest` rinfrescato (9 ingested / 4 new / 0 errori); GateE reminder task obsoleto (disable manuale Eduardo).
