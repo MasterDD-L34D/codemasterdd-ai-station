@@ -19,6 +19,27 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-06-23 (de-confusione strumenti steering cross-repo + drain coda + 6 Short DONE)
+
+### Completato
+- **Strumenti steering cross-repo chiariti + resi fidati.** La "situazione confusa" era stale-tooling, non backlog reale. Fix: `repo-health-auditor` riscritto 4->7 repo + servizi ADR-0017 morti rimossi (94a8207); governor `ingest` validato (9 ingested / 4 new / 0 err); GateE reminder task obsoleto DISABILITATO; STATUS+GOALS audit delta 06-23 (f66fcc6 / 12d872a).
+- **Status 36 spec/plan superpowers** stampati (lifecycle current 06-23, e6e74e4); **9 jules digest** 06-12..06-23 landati (b9064c9).
+- **Triage + harsh-review 5 PR cross-repo**: Game #2981 bestiary SHIP-IT (no fabricazione strutturale, additive, registry append-only, CI required verde) -> MERGED; #2957 name-swap-puro / #2980 disposition / #2918 date-bump reviewed clean -> freshened via update-branch + armabili; Godot #512 Ferrospora UI SHIP-IT (docs additive, #511 closed verificato).
+- **Follow-up check**: FU1 (#2981 re-promote post-#2957) DISSOLTO (EN/IT independent, zero typo/leak nel bestiario merged); FU2 (Godot spore-color 3-way #B24DFF action / #3acde5 glow / #cd52d2 token) -> issue #544 + chip task_a15add23.
+- **Indagini ground-truth**: game-governance-drift 362->9 warnings (numero spaventoso era stale; i 9 = registry-sync banale); **6 Short ratificati 06-11 TUTTI DONE** (gh-verified: Game SPEC-I ER7 flip-ON #2737 / Godot ladder item-4/5/6 #468/#471 / vault eng-graph daily-daemon #257 / Game-DB species export / codemasterdd post-Max / evo-swarm PARK); vault 0-BLOCK healthy (7 WARN gated stabili + 598 orphan stazionari).
+- **Memory reconcile** (3 stale: gap_audit PR2 #2867/#2869, swarm #125/#126, node_fleet ADR-0003-addendum) + lesson shared-clone (ancestor-merged != leftover se tree dirty -- il Game detached-HEAD 87fc3d9b era sessione attiva con WIP master-dd, non un leftover).
+- **Next Short 06-23 ratificati** (Eduardo, AskUserQuestion): Game trait-completeness / Godot Ferrospora dock-first / vault 7-WARN cleanup; Game-DB/codemasterdd/evo-swarm/Synesthesia = no-Short proattivo (c11a0d0).
+
+### Da fare
+- Game: arma merge #2957/#2980/#2918 (freshened, armabili `--auto --squash`); registry-sync 9 doc 06-18/20 (lane Game-session attiva).
+- Godot: chip #544 spore-color reconcile + Ferrospora dock-first rebuild (next Short).
+- vault: 7 WARN cleanup incl. 2 drift cross-repo (canonical-config Max-stale + model-names) (next Short, sovereign).
+- Game detached-HEAD 87fc3d9b = sessione attiva master-dd (NON toccare finche' la sessione non chiude).
+
+### Note
+- Pattern del giorno: la confusione era stale-tooling + steady-state-letto-come-fuoco, non backlog reale. Rinfrescati gli strumenti -> ecosistema calmo, direzione (6 Short) gia' consegnata, progetto a inflection "set-next-Short".
+- codemasterdd HEAD c11a0d0 pushed. 6 commit sessione: e6e74e4 (spec-status), b9064c9 (digests), 94a8207 (auditor), f66fcc6 + 12d872a + c11a0d0 (governance/goals).
+
 ## 2026-06-19 (RFC#4 S3 DB-as-SoT: falsified -> NO-GO ratified, ADR + stamp landed)
 
 ### Completato
