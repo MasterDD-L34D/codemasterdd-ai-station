@@ -2,7 +2,7 @@
 
 > Read-only hub synthesis. Canonical goals live per-repo (each repo's `## Goals (S/M/L)`).
 > Refreshed by repo-health-auditor agent. Horizons: Short=sprint(weeks) / Mid=epic(1-2mo) / Long=vision(3-6mo).
-> Last refresh: **2026-06-19** (delta sotto la Snapshot supersedes il baseline 06-11 dove diverge). Precedente 2026-06-10 (ground-truth audit repo-health-auditor: **tutti i 6 Short del 2026-05-22 COMPLETATI** -- PR canonici #2384/#352/#165/#176/#122 tutti MERGED ~2026-05-25, outcome superati dall'evidenza successiva). **Next Short RATIFICATI da Eduardo 2026-06-11** (AskUserQuestion strutturato, sessione coordinatore -- vedi "Short ratificati 2026-06-11"). Sources precedenti: docs/superpowers/specs/2026-05-21-cross-repo-goals-coordination-design.md + docs/superpowers/specs/2026-05-22-four-repo-short-directions-design.md
+> Last refresh: **2026-06-23** (audit delta vs 06-19, sezione sotto). Prec. **2026-06-19** (delta sotto la Snapshot supersedes il baseline 06-11 dove diverge). Precedente 2026-06-10 (ground-truth audit repo-health-auditor: **tutti i 6 Short del 2026-05-22 COMPLETATI** -- PR canonici #2384/#352/#165/#176/#122 tutti MERGED ~2026-05-25, outcome superati dall'evidenza successiva). **Next Short RATIFICATI da Eduardo 2026-06-11** (AskUserQuestion strutturato, sessione coordinatore -- vedi "Short ratificati 2026-06-11"). Sources precedenti: docs/superpowers/specs/2026-05-21-cross-repo-goals-coordination-design.md + docs/superpowers/specs/2026-05-22-four-repo-short-directions-design.md
 
 ## Snapshot
 
@@ -29,6 +29,15 @@ Ground-truth audit 2026-06-19 (repo-health-auditor). Supersedes la Snapshot 06-1
 **Pending trigger-gated / deferred** (nessuna azione ora): RFC#4 GO_NARROW (3 trigger); swarm Lever-2/Lever-3 spec; gap-audit P5 live-emission + SDMG corpus run; ferrospora creature-LoRA + ControlNet silhouette-lock / roster coherence (Ryzen .11 -- opt-2 ComfyUI/`/prompt` seam-spike DONE 2026-06-21); GD1 Godot TV LobbyView; prod-auto-restart residue (Game chip task_3ce69e8d). **Scheduled**: SDMG quarterly review ~2026-08-01; governor reconcile settimanale (R2 earn-window).
 
 I 'Next Short (ratificato 06-11)' nella tabella sopra restano il baseline d'intento; il setting dei prossimi Short = decisione Eduardo.
+
+## 2026-06-23 audit delta (vs 06-19)
+
+Ground-truth gh/git 7 repo (repo-health-auditor manuale, post tool-fix):
+
+- **Game**: open-PR set ruotato -- #2765 (weekly-drift) chiuso; ora 4 PR content/chore (#2981 bestiary canonize, #2980 aa01 imprint disposition, #2957 lore-name polish, #2918 tracker). Working tree su detached HEAD (leftover shared-clone -> cleanup).
+- **Godot-v2**: branch `feat/creature-lora-fase2` attivo (creature-LoRA); 1 PR open #512 (Ferrospora UI canonical).
+- **codemasterdd / Game-DB / evo-swarm / vault / Synesthesia**: 0 PR open.
+- I 'Next Short (ratificato 06-11)' SPEC-I (Game) / AI-playtest-ladder (Godot) / eng-graph daemon (vault) NON ri-confermati questo giro -- verifica status al prossimo audit.
 
 ## Cross-cutting initiatives
 
