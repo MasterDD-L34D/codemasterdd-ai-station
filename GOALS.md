@@ -37,7 +37,19 @@ Ground-truth gh/git 7 repo (repo-health-auditor manuale, post tool-fix):
 - **Game**: open-PR set ruotato -- #2765 (weekly-drift) chiuso; ora 4 PR content/chore (#2981 bestiary canonize, #2980 aa01 imprint disposition, #2957 lore-name polish, #2918 tracker). Working tree su detached HEAD (#2973 merged) ma con WIP attivo master-dd + 8 worktree concorrenti -> sessione ATTIVA, non un cleanup target.
 - **Godot-v2**: branch `feat/creature-lora-fase2` attivo (creature-LoRA); 1 PR open #512 (Ferrospora UI canonical).
 - **codemasterdd / Game-DB / evo-swarm / vault / Synesthesia**: 0 PR open.
-- I 'Next Short (ratificato 06-11)' SPEC-I (Game) / AI-playtest-ladder (Godot) / eng-graph daemon (vault) NON ri-confermati questo giro -- verifica status al prossimo audit.
+- I 6 Next-Short ratificati 06-11 = **TUTTI DONE** (verifica gh 06-23): Game SPEC-I ER7 flip-ON #2737 / Godot ladder item-4/5/6 #468/#471 / vault eng-graph daily-daemon #257 / Game-DB species export / codemasterdd post-Max ADR-0023 / evo-swarm PARK. Nuovi Short -> sezione sotto.
+
+## Short ratificati 2026-06-23 (decisione Eduardo)
+
+> Tutti i 6 Short ratificati 06-11 = DONE (ground-truth gh 2026-06-23). Nuovi Short via AskUserQuestion recommended-first, 1 per repo. Stato progetto = inflection "Short consegnati -> next set".
+
+- **Game**: trait completeness (post-A4) -- Mid-item promosso a Short.
+- **Game-Godot-v2**: Ferrospora UI per-surface rebuild, **dock-first** (ActionDock fixa il socket-centering by-construction; roadmap PR #512; color-reconcile via issue #544 + chip task_a15add23).
+- **vault**: 7 WARN cleanup carry-forward + 2 cross-repo currency drift (canonical-config Claude-Max-stale post-scadenza 06-17 + model-names sonnet-4.7 -> claude-sonnet-4-6).
+- **Game-Database**: nessun Short proattivo (Jules-maintained; RFC#4 chiuso end-to-end).
+- **codemasterdd**: nessun Short proattivo (hub reattivo; steering-tools rinfrescati 06-23; SDMG quarterly review ~2026-08-01 schedulato).
+- **evo-swarm**: PARK esplicito (reactivation Eduardo-gated, invariato).
+- **Synesthesia**: dormant fino ~ago 2026 (invariato).
 
 ## Cross-cutting initiatives
 
