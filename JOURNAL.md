@@ -19,6 +19,27 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-06-25 (Jules cycle x7 full-auto-merge + merge-authority ratifica + earn-path advance)
+
+### Completato
+- **7 cicli Jules code-health full-auto** su codemasterdd (dispatch -> delivery-miss -> salvage -> gate -> auto-merge), tutti CI verde zero-regressioni: #410 `_normalize_path` test (governor) 0d1fe1e; #413 atomize helpers test f1c6ca4; #414 classify unused-imports ca2dcb4; #415 project-preview tqdm 0440b4d; #416 `_first_int` test (governor) c177c9b; #417 `message_to_text` 8-branch test 0caa0c3; #418 `classify_topic` test 733c8bd.
+- **Delivery-miss 7/7**: Jules COMPLETED ma non pubblica MAI il PR; diff recuperato da outputs/activities changeSet ogni volta. Memory `feedback_jules_failed_recovery` broadened (COMPLETED-no-PR, non solo FAILED).
+- **Autorita' merge ratificata** (AskUserQuestion): codemasterdd auto-merge dopo gate (CI+P1+harsh-review) = ATTIVO; Game-family = via amendment ADR-0037 + SDMG (NON attivo -- flaggato conflitto con doctrine SDMG-survived, 2 grant gia' killati). Memory `feedback_merge_authority` creata. Merge = rebase (preserva trailer ADR-0011).
+- **Earn-path advance**: girato il rung reconcile (manuale, no-cron) -> drift 2 legs -> #411 (codemasterdd STATUS) + #260 (vault) aperti -> Eduardo merged entrambi. NB ADR-0039 dec.1: #411 STATUS-leg NON conta R2 (clock-leak), solo #260 vault conta -> +1 cycle.
+- **Digest dual-registration fix**: `jules-daily-digest` era su Lenovo+Ryzen -> unregister Ryzen via SSH (keep Lenovo canonical). Single-owner ripristinato.
+- **Re-validazione 5 report Jules 06-04** (docs-reorg x4 repo + ADR-consistency): pullati + triati + archiviati. **0 actionable** (DECISIONS_LOG gia' sync, ryzen-archive gia' in archive/, ADR-0024 "bad ref" = Game ADR-2026-05-05 legittimo).
+
+### Da fare
+- **Museum-card** 2 landmark (merge-authority governance + delivery-miss 7/7 pattern): formato/location da confermare con Eduardo.
+- **Game-family merge**: amendment ADR-0037 + SDMG harsh-review (path pulito) quando il governor R2 evidence matura (serve fix STATUS clock-leak per la distribuzione >=2-repo).
+- **Game local clone**: 9 file dirty = WIP sessione concorrente (CLAUDE.md/.env.example/ADR + log) -- NON toccato, verificare con la sessione owner.
+- **Pool clean codemasterdd ESAURITO**: governor coperto, atomize/parsers/autofill fatti, classify = heavy-deps friction, Flask route non-testabile (harness mocka flask). Prossimo Jules = Game-family (PR-to-owner) o fresh-sweep futura.
+
+### Note
+- Pattern del giorno: **delivery-miss Jules 7/7** -- il salvage-da-changeSet e' OBBLIGATORIO, non eccezione. Wrapper 5-gate solido; il gap e' la consegna-PR lato Jules, non l'authoring.
+- Currency-Gate self-miss (mio): "clean-cycles=0/rung dormiente" veniva da actor-criteria sec-8 (snapshot 06-03 stale); ADR-0039 corrente = 2 gia' banked. Leggere l'ADR vivo, non lo snapshot.
+- Reco honest tenuta: pool dry -> stop > forzare dispatch infeasible (Flask-mocked / heavy-deps).
+
 ## 2026-06-23 (de-confusione strumenti steering cross-repo + drain coda + 6 Short DONE)
 
 ### Completato
