@@ -237,3 +237,13 @@ judgment that a verdict "looked plausible".
 > vault `Atlas/lint-status.md` carries 13 pre-existing trailing NUL bytes (binary, from the #260
 > creation) faithfully preserved by `get_file` -> a de-NUL + builder-sanitize follow-up is tracked
 > (does not block this cycle). R2/Fase-4 stay hard-gated.
+>
+> **Correction (same session): #424 does NOT count as a clean cycle.** #424 (STATUS) was
+> human-merged carrying a buggy `vault-coherence = ok` (a parser miss: the multi-pass coherence
+> report records "N WARN (W-1..)" / "**0 BLOCK**" which `parse_vault_report` did not read -- Codex
+> P2 on #261). The parser was fixed (#428, MERGED -- WARN count form anchored to the `(W-`
+> enumeration; SDMG harsh-review SURVIVE-WITH-CHANGES) and re-reconcile opened **#426** to correct
+> the same `vault-coherence` line on main (ok -> warning). Because #426 is a same-line follow-up
+> to #424 within 7 days, **#424 FAILS the clean-cycle test (sec 6(c))** and does not count. The
+> STATUS leg still counts going forward; the leg's FIRST clean cycle will be the next
+> correction-free reconcile (#426 + #261, then steady-state). Honest mechanics, not a loss.
