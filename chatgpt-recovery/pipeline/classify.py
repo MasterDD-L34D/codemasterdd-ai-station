@@ -29,11 +29,9 @@ from datetime import datetime
 from pathlib import Path
 from typing import Iterator
 
-import frontmatter
 import numpy as np
 import ollama
 from bertopic import BERTopic
-from sentence_transformers import SentenceTransformer
 from sklearn.feature_extraction.text import CountVectorizer
 from tqdm import tqdm
 from umap import UMAP
