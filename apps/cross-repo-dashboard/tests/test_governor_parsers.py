@@ -162,7 +162,7 @@ def test_parse_vault_report_coherence_multipass_warn_count_form():
     md = (
         "# Gap-Coherence Pass -- 2026-06-28\n\n"
         "## PASS-1\n\n**0 BLOCK**\n\n#### WARN (carry-forward)\n\n"
-        "### Disposition\n\n8 WARN carry-forward (W-1..W-8), all user-gated.\n\n"
+        "### Disposition\n\n8 WARN (W-1..W-8), all user-gated.\n\n"
         "## PASS-2\n\n**0 BLOCK**\n\n9 WARN (W-1..W-9): W-9 NEW this pass.\n"
     )
     sig = parse_vault_report(md, source="vault-coherence", kind="coherence", ref="r")
@@ -171,6 +171,22 @@ def test_parse_vault_report_coherence_multipass_warn_count_form():
     assert sig.counts["block"] == 0
     assert sig.produced_at == "2026-06-28"
     assert "WARN 9" in sig.summary
+
+
+def test_parse_vault_report_prose_warn_recap_is_not_a_finding():
+    # The count form is anchored to the `(W-` disposition enumeration, so a free-floating
+    # narrative recap like "7 WARN carry-forward" (which really occurs in the corpus) must NOT
+    # be counted as a live finding. Disposition "0 WARN (W-none)" is the live verdict -> ok.
+    from governor.parsers import parse_vault_report
+    md = (
+        "# Coherence pass -- 2026-06-05\n\n"
+        "Last cycle had 7 WARN carry-forward, all since resolved.\n\n"
+        "### Disposition\n\n**0 BLOCK**\n0 WARN (W-none) this pass.\n"
+    )
+    sig = parse_vault_report(md, source="vault-coherence", kind="coherence", ref="r")
+    assert sig.severity == "ok"          # prose "7 WARN" is recap, not a finding
+    assert sig.counts["warn"] == 0
+    assert sig.counts["block"] == 0
 
 
 def test_parse_vault_report_block_count_prose_is_not_error():
