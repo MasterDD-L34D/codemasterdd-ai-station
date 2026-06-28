@@ -220,3 +220,20 @@ judgment that a verdict "looked plausible".
 > = the off-ramp signal, not a stall). The ">= 4 across >= 2 repos" distribution is DEFERRED to
 > the R2 ADR (two real legs now exist; not pre-decided). R2/Fase-4 stay hard-gated. Authority:
 > ADR-0039 + spec/plan 2026-06-03.
+
+> **Update 2026-06-28 (STATUS-leg clock-leak FIXED -> exclusion LIFTED + first post-fix cycle in
+> flight).** The STATUS-leg clock-leak that ADR-0039 dec.1 used to disqualify codemasterdd-leg
+> PR-cycles from R2 was FIXED by #333 (render mask, 2026-06-11) and the exclusion is now LIFTED
+> by ADR-0039 Addendum 2026-06-28 (PR #422, MERGED 64d8384): **STATUS-leg STEADY-STATE PR-cycles
+> now COUNT toward R2** alongside vault-leg (bootstrap #296/#252 still excluded -- annotation (b)).
+> First post-fix reconcile run (2026-06-28, manual `python -m governor.reconcile`, both legs
+> drifted on real content): opened codemasterdd **#424** (STATUS_MULTI_REPO.md, region-only, CI
+> green, the masked vault-eng-graph row stayed STABLE while real signals drifted = the #333 fix
+> validated live) + vault **#261** (Atlas/lint-status.md, region-only). **Both OPEN, pending
+> Eduardo human-merge** (sec 6 / ADR-0039 dec.3: a clean R1 cycle is human-merged; the hub does
+> NOT self-merge reconcile-class PRs). **clean-R1-PR-cycles still 0** until #424/#261 are
+> human-merged AND survive the 7-day no-revert / no-same-line windows; once they do this is the
+> 1st post-fix steady-state cycle across 2 repos (need >= 4 across >= 2 repos for R2). Finding:
+> vault `Atlas/lint-status.md` carries 13 pre-existing trailing NUL bytes (binary, from the #260
+> creation) faithfully preserved by `get_file` -> a de-NUL + builder-sanitize follow-up is tracked
+> (does not block this cycle). R2/Fase-4 stay hard-gated.
