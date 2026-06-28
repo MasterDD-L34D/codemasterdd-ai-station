@@ -19,6 +19,25 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-06-28 (Game-family merge amendment SDMG-killed + ADR-0039 currency fix + Jules Game cycle)
+
+### Completato
+- **Step 1 ground-truth**: Game #3049 (`translatePathfinderStatblock` char-test) MERGED -> sessione Jules `1716...658` archiviata (R3-bis archive-only). Museum #3048 + Godot #552 confermati MERGED.
+- **Step 2 -- amendment merge Game-family (ADR-0037) SDMG-KILLED (3a volta, corretto)**: draftato tier JM1 narrow (Game-only, required-checks-gated, via futuro actor `jules-merge`) -> harsh-reviewer KILL, 3 P0: (a/c) l'actor ricicla-non-scappa il merge-gate dell'harness (serve comunque grant settings + fa il merge-to-default che il classifier blocca); (b) Game `required_pr=false`+`enforce_admins=false` -> "CI-green-gated" e' platform-unenforced anche per Game (Godot/Game-DB senza protezione); zero-yield "R3-deferred" -> non deve toccare un ADR. Adottato, bozza scartata (mai PR-ata).
+- **Currency finding (Currency-Gate)**: il clock-leak STATUS che ADR-0039 dec.1 usava per escludere il leg codemasterdd da R2 era GIA' fixato da **#333** (render mask, 2026-06-11) ma dec.1 non era mai stato aggiornato (stale ~2.5 settimane; la memory 06-24 propagava la frase vecchia).
+- **Earn-path advance**: scritto emendamento correttivo a ADR-0039 (registra fix #333, **LIFT esclusione** -> STATUS-leg steady-state conta verso R2) -> harsh-review SDMG **SURVIVE-WITH-CHANGES** (1 P1 soften adottato, 0 P0) -> **PR #422** (doctrine = Eduardo-merge). Diagnostic: ingest 9/9 + drift STATUS reale di contenuto (game-governance-drift 9->20 warn; vault lint report rolling) con `vault-eng-graph` mascherato e stabile = mask validata empiricamente.
+- **Step 3 -- ciclo Jules Game completo**: candidato `apps/backend/services/fairnessCap.js` (`checkCapPtBudget`+`consumeCapPt`, puro, non-freeze, zero test, ground-truth su origin/main) -> dispatch 5/5 gate (session `3217...432`) -> delivery-miss (COMPLETED no-PR) -> salvage changeSet (1 file, 10 test, zero scratch) -> verify `node --test` **10/10** su codice reale -> deliver via gh-API server-side (commit `6e95dd6a`, niente husky) -> **PR #3052** CI **CLEAN** (governance/stack-quality/ci-gate pass).
+
+### Da fare
+- **Eduardo**: merge PR #422 (ADR-0039 doctrine, `--rebase`) + PR #3052 (Game test, repo esterno).
+- **Eduardo**: mint `GOVERNOR_RECONCILE_TOKEN` (PAT, ADR-0039 dec.6) -> `python -m governor.reconcile` apre PR reconcile STATUS(+vault) -> merge = 1a cycle steady-state post-fix bancata (servono >=4 su >=2 repo per R2).
+- 3 candidati Game residui per prossimi dispatch: `geneEncoder.encode`, `mbtiSurface.computeConfidence`, `hexGrid.elevationDamageMultiplier`.
+
+### Note
+- Memory `feedback_merge_authority` aggiornata: currency-correction (leak-fix #333) + kill-3a + stato earn-path (PR #422 + token-gate).
+- Token reconcile = blocco umano: no auto-bank della cycle in-session (token unset -> reconcile salta entrambi i leg "no-token").
+- Pattern confermati: delivery-miss ~ogni dispatch (salvage = step fisso); consegna esterna via gh-API PUT (husky/prettier-ENOENT nei worktree); pre-format con prettier del repo target evita CI-red.
+
 ## 2026-06-25 (Jules cycle x7 full-auto-merge + merge-authority ratifica + earn-path advance)
 
 ### Completato
