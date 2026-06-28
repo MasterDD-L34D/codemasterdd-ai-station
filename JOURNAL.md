@@ -29,11 +29,15 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 - **Digest dual-registration fix**: `jules-daily-digest` era su Lenovo+Ryzen -> unregister Ryzen via SSH (keep Lenovo canonical). Single-owner ripristinato.
 - **Re-validazione 5 report Jules 06-04** (docs-reorg x4 repo + ADR-consistency): pullati + triati + archiviati. **0 actionable** (DECISIONS_LOG gia' sync, ryzen-archive gia' in archive/, ADR-0024 "bad ref" = Game ADR-2026-05-05 legittimo).
 
+- **Museum network bidirezionale**: creato museum hub codemasterdd (`docs/museum/` + 2 landmark card: merge-authority + delivery-miss) #420; link reciproci Game #3048 + Godot #552 (entrambi MERGED). Vault cross-linked.
+- **1 Jules job overseen su Game (PR-to-owner)**: #3049 characterization test `translatePathfinderStatblock` (freeze-zone behavior-pin, test-only). Delivery-miss -> salvage; husky/prettier-ENOENT su commit-locale -> consegna via gh-API PUT; CI prettier-fail -> format via Game node_modules; CI **CLEAN**. OPEN, pending Eduardo merge. Memory salvage-esterno aggiornata.
+- **Jules governance consolidata**: nuovo `docs/jules/JULES-GOVERNANCE-INDEX.md` (hub-rooted: processo/cycle + ADR doctrine + tooling + cross-repo map + taxonomy S1-S7); `reference_jules_workflow` ora punta li' come entry-point.
+
 ### Da fare
-- **Museum-card** 2 landmark (merge-authority governance + delivery-miss 7/7 pattern): formato/location da confermare con Eduardo.
-- **Game-family merge**: amendment ADR-0037 + SDMG harsh-review (path pulito) quando il governor R2 evidence matura (serve fix STATUS clock-leak per la distribuzione >=2-repo).
-- **Game local clone**: 9 file dirty = WIP sessione concorrente (CLAUDE.md/.env.example/ADR + log) -- NON toccato, verificare con la sessione owner.
-- **Pool clean codemasterdd ESAURITO**: governor coperto, atomize/parsers/autofill fatti, classify = heavy-deps friction, Flask route non-testabile (harness mocka flask). Prossimo Jules = Game-family (PR-to-owner) o fresh-sweep futura.
+- **Merge #3049** (Game test, CI verde) -- Eduardo (external boundary).
+- **Game-family merge autonomy**: amendment ADR-0037 + SDMG harsh-review quando governor R2 matura (serve fix STATUS clock-leak per distribuzione >=2-repo).
+- **Game local clone**: 9 file dirty = WIP sessione concorrente -- NON toccato, verificare con la sessione owner.
+- **Pool clean codemasterdd ESAURITO**: prossimo Jules = Game-family (PR-to-owner) o fresh-sweep futura.
 
 ### Note
 - Pattern del giorno: **delivery-miss Jules 7/7** -- il salvage-da-changeSet e' OBBLIGATORIO, non eccezione. Wrapper 5-gate solido; il gap e' la consegna-PR lato Jules, non l'authoring.
