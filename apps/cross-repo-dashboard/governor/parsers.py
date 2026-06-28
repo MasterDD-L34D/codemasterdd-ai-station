@@ -66,10 +66,13 @@ _RE_VAULT_BOLD_NUM = re.compile(r"\*\*(\d+)\*\*")
 _RE_VAULT_SUMMARY = re.compile(r"^##\s+Summary\b(.*?)(?=^##\s|\Z)", re.MULTILINE | re.DOTALL | re.IGNORECASE)
 _RE_VAULT_BLOCK = re.compile(r"\bBLOCK:\s*(\d+)")
 _RE_VAULT_WARN = re.compile(r"\bWARN:\s*(\d+)")
-# Disposition count form `N WARN` (multi-pass coherence reports, e.g. "9 WARN (W-1..W-9)").
-# WARN-only on purpose: a `N BLOCK` count form would match policy prose like ">=1 BLOCK"
-# and false-alarm error (see the parse_vault_report severity note).
-_RE_VAULT_WARN_COUNT = re.compile(r"(\d+)\s+WARN\b")
+# Disposition count form `N WARN (W-1..W-N)` (multi-pass coherence reports). Anchored to the
+# `(W-` finding enumeration that follows the count in the disposition verdict, so free-floating
+# narrative prose like "7 WARN carry-forward" (a recap, not a live verdict) does NOT false-alarm.
+# WARN-only on purpose: a `N BLOCK` count form would match policy prose like ">=1 BLOCK" and
+# false-alarm error (see the parse_vault_report severity note). Accepted residual: a future
+# report emitting a bare `N BLOCK` count (no `BLOCK: N` colon) is under-reported as not-error.
+_RE_VAULT_WARN_COUNT = re.compile(r"(\d+)\s+WARN\s*\(W-")
 
 
 def parse_vault_report(md: str, source: str, kind: str, ref: str) -> Signal:
@@ -101,10 +104,11 @@ def parse_vault_report(md: str, source: str, kind: str, ref: str) -> Signal:
     nonzero = sum(1 for n in nums if n > 0)
     m_block = _RE_VAULT_BLOCK.search(text)
     block_n = int(m_block.group(1)) if m_block else 0
-    # WARN: structured colon verdict `WARN: N` (single-pass) OR disposition count form
-    # `N WARN` (multi-pass coherence, e.g. "9 WARN (W-1..W-9)"). Take the MAX -- a multi-pass
-    # report repeats the count per pass and the highest is the live verdict. BLOCK stays
-    # colon-only on purpose (count form would false-alarm on ">=1 BLOCK" policy prose).
+    # WARN: structured colon verdict `WARN: N` (single-pass) OR the disposition count form
+    # `N WARN (W-1..W-N)` (multi-pass coherence). Take the MAX -- a multi-pass report repeats
+    # the count per pass and the highest is the live verdict. The count form is anchored to the
+    # `(W-` enumeration so narrative prose ("7 WARN carry-forward") is not counted. BLOCK stays
+    # colon-only on purpose (a count form would false-alarm on ">=1 BLOCK" policy prose).
     warn_candidates = [int(x) for x in _RE_VAULT_WARN.findall(text)]
     warn_candidates += [int(x) for x in _RE_VAULT_WARN_COUNT.findall(text)]
     warn_n = max(warn_candidates) if warn_candidates else 0
