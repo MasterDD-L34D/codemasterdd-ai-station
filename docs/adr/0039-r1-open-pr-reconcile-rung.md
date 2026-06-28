@@ -26,6 +26,8 @@ shipped issue actor (`act.py:run_r1`); both coexist. **Clock-free rescope (ratif
 2026-06-11):** the clock-free claim holds for the RENDER and for the vault leg; the codemasterdd
 STATUS leg has time-derived severity UPSTREAM of the render (eng-graph staleness band), so
 STATUS-leg PR-cycles do NOT count toward R2 until that leak is fixed -- see dec.1.
+**[Update 2026-06-28: that leak was FIXED by #333 (render mask, 2026-06-11); STATUS-leg
+STEADY-STATE PR-cycles now count toward R2. See Addendum 2026-06-28.]**
 
 ## Context
 
@@ -62,6 +64,15 @@ row). Consequence: **STATUS-leg PR-cycles do NOT count toward R2 until the leak 
 valid as bootstrap-class evidence (the #296 diff was the region CREATION, not a staleness
 flip). Safety is untouched: the no-merge 3-lock (dec.4) does not depend on clock-freedom; the
 leak affects R2 EVIDENCE QUALITY only.
+
+> **[Update 2026-06-28 -- leak FIXED, this exclusion LIFTED. See Addendum 2026-06-28.]** The
+> leak was sealed by #333 (2026-06-11) at the render boundary: `render_status_multi_repo` now
+> MASKS the time-derived severity cell for `vault-eng-graph`, so a calendar-only flip yields a
+> byte-identical region and opens NO PR. The STATUS reconciler diffs that masked render
+> (`build_reconcilers` -> `render=render_status_multi_repo`), so the leak cannot reach the
+> PR-open decision. STATUS-leg STEADY-STATE PR-cycles therefore now count toward R2 (bootstrap
+> #296 still excluded per annotation (b)). The dec.1 reasoning above is preserved as the
+> pre-fix record.
 
 ### 2. Doctrine exclusion = static gate + a HUMAN review checkpoint (ADR-0038)
 
@@ -202,6 +213,52 @@ a failed clean cycle (sec 6 counts merged-then-reverted/followed-up PRs, not a n
 artifact PR), but it IS evidence for annotation (b): bootstrap/create-class mechanics carry
 sharp edges that steady-state cycles must not inherit.
 
+## Addendum 2026-06-28 -- STATUS-leg clock-leak FIXED (#333); dec.1 exclusion LIFTED
+
+**Currency correction (ground-truthed 2026-06-28).** dec.1 / ratify-amendment-P1 (2026-06-11)
+flagged that the codemasterdd STATUS leg still leaked the calendar (time-derived `vault-eng-graph`
+severity upstream of the render) and therefore STATUS-leg PR-cycles did NOT count toward R2. That
+leak was **FIXED the same day** by PR **#333 `fix(governor): mask time-derived severity in STATUS
+render (ADR-0039 P1)` (35b2122, 2026-06-11 11:25, on origin/main)** -- but dec.1's text was never
+amended, so the ADR (and downstream notes, incl. the 2026-06-24 merge-authority memory) kept
+asserting the stale "STATUS-leg does not count / only vault-leg counts" claim for ~2.5 weeks. This
+addendum closes that doctrine-vs-code gap (a currency-gate-class stale-pull: git recency > doc
+authority; memory `feedback_currency_gate`).
+
+**What #333 actually does (verified, not assumed).** `render_status_multi_repo` (governor/
+reconcile.py) MASKS the `severity` cell for the time-derived source set
+`_TIME_DERIVED_SEVERITY_SOURCES = {vault-eng-graph}` (cell text `(masked: time-derived)`), so a
+calendar-only severity flip (info->warning) produces a BYTE-IDENTICAL rendered region. The STATUS
+reconciler diffs exactly that masked render (`build_reconcilers` -> `status_block` with
+`render=render_status_multi_repo`), so a calendar tick can no longer reach the PR-open decision.
+The leak is sealed at the actor's decision boundary, not merely cosmetically. Guardrails (both
+green 2026-06-28): `test_render_status_stable_across_staleness_boundary` (calendar advance ->
+identical render) + `test_time_derived_severity_sources_pin_matches_parsers` (the mask source-set
+stays pinned to the now-aware parsers, so a future now-aware parser added without masking goes
+CI-red). Today severity is the only `now`-absorbing rendered column:
+produced_at/summary/source/ref derive from MOC content, not the clock (the `parse_eng_graph_moc`
+contract, parsers.py; produced_at = the artifact's own `last_verified`, never `now`). A future
+parser leaking the calendar into summary/produced_at would reopen P1-1 -- caught by
+`test_render_status_stable_across_staleness_boundary` (parser-routed) and pinned by
+`test_time_derived_severity_sources_pin_matches_parsers`.
+
+**Decision.** The dec.1 exclusion is **LIFTED**: STATUS-leg **STEADY-STATE** PR-cycles now count
+toward R2 alongside vault-leg cycles. Unchanged: (1) the 2 banked cycles (#296/#252) stay
+**bootstrap-class** and do NOT count (annotation (b) -- R2 needs steady-state drift, not
+create-PRs); (2) the stored severity is still time-derived -- only the RENDER (hence the PR
+evidence) is clock-free, which is all R2 evidence quality requires; the staleness band keeps
+working for the ISSUE actor (worsened-delta reads the store, not this render); (3) this addendum
+grants NO autonomy and earns NO rung -- R2 still requires >=4 clean STEADY-STATE cycles across
+>=2 repos over >=2 weeks + the rest of actor-criteria sec 3 + its own R2 ADR. It only removes the
+codemasterdd-leg DISQUALIFIER so the 2nd repo can contribute the cycles the ">=2 repos" condition
+needs. No reconcile run has happened since 2026-06-03, so zero steady-state cycles are banked on
+EITHER leg today (annotation (d): no-run != no-drift); maturing the earn requires periodic manual
+`python -m governor.reconcile` runs.
+
+**Doctrine-file (this ADR) = Eduardo-only-merge** (ADR-0037 dec.2 / ADR-0038); delivered as
+branch+PR, NOT hub-self-merged. SDMG Protocol-7 harsh-review of this currency correction recorded
+in the Falsification section below.
+
 ## Falsification (SDMG Protocol 7)
 
 The DESIGN passed two harsh-reviewer rounds (v1 REJECT -> v2 SURVIVE-WITH-CHANGES, all adopted;
@@ -231,6 +288,17 @@ non difendo"):
   env-only); **P2.2** -- documented the create-if-absent reused-PR behavior (Consequences, below).
 Held with no change: merge-block (3-part), clock-free render, fail-closed token, anti-self-licking
 externality, doctrine `__post_init__` fail-closed.
+
+**Round 4 -- Addendum 2026-06-28 currency correction: SURVIVE-WITH-CHANGES (no P0).** harsh-reviewer
+traced the actor diff path (`splice(current, render(store))`, reconcile.py) and confirmed the STATUS
+leg diffs the MASKED render only (no raw-store severity path), so the leak is sealed at the PR-open
+decision, not merely cosmetic; confirmed `parse_eng_graph_moc` is the ONLY now-aware parser (pinned)
+and severity its only `now`-absorbing rendered column; confirmed the addendum grants no rung and
+keeps the bootstrap-exclusion orthogonal. One P1 adopted: softened an over-confident absolute
+("severity was the only leak vector") to the accurate "true-today + regression-guarded" claim
+(parse_eng_graph_moc contract + the two render-stability/pin tests). P2 (extend the staleness-
+boundary test to also straddle the error band) noted, deferred -- not a leak (the mask is
+severity-value-agnostic).
 
 ## References
 
