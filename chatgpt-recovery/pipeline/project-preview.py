@@ -27,8 +27,6 @@ import sys
 from datetime import datetime
 from pathlib import Path
 
-from tqdm import tqdm
-
 
 def parse_args():
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
