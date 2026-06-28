@@ -229,11 +229,13 @@ judgment that a verdict "looked plausible".
 > First post-fix reconcile run (2026-06-28, manual `python -m governor.reconcile`, both legs
 > drifted on real content): opened codemasterdd **#424** (STATUS_MULTI_REPO.md, region-only, CI
 > green, the masked vault-eng-graph row stayed STABLE while real signals drifted = the #333 fix
-> validated live) + vault **#261** (Atlas/lint-status.md, region-only). **Both OPEN, pending
-> Eduardo human-merge** (sec 6 / ADR-0039 dec.3: a clean R1 cycle is human-merged; the hub does
-> NOT self-merge reconcile-class PRs). **clean-R1-PR-cycles still 0** until #424/#261 are
-> human-merged AND survive the 7-day no-revert / no-same-line windows; once they do this is the
-> 1st post-fix steady-state cycle across 2 repos (need >= 4 across >= 2 repos for R2). Finding:
+> validated live) + vault **#261** (Atlas/lint-status.md, region-only). Both were opened as
+> reconcile-class PRs for **Eduardo human-merge** (sec 6 / ADR-0039 dec.3: a clean R1 cycle is
+> human-merged; the hub does NOT self-merge reconcile-class PRs). **#424 has since MERGED but does
+> NOT count** (a same-line correction follow-up -- see Correction below); **#261 was CLOSED**
+> (superseded, replaced by the clean #263). **clean-R1-PR-cycles still 0**: the leg's first clean
+> cycle is the next correction-free reconcile, human-merged AND surviving the 7-day no-revert /
+> no-same-line windows (need >= 4 across >= 2 repos for R2). Finding:
 > vault `Atlas/lint-status.md` carries 13 pre-existing trailing NUL bytes (binary, from the #260
 > creation) faithfully preserved by `get_file` -> a de-NUL + builder-sanitize follow-up is tracked
 > (does not block this cycle). R2/Fase-4 stay hard-gated.
@@ -246,4 +248,6 @@ judgment that a verdict "looked plausible".
 > the same `vault-coherence` line on main (ok -> warning). Because #426 is a same-line follow-up
 > to #424 within 7 days, **#424 FAILS the clean-cycle test (sec 6(c))** and does not count. The
 > STATUS leg still counts going forward; the leg's FIRST clean cycle will be the next
-> correction-free reconcile (#426 + #261, then steady-state). Honest mechanics, not a loss.
+> correction-free reconcile. (The conflicted #261 was CLOSED and replaced by **#263** -- a clean
+> de-NUL'd base + the corrected `coherence=warning`; #426 + #263 are the current correction PRs.)
+> Honest mechanics, not a loss.
