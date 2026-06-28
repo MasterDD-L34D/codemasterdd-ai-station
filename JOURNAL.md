@@ -19,6 +19,22 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-06-28 (governor reconcile binary-contamination fix -- self-heal + vault doc clean)
+
+### Completato
+- **Difetto ground-truthed**: `Atlas/lint-status.md` (vault main, governor-owned) con 13 NUL trailing (0x00) dal #260 (probabile residuo conflict-resolution #258->#260) -> git lo tratta BINARY -> i reconcile PR R1 (#261) rendevano "Binary files differ", region-diff illeggibile = annulla lo scopo human-review del rung (ADR-0039). Builder PRESERVAVA: `_real_get_file` decode `errors="replace"` (0x00 -> U+0000), splice append region, PUT re-encode -> mai self-heal.
+- **Part 2 hardening (codemasterdd #427 MERGED, rebase, commit ed62a968, trailer ADR-0011)**: `splice` ora passa doc_text/new_region/create_header in nuovo `_strip_control_bytes` (striscia C0+DEL eccetto tab/newline/CR). Sorgente contaminato -> drift (output sanificato != sorgente sporco) -> PR pulito -> self-heal al merge. Chokepoint = `splice` NON `_real_get_file` (sanitize al read pulirebbe `current` prima del compare `patched==current` -> MASCHERA il drift, heal-PR mai aperto -- finding harsh-reviewer). Scope stretto: control-byte only, non mojibake UTF-8 (decode gia' folda a U+FFFD = valid text). Create-if-absent path confermato non-emit (header costante ASCII + create_header sanificato). TDD RED/GREEN: 6 test nuovi (5 splice scope/contam + 1 actor end-to-end self-heal). 205 test governor verdi. NO-merge invariant ADR-0039 dec.4 INTATTO (pinned dai negative test esistenti). Harsh-review SDMG Protocol 7: zero P1, finding framing/docstring/scope-test adottati. ASCII ADR-0021.
+- **Part 1 vault doc (vault #262 MERGED da Eduardo, commit 8771486)**: clean rewrite server-side via gh-API PUT (branch+PR, Eduardo-merge -- sovereign sibling-peer). Strisciati SOLO i 13 NUL (1439 -> 1426 byte); region GOVERNOR-SYNC:lint + frontmatter (incl `up: "[[index]]"`) + prose byte-for-byte invariati. Vault main ora 0 NUL / ASCII / newline-finale verificato post-merge. Branch eliminato.
+- **Verifica**: dimostrato locale binary-before / text-after (reconcile simulato su doc pulito = diff testuale leggibile della region GOVERNOR-SYNC:lint). PR #262 own-diff restava "Binary files differ" (base main ancora contaminata al momento) = atteso; loop chiuso al merge (main ora pulito -> prossimo reconcile = testo).
+
+### Da fare
+- Nessun residuo di questa sessione. Prossimo reconcile reale su vault main pulito -> primo PR R1 leggibile post-fix (richiede ancora `GOVERNOR_RECONCILE_TOKEN`, blocco token gia' tracciato nell'entry sotto).
+
+### Note
+- Lesson (sanitize-at-chokepoint): per self-heal di contaminazione via reconcile, sanifica al CHOKEPOINT che produce l'output (`splice`) NON al read (`get_file`); pulire `current` al read maschera il drift e il PR correttivo non si apre mai. Adottato direttamente da harsh-reviewer.
+- Lesson (cleanup-PR resta binary): un PR che rimuove byte-binary mostra comunque "Binary files differ" finche' la base non e' pulita (git flagga binary su un lato qualsiasi del diff); il diff testuale arriva solo post-merge.
+- gh-API PUT server-side per repo sovereign (no husky/clone locale); striscia-da-raw (filtra control-byte dal contenuto decodificato originale) preserva byte-exact tutto il resto.
+
 ## 2026-06-28 (Game-family merge amendment SDMG-killed + ADR-0039 currency fix + Jules Game cycle)
 
 ### Completato
