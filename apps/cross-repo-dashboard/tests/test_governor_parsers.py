@@ -153,6 +153,42 @@ def test_parse_vault_report_coherence_block_zero_warn_is_warning():
     assert sig.produced_at == "2026-06-01"
 
 
+def test_parse_vault_report_coherence_multipass_warn_count_form():
+    # Multi-pass coherence reports (2026-06-28 format) express WARN findings as a
+    # disposition COUNT "N WARN (W-1..W-N)" and "**0 BLOCK**", with NO `## Summary`
+    # and NO `WARN: N` colon verdict. Pre-fix this parsed ok+"present" (Codex P2: hid
+    # 9 live WARN). Must be warning, taking the MAX count across passes (8 then 9).
+    from governor.parsers import parse_vault_report
+    md = (
+        "# Gap-Coherence Pass -- 2026-06-28\n\n"
+        "## PASS-1\n\n**0 BLOCK**\n\n#### WARN (carry-forward)\n\n"
+        "### Disposition\n\n8 WARN carry-forward (W-1..W-8), all user-gated.\n\n"
+        "## PASS-2\n\n**0 BLOCK**\n\n9 WARN (W-1..W-9): W-9 NEW this pass.\n"
+    )
+    sig = parse_vault_report(md, source="vault-coherence", kind="coherence", ref="r")
+    assert sig.severity == "warning"
+    assert sig.counts["warn"] == 9   # max(8, 9) across passes
+    assert sig.counts["block"] == 0
+    assert sig.produced_at == "2026-06-28"
+    assert "WARN 9" in sig.summary
+
+
+def test_parse_vault_report_block_count_prose_is_not_error():
+    # Guard: the `N WARN` count form is WARN-only. A `N BLOCK` count form would match
+    # policy prose (">=1 BLOCK", "3 BLOCK would be bad") and false-alarm error. With no
+    # structured `BLOCK: N` verdict and no WARN, severity must stay ok.
+    from governor.parsers import parse_vault_report
+    md = (
+        "# Coherence pass -- 2026-06-05\n\n"
+        "Policy: open a PR if >=1 BLOCK. 3 BLOCK would be bad.\n\n"
+        "### Disposition\n\n0 WARN this pass.\n"
+    )
+    sig = parse_vault_report(md, source="vault-coherence", kind="coherence", ref="r")
+    assert sig.severity == "ok"          # prose BLOCK counts must NOT make it error
+    assert sig.counts["block"] == 0
+    assert sig.counts["warn"] == 0
+
+
 def _eng_graph_moc_fixture() -> str:
     """Inline fixture for eng-graph MOC tests.
 

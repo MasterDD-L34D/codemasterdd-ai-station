@@ -66,6 +66,10 @@ _RE_VAULT_BOLD_NUM = re.compile(r"\*\*(\d+)\*\*")
 _RE_VAULT_SUMMARY = re.compile(r"^##\s+Summary\b(.*?)(?=^##\s|\Z)", re.MULTILINE | re.DOTALL | re.IGNORECASE)
 _RE_VAULT_BLOCK = re.compile(r"\bBLOCK:\s*(\d+)")
 _RE_VAULT_WARN = re.compile(r"\bWARN:\s*(\d+)")
+# Disposition count form `N WARN` (multi-pass coherence reports, e.g. "9 WARN (W-1..W-9)").
+# WARN-only on purpose: a `N BLOCK` count form would match policy prose like ">=1 BLOCK"
+# and false-alarm error (see the parse_vault_report severity note).
+_RE_VAULT_WARN_COUNT = re.compile(r"(\d+)\s+WARN\b")
 
 
 def parse_vault_report(md: str, source: str, kind: str, ref: str) -> Signal:
@@ -76,7 +80,9 @@ def parse_vault_report(md: str, source: str, kind: str, ref: str) -> Signal:
       prose must not win and churn the change-hash every run).
     - severity: error ONLY if the structured verdict `BLOCK: N` has N>0 (NOT the
       bare word "BLOCK", which appears in policy prose -> false alarms); else
-      warning if the `## Summary` section has any nonzero metric; else ok.
+      warning if the `## Summary` section has any nonzero metric OR the report records
+      WARN findings -- the colon verdict `WARN: N` or the multi-pass disposition count
+      form `N WARN` (e.g. "9 WARN (W-1..W-9)"); else ok.
     - findings/metrics are restricted to the `## Summary` section (excludes corpus
       sizes like "Scanned **2249** md"). The summary STRING reports the count of
       nonzero metrics, NOT a conflated sum (a graph-density census is not an
@@ -95,8 +101,13 @@ def parse_vault_report(md: str, source: str, kind: str, ref: str) -> Signal:
     nonzero = sum(1 for n in nums if n > 0)
     m_block = _RE_VAULT_BLOCK.search(text)
     block_n = int(m_block.group(1)) if m_block else 0
-    m_warn = _RE_VAULT_WARN.search(text)
-    warn_n = int(m_warn.group(1)) if m_warn else 0
+    # WARN: structured colon verdict `WARN: N` (single-pass) OR disposition count form
+    # `N WARN` (multi-pass coherence, e.g. "9 WARN (W-1..W-9)"). Take the MAX -- a multi-pass
+    # report repeats the count per pass and the highest is the live verdict. BLOCK stays
+    # colon-only on purpose (count form would false-alarm on ">=1 BLOCK" policy prose).
+    warn_candidates = [int(x) for x in _RE_VAULT_WARN.findall(text)]
+    warn_candidates += [int(x) for x in _RE_VAULT_WARN_COUNT.findall(text)]
+    warn_n = max(warn_candidates) if warn_candidates else 0
     if block_n > 0:
         severity = "error"
     elif nonzero > 0 or warn_n > 0:
