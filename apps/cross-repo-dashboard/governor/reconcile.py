@@ -118,6 +118,33 @@ class Reconciler:
             )
 
 
+# C0/DEL control bytes are the contamination this gate heals: a single NUL (0x00) makes git
+# treat the whole file as binary, so the governor's human-reviewable GOVERNOR-SYNC region renders
+# as "Binary files differ" -- defeating the rung's entire point (vault #260; the 13 trailing NULs
+# likely entered via the #258->#260 conflict-resolution, ADR-0039 Addendum 2026-06-11). The
+# actor only PRESERVES whatever get_file decoded (base64 -> .decode(errors="replace") keeps 0x00
+# as U+0000), so the contamination NEVER self-heals across reconcile runs. This gate strips every
+# C0 control char (and DEL 0x7f) EXCEPT the three legitimate text-whitespace bytes -- tab (0x09),
+# newline (0x0a), carriage-return (0x0d) -- from splice's text inputs, so a contaminated source
+# self-heals on the next reconcile (the sanitized output differs from the dirty source -> drift ->
+# a clean PR) instead of carrying the control bytes forward. CR is preserved to avoid an unrelated
+# CRLF->LF reflow. SCOPE (deliberately narrow): this heals control-BYTE contamination only, NOT
+# invalid-UTF-8 "mojibake" -- decode(errors="replace") already folds that into U+FFFD, which is
+# itself valid UTF-8 (text, not binary), so it is left untouched on purpose (a different, larger
+# concern). Deterministic + idempotent: clean text -> identical text (no-op), so splice's
+# idempotency / no-churn contract is preserved. Source is pure ASCII (ADR-0021): \x7f is an
+# ASCII-source escape, not a non-ASCII literal byte.
+_CONTROL_STRIP_TABLE = {c: None for c in range(0x20) if c not in (0x09, 0x0A, 0x0D)}
+_CONTROL_STRIP_TABLE[0x7F] = None
+
+
+def _strip_control_bytes(text: str) -> str:
+    """Strip C0 control chars + DEL (except tab/newline/CR) from `text`. Pure, deterministic,
+    idempotent. Defends the reconcile region against binary contamination (NUL) propagating
+    forward; a no-op on already-clean text (see _CONTROL_STRIP_TABLE rationale above)."""
+    return (text or "").translate(_CONTROL_STRIP_TABLE)
+
+
 def splice(doc_text, marker, new_region, anchor=None, create_header=None) -> str:
     """Pure, idempotent region-replace bounded by (begin, end) markers.
 
@@ -129,17 +156,24 @@ def splice(doc_text, marker, new_region, anchor=None, create_header=None) -> str
     `new_region` is the INNER body (a table); splice wraps it with the markers. splice adds NO
     timestamp (idempotency: identical new_region -> identical output, spec sec 6.4). A function
     replacement is used in re.sub so backslashes in `new_region` are literal (no backref bug).
+
+    Every text input (doc_text, new_region, create_header) is passed through
+    _strip_control_bytes FIRST: the output is therefore guaranteed free of C0 control bytes
+    regardless of which source (a contaminated existing doc, a junk-bearing render, or a header)
+    introduced them -- so binary contamination self-heals here rather than propagating forward
+    (vault #260). The markers themselves are clean literals.
     """
     begin, end = marker
+    new_region = _strip_control_bytes(new_region)
     block = f"{begin}\n{new_region}\n{end}"
-    text = doc_text or ""
+    text = _strip_control_bytes(doc_text)
 
     if begin in text and end in text:
         pattern = re.escape(begin) + r".*?" + re.escape(end)
         return re.sub(pattern, lambda _m: block, text, count=1, flags=re.DOTALL)
 
     if not text.strip():
-        header = (create_header or "").rstrip()
+        header = _strip_control_bytes(create_header).rstrip()
         return (header + "\n\n" + block + "\n") if header else (block + "\n")
 
     if anchor and anchor in text:
@@ -417,7 +451,12 @@ def _real_open_or_update_pr(repo, branch, base, path, content, rid):
     Precondition (actor contract): `content` DIFFERS from the file on `base` (the actor
     calls this only on drift), so post-reset the dedup always PUTs. A direct caller passing
     content identical to base ends fail-closed: dedup skips the PUT and the PR create on a
-    zero-diff branch raises (isolated per-leg by the actor, never a junk PR)."""
+    zero-diff branch raises (isolated per-leg by the actor, never a junk PR).
+
+    `content` is expected PRE-SANITIZED of control bytes: the only real caller (reconcile_actor)
+    routes it through `splice` -> `_strip_control_bytes`, so the PUT never re-emits binary. This
+    builder does NOT re-sanitize (single chokepoint is `splice`); a direct caller passing raw
+    contaminated bytes would PUT them verbatim."""
     wtok = _write_token()
     if not wtok:
         raise RuntimeError(
