@@ -128,6 +128,24 @@ def test_actor_one_reconciler_error_is_isolated(tmp_path):
     assert len(res["opened"]) == 1               # the good one still proceeded
 
 
+def test_actor_self_heals_binary_contaminated_source(tmp_path):
+    """vault #260: the governor-owned doc carries trailing NUL bytes (binary). get_file decodes
+    them (errors='replace' -> U+0000); the actor must treat that as DRIFT and open a PR whose
+    content is CLEAN text -- so the contamination self-heals on merge instead of propagating
+    forward forever (the builder faithfully preserves whatever it decodes)."""
+    from governor.reconcile import reconcile_actor, splice, render_status_multi_repo
+    store = _store(tmp_path, SIGNALS)
+    region = render_status_multi_repo(store)
+    synced = splice("# STATUS_MULTI_REPO\n", MK, region, anchor="# STATUS_MULTI_REPO")
+    contaminated = synced + ("\x00" * 13)   # region already in-sync BUT binary-contaminated EOF
+    api, calls, _ = _fake_gh_api({"MasterDD-L34D/codemasterdd-ai-station":
+                                  {"STATUS_MULTI_REPO.md": contaminated}})
+    res = reconcile_actor(store, [_status_reconciler()], api, environ=TOKEN_ENV)
+    assert len(res["opened"]) == 1          # contamination alone counts as drift -> opens a PR
+    put = calls["open_or_update_pr"][0]["content"]
+    assert "\x00" not in put                # the opened PR carries CLEAN text (self-heal)
+
+
 def test_build_reconcilers_two_legs_nondoctrine_targets():
     from governor.reconcile import build_reconcilers
     recs = build_reconcilers()
