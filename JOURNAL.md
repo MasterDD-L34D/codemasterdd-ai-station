@@ -19,6 +19,19 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-06-29 (CI ASCII-guard exit-128 flake fix -- merge-base range)
+
+### Completato
+- **Flake ground-truthed**: job "ASCII guard (ADR-0021)" rosso intermittente con `fatal: origin/$BASE...HEAD: no merge base` (exit 128) nello step "Compute changed code files" -- inciampo git-plumbing, non violazione ASCII reale. Repro PR #429 (run 28334646131): pytest verde, scan ASCII mai partito. Causa: `git fetch origin "$BASE" --depth=1` ri-shallowava base (solo punta) nonostante checkout gia' a `fetch-depth: 0`; il range tre-punti `origin/$BASE...HEAD` richiede merge base -> base avanzata mid-run (auto-merge-squash veloce) -> punta shallow senza antenato comune -> exit 128.
+- **Fix (codemasterdd #430 MERGED, commit 2fa615e, squash 7097ad2, trailer ADR-0011)**: tolto `--depth=1` (fetch base full -- checkout gia' fetch-depth 0 -> merge base sempre esiste); merge base esplicito (`git merge-base`) + diff `"$MERGE_BASE HEAD"` = semantica added-lines identica a `BASE...HEAD` ma senza sintassi tre-punti che esplode; fallback tip-vs-tip solo se zero antenati comuni. Scope diff-scan invariato -> mojibake riga-1 JOURNAL.md resta esente (ADR-0021 frozen).
+- **Verifica**: locale pre-push merge-base risolve + `git diff <mb> HEAD` provato EQUIVALENT a `origin/main...HEAD` + righe nuove ASCII-clean. CI reale (PR #430): ASCII guard pass 5s, pytest pass 10s, zero `fatal: no merge base`, step scan stampa runtime `ASCII guard OK (added-lines scope)` = scan partito davvero sul ci.yml e passato. Fix live su origin/main verificato (`MERGE_BASE` presente, `--depth=1` sparito).
+
+### Da fare
+- Nessun residuo. Race vera (base che avanza durante run) non forzabile a comando; immunita' strutturale (no --depth=1, no tre-punti).
+
+### Note
+- Lesson: range git tre-punti `A...B` dentro uno step CI puo' uscire 128 su shallow-fetch se base avanza mid-run; usa merge-base esplicito (`git merge-base A B` + range `"$MB B"`) per stessa semantica senza throw. Famiglia L-040 (gate su exit-code git vero, non assumere happy-path).
+
 ## 2026-06-28 (governor reconcile binary-contamination fix -- self-heal + vault doc clean)
 
 ### Completato
