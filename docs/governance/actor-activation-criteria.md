@@ -220,3 +220,34 @@ judgment that a verdict "looked plausible".
 > = the off-ramp signal, not a stall). The ">= 4 across >= 2 repos" distribution is DEFERRED to
 > the R2 ADR (two real legs now exist; not pre-decided). R2/Fase-4 stay hard-gated. Authority:
 > ADR-0039 + spec/plan 2026-06-03.
+
+> **Update 2026-06-28 (STATUS-leg clock-leak FIXED -> exclusion LIFTED + first post-fix cycle in
+> flight).** The STATUS-leg clock-leak that ADR-0039 dec.1 used to disqualify codemasterdd-leg
+> PR-cycles from R2 was FIXED by #333 (render mask, 2026-06-11) and the exclusion is now LIFTED
+> by ADR-0039 Addendum 2026-06-28 (PR #422, MERGED 64d8384): **STATUS-leg STEADY-STATE PR-cycles
+> now COUNT toward R2** alongside vault-leg (bootstrap #296/#252 still excluded -- annotation (b)).
+> First post-fix reconcile run (2026-06-28, manual `python -m governor.reconcile`, both legs
+> drifted on real content): opened codemasterdd **#424** (STATUS_MULTI_REPO.md, region-only, CI
+> green, the masked vault-eng-graph row stayed STABLE while real signals drifted = the #333 fix
+> validated live) + vault **#261** (Atlas/lint-status.md, region-only). Both were opened as
+> reconcile-class PRs for **Eduardo human-merge** (sec 6 / ADR-0039 dec.3: a clean R1 cycle is
+> human-merged; the hub does NOT self-merge reconcile-class PRs). **#424 has since MERGED but does
+> NOT count** (a same-line correction follow-up -- see Correction below); **#261 was CLOSED**
+> (superseded, replaced by the clean #263). **clean-R1-PR-cycles still 0**: the leg's first clean
+> cycle is the next correction-free reconcile, human-merged AND surviving the 7-day no-revert /
+> no-same-line windows (need >= 4 across >= 2 repos for R2). Finding:
+> vault `Atlas/lint-status.md` carries 13 pre-existing trailing NUL bytes (binary, from the #260
+> creation) faithfully preserved by `get_file` -> a de-NUL + builder-sanitize follow-up is tracked
+> (does not block this cycle). R2/Fase-4 stay hard-gated.
+>
+> **Correction (same session): #424 does NOT count as a clean cycle.** #424 (STATUS) was
+> human-merged carrying a buggy `vault-coherence = ok` (a parser miss: the multi-pass coherence
+> report records "N WARN (W-1..)" / "**0 BLOCK**" which `parse_vault_report` did not read -- Codex
+> P2 on #261). The parser was fixed (#428, MERGED -- WARN count form anchored to the `(W-`
+> enumeration; SDMG harsh-review SURVIVE-WITH-CHANGES) and re-reconcile opened **#426** to correct
+> the same `vault-coherence` line on main (ok -> warning). Because #426 is a same-line follow-up
+> to #424 within 7 days, **#424 FAILS the clean-cycle test (sec 6(c))** and does not count. The
+> STATUS leg still counts going forward; the leg's FIRST clean cycle will be the next
+> correction-free reconcile. (The conflicted #261 was CLOSED and replaced by **#263** -- a clean
+> de-NUL'd base + the corrected `coherence=warning`; #426 + #263 are the current correction PRs.)
+> Honest mechanics, not a loss.
