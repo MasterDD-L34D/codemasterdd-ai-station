@@ -12,14 +12,49 @@ import urllib.request
 
 
 def _extract_json(text):
-    """Pull the first JSON array out of a free-form model response."""
-    m = re.search(r"\[.*\]", text, re.DOTALL)
-    if not m:
+    """Pull the first VALID JSON array out of a free-form model response.
+
+    A greedy `\\[.*\\]` match grabs from the first '[' to the last ']', so a reply
+    with bracketed prose around the verdict (e.g. "Assessment [draft] ... [..] ...
+    note [end]") yields invalid JSON and json.loads returns None even though a
+    real array is present. Instead, scan each '[' as a candidate start, do a
+    string-aware balanced-bracket walk to its matching ']', and return the first
+    candidate that parses to a list. Robust to fenced/prefaced/trailing text.
+    """
+    if not text:
         return None
-    try:
-        return json.loads(m.group(0))
-    except json.JSONDecodeError:
-        return None
+    for start, ch in enumerate(text):
+        if ch != "[":
+            continue
+        depth = 0
+        in_str = False
+        esc = False
+        for i in range(start, len(text)):
+            c = text[i]
+            if in_str:
+                if esc:
+                    esc = False
+                elif c == "\\":
+                    esc = True
+                elif c == '"':
+                    in_str = False
+                continue
+            if c == '"':
+                in_str = True
+            elif c == "[":
+                depth += 1
+            elif c == "]":
+                depth -= 1
+                if depth == 0:
+                    candidate = text[start:i + 1]
+                    try:
+                        parsed = json.loads(candidate)
+                    except json.JSONDecodeError:
+                        break  # this '[' is not a valid array start -- try the next
+                    if isinstance(parsed, list):
+                        return parsed
+                    break  # parsed but not a list -- try the next '['
+    return None
 
 
 SPECS = {
@@ -171,8 +206,10 @@ def _merge_verdicts(vision, det):
     hallucinates color/px); vision kept for qualitative items. `det` maps
     item -> {verdict, reason}. Each merged row is tagged with its source."""
     merged = []
+    seen = set()
     for v in vision:
         item = v.get("item")
+        seen.add(item)
         if item in det:
             d = det[item]
             merged.append({
@@ -188,6 +225,18 @@ def _merge_verdicts(vision, det):
                 "reason": v.get("reason", ""),
                 "source": "vision",
             })
+    # Deterministic-only safety net: if the vision response omitted or misnumbered
+    # an item that HAS a deterministic check (e.g. an incomplete Gemma reply that
+    # drops item 4), still emit its deterministic verdict -- the measurable
+    # FAIL/PASS override must never vanish just because the model was incomplete.
+    for item in sorted(k for k in det if k not in seen):
+        d = det[item]
+        merged.append({
+            "item": item,
+            "verdict": d["verdict"],
+            "reason": d["reason"],
+            "source": "deterministic",
+        })
     return merged
 
 

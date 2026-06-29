@@ -38,8 +38,8 @@ deterministically; the model is for qualitative judgment only.
 
 ```
 Playwright screenshot
-  ├─ vision:        _prompt -> POST .10:11434/api/generate (gemma4) -> _extract_json
-  └─ deterministic: PIL pixel-sample (corners) -> _is_dark_bg
+  |- vision:        _prompt -> POST .10:11434/api/generate (gemma4) -> _extract_json
+  \- deterministic: PIL pixel-sample (corners) -> _is_dark_bg
                           \-> _merge_verdicts (deterministic overrides measurable) -> per-item PASS/FAIL
 ```
 
@@ -66,7 +66,7 @@ writes the wrong path and the guard sees a stale pass).
 ### Verified end-to-end (2026-06-02, real PIL + real Gemma-4 on `.10`)
 
 On the POC lobby PNG: item4 bg = **FAIL `source=deterministic`** (`RGB(77,77,77)`
-gray), overriding what every VLM false-PASSes; item6 tofu PASS (the `✦` fixes);
+gray), overriding what every VLM false-PASSes; item6 tofu PASS (the star-glyph fix);
 items 2/3/5 vision verdicts; item1 room-code FAIL (= the known bare-boot artifact,
 resolved by the populated-drive). Exit code 1. The full loop ran with no human and
 no Claude in the judgment.
