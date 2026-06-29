@@ -505,3 +505,40 @@ def test_run_preserves_deterministic_bg_when_vision_returns_short_array():
     assert by[4]["verdict"] == "FAIL"
     assert by[4]["source"] == "deterministic"
     assert by[5]["source"] == "deterministic"  # accent override also preserved
+
+
+def test_merge_verdicts_misnumber_keeps_det_override_label_may_shift():
+    # Honest behavior (harsh-review): the det-only append covers OMIT, not relabel.
+    # If vision mislabels item 4's content as item 3 AND omits a real item 4, the
+    # deterministic override for item 4 still appears (det-only append); the
+    # mislabeled vision row passes through under its (wrong) label. Safety survives;
+    # only the qualitative vision label may shift. (In run() this is moot -- vision
+    # is renumbered positionally -- this pins the _merge_verdicts contract directly.)
+    from judge_screen import _merge_verdicts
+
+    vision = [{"item": 3, "verdict": "PASS", "reason": "really item-4 content"}]
+    det = {4: {"verdict": "FAIL", "reason": "bg gray"}}
+    by = {m["item"]: m for m in _merge_verdicts(vision, det)}
+    assert by[4]["verdict"] == "FAIL"
+    assert by[4]["source"] == "deterministic"   # override never vanishes
+    assert by[3]["source"] == "vision"           # mislabeled row passes through
+
+
+def test_extract_json_returns_none_for_object_not_array():
+    from judge_screen import _extract_json
+
+    assert _extract_json('{"verdict": "PASS"}') is None
+
+
+def test_extract_json_empty_array():
+    from judge_screen import _extract_json
+
+    assert _extract_json("verdict array: []") == []
+
+
+def test_extract_json_recovers_after_unterminated_bracket():
+    # An earlier unterminated '[' must not block a later valid array.
+    from judge_screen import _extract_json
+
+    raw = 'oops [ unterminated, then the real one [{"item": 1, "verdict": "PASS"}]'
+    assert _extract_json(raw) == [{"item": 1, "verdict": "PASS"}]

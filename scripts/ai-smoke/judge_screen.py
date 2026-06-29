@@ -225,10 +225,13 @@ def _merge_verdicts(vision, det):
                 "reason": v.get("reason", ""),
                 "source": "vision",
             })
-    # Deterministic-only safety net: if the vision response omitted or misnumbered
-    # an item that HAS a deterministic check (e.g. an incomplete Gemma reply that
-    # drops item 4), still emit its deterministic verdict -- the measurable
-    # FAIL/PASS override must never vanish just because the model was incomplete.
+    # Deterministic-only safety net: if the vision response is SHORTER than the
+    # deterministic item indices (an incomplete Gemma reply that drops e.g. item 4),
+    # still emit that deterministic verdict -- the measurable FAIL/PASS override must
+    # never vanish just because the reply was incomplete. This covers the omit /
+    # short-array case ONLY. A REORDERED reply is already safe upstream and NOT via
+    # this loop: run() renumbers vision positionally (i+1) and `det` overrides by
+    # slot, so a measurable item's override survives reordering regardless.
     for item in sorted(k for k in det if k not in seen):
         d = det[item]
         merged.append({
