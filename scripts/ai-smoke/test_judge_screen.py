@@ -436,3 +436,72 @@ def test_sample_accent_still_counts_teal_in_the_chrome_band(tmp_path):
     p = tmp_path / "teal_frame.png"
     im.save(str(p))
     assert sample_accent(str(p)) > 0.3
+
+
+# --- Codex P2 (#263): robustness of the extractor + the deterministic safety net ---
+
+
+def test_extract_json_ignores_bracketed_prose_around_array():
+    # Codex P2 (judge_screen.py:16): a greedy `\[.*\]` grabs from the first '['
+    # to the LAST ']', so bracketed prose before/after the verdict array breaks
+    # json.loads. The extractor must return the real verdict array regardless.
+    from judge_screen import _extract_json
+
+    raw = (
+        "Assessment [draft]: here is the verdict below.\n"
+        '[{"item": 1, "verdict": "PASS", "reason": "code centered"},'
+        ' {"item": 4, "verdict": "FAIL", "reason": "bg gray"}]\n'
+        "Note [end]: let me know."
+    )
+    assert _extract_json(raw) == [
+        {"item": 1, "verdict": "PASS", "reason": "code centered"},
+        {"item": 4, "verdict": "FAIL", "reason": "bg gray"},
+    ]
+
+
+def test_extract_json_handles_nested_array_in_reason():
+    # The balanced walk must respect nested brackets inside string values (a
+    # reason that itself contains "[...]") and still capture the whole array.
+    from judge_screen import _extract_json
+
+    raw = 'prefix [{"item": 1, "verdict": "FAIL", "reason": "missing [code]"}] suffix'
+    assert _extract_json(raw) == [
+        {"item": 1, "verdict": "FAIL", "reason": "missing [code]"}
+    ]
+
+
+def test_merge_verdicts_emits_deterministic_only_when_vision_omits_item():
+    # Codex P2 (judge_screen.py:~173): an INCOMPLETE vision array that omits an
+    # item carrying a deterministic check (e.g. bg item 4) must NOT drop the
+    # deterministic verdict -- the measurable FAIL/PASS safety override survives.
+    from judge_screen import _merge_verdicts
+
+    vision = [
+        {"item": 1, "verdict": "PASS", "reason": "code centered"},
+        {"item": 2, "verdict": "PASS", "reason": "slots"},
+    ]  # vision omitted item 4
+    det = {4: {"verdict": "FAIL", "reason": "bg gray 77 >= 40"}}
+    by = {m["item"]: m for m in _merge_verdicts(vision, det)}
+    assert by[4]["verdict"] == "FAIL"
+    assert by[4]["source"] == "deterministic"
+    assert by[1]["source"] == "vision"
+
+
+def test_run_preserves_deterministic_bg_when_vision_returns_short_array():
+    # End-to-end of the safety net: a short Ollama reply (only 3 verdicts) on a
+    # gray-bg lobby must still surface the deterministic item-4 FAIL.
+    from judge_screen import run
+
+    short = '[{"verdict":"PASS"},{"verdict":"PASS"},{"verdict":"PASS"}]'  # only 3
+    merged = run(
+        "x.png",
+        "lobby",
+        40,
+        sampler=lambda path, inset=40: [(77, 77, 77)] * 4,  # gray -> det FAIL
+        vision_post=lambda path, screen, host, model: short,
+        accent_sampler=lambda path: 0.0,  # no teal -> item5 det FAIL too
+    )
+    by = {m["item"]: m for m in merged}
+    assert by[4]["verdict"] == "FAIL"
+    assert by[4]["source"] == "deterministic"
+    assert by[5]["source"] == "deterministic"  # accent override also preserved
