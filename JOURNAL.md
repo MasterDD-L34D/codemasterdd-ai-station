@@ -19,6 +19,24 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-06-29 (Codex chain: coherence parser + reconcile cycle + ai-smoke judge)
+
+### Completato
+- **ADR-0039 currency amendment (#422 MERGED 64d8384)**: il clock-leak STATUS che dec.1 usava per escludere il leg codemasterdd da R2 era GIA' fixato da #333 (render mask, 2026-06-11) ma dec.1 mai aggiornato (stale ~2.5 sett; memory 06-24 propagava la frase vecchia). Addendum 2026-06-28: esclusione LIFTED -> STATUS-leg steady-state cycles contano (bootstrap #296/#252 esclusi). harsh-review SURVIVE-WITH-CHANGES (1 P1 wording soften). Doctrine = Eduardo-merge.
+- **sec-8 live-state (#425 MERGED be16a669)** + follow-up Codex P2: marca #424 MERGED-ma-non-conta (same-line correction), #261 CLOSED->#263. Reply+resolve thread.
+- **Reconcile cycle live**: il token `GOVERNOR_RECONCILE_TOKEN` era GIA' in keys.env (mio falso-negativo: reconcile girato senza `source keys.env`). Girato ingest 9/9 + reconcile -> #424 STATUS (mergeato buggy da Eduardo: coherence=ok) + #261 vault. **#426** (STATUS) + **vault #263** (lint) MERGED = 1a reconcile cycle 2-repo post-#422 (finestra 7gg). #424 fallisce clean-cycle (same-line #426, sec 6c).
+- **Codex P2 coherence parser (#428 MERGED f10ad31)**: `parse_vault_report` non leggeva il formato multi-pass `N WARN (W-1..)` / `**0 BLOCK**` -> coherence sotto-riportata `ok` con 9 WARN live. Fix: count-form WARN ancorato a `(W-` + `max(colon,count)`; BLOCK colon-only (anti falso-error su ">=1 BLOCK"). harsh-review SURVIVE-WITH-CHANGES (anchor stretto + guard prosa-WARN). 29 parser test verdi. Reply+resolve thread #261/#263.
+- **ai-smoke Codex #263 chain (#432 MERGED 0065a4a4)**: 3 P2 sul vision-judge gia' merged -- (1) `_merge_verdicts` droppava il verdetto deterministico se vision omette l'item (override misurabile perso) -> safety-net det-only; (2) `_extract_json` greedy `[.*]` rotto da prosa tra parentesi -> balanced-bracket scan string-aware; (3) README box-drawing/star glyph -> ASCII (ADR-0021). TDD 4+4 test (33 verdi). harsh-review SURVIVE-WITH-CHANGES (P1 comment-honesty: l'append copre OMIT non relabel; misnumber safe upstream via positional+slot-keyed det). 3 thread Codex resolved.
+
+### Da fare
+- Earn-path: #426 + vault #263 nella finestra 7gg no-revert; il 1o clean cycle STATUS vero = prossimo reconcile correction-free. Servono >=4 su >=2 repo per R2.
+- Game-family merge amendment: 3o SDMG-kill regge (nessun grant diretto; solo earn-path).
+
+### Note
+- Token reconcile gia' in keys.env -> `set -a; source ~/.config/api-keys/keys.env; set +a` PRIMA di `py -m governor.reconcile` (no fallback ambient per il write).
+- Codex review attivo su codemasterdd + vault: P2 su PR gia' merged -> follow-up PR nuovo, poi reply (chiusura `_Addressed by Claude Code_`) + resolveReviewThread (GraphQL, serve thread node-id non comment-id).
+- Currency-gate ricorrente: ADR/doc stale vs codice (dec.1 leak fixato #333 ma doc no), e il reco del harsh-reviewer puo' basarsi su doc stale -> ground-truth SEMPRE il codice prima di agire.
+
 ## 2026-06-29 (CI ASCII-guard exit-128 flake fix -- merge-base range)
 
 ### Completato
