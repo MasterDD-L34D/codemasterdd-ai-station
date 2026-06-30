@@ -8,16 +8,18 @@ Pre-2026-05-13 i 6 wrapper Aider vivevano solo `~/.local/bin/*.cmd` user-side: N
 
 Post-fix questa directory (`scripts/wrappers/`) contiene la versione **canonical repo-tracked** dei 6 wrapper. Install/sync via `scripts/setup/install-wrappers.ps1` (idempotente, hash-verified, backup-on-conflict).
 
-## Wrapper attivi (6 totale post-cluster T1 SPRINT_02)
+## Wrapper attivi (8 totale -- 6 cluster T1 SPRINT_02 + 2 free-LLM audit 2026-05-15)
 
 | Wrapper | Tier | Stack | Default invocation status | Mitigation flags |
 |---------|------|-------|---------------------------|------------------|
-| `aider-cosmetic.cmd` | 1 sovereign | Qwen 7B local + diff | NON_COMPLIANT whole format (entry #27) | Updated 2026-05-13: `whole→diff` + `--no-auto-commits` -- entry #34 PASS |
+| `aider-cosmetic.cmd` | 1 sovereign | Qwen 7B local + diff | NON_COMPLIANT whole format (entry #27) | Updated 2026-05-13: `whole->diff` + `--no-auto-commits` -- entry #34 PASS |
 | `aider-refactor.cmd` | 1-2 sovereign | Qwen 14B Q2 local + diff | PASS constraint=1 default (entry #30) | Multi-block: decompose pattern in single-block sequential edits |
 | `aider-cerebras.cmd` | 3 cloud free | Cerebras llama3.1-8b + diff | FAIL context overflow 8k | Required `--map-tokens 0` -- entry #31 PASS $0.00038 |
 | `aider-gemini.cmd` | 3 cloud free | Gemini 2.5 Flash + diff | FAIL 24k tok ignora flag | Required `--map-tokens 0 --no-stream` -- entry #32 PASS $0.0078 |
 | `aider-openai.cmd` | 4 cloud paid | gpt-4o-mini + diff | FAIL quota=0 originale | Post 10 EUR funding + Sharing toggle ON = pool free 2.5M tok/day -- viable |
 | `aider-groq-bypass.cmd` | 3 cloud free | Groq llama-3.3-70b via openai/ | FAIL "Invalid API Key" senza env-file override | Temp env-file pattern P0 hardened (NTFS-protected, NOT in argv) -- entry #36 PASS |
+| `aider-hf.cmd` | 3 cloud free | HF Inference Providers, DeepSeek-R1:fastest default | PROPOSED (free-LLM audit 2026-05-15, no bench entry) | `--map-tokens 0 --no-stream` + temp env-file (HUGGINGFACE_API_KEY, CWE-214 hardened) |
+| `aider-github-models.cmd` | 3 cloud free | GitHub Models, gpt-4o-mini (150 req/day free PAT) | PROPOSED (endpoint corretto models.github.ai/inference) | `--map-tokens 0 --no-stream` + temp env-file (GITHUB_MODELS_API_KEY) |
 
 ## DEPRECATED removed
 
@@ -58,6 +60,8 @@ cd C:\dev\codemasterdd-ai-station
 - L-2026-05-015: PowerShell `&` invocation REM pollution -- fix Option B applied a 6 wrapper
 
 ## Last update
+
+2026-06-30: README sync drift fix -- aggiunti `aider-hf` + `aider-github-models` al matrix (esistono da `c04f3e5` 2026-05-15, README era fermo a 6). Install script gia' data-driven (glob `*.cmd`) -> nessun gap funzionale, solo doc.
 
 2026-05-13: harsh-reviewer P1 #4 fix shipped via PR #84 (placeholder fino merge):
 - Move 6 wrapper canonical from user-side to `scripts/wrappers/`
