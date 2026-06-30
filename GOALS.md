@@ -19,7 +19,7 @@
 
 Ground-truth audit 2026-06-19 (repo-health-auditor). Supersedes la Snapshot 06-11 dove diverge:
 
-- **Game**: taxonomy reconciliation (Phase A/B/D) + 5-stub honest-stub deploy + S0-S3 calibration + steep-lever band-widen + jsonschema-shadow ALL MERGED. **RFC#4 CHIUSO end-to-end** (S1 traits / S2 species fidelity-shadow + biome/eco import-only / S3 NO-GO ratified `ADR-2026-06-19` #2877). **PE_ratio PR2/PR2b DONE** (#2867/#2869; finding: signal marginale -> decisione band residua). Open: solo #2765 DRAFT weekly-drift.
+- **Game**: taxonomy reconciliation (Phase A/B/D) + 5-stub honest-stub deploy + S0-S3 calibration + steep-lever band-widen + jsonschema-shadow ALL MERGED. **RFC#4 CHIUSO end-to-end** (S1 traits / S2 species fidelity-shadow + biome/eco import-only / S3 NO-GO ratified `ADR-2026-06-19` #2877). **PE_ratio arc CLOSED 2026-06-24** (#3022: contestedness FALSIFIED N=40 multi-policy -> PE term droppato, composite=0.70*WR+0.30*KD; negative-result SDMG-ratified, sblocca SPEC-J/SPEC-H). Open: 0 PR (verificato 06-30).
 - **Game-Database**: RFC#4 S2 chiuso (#226/#227) + S3 stamp (#230, pointer Game ADR). 0 open.
 - **evo-swarm**: **REACTIVATED** (non piu' IDLE) -- entity-grounding pre-emit gate Lever-1 #124 + 2 fix trait-source #125/#126 (06-19, suite 471 green). Runtime ancora PARKED. Lever-2/Lever-3 = spec future.
 - **Game-Godot-v2**: Ferrospora UI art-pass v2 + style-LoRA v1 DONE; SPEC-K K-05 phone/TV client #507. #509 (ForecastPanel frame) + #510 (K-05 QA) **MERGED 2026-06-19** -- 0 PR open da questo batch.
