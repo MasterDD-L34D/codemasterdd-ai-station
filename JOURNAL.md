@@ -19,6 +19,22 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-06-30 (Tool/skill adoption: grill-family + Ponytail ratify N=40 + Context7 + 5-tool eval)
+
+### Completato
+- **Skill-hunt (/last30days)**: importate in global ~/.claude/skills -- grilling/grill-me/grill-with-docs/domain-modeling (mattpocock MIT @0877403) + Context7 MCP user-scope. Audit-then-replay + attribution header + lock-commit. Verdetto: la maggior parte delle "top skills 2026" e' gia' posseduta (superpowers/skill-creator/engineering) -> no bulk-install (anti-shadow-duplicate).
+- **5-tool eval (Ponytail/knip/Noctis/ReconForge/Medusa)** con stessi protocolli: verdetti fit-driven non buzz-driven. Ponytail ADOPT (opt-in), knip DEFER, Noctis/Medusa SKIP, ReconForge DEFER. Doc difensivo docs/research/offensive-tooling-awareness-2026-06-30.md.
+- **knip falsi-positivi verificati** su Game (export cross-workspace) + Game-DB/server (5 unused-deps tutti referenziati): out-of-box = rumore, no PR rumoroso aperto (DoD). Worktree-off-origin/main usato (Game shared-clone sporco).
+- **Ponytail claim FALSIFICATO/RATIFICATO N=40** (2 workflow multi-agent, 20 task x 2 arm x 2 sample, hidden tests indipendenti): -25.4% LOC reale (NON -54% vendor, cherry-picked su task golfabili); "100% safety" FALSA (39/40, un calc one-liner rotto). Report docs/research/ponytail-loc-falsification-2026-06-30.md.
+
+### Da fare
+- **Ponytail always-on hook**: deferito pending re-decisione Eduardo -- la ratify (post-approvazione) ha rivelato rischio-correttezza su logica complessa + tocca settings.json security-critical. Reco: tenere opt-in.
+- knip: se mai adottato, config per-repo + verifica manuale di OGNI finding (auto-delete dannoso, cancellerebbe dep/export vivi).
+
+### Note
+- Game shared-clone HEAD ha racing-shiftato 5819064->53c3f815 mid-task (>25 worktree di sessioni concorrenti) -- worktree-off-origin/main isola (conferma lesson shared-clone-concurrency).
+- 2 workflow (10 + 80 agent) per la falsifica, ~4.7M token subagent; harness riproducibile in scratchpad (ponytail_grader.py/_v2.py).
+
 ## 2026-06-30 (Stato-lavori: 3 stale-decision reconcile + evo-swarm post-mortem + 7-repo refresh)
 
 ### Completato
