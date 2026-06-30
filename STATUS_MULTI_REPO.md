@@ -26,7 +26,7 @@ _Auto-synced governor signal snapshot; human prose elsewhere is authoritative. T
 >
 > Riferimenti deep: CLAUDE.md sezione "Progetti monitorati" (descrittivo), memory `project_multi_repo_overview.md` (architetturale), questo file (operativo). Audit storici + session-log May 2026 archiviati in [`docs/archive/status-multi-repo-history-2026-05.md`](docs/archive/status-multi-repo-history-2026-05.md) (Ecosystem-audit 15-repo + Reconcile OD-038 + DF Integration + ADR retrospective + D-sequence + multi-session orchestration).
 
-**Ultimo refresh**: **2026-06-19** (ground-truth audit repo-health-auditor, gh-api verified tutti i repo; riconciliati ~9gg di daily-ship vs snapshot 06-10). _Dettaglio JOURNAL 2026-06-19._ NB: la **Snapshot 1-riga** sotto e' fresca 06-19; le sezioni per-repo narrative restano contesto datato 06-10 (last-verified per-sezione).
+**Ultimo refresh**: **2026-06-30** (ground-truth audit repo-health-auditor, gh-api verified 7 repo). NB: la **Snapshot 1-riga** + sezioni per-repo narrative sotto restano contesto datato (last-verified per-sezione); il layer fresco e' la sezione "Audit delta 2026-06-30" qui sotto (le delta accumulano, lo Snapshot non si ri-hardcoda -- daily-ship).
 
 **Codemasterdd state**: HEAD main `f15387e` (docs(journal): rfc4 s3 closed NO-GO, #398). 0 PR open. 84 PR merged 06-10->06-19. **Claude Max SCADUTO ~2026-06-17 -> post-Max routing ADR-0023 attivo** (`logs/claude-api-spend-2026-06.md` presente, spend ~$0 giugno). Stack ADR-0017 DOWN (scaffold opt-in, expected). Last-verified: 2026-06-19.
 
@@ -37,6 +37,18 @@ _Auto-synced governor signal snapshot; human prose elsewhere is authoritative. T
 - **Godot-v2**: branch `feat/creature-lora-fase2` (creature-LoRA in corso). **1 PR open** #512 Ferrospora UI canonical (#509/#510 chiusi dal 06-19).
 - **Game-DB / evo-swarm / vault / Synesthesia**: 0 PR open.
 - Tool-fix questo giro: repo-health-auditor riscritto (7 repo, servizi ADR-0017 morti rimossi); governor `ingest` rinfrescato (9 ingested / 4 new / 0 errori); GateE reminder task obsoleto (disable manuale Eduardo).
+
+### Audit delta 2026-06-30 (gh/git ground-truth, 7 repo, repo-health-auditor + spot-verify)
+
+> Le righe Game/Godot del delta 06-23 sono superate (PR citati tutti merged). Questo delta = layer fresco.
+
+- **codemasterdd**: HEAD `9155f99`. 0 PR open, working tree clean. Post-Max routing ADR-0023 attivo, spend ~$0 giugno. Ollama UP 16 modelli.
+- **Game**: **0 PR open** (i 4 del delta 06-23 #2981/#2980/#2957/#2918 tutti MERGED; #3088 chore-I2 dead-code MERGED 06-30 -- ci.yml comment-only). Daily-ship intenso (15 PR merged 06-30). HEAD non hardcodato.
+- **Godot-v2**: **0 PR open** (#509/#510 MERGED 06-19, #512 Ferrospora UI MERGED 06-23, SPEC-K K-01 #516 MERGED 06-20). Remote main HEAD = #557 terrain-cost telegraph Gate-5 flag-OFF (06-29); portrait-loader loop CLOSED #556 + creature-LoRA Fase-3 ControlNet #553 (06-28). Next Godot Short = Eduardo-gated. Residuo: 3 worktree locali su branch merged (cleanup).
+- **Game-Database**: 0 PR open. Clone Lenovo 3 commit behind remoto (benigno, Ryzen-primary). 6 issue RFC#4 S2+ backlog-reference aperte, non bloccanti.
+- **evo-swarm**: ARCHIVED+PRIVATE (push 403). 0 PR open. Remote main HEAD `384d8f7` = **Decisione 014** (retire reconfirmed narrow-probe 0/15 prima dell'archive -- re-litigato revive-vs-retire, RETIRE confermato). Digest pipeline CHIUSA, 13 report post-mortem in `docs/archive/evo-swarm-digest-archive/`. Branch locale `chore/weekly-digest-2026-06-30` non pushabile (leftover).
+- **vault**: 0 PR open, 0 issue open. PR #260/#262(NUL-strip)/#263(lint reconcile) MERGED 06-24->06-29. Clone Lenovo synced 06-30 (`489731b`). **WARN reale = 9** (coherence PASS-4 06-30 carry-forward, 0 BLOCK; #262/#263 toccavano lint-status NUL, NON i 9 coherence-WARN). NB Snapshot "7 WARN + W-2 RESOLVED" stale: sono 9, e W-2 (Claude-Max expiry) ancora aperto user-gated.
+- **Synesthesia**: invariato, HEAD `05f8a92`, dormant ~ago 2026. 0 PR open.
 
 ---
 

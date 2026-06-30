@@ -2,7 +2,7 @@
 
 > Read-only hub synthesis. Canonical goals live per-repo (each repo's `## Goals (S/M/L)`).
 > Refreshed by repo-health-auditor agent. Horizons: Short=sprint(weeks) / Mid=epic(1-2mo) / Long=vision(3-6mo).
-> Last refresh: **2026-06-23** (audit delta vs 06-19, sezione sotto). Prec. **2026-06-19** (delta sotto la Snapshot supersedes il baseline 06-11 dove diverge). Precedente 2026-06-10 (ground-truth audit repo-health-auditor: **tutti i 6 Short del 2026-05-22 COMPLETATI** -- PR canonici #2384/#352/#165/#176/#122 tutti MERGED ~2026-05-25, outcome superati dall'evidenza successiva). **Next Short RATIFICATI da Eduardo 2026-06-11** (AskUserQuestion strutturato, sessione coordinatore -- vedi "Short ratificati 2026-06-11"). Sources precedenti: docs/superpowers/specs/2026-05-21-cross-repo-goals-coordination-design.md + docs/superpowers/specs/2026-05-22-four-repo-short-directions-design.md
+> Last refresh: **2026-06-30** (audit delta vs 06-23, currency note in fondo). Prec. **2026-06-23** (audit delta vs 06-19). Prec. **2026-06-19** (delta sotto la Snapshot supersedes il baseline 06-11 dove diverge). Precedente 2026-06-10 (ground-truth audit repo-health-auditor: **tutti i 6 Short del 2026-05-22 COMPLETATI** -- PR canonici #2384/#352/#165/#176/#122 tutti MERGED ~2026-05-25, outcome superati dall'evidenza successiva). **Next Short RATIFICATI da Eduardo 2026-06-11** (AskUserQuestion strutturato, sessione coordinatore -- vedi "Short ratificati 2026-06-11"). Sources precedenti: docs/superpowers/specs/2026-05-21-cross-repo-goals-coordination-design.md + docs/superpowers/specs/2026-05-22-four-repo-short-directions-design.md
 
 ## Snapshot
 
@@ -50,6 +50,14 @@ Ground-truth gh/git 7 repo (repo-health-auditor manuale, post tool-fix):
 - **codemasterdd**: nessun Short proattivo (hub reattivo; steering-tools rinfrescati 06-23; SDMG quarterly review ~2026-08-01 schedulato).
 - **evo-swarm**: PARK esplicito (reactivation Eduardo-gated, invariato).
 - **Synesthesia**: dormant fino ~ago 2026 (invariato).
+
+## 2026-06-30 audit delta (vs 06-23) -- currency note
+
+> Ground-truth gh/git (repo-health-auditor + spot-verify). I 'Short ratificati 06-23' sopra restano direttive Eduardo; questa e' solo nota di currency (cosa risulta consegnato), il re-set dei prossimi Short = decisione Eduardo.
+
+- **Godot-v2 Short "Ferrospora dock-first"**: risulta consegnato/superato -- remote main e' a #557 (terrain-cost telegraph Gate-5) + portrait-loader loop CLOSED #556; 0 PR open. -> candidato a next-Short da ri-settare.
+- **vault Short "7 WARN cleanup + 2 currency drift"**: WARN reale = **9** (non 7), confermato coherence PASS-4 06-30 (carry-forward, 0 BLOCK; #262/#263 toccavano lint-status NUL, non i 9 coherence-WARN). I 9 = W-1..W-9 user-gated (incl. W-2 Claude-Max expiry, W-4 canonical-config OD-059-stale = i 2 currency drift citati). Clone Lenovo synced 06-30.
+- **Game / Godot / codemasterdd**: 0 PR open. **evo-swarm**: ARCHIVED, Decisione 014 retire-reconfirmed (post-013).
 
 ## Cross-cutting initiatives
 
