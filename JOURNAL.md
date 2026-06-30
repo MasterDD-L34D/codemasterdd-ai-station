@@ -19,6 +19,26 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-06-30 (Stato-lavori: 3 stale-decision reconcile + evo-swarm post-mortem + 7-repo refresh)
+
+### Completato
+- **Status audit (richiesta Eduardo "stato lavori completo")**: ground-truth 6 repo -> 0 PR open ovunque, ecosistema sano. MA 3 "decisioni aperte" in STATUS/GOALS erano gia' CHIUSE (snapshot 06-19 stale sulle risoluzioni 06-20+). Currency-gate ha prevenuto 3 ratifiche di decisioni morte.
+- **PE_ratio (Game) reconcile (364242c)**: arc CLOSED #3022 (06-24, contestedness FALSIFIED canonical multi-policy N=40, PE term droppato, composite=0.70*WR+0.30*KD; negative-result SDMG-ratified). Fix STATUS:49 + GOALS + memory.
+- **jules-batch cleanup (9d9b7e2)**: 8 file untracked committati (digest 06-29/06-30 = 0 awaiting + task statblock + reports/ nuova dir), per convenzione (34 file jules gia' tracked, no gitignore). .md esente da ASCII-guard CI.
+- **evo-swarm post-mortem (9155f99)**: arc CLOSED Decisione 013 #130 (swarm-as-production-accelerator FALSIFIED, 12 artifact -> 11 rejected 91.7% halluc via gate L1/L3) + Decisione 014 (retire reconfirmed 0/15 pre-archive) + remote ARCHIVED+PRIVATE 06-22 (push 403). 13 digest archiviati `docs/archive/evo-swarm-digest-archive/` + POST-MORTEM.md (remote archiviato non puo' ospitarli; INDEX si rivolge all'hub).
+- **Full 7-repo refresh (ed668fc)**: repo-health-auditor + spot-verify -> sezione "Audit delta 2026-06-30" in STATUS/GOALS. vault clone synced (ff-only), WARN reale=9 confermato (coherence PASS-4 06-30, 0 BLOCK) -- era stale "7 WARN + W-2 RESOLVED" (W-2 Claude-Max expiry ancora aperto).
+- **MEMORY.md compattata** 19.6->17.1KB (hook-triggered, paragrafi-monstre -> one-line pointer) + memory **closing-protocol** salvata (recap-chiaro PRIMA, poi AskUserQuestion default a fine azione).
+
+### Da fare
+- **Godot worktree cleanup** (3 branch squash-merged leftover: _ggv2wt-k01 #516, _wt-ferro-base #512, main feat/creature-portrait-loader #556): DEFERRED -- sessione Claude attiva (claude/blissful-kare-927e3e) + main dirty 1 riga. A sessione idle: worktree remove + branch -D; risolvere prima la riga dirty del main.
+- **evo-swarm branch locale** chore/weekly-digest-2026-06-30 (ab068d8) non pushabile (archived) -- sovereign, decisione Eduardo.
+- **vault 9 WARN** user-gated (W-1..W-9: tracker stale, canonical-config OD-059-stale, frontmatter divergenze) -- cleanup pass opzionale.
+
+### Note
+- **No-blind-trust subagent** (doctrine): spot-verify ha corretto 2 claim del repo-health-auditor -- Game #3088 = MERGED non open (0 PR), evo-swarm Decisione 014 vs mio local clone stale a #102. Senza verifica avrei detto "mergia #3088" (gia' merged).
+- **Pattern stale-decision**: STATUS/GOALS snapshot datati laggano ~10gg sulle risoluzioni daily-ship; il layer "Audit delta <data>" accumula = truth fresca, lo Snapshot resta dated-context (no re-hardcode HEAD, il file stesso lo vieta).
+- evo-swarm pipeline swarm->Game morta da 04-27 (picco 432 cicli -> 0 per 8+ sett); il "task schedulato weekly-digest" non e' un schtask registrato (i 13 file rigenerati a mano 06-30, non cron-accumulati).
+
 ## 2026-06-29 (Codex chain: coherence parser + reconcile cycle + ai-smoke judge)
 
 ### Completato
