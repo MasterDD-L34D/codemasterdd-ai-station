@@ -19,6 +19,24 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-07-01 (Cowork-layer eval + probe dashboard + 4 finding Game verificati)
+
+### Completato
+- **Eval layer cowork per Evo-Tactics**: agent-scanner -> NO adozione wholesale (shadow-duplicate della flotta Godot-v2: telemetry-viz/ui-design-illuminator/playtest-analyzer/asset-workflow gia' coprono meglio; generici cowork fuori-stack). ADOPT narrow: `data:build-dashboard` come braccio implementativo on-demand (gli agent locali sono advisor "critic + pattern-curator"; il gap "no dashboard live" era flaggato da telemetry-viz stesso). Memoria `project_cowork_layer_eval`.
+- **Probe dashboard su dati reali**: 2517 file `Game/logs/session_*.json` (2515 sessioni, 255k eventi) -> pipeline aggregate+build -> HTML self-contained 19KB. Valore skill ~60% pattern imposti / 40% boilerplate risparmiato.
+- **4 finding data-quality investigati e verificati** (workflow 8 agent: 4 investigate Explore + 4 adversarial verify, 693k token): F1 species id underscore/hyphen CONFIRMED; F2 abandon 44.4% = timeout NON dichiarati dagli harness (WR calibrazione distorta, tocca gate banda 30-50%); F3 scenario_id null 92.5% = caller web legacy (ipotesi coopOrchestrator REFUTATA dal verify: payload dead-code mai forwardato); F4 truncated 13% = flag endSession opt-in (PLAUSIBLE). -> Game issue #3157 (solo claim verificati, priorita' F2>F1>F3>F4).
+- **Pipeline promossa**: Game draft PR #3159 (`tools/py/aggregate_session_logs.py` + `build_playtest_dashboard.py`; complementari ad analyze_telemetry.py che targetta il JSONL stream, vuoto). Smoke 2515 sessioni + negative control exit 1. DRAFT: QG step-3 tuning pending.
+- (Blocco 2 stesso giorno; blocco 1 = SSH+sync sotto. In mezzo: plugin parity Lenovo 6->26 = Ryzen via `claude plugin list` fonte autoritativa + 20 install batch.)
+
+### Da fare
+- Game #3157: fix F2 (dichiarare outcome in ai-driven-sim.js:897 + batch_calibrate*.py) = piu' urgente; letture WR dei gate gonfiate dal mislabel.
+- PR #3159: QG step-3 (1 iterazione tuning con metrica delta) prima di ready-for-review.
+- Nota non verificata: query analyze_telemetry.py usano schema `session_complete`/`victory` inesistente nei log reali -- possibile drift da verificare a parte.
+
+### Note
+- **Lesson verify avversariale**: 4/4 investigazioni con file:line corretti MA 2/4 narrative causali sbagliate (evidence vera, conclusione falsa) -- senza verify l'issue pubblica avrebbe portato 2 diagnosi errate. Conferma ground-truth > agent-report.
+- Layer cowork = iniettato in sessione (managed), NON installabile via `claude plugin` -- non e' unita' di fleet-sync.
+
 ## 2026-07-01 (Fleet SSH diagnosi + skill/plugin sync Lenovo<->Ryzen)
 
 ### Completato
