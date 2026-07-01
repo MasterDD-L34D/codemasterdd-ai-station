@@ -19,6 +19,22 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-07-02 (F2 fix shipped + dashboard QG 3/3 + firewall chiuso)
+
+### Completato
+- **F2 (#3157) FIXED -> Game draft PR #3164**: 12 call-site harness ora dichiarano l'outcome client `{timeout,defeat}` su POST /end (gate server downgrade-only #2703; victory resta board-derived). Verifica A/B seed-identico (hardcore07 --seed 42, backend live da branch): script vecchio -> `abandon`, script fixato -> `timeout`, stesso board state (turn 16, 2v2 vivi). py_compile 11/11 + node --check verdi. Lasciati intatti con motivo: cleanup-path, probe_ai, vc_telemetry_harness, non_elim (objective-driven).
+- **PR #3159 QG 3/3 -> ready for review** (281f89eb): tuning timeout-first-class (OUTCOL + colonna tabella + per-day stack) con delta misurato su corpus A/B 2-sessioni (before: 1/2 renderizzate + crash assert fixed-size su corpus piccolo; after: 2/2 + build 12KB). Regressione full-corpus identica (2515 sess / WR 50.0%). Bonus: assert injection ora a soglia relativa.
+- **Firewall Lenovo CHIUSO**: UAC via `Start-Process -Verb RunAs` (Eduardo click) -> Wi-Fi NetworkCategory=Private -> regola sshd Private-scoped attiva -> SSH Ryzen->Lenovo sbloccato (arc SSH 07-01 completo).
+- Gotcha operativi: worktree Game senza node_modules -> `NODE_PATH` + `.bin` in PATH per husky/prettier (NO --no-verify); porta 3341 = WS (426 su HTTP), HTTP = 3334 default / 3390 custom; backend residuo dal 30/06 gira su 3334 con cwd ignoto (non killato, non mio).
+
+### Da fare
+- PR #3164 (F2) e #3159 (dashboard): review + merge = Eduardo. #3159 dipende logicamente da #3164 per vedere timeout nei dati nuovi.
+- Corpus storico resta timeout-contaminato su `abandon` (fix non retroattivo): letture calibrazione su dati pre-fix da trattare (nota in #3157).
+- F1/F3/F4 di #3157 ancora aperti (species split / scenario_id null / truncated).
+
+### Note
+- Backend residuo su 3334/3341 (PID 11132, dal 30/06 23:18, cwd sconosciuto): possibile leftover batch -- se non serve, kill manuale.
+
 ## 2026-07-01 (Cowork-layer eval + probe dashboard + 4 finding Game verificati)
 
 ### Completato
