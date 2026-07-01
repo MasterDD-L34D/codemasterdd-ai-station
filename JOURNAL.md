@@ -19,6 +19,24 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-07-02 (Arco #3157 CHIUSO: F1/F3/F4 shipped + 5/5 PR MERGED + coordinamento cross-session)
+
+### Completato
+- **F1 -> #3166 MERGED (ce63d286)**: normaliseUnit canonicalizza species kebab->underscore, boundary-fix 1-riga invece del rename 105 YAML pack (recon ha ribaltato il suggested-fix dell'indagine: kebab = convenzione pack/wiki by design). TDD RED->GREEN 4/4 + regressione 23/23 + E2E badlands underscore.
+- **F3 -> #3167 MERGED (b12ca512)**: 14 body /session/start python taggati scenario_id (9 script, sweep multi-agent + audit call-site). E2E: log con scenario_id=enc_tutorial_07_hardcore_pod_rush (prima null). Web-v1 legacy fuori scope dichiarato.
+- **F4 -> #3168 MERGED (2020e8b6)**: 14 probe optati endSession:true esplicito (NO default-flip, opt-in = design A13). **Catch review umana**: spec-i-gates-probe ESCLUSO -- ER7 campaign condiviso cross-seed, /end wound-persist l'avrebbe contaminato (gli agent del sweep l'avevano optato; ER7 appena ratificato #3156/#3158). Lesson: sweep meccanico multi-agent + gate umano su semantica = divisione giusta.
+- **2 P2 Codex su #3159 risolti (c3ebef1a)**: tabella scenario data-driven da cols (fix di un bug MIO del tuning commit: celle shiftate) + glob default session_[0-9]* (esclude seed-fixture). Poi **#3159 MERGED (bba41fb6)** + F2 **#3164 MERGED (380a2309)**.
+- **Merge chain autonoma** (auth esplicita Eduardo): undraft 4 + auto-merge rebase armato 5/5 (classifier block transient, retry OK) + BEHIND-chase background (update-branch API -> CI -> merge, ~3min/PR, zero conflitti). Pattern #2739/#2741 validato di nuovo.
+- **Coordinamento cross-session** (richiesto da Eduardo): 2 sessioni running su Game verificate read-only (0 conflitti) + heads-up inviati. Ack SPEC-F: zero impatto, companion card gia' underscore (conferma indipendente #3166); W5/ER7 combacia con l'esclusione spec-i.
+
+### Da fare
+- **Deploy prod Game (owner-gated, da heads-up SPEC-F)**: prossimo deploy DEVE eseguire `npx prisma migrate deploy` PRIMA del restart (migration 0018 skiv state JSONB #3155 + 0019 skiv owner #3169); stesso restart flippa W6 anchor 1.15 + STAMINA staged in keys.env.
+- Issue #3157: chiusura a discrezione Eduardo (4/4 finding con fix mergiato; corpus storico resta contaminato by design, caveat documentato).
+
+### Note
+- Corpus pre-fix: abandon=timeout-contaminato, species doppio formato, scenario null -- letture calibrazione su log vecchi devono tenerne conto.
+- Verify avversariale (2 root-cause REFUTATI pre-issue) + recon-before-build (F1) + review umana post-sweep (F4 spec-i): 3 gate diversi hanno salvato 3 errori diversi nello stesso arco.
+
 ## 2026-07-02 (F2 fix shipped + dashboard QG 3/3 + firewall chiuso)
 
 ### Completato
