@@ -19,6 +19,23 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-07-01 (Fleet SSH diagnosi + skill/plugin sync Lenovo<->Ryzen)
+
+### Completato
+- **SSH root-cause "Ryzen->Lenovo irraggiungibile"**: sshd Lenovo sano (Running, listen :22, regola OpenSSH-Server-In-TCP Allow). Causa reale = Wi-Fi NetworkCategory=Public mentre la regola sshd e' scoped SOLO Private -> inbound :22 bloccato sul profilo Public. Diagnosi deterministica (profilo regola vs profilo rete).
+- **Skill standalone sync 8/8 parity** via SSH Lenovo->Ryzen (direzione funzionante): push 5 a Ryzen (domain-modeling, grill-me, grill-with-docs, grilling, ponytail), pull evo-tactics-dispatch a Lenovo. Verificato file-count identico su entrambi.
+- **last30days -> Ryzen**: `claude plugin marketplace add` + `install` (v3.8.3 enabled), verificato via `plugin list`.
+- **supermemory-local su Ryzen rimosso**: era `x failed to load` (marketplace supermemory-local not found). NON sincronizzato su Lenovo -- confirm-gate ha evitato di clonare un plugin morto.
+
+### Da fare
+- **Firewall Wi-Fi -> Private** (Eduardo, shell admin, UAC non automatizzabile da agent): `Set-NetConnectionProfile -InterfaceAlias 'Wi-Fi' -NetworkCategory Private` -> poi da Ryzen `Test-NetConnection 192.168.1.10 -Port 22`. Fallback opzione B (regola firewall che include Public) se GPO/DomainAuthenticated blocca.
+- Marketplace orfano `supermemory-plugins` su Ryzen (innocuo, cleanup opzionale).
+- Valutare addendum gotcha Public-profile in `docs/runbook/ssh-inbound-fleet-setup.md` (SoT SSH inbound) se ricorre.
+
+### Note
+- `claude plugin list` = fonte autoritativa enabled-state (FS `enabledPlugins` vuoto: lo stato sta in user-settings). Ryzen ~24 plugin enabled; claude-mem + tdd-guard disabled.
+- Inventario FS-only fuorviante: `plugins/cache` = solo attivati; catalogo reale = `plugins/marketplaces/<mk>/plugins`. Marketplace = unita' di sync (non i singoli plugin official, identici upstream).
+
 ## 2026-06-30 (Tool/skill adoption: grill-family + Ponytail ratify N=40 + Context7 + 5-tool eval)
 
 ### Completato
