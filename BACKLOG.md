@@ -31,6 +31,7 @@ Pattern di chiusura applicato: marker stale = anti-pattern #19 -> ground-truth v
 
 - [ ] **M5** — Synesthesia privacy first-violation test: ≥1 sessione che tocchi `views/` (cloud OK) + `controllers/` (sovereign-only). Criterio 3 ADR-0014. **Dormant** UniUPO esame ~ago 2026 (1/3 ancora).
 - [ ] **M14** — AA01 Task D: guides + awesome + design. **PARTIAL DEFERRED** Eduardo-direct: #2 + #6 + #12 vault Card 3/4 sibling-peer boundary pending. #9 dair-ai/Prompt-Engineering-Guide REFERENCE_INDEX link bookmark candidate.
+- [ ] **M15** -- MAP-Elites v2 closeout (2026-07-02): Game PR #3183 (knob-space SoT-full + fix SPRT truncated-eviction + edm-run results) in review Eduardo. Al merge: opzionale seconda card RUN_MONITORS per `map-elites-hardcore_06-v2-edm-run`. Ref memory `project_map_elites_v2` + OD-012.
 
 ### Priorità bassa
 
