@@ -27,6 +27,7 @@
 | OD-009 | Stack ADR-0017 (LiteLLM+Langfuse+Postgres+dogfood-ui) post-Hybrid-A1 value review? | ✅ CLOSED 2026-05-28 sera (Decommission codice shipped: `git rm -r infra/ apps/dogfood-ui/` + ADR-0017 status SUPERSEDED-by-ADR-0030 + runbook hot-restart DEPRECATED) | Nessuna. Reversibile via git history se future need emerge |
 | OD-010 | Re-visit-trigger combat Godot (tutorial->generale = N=40) orfano? | OPEN (monitoring) 2026-06-08 | Sorveglianza hub; nessuna azione finche' combat Godot = tutorial/preview. Trigger: Godot-combat -> general -> N=40 re-validation + ADR (body sotto) |
 | OD-011 | Biome-SoT cross-repo: contro quale file biome validano i canonical_refs swarm/Game? | OPEN (hub-watch) 2026-06-20 | Owner decisione = Game-canon. Hub sorveglia; nessuna azione codemasterdd finche' swarm PARKED. Body sotto; autoritativo = evo-swarm OD-007 (#127) + RFC#4-S3 finding F2 |
+| OD-012 | Variante "nightmare" hc06: serve WR<10%? Il knob-space SoT non ci arriva (floor greedy ~15%, MAP-Elites edm-run 2026-07-02) | OPEN (hub-watch) 2026-07-02 | Owner = Game design. Nessuna azione finche' non nasce l'esigenza di una variante ultra-hard. Body sotto; dati = Game docs/research/2026-07-02-map-elites-v2-edm-run-results.md |
 
 **Decisioni vision/architettura**: vivono in `docs/adr/` (24+ ADR Accepted). Per cose nuove rilevanti usa ADR-NNNN MADR format (vedi `docs/adr/0000-template.md` se esiste oppure copia struttura ADR esistente).
 
@@ -70,6 +71,28 @@ Quando chiudi una OD: aggiorna la riga in tabella + sposta il body in `docs/arch
 - **File/moduli**: evo-swarm `scripts/verify-swarm-claims.py`; Game `scripts/check-canon-consistency.cjs` + `data/core/biomes.yaml` + `biomes_expansion.yaml` + `packs/evo_tactics_pack/data/biomes.yaml`.
 - **Prossima azione**: nessuna codemasterdd-side finche' swarm PARKED. Body autoritativo = evo-swarm `OPEN_DECISIONS.md` OD-007 (#127, mergiato 2026-06-20). Hub-watch.
 - **Trigger reactivation**: riattivazione swarm runtime OR Game-canon-owner apre la decisione SoT-biome OR prossimo audit cross-repo opportunistico.
+
+### OD-012 -- Variante "nightmare" hc06: WR<10% richiede lever fuori dal knob-space SoT
+
+- **Livello**: cross-repo (codemasterdd hub-watch; owner decisione = Game design)
+- **Stato**: OPEN (hub-watch) 2026-07-02
+- **Ambiguita' originale**: la mappa MAP-Elites v2 edm-run (50 iter N=40, knob-space
+  SoT-full: boss_hp 0.50-1.30 + enemy_damage 1.0-2.5 + turn_limit 25-35) mostra WR
+  minimo osservato 15% -- la colonna 0-10% e' irraggiungibile. Floor strutturale del
+  greedy AI su hc06: anche boss 1.26 + edm 1.9 resta ~15%.
+- **Perche' conta**: se in futuro il design vuole un hc06 "quasi impossibile"
+  (nightmare/prestige), il knob-space canonico NON puo' produrlo: serve estendere il
+  SoT (boss_hp >1.30, cap <25, nuovo lever) o cambiare regime AI -- decisione design,
+  non tuning.
+- **Miglior default**: nessuna azione. La mappa QD e' l'evidenza; si riapre solo su
+  esigenza design reale.
+- **Rischio se ignorata**: zero oggi (nessuna variante nightmare in roadmap).
+- **File/moduli**: Game `docs/research/2026-07-02-map-elites-v2-edm-run-results.md`
+  (finding F-A) + `docs/playtest/canonical-suite.yaml` (knob_space SoT) +
+  `tools/py/calibrate_map_elites.py`.
+- **Prossima azione**: nessuna. Hub-watch.
+- **Trigger reactivation**: richiesta design di variante ultra-hard hc06 OR modifica
+  del knob_space nel manifest OR cambio policy AI di riferimento (greedy -> altro).
 
 ---
 
