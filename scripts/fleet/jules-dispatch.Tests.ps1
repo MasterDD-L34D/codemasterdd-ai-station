@@ -239,6 +239,35 @@ Assert-Eq 3 $r14c.Pages 'always-token fetcher -> capped at MaxPages=3'
 Assert-True ([bool]$r14c.Truncated) 'token still present at cap -> Truncated=true'
 
 # ======================================================================
+Write-Host "Test 15: Resolve-TaskFilePath (.NET-CWD independence -- worktree dispatch fix 2026-07-02)"
+# [IO.File] resolves RELATIVE paths against the PROCESS CWD, which does NOT follow the PS
+# location (Set-Location/Push-Location). Dispatching from a git worktree threw on a TaskFile
+# that Test-Path had just validated -- and with a same-named decoy in the process CWD it would
+# instead silently READ THE WRONG FILE (gates 2-3 would lint the decoy). Canonicalize first.
+$dirA = Join-Path $env:TEMP ("jd-cwd-a-" + [guid]::NewGuid().ToString('N'))
+$dirB = Join-Path $env:TEMP ("jd-cwd-b-" + [guid]::NewGuid().ToString('N'))
+New-Item -ItemType Directory -Path $dirA, $dirB | Out-Null
+[IO.File]::WriteAllText((Join-Path $dirA 'task.md'), 'REAL task body')
+[IO.File]::WriteAllText((Join-Path $dirB 'task.md'), 'DECOY body')
+$savedLoc = Get-Location
+$savedNet = [Environment]::CurrentDirectory
+try {
+  Set-Location $dirA                          # PS location = where the operator cd'd
+  [Environment]::CurrentDirectory = $dirB     # process CWD = elsewhere (the worktree scenario)
+  $resolved = $null; try { $resolved = Resolve-TaskFilePath 'task.md' } catch {}
+  Assert-True ($null -ne $resolved) 'relative TaskFile resolves (no throw)'
+  Assert-Eq (Join-Path $dirA 'task.md') $resolved 'resolves against the PS location, NOT the process CWD'
+  $readBack = if ($resolved) { [IO.File]::ReadAllText($resolved) } else { '' }
+  Assert-Eq 'REAL task body' $readBack 'ReadAllText on the resolved path reads the REAL file, not the decoy'
+  $abs = $null; try { $abs = Resolve-TaskFilePath (Join-Path $dirA 'task.md') } catch {}
+  Assert-Eq (Join-Path $dirA 'task.md') $abs 'absolute path passes through unchanged'
+} finally {
+  Set-Location $savedLoc
+  [Environment]::CurrentDirectory = $savedNet
+  Remove-Item $dirA, $dirB -Recurse -Force -ErrorAction SilentlyContinue
+}
+
+# ======================================================================
 Write-Host ""
 Write-Host "Results: $script:passed passed, $script:failed failed"
 
