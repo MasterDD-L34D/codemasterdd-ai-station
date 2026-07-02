@@ -11,20 +11,19 @@
 - **Ruolo**: infrastructure-as-code + governance + dashboard operativa cross-repo
   per la fleet AI sovereign-first di Eduardo (vedi `CLAUDE.md` autoritativo).
 
-## Stato attuale (verificato git/ls/gh 2026-07-02 sera-3)
-- **HEAD origin/main**: `93fe89d` (2026-07-02) -- `docs(runbook): godot campaign
-  multi-machine dispatch`. PR open sul hub: **#465** (draft, M15 card + fix
-  conteggio checkpoint) + **#462** (handoff ennea, altra sessione).
-- **Modello sessioni**: Claude Fable 5 attivo (trailer `claude-fable-5`); la
-  finestra Max/Opus-crunch di giugno e' passata (journal 07-02 "siamo tornati
-  con fable"). Roadmap post-Max: vedi ADR-0023/0030.
-- **Arco MAP-Elites v2 CHIUSO** (memory `project_map_elites_v2`): Game
-  #3181+#3182 e hub #453+#459+#460 MERGED. Residuo SOLO atti Eduardo:
-  Game #3183 DRAFT (CI verde, 0 P1, advisory = falsi positivi tooling) ->
-  `gh pr ready 3183` + merge; hub #465 review. M15 CHIUSO via #465 (card
-  `map-elites-hc06-v2-edm` + fix: iter SPRT-evicted non scrivono iter-json ->
-  done = max(json, iter distinte checkpoint.jsonl)). Lesson chiave: MAI backend
-  Node spawnato con stdout=PIPE non drenato.
+## Stato attuale (verificato git/ls/gh 2026-07-02 sera-3, arco chiuso 20:16Z)
+- **HEAD origin/main**: `bd86af8`+ (2026-07-02; avanza a ogni doc-land). 0 PR
+  arco aperti sul hub (#462 ennea handoff = altra sessione).
+- **Modello sessioni**: sessione avviata Fable 5, switch a Opus 4.8 a fine
+  giornata (trailer commit riflette il modello attivo al commit). Finestra
+  Max/Opus-crunch di giugno passata. Roadmap post-Max: ADR-0023/0030.
+- **Arco MAP-Elites v2 CHIUSO+MERGED** (memory `project_map_elites_v2`): Game
+  #3181+#3182+#3183 e hub #453+#459+#460+#465 tutti MERGED (2026-07-02 20:16Z),
+  **0 residui**. M15 = card `map-elites-hc06-v2-edm` + fix conteggio (iter
+  SPRT-evicted NON scrivono iter-json -> done = max(json, iter distinte
+  checkpoint.jsonl); VERIFICATA comportamentalmente 50/50 COMPLETE sul dir
+  reale via funzione shippata). Lesson chiave: MAI backend Node spawnato con
+  stdout=PIPE non drenato; checkpoint.jsonl = contatore autoritativo.
 - **Campagna doc-comment GGv2**: **134/280 (48%)** post batch 34 (#581+#582,
   primo dispatch da Lenovo -- gate-4 dedup = guardia cross-machine, runbook
   aggiornato multi-machine `93fe89d`). Lane policy ratificata:
@@ -48,8 +47,8 @@
 
 ## Prossimi passi
 
-1. **Atti Eduardo**: Game `gh pr ready 3183` + merge; review/merge hub #465;
-   review Game #3185 (reorg L5, altra sessione).
+1. **Atti Eduardo**: arco MAP-Elites DONE (#3183+#465 MERGED). Resta solo
+   review Game #3185 (reorg docs L5, altra sessione).
 2. **Fronte playtest Game** = prossima sessione piena (journal 07-02 sera-2:
    leggere prima memory `project_godot_visual_asset_pipeline` + coordinarsi
    con arco Game). Baricentro progetto, critical path.
