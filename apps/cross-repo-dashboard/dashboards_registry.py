@@ -102,6 +102,34 @@ DASHBOARDS: list[dict[str, Any]] = [
         },
     },
     {
+        "id": "ermes-report",
+        "name": "ERMES eco-pressure report",
+        "area": "Game", "kind": "generator", "status": "regenerable",
+        "desc": "Report statico multi-bioma dal boot ERMES: bande diegetiche, bias "
+                "encounter/mutazione, rischi estinzione. Sostituisce il workbench "
+                "Streamlit FASE-1 (morto). Salvage 2026-07-02.",
+        "open": GAME + r"\logs\reports\ermes_report.html",
+        "regen": {
+            "cwd": GAME,
+            "steps": [["py", "tools/py/build_ermes_report.py"]],
+            "timeout": 120,
+        },
+    },
+    {
+        "id": "hud-canary-report",
+        "name": "HUD canary alerts report",
+        "area": "Game", "kind": "generator", "status": "regenerable",
+        "desc": "KPI pipeline HUD Smart Alerts (ack rate vs 80%, filter ratio, trend "
+                "per sessione) dai log playtest reali. Soglie importate dal QA gate. "
+                "Salvage 2026-07-02.",
+        "open": GAME + r"\logs\qa\hud_canary_report.html",
+        "regen": {
+            "cwd": GAME,
+            "steps": [["py", "tools/feedback/build_hud_canary_report.py"]],
+            "timeout": 120,
+        },
+    },
+    {
         "id": "mission-console",
         "name": "Mission Console (Vue SPA)",
         "area": "Game", "kind": "served", "status": "live",
