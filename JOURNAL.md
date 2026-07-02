@@ -19,6 +19,23 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-07-02 (sera -- doc-comment campaign RIPRESA: batch 26-29 + tracker regen + opencode chiuso)
+
+### Completato
+- **Campagna doc-comment Godot-v2 RIPRESA dopo la pausa di giugno** (decisione Eduardo: "siamo tornati con fable, continuiamo da qui" -- l'handoff OpenCode era il workaround per il Max-crunch di giugno, constraint sparito). Refresh-verify d'apertura: repo cresciuto +28 .gd in giugno (251->279, phone +14), tracker STALE a 99/251 -> regen **#559** (107/279 onesto) + phase-note corretta (la crescita era ricca di cream nuova).
+- **4 batch trio, 12 file, 75 add, 0 FAILED** (tutti ground-truth: dels=0 / gdformat-unchanged / gdlint-clean / ASCII-add / only-target): **#561** phone wires (chronicle_view/form_pulse_wire/lethal_consent_wire), **#562** phone quorum (lethal_consent_overlay/world_confirm_wire/mission_ready_wire), **#563** observer misto (main_world_confirm session / tv_lethal_consent_panel ui / chronicle_api net), **#564** phone small (coop_ids/imprint_hint_chip/overcharge_hint). **107 -> 119/279 (43%)**; phone 7->16/43. Tracker regen finale **#565** (batch-row 26-29 + coda residua ~12 clean nel phase-note). 6 branch mergiati prunati.
+- **Filone opencode-headless CHIUSO** (decisione: inutile ora che Fable gira; il grosso lo fa Jules gratis). Upgrade 1.16.2->1.17.13 testato: STESSO hang a `init` (2 versioni major = problema strutturale opencode-CLI-su-Windows, non transitorio). Runbook handoff #310 resta valido per qualsiasi esecutore futuro.
+
+### Da fare
+- Coda clean residua (~12 file): coop/surface_role_registry, phone_creature_named_reveal, main_lethal_consent, combat/sense_reveal, services/telemetry_collector (7pub/143L), ai/sistema_intents, phone_coop_vote_wire (8pub/130L). Poi tail basso-valore (>150L / zero-pub / high-NA) -- STOP li' o 1-2 alla volta.
+- Ryzen: 4 digest jules-batch untracked in docs/jules-batch/ (2026-06-15/16/21/24) -- da committare o lasciare al flusso digest.
+
+### Note
+- Modello sessione = claude-fable-5 (trailer aggiornati). Conteggio adds atteso: contare le righe dei blocchi ## multilinea nel task-file (batch-27: 22 vs 21 "attesi" = errore di conto mio, Jules era verbatim-esatto).
+- Jules quota ~5 sessioni oggi, loop sano (5-10 min/batch). Il canary-PONG (opencode) e' costato poco e ha chiuso una domanda aperta da un mese.
+
+---
+
 ## 2026-07-02 (Arco #3157 CHIUSO: F1/F3/F4 shipped + 5/5 PR MERGED + coordinamento cross-session)
 
 ### Completato
