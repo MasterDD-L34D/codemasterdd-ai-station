@@ -18,14 +18,24 @@
 caveat (QA doc GGv2 `docs/godot-v2/qa/2026-07-02-ennea-pulse-firing-rate-sweep.md`:
 copertura 6/7 mechanical su ogni fascia HP). Playtest umano consigliato al primo flip.
 
-**Restano aperti (ticket)**:
+**Restano aperti (ticket)** -- ARCO TICKET CHIUSO 2026-07-02 notte (sessione
+coordinatore Ryzen, dettaglio: `2026-07-02-ryzen-ennea-tickets-arc.md`):
 1. Riformatore(1): trigger strutturalmente irraggiungibile (setup_ratio>0.5 &&
    hit_rate>0.65 auto-contraddittorio). Retune CANON cross-repo: telemetry.yaml +
    vcScoring.js + vc_scoring.gd insieme (parity).
+   **-> FATTO, in review: Game #3184 + GGv2 #579 (setup_ratio>0.3, sweep v4
+   7/7 mechanical, zero falsi positivi, CI verdi, mergiare insieme).**
 2. Step-4 handoff: privacy toggle "profilazione stile" + amnesia (debito freeze
    sect.13-14) -- unico pezzo mancante prima di un flip player-facing.
+   **-> FATTO, in review: Game #3186 + GGv2 #580 (toggle diegetico form-pulse
+   + pref per-player coop store + host mirror amnesia live, CI verdi,
+   mergiare insieme). Il debito freeze step-4 decade al merge.**
 3. Stoico(9) consumer: richiede porting del tracker stress PER-UNIT dal backend
    (l'SgTracker Godot e' l'accumulator globale Sistema Gravity, semantica diversa).
+   **-> DESIGN FALSIFICATO (v1 refuted, panel 4 lenti), v2 in review: GGv2
+   #583. Riframe: barra SG per-unit = canone freeze (:174), DefyEngine gia'
+   in-repo. TDD bloccato su 2 decisioni owner (consumer Stoico Q1/Q2 +
+   direzione retune soglie) -- vedi doc design.**
 
 ### Esito falsificazione (panel 4 critici, run wf_e9b5930f-e10): v1 REFUTED, v2 corretto
 

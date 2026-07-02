@@ -7,13 +7,20 @@
 > Seme chiuso: 6 PR mergiate su GGv2 (#560/#566/#570/#571/#572/#575), flag
 > `ENNEA_COMBAT_PULSE_ENABLED` default OFF.
 
-## Stato arco: IN CORSO (aggiornare a ogni milestone)
+## Stato arco: CHIUSO 2026-07-02 notte (tutte le PR in review, merge = owner)
 
 | Ticket | Stato | PR |
 |---|---|---|
-| T1 retune Riformatore(1) canon parity | IN REVIEW | Game #3184 + GGv2 #579 (cross-linkate) |
-| T2 wire UI toggle "profilazione stile" | IN REVIEW | Game #3186 + GGv2 #580 (cross-linkate) |
-| T3 design+falsificazione stress per-unit (Stoico consumer) | PENDING | design PRIMA di codice |
+| T1 retune Riformatore(1) canon parity | IN REVIEW (CI verdi) | Game #3184 + GGv2 #579 (mergiare insieme) |
+| T2 wire UI toggle "profilazione stile" | IN REVIEW (CI verdi) | Game #3186 + GGv2 #580 (mergiare insieme) |
+| T3 design stress per-unit -> "SG unit pool port" | DESIGN v2 IN REVIEW (v1 refuted, panel 4 lenti) | GGv2 #583 (doc-only) |
+
+**Decisioni owner aperte (bloccano il TDD di T3, non i merge)**: consumer
+Stoico Q1/Q2 + direzione retune soglie SG -- dettagli in GGv2
+`docs/godot-v2/design/2026-07-02-sg-unit-pool-port-design.md`.
+Codex quota esaurita su tutte le PR -> review interno documentato sui thread.
+Non-collisione rispettata: zero overlap coi file MAP-Elites per tutto l'arco.
+Worktree rimossi a fine arco (branch restano su origin).
 
 ## T1 -- file target (retune trigger Riformatore, canon cross-repo)
 
