@@ -19,6 +19,23 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-07-02 (sera-3 -- M15 closeout + batch 34 filler, primo dispatch da Lenovo)
+
+### Completato
+- **Triage PR arco MAP-Elites (Currency Gate)**: hub #460 (0 commenti, CI verde) auto-merge armato -> MERGED 17:55Z; Game #3183 CI verde + 0 P1 (advisory entity-grounding = 26 falsi positivi su identifier tooling, non canon) ma DRAFT -> ready+merge consegnato a Eduardo.
+- **M15 chiuso (PR draft hub #465)**: card RUN_MONITORS `map-elites-hc06-v2-edm` + fix scope-adiacente `_scan_run_monitors`: iter SPRT-evicted non scrivono iter-json (36 json vs 50 iter reali nel checkpoint) -> senza fix card 36/50 STALLED su run COMPLETE; ora done = max(json, iter distinte checkpoint.jsonl), tollera riga parziale mid-write. Test nuovo (dup + partial line); pytest 47/47. BACKLOG M15 spuntato.
+- **Batch 34 campagna doc-comment (filler-only, in coda a sessione M15)**: GGv2 #581 MERGED (lifecycle/lineage_merge_service + phone/composer_biome_tint + main_reinforcement, 18 adds, gate perfetto primo colpo incl. no-blank-line) + tracker regen #582 -> **134/280 (48%)** @ d3ba460; lifecycle 1/1 COMPLETE. **Primo dispatch da Lenovo**: gate-4 dedup cross-machine tenuto (0 overlap), sid 7270682924938799989 archiviata post-ship. Apply in worktree GGv2 dedicato (clone occupato da feat/creature-portrait-loader). Quota: 1 dispatch.
+
+### Da fare
+- Eduardo: `gh pr ready 3183` + merge (Game, CI verde 0 P1); review/merge hub #465 (M15 card + fix conteggio).
+- Prossimo filler trio (pool ~9, by NA): ai/ai_personality_loader + main_ai_progress + combat/resistance_engine.
+
+### Note
+- Poll Jules: coda iniziale ~5 min + lavoro ~13 min -> budget poll 30 min e' la taglia giusta (20 min timeout al primo giro).
+- PS5.1: hashtable-di-array + `+=` su elemento = op_Addition MethodNotFound; scan tracker fatto in py. /tmp di git-bash non visibile a Windows-py (heredoc py con path espliciti).
+
+---
+
 ## 2026-07-02 (Game docs-tree reorg L5 EXECUTE -- PR #3185, subset sicuro della proposal Jules)
 
 ### Completato
