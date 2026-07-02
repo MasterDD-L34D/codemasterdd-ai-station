@@ -53,6 +53,43 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 - Metodo provato riusato (codemasterdd #302/#304, Game-DB #177, Godot-v2 #414): git mv + resolver fence-aware con ricomputo depth per i file mossi + replace testuale surgical sul registry (json.dumps round-trip = drift prettier, evitato).
 - docs:smoke di Game spawna il backend intero (:3334/:5000): 2 processi orfani su Ryzen (PID 27976/28172, avviati 19:53 dal mio job poi stoppato) -- kill negato dal classifier (guardrail prod-ports), lasciati a Eduardo.
 
+## 2026-07-02 (notte -- arco ticket Ennea Combat Pulse: T1+T2 shipped, T3 design falsificato)
+
+### Completato
+- **T1 retune Riformatore(1) canon parity** (Game #3184 + GGv2 #579, CI verdi, in review):
+  setup_ratio 0.5 -> 0.3 su telemetry.yaml + vc_scoring.gd (vcScoring.js parsa il yaml,
+  zero hardcode JS). Sweep v4: Riformatore 3/3 fasce via tactician, righe altri profili
+  INVARIATE, copertura mechanical 6/7 -> 7/7. Fixture parity nei test di entrambi i repo
+  (caso 0.35 fira SOLO col canon nuovo).
+- **T2 privacy toggle "profilazione stile"** (Game #3186 + GGv2 #580, CI verdi, in review):
+  chiude il debito freeze step-4. Toggle diegetico in PhoneFormPulseView (default ON, mai
+  lockato) -> intent WS `profiling_consent_set` -> pref per-player nel coop store (stamp
+  additive sul character record, mirror default_parts) -> unit.profiling_opt_out a
+  /session/start + broadcast -> MainProfilingConsent host observer (pattern lethal):
+  gate per-unit + ennea_amnesia LIVE. main.gd invariato 1099/1100. 6 test JS + 16 GUT.
+- **T3 design SG unit pool** (GGv2 #583, doc-only): v1 "stress per-unit" REFUTED da panel
+  adversarial 4 lenti; v2 riframato -- barra SG per-unit e' CANONE freeze (:174/:468),
+  il port e' compliance, Stoico solo modulatore. Scoperte: DefyEngine gia' in-repo
+  non-wired (actor.sg prenotato); wire taken corretto = apply_damage (i DOT bypassano
+  l'attack path); canale buff ennea INT-only (int(0.05)=0); fixture parity esiste
+  (Game tests/api/sgTracker.test.js, 12 casi); niente sg nel debrief (contratto chiuso).
+- Coordinamento: handoff arco `2026-07-02-ryzen-ennea-tickets-arc.md` (hub #462, branch
+  aggiornato a ogni milestone) + sezione ticket del handoff seme aggiornata. Overlap
+  check vs MAP-Elites: zero collisioni per tutto l'arco. Worktree only, checkout GGv2
+  principale mai toccato.
+
+### Da fare
+- Merge coppie PR (owner): #3184+#579 insieme, #3186+#580 insieme; #583 review doc.
+- Decisioni owner T3 (bloccano il TDD): consumer Stoico Q1/Q2 + direzione retune soglie
+  SG (dettagli nel design doc). Poi TDD modulo dark su fixture 12 casi.
+- Codex quota esaurita su tutte le 5 PR -> review interno documentato sui thread; se la
+  quota rientra, ri-triage bot comments.
+
+### Note
+- Il retune T1 e' il precedente giusto per il gate-1 di T3 (stesse costanti-canon
+  degenerate sul CT-scale: metric-space-mismatch ricorrente web->Godot).
+- Pattern worktree + branch-switch nello stesso worktree (T1 -> T2 -> T3-docs) regge
+  bene: zero contaminazione fra PR, node_modules/import cache riusati.
 
 ## 2026-07-02 (MAP-Elites v2: arco completo -- root-cause pipe, 2 run, 4 PR, hub card)
 
