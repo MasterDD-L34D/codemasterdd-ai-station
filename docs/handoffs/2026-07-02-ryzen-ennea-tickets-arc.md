@@ -12,7 +12,7 @@
 | Ticket | Stato | PR |
 |---|---|---|
 | T1 retune Riformatore(1) canon parity | IN REVIEW | Game #3184 + GGv2 #579 (cross-linkate) |
-| T2 wire UI toggle "profilazione stile" | PENDING | - |
+| T2 wire UI toggle "profilazione stile" | IN REVIEW | Game #3186 + GGv2 #580 (cross-linkate) |
 | T3 design+falsificazione stress per-unit (Stoico consumer) | PENDING | design PRIMA di codice |
 
 ## T1 -- file target (retune trigger Riformatore, canon cross-repo)
@@ -47,6 +47,18 @@ Runtime pronto da GGv2 #575 (`profiling_opt_out`, `set_ennea_profiling_consent`,
   `session.profilingConsent`, `apps/backend/routes/session.js:4418+`).
 - **GGv2 phone UI**: toggle diegetico (pattern `scripts/phone/phone_form_pulse_view.gd`).
 - **GGv2 host wiring**: pref -> `profiling_opt_out` su unit roster + consent hook.
+
+**ESITO (2026-07-02 notte)**: shippato in review. Backend: pref per-player nel
+coop store (character record additive + drain WS intent `profiling_consent_set`
++ broadcast). GGv2: toggle diegetico in PhoneFormPulseView (default ON, mai
+lockato) + `MainProfilingConsent` observer host (gate per-unit + amnesia live,
+pattern MainLethalConsent), main.gd invariato a 1099 righe. Test: 6/6 JS +
+252/252 regressione coop; 16 GUT nuovi, suite 3804 0 fail. PR: Game #3186 +
+GGv2 #580 (parity, da mergiare insieme). File toccati in piu' rispetto
+all'annuncio iniziale (stesso arco, zero overlap con MAP-Elites):
+coop_ws_peer.gd, combat_lifecycle_hook.gd, main{,_combat_setup,_debrief}.gd,
+phone_form_pulse_{view,wire}.gd, main_profiling_consent.gd (nuovo);
+coopOrchestrator.js, wsSession.js.
 
 ## T3 -- nessun file finche' design non falsificato
 
