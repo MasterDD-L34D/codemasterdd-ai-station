@@ -19,6 +19,24 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-07-02 (piattaforma dashboard unificata + salvage-arc: 8 PR merged, MAP-Elites overnight)
+
+### Completato
+- **Piattaforma dashboard unica**: inventory sweep 6-aree (~40 artefatti) -> verdetto anti-shadow-duplicate: estendere il cross-repo-dashboard :8081 esistente. Nuova pagina `/cross-repo/dashboards`: catalogo fleet-wide (~20 entry, badge stato, launch hint), sezione run-attive con progress bar live, API regen whitelist-only, apertura file server-side. PR hub #443 + fix #444 (3 bug da analisi Chrome live: 14/20 link file:// morti, semantica rc linter, styling) + #446 retire sparkline + #447 registry. Tutti MERGED.
+- **Ponytail + protocollo recupero sulle idee morte**: 4 probe salvage (steelman intento -> copertura esistente -> verdetto). Risultato: sparkline RITIRATA (leggeva stream mai esistito), Streamlit ERMES morto (4 blocker) MA ermes_sim = critical path protetto, skiv_monitor attivo protetto (2 tagli sbagliati evitati dal recon), rollout yaml parcheggiato (aspirazionale).
+- **Salvage shipped su Game (4 PR MERGED)**: #3176 fix vc_mbti/vc_ennea null-forever (PR #1535 leggeva campi mai restituiti da buildVcSnapshot; nuovo aggregateVcSnapshot, TDD 3/3 + regressione 60/60 + E2E primo session_end popolato di sempre -- sblocca P4 Temperamenti analytics); #3177 DuckDB repoint 9 query sul corpus reale (2974 file; agent ha corretto la premessa reward_skip + trovato 2 file corrotti reali); #3178 HUD canary report sopra la pipeline viva (soglie importate dal QA gate); #3179 ERMES report statico multi-biome (bande dal yaml, 4 biomi verificati, cryosteppe HIGH con cryo_lupus estinzione 1.0).
+- **MAP-Elites overnight**: prima full-run mai fatta (hardcore_06, 50 iter x N=40, ~17h) IN CORSO con monitor HTML live (barre totale + iterazione corrente) + card nel catalogo. Coordinata con W5.
+- Metodo: build trio delegato ad agent in worktree isolati con review semantica mia pre-PR; merge per-call auth Eduardo; 2 messaggi cross-session (busy-fermat overlap analytics + W5).
+
+### Da fare
+- Report MAP-Elites a run completa (~domani): assemblare archive QD in docs/research/, decidere commit.
+- Query MBTI mostrano dati solo su log post-#3176 (corpus vecchio null, non retroattivo) -- primo batch nuovo le popola.
+- Follow-up minori flaggati dagli agent: docstring stale in aggregate_session_logs.py; hud_smart_alerts.py crash cp1252 su stdout (gotcha noto); duckdb non in requirements (fallback ok).
+
+### Note
+- Lesson ricorrente triplicata oggi: "costruito contro spec, mai contro dati" (sparkline, analyze_telemetry, rollout yaml) -- filtro futuro: nessuna dashboard senza consumatore esistente.
+- Recon-before-cut: 2 artefatti che il ponytail avrebbe tagliato (skiv_monitor, ermes_sim) erano critical path -- il protocollo recupero li ha salvati.
+
 ## 2026-07-02 (sera -- doc-comment campaign RIPRESA: batch 26-29 + tracker regen + opencode chiuso)
 
 ### Completato
