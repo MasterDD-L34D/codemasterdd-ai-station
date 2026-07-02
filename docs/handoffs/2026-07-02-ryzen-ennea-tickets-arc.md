@@ -14,6 +14,7 @@
 | T1 retune Riformatore(1) canon parity | **MERGED** (coppia insieme, 18:53Z) | Game #3184 + GGv2 #579 |
 | T2 wire UI toggle "profilazione stile" | **MERGED** (coppia insieme, 18:53Z) | Game #3186 + GGv2 #580 |
 | T3 design "SG unit pool port" (v1 refuted, panel 4 lenti) | **MERGED** (doc-only) | GGv2 #583 |
+| T3 impl `SgUnitPool` dark module (Stage A, flag OFF) | **PR aperta** | GGv2 #584 |
 
 **Decisioni owner RATIFICATE (2026-07-02 notte, autorizzazione esplicita
 Eduardo -- merge + raccomandazioni)**:
@@ -73,13 +74,33 @@ coop_ws_peer.gd, combat_lifecycle_hook.gd, main{,_combat_setup,_debrief}.gd,
 phone_form_pulse_{view,wire}.gd, main_profiling_consent.gd (nuovo);
 coopOrchestrator.js, wsSession.js.
 
-## T3 -- nessun file finche' design non falsificato
+## T3 -- Stage A implementato (dark module, flag OFF) -- PR GGv2 #584
 
 Design sistema stress per-unit Godot (Stoico(9) consumer). Il backend scala
 `sgTracker.js accumulate(unit,{damage_taken})` PER-UNIT; l'SgTracker Godot e'
 l'accumulator GLOBALE Sistema Gravity -- semantica diversa, NON si cabla li'.
 Percorso: design doc -> panel critici multi-lente (freeze-compliance,
-engine-feasibility, balance/anti-snowball, ops/test) -> solo dopo TDD.
+engine-feasibility, balance/anti-snowball, ops/test) -> TDD del modulo dark.
+
+**ESITO (2026-07-02, Ryzen)**: Stage A shippato in review (PR GGv2 #584).
+Modulo `scripts/combat/sg_unit_pool.gd` (RefCounted static, pattern
+EnneaEffects), parity di meccanismo con `sgTracker.js` (12 casi fixture 1:1),
+flag `SG_UNIT_POOL_ENABLED` default OFF. Wire dietro flag: taken in
+`CombatSession.apply_damage` (copre attack + status_dot + terrain_dot), dealt
+in `resolve_attack_action`, `begin_turn` proxy su EndTurnAction, reset in
+`start()`; shield-transfer bond escluso by design. Stoico = Q2 (log_only,
+`ennea_effects.gd` NON toccato). Costanti 5/8/3/2 = parity (retune canon =
+ticket successivo). Sweep `tools/qa/sg_earn_rate_sweep.gd` conferma verdetto
+balance #1: soglie assolute = artefatto scala HP (earn-rate spread 2.3x
+cross-band + pinning 0/6->5/6 su fasce 7/15/32); controfattuale relativo
+comprime a 1.1x -> dati per il retune in
+`docs/godot-v2/qa/2026-07-02-sg-earn-rate-sweep.md`. Test: 19 modulo + 9 wire,
+suite GUT 3828 pass / 0 fail, gdformat+gdlint verdi. Review adversarial interno
+(4 dimensioni, verify per-finding): 0 finding confermati. VIETATO rispettati:
+niente sg nel debrief_payload, zero tocco a SgTracker globale / main.gd.
+Worktree dedicato `C:\dev\_worktrees\ggv2-t3-sg-unit-pool` (checkout
+principale intatto). **Gate di flip residui** (NON in questa PR): retune soglie
+CT-scale, spender DefyEngine riconciliato, HUD gauge SG, ratifica sweep.
 
 ## Richiesta non-collisione
 
