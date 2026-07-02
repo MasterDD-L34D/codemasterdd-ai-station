@@ -7,17 +7,23 @@
 > Seme chiuso: 6 PR mergiate su GGv2 (#560/#566/#570/#571/#572/#575), flag
 > `ENNEA_COMBAT_PULSE_ENABLED` default OFF.
 
-## Stato arco: CHIUSO 2026-07-02 notte (tutte le PR in review, merge = owner)
+## Stato arco: CHIUSO E MERGIATO 2026-07-02 notte (autorizzazione owner)
 
 | Ticket | Stato | PR |
 |---|---|---|
-| T1 retune Riformatore(1) canon parity | IN REVIEW (CI verdi) | Game #3184 + GGv2 #579 (mergiare insieme) |
-| T2 wire UI toggle "profilazione stile" | IN REVIEW (CI verdi) | Game #3186 + GGv2 #580 (mergiare insieme) |
-| T3 design stress per-unit -> "SG unit pool port" | DESIGN v2 IN REVIEW (v1 refuted, panel 4 lenti) | GGv2 #583 (doc-only) |
+| T1 retune Riformatore(1) canon parity | **MERGED** (coppia insieme, 18:53Z) | Game #3184 + GGv2 #579 |
+| T2 wire UI toggle "profilazione stile" | **MERGED** (coppia insieme, 18:53Z) | Game #3186 + GGv2 #580 |
+| T3 design "SG unit pool port" (v1 refuted, panel 4 lenti) | **MERGED** (doc-only) | GGv2 #583 |
 
-**Decisioni owner aperte (bloccano il TDD di T3, non i merge)**: consumer
-Stoico Q1/Q2 + direzione retune soglie SG -- dettagli in GGv2
-`docs/godot-v2/design/2026-07-02-sg-unit-pool-port-design.md`.
+**Decisioni owner RATIFICATE (2026-07-02 notte, autorizzazione esplicita
+Eduardo -- merge + raccomandazioni)**:
+- Consumer Stoico = **Q2**: resta log_only finche' il retune soglie SG non
+  fissa il metric-space; ampiezza decisa DOPO coi numeri del sweep.
+- Retune soglie = **sweep-driven**: prima `sg_earn_rate_sweep` per-fascia,
+  poi retune canon sui dati (stesso percorso del Riformatore T1).
+- TDD del modulo dark `SgUnitPool` SBLOCCATO (fixture: Game
+  tests/api/sgTracker.test.js, 12 casi; gate di flip invariati nel design doc).
+
 Codex quota esaurita su tutte le PR -> review interno documentato sui thread.
 Non-collisione rispettata: zero overlap coi file MAP-Elites per tutto l'arco.
 Worktree rimossi a fine arco (branch restano su origin).

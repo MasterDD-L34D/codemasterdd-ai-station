@@ -79,11 +79,13 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
   principale mai toccato.
 
 ### Da fare
-- Merge coppie PR (owner): #3184+#579 insieme, #3186+#580 insieme; #583 review doc.
-- Decisioni owner T3 (bloccano il TDD): consumer Stoico Q1/Q2 + direzione retune soglie
-  SG (dettagli nel design doc). Poi TDD modulo dark su fixture 12 casi.
+- ~~Merge coppie PR~~ FATTO: tutte e 5 MERGED 18:53Z (autorizzazione esplicita Eduardo,
+  merge --rebase, coppie parity insieme).
+- ~~Decisioni owner T3~~ RATIFICATE: consumer Stoico = Q2 (log_only fino al retune),
+  retune soglie = sweep-driven. Prossimo: TDD modulo dark `SgUnitPool` su fixture
+  12 casi (Game tests/api/sgTracker.test.js) + `tools/qa/sg_earn_rate_sweep.gd`.
 - Codex quota esaurita su tutte le 5 PR -> review interno documentato sui thread; se la
-  quota rientra, ri-triage bot comments.
+  quota rientra, ri-triage bot comments post-merge.
 
 ### Note
 - Il retune T1 e' il precedente giusto per il gate-1 di T3 (stesse costanti-canon
