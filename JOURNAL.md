@@ -19,6 +19,24 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-07-02 (Game docs-tree reorg L5 EXECUTE -- PR #3185, subset sicuro della proposal Jules)
+
+### Completato
+- **Reorg albero docs Game eseguita** (lane L5 studio jules-schema-reuse-2026-07-02, proposal `logs/jules-tasks/proposals/game-reorg-proposal.md`): [Game PR #3185](https://github.com/MasterDD-L34D/Game/pull/3185) OPEN, merge = Eduardo. 2 commit: `67d2bc7a3` = 25 file git-mv tutti R100 (history preservata); `19722838e` = rewrite (50 link md fence-aware + 84 menzioni letterali + 8 path registry surgical + prettier su 5 file pre-dirty).
+- **11 move applicati** (subset verificato ground-truth): audio->design/, ci+config+integrations+operativo+runbook->ops/, examples->guide/, handoff->planning/ (home dei handoff), pitch->archive/, playtests->qa/ (disambigua vs playtest/), prompts->process/.
+- **Proposal refutata dove il grep la smentiva**: gitignore di generated/+logs/ REFUTATO (daily-pr-summary committa in generated/, trait_audit.py scrive in logs/, 15 entry registry); appendici/tutorials/presentations/templates/editorial = tooling-pinned (runtime alienaCoherence.js, featureFlags.json, showcase builder, linter const); skiv/frontend/playtest/mission-console = CI-writer; famiglie workstream (traits/biomes/combat/evo-tactics-pack/...) = home canoniche CLAUDE.md, ferme.
+- **Verifiche**: docs-governance strict errors=0 warnings=0; docs:lint tutti i link validi; pytest migrator 41/41; audio-middleware 8/8; residui vecchi prefissi = 0.
+
+### Da fare
+- Eduardo: review+merge Game #3185 (rollback = revert singolo, zero flag/schema).
+- DOPO il merge: secondo PR qui in codemasterdd per i 17 link deferred verso vecchi path Game (14 ryzen-dump + 3 live) -- NB: i 3 live puntano a museum/adr = NON mossi, probabile quasi-no-op; verificare con la mappa old->new del PR.
+- Owner design-call separata: bonifica docs/generated/ + docs/logs/ (writer CI attivi, non gitignorabili a freddo).
+
+### Note
+- Metodo provato riusato (codemasterdd #302/#304, Game-DB #177, Godot-v2 #414): git mv + resolver fence-aware con ricomputo depth per i file mossi + replace testuale surgical sul registry (json.dumps round-trip = drift prettier, evitato).
+- docs:smoke di Game spawna il backend intero (:3334/:5000): 2 processi orfani su Ryzen (PID 27976/28172, avviati 19:53 dal mio job poi stoppato) -- kill negato dal classifier (guardrail prod-ports), lasciati a Eduardo.
+
+
 ## 2026-07-02 (MAP-Elites v2: arco completo -- root-cause pipe, 2 run, 4 PR, hub card)
 
 ### Completato
