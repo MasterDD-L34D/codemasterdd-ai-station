@@ -47,6 +47,8 @@ DASHBOARDS: list[dict[str, Any]] = [
             "cwd": HUB,
             "steps": [["powershell", "-NoProfile", "-File", "scripts/governance-lint.ps1"]],
             "timeout": 120,
+            # linter semantics: rc=1 = "findings found" (report written anyway)
+            "ok_exit_codes": [0, 1],
         },
     },
     {

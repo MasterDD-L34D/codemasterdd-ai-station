@@ -16,7 +16,12 @@
     .b-stale { background: #6e7681; color: #fff; }
     .b-one-shot { background: #6e7681; color: #fff; }
     .b-kind { background: #21262d; color: #8b949e; border: 1px solid #30363d; }
-    .dash-actions a, .dash-actions button { font-size: 12px; margin-right: 8px; }
+    .dash-actions a, .dash-actions button, .run-card a, .run-card button {
+      font-size: 12.5px; margin-right: 8px; color: #58a6ff; background: #21262d;
+      border: 1px solid #30363d; border-radius: 6px; padding: 3px 10px;
+      text-decoration: none; cursor: pointer; display: inline-block;
+    }
+    .dash-actions a:hover, .dash-actions button:hover, .run-card button:hover { background: #30363d; }
     .run-card { border-left: 4px solid #1f6feb; }
     .run-bar { background: #21262d; border-radius: 6px; height: 18px; overflow: hidden; margin: 6px 0; max-width: 420px; }
     .run-fill { background: #1f6feb; height: 100%; color: #fff; font-size: 11px; font-weight: 700; line-height: 18px; padding-left: 6px; white-space: nowrap; }
@@ -35,7 +40,7 @@
     <h4>{{ r.name }} <span class="r-{{ r.state }}">[{{ r.state|upper }}]</span></h4>
     <div class="run-bar"><div class="run-fill" style="width: {{ r.pct }}%">{{ r.pct }}%</div></div>
     <p>{{ r.done }}/{{ r.total_iter }} iterazioni{% if r.age_min is not none %} -- ultimo file {{ r.age_min }} min fa{% endif %}</p>
-    {% if r.monitor_href %}<div class="dash-actions"><a href="{{ r.monitor_href }}" target="_blank">apri monitor live</a></div>{% endif %}
+    {% if r.monitor_href %}<div class="dash-actions"><button onclick="openDashboard('{{ r.id }}')">apri monitor live</button></div>{% endif %}
   </div>
   {% else %}
   <p>Nessuna run monitorata al momento.</p>
@@ -53,7 +58,12 @@
       </div>
       <p>{{ d.desc }}</p>
       <div class="dash-actions">
-        {% if d.open_href %}<a href="{{ d.open_href }}" target="_blank">apri</a>{% endif %}
+        {% if d.open_is_url %}
+        <a href="{{ d.open_href }}" target="_blank">apri</a>
+        {% elif d.open_href %}
+        {# browsers block file:// from http pages: open server-side (os.startfile) #}
+        <button onclick="openDashboard('{{ d.id }}')">apri</button>
+        {% endif %}
         {% if d.has_regen %}<button onclick="regenDashboard('{{ d.id }}')" id="btn-{{ d.id }}">rigenera</button>{% endif %}
       </div>
       {% if d.launch_hint %}<div class="launch-hint">avvio: {{ d.launch_hint }}</div>{% endif %}
@@ -65,6 +75,17 @@
 
   <script>
     const API_SECRET = {{ api_secret|tojson }};
+    async function openDashboard(id) {
+      try {
+        const headers = { 'Content-Type': 'application/json' };
+        if (API_SECRET) headers['Authorization'] = 'Bearer ' + API_SECRET;
+        const r = await fetch('{{ url_for("cross_repo.open_dashboard") }}', {
+          method: 'POST', headers, body: JSON.stringify({ id })
+        });
+        const j = await r.json();
+        if (!j.ok) alert('apertura fallita: ' + (j.error || '?'));
+      } catch (e) { alert('errore rete: ' + e); }
+    }
     async function regenDashboard(id) {
       const btn = document.getElementById('btn-' + id);
       const out = document.getElementById('out-' + id);

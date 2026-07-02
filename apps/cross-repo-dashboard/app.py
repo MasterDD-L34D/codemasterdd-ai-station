@@ -739,9 +739,19 @@ def governor_pane() -> Any:
 # Dashboards catalog (2026-07-02 dashboards-catalog feature)
 # ====================================================================== #
 
+def _is_url(target: str) -> bool:
+    return target.startswith(("http://", "https://"))
+
+
 def _open_href(target: str) -> str:
-    """URL as-is; Windows file path -> file:/// URI the browser can open."""
-    if target.startswith(("http://", "https://")):
+    """URL as-is; Windows file path -> file:/// URI.
+
+    NB (Chrome debug session 2026-07-02): browsers BLOCK file:// navigation
+    from http-served pages, so file targets are opened SERVER-SIDE via
+    /api/open-dashboard (os.startfile) and this href is only a fallback for
+    copy/paste. The template renders a button for file targets, a plain
+    link for http ones."""
+    if _is_url(target):
         return target
     return "file:///" + target.replace("\\", "/")
 
@@ -788,6 +798,7 @@ def dashboards_catalog() -> Any:
     for d in DASHBOARDS:
         e = dict(d)
         e["open_href"] = _open_href(d["open"]) if d.get("open") else ""
+        e["open_is_url"] = bool(d.get("open")) and _is_url(d["open"])
         e["has_regen"] = bool(d.get("regen"))
         e.pop("regen", None)  # argv lists never reach the template
         entries.append(e)
@@ -836,11 +847,50 @@ def regen_dashboard() -> Any:
                             "output": "\n".join(outputs)[-2000:]}), 500
         tail = (result.stdout or "")[-500:] + (("\nSTDERR: " + result.stderr[-500:]) if result.stderr else "")
         outputs.append(f"$ {' '.join(argv)} (rc={result.returncode})\n{tail}")
-        if result.returncode != 0:
+        # lint-style tools exit non-zero WHEN THEY FIND SOMETHING (by design):
+        # ok_exit_codes on the registry entry widens the success set (Chrome
+        # debug 2026-07-02: governance-lint rc=1 with report written showed
+        # as ERROR while the run had succeeded).
+        ok_codes = set(regen.get("ok_exit_codes", [0]))
+        if result.returncode not in ok_codes:
             return jsonify({"ok": False, "error": f"step failed rc={result.returncode}",
                             "output": "\n".join(outputs)[-2000:]}), 500
     return jsonify({"ok": True, "output": "\n".join(outputs)[-2000:],
                     "open_href": _open_href(entry["open"]) if entry.get("open") else ""})
+
+
+@cross_repo_bp.route("/api/open-dashboard", methods=["POST"])
+def open_dashboard() -> Any:
+    """Open a FILE-target dashboard on the host via os.startfile.
+
+    Browsers refuse file:// navigation from http pages, so the 14 local-file
+    catalog entries were unreachable from the UI (Chrome debug 2026-07-02).
+    Whitelist-only: the client sends a registry id (or run-monitor id); the
+    path comes exclusively from the registry. http targets return 400 (the
+    client opens those directly)."""
+    api_secret = os.environ.get("API_SECRET")
+    if api_secret:
+        auth_header = request.headers.get("Authorization", "")
+        if not hmac.compare_digest(auth_header, f"Bearer {api_secret}"):
+            return jsonify({"ok": False, "error": "unauthorized"}), 401
+
+    dash_id = (request.json or {}).get("id", "")
+    entry = next((d for d in DASHBOARDS if d["id"] == dash_id), None)
+    target = entry.get("open") if entry else None
+    if target is None:
+        mon = next((m for m in RUN_MONITORS if m["id"] == dash_id), None)
+        target = mon.get("monitor_html") if mon else None
+    if not target:
+        return jsonify({"ok": False, "error": "unknown dashboard id"}), 400
+    if _is_url(target):
+        return jsonify({"ok": False, "error": "http target: open it client-side"}), 400
+    if not Path(target).exists():
+        return jsonify({"ok": False, "error": "target file does not exist yet (regenerate first?)"}), 404
+    try:
+        os.startfile(target)  # noqa: S606 -- registry-whitelisted path, never client input
+    except OSError as e:
+        return jsonify({"ok": False, "error": f"startfile failed: {e}"}), 500
+    return jsonify({"ok": True})
 
 
 _NOTES_SAFE_REGEX = re.compile(r"^[A-Za-z0-9 .,_/:#\-+()=]{1,200}$")
