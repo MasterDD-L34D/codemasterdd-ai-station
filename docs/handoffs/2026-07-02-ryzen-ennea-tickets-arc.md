@@ -14,7 +14,7 @@
 | T1 retune Riformatore(1) canon parity | **MERGED** (coppia insieme, 18:53Z) | Game #3184 + GGv2 #579 |
 | T2 wire UI toggle "profilazione stile" | **MERGED** (coppia insieme, 18:53Z) | Game #3186 + GGv2 #580 |
 | T3 design "SG unit pool port" (v1 refuted, panel 4 lenti) | **MERGED** (doc-only) | GGv2 #583 |
-| T3 impl `SgUnitPool` dark module (Stage A, flag OFF) | **PR aperta** | GGv2 #584 |
+| T3 impl `SgUnitPool` dark module (Stage A, flag OFF) | **MERGED** (squash, CI verde) | GGv2 #584 |
 
 **Decisioni owner RATIFICATE (2026-07-02 notte, autorizzazione esplicita
 Eduardo -- merge + raccomandazioni)**:
@@ -82,7 +82,8 @@ l'accumulator GLOBALE Sistema Gravity -- semantica diversa, NON si cabla li'.
 Percorso: design doc -> panel critici multi-lente (freeze-compliance,
 engine-feasibility, balance/anti-snowball, ops/test) -> TDD del modulo dark.
 
-**ESITO (2026-07-02, Ryzen)**: Stage A shippato in review (PR GGv2 #584).
+**ESITO (2026-07-02, Ryzen)**: Stage A MERGED su GGv2 main (squash `0c1efea`,
+CI GUT+gdformat verde) -- PR GGv2 #584.
 Modulo `scripts/combat/sg_unit_pool.gd` (RefCounted static, pattern
 EnneaEffects), parity di meccanismo con `sgTracker.js` (12 casi fixture 1:1),
 flag `SG_UNIT_POOL_ENABLED` default OFF. Wire dietro flag: taken in
