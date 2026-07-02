@@ -8,7 +8,7 @@ without a must-block case proves nothing).
 from __future__ import annotations
 
 import sys
-from pathlib import Path
+from pathlib import Path, PureWindowsPath
 
 import pytest
 
@@ -38,7 +38,9 @@ def test_regen_security_contract() -> None:
         regen = d.get("regen")
         if not regen:
             continue
-        assert isinstance(regen.get("cwd"), str) and Path(regen["cwd"]).is_absolute(), \
+        # PureWindowsPath: the registry targets the Windows fleet host by design;
+        # CI runs on Linux where Path("C:\\...") would be relative (false fail).
+        assert isinstance(regen.get("cwd"), str) and PureWindowsPath(regen["cwd"]).is_absolute(), \
             f"{d['id']}: regen.cwd must be absolute"
         steps = regen.get("steps")
         assert isinstance(steps, list) and steps, f"{d['id']}: regen.steps empty"
@@ -58,6 +60,11 @@ def test_run_monitors_schema() -> None:
 
 @pytest.fixture(scope="module")
 def client():
+    # CI "dep-light stable set" has no flask/requests: the registry-contract
+    # tests above still run there; these route tests run where the app's real
+    # deps exist (dev machines, dashboard host).
+    pytest.importorskip("flask")
+    pytest.importorskip("requests")
     from app import create_app
     app = create_app()
     app.config["TESTING"] = True
