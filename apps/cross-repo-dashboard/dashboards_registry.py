@@ -215,13 +215,17 @@ DASHBOARDS: list[dict[str, Any]] = [
 # Overnight/long-running batch runs surfaced in the "run attive" section.
 # freshness_stall_min: newest file older than this -> STALLED badge.
 RUN_MONITORS: list[dict[str, Any]] = [
+    # v1 entry (map-elites-hc06-overnight, trial_dir ...-overnight-20260702)
+    # retired 2026-07-02: run interrupted 25/50, negative result (Game
+    # docs/research/2026-07-02-map-elites-hc06-overnight-negative-result.md).
+    # v2 below uses the PINNED label the launch will pass via --label
+    # (Game PR #3181); the card reads "absent" until the run starts.
     {
-        "id": "map-elites-hc06-overnight",
-        "name": "MAP-Elites hardcore_06 overnight (QD archive)",
-        "trial_dir": GAME + r"\docs\playtest\map-elites-hardcore_06-overnight-20260702",
+        "id": "map-elites-hc06-v2",
+        "name": "MAP-Elites v2 hardcore_06 (WR x turns QD archive)",
+        "trial_dir": GAME + r"\docs\playtest\map-elites-hardcore_06-v2-run",
         "total_iter": 50,
         "n_per_trial": 40,
-        "monitor_html": GAME + r"\logs\map_elites_monitor.html",
-        "freshness_stall_min": 90,
+        "freshness_stall_min": 30,
     },
 ]
