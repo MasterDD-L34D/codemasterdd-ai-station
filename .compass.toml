@@ -21,8 +21,8 @@ weight = 1.0
 [[pillars]]
 id = "cross-fleet-reproducibility"
 name = "Cross-PC fleet sync + backup + hooks"
-description = "Mirror infra + backup-api-keys + hooks chain + cross-repo orchestrator"
-paths = ["scripts/backup/**", "scripts/hooks/**", "scripts/cross-repo/**"]
+description = "Fleet sync/dispatch tooling + mirror infra + backup-api-keys + hooks chain + cross-repo orchestrator"
+paths = ["scripts/fleet/**", "scripts/backup/**", "scripts/hooks/**", "scripts/cross-repo/**"]
 weight = 1.0
 
 [[pillars]]
