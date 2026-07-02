@@ -19,6 +19,22 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-07-02 (sera-4 -- runbook godot-campaign: supersede Ryzen-only, dettaglio #468)
+
+### Completato
+- **Dettaglio del chip runbook gia' notato in sera-3** (`93fe89d` = hub PR #468 MERGED rebase 18:55Z, trailer ADR-0011): sez. 0-1 vincolo "SOLE Jules handler = Ryzen" SUPERSEDED -> dispatch da qualsiasi macchina fleet con wrapper current + keys.env; guardia cross-machine = gate-4 dedup-vs-active (session-list Jules LIVE, machine-independent); identity check resta informational. Batch 34 (GGv2 #581+#582) citato come primo dispatch Lenovo validato. Sez. 11 step 0 nuovo: clone GGv2 occupato -> apply in worktree dedicato (`git worktree add`), pattern validato batch 34.
+- **Scan doc correlati = zero stale residui**: jules-lane-policy.md + docs/jules/ clean (nessun riferimento macchina); studio jules-schema-reuse gia' annotava il supersede; JOURNAL storiche frozen by design. Memory `reference_jules_workflow` + index MEMORY.md aggiornate (sezione multi-machine dispatch).
+- Gate merge (per-call OK Eduardo, ADR-0037): CI verde (ASCII guard + pytest), 0 review comment, 0 P1 (solo notice bot Codex usage-limit).
+
+### Da fare
+- Nulla: doc-only, SoT = runbook in main.
+
+### Note
+- journal-land safety-net esercitato live: primo land ABORT corretto (origin/main avanzato di 3 commit concorrenti, incl. amend sera-3 della sessione Compass), edit restored, re-insert su base fresca. Contract del helper tenuto.
+- Currency Gate pre-edit: claim verificati su JOURNAL sera-2/sera-3 prima di toccare il runbook.
+
+---
+
 ## 2026-07-02 (sera-3 -- M15 closeout + batch 34 filler, primo dispatch da Lenovo)
 
 ### Completato
