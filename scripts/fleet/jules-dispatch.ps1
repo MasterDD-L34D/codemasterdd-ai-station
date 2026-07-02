@@ -233,6 +233,17 @@ function Get-AllSessionPages {
   }
 }
 
+function Resolve-TaskFilePath {
+  param([string]$TaskFile)
+  # .NET [IO.File] resolves RELATIVE paths against the PROCESS CWD, which does NOT follow the
+  # PowerShell location (Set-Location/Push-Location). Dispatching from a git worktree made
+  # ReadAllText throw on a TaskFile that Test-Path had just validated (2026-07-02) -- and a
+  # same-named decoy in the process CWD would instead be read SILENTLY (gates 2-3 would lint
+  # the wrong file). Canonicalize via the PS provider once; every [IO.File] call downstream
+  # gets an absolute path. Throws on a missing path -- MAIN checks Test-Path first.
+  return [string](Convert-Path -LiteralPath $TaskFile)
+}
+
 # === MAIN (impure orchestration -- not dot-sourced; everything below runs only on direct invoke) ===
 $ErrorActionPreference = 'Stop'
 
@@ -248,7 +259,8 @@ if (-not (Test-RepoWhitelisted $Repo)) {
 }
 
 # --- load + validate task-file ---
-if (-not (Test-Path $TaskFile)) { Write-Error "ABORT: TaskFile not found: $TaskFile"; exit 2 }
+if (-not (Test-Path -LiteralPath $TaskFile)) { Write-Error "ABORT: TaskFile not found: $TaskFile"; exit 2 }
+$TaskFile = Resolve-TaskFilePath $TaskFile
 $taskContent = [IO.File]::ReadAllText($TaskFile)
 if ([string]::IsNullOrWhiteSpace($taskContent)) { Write-Error 'ABORT: task-file is empty'; exit 1 }
 
