@@ -1,0 +1,89 @@
+<!-- templates/cr_dashboards.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Dashboards -- fleet catalog</title>
+  <link rel="stylesheet" href="{{ url_for('cross_repo.static', filename='style.css') }}">
+  <style>
+    .dash-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 12px; margin: 10px 0 22px; }
+    .dash-card { background: var(--card-bg, #161b22); border: 1px solid #30363d; border-radius: 8px; padding: 12px 14px; }
+    .dash-card h4 { margin: 0 0 4px; font-size: 15px; }
+    .dash-card p { margin: 4px 0 8px; font-size: 12.5px; color: #8b949e; }
+    .badge { display: inline-block; padding: 1px 8px; border-radius: 10px; font-size: 11px; font-weight: 600; margin-right: 6px; }
+    .b-live { background: #1a7f37; color: #fff; }
+    .b-regenerable { background: #1f6feb; color: #fff; }
+    .b-stale { background: #6e7681; color: #fff; }
+    .b-one-shot { background: #6e7681; color: #fff; }
+    .b-kind { background: #21262d; color: #8b949e; border: 1px solid #30363d; }
+    .dash-actions a, .dash-actions button { font-size: 12px; margin-right: 8px; }
+    .run-card { border-left: 4px solid #1f6feb; }
+    .run-bar { background: #21262d; border-radius: 6px; height: 18px; overflow: hidden; margin: 6px 0; max-width: 420px; }
+    .run-fill { background: #1f6feb; height: 100%; color: #fff; font-size: 11px; font-weight: 700; line-height: 18px; padding-left: 6px; white-space: nowrap; }
+    .r-running { color: #3fb950; } .r-stalled { color: #f85149; } .r-complete { color: #1f6feb; } .r-absent { color: #6e7681; }
+    .regen-out { display: none; white-space: pre-wrap; font-size: 11px; background: #0d1117; border: 1px solid #30363d; border-radius: 6px; padding: 8px; margin-top: 8px; max-height: 180px; overflow: auto; }
+    .launch-hint { font-size: 11px; color: #6e7681; }
+  </style>
+</head>
+<body>
+  <h1>Dashboards -- catalogo fleet</h1>
+  <p><a href="{{ url_for('cross_repo.index') }}">&larr; cross-repo dashboard</a></p>
+
+  <h2>Run attive</h2>
+  {% for r in runs %}
+  <div class="dash-card run-card">
+    <h4>{{ r.name }} <span class="r-{{ r.state }}">[{{ r.state|upper }}]</span></h4>
+    <div class="run-bar"><div class="run-fill" style="width: {{ r.pct }}%">{{ r.pct }}%</div></div>
+    <p>{{ r.done }}/{{ r.total_iter }} iterazioni{% if r.age_min is not none %} -- ultimo file {{ r.age_min }} min fa{% endif %}</p>
+    {% if r.monitor_href %}<div class="dash-actions"><a href="{{ r.monitor_href }}" target="_blank">apri monitor live</a></div>{% endif %}
+  </div>
+  {% else %}
+  <p>Nessuna run monitorata al momento.</p>
+  {% endfor %}
+
+  {% for area, entries in areas.items() %}
+  <h2>{{ area }}</h2>
+  <div class="dash-grid">
+    {% for d in entries %}
+    <div class="dash-card" id="card-{{ d.id }}">
+      <h4>{{ d.name }}</h4>
+      <div>
+        <span class="badge b-{{ d.status }}">{{ d.status }}</span>
+        <span class="badge b-kind">{{ d.kind }}</span>
+      </div>
+      <p>{{ d.desc }}</p>
+      <div class="dash-actions">
+        {% if d.open_href %}<a href="{{ d.open_href }}" target="_blank">apri</a>{% endif %}
+        {% if d.has_regen %}<button onclick="regenDashboard('{{ d.id }}')" id="btn-{{ d.id }}">rigenera</button>{% endif %}
+      </div>
+      {% if d.launch_hint %}<div class="launch-hint">avvio: {{ d.launch_hint }}</div>{% endif %}
+      <pre class="regen-out" id="out-{{ d.id }}"></pre>
+    </div>
+    {% endfor %}
+  </div>
+  {% endfor %}
+
+  <script>
+    const API_SECRET = {{ api_secret|tojson }};
+    async function regenDashboard(id) {
+      const btn = document.getElementById('btn-' + id);
+      const out = document.getElementById('out-' + id);
+      btn.disabled = true; btn.textContent = 'rigenero...';
+      out.style.display = 'block'; out.textContent = 'in esecuzione (puo richiedere minuti)...';
+      try {
+        const headers = { 'Content-Type': 'application/json' };
+        if (API_SECRET) headers['Authorization'] = 'Bearer ' + API_SECRET;
+        const r = await fetch('{{ url_for("cross_repo.regen_dashboard") }}', {
+          method: 'POST', headers, body: JSON.stringify({ id })
+        });
+        const j = await r.json();
+        out.textContent = (j.ok ? 'OK\n' : 'ERRORE: ' + (j.error || '?') + '\n') + (j.output || '');
+      } catch (e) {
+        out.textContent = 'ERRORE rete: ' + e;
+      } finally {
+        btn.disabled = false; btn.textContent = 'rigenera';
+      }
+    }
+  </script>
+</body>
+</html>
