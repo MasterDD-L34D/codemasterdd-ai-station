@@ -251,6 +251,7 @@ New-Item -ItemType Directory -Path $dirA, $dirB | Out-Null
 [IO.File]::WriteAllText((Join-Path $dirB 'task.md'), 'DECOY body')
 $savedLoc = Get-Location
 $savedNet = [Environment]::CurrentDirectory
+$jTgt = $null; $jLink = $null
 try {
   Set-Location $dirA                          # PS location = where the operator cd'd
   [Environment]::CurrentDirectory = $dirB     # process CWD = elsewhere (the worktree scenario)
@@ -261,10 +262,24 @@ try {
   Assert-Eq 'REAL task body' $readBack 'ReadAllText on the resolved path reads the REAL file, not the decoy'
   $abs = $null; try { $abs = Resolve-TaskFilePath (Join-Path $dirA 'task.md') } catch {}
   Assert-Eq (Join-Path $dirA 'task.md') $abs 'absolute path passes through unchanged'
+  # Junction (the fleet layout the fix comment cites): PS5.1 Convert-Path does NOT
+  # canonicalize a junction to its target -- the audit line keeps the operator's input.
+  $jTgt = Join-Path $env:TEMP ("jd-cwd-jt-" + [guid]::NewGuid().ToString('N'))
+  New-Item -ItemType Directory -Path $jTgt | Out-Null
+  [IO.File]::WriteAllText((Join-Path $jTgt 'task.md'), 'JUNCTION body')
+  $jLink = Join-Path $env:TEMP ("jd-cwd-jl-" + [guid]::NewGuid().ToString('N'))
+  cmd /c mklink /J "$jLink" "$jTgt" | Out-Null
+  $viaJ = $null; try { $viaJ = Resolve-TaskFilePath (Join-Path $jLink 'task.md') } catch {}
+  Assert-Eq (Join-Path $jLink 'task.md') $viaJ 'junction path preserved (not canonicalized to target)'
+  $readJ = if ($viaJ) { [IO.File]::ReadAllText($viaJ) } else { '' }
+  Assert-Eq 'JUNCTION body' $readJ 'file readable through the junction path'
 } finally {
   Set-Location $savedLoc
   [Environment]::CurrentDirectory = $savedNet
   Remove-Item $dirA, $dirB -Recurse -Force -ErrorAction SilentlyContinue
+  # rmdir removes the junction LINK only (Remove-Item -Recurse may follow into the target)
+  if ($jLink -and (Test-Path -LiteralPath $jLink)) { cmd /c rmdir "$jLink" | Out-Null }
+  if ($jTgt) { Remove-Item $jTgt -Recurse -Force -ErrorAction SilentlyContinue }
 }
 
 # ======================================================================

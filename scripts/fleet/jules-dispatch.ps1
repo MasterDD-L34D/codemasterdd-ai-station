@@ -260,7 +260,10 @@ if (-not (Test-RepoWhitelisted $Repo)) {
 
 # --- load + validate task-file ---
 if (-not (Test-Path -LiteralPath $TaskFile)) { Write-Error "ABORT: TaskFile not found: $TaskFile"; exit 2 }
-$TaskFile = Resolve-TaskFilePath $TaskFile
+# try/catch (review P2): an unhandled Convert-Path throw under Stop (TOCTOU delete, non-FS
+# PSDrive) would exit 1 with a stack trace; every other abort in this block is a clean exit 2.
+try { $TaskFile = Resolve-TaskFilePath $TaskFile }
+catch { Write-Error "ABORT: cannot resolve TaskFile path '$TaskFile' ($($_.Exception.Message))"; exit 2 }
 $taskContent = [IO.File]::ReadAllText($TaskFile)
 if ([string]::IsNullOrWhiteSpace($taskContent)) { Write-Error 'ABORT: task-file is empty'; exit 1 }
 
