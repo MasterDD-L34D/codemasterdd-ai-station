@@ -109,8 +109,20 @@ Dipende da `@modelcontextprotocol/sdk` v1.12.0. Keys lette per-call, mai residen
 | last30days v3.3.2 | MIT | ACTIVE |
 | continuous-learning-v2 | vendored anthropic-skills | ACTIVE (hook observe.sh) |
 | agent-scanner (own) | -- internal | ACTIVE (anti-shadow-duplicate) |
-| claude-mem v13.2.0 | Apache-2.0 | **DORMANT** (settings `=false`) |
+| claude-mem v13.2.0 | Apache-2.0 | **DORMANT** (settings `=false`, Windows console-flash #19012; overlappa file-memory+AA01) |
 | tdd-guard v1.3.0 | MIT | **DORMANT** (settings `=false`) |
+
+**Code-graph tooling** (game repo family, ADR-0040 -- 2026-07-02):
+
+| Tool | Licenza | Ruolo | Note |
+|------|---------|-------|------|
+| CodeGraph v1.2.0 (`@colbymchenry/codegraph`, npm -g) | MIT | lente impatto-codice: call-graph, blast-radius + test-coverage, watcher auto-sync | MCP global (`~/.claude.json`), NO hook (rimosso, Windows flash-safe); `mcp__codegraph__*` post-restart |
+| graphify v0.9.5 (PyPI `graphifyy`, CLI `graphify`) | open-source | lente architettura+doc: multimodal code+doc, Leiden community | skill+MCP (no-hook), `.graphifyignore` tuning; `/graphify` |
+
+Indicizzati: Game + Game-Database (full). Game-Godot-v2 = doc-map only (**GDScript
+non parsato** da nessuno dei due -- gap noto ADR-0040; struttura-codice Godot via
+`godot-engine-specialist` + LSP). Zero footprint tracked (`.git/info/exclude`).
+Complementa `eng-graph` (SSE, vault/codemasterdd-scoped, sez. 8).
 
 **MCP server connessi** (env Claude Code): NotebookLM, fleet-tools (sez. 4),
 computer-use, Claude-in-Chrome, visualize, mcp-registry. Anthropic Agent Skills
