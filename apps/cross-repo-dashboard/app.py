@@ -20,6 +20,7 @@ from __future__ import annotations
 __all__ = ["app", "fetch_healthchecks"]
 
 import hmac
+import json
 import os
 import re
 import subprocess
@@ -772,6 +773,17 @@ def _scan_run_monitors() -> list[dict[str, Any]]:
         if trial_dir.is_dir():
             files = list(trial_dir.iterdir())
             done = sum(1 for f in files if f.name.endswith(".json") and f.name.startswith("iter-"))
+            # SPRT-evicted iterations write no iter-*.json: checkpoint.jsonl
+            # (one line per iteration) is the authoritative progress counter.
+            ckpt = trial_dir / "checkpoint.jsonl"
+            if ckpt.is_file():
+                iters = set()
+                for ln in ckpt.read_text(encoding="utf-8").splitlines():
+                    try:
+                        iters.add(json.loads(ln)["iter"])
+                    except (ValueError, KeyError):
+                        continue  # partial line mid-write during an active run
+                done = max(done, len(iters))
             newest = max((f.stat().st_mtime for f in files), default=0.0)
             age_min = (datetime.now(timezone.utc).timestamp() - newest) / 60 if newest else None
             stall = float(mon.get("freshness_stall_min", 90))

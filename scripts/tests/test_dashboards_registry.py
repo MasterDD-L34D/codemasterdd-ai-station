@@ -53,9 +53,34 @@ def test_regen_security_contract() -> None:
 
 
 def test_run_monitors_schema() -> None:
+    ids = [m["id"] for m in RUN_MONITORS]
+    assert len(ids) == len(set(ids)), "duplicate run-monitor ids"
     for m in RUN_MONITORS:
         assert m.get("id") and m.get("name") and m.get("trial_dir")
         assert int(m.get("total_iter", 0)) > 0
+
+
+def test_run_monitor_counts_checkpoint_iters(tmp_path, monkeypatch) -> None:
+    """SPRT-evicted iterations write no iter-*.json: progress must come from
+    checkpoint.jsonl (one line per iter), tolerating duplicate iter lines and
+    a partial tail line mid-write during an active run."""
+    pytest.importorskip("flask")
+    pytest.importorskip("requests")
+    import app as app_mod
+
+    trial = tmp_path / "run"
+    trial.mkdir()
+    (trial / "iter-000.json").write_text("{}", encoding="utf-8")
+    (trial / "checkpoint.jsonl").write_text(
+        '{"iter": 0}\n{"iter": 1}\n{"iter": 2}\n{"iter": 2}\n{"iter',
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(app_mod, "RUN_MONITORS", [
+        {"id": "t", "name": "t", "trial_dir": str(trial), "total_iter": 3},
+    ])
+    (row,) = app_mod._scan_run_monitors()
+    assert row["done"] == 3, "distinct checkpoint iters must win over json count"
+    assert row["state"] == "complete"
 
 
 @pytest.fixture(scope="module")
