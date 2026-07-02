@@ -53,8 +53,10 @@
 2. **Fronte playtest Game** = prossima sessione piena (journal 07-02 sera-2:
    leggere prima memory `project_godot_visual_asset_pipeline` + coordinarsi
    con arco Game). Baricentro progetto, critical path.
-3. **agentic-tooling** (nuovo top-drift Compass): recon read-only
-   scope-vs-neglect stile #469; commit solo se gap reale.
+3. ~~agentic-tooling recon~~ **FATTO 2026-07-02 sera**: verdetto = artefatto di
+   finestra (30 commit window = tutto same-day; wrappers toccato 06-30), NO
+   neglect, nessun commit aspirazionale; unica omissione scope reale =
+   `apps/fleet-tools-mcp/**` aggiunto al pillar (#473 MERGED). Non rifare.
 4. **Campagna GGv2**: prossimo filler trio (pool ~9, by NA):
    ai/ai_personality_loader + main_ai_progress + combat/resistance_engine --
    SOLO in coda a sessione con altro focus (lane policy).
