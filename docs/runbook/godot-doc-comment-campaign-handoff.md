@@ -22,15 +22,20 @@ GGv2 `docs/godot-v2/doc-comment-campaign.md` (the coverage tracker = state SoT).
   are INERT -- comment-only, additions-only, ZERO behavior change.
 - **State (2026-06-06)**: 99 / 251 (39%). Tracker (scan-regenerated) is the SoT:
   `Game-Godot-v2/docs/godot-v2/doc-comment-campaign.md`.
-- **Machine**: Ryzen `DESKTOP-T77TMKT` / `VGit`. SOLE Jules handler (Lenovo backed off).
+- **Machine**: ANY fleet machine with a CURRENT dispatch wrapper + `keys.env`
+  (Ryzen `DESKTOP-T77TMKT`/`VGit` or Lenovo `CODEMASTERDD`/`edusc`). The cross-machine
+  guard is gate-4 dedup-vs-active (section 9), NOT machine identity. The old
+  "SOLE Jules handler = Ryzen" rule is SUPERSEDED (2026-07-02, >=2 dispatch paths):
+  batch 34 (GGv2 #581+#582) = first validated Lenovo dispatch, gate-4 dedup 0 overlap,
+  gate perfect first try.
 - **Auth**: Eduardo authorized THIS campaign's auto-merge (external repo,
   doc-comment-only lane). Do NOT extend the auto-merge to any non-doc-comment work.
 
 ## 1. Pre-flight (every session, before any dispatch)
 
 ```powershell
-# (a) identity -- MUST be Ryzen
-Write-Output ('PC=' + $env:COMPUTERNAME + ' USER=' + $env:USERNAME)   # PC=DESKTOP-T77TMKT USER=VGit
+# (a) identity -- know WHERE you dispatch from (informational, NOT a Ryzen gate)
+Write-Output ('PC=' + $env:COMPUTERNAME + ' USER=' + $env:USERNAME)   # Ryzen=DESKTOP-T77TMKT/VGit, Lenovo=CODEMASTERDD/edusc
 
 # (b) cdd wrapper currency -- the stale-wrapper trap (gate-4 paginated-abort if pre-#307)
 git -C C:/dev/codemasterdd-ai-station fetch origin main --quiet
@@ -41,7 +46,11 @@ git -C C:/dev/codemasterdd-ai-station merge --ff-only origin/main      # only if
 git -C C:/dev/Game-Godot-v2 fetch origin main --quiet
 ```
 
-If (a) != Ryzen -> STOP. If (b) count != 3 -> `ff-only` main first (a stale local
+(a) is NOT a stop-gate: any fleet machine qualifies as long as (b) passes on ITS
+local clone and its `keys.env` has `JULES_API_KEY`. The guard against a concurrent
+dispatch from the other machine is gate-4 dedup-vs-active, which reads the LIVE
+Jules session list (machine-independent). Validated: batch 34 dispatched from
+Lenovo, 0 overlap. If (b) count != 3 -> `ff-only` main first (a stale local
 main reverts the wrapper to the pre-#307 version that aborts on a paginated
 session list once >100 lifetime Jules sessions exist).
 
@@ -261,6 +270,12 @@ Work small trios first (fast), then the big high-value ones 1-2 at a time, then 
 
 ## 11. Wrap-up (end of a working session)
 
+0. **GGv2 clone busy on another branch** (parallel feature session)? Do NOT touch
+   its checkout: run the apply (section 6) and the tracker edit in a DEDICATED
+   worktree -- `git -C C:/dev/Game-Godot-v2 worktree add <path> origin/main`, work
+   with `git -C <path>`, then `git worktree remove <path>` when merged. Validated
+   batch 34 (clone was on `feat/creature-portrait-loader`). Mind the .NET
+   CWD-vs-PS-location gotcha (section 8) when operating from a worktree.
 1. Regen the tracker by SCAN (section 2 count) -> edit
    `Game-Godot-v2/docs/godot-v2/doc-comment-campaign.md` snapshot + per-dir table +
    batch rows -> branch+PR+merge (NOT a hand-patch drift).
