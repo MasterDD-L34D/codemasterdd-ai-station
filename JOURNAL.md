@@ -19,6 +19,23 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-07-02 (sera-2 -- analisi Jules cross-session + studio schema-reuse + digest backfill)
+
+### Completato
+- **Analisi sessione ricollegata ai lavori Jules recenti** (audit-log + digest + JOURNAL come fonti, non memoria): timeline giugno ricostruita; +8 doc GGv2 interim attribuiti DEFINITIVAMENTE al feature-work (zero dispatch wrapper 06-06->06-30). **Correzione onesta**: giugno era wrapper-idle ma NON Jules-idle -- il char-test statblock (task 06-25) giro' fuori wrapper -> Game #3049 MERGED. Vista completa Jules = audit-log + digest + JOURNAL; sole-handler-Ryzen superato (>=2 vie dispatch, gate-4 dedup = unica guardia cross-via).
+- **Digest backfill #450**: i 4 digest Ryzen untracked (06-15/16/21/24, tutti 0-awaiting) committati -- serie governor (9th R0 signal) completa.
+- **Studio schema-reuse #451** -> `docs/research/jules-schema-reuse-2026-07-02.md`: inventario 10 schemi provati con evidenza (doc-comments 29/29, char-test 1/1, reorg-read 4/4, gate catch 2/2), mappa riuso su portfolio playtest-convergente: L1 tail GGv2 opportunistico GO, **L3 characterization-tests su tool playtest GO-CONDIZIONATO** (criterio churn-fermo >=3-5gg; template = task statblock 06-25), L5 Game docs-reorg execute = lavoro Claude non-Jules (proposal gia' pronta), L6/L7 NO-GO confermati. Perimetro auto-merge resta doc-comment-GGv2-only.
+- **Rivalutazione portfolio** (git ground-truth): baricentro progetto = playtest (analytics pipeline + canary dashboard + O8 + runbook, sessione fable-5 parallela attiva su Game 15:57-16:18). Campagna doc = fuori critical-path, costo giusto, cadenza -> opportunistica. Memory feedback_jules_loop_operational aggiornata (nuova lane + scope-correction + churn-risk).
+
+### Da fare
+- Prossima sessione piena -> fronte playtest (leggere prima project_godot_visual_asset_pipeline + coordinarsi con arco Game). Campagna: 1 giro trio in coda quando capita.
+- L3 char-test: attivare quando analyze_telemetry/dashboard pipeline si fermano (nessun commit >=3-5gg).
+
+### Note
+- Gotcha commit-msg hook: subject max 72 char (bloccato a 73, branch pushato vuoto prima del re-commit -- verificare sempre commit exit PRIMA del push).
+
+---
+
 ## 2026-07-02 (piattaforma dashboard unificata + salvage-arc: 8 PR merged, MAP-Elites overnight)
 
 ### Completato
