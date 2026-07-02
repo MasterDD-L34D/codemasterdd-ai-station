@@ -14,8 +14,8 @@ weight = 1.0
 [[pillars]]
 id = "agentic-tooling"
 name = "Delegation wrappers + agents + skills (sovereign-first)"
-description = "Aider wrappers + sub-agents + global skills + L3 directive fragments"
-paths = ["scripts/wrappers/**", "scripts/setup/**", ".claude/agents/**", ".claude/global-skills/**", ".claude/global-claude-md-fragments/**"]
+description = "Aider wrappers + sub-agents + global skills + L3 directive fragments + fleet MCP server"
+paths = ["scripts/wrappers/**", "scripts/setup/**", ".claude/agents/**", ".claude/global-skills/**", ".claude/global-claude-md-fragments/**", "apps/fleet-tools-mcp/**"]
 weight = 1.0
 
 [[pillars]]
