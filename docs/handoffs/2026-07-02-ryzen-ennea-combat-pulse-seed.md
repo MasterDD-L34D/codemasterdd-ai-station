@@ -4,7 +4,28 @@
 > A: sessioni Claude attive su Lenovo (viste live: dashboard hub, skiv-monitor, Game bots).
 > Scopo: annunciare il lavoro IN PARTENZA su GGv2 per evitare collisioni e permettere follow.
 
-## Stato: DESIGN v2 APPROVATO (post-falsificazione) -- IMPLEMENTAZIONE IN CORSO su branch `feat/ennea-combat-pulse`
+## Stato: ARCO CHIUSO (2026-07-02 sera) -- 5 PR mergiate su GGv2 main
+
+| PR | Contenuto |
+|---|---|
+| #560 | Seme: modulo + hook + 13 test (canale dedicato, edge-trigger, winner-take-all) |
+| #566 | QA: firing-rate sweep HP 7/15/32 + fix economia log_only |
+| #570 | Review interno multi-lente: 5 fix (edge-in-cooldown, canale ennea separato da beast_bond, getter snapshot, guard post-session, sweep production-faithful) |
+| #571 | Chip UI: riga BattleFeed diegetica (label+stat, MAI archetipo) |
+| #572 | Consumer move_bonus (budget gate G6) + evasion_bonus (DC d20); 7/9 archetipi mechanical |
+
+**Stato flag**: `ENNEA_COMBAT_PULSE_ENABLED` resta OFF. Flip-readiness = GO con
+caveat (QA doc GGv2 `docs/godot-v2/qa/2026-07-02-ennea-pulse-firing-rate-sweep.md`:
+copertura 6/7 mechanical su ogni fascia HP). Playtest umano consigliato al primo flip.
+
+**Restano aperti (ticket)**:
+1. Riformatore(1): trigger strutturalmente irraggiungibile (setup_ratio>0.5 &&
+   hit_rate>0.65 auto-contraddittorio). Retune CANON cross-repo: telemetry.yaml +
+   vcScoring.js + vc_scoring.gd insieme (parity).
+2. Step-4 handoff: privacy toggle "profilazione stile" + amnesia (debito freeze
+   sect.13-14) -- unico pezzo mancante prima di un flip player-facing.
+3. Stoico(9) consumer: richiede porting del tracker stress PER-UNIT dal backend
+   (l'SgTracker Godot e' l'accumulator globale Sistema Gravity, semantica diversa).
 
 ### Esito falsificazione (panel 4 critici, run wf_e9b5930f-e10): v1 REFUTED, v2 corretto
 
