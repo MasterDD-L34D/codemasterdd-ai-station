@@ -11,24 +11,34 @@
 - **Ruolo**: infrastructure-as-code + governance + dashboard operativa cross-repo
   per la fleet AI sovereign-first di Eduardo (vedi `CLAUDE.md` autoritativo).
 
-## Stato attuale (verificato git/ls/gh 2026-07-02)
-- **HEAD origin/main**: `8add847` (2026-07-02) -- `docs(journal): 07-02 MAP-Elites
-  v2 arc -- pipe root-cause, 2 run, 4 PR (#459)`. 0 PR open sul hub.
+## Stato attuale (verificato git/ls/gh 2026-07-02 sera-3)
+- **HEAD origin/main**: `93fe89d` (2026-07-02) -- `docs(runbook): godot campaign
+  multi-machine dispatch`. PR open sul hub: **#465** (draft, M15 card + fix
+  conteggio checkpoint) + **#462** (handoff ennea, altra sessione).
 - **Modello sessioni**: Claude Fable 5 attivo (trailer `claude-fable-5`); la
   finestra Max/Opus-crunch di giugno e' passata (journal 07-02 "siamo tornati
   con fable"). Roadmap post-Max: vedi ADR-0023/0030.
-- **Arco 2026-07-02 MAP-Elites v2 CHIUSO in giornata** (memory
-  `project_map_elites_v2`): Game #3181+#3182 e hub #453+#459 MERGED; residuo =
-  Game #3183 (knob-space SoT + fix SPRT) in review -> BACKLOG M15 + OD-012.
-  Lesson chiave: MAI backend Node spawnato con stdout=PIPE non drenato
-  (event-loop freeze a buffer pieno; provato con drain-recovery).
-- **Focus fleet altre lane** (journal 07-02, 3 sessioni stesso giorno): campagna
-  doc-comment Godot-v2 ripresa (119/279, batch 26-31) + arco ennea chiuso (5 PR);
-  filone opencode-headless CHIUSO (hang strutturale su Windows, 2 major testate).
+- **Arco MAP-Elites v2 CHIUSO** (memory `project_map_elites_v2`): Game
+  #3181+#3182 e hub #453+#459+#460 MERGED. Residuo SOLO atti Eduardo:
+  Game #3183 DRAFT (CI verde, 0 P1, advisory = falsi positivi tooling) ->
+  `gh pr ready 3183` + merge; hub #465 review. M15 CHIUSO via #465 (card
+  `map-elites-hc06-v2-edm` + fix: iter SPRT-evicted non scrivono iter-json ->
+  done = max(json, iter distinte checkpoint.jsonl)). Lesson chiave: MAI backend
+  Node spawnato con stdout=PIPE non drenato.
+- **Campagna doc-comment GGv2**: **134/280 (48%)** post batch 34 (#581+#582,
+  primo dispatch da Lenovo -- gate-4 dedup = guardia cross-machine, runbook
+  aggiornato multi-machine `93fe89d`). Lane policy ratificata:
+  `docs/reference/jules-lane-policy.md` (FILLER-ONLY max 1 trio/sessione in
+  coda, stop a pool vuoto, ~9 file clean residui; 100% NON e' un goal).
+- **Compass**: DI **80** (era 72). Pillar `cross-fleet-reproducibility` era un
+  falso drift da mis-scoping (paths senza `scripts/fleet/**`) -> fix #469
+  MERGED; backup runtime verificato sano (mirror 15 repo result=0 + ApiKeysBackup
+  daily ok). Nuovo top-drift: `agentic-tooling` -- fare recon scope-vs-neglect
+  PRIMA di qualsiasi commit (anti L-016).
+- **Fleet altre lane** (journal 07-02): arco ennea chiuso (5 PR); reorg docs
+  Game L5 -> PR #3185 OPEN (merge Eduardo); opencode-headless CHIUSO.
 - **ADR**: 43 file in `docs/adr/` (ls 2026-07-02; include SUPERSEDED inline).
   Cluster recente orchestration/autonomy: ADR-0036..0039.
-- **Context-files reorg**: COMPLETE Fasi 1-6 (2026-06-03; memory
-  `project_context_files_reorg`). Nessun follow-up aperto.
 - **Stack decommissionato** (NON piu' presente): `infra/` (LiteLLM+Langfuse+
   Postgres docker-compose) e `apps/dogfood-ui/` RIMOSSI (ADR-0017 SUPERSEDED da
   ADR-0030 Hybrid A1). `apps/` ora contiene solo `cross-repo-dashboard/` +
@@ -38,13 +48,17 @@
 
 ## Prossimi passi
 
-1. **M15**: Game #3183 review/merge Eduardo (knob-space SoT + fix SPRT +
-   edm-run results); al merge, opzionale card RUN_MONITORS per v2-edm-run.
-2. **Campagna doc-comment Godot-v2**: coda clean residua ~12 file (journal
-   07-02 sera per la lista).
-3. **Compass**: pilastro `cross-fleet-reproducibility` scoperto da 30+ commit
-   (path candidato `scripts/backup/**`).
-4. **Chiusura sessione**: aggiornare il blocco "Stato attuale" sopra (HEAD + ADR
+1. **Atti Eduardo**: Game `gh pr ready 3183` + merge; review/merge hub #465;
+   review Game #3185 (reorg L5, altra sessione).
+2. **Fronte playtest Game** = prossima sessione piena (journal 07-02 sera-2:
+   leggere prima memory `project_godot_visual_asset_pipeline` + coordinarsi
+   con arco Game). Baricentro progetto, critical path.
+3. **agentic-tooling** (nuovo top-drift Compass): recon read-only
+   scope-vs-neglect stile #469; commit solo se gap reale.
+4. **Campagna GGv2**: prossimo filler trio (pool ~9, by NA):
+   ai/ai_personality_loader + main_ai_progress + combat/resistance_engine --
+   SOLO in coda a sessione con altro focus (lane policy).
+5. **Chiusura sessione**: aggiornare il blocco "Stato attuale" sopra (HEAD + ADR
    count + focus) via `git log`/`ls`, MAI copiare numeri stantii.
 
 ## Next session: ordine lettura

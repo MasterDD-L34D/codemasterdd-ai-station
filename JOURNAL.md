@@ -25,10 +25,13 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 - **Triage PR arco MAP-Elites (Currency Gate)**: hub #460 (0 commenti, CI verde) auto-merge armato -> MERGED 17:55Z; Game #3183 CI verde + 0 P1 (advisory entity-grounding = 26 falsi positivi su identifier tooling, non canon) ma DRAFT -> ready+merge consegnato a Eduardo.
 - **M15 chiuso (PR draft hub #465)**: card RUN_MONITORS `map-elites-hc06-v2-edm` + fix scope-adiacente `_scan_run_monitors`: iter SPRT-evicted non scrivono iter-json (36 json vs 50 iter reali nel checkpoint) -> senza fix card 36/50 STALLED su run COMPLETE; ora done = max(json, iter distinte checkpoint.jsonl), tollera riga parziale mid-write. Test nuovo (dup + partial line); pytest 47/47. BACKLOG M15 spuntato.
 - **Batch 34 campagna doc-comment (filler-only, in coda a sessione M15)**: GGv2 #581 MERGED (lifecycle/lineage_merge_service + phone/composer_biome_tint + main_reinforcement, 18 adds, gate perfetto primo colpo incl. no-blank-line) + tracker regen #582 -> **134/280 (48%)** @ d3ba460; lifecycle 1/1 COMPLETE. **Primo dispatch da Lenovo**: gate-4 dedup cross-machine tenuto (0 overlap), sid 7270682924938799989 archiviata post-ship. Apply in worktree GGv2 dedicato (clone occupato da feat/creature-portrait-loader). Quota: 1 dispatch.
+- **Compass recon (post-landing #467, stessa sessione)**: warning "cross-fleet-reproducibility scoperto da 30 commit" = **falso drift da mis-scoping** -- description prometteva "Cross-PC fleet sync" ma i paths omettevano `scripts/fleet/**` (4 commit/30 li' vs 0 nei path configurati). Runtime backup verificato SANO (mirror task result=0, 15 repo org-wide freschi; ApiKeysBackup daily result=0). Fix 1-riga `.compass.toml` -> **#469 MERGED**, DI **72 -> 80** verificato via compass-check. Nessun commit aspirazionale su scripts/backup (anti L-016). Nuovo top-drift: `agentic-tooling` (recon scope-vs-neglect prima di ogni commit).
+- **Chip runbook eseguito da sessione separata**: pre-flight Ryzen-only superato -> runbook multi-machine `93fe89d` su main.
 
 ### Da fare
 - Eduardo: `gh pr ready 3183` + merge (Game, CI verde 0 P1); review/merge hub #465 (M15 card + fix conteggio).
 - Prossimo filler trio (pool ~9, by NA): ai/ai_personality_loader + main_ai_progress + combat/resistance_engine.
+- agentic-tooling (top-drift Compass): recon read-only stile #469 prima di toccare `scripts/wrappers/**`.
 
 ### Note
 - Poll Jules: coda iniziale ~5 min + lavoro ~13 min -> budget poll 30 min e' la taglia giusta (20 min timeout al primo giro).
