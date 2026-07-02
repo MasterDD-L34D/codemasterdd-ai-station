@@ -9,6 +9,11 @@ The safety is the **ground-truth gate** (section 4) -- it is 100% mechanical
 Companion docs: `docs/runbook/jules-session-triage-via-cli.md` (generic Jules CLI),
 GGv2 `docs/godot-v2/doc-comment-campaign.md` (the coverage tracker = state SoT).
 
+> CADENCE POLICY (ratified 2026-07-02, overrides anything looser below):
+> `docs/reference/jules-lane-policy.md` -- filler-only (max 1 trio per session,
+> never a dedicated session), hard-stop at the tail, L3 char-tests take priority
+> once the Game tools/ churn is still for >=3-5 days.
+
 ## 0. What + why + state
 
 - **What**: add `##` GDScript doc-comments to the PUBLIC API (non `_`-prefixed
