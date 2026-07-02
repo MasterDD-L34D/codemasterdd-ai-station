@@ -228,4 +228,14 @@ RUN_MONITORS: list[dict[str, Any]] = [
         "n_per_trial": 40,
         "freshness_stall_min": 30,
     },
+    # edm follow-up run (Game PR #3183: knob-space SoT-full, WR floor 15%).
+    # Run COMPLETE 2026-07-02 (50/50 iter); card kept to consult the archive.
+    {
+        "id": "map-elites-hc06-v2-edm",
+        "name": "MAP-Elites v2 hardcore_06 edm-run (enemy_damage knob)",
+        "trial_dir": GAME + r"\docs\playtest\map-elites-hardcore_06-v2-edm-run",
+        "total_iter": 50,
+        "n_per_trial": 40,
+        "freshness_stall_min": 30,
+    },
 ]
