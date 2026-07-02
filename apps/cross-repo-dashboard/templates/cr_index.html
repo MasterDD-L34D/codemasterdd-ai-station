@@ -12,6 +12,8 @@
   <span>Last refresh: <code>{{ state.timestamp }}</code></span>
   <a class="btn" href="{{ url_for('cross_repo.index') }}?refresh=1">Force refresh</a>
   <a class="btn-secondary" href="{{ url_for('cross_repo.api_state') }}">JSON API</a>
+  <a class="btn-secondary" href="{{ url_for('cross_repo.dashboards_catalog') }}">Dashboards</a>
+  <a class="btn-secondary" href="{{ url_for('cross_repo.governor_pane') }}">Governor</a>
   <button class="btn-action" onclick="openCoordModal()">Log coord event (Gate E)</button>
   <button class="btn-action" onclick="openPrModal()">Draft cross-repo PR</button>
 </div>

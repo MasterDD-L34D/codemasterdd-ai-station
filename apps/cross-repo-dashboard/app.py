@@ -31,6 +31,8 @@ from typing import Any
 import requests
 from flask import Flask, Blueprint, jsonify, render_template, request
 
+from dashboards_registry import DASHBOARDS, RUN_MONITORS
+
 cross_repo_bp = Blueprint(
     'cross_repo', __name__,
     template_folder='templates',
@@ -104,6 +106,10 @@ HEALTHCHECKS = [
     {"name": "dogfood-ui Flask", "url": "http://127.0.0.1:8080/api/health", "timeout": 6, "category": "stack-adr-0017"},
     # Dafne swarm (run manually via START-SWARM.ps1)
     {"name": "Dafne swarm", "url": "http://127.0.0.1:5000/health", "timeout": 3, "category": "dafne"},
+    # Dashboard platforms (2026-07-02 dashboards-catalog): fleet dashboard endpoints
+    {"name": "Game backend (prod)", "url": "http://127.0.0.1:3334/api/health", "timeout": 3, "category": "dashboards"},
+    {"name": "Mission Console", "url": "http://127.0.0.1:5555/", "timeout": 3, "category": "dashboards"},
+    {"name": "Game-Database API", "url": "http://127.0.0.1:3333/health", "timeout": 3, "category": "dashboards"},
 ]
 
 # TCP-only services (no HTTP endpoint, port-open check)
@@ -727,6 +733,114 @@ def governor_pane() -> Any:
         acted_count=store.acted_on_count(),
         advisory=store.auto_observed_recent(limit=20),
     )
+
+
+# ====================================================================== #
+# Dashboards catalog (2026-07-02 dashboards-catalog feature)
+# ====================================================================== #
+
+def _open_href(target: str) -> str:
+    """URL as-is; Windows file path -> file:/// URI the browser can open."""
+    if target.startswith(("http://", "https://")):
+        return target
+    return "file:///" + target.replace("\\", "/")
+
+
+def _scan_run_monitors() -> list[dict[str, Any]]:
+    """Progress of long-running batch runs (read-only dir scan, no caching:
+    freshness IS the signal)."""
+    out: list[dict[str, Any]] = []
+    for mon in RUN_MONITORS:
+        trial_dir = Path(mon["trial_dir"])
+        total = int(mon.get("total_iter", 0)) or 1
+        info: dict[str, Any] = {
+            "id": mon["id"], "name": mon["name"], "total_iter": total,
+            "monitor_href": _open_href(mon["monitor_html"]) if mon.get("monitor_html") else "",
+            "exists": trial_dir.is_dir(),
+            "done": 0, "pct": 0.0, "state": "absent", "age_min": None,
+        }
+        if trial_dir.is_dir():
+            files = list(trial_dir.iterdir())
+            done = sum(1 for f in files if f.name.endswith(".json") and f.name.startswith("iter-"))
+            newest = max((f.stat().st_mtime for f in files), default=0.0)
+            age_min = (datetime.now(timezone.utc).timestamp() - newest) / 60 if newest else None
+            stall = float(mon.get("freshness_stall_min", 90))
+            if done >= total:
+                state = "complete"
+            elif age_min is not None and age_min < stall:
+                state = "running"
+            else:
+                state = "stalled"
+            info.update({
+                "done": done, "pct": round(100.0 * done / total, 1),
+                "age_min": round(age_min, 1) if age_min is not None else None,
+                "state": state,
+            })
+        out.append(info)
+    return out
+
+
+@cross_repo_bp.route("/dashboards")
+def dashboards_catalog() -> Any:
+    """Fleet-wide dashboard catalog: every dashboard/report UI across the
+    repos, with open links, status badges and regen actions (registry-driven)."""
+    entries = []
+    for d in DASHBOARDS:
+        e = dict(d)
+        e["open_href"] = _open_href(d["open"]) if d.get("open") else ""
+        e["has_regen"] = bool(d.get("regen"))
+        e.pop("regen", None)  # argv lists never reach the template
+        entries.append(e)
+    areas: dict[str, list[dict[str, Any]]] = {}
+    for e in entries:
+        areas.setdefault(e["area"], []).append(e)
+    return render_template(
+        "cr_dashboards.html",
+        areas=areas,
+        runs=_scan_run_monitors(),
+        api_secret=os.environ.get("API_SECRET", ""),
+    )
+
+
+@cross_repo_bp.route("/api/regen-dashboard", methods=["POST"])
+def regen_dashboard() -> Any:
+    """Run the FIXED argv steps of a registry entry (whitelist-only).
+
+    Security mirrors /api/coord-event: optional API_SECRET bearer with
+    constant-time compare; the only client input is the registry id (dict
+    lookup, no interpolation); steps are code-reviewed argv lists executed
+    without shell."""
+    api_secret = os.environ.get("API_SECRET")
+    if api_secret:
+        auth_header = request.headers.get("Authorization", "")
+        if not hmac.compare_digest(auth_header, f"Bearer {api_secret}"):
+            return jsonify({"ok": False, "error": "unauthorized"}), 401
+
+    dash_id = (request.json or {}).get("id", "")
+    entry = next((d for d in DASHBOARDS if d["id"] == dash_id), None)
+    if entry is None or not entry.get("regen"):
+        return jsonify({"ok": False, "error": "unknown or non-regenerable dashboard id"}), 400
+
+    regen = entry["regen"]
+    timeout = int(regen.get("timeout", 300))
+    outputs: list[str] = []
+    for argv in regen["steps"]:
+        try:
+            result = subprocess.run(
+                argv, cwd=regen["cwd"], capture_output=True, text=True,
+                timeout=timeout, check=False, shell=False,
+                creationflags=_NO_WINDOW_FLAG,
+            )
+        except subprocess.TimeoutExpired:
+            return jsonify({"ok": False, "error": f"timeout after {timeout}s on {argv[1] if len(argv) > 1 else argv[0]}",
+                            "output": "\n".join(outputs)[-2000:]}), 500
+        tail = (result.stdout or "")[-500:] + (("\nSTDERR: " + result.stderr[-500:]) if result.stderr else "")
+        outputs.append(f"$ {' '.join(argv)} (rc={result.returncode})\n{tail}")
+        if result.returncode != 0:
+            return jsonify({"ok": False, "error": f"step failed rc={result.returncode}",
+                            "output": "\n".join(outputs)[-2000:]}), 500
+    return jsonify({"ok": True, "output": "\n".join(outputs)[-2000:],
+                    "open_href": _open_href(entry["open"]) if entry.get("open") else ""})
 
 
 _NOTES_SAFE_REGEX = re.compile(r"^[A-Za-z0-9 .,_/:#\-+()=]{1,200}$")
