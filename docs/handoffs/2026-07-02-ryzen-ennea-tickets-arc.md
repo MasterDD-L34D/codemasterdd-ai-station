@@ -11,7 +11,7 @@
 
 | Ticket | Stato | PR |
 |---|---|---|
-| T1 retune Riformatore(1) canon parity | IN CORSO | Game: TBD, GGv2: TBD |
+| T1 retune Riformatore(1) canon parity | IN REVIEW | Game #3184 + GGv2 #579 (cross-linkate) |
 | T2 wire UI toggle "profilazione stile" | PENDING | - |
 | T3 design+falsificazione stress per-unit (Stoico consumer) | PENDING | design PRIMA di codice |
 
@@ -22,6 +22,11 @@ esito 3 -- trigger `setup_ratio>0.5 && attack_hit_rate>0.65` strutturalmente
 irraggiungibile nel metric-space Godot (ogni attacco diluisce setup_ratio;
 EndTurnAction nel ledger peggiora). Retune proposto: `setup_ratio>0.3`,
 validato con sweep riproducibile prima della PR.
+
+**ESITO (2026-07-02 sera)**: retune shippato in review. Sweep v4: Riformatore
+raggiungibile 3/3 fasce (tactician), zero falsi positivi, copertura mechanical
+7/7. GUT 3784 pass / JS 31 pass. PR: Game #3184 + GGv2 #579 (parity, da
+mergiare insieme).
 
 - **Game** (branch `feat/ennea-riformatore-retune`, worktree `C:\dev\_wt-game-ennea-t1`):
   - `data/core/telemetry.yaml` (ennea_themes, r.90-92) -- CANON.
