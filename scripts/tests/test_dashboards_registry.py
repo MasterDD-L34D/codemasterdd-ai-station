@@ -92,3 +92,23 @@ def test_regen_non_regenerable_blocked(client) -> None:
     # 'mission-console' exists but has no regen block -> must block too
     r = client.post("/cross-repo/api/regen-dashboard", json={"id": "mission-console"})
     assert r.status_code == 400
+
+
+def test_open_unknown_id_blocked(client) -> None:
+    r = client.post("/cross-repo/api/open-dashboard", json={"id": "does-not-exist"})
+    assert r.status_code == 400  # negative control: must block
+
+
+def test_open_http_target_blocked(client) -> None:
+    # http targets are opened client-side; the server endpoint must refuse them
+    r = client.post("/cross-repo/api/open-dashboard", json={"id": "mission-console"})
+    assert r.status_code == 400
+
+
+def test_file_entries_render_button_not_dead_link(client) -> None:
+    """Chrome blocks file:// navigation from http pages (debug 2026-07-02):
+    file targets must render as openDashboard buttons, never as <a href=file>."""
+    r = client.get("/cross-repo/dashboards")
+    body = r.get_data(as_text=True)
+    assert 'href="file:///' not in body, "dead file:// link leaked into the page"
+    assert "openDashboard(" in body
