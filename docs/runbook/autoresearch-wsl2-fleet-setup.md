@@ -40,6 +40,7 @@ wsl --install -d Ubuntu --no-launch   # WSL feature gia' attiva se c'e' docker-d
 # dentro WSL (root ok)
 apt-get update && apt-get install -y gcc g++        # triton compila moduli C a runtime
 curl -LsSf https://astral.sh/uv/install.sh | sh
+export PATH="$HOME/.local/bin:$PATH"                # installer non tocca la shell corrente
 git clone --depth 1 https://github.com/karpathy/autoresearch.git ~/autoresearch
 cd ~/autoresearch && uv sync                        # wheels Linux: torch cu128 + triton + fa3
 uv run prepare.py                                   # one-time: data + tokenizer
