@@ -19,6 +19,28 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-07-02 (MAP-Elites v2: arco completo -- root-cause pipe, 2 run, 4 PR, hub card)
+
+### Completato
+- **MAP-Elites v2 shippata e girata, arco salvage chiuso in giornata** (Game #3181 + #3182 + hub #453 MERGED; Game #3183 draft). v2 = assi WR x turns_avg, checkpoint per-iter + --resume-from, 4 shard paralleli (3390+), --sprt; 15 test, dry-run gate 3/3.
+- **Root cause N-leak v1 CORRETTO via repro empirica** (falsifica l'ipotesi warm-up del doc negative-result): `start_backend` con `stdout=PIPE` mai letto -> buffer ~4KB pieno a run ~18 -> event loop Node congelato. Prova drain-recovery: letti 4204 byte accodati, health torna 200 senza restart. Anche i ~35min/iter v1 erano backpressure pipe (sim reale ~1.4s/run) -> "overnight" 50 iter = ~15 min.
+- **Bug no-op OD-032 nel call-site v1**: client batch senza curves_path -> turn_limit knob morto client-side (r(wr,turns) v1 -0.90 era artefatto). v2 fixa; run v2: r=-0.019.
+- **Run 1 (v2-run)**: 50/50 iter N=40, archive 6/25; candidato banda (2,2) boss 0.886/cap 26 = WR 27.5% AMBER -> decisione: archive-only (prod 1.02 WR 23% N=100 GREEN resta).
+- **Run 2 (v2-edm-run)**: knob-space allineato al manifest SoT (boss fino 1.30 + enemy_damage 1.0-2.5): coverage 10/25, WR floor 15%, SPRT live (14/50 troncati, 352 run risparmiate). Wart truncated-eviction trovato sui dati e fixato (truncated = populate-only). Finding design: WR<10% irraggiungibile nel SoT (floor greedy ~15%).
+- **Hub**: card RUN_MONITORS v1 STALLED sostituita con entry v2 pinnata (#453, 9 test).
+- **MBTI (scope 4)**: batch hc07 n=10 post-#3176 -> mbti_distribution/archetype_pickrate mostrano dati (10/67 vc_mbti popolati, vecchio corpus null by design). ESTJ uniforme sotto greedy: segnale, non bug.
+
+### Da fare
+- Game #3183 (knob-space SoT + fix SPRT + edm results): review/merge Eduardo.
+- Eventuale variante "nightmare" hc06 richiede lever fuori SoT (WR<10% irraggiungibile) -- decisione design futura, non task.
+- Card hub per v2-edm-run: opzionale (la card attuale punta a v2-run, complete).
+
+### Note
+- Lesson operativa: MAI spawn di backend Node con PIPE non drenato (memoria project_map_elites_v2). Ground-truth > report anche sui doc appena scritti: il pattern run-19-in-coda era leggibile nei log v1.
+- SPRT: risparmio 18% a parita' di wall-time (wave-barrier limita il guadagno); paga su run piu' lunghe.
+
+---
+
 ## 2026-07-02 (notte -- L1 execute: doc-comment batch 30-31 shipped + L3 verdetto churn)
 
 ### Completato
