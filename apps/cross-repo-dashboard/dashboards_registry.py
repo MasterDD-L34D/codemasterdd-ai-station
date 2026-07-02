@@ -77,15 +77,17 @@ DASHBOARDS: list[dict[str, Any]] = [
     },
     {
         "id": "sparkline-dashboard",
-        "name": "Tufte sparkline telemetry",
-        "area": "Game", "kind": "generator", "status": "regenerable",
-        "desc": "Small-multiples: win-rate, durata sessioni, kill, skip-rate, funnel tutorial.",
-        "open": GAME + r"\out\sparkline_dashboard.html",
-        "regen": {
-            "cwd": GAME,
-            "steps": [["py", "tools/py/sparkline_dashboard.py"]],
-            "timeout": 300,
-        },
+        "name": "Tufte sparkline telemetry (RITIRATA)",
+        "area": "Game", "kind": "generator", "status": "stale",
+        # Ponytail audit 2026-07-02: legge logs/telemetry_*.jsonl con eventi
+        # 'session_complete' -- stream MAI popolato e schema mai emesso dal
+        # backend (session logs reali = array JSON con session_end/win).
+        # Dashboard costruita contro una spec, mai contro dati. Regen rimosso.
+        # L'intento (trend nel tempo) e' coperto da sessions_by_day/outcome_by_day
+        # nella AI-Playtest dashboard.
+        "desc": "RITIRATA: leggeva uno stream telemetry mai esistito (schema drift). "
+                "Trend temporali -> AI-Playtest dashboard.",
+        "open": GAME + r"\tools\py\sparkline_dashboard.py",
     },
     {
         "id": "trait-completion",
