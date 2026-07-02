@@ -19,6 +19,23 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-07-02 (notte -- L1 execute: doc-comment batch 30-31 shipped + L3 verdetto churn)
+
+### Completato
+- **Campagna doc-comment GGv2, 2 giri trio** (execute L1 dello studio schema-reuse): batch 30 **#567** (coop/surface_role_registry + phone_creature_named_reveal + main_lethal_consent, 16 adds) e batch 31 **#568** (combat/sense_reveal + services/telemetry_collector + ai/sistema_intents, 30 adds) MERGED --rebase. Gate ground-truth 2/2 perfetto (dels=0, adds==spec, ASCII-only, gdformat unchanged, gdlint clean). Tally campagna **31/31**. scripts/coop 1/1 e scripts/services 4/4 ora COMPLETE. Tracker regen **#569** -> 125/280 (45%) @ 1678371; prune 3 branch cherry-verified.
+- **Delivery-miss = gotcha NUOVO sul canale wrapper**: prima sessione b31 (15385179988696772982) COMPLETED ma `outputs` ASSENTE e `activities` = `{}` -- nemmeno il recovery L-031 via activities era possibile (API totalmente vuota). Mitigazione: re-dispatch stesso task-file -> pulito al secondo giro (10821158570749112081, ~8 min). Quota giornata: 3 dispatch.
+- **L3 char-test Game: NO-GO oggi** -- analyze_telemetry / build_playtest_dashboard / ERMES report committati OGGI 16:21-16:26 (churn continuo tutta la settimana su tools/). Criterio-fermo >=3-5gg fallito -> nessuna proposta dispatch. Nota: `tools/py/test_analyze_telemetry.py` esiste gia'.
+
+### Da fare
+- Prossimo giro trio opportunistico: phone_coop_vote_wire + ui/lobby_spectator_poll + main_thoughts_ritual (pool clean ~18, lista nel phase-note tracker).
+- L3: ricontrollare churn analyze_telemetry/dashboard tra 3-5 giorni; se fermo, proporre char-test sul template statblock 06-25 (PR-to-owner, do-NOT-merge).
+
+### Note
+- Gotcha wrapper-da-worktree: `[IO.File]::ReadAllText` usa il process-CWD .NET (NON la PS location) -> passare `-TaskFile` ASSOLUTO e allineare `[Environment]::CurrentDirectory` prima del dispatch.
+- Delivery-miss su sessione COMPLETED = classe nuova (mai vista sul canale API-only): retry immediato e' la mitigazione corretta (gate-4 passa perche' la vecchia sessione non e' piu' attiva).
+
+---
+
 ## 2026-07-02 (sera-2 -- analisi Jules cross-session + studio schema-reuse + digest backfill)
 
 ### Completato
