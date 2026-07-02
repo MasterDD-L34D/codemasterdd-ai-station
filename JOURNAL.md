@@ -19,6 +19,30 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-07-02 (sera-5 -- Stream-1 code-graph tooling: CodeGraph + graphify adottati, bake-off)
+
+### Completato
+- **agent-scanner pre-adozione ha ribaltato la richiesta** (3 plugin -> 2). Utente voleva graphify+claude-mem+CodeGraph su tutta la game family. Scan: claude-mem GIA' off apposta (Windows console-flash, issue #19012 closed; overlappa file-memory+AA01+continuous-learning-v2) -> resta OFF; CodeGraph e graphify = stessa classe, overlappano `eng-graph` (SSE vivo ma codemasterdd-scoped, non indicizza la family). Verdetto: 1 graph tool per la family = valore netto, claude-mem escluso.
+- **Bake-off pilota Game (utente ha scelto "entrambi")**: dimostrata COMPLEMENTARITA' non-duplicazione. CodeGraph = impatto-codice (26.486 nodi/96.898 archi; `explore` -> blast-radius + test-coverage gaps). graphify = architettura+doc multimodal (44.867 nodi post-tuning/3.223 community Leiden; `explain`+god-nodes su code+doc).
+- **Windows flash-safety = vincolo duro rispettato.** CodeGraph installer aggiungeva un hook `UserPromptSubmit codegraph prompt-hook` non annunciato (stesso pattern claude-mem) -> RIMOSSO, tenuti MCP global + auto-allow + direttiva CLAUDE.md fenced. graphify installato skill+MCP only (nessun `graphify hook install`).
+- **Tuning graphify (Quality Gate step 3)**: `.graphifyignore` esclude bundle Vite minified committati in `docs/mission-console/assets/` -> nodi 47.100->44.867 (-2.233), noise-hub 24->1.
+- **Rollout**: Game-Database full value (CodeGraph 2.168 / graphify 2.056). Game-Godot-v2 THIN: GDScript non parsato da nessuno dei due (CodeGraph 56 file, 0/1015 `.gd`; graphify solo doc-map 258 md).
+- **Zero footprint tracked sulla family**: indici + `.graphifyignore` via `.git/info/exclude` (`.codegraph/`, `graphify-out/`). Nessun commit ai repo Game*.
+- Doc: **ADR-0040** (adoption) + **QUALITY.md** (3-step evidenze) + row DECISIONS_LOG. Log build in `Extras/ollama-runs/2026-07-02-*`.
+
+### Da fare
+- **Restart CC** per esporre `mcp__codegraph__*` in-session (config scritta in `~/.claude.json`).
+- **Follow-up GDScript**: valutare `tree-sitter-gdscript` per graphify -> coprire struttura-codice Godot-v2 (oggi cieco). Senza, la lente code-graph resta Game-backend + Game-DB only.
+- **`.graphifyignore` Game** = candidato commit via PR (branch+PR, merge Eduardo) se si vuole team-shared.
+- Aggiornare `docs/reference/ai-tools-manifest.md` sez.1 con i due tool (pointer, non fatto in sessione).
+- **Stream-2 mappe** = task separato spawnato (analisi Dungeon Alchemist -> scope generatore mappe-scontro Godot; DA solo reference, no clone).
+
+### Note
+- eng-graph resta codemasterdd-scoped; rivalutare estensione alla family se i due nuovi tool si rivelano ridondanti (deferred).
+- Direttive scritte nel `~/.claude/CLAUDE.md` globale: blocco fenced CodeGraph (~15 righe) + registrazione skill graphify (3 righe). Rimovibili.
+
+---
+
 ## 2026-07-02 (sera-4 -- runbook godot-campaign: supersede Ryzen-only, dettaglio #468)
 
 ### Completato
