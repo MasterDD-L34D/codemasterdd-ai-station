@@ -100,6 +100,9 @@ re-dispatch (keeps the additions-only guarantee).
 
 ```powershell
 # dispatch (cd codemasterdd). NEVER -ForceBlind (classifier blocks it + defeats dedup).
+# If your PROCESS CWD differs from the PS location (e.g. dispatching from a git worktree),
+# pass -TaskFile as an ABSOLUTE path: .NET [IO.File] resolves relative paths against the
+# process CWD, not the PS location (seen 2026-07-02: ReadAllText threw on a valid path).
 cd C:/dev/codemasterdd-ai-station
 & scripts/fleet/jules-dispatch.ps1 -Repo Game-Godot-v2 -TaskFile logs/jules-tasks/godot-doc-<name>.md -Target "scripts/<dir>/<a>.gd,scripts/<dir>/<b>.gd"
 # -> prints "DISPATCHED session <SID> (state=QUEUED)". Save <SID>.
@@ -129,6 +132,10 @@ $s = Invoke-RestMethod -Headers $hdr "https://jules.googleapis.com/v1alpha/sessi
 $patch = $s.outputs[0].changeSet.gitPatch.unidiffPatch
 # FAILED session with empty outputs -> fall back to an EARLY activities snapshot:
 #   $s.activities[].artifacts[].changeSet.gitPatch.unidiffPatch  (take a pre-pollution one)
+# DELIVERY-MISS (seen 2026-07-02, sid 15385179988696772982): a session can be COMPLETED with
+# NO outputs field at all AND GET /activities returning {} -- nothing recoverable via API.
+# Wait ~2 min, re-GET once; if still empty, RE-DISPATCH the same task-file (gate-4 passes:
+# the dead session is terminal, so there is no active-overlap). Second run came back clean.
 [IO.File]::WriteAllText('C:/dev/codemasterdd-ai-station/logs/jules-tasks/patch-<name>.diff', $patch, (New-Object Text.UTF8Encoding $false))
 ```
 
@@ -185,6 +192,10 @@ gh pr merge ($pr -split '/')[-1] -R MasterDD-L34D/Game-Godot-v2 --rebase --delet
   `branch --show-current` after; bump the `-N` suffix on collision.
 - **Native git/gh stderr-on-success** -> the tool may report exit 255 noise; trust
   the explicit `$LASTEXITCODE` you print, not the wrapper's exit.
+- **.NET IO vs PS location** -> `[IO.File]::ReadAllText`/`ReadAllBytes` resolve RELATIVE
+  paths against the PROCESS CWD, which `Set-Location`/`Push-Location` do NOT move. From a
+  worktree (or any mismatched CWD) pass ABSOLUTE paths, or align
+  `[Environment]::CurrentDirectory` with the PS location first.
 
 ## 9. Embedded task-file TEMPLATE (copy + adapt per batch)
 
