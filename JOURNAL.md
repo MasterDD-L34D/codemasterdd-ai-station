@@ -33,6 +33,7 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 ### Note
 - Gotcha wrapper-da-worktree: `[IO.File]::ReadAllText` usa il process-CWD .NET (NON la PS location) -> passare `-TaskFile` ASSOLUTO e allineare `[Environment]::CurrentDirectory` prima del dispatch.
 - Delivery-miss su sessione COMPLETED = classe nuova (mai vista sul canale API-only): retry immediato e' la mitigazione corretta (gate-4 passa perche' la vecchia sessione non e' piu' attiva).
+- **RISOLTI entrambi in serata (PR #455 merged, rebase)**: wrapper canonicalizza `-TaskFile` via nuova pure-fn `Resolve-TaskFilePath` (Convert-Path; TDD Test-15 RED->GREEN 85/85 + junction/bracket probes; pytest 46/46; harsh-review SHIP-IT, 2 P2 chiusi: exit-2 su Convert-Path throw + assert junction) + runbook sez.5/8 con recovery delivery-miss. Scoperto en-route e risolto: claude CLI 401 su OGNI processo fresco (accessToken scaduto 17/06 -- data ciclo Max -- SENZA refreshToken; tdd-guard fail-closed bloccava tutti gli Edit script) -> re-login interattivo Eduardo; token ora valido con refresh. Merge #455 = autorizzazione esplicita one-shot Eduardo (classifier aveva correttamente negato il self-merge fuori lane GGv2).
 
 ---
 
