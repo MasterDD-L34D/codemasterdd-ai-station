@@ -6,6 +6,7 @@ di routing key/task (ex `operations/`, flattened 2026-06-04).
 ## File principali
 
 - `ssh-inbound-fleet-setup.md` -- SoT setup SSH inbound fleet (Ryzen <-> Lenovo)
+- `autoresearch-wsl2-fleet-setup.md` -- karpathy/autoresearch: setup WSL2, blocker Windows, tetto VRAM 4070S, sweep batch (2026-07-02)
 - `post-max-cutover.md` -- cutover Claude Max -> Hybrid A1 (~17/06), tier-0 overflow + spend log + rollback
 - `key-and-task-routing-matrix.md` -- inventario chiavi + 3-tier tool ecosystem + dispatch matrix (ex `operations/`)
 - `godot-v2-first-playable-golive.md` -- go-live First Playable Godot
