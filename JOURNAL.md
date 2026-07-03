@@ -19,6 +19,26 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-07-03 (Fleet-verify game-family DEEP -- follow-up blueprint, Lenovo/Opus 4.8)
+
+> Sessione dedicata: esegue il blueprint 8-fasi (Artifact 78108b9b della sessione sibling sotto) ristretto ai 3 repo game-family, piu' in profondita'.
+
+### Completato
+- **Audit fleet-verification game-family** (Game/Godot-v2/Game-DB, Fasi 1-4+7, read-mostly, ultracode). agent-scanner reuse-only -> Currency Gate -> topologia Lenovo+Ryzen(SSH ro) -> Workflow 5-probe // origin/main via gh api -> verify adversariale 3-vote -> ground-truth recheck. 8 agent, 494k tok, 0 nuovi agent. **Verdict GREEN**: 19 findings (11 green / 7 amber / 0 RED netti -- 1 RED doc-stale-prose declassato AMBER unanime dal 3-vote).
+- **#233 evo-import-sync ri-verificato** (era 8+/8 scheduled-fail): 2x dispatch GREEN post-fix (run 28656614132 + 28661522872, job sync 15-step reale). Prisma schema<->migration no-drift; SoT-drift 0 candidate (sentinel 12/12); 5 artifact-generator tutti presenti su main.
+- **Consegnato**: Artifact health-report (matrice + action-items owner-tagged, claude.ai/code/artifact/674e6333); PR #494 (delta STATUS_MULTI_REPO + GOALS 07-03) MERGED (rebase, trailer ADR-0011); draft-PR Game-DB #234 (fix-clarity `has_changes` riflette il vero git-status; via worktree dedicato collision-safe); chip task_d94fb271 (prune ~37 worktree leftover C:\dev\Game, guardrail prod-safe).
+- **Ground-truth corrections**: carry-over "Ryzen stale / GGv2 detached" SUPERATO (Ryzen Game+GGv2 fresh, niente detached); Game-DB "5-ahead" era 5-behind (L/R mislettura wave-1 corretta); ADR-0040/0043 collision confermata risolta; SPEC-E/G open-by-design (non stale-neglected).
+
+### Da fare
+- Eduardo: merge #234 (Game-DB, dopo review) + decisione #3195 (do-NOT-merge marker).
+- Ryzen: gdformat lint su GGv2 #585 (UNSTABLE, branch attivo).
+- Watch: prossimo tick cron evo-import-sync (schedule path non ancora ri-eseguito post-fix; dispatch 2x green sufficiente come proof).
+
+### Note
+- Collision-safe: cloni condivisi mai HEAD-switchati (worktree dedicati per #234 + questo journal, dopo che journal-land.ps1 ha abortito in sicurezza su conflitto con l'entry sibling concorrente); backend prod EvoTacticsBackend + vault NON toccati; merge Game-family lasciati a Eduardo (classifier).
+
+---
+
 ## 2026-07-03 (fleet audit multi-workflow -- Game-DB sync fix + blueprint sessione, Lenovo Opus 4.8)
 
 ### Completato
