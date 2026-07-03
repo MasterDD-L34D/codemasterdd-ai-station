@@ -38,6 +38,9 @@ decisione") + CLAUDE.md "Priorita' modelli / tier routing".
 - Spend tracking: `logs/claude-api-spend-YYYY-MM.md` + helper
   `scripts/claude-api/log_spend.py` (crea file mensile, appende entry,
   ricalcola cumulative, avvisa su soglie $10/$15/$20).
+  Nota: file **entry-triggered** (creato lazy al primo entry) + **gitignored
+  local-only** (mai committato; repo pubblico). Un mese senza file = zero
+  spend, NON un gap da backfillare.
 - Fallback sovereign smoke-tested: Ollama up, `aider-cosmetic` (7B) e
   `aider-refactor` (14B Q2) producono diff validi in `--dry-run`.
 
