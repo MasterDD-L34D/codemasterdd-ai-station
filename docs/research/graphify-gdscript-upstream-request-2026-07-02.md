@@ -74,8 +74,11 @@ preferable to taking language-pack as a new dependency?
 
 ## Note operative (codemasterdd, non parte della issue)
 
-- Boundary repo esterno: submit = Eduardo o gh-authed con OK esplicito. NON ancora
-  sottomesso.
+- Boundary repo esterno: submit autorizzato da Eduardo 2026-07-03. **SOTTOMESSO** come
+  commento (no dup: esisteva gia' issue-bare `safishamsi/graphify#697` "Add GDScript
+  (.gd) support" di Ravanla 2026-05-04, solo titolo): la spec verificata (node-type map
+  incl. `attribute_call`, per-wheel vs language-pack, incompat tree-sitter 0.25-vs-0.26,
+  offerta PR) e' in https://github.com/safishamsi/graphify/issues/697#issuecomment-4875489888
 - Se accettato, il PR upstream evita la patch-fragile-su-site-packages (anti-pattern).
 - Nel frattempo Godot-v2 code-nav resta coperto da `godot-engine-specialist` + LSP.
 
