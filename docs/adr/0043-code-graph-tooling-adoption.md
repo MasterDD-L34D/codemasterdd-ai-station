@@ -1,9 +1,10 @@
-# ADR-0040 -- Code-graph tooling adoption (CodeGraph + graphify) for the game repo family
+# ADR-0043 -- Code-graph tooling adoption (CodeGraph + graphify) for the game repo family
 
 - Status: Accepted
 - Data: 2026-07-02
 - Deciders: Eduardo
 - Contesto skill/tool-adoption: ADR-0010 (skill install richiede preview + ADR), OD-007 (agent-scanner anti-shadow-duplicate)
+- Nota renumber: originariamente numerato ADR-0040 (PR #480, 2026-07-02); rinumerato a 0043 il 2026-07-03 per collisione con ADR-0040 (Doctrine PR triage label, 2026-06-17).
 
 ## Contesto
 

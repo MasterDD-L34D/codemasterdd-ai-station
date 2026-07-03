@@ -112,7 +112,7 @@ Dipende da `@modelcontextprotocol/sdk` v1.12.0. Keys lette per-call, mai residen
 | claude-mem v13.2.0 | Apache-2.0 | **DORMANT** (settings `=false`, Windows console-flash #19012; overlappa file-memory+AA01) |
 | tdd-guard v1.3.0 | MIT | **DORMANT** (settings `=false`) |
 
-**Code-graph tooling** (game repo family, ADR-0040 -- 2026-07-02):
+**Code-graph tooling** (game repo family, ADR-0043 -- 2026-07-02):
 
 | Tool | Licenza | Ruolo | Note |
 |------|---------|-------|------|
@@ -120,7 +120,7 @@ Dipende da `@modelcontextprotocol/sdk` v1.12.0. Keys lette per-call, mai residen
 | graphify v0.9.5 (PyPI `graphifyy`, CLI `graphify`) | open-source | lente architettura+doc: multimodal code+doc, Leiden community | skill+MCP (no-hook), `.graphifyignore` tuning; `/graphify` |
 
 Indicizzati: Game + Game-Database (full). Game-Godot-v2 = doc-map only (**GDScript
-non parsato** da nessuno dei due -- gap noto ADR-0040; struttura-codice Godot via
+non parsato** da nessuno dei due -- gap noto ADR-0043; struttura-codice Godot via
 `godot-engine-specialist` + LSP). Zero footprint tracked (`.git/info/exclude`).
 Complementa `eng-graph` (SSE, vault/codemasterdd-scoped, sez. 8).
 
