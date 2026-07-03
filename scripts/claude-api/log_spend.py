@@ -10,7 +10,7 @@ Usage:
       --tokens-in 20 --tokens-out 10 [--cost-usd 0.0001] [--outcome OK]
 
 Cost: pass --cost-usd explicitly, or omit it and let the script estimate from
-the embedded pricing table (USD per MTok, cached 2026-06-11 from claude-api skill).
+the embedded pricing table (USD per MTok, verified 2026-07-03 vs platform.claude.com).
 No secrets are read or written by this script.
 """
 
@@ -20,13 +20,17 @@ import sys
 from datetime import datetime
 from pathlib import Path
 
-# USD per 1M tokens (input, output) -- cached 2026-06-11
+# USD per 1M tokens (input, output) -- verified 2026-07-03 vs platform.claude.com
+# (existing 5 entries confirmed no drift; claude-fable-5 added).
+# claude-sonnet-5 deliberately omitted: intro pricing 2.00/10.00 thru 2026-08-31,
+# then 3.00/15.00 -- time-varying, so pass --cost-usd rather than bake a stale rate.
 PRICING = {
     "claude-haiku-4-5": (1.00, 5.00),
     "claude-sonnet-4-6": (3.00, 15.00),
     "claude-opus-4-6": (5.00, 25.00),
     "claude-opus-4-7": (5.00, 25.00),
     "claude-opus-4-8": (5.00, 25.00),
+    "claude-fable-5": (10.00, 50.00),
 }
 
 TEMPLATE = """# Claude API spend log -- {month_label}
