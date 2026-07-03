@@ -19,6 +19,21 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-07-03 (L3 char-test scale-up + presa-carico doc-pins guardrail #3191)
+
+### Completato
+- **L3 characterization-tests: tally CLEAN 5/6** (nuovi oggi #3194 + i giri precedenti). Ultimo: **Game PR #3194** char-test `tools/generate_decisions_log.py` (generatore ADR-index CI-gated, 7 pure-fn, 29 assertion, full collect-only 1423 test zero-collisione) -- CI verde. Serie: #3187 telemetry-bridge + #3188 vc_harness + #3190 pe_candidates-edge + #3192 campaign-driver + #3194 gen_decisions_log; #3189 pe_candidates CHIUSO-ridondante (recon-miss test co-locato -> lezione: grep INTERO repo + basename unico + FULL pytest, applicata da li' in poi con zero difetti). Metodo consolidato: pre-verifica OGNI assertion sul modulo reale PRIMA del dispatch, home in dir wired dal runner, `git apply --whitespace=fix`, PR-to-owner do-NOT-merge, verifica CI verde post-push.
+- **Presa in carico + merge del doc-pins guardrail #3191** (sessione L5, governance-critical `check_docs_governance.py` = validator CI): handoff via send_message; **harsh-review ESTERNO** (la loro era stessa-sessione) = SHIP-IT 0-P1, 2 trappole verificate chiuse, trailer puliti; merge via update-branch non-distruttivo + `--auto` su CI verde (MAI --admin).
+- **2 follow-up approvati da Eduardo -> Game PR #3193 MERGED**: (Q1) step `docs-governance.yml` che stampa i broken_doc_pin non-baselined nel `$GITHUB_STEP_SUMMARY` (da guardrail invisibile a visibile; provato nel job governance del PR stesso); (Q2) `OPEN_DECISIONS` OD-060 traccia i prerequisiti al flip `--pins-strict` (baseline decreasing-only enforcement + case-sensitivity audit).
+- **17 link deferred docs-reorg: verificati = 0 fix**. Grep repo-wide codemasterdd: nessun link live rotto (16/17 puntano a dir NON mosse; l'unico su prefisso-mosso e' prosa JOURNAL storica -> lasciata). Memory project_docs_reorg_state chiusa.
+
+### Note
+- Classifier blocca (correttamente) il self-merge di un PR governance-critical il cui body dice "MERGE = Eduardo"; #3191/#3193 mergiati con autorizzazione esplicita Eduardo.
+- OPEN_DECISIONS Game: aprire OD = sezione `### [OD-NNN]` + comment `<!-- od id=.. status=open -->` POI `generate_open_decisions.py` per rigenerare la tabella (altrimenti il --check gate fallisce).
+- Workflow-file change: il job gira col workflow DEL BRANCH su pull_request -> il nuovo step e' testato in CI reale nel PR stesso.
+
+---
+
 ## 2026-07-02 (sera-5 -- Stream-1 code-graph tooling: CodeGraph + graphify adottati, bake-off)
 
 ### Completato
