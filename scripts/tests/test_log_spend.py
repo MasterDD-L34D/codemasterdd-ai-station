@@ -75,6 +75,19 @@ def test_cost_estimated_from_pricing_when_omitted(tmp_path):
     assert "$6.0000" in text
 
 
+def test_fable5_pricing_locked(tmp_path):
+    # fable-5: $10/MTok in + $50/MTok out -> 1M in + 1M out = $60.00 (verified 2026-07-03)
+    r = run_script(
+        "--task", "estimate", "--model", "claude-fable-5",
+        "--tokens-in", "1000000", "--tokens-out", "1000000",
+        "--date", "2026-07-03T12:00",
+        log_dir=tmp_path,
+    )
+    assert r.returncode == 0, r.stderr
+    text = (tmp_path / "claude-api-spend-2026-07.md").read_text(encoding="utf-8")
+    assert "$60.0000" in text
+
+
 def test_unknown_model_without_cost_fails(tmp_path):
     r = run_script(
         "--task", "x", "--model", "mystery-model-9",
