@@ -50,6 +50,16 @@ _Auto-synced governor signal snapshot; human prose elsewhere is authoritative. T
 - **vault**: 0 PR open, 0 issue open. PR #260/#262(NUL-strip)/#263(lint reconcile) MERGED 06-24->06-29. Clone Lenovo synced 06-30 (`489731b`). **WARN reale = 9** (coherence PASS-4 06-30 carry-forward, 0 BLOCK; #262/#263 toccavano lint-status NUL, NON i 9 coherence-WARN). NB Snapshot "7 WARN + W-2 RESOLVED" stale: sono 9, e W-2 (Claude-Max expiry) ancora aperto user-gated.
 - **Synesthesia**: invariato, HEAD `05f8a92`, dormant ~ago 2026. 0 PR open.
 
+### Audit delta 2026-07-03 (gh/git ground-truth -- game-family fleet-verify, Workflow 5-probe + 3-vote verify)
+
+> Scope ristretto game-family (Game / Godot-v2 / Game-DB). Layer fresco sopra il delta 06-30; HEAD non ri-hardcodati (git-truth via gh, regola :23). Nessun lavoro unpushed a rischio rilevato in alcun clone.
+
+- **Game**: **1 PR open** #3195 (test/gen-open-decisions char-test, CLEAN, marcato do-NOT-merge = Eduardo review). Main CI GREEN (CI + Docs Governance + SoT Drift Sentinel + Skiv Monitor tutti success). **MAP-Elites v2 arc CLOSED** (#3183 merged 07-02, cfr BACKLOG M15). SoT-drift: 0 candidate aperti (sentinel 12/12 success, watch-map intatto). Design-direction = AMBER: finestra 20-commit governance-heavy (doc-pins guardrail 10/20) ma il thread balance-calibration (MAP-Elites hc06 `enemy_damage` lever, SPRT truncated-eviction) e' legit-core; docs open-decisions 2-7wk stale (SPEC-E/SPEC-G TODO status da riconfermare).
+- **Godot-v2**: **1 PR open** #585 (feat/combat-camera-controls, **UNSTABLE = gdformat lint FAIL**, GUT tests pass) -- **branch = sessione Ryzen ATTIVA, monitor-only, NON pushare** (collision). Main CI GREEN. (Il "#557 / 0 PR open" del delta 06-30 e' superato.)
+- **Game-Database**: **evo-import-sync FIX landed** -- PR #233 MERGED 07-03 11:05 (unblock bot-403 push + `_game` gitlink gitignore). Il workflow "Evo Import Sync" era failing 8+/8 scheduled-run fino alle 09:36; verificato GREEN via manual dispatch (run 28656614132, job `sync` 15-step reale, non no-op). Prossimo tick schedulato non ancora ri-eseguito post-fix (ratifica cron pendente, ~cron 17 */6). Prisma schema<->migration = no drift (provenance-fields 1:1). 0 PR open.
+- **ADR-0040/0043 collision**: RISOLTA (0043 code-graph rinumerato da 0040 il 07-03; 0040 = Doctrine triage label invariato).
+- **Topologia cloni**: Lenovo Game = detached su commit gia'-merged + ~37 worktree leftover (cleanup candidate -> chip). Ryzen Game/Godot fresh (Godot = churn `.import` sessione attiva, non work-at-risk); Ryzen Game-DB stale-behind (benigno). Backend prod EvoTacticsBackend NON toccato.
+
 ---
 
 ## Snapshot 1-riga per repo
