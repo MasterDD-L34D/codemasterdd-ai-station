@@ -19,6 +19,26 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-07-03 (Stream-2 mappe Evo-Tactics: DA reference -> generatore DEFERRED -> camera #585 -> big-map descent redesign scoped)
+
+### Completato
+- **Fase 1 DA reference**: osservato Dungeon Alchemist dal vivo (computer-use, Ryzen). Decompile dei binari RIFIUTATO anche con autorizzazione Eduardo (EULA + copyright > possesso licenza). Report + technique register + correzione DA != WFC (metodo reale = interior-design-rules) -> `docs/research/2026-07-02-dungeon-alchemist-design-patterns-map-generator.md`.
+- **Fase 2 generatore -> DEFERRED**: brainstorming + loop avversariale 3-lenti (harsh-reviewer + first-principles + ground-truth) -> premessa OFF ("resa" = visivo/render, non data-layer procgen); Eduardo ha scelto fork A. Spec marcato DEFERRED (correzioni fattuali sez. 12). Il 1o Explore aveva dato fatti errati (getLineOfSight "ready", seam sbagliato, "backend manca elevation") -> confutati dai reviewer (memory `feedback_subagent_groundtruth_reverify`).
+- **Camera combat SHIPPED**: refresh-verify (S0-S3 gia' shippati -- memory stale, corretta) + capture reale del combat -> gap dominante = board minuscola nel vuoto (non il tile). PR GGv2 **#585** CombatCamera zoom-to-fit + wheel/pinch/pan (GUT 11/11 static+input-routing, suite 3794/0-fail, gdformat/gdlint clean). Awaiting Eduardo merge.
+- **Map-size front**: workflow scoping (design + balance su codice) -> bigger uniform = NO (turni morti + silent gate-drift; xpBudget grid-blind). Eduardo OVERRIDE -> redesign "big Descent-style". Workflow ricerca descent-maps (5 agenti) -> `docs/research/2026-07-03-big-map-tactical-design-reference-evo-tactics.md` (15 giochi, movimento trait-driven, coupling xpBudget). **10 decisioni di design ratificate** (sez. 8).
+
+### Da fare
+- Ricerca "lore-driven triggers per campagna + tratti" (da D7) in corso -> addendum companion.
+- Primo slice del redesign da scopare (brainstorm -> writing-plans): sequenza D10 = visivo -> LOS (D3 prerequisito) -> sistemi uno alla volta.
+- xpBudget grid-blind base-fix in corso (chip task Eduardo); espansione Descent da ri-spawnare post-decisioni.
+- #585 merge + smoke fisico (feel pan/zoom su iPhone/TV -- lo scroll-browser sintetico non lo prova, WASM focus).
+
+### Note
+- Doc Stream-2 su branch `claude/vigilant-brahmagupta-1ae47d` (non ancora su main -- merge = Eduardo).
+- Pattern chiave: 2 premesse ribaltate da first-principles + adversarial-verify (generatore + map-size) PRIMA di scrivere codice -> risparmio settimane sul problema sbagliato. Currency gate (git > memory) ha beccato S0-S3 gia' shippati + PR-0 gia' fatto.
+
+---
+
 ## 2026-07-03 (Fleet-verify game-family DEEP -- follow-up blueprint, Lenovo/Opus 4.8)
 
 > Sessione dedicata: esegue il blueprint 8-fasi (Artifact 78108b9b della sessione sibling sotto) ristretto ai 3 repo game-family, piu' in profondita'.
