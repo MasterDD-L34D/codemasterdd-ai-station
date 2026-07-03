@@ -102,6 +102,21 @@
 </div>
 </section>
 
+<!-- API spend cap-watch (ADR-0023 tier-0) -->
+<section class="row-section">
+<h3>Claude API spend (ADR-0023 tier-0)</h3>
+<div class="gate-e-card spend-{{ state.api_spend.band }}">
+  <div class="gate-e-stat"><span class="num">${{ '%.4f'|format(state.api_spend.mtd_cost) }}</span><span class="label">month-to-date ({{ state.api_spend.month }})</span></div>
+  <div class="gate-e-stat"><span class="num">${{ '%.4f'|format(state.api_spend.total_cost) }}</span><span class="label">total tracked</span></div>
+  <div class="gate-e-stat"><span class="num">{{ state.api_spend.band|upper }}</span><span class="label">cap band</span></div>
+  <div class="gate-e-threshold">
+    Soft cap ${{ state.api_spend.cap_low }}-{{ state.api_spend.cap_high }}/mo:
+    &lt;$10 OK | $10-15 awareness | $15-20 alert | &ge;$20 trigger reactivation Pro
+    | {{ state.api_spend.months_tracked }} month(s) tracked, local-only (gitignored)
+  </div>
+</div>
+</section>
+
 <!-- D1 OPEN_DECISIONS + D3 ADR countdown -->
 <section class="row-section split">
 <div class="split-half">

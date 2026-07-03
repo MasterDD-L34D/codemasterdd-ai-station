@@ -120,6 +120,11 @@ footer a { color: #58a6ff; }
 .gate-e-stat .label { font-size: 0.7rem; color: #7d8590; text-transform: uppercase; letter-spacing: 0.5px; }
 .gate-e-window { color: #c9d1d9; }
 .gate-e-threshold { grid-column: 1 / -1; color: #7d8590; font-size: 0.8rem; padding-top: 8px; border-top: 1px solid #21262d; }
+/* API spend cap-watch band colors (ADR-0023 soft cap $10/$15/$20) */
+.gate-e-card.spend-ok { border-color: #2ea043; }
+.gate-e-card.spend-awareness { border-color: #d29922; }
+.gate-e-card.spend-alert { border-color: #db6d28; }
+.gate-e-card.spend-trigger { border-color: #f85149; }
 
 .od-list, .adr-list { list-style: none; padding: 0; margin: 0; }
 .od-list li, .adr-list li {
