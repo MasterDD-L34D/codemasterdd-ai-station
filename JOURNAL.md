@@ -19,6 +19,24 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-07-03 (Jules L3 char-test -- generate_open_decisions #3195, Ryzen/Opus 4.8)
+
+### Completato
+- **L3 char-test #3195 SHIPPED + CI GREEN** (PR-to-owner, do-NOT-merge): characterization test per `tools/generate_open_decisions.py` (generatore CI-gated dell'indice OPEN_DECISIONS "Aperte", 33gg fermo, prima non-testato). Test-only, 1 file nuovo `tests/scripts/test_generate_open_decisions.py`, 175 righe, 9 test sui pure helper (_heading_title, _anchor slug, parse_records + stringhe errore R4/R7, _od_sort_key, render_table, build_block, apply, rami R3/R5/R6 di validate). CI python-tests GREEN (2 run). Tally L3 CLEAN 5/6 -> 6/7.
+- **FASE-0 refresh-verify** (ADR-0026 #1): riletti policy lane + doctrine memory + reuse-study; ground-truth git (PR/churn). Catch load-bearing: la vena pura value-domain (analytics/calibration/governance) e' quasi esaurita -- i file caldi (analyze_telemetry, calibrate_map_elites, dashboards, check_docs_governance) churned 07-02 = bloccati dal churn-gate >=3-5gg, e gli stabili (pe_*/calibrate_*/pressure_stats/objective/aggregator/policy) gia' co-located-tested; tools/sim/*.js vena morta. Vinto grepando la SIBLING FAMILY: #3194 aveva testato generate_decisions_log -> il fratello generate_open_decisions era non-testato.
+- **Tecnica nuova**: \uXXXX-escape per char-testare funzioni che STRIPPANO Unicode (checkmark/warn/em-dash) mantenendo il sorgente ASCII (gate naAdd==0 passa, Jules non mojibaka ASCII). Pre-verifica in mirror scratchpad isolato -> il gate meccanico diventa un byte-compare del patch Jules a un file gia' verde (gate piu' forte; tornato byte-identico).
+
+### Da fare
+- Eduardo: merge PR #3195 (lane char-test = PR-to-owner, ADR-0037).
+- L3 futuri: al recheck ~07-05, se i tool playtest/analytics (analyze_telemetry, dashboards) sono fermi >=3-5gg = target ad alto valore (ora churn-gated).
+
+### Note
+- GGv2 doc-comment filler TENUTO FERMO (policy = opzionale/opportunistico; sessione mono-focus governance piu' pulita; campagna vicina all'hard-stop tail 134/280).
+- Gotcha: py -3.13 stampa Unicode raw su console cp1252 -> UnicodeEncodeError (compute ok, solo il print) -> $env:PYTHONIOENCODING='utf-8'. Full collect-only da root Game colpisce errore PRE-ESISTENTE flint/ (sub-progetto con proprio pyproject --cov + smoke_test git) -> scope a tests/ (1211 collected clean).
+- Loop: DryRun 5/5 gate -> POST -> COMPLETED ~25min -> extract -> byte-identical gate -> apply --whitespace=fix -> tests/ collect + 9 passed -> commit (Coding-Agent claude-opus-4-8) -> PR #3195 -> CI green.
+
+---
+
 ## 2026-07-03 (coordinator resume -- ADR-0040 collision + GDScript verify + vault reconcile + handoff quick-wins)
 
 ### Completato
