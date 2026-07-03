@@ -59,6 +59,14 @@ Ground-truth gh/git 7 repo (repo-health-auditor manuale, post tool-fix):
 - **vault Short "7 WARN cleanup + 2 currency drift"**: WARN reale = **9** (non 7), confermato coherence PASS-4 06-30 (carry-forward, 0 BLOCK; #262/#263 toccavano lint-status NUL, non i 9 coherence-WARN). I 9 = W-1..W-9 user-gated (incl. W-2 Claude-Max expiry, W-4 canonical-config OD-059-stale = i 2 currency drift citati). Clone Lenovo synced 06-30.
 - **Game / Godot / codemasterdd**: 0 PR open. **evo-swarm**: ARCHIVED, Decisione 014 retire-reconfirmed (post-013).
 
+## 2026-07-03 audit delta (vs 06-30) -- currency note (game-family fleet-verify)
+
+> Ground-truth gh/git, scope game-family (Workflow 5-probe + 3-vote adversariale). Solo currency (cosa risulta consegnato/rotto-e-riparato); il re-set dei prossimi Short = decisione Eduardo.
+
+- **Game-Database**: evo-import-sync **riparato** -- PR #233 MERGED 07-03 dopo 8+/8 scheduled-run failing (bot-403 + `_game` gitlink); verificato GREEN via manual dispatch (run 28656614132). Prisma no-drift. Questo filone non era tracciato nei layer precedenti (gap chiuso).
+- **Game**: MAP-Elites v2 arc CLOSED (#3183 merged 07-02); 1 PR open #3195 (do-NOT-merge, Eduardo review). Design-direction AMBER: finestra recente governance-heavy, ma balance-thread (calibrazione) vivo.
+- **Godot-v2**: 1 PR open #585 (sessione Ryzen attiva, gdformat lint FAIL -- monitor-only, non pushare). Supera il "#557 / 0 PR open" del 06-30.
+
 ## Cross-cutting initiatives
 
 - **M1 "Sistema"** (persistent cross-session AI learning). **Build CLOSED + validation COMPLETE** -- build: Game route #2364 + pilot #2363 + passthrough #2376 + orphan-removal #2377; Godot client #342. Validation (Short 05-22): loop live validato e superato -- AI playtest item-3 co-op PASS (Godot #465, 2026-06-10); lato Game il loop ha retto lo stream OD-058 wound cutover fino al flip-ON (#2720/#2722).

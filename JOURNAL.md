@@ -39,6 +39,127 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-07-03 (Fleet-verify game-family DEEP -- follow-up blueprint, Lenovo/Opus 4.8)
+
+> Sessione dedicata: esegue il blueprint 8-fasi (Artifact 78108b9b della sessione sibling sotto) ristretto ai 3 repo game-family, piu' in profondita'.
+
+### Completato
+- **Audit fleet-verification game-family** (Game/Godot-v2/Game-DB, Fasi 1-4+7, read-mostly, ultracode). agent-scanner reuse-only -> Currency Gate -> topologia Lenovo+Ryzen(SSH ro) -> Workflow 5-probe // origin/main via gh api -> verify adversariale 3-vote -> ground-truth recheck. 8 agent, 494k tok, 0 nuovi agent. **Verdict GREEN**: 19 findings (11 green / 7 amber / 0 RED netti -- 1 RED doc-stale-prose declassato AMBER unanime dal 3-vote).
+- **#233 evo-import-sync ri-verificato** (era 8+/8 scheduled-fail): 2x dispatch GREEN post-fix (run 28656614132 + 28661522872, job sync 15-step reale). Prisma schema<->migration no-drift; SoT-drift 0 candidate (sentinel 12/12); 5 artifact-generator tutti presenti su main.
+- **Consegnato**: Artifact health-report (matrice + action-items owner-tagged, claude.ai/code/artifact/674e6333); PR #494 (delta STATUS_MULTI_REPO + GOALS 07-03) MERGED (rebase, trailer ADR-0011); draft-PR Game-DB #234 (fix-clarity `has_changes` riflette il vero git-status; via worktree dedicato collision-safe); chip task_d94fb271 (prune ~37 worktree leftover C:\dev\Game, guardrail prod-safe).
+- **Ground-truth corrections**: carry-over "Ryzen stale / GGv2 detached" SUPERATO (Ryzen Game+GGv2 fresh, niente detached); Game-DB "5-ahead" era 5-behind (L/R mislettura wave-1 corretta); ADR-0040/0043 collision confermata risolta; SPEC-E/G open-by-design (non stale-neglected).
+
+### Da fare
+- Eduardo: merge #234 (Game-DB, dopo review) + decisione #3195 (do-NOT-merge marker).
+- Ryzen: gdformat lint su GGv2 #585 (UNSTABLE, branch attivo).
+- Watch: prossimo tick cron evo-import-sync (schedule path non ancora ri-eseguito post-fix; dispatch 2x green sufficiente come proof).
+
+### Note
+- Collision-safe: cloni condivisi mai HEAD-switchati (worktree dedicati per #234 + questo journal, dopo che journal-land.ps1 ha abortito in sicurezza su conflitto con l'entry sibling concorrente); backend prod EvoTacticsBackend + vault NON toccati; merge Game-family lasciati a Eduardo (classifier).
+
+---
+
+## 2026-07-03 (fleet audit multi-workflow -- Game-DB sync fix + blueprint sessione, Lenovo Opus 4.8)
+
+### Completato
+- **Arco MAP-Elites v2 chiuso definitivamente** (continuo dalla sessione 07-02): triage #460/#3183, M15 card `map-elites-hc06-v2-edm` + fix conteggio (iter SPRT-evicted non scrivono iter-json -> `done = max(json, iter distinte checkpoint.jsonl)`; verificato 50/50 sul dir reale). Game #3183 + hub #465 MERGED, 0 residui.
+- **Campagna doc-comment GGv2 batch 34** (#581 + tracker #582, 134/280): PRIMO dispatch Jules da Lenovo (gate-4 dedup cross-machine ha tenuto). Salvage char-test #3 `pe_candidates`: collisione con sessione Ryzen intercettata (#3189 gia' consegnato) -> stand-down, zero duplicato.
+- **Compass 2 fix scope** (#469 scripts/fleet, #473 fleet-tools-mcp): drift = falsi positivi da mis-scoping, DI 72->82. Recon agentic-tooling = artefatto di finestra (no commit aspirazionale).
+- **Ricostruzione necessita' (workflow 6-agent)**: unica azione hub non-collidente = digest Jules #484; July-spend-log -> chip (poi produttosi la card dashboard cap-watch, ora su main).
+- **Audit dashboard + game-family (workflow 5-probe)**: fleet verde tranne 1 RED reale -> **Game-DB "Evo Import Sync" giu' 3 giorni** (8/8 fail, bot 403 + bug latente `_game` gitlink 160000).
+- **Fix Game-DB #233** (permissions block + `_game/` gitignore) MERGED -> **provato LIVE** via workflow_dispatch: run SUCCESS, step killer green, "No file changes" prova che `_game` non e' piu' stagiato. Pipeline ripristinata (il repo-setting NON era read-only, il fix YAML e' bastato).
+- **Verifica adversariale di sessione (workflow 4-verifier)**: overall_go TRUE, pytest hub 47/47, 0 blocking. Chiuso l'unico PARTIAL (BACKLOG M15 prosa stale, #489).
+- **Blueprint "sessione perfetta di fleet-verification"** (8 fasi, toolkit-matrix, guardrail) -> Artifact riferibile (claude.ai/code/artifact/78108b9b). ADR-0040 collision verificata RISOLTA (0043 landato, #482).
+
+### Da fare
+- **Chip game-family** (spawned): sessione hub pulita che applica Fasi 1-4+7 del blueprint su Game/GGv2/Game-DB.
+- Cloni locali Game/GGv2 stale -> refresh a fine sessioni Ryzen (dirty + collision-risk, no unattended-pull).
+
+### Note
+- Metodo: ground-truth > agent-report ha pescato 2 falsi finding (99/251 GGv2 inesistente, "+1 codemasterdd" mis-read) + la collisione #3189. Verifica SEMPRE le claim dei subagent.
+- SSH Ryzen read-only via `-EncodedCommand` (base64 UTF-16LE) evita il quoting-hell bash->ssh->powershell; MSYS_NO_PATHCONV=1 per `git show origin/main:path`.
+- 4 workflow + 2 chip in sessione; tutti i PR verificati (comportamentale sul dato reale, non reimplementato).
+
+---
+
+## 2026-07-03 (Jules L3 char-test -- generate_open_decisions #3195, Ryzen/Opus 4.8)
+
+### Completato
+- **L3 char-test #3195 SHIPPED + CI GREEN** (PR-to-owner, do-NOT-merge): characterization test per `tools/generate_open_decisions.py` (generatore CI-gated dell'indice OPEN_DECISIONS "Aperte", 33gg fermo, prima non-testato). Test-only, 1 file nuovo `tests/scripts/test_generate_open_decisions.py`, 175 righe, 9 test sui pure helper (_heading_title, _anchor slug, parse_records + stringhe errore R4/R7, _od_sort_key, render_table, build_block, apply, rami R3/R5/R6 di validate). CI python-tests GREEN (2 run). Tally L3 CLEAN 5/6 -> 6/7.
+- **FASE-0 refresh-verify** (ADR-0026 #1): riletti policy lane + doctrine memory + reuse-study; ground-truth git (PR/churn). Catch load-bearing: la vena pura value-domain (analytics/calibration/governance) e' quasi esaurita -- i file caldi (analyze_telemetry, calibrate_map_elites, dashboards, check_docs_governance) churned 07-02 = bloccati dal churn-gate >=3-5gg, e gli stabili (pe_*/calibrate_*/pressure_stats/objective/aggregator/policy) gia' co-located-tested; tools/sim/*.js vena morta. Vinto grepando la SIBLING FAMILY: #3194 aveva testato generate_decisions_log -> il fratello generate_open_decisions era non-testato.
+- **Tecnica nuova**: \uXXXX-escape per char-testare funzioni che STRIPPANO Unicode (checkmark/warn/em-dash) mantenendo il sorgente ASCII (gate naAdd==0 passa, Jules non mojibaka ASCII). Pre-verifica in mirror scratchpad isolato -> il gate meccanico diventa un byte-compare del patch Jules a un file gia' verde (gate piu' forte; tornato byte-identico).
+
+### Da fare
+- Eduardo: merge PR #3195 (lane char-test = PR-to-owner, ADR-0037).
+- L3 futuri: al recheck ~07-05, se i tool playtest/analytics (analyze_telemetry, dashboards) sono fermi >=3-5gg = target ad alto valore (ora churn-gated).
+
+### Note
+- GGv2 doc-comment filler TENUTO FERMO (policy = opzionale/opportunistico; sessione mono-focus governance piu' pulita; campagna vicina all'hard-stop tail 134/280).
+- Gotcha: py -3.13 stampa Unicode raw su console cp1252 -> UnicodeEncodeError (compute ok, solo il print) -> $env:PYTHONIOENCODING='utf-8'. Full collect-only da root Game colpisce errore PRE-ESISTENTE flint/ (sub-progetto con proprio pyproject --cov + smoke_test git) -> scope a tests/ (1211 collected clean).
+- Loop: DryRun 5/5 gate -> POST -> COMPLETED ~25min -> extract -> byte-identical gate -> apply --whitespace=fix -> tests/ collect + 9 passed -> commit (Coding-Agent claude-opus-4-8) -> PR #3195 -> CI green.
+
+---
+
+## 2026-07-03 (coordinator resume -- ADR-0040 collision + GDScript verify + vault reconcile + handoff quick-wins)
+
+### Completato
+- **Handoff ground-truth catch**: `docs/decisions/SESSION-HANDOFF-2026-07-03.md` NON in codemasterdd -- vive nel VAULT (origin/main `00d41ef51`), autored da coherence-routine (Trigger-C), ogni claim Game/cdd [corpus-inferred]. Re-verifica step-2bis (gh) = tutto stale: OD-058 D1-D5 TUTTI merged, #2512 CLOSED, #2551 MERGED. Il blocco inline del resume-prompt = la "Paste bootstrap" del doc. Memory `project_vault_handoff_location` + `project_claude_max_active` create.
+- **ADR-0040 collision fix** (PR #482 MERGED): due ADR sullo stesso 0040 (doctrine-triage 06-17 code-backed + code-graph 07-02 doc-only). Doctrine tiene 0040, code-graph -> **0043**. DECISIONS_LOG riga 50 malformata (0040+0042 su una riga, 0042 senza numero) splittata + riga 0041 mancante aggiunta -> log contiguo 0001-0043. Root README range 0001-0043.
+- **GDScript verify** (PR #483 MERGED): eseguito il TODO del draft upstream graphify ("verifica node-type reali prima del PR") su 82 file `.gd` di Game-Godot-v2 (tree-sitter-language-pack, 0 parse-error). 9/9 nomi confermati; gap: member-call = `attribute_call` (plurality 1349 vs 1214 `call`; draft mappava solo `call`). 3 correzioni framing (graphify usa wheel per-lingua NON language-pack = nuova dep; resolver-hook e' solo resolution-pass NON aggiunge lingue; incompat tree-sitter 0.25-vs-0.26). Filing upstream Eduardo-gated.
+- **Vault reconcile** (PR #264 MERGED): Ryzen vault diverged ahead3/behind11; i 3 commit local NON scartabili (`guida-uso-2026-06-22.md` 89 righe + index edits, mai pushati = AP#21). Preservati su branch remoto poi integrati via PR governance-clean (file referenziati gia' in origin -> zero dangling-link). Eduardo reset local -> origin/main (ff-clean verificato, guida-uso presente).
+- **Claude Max = ATTIVO**: authority-rule (accounts-infra sez.3/6) + Eduardo conferma -> Max primario rinnovato (non Pro). Docs stale corretti: vault PR #265 + cdd README PR #487 (entrambi MERGED).
+- **Quick-wins vault** (PR #265 MERGED, post adversarial-review): W-1 OD-058 tracker (tutte 5 righe open->shipped, piu' stale del previsto: handoff citava solo D2) + W-7 OD-057 verdict A+B1->R3+B1 (body confermava R3) + W-9 conteggio agenti 7->10 (reale; il "7" era artefatto grep `-vi claude/index`). **W-3 GIA' fatto** (moot, nessun testo stale). Adversarial reviewer indipendente (full-tool gh) ha catchato imprecision D4 (#2533 = issue chiuso non PR) -> fixed pre-merge.
+
+### Da fare
+- Filing upstream graphify GDScript issue (Eduardo-gated, repo esterno `safishamsi/graphify`).
+- Eventuale refresh GOALS/STATUS: OD-058 build-phase COMPLETA (D1-D5 shipped) se non gia' riflesso.
+
+### Note
+- 5 PR sessione: #482/#483/#264 merged da Eduardo; #265/#487 merged da me (autorizzato esplicito, post adversarial-review ADR-0026 P5). Ogni commit policy-C (Coding-Agent `claude-fable-5` + Trace-Id uuidv7; hook ha bloccato 2x su subject>72 + description-uppercase, corretti).
+- Worktree vault fallito su MAX_PATH Windows (path Valdombra/CharacterForge >260 char) -> usato main-tree stash+branch (diff short-path safe).
+- Adversarial review pre-merge ha aggiunto valore reale (catch D4 issue-vs-PR), non solo rituale.
+
+---
+
+## 2026-07-03 (L3 char-test scale-up + presa-carico doc-pins guardrail #3191)
+
+### Completato
+- **L3 characterization-tests: tally CLEAN 5/6** (nuovi oggi #3194 + i giri precedenti). Ultimo: **Game PR #3194** char-test `tools/generate_decisions_log.py` (generatore ADR-index CI-gated, 7 pure-fn, 29 assertion, full collect-only 1423 test zero-collisione) -- CI verde. Serie: #3187 telemetry-bridge + #3188 vc_harness + #3190 pe_candidates-edge + #3192 campaign-driver + #3194 gen_decisions_log; #3189 pe_candidates CHIUSO-ridondante (recon-miss test co-locato -> lezione: grep INTERO repo + basename unico + FULL pytest, applicata da li' in poi con zero difetti). Metodo consolidato: pre-verifica OGNI assertion sul modulo reale PRIMA del dispatch, home in dir wired dal runner, `git apply --whitespace=fix`, PR-to-owner do-NOT-merge, verifica CI verde post-push.
+- **Presa in carico + merge del doc-pins guardrail #3191** (sessione L5, governance-critical `check_docs_governance.py` = validator CI): handoff via send_message; **harsh-review ESTERNO** (la loro era stessa-sessione) = SHIP-IT 0-P1, 2 trappole verificate chiuse, trailer puliti; merge via update-branch non-distruttivo + `--auto` su CI verde (MAI --admin).
+- **2 follow-up approvati da Eduardo -> Game PR #3193 MERGED**: (Q1) step `docs-governance.yml` che stampa i broken_doc_pin non-baselined nel `$GITHUB_STEP_SUMMARY` (da guardrail invisibile a visibile; provato nel job governance del PR stesso); (Q2) `OPEN_DECISIONS` OD-060 traccia i prerequisiti al flip `--pins-strict` (baseline decreasing-only enforcement + case-sensitivity audit).
+- **17 link deferred docs-reorg: verificati = 0 fix**. Grep repo-wide codemasterdd: nessun link live rotto (16/17 puntano a dir NON mosse; l'unico su prefisso-mosso e' prosa JOURNAL storica -> lasciata). Memory project_docs_reorg_state chiusa.
+
+### Note
+- Classifier blocca (correttamente) il self-merge di un PR governance-critical il cui body dice "MERGE = Eduardo"; #3191/#3193 mergiati con autorizzazione esplicita Eduardo.
+- OPEN_DECISIONS Game: aprire OD = sezione `### [OD-NNN]` + comment `<!-- od id=.. status=open -->` POI `generate_open_decisions.py` per rigenerare la tabella (altrimenti il --check gate fallisce).
+- Workflow-file change: il job gira col workflow DEL BRANCH su pull_request -> il nuovo step e' testato in CI reale nel PR stesso.
+
+---
+
+## 2026-07-02 (sera-5 -- Stream-1 code-graph tooling: CodeGraph + graphify adottati, bake-off)
+
+### Completato
+- **agent-scanner pre-adozione ha ribaltato la richiesta** (3 plugin -> 2). Utente voleva graphify+claude-mem+CodeGraph su tutta la game family. Scan: claude-mem GIA' off apposta (Windows console-flash, issue #19012 closed; overlappa file-memory+AA01+continuous-learning-v2) -> resta OFF; CodeGraph e graphify = stessa classe, overlappano `eng-graph` (SSE vivo ma codemasterdd-scoped, non indicizza la family). Verdetto: 1 graph tool per la family = valore netto, claude-mem escluso.
+- **Bake-off pilota Game (utente ha scelto "entrambi")**: dimostrata COMPLEMENTARITA' non-duplicazione. CodeGraph = impatto-codice (26.486 nodi/96.898 archi; `explore` -> blast-radius + test-coverage gaps). graphify = architettura+doc multimodal (44.867 nodi post-tuning/3.223 community Leiden; `explain`+god-nodes su code+doc).
+- **Windows flash-safety = vincolo duro rispettato.** CodeGraph installer aggiungeva un hook `UserPromptSubmit codegraph prompt-hook` non annunciato (stesso pattern claude-mem) -> RIMOSSO, tenuti MCP global + auto-allow + direttiva CLAUDE.md fenced. graphify installato skill+MCP only (nessun `graphify hook install`).
+- **Tuning graphify (Quality Gate step 3)**: `.graphifyignore` esclude bundle Vite minified committati in `docs/mission-console/assets/` -> nodi 47.100->44.867 (-2.233), noise-hub 24->1.
+- **Rollout**: Game-Database full value (CodeGraph 2.168 / graphify 2.056). Game-Godot-v2 THIN: GDScript non parsato da nessuno dei due (CodeGraph 56 file, 0/1015 `.gd`; graphify solo doc-map 258 md).
+- **Zero footprint tracked sulla family**: indici + `.graphifyignore` via `.git/info/exclude` (`.codegraph/`, `graphify-out/`). Nessun commit ai repo Game*.
+- Doc: **ADR-0040** (adoption) + **QUALITY.md** (3-step evidenze) + row DECISIONS_LOG. Log build in `Extras/ollama-runs/2026-07-02-*`.
+
+### Da fare
+- **Restart CC** per esporre `mcp__codegraph__*` in-session (config scritta in `~/.claude.json`).
+- **Follow-up GDScript**: valutare `tree-sitter-gdscript` per graphify -> coprire struttura-codice Godot-v2 (oggi cieco). Senza, la lente code-graph resta Game-backend + Game-DB only.
+- **`.graphifyignore` Game** = candidato commit via PR (branch+PR, merge Eduardo) se si vuole team-shared.
+- Aggiornare `docs/reference/ai-tools-manifest.md` sez.1 con i due tool (pointer, non fatto in sessione).
+- **Stream-2 mappe** = task separato spawnato (analisi Dungeon Alchemist -> scope generatore mappe-scontro Godot; DA solo reference, no clone).
+
+### Note
+- eng-graph resta codemasterdd-scoped; rivalutare estensione alla family se i due nuovi tool si rivelano ridondanti (deferred).
+- Direttive scritte nel `~/.claude/CLAUDE.md` globale: blocco fenced CodeGraph (~15 righe) + registrazione skill graphify (3 righe). Rimovibili.
+
+---
+
 ## 2026-07-02 (sera-4 -- runbook godot-campaign: supersede Ryzen-only, dettaglio #468)
 
 ### Completato
@@ -165,6 +286,7 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 - **L3 ATTIVATA su ordine Eduardo ("uso vero di Jules") -- primo char-test wrapper-dispatched SHIPPED**: target `tools/sim/telemetry-bridge.js` scelto col churn-gate per-target (47gg fermo; analyze_telemetry/dashboard CALDI oggi -> esclusi). Upgrade metodo vs #3049: le 28 assertion della spec umana PRE-verificate verdi sul modulo reale PRIMA del dispatch. Jules = spec-fedele 1:1, test-only, 5/5 pass (ri-verificato post-prettier husky). Home `tests/services/` (unica dir wired dal runner; `tests/sim/` esiste ma nessun glob la esegue). Pin notevole: la rest-latency si attacca a QUALSIASI player_action, non solo attack come dice il commento header -- il test documenta il codice. Jules NON ha aperto il PR (2a occorrenza delivery-gap) -> salvage patch-extract, **Game PR #3187 open-for-Eduardo (do NOT merge)**. Char-test tally 2/2. [#3187 poi MERGED da Eduardo]
 - **L3 #2 (modello ora opus-4-8): char-test `tools/py/vc_telemetry_harness.py`** (#2850 S3, il harness dei vettori VC ratificati; 14gg fermo, zero test) -> **Game PR #3188 open-for-Eduardo (do NOT merge)**. 27 assertion / 7 test pytest PRE-verificate verdi (probe `py -3.13 -c` con runner finto) su pure-fn (`_clamp01`, `_index_value` incl. quirk bool), costanti (garanzia setup-mai-auto-sovrascritto, Codex P2 #2864), e `run_one_vc` monkeypatchato (happy species-filter + body ratificato, fetch-fail, telemetry-null/wrong-type + end-before-bail anti-leak). Fake-harness scritto verbatim nel task = Jules dattilografo. Home `tests/scripts/` (pytest bare discovery, idioma sys.path). Gotcha: Jules lascia trailing-ws su righe blank -> `git apply --whitespace=fix` (safe su file nuovo, no additions-only concern come la lane doc-comment); Jules NON apre PR (3a volta -> patch-extract e' lo standard). Ryzen py = `py -3.13` (3.12 assente, 3.14 senza pytest). Char-test tally 3/3.
 - **Coordinamento L5** (msg dalla sessione parallela reorg): Game docs-reorg = PR #3185 OPEN (11 dir mosse, merge Eduardo); mie lane L3 toccano solo `tools/py`+`tests/` -> ZERO conflitto con `docs/`. Path docs/ Game NUOVI post-#3185 per task futuri; 17 link deferred cdd->Game = 2o PR post-merge (thread L5); guardrail doc-pins in design.
+- **Merge autorizzati da Eduardo + L3 #3**: (a) **#3188 MERGED** --rebase; (b) **#3185 reorg L5** era BEHIND -> `gh pr update-branch` (non-distruttivo, merge di main dentro, no rewrite dei 2 commit fable-5) + `--auto` -> auto-mergiato 20:20 (docs/ops & co. atterrati), MAI `--admin` (bypasserebbe il gate CI-su-stato-finale). (c) **L3 #3: char-test `tools/py/pe_candidates.py`** (formule PE_ratio del composite calibration, 8gg fermo, 10 fn pure, zero test) -> **Game PR #3189 open-for-Eduardo**. 42 assertion / 7 test (40 eq + 2 KeyError) PRE-verificate verdi con probe `py -3.13`: 6 candidate A-F (candidate_D unclamped 2.0 vs candidate_value clamped 1.0; E zero-guard; F D-clamp interno), aggregate + KeyError-on-unknown, kd_normalize None-passthrough, attach_composite_terms (identity + setdefault idempotente + no-op su error/non-dict + override candidate). Tutte pure = no monkeypatch. Recon target parziale: scartati objective.py (36 test-ref, gia' coperto) e le JS fp-trait (0 `module.exports` = non testabili). **CORREZIONE post-review: #3189 CHIUSO-ridondante** (CI rosso spotato da Eduardo). Difetti: (1) esisteva GIA' `tools/py/test_pe_candidates.py` (13 test co-locati, copertura completa) -- il mio recon aveva grep-ato `test-ref` solo in `tests/`, non tutto il repo; (2) stesso basename -> bare `pytest` senza `__init__.py` = "import file mismatch" -> rompe TUTTA la python-tests job. Il mio pytest sul SINGOLO file mascherava entrambi. Fix lane (memory): recon deve grep-are l'INTERO repo per un test del modulo + verificare unicita' basename, e girare `pytest` FULL (non single-file) pre-dispatch. Main verificato zero-collisioni (vc_harness #3188 e' sano, no twin). **Char-test CLEAN tally 3/4** (#3187+#3188 MERGED, #3189 closed). Quota Jules oggi: 9 dispatch.
 
 ### Da fare
 - Prossimo giro trio opportunistico: phone_coop_vote_wire + ui/lobby_spectator_poll + main_thoughts_ritual (pool clean ~18, lista nel phase-note tracker).
