@@ -57,6 +57,7 @@ _ADR_NUM_RE = re.compile(r"(\d{4})")
 _OD_ENTRY_RE = re.compile(r"###\s+\[?(OD-\d+)\]?\s+([^\n]+)")
 _JOURNAL_DATE_RE = re.compile(r"^## 20\d{2}-\d{2}-\d{2}")
 _JOURNAL_HEADER_RE = re.compile(r"^## (.+)$")
+_SPEND_CUM_RE = re.compile(r"\*{0,2}Cumulative cost mese\*{0,2}\s*:\s*\$([0-9]+\.[0-9]+)")
 
 
 # Acquire gh token once at startup (clean subprocess from main thread)
@@ -304,6 +305,7 @@ def fetch_all_state(force_refresh: bool = False) -> dict[str, Any]:
         "repos": repos_state,
         "healthchecks": fetch_healthchecks(force_refresh),
         "gate_e": fetch_gate_e_counter(),
+        "api_spend": fetch_api_spend(),
         "adr_countdown": fetch_adr_countdown(),
         "open_decisions": fetch_open_decisions(),
         "journal_preview": fetch_journal_preview(),
@@ -485,6 +487,53 @@ def fetch_gate_e_counter() -> dict[str, Any]:
         "window_end": window_end.date().isoformat(),
         "threshold_pass_per_week": 5,
         "threshold_minimal_min": 2,
+    }
+
+
+def fetch_api_spend() -> dict[str, Any]:
+    """Claude API tier-0 spend cap-watch (ADR-0023).
+
+    Mirrors fetch_gate_e_counter: globs the monthly spend logs
+    (logs/claude-api-spend-*.md, gitignored local-only), reads each file's
+    '**Cumulative cost mese**: $X' aggregate, and reports current-month MTD +
+    all-time total + soft cap band ($10/$15/$20 per ADR-0023). The logs are
+    entry-triggered, so an absent month simply means $0 -- not a gap.
+    """
+    cur_month = datetime.now(timezone.utc).strftime("%Y-%m")
+    mtd = 0.0
+    total = 0.0
+    months: list[dict[str, Any]] = []
+    try:
+        for f in sorted(LOGS_DIR.glob("claude-api-spend-*.md")):
+            try:
+                content = f.read_text(encoding="utf-8", errors="replace")
+            except Exception:  # noqa: BLE001
+                continue
+            match = _SPEND_CUM_RE.search(content)
+            cost = float(match.group(1)) if match else 0.0
+            total += cost
+            months.append({"file": f.name, "cost": cost})
+            if cur_month in f.name:
+                mtd += cost
+    except Exception:  # noqa: BLE001
+        pass
+    # Soft cap band per ADR-0023, evaluated on current-month MTD.
+    if mtd >= 20:
+        band = "trigger"
+    elif mtd >= 15:
+        band = "alert"
+    elif mtd >= 10:
+        band = "awareness"
+    else:
+        band = "ok"
+    return {
+        "month": cur_month,
+        "mtd_cost": round(mtd, 4),
+        "total_cost": round(total, 4),
+        "band": band,
+        "cap_low": 10,
+        "cap_high": 20,
+        "months_tracked": len(months),
     }
 
 

@@ -74,3 +74,11 @@ def test_journal_header_re_extracts_full_header_text():
     from app import _JOURNAL_HEADER_RE
     m = _JOURNAL_HEADER_RE.match("## 2026-05-15 -- entry title")
     assert m is not None and m.group(1) == "2026-05-15 -- entry title"
+
+
+def test_spend_cum_re_extracts_dollar_amount():
+    from app import _SPEND_CUM_RE
+    m = _SPEND_CUM_RE.search("- **Cumulative cost mese**: $12.3456")
+    assert m is not None and m.group(1) == "12.3456"
+    assert _SPEND_CUM_RE.search("- **Cumulative cost mese**: $0.0000").group(1) == "0.0000"
+    assert _SPEND_CUM_RE.search("no cumulative line here") is None
