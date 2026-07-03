@@ -19,6 +19,27 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-07-03 (coordinator resume -- ADR-0040 collision + GDScript verify + vault reconcile + handoff quick-wins)
+
+### Completato
+- **Handoff ground-truth catch**: `docs/decisions/SESSION-HANDOFF-2026-07-03.md` NON in codemasterdd -- vive nel VAULT (origin/main `00d41ef51`), autored da coherence-routine (Trigger-C), ogni claim Game/cdd [corpus-inferred]. Re-verifica step-2bis (gh) = tutto stale: OD-058 D1-D5 TUTTI merged, #2512 CLOSED, #2551 MERGED. Il blocco inline del resume-prompt = la "Paste bootstrap" del doc. Memory `project_vault_handoff_location` + `project_claude_max_active` create.
+- **ADR-0040 collision fix** (PR #482 MERGED): due ADR sullo stesso 0040 (doctrine-triage 06-17 code-backed + code-graph 07-02 doc-only). Doctrine tiene 0040, code-graph -> **0043**. DECISIONS_LOG riga 50 malformata (0040+0042 su una riga, 0042 senza numero) splittata + riga 0041 mancante aggiunta -> log contiguo 0001-0043. Root README range 0001-0043.
+- **GDScript verify** (PR #483 MERGED): eseguito il TODO del draft upstream graphify ("verifica node-type reali prima del PR") su 82 file `.gd` di Game-Godot-v2 (tree-sitter-language-pack, 0 parse-error). 9/9 nomi confermati; gap: member-call = `attribute_call` (plurality 1349 vs 1214 `call`; draft mappava solo `call`). 3 correzioni framing (graphify usa wheel per-lingua NON language-pack = nuova dep; resolver-hook e' solo resolution-pass NON aggiunge lingue; incompat tree-sitter 0.25-vs-0.26). Filing upstream Eduardo-gated.
+- **Vault reconcile** (PR #264 MERGED): Ryzen vault diverged ahead3/behind11; i 3 commit local NON scartabili (`guida-uso-2026-06-22.md` 89 righe + index edits, mai pushati = AP#21). Preservati su branch remoto poi integrati via PR governance-clean (file referenziati gia' in origin -> zero dangling-link). Eduardo reset local -> origin/main (ff-clean verificato, guida-uso presente).
+- **Claude Max = ATTIVO**: authority-rule (accounts-infra sez.3/6) + Eduardo conferma -> Max primario rinnovato (non Pro). Docs stale corretti: vault PR #265 + cdd README PR #487 (entrambi MERGED).
+- **Quick-wins vault** (PR #265 MERGED, post adversarial-review): W-1 OD-058 tracker (tutte 5 righe open->shipped, piu' stale del previsto: handoff citava solo D2) + W-7 OD-057 verdict A+B1->R3+B1 (body confermava R3) + W-9 conteggio agenti 7->10 (reale; il "7" era artefatto grep `-vi claude/index`). **W-3 GIA' fatto** (moot, nessun testo stale). Adversarial reviewer indipendente (full-tool gh) ha catchato imprecision D4 (#2533 = issue chiuso non PR) -> fixed pre-merge.
+
+### Da fare
+- Filing upstream graphify GDScript issue (Eduardo-gated, repo esterno `safishamsi/graphify`).
+- Eventuale refresh GOALS/STATUS: OD-058 build-phase COMPLETA (D1-D5 shipped) se non gia' riflesso.
+
+### Note
+- 5 PR sessione: #482/#483/#264 merged da Eduardo; #265/#487 merged da me (autorizzato esplicito, post adversarial-review ADR-0026 P5). Ogni commit policy-C (Coding-Agent `claude-fable-5` + Trace-Id uuidv7; hook ha bloccato 2x su subject>72 + description-uppercase, corretti).
+- Worktree vault fallito su MAX_PATH Windows (path Valdombra/CharacterForge >260 char) -> usato main-tree stash+branch (diff short-path safe).
+- Adversarial review pre-merge ha aggiunto valore reale (catch D4 issue-vs-PR), non solo rituale.
+
+---
+
 ## 2026-07-03 (L3 char-test scale-up + presa-carico doc-pins guardrail #3191)
 
 ### Completato
