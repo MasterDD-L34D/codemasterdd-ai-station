@@ -1,6 +1,6 @@
 # Upstream feature-request draft -- graphify GDScript support
 
-Target repo: `safishamsi/graphify` (PyPI `graphifyy`). Draft 2026-07-02 (ADR-0040
+Target repo: `safishamsi/graphify` (PyPI `graphifyy`). Draft 2026-07-02 (ADR-0043
 follow-up). English (upstream). Post as a GitHub issue; offer a PR.
 
 --- ISSUE BODY BELOW (copy-paste) ---

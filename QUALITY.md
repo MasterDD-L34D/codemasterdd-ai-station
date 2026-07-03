@@ -1,7 +1,7 @@
 # QUALITY.md -- Code-graph tooling (CodeGraph + graphify)
 
 Quality Gate evidence per l'adozione dei due code-graph tool sulla game repo
-family. Standard: ADR-0040 + Quality Gate globale (3 step). Data: 2026-07-02.
+family. Standard: ADR-0043 + Quality Gate globale (3 step). Data: 2026-07-02.
 
 ## Step 1 -- Smoke (happy-path verde + output verificabile)
 
@@ -66,4 +66,4 @@ Verdetto step 3: **tuning efficace** -- rumore bundle rimosso, signal migliorato
 
 Production-ready su **Game + Game-Database** (3 step verdi). Game-Godot-v2 =
 doc-map only, in attesa di `tree-sitter-gdscript` per graphify (follow-up
-ADR-0040). claude-mem = escluso by-design.
+ADR-0043). claude-mem = escluso by-design.
