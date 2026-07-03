@@ -11,9 +11,15 @@
 - **Ruolo**: infrastructure-as-code + governance + dashboard operativa cross-repo
   per la fleet AI sovereign-first di Eduardo (vedi `CLAUDE.md` autoritativo).
 
-## Stato attuale (verificato git/ls/gh 2026-07-02 sera-3, arco chiuso 20:16Z)
-- **HEAD origin/main**: `bd86af8`+ (2026-07-02; avanza a ogni doc-land). 0 PR
-  arco aperti sul hub (#462 ennea handoff = altra sessione).
+## Stato attuale (verificato git/ls/gh 2026-07-03, fleet audit)
+- **HEAD origin/main**: `eca45fe`+ (2026-07-03; avanza a ogni land, hub molto
+  attivo Ryzen+Lenovo in parallelo). 0 PR miei aperti sul hub.
+- **Fleet health VERDE** (audit 2026-07-03, workflow 5-probe + verify 4-agent,
+  overall_go): dashboard registry 10/10 + run-monitor 50/50, Game/GGv2
+  origin/main CI verde. Unico RED era **Game-DB "Evo Import Sync"** (giu' 3gg,
+  bot 403 + `_game` gitlink) -> **FIXATO #233** (permissions block + gitignore)
+  MERGED e **provato live** (workflow_dispatch SUCCESS). Blueprint fleet-verify
+  -> Artifact `claude.ai/code/artifact/78108b9b`.
 - **Modello sessioni**: sessione avviata Fable 5, switch a Opus 4.8 a fine
   giornata (trailer commit riflette il modello attivo al commit). Finestra
   Max/Opus-crunch di giugno passata. Roadmap post-Max: ADR-0023/0030.
@@ -29,15 +35,17 @@
   aggiornato multi-machine `93fe89d`). Lane policy ratificata:
   `docs/reference/jules-lane-policy.md` (FILLER-ONLY max 1 trio/sessione in
   coda, stop a pool vuoto, ~9 file clean residui; 100% NON e' un goal).
-- **Compass**: DI **80** (era 72). Pillar `cross-fleet-reproducibility` era un
-  falso drift da mis-scoping (paths senza `scripts/fleet/**`) -> fix #469
-  MERGED; backup runtime verificato sano (mirror 15 repo result=0 + ApiKeysBackup
-  daily ok). Nuovo top-drift: `agentic-tooling` -- fare recon scope-vs-neglect
-  PRIMA di qualsiasi commit (anti L-016).
-- **Fleet altre lane** (journal 07-02): arco ennea chiuso (5 PR); reorg docs
-  Game L5 -> PR #3185 OPEN (merge Eduardo); opencode-headless CHIUSO.
-- **ADR**: 43 file in `docs/adr/` (ls 2026-07-02; include SUPERSEDED inline).
-  Cluster recente orchestration/autonomy: ADR-0036..0039.
+- **Compass**: DI ~72-82 (oscilla con la window same-day). Due drift risolti =
+  falsi positivi da mis-scoping (#469 scripts/fleet, #473 fleet-tools-mcp).
+  `agentic-tooling` drift = artefatto di finestra (30 commit same-day), NON
+  neglect -- recon scope-vs-neglect PRIMA di ogni commit (anti L-016).
+- **Fleet altre lane 07-03**: Ryzen lane L3 char-test attiva (telemetry-bridge
+  #3187, vc_telemetry_harness #3188, pe_candidates #3189, generate_open_decisions
+  #3195 -- PR-to-owner do-NOT-merge); July-spend chip -> card dashboard cap-watch
+  su main; code-graph tooling landato (ADR-0043).
+- **ADR**: ~43 file; **collision 0040 RISOLTA** (#482: 0040-code-graph ->
+  0043-code-graph-tooling-adoption; resta 0040-doctrine-triage-label). Recenti
+  0041 sovereign-SD, 0042 evo-swarm entity-grounding, 0043 code-graph.
 - **Stack decommissionato** (NON piu' presente): `infra/` (LiteLLM+Langfuse+
   Postgres docker-compose) e `apps/dogfood-ui/` RIMOSSI (ADR-0017 SUPERSEDED da
   ADR-0030 Hybrid A1). `apps/` ora contiene solo `cross-repo-dashboard/` +
@@ -47,8 +55,10 @@
 
 ## Prossimi passi
 
-1. **Atti Eduardo**: arco MAP-Elites DONE (#3183+#465 MERGED). Resta solo
-   review Game #3185 (reorg docs L5, altra sessione).
+1. **Chip game-family (spawned 2026-07-03)**: sessione hub pulita che applica
+   Fasi 1-4+7 del blueprint fleet-verify su Game/GGv2/Game-DB (topologia +
+   salute repo + dashboard game + governance, ogni RED verificato adversarial,
+   sintesi Artifact). Read-mostly, draft-PR + hand-merge.
 2. **Fronte playtest Game** = prossima sessione piena (journal 07-02 sera-2:
    leggere prima memory `project_godot_visual_asset_pipeline` + coordinarsi
    con arco Game). Baricentro progetto, critical path.

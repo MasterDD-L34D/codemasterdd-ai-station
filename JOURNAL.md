@@ -19,6 +19,29 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-07-03 (fleet audit multi-workflow -- Game-DB sync fix + blueprint sessione, Lenovo Opus 4.8)
+
+### Completato
+- **Arco MAP-Elites v2 chiuso definitivamente** (continuo dalla sessione 07-02): triage #460/#3183, M15 card `map-elites-hc06-v2-edm` + fix conteggio (iter SPRT-evicted non scrivono iter-json -> `done = max(json, iter distinte checkpoint.jsonl)`; verificato 50/50 sul dir reale). Game #3183 + hub #465 MERGED, 0 residui.
+- **Campagna doc-comment GGv2 batch 34** (#581 + tracker #582, 134/280): PRIMO dispatch Jules da Lenovo (gate-4 dedup cross-machine ha tenuto). Salvage char-test #3 `pe_candidates`: collisione con sessione Ryzen intercettata (#3189 gia' consegnato) -> stand-down, zero duplicato.
+- **Compass 2 fix scope** (#469 scripts/fleet, #473 fleet-tools-mcp): drift = falsi positivi da mis-scoping, DI 72->82. Recon agentic-tooling = artefatto di finestra (no commit aspirazionale).
+- **Ricostruzione necessita' (workflow 6-agent)**: unica azione hub non-collidente = digest Jules #484; July-spend-log -> chip (poi produttosi la card dashboard cap-watch, ora su main).
+- **Audit dashboard + game-family (workflow 5-probe)**: fleet verde tranne 1 RED reale -> **Game-DB "Evo Import Sync" giu' 3 giorni** (8/8 fail, bot 403 + bug latente `_game` gitlink 160000).
+- **Fix Game-DB #233** (permissions block + `_game/` gitignore) MERGED -> **provato LIVE** via workflow_dispatch: run SUCCESS, step killer green, "No file changes" prova che `_game` non e' piu' stagiato. Pipeline ripristinata (il repo-setting NON era read-only, il fix YAML e' bastato).
+- **Verifica adversariale di sessione (workflow 4-verifier)**: overall_go TRUE, pytest hub 47/47, 0 blocking. Chiuso l'unico PARTIAL (BACKLOG M15 prosa stale, #489).
+- **Blueprint "sessione perfetta di fleet-verification"** (8 fasi, toolkit-matrix, guardrail) -> Artifact riferibile (claude.ai/code/artifact/78108b9b). ADR-0040 collision verificata RISOLTA (0043 landato, #482).
+
+### Da fare
+- **Chip game-family** (spawned): sessione hub pulita che applica Fasi 1-4+7 del blueprint su Game/GGv2/Game-DB.
+- Cloni locali Game/GGv2 stale -> refresh a fine sessioni Ryzen (dirty + collision-risk, no unattended-pull).
+
+### Note
+- Metodo: ground-truth > agent-report ha pescato 2 falsi finding (99/251 GGv2 inesistente, "+1 codemasterdd" mis-read) + la collisione #3189. Verifica SEMPRE le claim dei subagent.
+- SSH Ryzen read-only via `-EncodedCommand` (base64 UTF-16LE) evita il quoting-hell bash->ssh->powershell; MSYS_NO_PATHCONV=1 per `git show origin/main:path`.
+- 4 workflow + 2 chip in sessione; tutti i PR verificati (comportamentale sul dato reale, non reimplementato).
+
+---
+
 ## 2026-07-03 (Jules L3 char-test -- generate_open_decisions #3195, Ryzen/Opus 4.8)
 
 ### Completato
