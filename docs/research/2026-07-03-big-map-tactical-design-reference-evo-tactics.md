@@ -481,5 +481,8 @@ slice** dovra' comunque essere un sottoinsieme coerente e costruibile -- il cand
 (1) slice visivo (tile biome + camera #585 gia' fatta), poi (2) LOS (D3, il prerequisito), poi i sistemi
 uno alla volta. Da definire in brainstorm/writing-plans.
 
-**Addendum in arrivo:** ricerca "trigger naturali/lore-driven per campagna + tratti" (da D7) -> doc
-companion `docs/research/2026-07-03-lore-driven-triggers-*.md` (in corso).
+**Addendum CONSEGNATO:** ricerca "trigger naturali/lore-driven per campagna + tratti" (da D7) ->
+`docs/research/2026-07-03-lore-driven-triggers-campaign-traits.md`. Tesi: modella lo STATO ECOLOGICO
+del bioma + resolver che lo legge -> mappa + obiettivo + trigger-tratto = 3 output dello stesso stato;
+trait-unlock = conditional-record (exposure/hazard-survival/signature-behavior), non counter; 10 guardrail
+anti-grind; 8 domande di design aperte (sez.6 dell'addendum).
