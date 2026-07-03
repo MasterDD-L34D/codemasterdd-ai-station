@@ -25,7 +25,7 @@ param(
   [string]$Target     = $env:FLEET_RYZEN_SSH,
   [string]$TargetHome = 'C:/Users/Vgit/.claude',
   [string]$SourceHome = "$env:USERPROFILE/.claude",
-  [string[]]$Files    = @('CLAUDE.md', 'rules/encoding.md', 'reference/anti-patterns.md', 'reference/fleet-topology.md'),
+  [string[]]$Files    = @('CLAUDE.md', 'rules/encoding.md', 'reference/anti-patterns.md', 'reference/fleet-topology.md', 'skills/fleet-verify/SKILL.md'),
   [switch]$Apply,
   [switch]$NoBackup
 )
