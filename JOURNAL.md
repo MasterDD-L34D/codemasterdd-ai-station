@@ -19,6 +19,23 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-07-04 (Fleet-verify game-family da Ryzen: confronto Lenovo + 5 PR follow-up, Opus 4.8)
+
+### Completato
+- **Fleet-verify (skill) da Ryzen**, confronto vs Lenovo. Origin identico + tutto verde tranne 1 RED: codemasterdd `playtest2-board-sync.yml` 0/15 startup_failure (heredoc dedentato dentro il block-scalar YAML). Delta reale = cloni LOCALI Ryzen (Game-DB 35-behind + `index.lock` fantasma 1-Jul, Godot-v2 332 `.png.import` churn) vs Lenovo current. gh-auth VIVO su Ryzen + push https funziona (contro gotcha noto). Artifact health-report `65b4129b`.
+- **2 RED chiusi via chip -> MERGED**: CI startup_failure `#498` + indici reverse-FK Game-DB `#235` (verificati io su origin/main, non sulla cache session-mgmt che dava `#235` OPEN mentre gh dava MERGED).
+- **Sync Ryzen**: pull Game-DB (rimosso `index.lock` stale 2.5gg) + codemasterdd; scartata churn Godot (verificato 0 file non-`.png.import` prima); Game WIP `feat/combat-los-slice1` intatto.
+- **Deep audit 14-agent** (Workflow: 5 probe + harsh-reviewer 3-vote) -> 3 amber -> **3 PR aperti + CI-verdi** (merge Eduardo): soft-delete skip+warn Game-DB `#236` (helper `filterSoftDeletedRecords` iniettabile, 5 unit-test no-DB), balance-gate guards Game `#3204` (sanity-band + allowlist OD-032, guard provati non-vacui), FK-policy doc Game-DB `#237` (comment-only, il generatore strippa i commenti -> schema-ref sync).
+
+### Da fare
+- Merge Eduardo: `#236` / `#3204` / `#237`. Decisione TKT-P6-AP3 (5 abilita `cost_ap:3`, decision-gated). Reconcile vault SoT sez. 14.4/14.5 hex-LOS-green QUANDO LOS `#3202` mergia.
+
+### Note
+- Ground-truth > report ha morso 3x: "resurrection" era clobber (deletedAt mai toccato); i 2 voti-refute DB erano stale-clone non sostanza (chiusi io su origin); il probe governance confondeva Ryzen (35-behind) con Lenovo (current). SDMG: 2 fork di policy (#1 skip/resurrect, #2 soglie-gate) -> decisi da Eduardo via AskUserQuestion, non da me.
+- Gotcha aggiornata: push https da Ryzen FUNZIONA con gh-auth vivo -- il blocco wincredman vale solo per SSH non-interattivo.
+
+---
+
 ## 2026-07-03 (Stream-2 mappe Evo-Tactics: DA reference -> generatore DEFERRED -> camera #585 -> big-map descent redesign scoped)
 
 ### Completato
