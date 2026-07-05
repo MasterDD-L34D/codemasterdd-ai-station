@@ -19,6 +19,22 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-07-05 (Co-op turn semantics: verdict free-ordering + active_unit onesto, Fable 5)
+
+### Completato
+- **Verdict ground-truthed sui 2 finding turn-order** emersi dalla review LOS probe-v2 (#3212): il free player ordering dentro il round E' il design co-op inteso (ADR-2026-04-16 sez.2 active_unit "advisory" + M17 shipped: /action e /turn/end = wrapper sul round flow; vincolo reale = AP budget; nessun client gata su active_unit -- Godot fallback display-only, web ctBar con test "no active_unit -> priority", publisher TV non forwarda nemmeno la key #2727). Enforcement del turn order avrebbe contraddetto il round model e rotto il composer co-op.
+- **Fix "active_unit onesto" in Game PR #3214** (CI 13/13 verde, attesa merge Eduardo): null al hand-off ai player (`advanceThroughAiTurns`) + null post `/turn/end` (round bridge); prima restava pinnato a `turn_order[0]` player per l'intero fight. Driver `ai-driven-sim.js` ora itera i player vivi con AP (fix della starvation single-pinned-actor che aveva affamato il probe LOS v1). Addendum ADR-2026-04-16 + regression pin `tests/api/coopTurnSemantics.test.js` (4 test, TDD RED->GREEN; blast radius round-model 60/60; full test:api exit 0).
+- Memory `game_coop_turn_semantics` (impatto fixture LOS ratify: mai pilotare via active_unit; gotcha mod:99 scala danno con MoS).
+
+### Da fare
+- Merge #3214 (Eduardo). Poi le fixture LOS ratify (chip task_7699b10c) possono assumere la semantica pinnata: iterare player con `ap_remaining > 0`, non active_unit.
+- Follow-up #2727 (publisher TV: forward actor key reale + phase) resta aperto lato Game.
+
+### Note
+- Metodo: Refresh-verify pre-verdict (ADR + codice + Godot + QA doc 2026-06-11 item4) -- il QA doc aveva gia' flaggato il vocabolario actor-id triplo, conferma indipendente che nessun client autorizza su active_unit. Worktree isolato (main checkout aveva il lavoro LOS in corso, mai toccato). Prettier drift preso dal gate CI, non dal local run: `lint-stack` non era nel loop locale -- nota per i prossimi fix Game.
+
+---
+
 ## 2026-07-05 (Combat LOS: arco completo su main -- slice-1 + unit-blocking + reaction-gating + Godot parity + repositioning, Opus 4.8)
 
 ### Completato
