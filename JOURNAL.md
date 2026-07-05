@@ -19,6 +19,26 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-07-06 (LOS-reposition budget v2: euristica + SDMG + matrice controllo corretto, Fable 5 da Ryzen)
+
+### Completato
+- **Recon Workflow 51-agent** (4 probe paralleli + verify adversariale, 0 REFUTED su 48 claim) su Game per il follow-up PR #3210: ground-truth engine (move = multi-tile teleport AP=Manhattan, session.js:2993; attack 1 AP; freeze strutturale `active_unit` M17 -- scritto solo a /start, /turn/end non avanza MAI -> fixture-fix impossibile, serve driver-fix; `/action` senza gate active-unit; resolver WEGO deduce `ap_cost` field senza ricalcolo).
+- **Collisione sessione parallela gestita collision-safe**: #3210/#3212/#3213 mergiati DURANTE la sessione dall'altra sessione (probe controllo-corretto gia' costruito la'); miei 8 file uncommitted spostati via patch in worktree dedicato `los-repos-budget` + tree condiviso ripristinato chirurgicamente (diff-match verificato pre-restore) per non contaminare le sue misure.
+- **Euristica budget-aware TDD** (Game PR **#3217**, 2 commit, flag-dormant): `stepToRegainLos` con `opts.budget` (default 1 = greedy byte-identico), metrica (costo, dist-nemico, x, y); sim two-phase (riserva 1 AP poi full-pool), prod full-pool + `ap_cost` = distanza reale (fix undercharge WEGO); adapter `allPlayersActPerRound` + `playerActionsByUnit` (aggira freeze M17). 74/74 -> regressione piena test:api 77/77+5/5 + sim 227/227.
+- **SDMG falsificazione esterna**: harsh-reviewer SOUND WITH FIXES (P1 `MOVE_TERRAIN_COST_ENABLED` x budget = under-charge AP silenzioso -> guard clamp-a-1 shippato test-locked; metrica threat-blind documentata) + game-design-validator COHERENT WITH CHANGES (flanking on-pillar; wall-standing -> knob `avoidBlockerTiles` A/B; prod full-pool da provare a N=40).
+- **Matrice controllo CORRETTO** (probe v2 + geometria `wide` mia, LOS ON entrambi gli arm, N=10 x 8 run, coverage gate 3/3 unita'): repositioning = pace-positivo WR-neutrale (fino a -3.0 round, -24%, lane@1.8), **zero timeout** (i 3/10 di v1 = artefatto fixture CONFERMATO); budget vs step = **nessuna separazione outcome** (lane identici = parity proof; wide fire-rate 48% vs 26% ma non converte).
+- Chip spawnato e preso da sessione dedicata: audit `/declare-intent` no-authz + AP undercharge (branch `fix/declare-intent-authz-ap-undercharge`).
+
+### Da fare
+- Eduardo: review/merge PR #3217 + 3 decisioni pre-flip (default prod budget-vs-step; K4 recognizer `_LOS_BLOCKED` vs oscillazione documentata; `avoidBlockerTiles` A/B) -- in QUALITY doc `2026-07-06-los-reposition-budget-QUALITY.md`.
+- Ratify N=40 owner-gated: 3 arm (off/step/budget) x 2 geometrie x avoidBlockerTiles, + board mirror-wall anti-oscillazione del validator. Repositioning per se' GIUSTIFICATO dal controllo corretto. Post-merge #3214: fixture puo' assumere semantica onesta active_unit.
+
+### Note
+- Gotcha nuovi: patch via `>` PS5.1 = UTF-16 illeggibile da git (`git diff --output=` risolve); saturazione porte effimere Windows 49152+ con 2 sessioni sim concorrenti (~5k TIME_WAIT) -> retry wrapper nel probe + attesa drain; Ryzen = solo Node 24 (regola "mai 24" e' del setup nvm Lenovo) -> confronti arm-vs-arm same-node validi, cross-machine no.
+- v1 wrong-control chiuso: flag-OFF = "nessun vincolo LOS" (ceiling irraggiungibile), il controllo giusto e' repos-ON vs repos-OFF con LOS ON -- ora strumentato via `COMBAT_LOS_REPOSITION_MODE` (off/step/unset) letto per-call.
+
+---
+
 ## 2026-07-05 (Co-op turn semantics: verdict free-ordering + active_unit onesto, Fable 5)
 
 ### Completato
