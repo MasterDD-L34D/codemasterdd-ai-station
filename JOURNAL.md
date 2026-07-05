@@ -19,6 +19,24 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-07-05 (Combat LOS: arco completo su main -- slice-1 + unit-blocking + reaction-gating + Godot parity + repositioning, Opus 4.8)
+
+### Completato
+- **Arco Combat-LOS INTERO mergiato** (8 PR, tutte flag-dormant `COMBAT_LOS_ENABLED` OFF = band-neutral): slice-1 `#3202` (primitiva integer DDA + config blocker + golden-vectors 15 + 4 seam: umano /action + /round/execute, AI intent, sim parity) via subagent-driven-development T0->T7 con review a 2 stadi per task; spec fase-2c `#3198`; estrazione `losForGrid` `#3203`; **Godot GDScript parity port `#586`** (GUT 8/8, 15/15 vettori byte-identici, fix gdformat); unit-blocking `#3205` (dormiente doppio-gate, nit hp->`?? 0` fixato pre-merge); reaction-gating `#3206` (SOLO overwatch + bond counter-attack = line-of-fire reali; intercept/terrain-burst/beast-bond chiusi per decisione, recon 5-classifier: no attacker->target line); probe ratify `#3207`; **AI LOS-repositioning `#3210`** (helper condiviso `stepToRegainLos` greedy 4-neighbor, sim=all-foes / prod=[target], fallback grazioso testato su entrambi i seam).
+- **Ratify N=10 + falsificazione SDMG (il finding chiave)**: probe con positive-control anti-R5 (5/5 linee bloccate) -> wr_delta -0.30 flag-ON. Post-repositioning il gap NON si chiude; falsificazione opus indipendente conferma: (a) fixture turn-starved (solo ranged_1 agisce 30 round), (b) `stepToRegainLos` FIRE correttamente (7-9x/run), (c) **il control flag-ON-vs-OFF e' strutturalmente sbagliato** (OFF = nessun vincolo LOS, il gap non puo' chiudersi per costruzione), (d) isolazione corretta (repos-ON-vs-OFF con LOS held ON): delta 0.000 -- **euristica greedy 1-tile inerte dove misurabile** (serve multi-tile lookahead). Merge #3210 deciso da Eduardo come infrastruttura; euristica forte + control corretto = chip follow-up.
+- Governance: 2 errori ground-truth del plan corretti pre-dispatch (closure-vs-Map `terrainAtFromFeatures`, seam AI inesistente `policy.js:128` -> `declareSistemaIntents`); commit concorrenti dei chip scoperti via git (Currency Gate); memory `feedback_subagent_groundtruth_reverify` estesa (plan=ipotesi, git=verita; chip worktree possono committare sul branch padre); collision doppio-agent probe fermata via TaskStop pre-clobber.
+
+### Da fare
+- **Flip `COMBAT_LOS_ENABLED`** (owner-gated): PRIMA servono (chip `task_7699b10c`) fixture multi-unit non-turn-starved + control corretto (repos-ON-vs-OFF, LOS held ON) + euristica multi-tile lookahead con falsificazione esterna (harsh-reviewer + game-design-validator), POI N=40. `units_block_los` flip = asse separato.
+- Fast-follow: helper condiviso `occupiedSetFromUnits` (occupancy-set duplicato ~4x nel combat stack).
+- Vault SoT: reconcile sez. 14.4/14.5 hex-LOS (ora che #3202 e' su main la LOS square-grid e' shipped; la hex resta primitiva unwired).
+
+### Note
+- Il valore della sessione = il **negativo**: la falsificazione SDMG ha ribaltato sia la spiegazione dell'implementer ("fixture artifact" -- vera ma incompleta) sia l'assunto del design (greedy 1-tile utile). Metrica self-designed + euristica self-designed si auto-confermavano; solo il controllo avversariale con l'isolazione giusta l'ha rotto. Ship-as-infra + iterate = decisione owner consapevole, non "done" gonfiato.
+- Merge discipline tenuta su 8 PR: update-branch + CI re-verde, mai `--admin`; force-with-lease solo su feature branch. EADDRINUSE nei sim test = flake pre-esistente (file mai toccati), non regressione.
+
+---
+
 ## 2026-07-04 (Fleet-verify game-family da Ryzen: confronto Lenovo + 5 PR follow-up, Opus 4.8)
 
 ### Completato
