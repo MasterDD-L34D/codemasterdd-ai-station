@@ -19,6 +19,24 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-07-06 (LOS UI-tell Godot: C2 meta' chiusa, GGv2 PR #588, Fable 5 da Ryzen)
+
+### Completato
+- **Verifica chip #3222**: mergiato da Eduardo 13:28, spot-check main 25/25 verdi.
+- **Slice UI-tell LOS** (GGv2 **PR #588**, condizione C2 pre-flip, meta' UI): entrando in attack-targeting l'overlay marca i bersagli SISTEMA senza linea di tiro (mode `los_blocked`, FERRO_TEAL desaturato). Nuovo `LosTell` sveglia il porting SquareLos DORMIENTE (#586) + riusa `MoveCostField.terrain_at_from_features`; blocker set = mirror los.yaml backend; wire single-emission nel CombatEmitterCaller. 45 righe produzione (regola-50 rispettata e dichiarata nel PR).
+- **TDD vero su Ryzen**: godot.cmd 4.6.2 TROVATO in AppData (GUT locale possibile, gotcha "niente Godot su Ryzen" superato); RED->GREEN x2 (LosTell assente; poi clobber-guard). Full suite 3853/3858 pass 0 fail; gdformat/gdlint clean.
+- **Review godot-engine-specialist (ADR-0026 #5, 3 PR same-day): SHIP-WITH-FIXES, P1 REALE**: `BoardOverlayAdapter.clear_all()` a ogni segnale -> le 2 emissioni separate clobberavano l'overlay attack-range (il mio test history-based non lo vedeva). Fix: payload unico + assert live-state della BoardOverlay (RED contro il clobber). P3 (Callable capture, perf DDA) non-issue.
+- **Recon 2-track + re-verify**: 2 Explore (backend seam wire + Godot combat screen) con spot-check diretto -- 2 over-claim beccati (chiave terrain client = `type` non `terrain_type`; getter round_orch gia' esistente). Memoria visual-asset CORRETTA (stale: S0-S3 era CHIUSO da giugno, Ferrospora Art Pass v2 shipped -- Currency Gate).
+
+### Da fare
+- Eduardo: merge GGv2 #588 (CI + review annotata sul PR) + Game #3223. Follow-up candidati dichiarati nel PR: ForecastPanel "bloccato da LOS", recompute tell on-move, gating locale attacco.
+- C2 seconda meta' = decisione `units_block_los` (design, owner). Poi flip `COMBAT_LOS_ENABLED` = tua chiamata con tutta l'evidenza sul tavolo.
+
+### Note
+- Wire backend (per il futuro): /action risponde 400 "LOS ostruita"; round path marca `skipped: target_los_blocked`; overwatch LOS-gated silente; bond/intercept NON gated. Il combat Godot e' un mirror locale (CombatSession) -- il tell usa la primitiva parity-locked, non il wire.
+
+---
+
 ## 2026-07-06 (LOS de-ceiling + ratify N=40: letalita' misurata, C1 chiusa, Fable 5 da Ryzen)
 
 ### Completato
