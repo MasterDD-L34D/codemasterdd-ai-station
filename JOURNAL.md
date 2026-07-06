@@ -19,6 +19,22 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-07-06 (units_block_los MISURATO: crowd ratify N=40, Game PR #3227, Fable 5 da Ryzen)
+
+### Completato
+- **Geometria `crowd` nel probe LOS** (Game `tools/sim/los-repos-probe.js`): corpo ALLEATO x=3 sulla linea di tiro (prop mai pilotato, hp 24/dc 12), attaccante x=1, nemico x=5, zero terrain in-lane -- chiude il chip task_520db362 (fixture lane/wide strutturalmente cieca all'asse, delta 0 per costruzione). Positive-control nuovo fallibile in ENTRAMBE le direzioni sul predicato units-aware di produzione (`losClearOnGrid` con units). Arm flip-off PINNA `COMBAT_LOS_ENABLED='false'` + eco provenienza per-arm (`los_flag_env`, `units_block_los`) nel JSON -- il gotcha "default cambiato" era REALE: #3226 ha flippato default-ON a meta' sessione.
+- **Ratify N=40 asse units_block_los** (2 run flip, banda scale 2.0 / enemyRange 4, varianti worktree `los.yaml`, true MAI committata, drain-gate TIME_WAIT<3000 + checkpoint resume): **dWR -0.375** (0.525 -> 0.150, Wilson CI95 disgiunti), dRound +11.28, timeout 19 -> 34, zero sconfitte. Arm OFF byte-identico in TUTTI i run (0.800, 32/0/8).
+- **Currency Gate esercitato**: #3226 (flip default-ON + sistema step budget-1) mergiato durante i run -> rebase + RI-MISURA completa su main post-flip: run true byte-identico (clamp budget-1 no-op su crowd), run false stesso WR con mix 21/11/8 -> 21/0/19 (sistema step insegue meno). Asse identico nelle due misure = robusto.
+- **Meccanismo ground-truthed** (replay seed 1 loggato PRIMA del verdetto): stallo BILATERALE -- policy player gate-a units-aware ma `stepToRegainLos` e' terrain-only by-design (oscillazione infinita (1,y)<->(2,y)); sistema AI non ritargetta mai il corpo visibile (reposition pinnato sul target scelto -> idle). Solo corsia y=1 si auto-risolve via edge-row y=0.
+- Report `docs/research/2026-07-06-los-units-block-crowd-n40.md` (Game) + **Game PR #3227** (merge=Eduardo). Unit test LOS 35/35 verdi post-rebase.
+
+### Da fare
+- Merge #3227 (Eduardo). **`units_block_los` resta false** (coerente col flip #3226): accenderlo richiede (a) reposition body-aware, (b) retarget sistema su target visibile, POI ri-misura su crowd.
+- C2: meta' config (questa misura) CHIUSA; meta' UI-tell = GGv2 #588/#589.
+
+### Note
+- Run N=40 crowd = ~2 min l'uno (in-process supertest); il run true lascia ~16.3k TIME_WAIT -> drain-gate confermato necessario (memoria `reference_game_apisuite_eaddrinuse`).
+
 ## 2026-07-06 (FLIP LOS eseguito: decisioni owner + gate Godot + regressione adapter fixata, Fable 5 da Ryzen)
 
 ### Completato
