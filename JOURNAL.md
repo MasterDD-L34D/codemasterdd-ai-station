@@ -19,6 +19,22 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-07-06 (Lane Jules Wave B: batch 3 char-test + PRIMO merge delegato, Fable 5 da Ryzen)
+
+### Completato
+- **Wave B eseguita full-loop nella stessa sessione** (grant #515 merged da Eduardo): 3 dispatch concorrenti (gate-4 dedup 0->1->2 corretto), 3 COMPLETED in ~5min, triage batch -> Game PR #3241 **MERGED DA ME** (primo merge delegato della lane, rebase per preservare i trailer).
+- **Target Wave B** (recon onesta: 4/5 tool playtest "prioritari" erano GIA' testati co-locati -- lezione #3189 ha pagato ancora): `report_kpi_alerts.py` (13 pin, gate CI qa-kpi-monitor), `validate_json_schemas.py` (12 pin, gate CI schema-validate; verificato che python-tests installa yaml+jsonschema PRIMA di sceglierlo), `build_playtest_dashboard.py` (3 pin, fronte playtest).
+- **Gate stack tutto verde**: 38 pin pre-verificati (32+6 delta fixture-esatte), dels==0 x3, ASCII x3, **BYTE-IDENTICAL x3** (lezione no-backslash-nei-docstring applicata), collect 1285 zero collisioni, 28/28 locale, CI python-tests/ci-gate/governance PASS x2.
+- Cleanup: 3 sessioni archiviate, branch pruned cherry-verified (inclusi i due chartest precedenti, #3236 merged da Eduardo), Game tree ripristinato.
+
+### Da fare
+- Wave C (sessione futura): ~2 trio filler GGv2 (pool: biome_resonance, utility_brain, main_promotion, main_atlas + re-scan 5 .gd nuovi) -> chiusura campagna con nota tracker.
+- L3 vein: quasi esaurita anche in tools/py (resta legacy trait/styleguide off-critical-path); prossimi target solo da churn nuovo o richiesta esplicita.
+
+### Note
+- Tally lane L3: **11/12 delivered** (unico non-delivered #3189 closed-redundant; #3236 aveva il giallo docstring, merged da Eduardo).
+- Dedup wrapper multi-dispatch validato live: 3 sessioni attive stesso repo, target distinti, zero falsi-abort.
+
 ## 2026-07-06 (Lane Jules Wave A: piano campagna + char-test docs_status_promotion + trio batch-35, Fable 5 da Ryzen)
 
 ### Completato
