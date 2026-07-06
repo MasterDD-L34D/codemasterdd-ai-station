@@ -19,6 +19,22 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-07-06 (Lane Jules L3: char-test schema_enum_diff, Fable 5 da Ryzen)
+
+### Completato
+- **L3 char-test #8 -- CLEAN tally 7/8**: `tools/schema_enum_diff.py` (sibling family di #3194: recon completa dei tools/*.py governance/docs; modulo stabile da 2025-11-11, 0 test nel repo intero, basename unico, stdlib-only) -> Game PR #3233 do-NOT-merge, CI **python-tests GREEN** (40s/47s, 2 run) + ci-gate/governance PASS. 27 pin: load errors, extraction enum/range/none, zero-bound `is not None`, empty-iterator truthy quirk, precedenza enum-su-range, formato righe diff, exit code main.
+- **Metodo #3195 confermato**: 31 pin-check pre-verificati contro il modulo reale PRIMA del dispatch; file embedded byte-esatto nel task -> patch Jules BYTE-IDENTICAL allo spec; gate dels==0 / only-target / ASCII / collect `tests/` 1238 item zero-collisioni / 27 passed locale.
+- Wrapper 5-gate: DryRun PASS + POST (dedup 0 su 2 pagine); sessione COMPLETED ~6min, archiviata via API; task file committato su main (65b4f90); Game tree ripristinato su branch pre-esistente.
+
+### Da fare
+- Merge #3233 (Eduardo).
+- Target riserva pronto per prossimo giro L3: `tools/docs_status_promotion.py` (227L, stabile 04-14, 0 test).
+
+### Note
+- **tdd-guard: nuovo sub-caso false-block** -- Write di un characterization-test bloccata ANCHE nel mirror scratchpad (chiede red-green, impossibile su modulo esistente). In sessione autonoma niente guard-off (serve auth utente in-sessione): fallback compliant = metodo pre-#3195 (pin via `py -3.13` stdin + file embedded nel task .md + ingresso via git-apply della lane). Forza del gate invariata (byte-compare pieno). Memory feedback_jules_loop_operational aggiornata.
+- Gotcha monitor: `set -a; source keys.env` rompe su line 13 in bash (non fatale); lettura robusta = `grep '^JULES_API_KEY=' | tr -d '\r' | cut -d= -f2-`.
+- Filler GGv2: HELD (sessione single-focus; pool tail 134/280 vicino hard-stop).
+
 ## 2026-07-06 (Flake fullLoopRouting: root-cause string-seed drop + fix adapter, Fable 5 da Ryzen)
 
 ### Completato
