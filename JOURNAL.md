@@ -19,6 +19,23 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-07-06 (D4 dial-scaling: spec + flag-gated + A/B N=10 NEGATIVE, Fable 5 da Ryzen)
+
+### Completato
+- **Ground-truth correction sul finding grid-ratify**: il dial runtime degli intents NON e' `sessionHelpers.SISTEMA_PRESSURE_TIERS` (copia fallback DRIFTATA 1/2/2/3/3, pre-rebalance 2026-04-17) ma `declareSistemaIntents.PRESSURE_TIER_INTENT_CAP` = 1/2/3/3/4 (4 copie totali, 3 allineate). Drift fixato in commit separato (campo surfacciato in publicSessionView ma ZERO consumer: web+Godot ricomputano da tabelle proprie, grep-verificato entrambi i repo).
+- **Spec + impl flag-gated** (Game PR #3231, STACKED su #3229): `effectiveCap = min(max(tierCap, ceil(aliveSistema/K)), 6)`, tier = FLOOR (roster piccoli invariati anche a flag ON), `SISTEMA_INTENTS_ROSTER_SCALING_ENABLED` default OFF pattern A2, K env default 3 PROPOSED. Spec 3-approcci (per-board e activation-ratio scartati con rationale). TDD 12 test red->green, regressione 2139/2139.
+- **A/B N=10, 6 arm = NEGATIVE RESULT**: A1 (ON, faithful) in banda 13.3 = tier-floor no-op MISURATO; B0 (OFF, 13 nemici) riproduce la patologia; B1/B2/C1 (treatment, anche interazione +range4) = ZERO separazione outcome. Falsificazione wiring: divergenza per-seed 10/10 -> negative reale, non flag morto. NO N=40 (guardrail N-sample: niente direction da ratificare), flip NON proposto, baseline intatta. Ipotesi di lavoro D4: ceiling nella CONVERSIONE -> prossimo lever comportamentale (zone-defense / intent-type unlock).
+- **Harsh-review SDMG**: SHIP IT zero P1; Q1 (contratto Godot) chiusa via grep; P2 (onesta' prosa "display-only", criterio delta post-hoc dichiarato, conclusione declassata a ipotesi) + P3 (summary probe legge env reale, invariante snapshot testato) applicati.
+
+### Da fare
+- Merge chain Eduardo: #3229 -> #3230 -> #3231 (o retarget su main).
+- Chip D4 next-lever: AI zone-defense / differenziazione intent-type dei tier alti YAML nel driver (oggi non differenziati).
+- Chip HUD: `ai_progress.intents_per_round` mostra tier baseline a flag ON -> surface `intents_cap_effective` se/quando flip.
+
+### Note
+- tdd-guard gotcha nuovo: worktree Game FUORI da `C:/dev/Game` non matcha il carve-out `**/Game/**` -> worktree Game sotto `C:/dev/Game/.claude/worktrees/` (+ `.git/info/exclude`), zero guard-off. Bonus: node_modules risolve dal parent.
+- `node --test <dir>/` directory-arg su Windows = fail spurio in 30ms; usare glob file espliciti.
+
 ## 2026-07-06 (Coda chiusa: LOS end-to-end LIVE + verifiche chip + merge wave finale, Fable 5 da Ryzen)
 
 ### Completato
