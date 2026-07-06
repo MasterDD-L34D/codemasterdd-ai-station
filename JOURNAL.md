@@ -19,6 +19,22 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-07-06 (Occupancy-set dedup: helper condiviso combat stack, Game PR #3222, Fable 5 da Ryzen)
+
+### Completato
+- **Game PR #3222** (fast-follow journal 07-05 arco combat-LOS): occupancy-set `"x,y"` da unita' vive duplicato inline in 6 siti -> helper condiviso `apps/backend/services/combat/occupancy.js` (`occupiedSetFromUnits(units, {excludeId, requireFinite})`). Siti: abilityExecutor (spawn minion), declareSistemaIntents (LOS reposition, excludeId), losForGrid `_unitBlocker` (requireFinite), combat-policy `occupiedSet` (delegate stessa firma), los-repos-probe `occAll`, ultima-caccia-wr-probe `reserved`. Diff -32/+12 sui siti.
+- **TDD**: test `tests/services/occupancy.test.js` (7 casi) scritto prima, RED verificato (MODULE_NOT_FOUND), poi GREEN; CI-wired dal glob esistente `tests/services/*.test.js`. Verifica per-file (no full test:api): LOS suite 53 pass + declareSistemaIntents/combatPolicy 47 pass + api/abilityExecutor 41 pass, 0 fail; prettier clean.
+- **Collision-safe**: checkout Game era su `feat/combat-los-flip-descale` (arco attivo) -> lavoro in git worktree throwaway off origin/main, rimosso post-push. Checkout mai toccato.
+
+### Da fare
+- Eduardo review/merge #3222 (indipendente; base = main fresco post onda-merge #3219/#3221).
+
+### Note
+- Questa sessione = evasione del chip `occupiedSetFromUnits` fast-follow (task_4649a5dc, spawnato dalla sessione onda-merge #504).
+- Fuori scope motivato: `sessionRoundBridge.js` CELL_OCCUPIED = `.find` lineare che serve `blocker.id` per il messaggio (non un Set); `reinforcementSpawner.isWalkable` = scan per-tile. Delta teorica sui 2 probe (guard null/position in piu' su input degeneri): fixture sempre hp>0+position, output identico.
+
+---
+
 ## 2026-07-06 (Ricostruzione post-febbre + completamento coda: CI #3215 + conflitto #3217 + epilogo flip, Fable 5 da Ryzen)
 
 ### Completato
