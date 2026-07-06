@@ -19,6 +19,24 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-07-06 (CI-gap tests/sim CHIUSO: glob wired + secondo residuo #3214 fixato, Fable 5 da Ryzen)
+
+### Completato
+- **Ground-truth glob CI Game** (verificata da runner+workflow, non dedotta): `run-test-api.cjs` copre api/play/services(+1 nested)/ai/worldgen/difficulty/codex/routes/js; `combat-oracle` = solo oracle WR band (e il suo paths-filter NON include tools/sim/**). `tests/sim` (32 file, ~229 test) = orfano totale; `tests/services` gia' wired dal 2026-05-30.
+- **Wire-are il glob su main = rosso**: fullLoopRouting.test.js FAIL 3/3 deterministico anche post-#3225. Bisect: #3202 verde (6/6 baseline) -> first-bad bdbd718ab (#3214). Probe wire-level: approach step CIECO di combat-policy -> `400 casella occupata` 25/39 azioni sul chapter enc_tutorial_05 -> timeout garantito. SECONDO consumer della famiglia #3214 (il primo era l'adapter, fixato #3225).
+- **Game PR #3228** (branch ci/wire-tests-sim-glob, 2 commit): (1) fix(sim) `stepAroundOccupied` -- riuso della candidate-walk zone-pursuit OA2 nell'approach, happy-path byte-identical + maxRounds full-loop 40->80 (runaway bound, non pacing assert; fight allungati legittimamente da stack LOS/AP: col solo fix occupancy 1/6, con headroom 6/6); (2) test(ci) glob `node --test --test-concurrency=1 tests/sim/*.test.js` nel runner. **Gate proof**: adapter pre-#3225 -> exit 1 con 12 rossi su 4 famiglie; ripristinato -> 229/229. TDD red-first; N-sample 6x + glob 4x.
+- **tdd-guard cross-repo blind-spot ri-confermato** (reporter vede output pytest stale di altro repo): guard-off scoped autorizzato via AskUserQuestion (pattern `**/Game-ci-simgap/**` in ignorePatterns, REVERTATO a fine sessione).
+
+### Da fare
+- Eduardo: merge **#3228** -- il CI del PR stesso = verifica node22/Linux (locale = node 24 unico su Ryzen; node-delta noto dalla saga combat-oracle, ma qui assert route/completion con headroom 2x, non band WR). Chip CI-gap task_cc4361b3 = chiuso da questo PR.
+- Worktree `C:\dev\Game-ci-simgap` lasciato in piedi (tree pulito, branch pushed) per eventuali review-fix.
+
+### Note
+- paths-filter gia' a posto senza toccare workflow: filtro `stack` include tools/sim/** (OD-038) + apps/backend/** + run-test-api.cjs stesso -> il PR ri-esegue la suite che modifica by construction.
+- Gotcha nuovo: `node --test` glob parallelo con supertest (una porta effimera per request) = instabile su Windows (9x EADDRINUSE + flake del test determinismo sotto contention); `--test-concurrency=1` = 3/3 stabile ~16s, stesso comando su Ryzen e CI Linux.
+
+---
+
 ## 2026-07-06 (units_block_los MISURATO: crowd ratify N=40, Game PR #3227, Fable 5 da Ryzen)
 
 ### Completato
@@ -34,6 +52,8 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ### Note
 - Run N=40 crowd = ~2 min l'uno (in-process supertest); il run true lascia ~16.3k TIME_WAIT -> drain-gate confermato necessario (memoria `reference_game_apisuite_eaddrinuse`).
+
+---
 
 ## 2026-07-06 (FLIP LOS eseguito: decisioni owner + gate Godot + regressione adapter fixata, Fable 5 da Ryzen)
 
