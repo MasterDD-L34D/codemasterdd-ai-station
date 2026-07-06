@@ -19,6 +19,23 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-07-06 (Coda chiusa: LOS end-to-end LIVE + verifiche chip + merge wave finale, Fable 5 da Ryzen)
+
+### Completato
+- **Verifica adversariale chip pre-merge** (autorizzazione Eduardo "merge dopo controlli e fix"): #3227 (crowd) = probe+doc puliti, misura solida; #3228 = run locale del nuovo gate seriale 229 test -> scoperto che **main era DI NUOVO rosso su tests/sim post-flip** (invisibile: gate non ancora mergiato) e che il branch #3228 lo risana (root-cause vero: stepAroundOccupied). Flake residuo noto: seed-replay determinism intermittente SOLO Windows (CI Linux stabile).
+- **Merge wave finale**: Game #3223 + #3224 + #3227 + #3228 MERGED (seriale, update-branch a catena, mai --admin) + **GGv2 #589 MERGED** (autorizzazione esplicita via AskUserQuestion -- classifier self-approval gate rispettato; conflitto add/add post-squash #588 risolto superset-side, 10/10 post-resolve). **LOS VIVO END-TO-END per il player**: tell (#588) + gate locale (#589) + backend default ON (#3226).
+- **Arco big-map ri-scopato con Currency Gate**: PR1 geometry-gate GIA' shipped (flag+tool+purge presenti), fase-2c board_scale GIA' su main (#3198-#3201, ADR-2026-07-03 active) -- il "primo slice" reale = autorare il PRIMO encounter grande + ratify (entry point handoff fase-2c). Chip armato e avviato da Eduardo (task_08d0c1c8): 16x12, principi densita' D1-D10/B3, probe N=10 -> ratify N=40, tutti i gotcha (drain-gate, flake, SDMG PROPOSED).
+
+### Da fare
+- Chip big-map in corso (sessione separata): primo encounter 16x12 + numeri.
+- units_block: resta OFF; prerequisiti per accenderlo dichiarati in #3227 (reposition body-aware + retarget sistema).
+- Lane automation invariata: #3218 (draft conflicting) + #3196.
+
+### Note
+- Il giro up-to-date della branch-protection serializza i merge da solo ma NON auto-aggiorna: ogni merge rimette BEHIND gli altri -> update-branch a catena, l'ultimo della coda non puo' essere superato.
+
+---
+
 ## 2026-07-06 (CI-gap tests/sim CHIUSO: glob wired + secondo residuo #3214 fixato, Fable 5 da Ryzen)
 
 ### Completato
