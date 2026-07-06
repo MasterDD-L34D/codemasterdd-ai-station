@@ -19,6 +19,23 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-07-06 (LOS de-ceiling + ratify N=40: letalita' misurata, C1 chiusa, Fable 5 da Ryzen)
+
+### Completato
+- **C1 chiusa SENZA redesign fixture**: ipotesi epilogo confermata al primo esperimento -- #3214 (active_unit onesto) da solo de-ceilinga il probe flip. Zero righe di probe nuove; solo misura. Soglia de-ceiling tra scale 1.5 e 2.0 (a enemyRange 4). Direzione N=10: lane s2.0 dWR -0.30, wide s2.0 dWR -0.40, s1.5 ancora ceiling.
+- **Ratify N=40 (go Eduardo, matrice 6 run)**: 3 arm repositioning (off/step/budget) x 2 geometrie (lane/wide), flip mode, seed appaiati; arm OFF = 0.850 identico 6/6 (controllo deterministico, consistenza interna). Verdetti: (1) LOS costa dWR -0.125..-0.25 + pace ovunque -- taglia misurata, meccanica by-design; (2) **step-vs-budget ZERO separazione outcome anche su wide** (costruita apposta; positive-control budget2 3/3 ma non converte) -- budget = valore SOLO pace (dRound 0.22-0.32, il minore); (3) euristica on-vs-off +0.10 WR trend, CI95 sovrapposti. Report + gap dichiarati (mirror-wall, avoidBlockerTiles, K4) in **Game PR #3223** `docs/research/2026-07-06-los-flip-ratify-n40.md`.
+- **Gotcha nuovo scalato**: 1 run probe N=40 = ~16k TIME_WAIT da solo (run passa, i successivi muoiono EADDRINUSE in cascata -- prima matrice bruciata 5/6 run) -> v2 con drain-gate (<3000, poll 45s) + checkpoint per-file resume idempotente. Memoria `reference_game_apisuite_eaddrinuse` aggiornata.
+- Chip parallelo chiuso in sessione dedicata: Game PR #3222 (occupancy helper, entry sotto).
+
+### Da fare
+- Eduardo: merge #3222 + #3223; decisioni QUALITY doc ora con dati (default step vs budget: outcome NON giustifica budget, solo pace; avoidBlockerTiles asse aperto; K4 design); decisione flip (misura non e' piu' il blocco) + C2 (units_block_los / UI-tell Godot).
+- Prossimo slice buildabile: UI-tell LOS in Godot (C2) oppure visual track S0 -- a scelta owner.
+
+### Note
+- Metodo: cheapest-experiment-first (misura prima di ridisegnare) ha risparmiato il redesign intero; N-sample discipline (N=10 direction -> N=40 ratify, CI95 Wilson dichiarati); SDMG (matrice=misura, decisioni=owner); worktree `los-deceiling` lasciato per la review del PR #3223.
+
+---
+
 ## 2026-07-06 (Occupancy-set dedup: helper condiviso combat stack, Game PR #3222, Fable 5 da Ryzen)
 
 ### Completato
