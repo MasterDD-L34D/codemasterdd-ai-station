@@ -27,9 +27,14 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 - **#3217 CONFLICTING -> MERGEABLE**: merge origin/main (post-#3216), 5 seam su `tools/sim/los-repos-probe.js` -- unificate le 2 estensioni CLI concorrenti (#3216 enemyScale/enemyRange + #3217 geometry lane|wide); posizionali ora su rest[] filtrato (argv raw slittava col token geometry = bug latente della combinazione); enemyRange aggiunto al JSON report. Verifica: 56/56 test PR + smoke `N=2 flip wide 1.5 4` (controllo wide invertito OK budget1=0/budget2=3-3, repositioning 15 call/11 nonnull, 3/3 unita' partecipano). Push `bf8c8c791`.
 - **Epilogo flip salvato** (era rimasto fuori dal journal -- la sessione 17236a0b chiedeva "aggiorno il journal?" alle 00:08 senza risposta): NON flippare COMBAT_LOS_ENABLED; pace +0.67 bounded (N=40), letalita' NON testata (ceiling strutturale, nessun knob lo stacca); percorso = merge #3214 -> fixture de-ceiling -> C1 -> flip. Memory nuova `game_combat_los_flip_state`.
 
+### Addendum pomeriggio (onda merge autorizzata + gotcha-fix)
+- **Coda MERGIATA su main** (autorizzazione esplicita Eduardo "mergia tutto quello che passa i controlli"): #3214 + #3215 + #3217 + #3219 (con #3220 stacked collassato prima nel branch base) + #3221. Catena stacked collassata top-down; protection up-to-date gestita con update-branch seriale + auto-merge (mai --admin). Secondo prettier-drift (#3219 `sessionActionApCharge.test.js`) fixato in-flight, 4/4 stack file clean, test 6/6.
+- **Gotcha-fix strutturali (root-cause, non solo nota)**: Game PR **#3221** = `lint-stack.mjs` ora spawna prettier anche su Windows (npx.cmd + shell single-string, CVE-2024-27980) -- il drift che ha colpito #3215/#3219 muore in locale d'ora in poi; `~/.claude/hooks/commit-guard.js` = subject check sulla PRIMA riga del `-m` multilinea (falso-blocco 258-char eliminato; ban Co-Authored-By e warn trailer invariati; autorizzato via AskUserQuestion, classifier self-modification gate rispettato).
+- Sessioni parallele verificate CHIUSE prima dei merge (lucid-solomon 12:20 report finale, determined-solomon 12:08). Cleanup: 4 worktree spesi rimossi + branch locali mergiati cancellati. Chip spawnato: `occupiedSetFromUnits` fast-follow (task_4649a5dc). Memory `game_combat_los_flip_state` aggiornata post-merge.
+
 ### Da fare
-- Eduardo review/merge: **#3214** (verde), **#3215** (verde), **#3217** (CI post-merge-fix), poi **#3219** quando la sessione solomon chiude. Le 3 decisioni pre-flip restano in `2026-07-06-los-reposition-budget-QUALITY.md`.
-- Ratify N=40 owner-gated post-#3214 (matrice 3 arm x 2 geometrie x avoidBlockerTiles, ora con enemyRange nel probe unificato).
+- **Fixture-redesign de-ceiling** (ora sbloccata: active_unit onesto su main) -> N=40 ratify con le 3 decisioni owner (`docs/quality/2026-07-06-los-reposition-budget-QUALITY.md`) -> flip `COMBAT_LOS_ENABLED`.
+- Lane automation lasciata a se': #3196 (tracker refresh stale) + #3218 (weekly drift audit, draft CONFLICTING).
 
 ### Note
 - Gotcha nuovi: commit-guard.js legge male `git commit -m` multilinea da bash (subject = intero messaggio, 258 char) -> usare `git commit -F <file>`. `lint-stack.mjs` su Ryzen/GitBash: `spawnSync npx ENOENT` (cerca `npx`, serve `npx.cmd`) -> check equivalente `npx prettier --check` diretto.
