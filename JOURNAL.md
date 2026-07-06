@@ -19,6 +19,23 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-07-06 (FLIP LOS eseguito: decisioni owner + gate Godot + regressione adapter fixata, Fable 5 da Ryzen)
+
+### Completato
+- **4 decisioni owner ratificate** (AskUserQuestion su dati N=40): flip completo ORA; step = default prod (dati: zero separazione outcome, budget=solo pace); units_block_los OFF al flip (catch SDMG: fixture lane/wide CIECA all'asse -- misura vacua evitata, geometria crowd = chip task_520db362); K4+avoidBlockerTiles chiusi YAGNI (0 timeout/240 encounter).
+- **FLIP ESEGUITO**: Game **#3226 MERGED** = `COMBAT_LOS_ENABLED` default ON (opt-out `='false'`) + budget clamp 1 + QUALITY addendum; blast-radius gestito (test flag-OFF -> opt-out esplicito; pin full-AP ri-pinnato a step; probe arm-off opt-out esplicito; LOS+adiacenti 103/103, api gates 7/7, spread 50/50). Client: GGv2 **#589** (gate resolver locale in `_validate_attack` via helper, marker `target_los_blocked` = mirror backend; TDD 10/10; full suite 3862 0-fail con gate DEFAULT ON) -- attesa merge Eduardo. Insight load-bearing: il combat Godot e' mirror LOCALE, il flag backend da solo NON gata il player.
+- **Regressione pre-esistente trovata e fixata durante la verifica flip**: #3214 aveva lasciato il loop legacy di combat-adapter.js a pilotare via active_unit (ora onestamente null) -> `break` -> timeout garantito; combatAdapter.test.js 5/6 ROSSO su main INVISIBILE (nessun glob CI esegue tests/sim). Bisezione 7b7b224cf verde -> 5bf7b652a rosso. Fix **#3225 MERGED** (driver AP-based, stesso pattern ai-driven-sim; pin M17-freeze obsoleto aggiornato). Chip CI-gap: task_cc4361b3.
+- **#3223 advisory canon-check**: 20/20 flagged = falsi positivi (identificatori codice + vocabolario metodo, zero entity); tuning PR **#3224** (stopwords, come da rollout path). Merge #3223/#3224 = Eduardo.
+
+### Da fare
+- Eduardo merge: **GGv2 #589** (il pezzo che accende LOS per il player), #3223, #3224. Chips: crowd-fixture units_block (task_520db362) + CI-gap tests/sim (task_cc4361b3).
+- Post-#589: smoke fisico consigliato (feel del tell+gate su iPhone/TV) + follow-up dichiarati (ForecastPanel "bloccato da LOS", AI locale LOS-aware retargeting).
+
+### Note
+- Metodo: cheapest-experiment + positive-control ha ucciso una misura vacua PRIMA di lanciarla (units_block su fixture cieca); la verifica flip ha scovato una regressione che nessun gate vedeva (ground-truth > CI verde). Fix separato dal flip (attribuzione pulita).
+
+---
+
 ## 2026-07-06 (LOS UI-tell Godot: C2 meta' chiusa, GGv2 PR #588, Fable 5 da Ryzen)
 
 ### Completato
