@@ -19,6 +19,23 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-07-06 (Lane Jules Wave A: piano campagna + char-test docs_status_promotion + trio batch-35, Fable 5 da Ryzen)
+
+### Completato
+- **Piano campagna Jules ratificato da Eduardo** (AskUserQuestion strutturata): ~8-10 dispatch residui in 3 wave (A subito / B playtest-tools a churn fermo ~07-08 / C coda filler + chiusura); grant merge delegato per char-test gate-verdi -> addendum `jules-lane-policy.md` PR cdd #515 (PR-to-owner, grant ATTIVO solo dal merge Eduardo).
+- **Char-test #9 (Wave A)**: `tools/docs_status_promotion.py` (riserva sibling-family, 227L, 0 test) -> Game PR #3236: 35 pin pre-verificati, 19 test, collect 1257 zero-collisioni, 19/19 locale, CI python-tests GREEN x2. UNICO giallo: deviazione 1 carattere nel DOCSTRING (Jules ha scritto l'escape singolo invece del doppio) -> byte-compare FAIL -> per addendum: PR-to-owner con flag esplicito, NO hand-fix (provenance).
+- **Trio filler batch-35 (GGv2)**: ai/ai_personality_loader + main_ai_progress + combat/resistance_engine -> #590 MERGED (lane auto-merge ratificata; gate perfetto: diff_git=3, adds=20==spec, dels=0, naAdd=0, gdformat unchanged, gdlint clean, placement spot-checked) + tracker regen #591 MERGED -> **143/285 (50%)**; pool residuo ~4 named + re-scan (~2 trio all'hard-stop).
+- Cleanup: worktree ggv2-batch35 rimosso, 2 sessioni Jules archiviate, branch triage pruned cherry-verified, Game+GGv2 tree ripristinati sui branch pre-esistenti.
+
+### Da fare
+- Eduardo: merge cdd #515 (attiva il grant) + merge Game #3236 (giallo dichiarato, docstring-only).
+- Wave B (~07-08+, churn-gate): 2-3 char-test su analyze_telemetry / build_playtest_dashboard / calibrate_map_elites (recon coverage al momento).
+- Wave C: ~2 trio filler -> chiusura campagna con nota tracker.
+
+### Note
+- GGv2 crescita 280->285 .gd + 6 file documentati arrivati da feature merge -> scan (non tracker) = verita', di nuovo.
+- **Prima deviazione byte-compare della lane** (1 char, docstring): Jules "corregge" l'escape doppio `\\ufeff` in `﻿`. Lesson per i prossimi task: niente backslash-escape doppi nei docstring embedded (riformulare senza backslash).
+
 ## 2026-07-06 (Lane Jules L3: char-test schema_enum_diff, Fable 5 da Ryzen)
 
 ### Completato
