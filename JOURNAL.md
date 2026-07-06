@@ -19,6 +19,20 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-07-07 (Lane Jules Wave C: doppio trio filler 36+37, Fable 5 da Ryzen)
+
+### Completato
+- **Wave C (autorizzata esplicitamente da Eduardo "procediamo")**: 2 trio filler GGv2 nella stessa sessione -- batch 36 (#592: combat/biome_resonance + ai/utility_brain [10 func] + main_promotion, 23 righe) + batch 37 (#593: main_atlas + ui/biome_palette + ai/threat_assessment, 16 righe). Entrambi gate-perfect first try (dels=0, adds==spec, gdformat/gdlint clean, placement spot-checked su tutti i 39 blocchi). Tracker regen #594 -> **149/285 (52%)**.
+- Re-scan 07-06 aveva corretto la stima pool: 11 clean reali (tracker diceva ~4). Dopo i 2 trio: **pool residuo 5** (net/resume_token_manager, main_wound_helpers, main_coop_combat_end, combat/biome_pool_loader, combat/terrain_reactions) = ~2 giri filler all'hard-stop.
+- Cleanup: 2 sessioni archiviate, worktree ggv2-wavec rimosso, branch pruned content-verified.
+
+### Da fare
+- Ultimi ~2 trio filler (pool 5) in coda a sessioni future con altro focus -> chiusura campagna con nota tracker.
+
+### Note
+- Doc-comment clean tally: 35/35 batch-PR (batch 35+36+37 in questa sessione: 9 file, 59 righe, zero reject).
+- Doppio trio in una sessione = eccezione one-off autorizzata dal policy-owner; cadenza filler-only resta la regola.
+
 ## 2026-07-06 (Lane Jules Wave B: batch 3 char-test + PRIMO merge delegato, Fable 5 da Ryzen)
 
 ### Completato
