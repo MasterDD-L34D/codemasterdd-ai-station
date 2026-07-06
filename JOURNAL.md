@@ -19,6 +19,20 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-07-06 (Flake fullLoopRouting: root-cause string-seed drop + fix adapter, Fable 5 da Ryzen)
+
+### Completato
+- **Root-cause flake `tests/sim/fullLoopRouting.test.js`** (post-#3228, visto su PR #3229 rerun + main `88b1d34b6`): piu' profonda della diagnosi "graph-mode non seedato" -- `/api/session/start` accetta solo seed NUMERICO finito (`Number()` non-finito -> `combatRng.state=null` -> Math.random), e full-loop-runner threada SEMPRE stringhe (`${seed}-${step}`) -> **nessun full-loop run mai seedato a livello combat** (band-batch calibrazione inclusi). Il test determinismo combatAdapter ('det-1', Codex #2561) passava banalmente (fixture vince a prescindere dai roll).
+- **Fix band-safe** (Game PR #3232, merge=Eduardo): `tools/sim/combat-adapter.js` hasha seed non-numerico -> uint32 stabile (stesso fold di `tools/ts/roll_pack.ts hashSeed`, stream condiviso tra i due stack sim); numerici passthrough byte-identical. Zero engine change.
+- **Verifica**: fullLoopRouting 10/10 run consecutivi verdi; probe determinismo (stesso seed -> outcome/rounds/hp bit-identici, seed diverso -> traiettoria diversa); suite `tests/sim` 229/229 seriale (mirror CI #3228); prettier + lint-stack puliti.
+
+### Da fare
+- Merge #3232 (Eduardo) + occhio al primo batch N=40 post-merge: distribuzioni ora DAVVERO seedate, possibile shift vs baseline storiche (che erano unseeded-random).
+
+### Note
+- Memory nuova `game_fullloop_seed_never_effective`: batch storici = distribuzioni UNSEEDED; deviazioni future dalla baseline pre-#3232 -> prima causa candidata il seeding ora effettivo.
+- Verificato su Node 24.11 locale (canonical Game = 22): mulberry32 + fold hash = int-math pura, identica cross-versione.
+
 ## 2026-07-06 (D4 dial-scaling: spec + flag-gated + A/B N=10 NEGATIVE, Fable 5 da Ryzen)
 
 ### Completato
