@@ -19,6 +19,24 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-07-06 (Ricostruzione post-febbre + completamento coda: CI #3215 + conflitto #3217 + epilogo flip, Fable 5 da Ryzen)
+
+### Completato
+- **Ricostruzione 5 sessioni 07-05/notte** da transcript jsonl + git + journal (Eduardo febbricitante, memoria persa): (1) 17236a0b = arco LOS + probe #3212/#3213/#3216 + verdetto flip; (2) interesting-rubin = coop turn semantics #3214; (3) frosty-feynman = security authz #3215; (4) happy-curie = budget v2 #3217 (journal #502); (5) vault magical-booth = SoT #268 MERGED. Sessione solomon ANCORA VIVA durante la ricostruzione (follow-up #3219 attack/ability AP) -- non toccata (collision-safe).
+- **#3215 CI RED -> GREEN**: stack-quality fail = prettier drift 3 file (stessa gotcha journal #501: lint-stack fuori dal loop locale). prettier --write (line-wrap only, zero semantica) + test per-file 10/10 + push `abe1d352f`. ci-gate pass.
+- **#3217 CONFLICTING -> MERGEABLE**: merge origin/main (post-#3216), 5 seam su `tools/sim/los-repos-probe.js` -- unificate le 2 estensioni CLI concorrenti (#3216 enemyScale/enemyRange + #3217 geometry lane|wide); posizionali ora su rest[] filtrato (argv raw slittava col token geometry = bug latente della combinazione); enemyRange aggiunto al JSON report. Verifica: 56/56 test PR + smoke `N=2 flip wide 1.5 4` (controllo wide invertito OK budget1=0/budget2=3-3, repositioning 15 call/11 nonnull, 3/3 unita' partecipano). Push `bf8c8c791`.
+- **Epilogo flip salvato** (era rimasto fuori dal journal -- la sessione 17236a0b chiedeva "aggiorno il journal?" alle 00:08 senza risposta): NON flippare COMBAT_LOS_ENABLED; pace +0.67 bounded (N=40), letalita' NON testata (ceiling strutturale, nessun knob lo stacca); percorso = merge #3214 -> fixture de-ceiling -> C1 -> flip. Memory nuova `game_combat_los_flip_state`.
+
+### Da fare
+- Eduardo review/merge: **#3214** (verde), **#3215** (verde), **#3217** (CI post-merge-fix), poi **#3219** quando la sessione solomon chiude. Le 3 decisioni pre-flip restano in `2026-07-06-los-reposition-budget-QUALITY.md`.
+- Ratify N=40 owner-gated post-#3214 (matrice 3 arm x 2 geometrie x avoidBlockerTiles, ora con enemyRange nel probe unificato).
+
+### Note
+- Gotcha nuovi: commit-guard.js legge male `git commit -m` multilinea da bash (subject = intero messaggio, 258 char) -> usare `git commit -F <file>`. `lint-stack.mjs` su Ryzen/GitBash: `spawnSync npx ENOENT` (cerca `npx`, serve `npx.cmd`) -> check equivalente `npx prettier --check` diretto.
+- Metodo: ground-truth (git/gh/CI log) prima dei transcript; transcript = solo per intent e coda non committata. Nessun agent-report usato senza verifica diretta.
+
+---
+
 ## 2026-07-06 (LOS-reposition budget v2: euristica + SDMG + matrice controllo corretto, Fable 5 da Ryzen)
 
 ### Completato
