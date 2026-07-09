@@ -19,6 +19,23 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-07-10 (Monitor v2 + fleet-verify: overlay smentito dal prod, flag-set ratificato, Nido aperto, Fable 5 da Ryzen)
+
+### Completato
+- **Skill evo-tactics-monitor RISCRITTA v2** (logica vecchia = audit aprile/GDD-2024, falsificata da Eduardo): Nord = SoT v5 + overlay LIVE, scope 2 repo, metrica = burn-down assemblaggio (Indice Assemblaggio 51/100), health-header da fleet-verify (referral, anti-ricorsione), ground-truth locale. Quality Gate 3-step: smoke su dati reali + 5 edge case + 2 tuning (INERT=giallo; step 2-bis flag-truth). Casa: `~/.claude/skills/evo-tactics-monitor/` (copia v1 plugin claude.ai = zombie da rimuovere lato Eduardo).
+- **Fleet-verify game-family** (richiesta esplicita, Workflow 80 agenti: 5 probe + giurie refute 3-voti; Artifact health-report `42966f44`): il briefing v2 era ANCORA sbagliato perche' l'OVERLAY mente sui flag. Confermati: **Nido mai raggiungibile in prod** (NIDO_UNLOCKED inesistente + zero setter runtime -> Cronaca/rituale/recruit/K-05 tutti prod-morti dietro la porta), Impronta SPARITA dal prod (regressione vs sign-off 06-24), META_NETWORK_ROUTING e LETHAL accesi (overlay li dava OFF), combo lethal+terrain+geometry MAI testata insieme (re-probe richiesto dal repo stesso), M2 diagnosi overlay sbagliata (wiring esiste, blocco = zero caller register_pg + lethal param), SoT stale su LOS-default e board grid_sized, **evo-import-sync = pipeline fantasma** (importa in DB effimero, non puo' MAI produrre il sync-PR promesso; DB reale aggiornato solo a mano, freshness non tracciabile), GOALS/STATUS fermi al 07-03 + Claude-Max-scaduto ancora scritto. Giuria-override motivato: finding lethal 'refuted' per errore-macchina dei verificatori (grep su keys.env Ryzen invece del Lenovo) -- ground-truth SSH prevale.
+- **Flag-set RATIFICATO da Eduardo (4 decisioni) e DEPLOYATO** (keys.env + restart, pid 8008, health ok): LETHAL=false (fino a K-07, sequenza dossier-gates-flip ripristinata), route ON, IMPRINT_BEAT=true (riacceso), **NIDO_UNLOCKED=true (meta-loop APERTO in prod)** + setx utente per il client TV.
+- 3 chip lasciati: riconcilia-doc (overlay+SoT+GOALS/STATUS col set ratificato), re-probe N=40 mappe grandi con terrain+geometry ON, pipeline-DB onesta.
+
+### Da fare
+- Eduardo: 3 chip sopra + rimozione skill v1 dal plugin claude.ai + eventuale rotazione chiave (un verificatore ha greppato keys.env Ryzen nel transcript locale -- esposizione solo su disco).
+- Lenovo clone GGv2 46 behind su branch appeso (collision-safe: non toccato) -- da allineare in prep K-07.
+- K-07 real-device playtest = tappo confermato; ora col Nido aperto copre anche il meta-loop.
+
+### Note
+- Lezione centrale: doc "cosa e' acceso" = IPOTESI finche' non leggi i flag dal prod. Codificata nel monitor v2 (step 2-bis flag-truth obbligatorio) + memory reference_lenovo_backend_prod.
+- Gotcha sed-via-SSH: replacement con `.` scrive il punto letterale (riga keys.env rotta e sanata subito).
+
 ## 2026-07-09 (Rientro post-malattia: ricostruzione + flag D9 su Lenovo + PR automation + pulizie flotta, Fable 5 da Ryzen)
 
 ### Completato
