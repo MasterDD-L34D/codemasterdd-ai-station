@@ -19,6 +19,42 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-07-10 (pre-flip telegraph: Codex P2 #3258 risolto -- contratto hidden-row, PR Game #3264)
+
+### Completato
+- **Contratto threat_preview threats-only DECISO + implementato** (pre-condizione 1 del
+  flip ADR symmetry): con `SISTEMA_TELEGRAPH_THREATS_ONLY=true` ogni unita' SIS viva con
+  intent pendente ha SEMPRE una riga; non-threat e oltre-cap -> riga mascherata
+  `intent_type:"hidden"` RICOSTRUITA da zero (mask di una riga attack conserverebbe
+  expected_damage = leak); riga assente = solo "preview non disponibile". Scelto vs
+  "assenza = no telegraph": il fallback-attacco legacy (apps/play main.js:702) scatta
+  proprio su riga assente; payload self-describing per il wiring Godot futuro.
+- **Punto 2 verificato (Godot canonico)**: Game-Godot-v2 NON consuma threat_preview
+  backend -- `threat_preview.gd` = port locale SENZA consumer surface (deferred-roadmap),
+  sistema_api.gd non chiama begin-planning. Nessun fallback-attacco lato Godot.
+  Contratto documentato in addendum ADR-2026-07-10-sistema-action-symmetry.
+- **PR Game #3264** (fix/telegraph-hidden-intent-contract): threatPreview.js + 8 test
+  threats-only (17/17 verdi col file legacy; leak-check sul downgrade + dead-unit),
+  labelMap `hidden: nascosto` nel reference consumer, addendum ADR. CI verde + Codex
+  clean ("no major issues" su 1a115616e0). Worktree dedicato `C:\dev\_game-wt-telegraph`
+  senza npm ci: test via NODE_PATH al node_modules del clone padre (collision-safe,
+  zero junction).
+
+### Da fare
+- Merge #3264 = Eduardo; POI flip flag owner (keys.env Lenovo + restart) -> ri-ratifica
+  bande flag-ON (L-069, worktree _game-wt-probe pronto) + neutralizzare xpBudget
+  action_economy.
+- Al wiring Godot di threat_preview: rispettare contratto hidden-row (nota in addendum ADR).
+
+### Note
+- Il cap oltre-soglia aveva lo STESSO bug del filtro (riga tagliata -> sparita ->
+  fallback attacco): il P2 Codex citava solo il `continue`; il downgrade oltre-cap e'
+  scoperta di questa sessione.
+- Output grep puo' arrivare mangled (`//` reso `\ `): render.js:1435 era falso allarme,
+  verificato byte-level prima di aprire un chip.
+
+---
+
 ## 2026-07-10 (consolidamento post-arco symmetry: #3250 merged, cleanup, re-probe bit-exact, Fable 5 da Ryzen)
 
 ### Completato
