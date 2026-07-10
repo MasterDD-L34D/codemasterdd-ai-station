@@ -20,26 +20,38 @@ DEFAULTS = ["*.md", "*.txt", "*.log", "*.json", "*.yml", "*.yaml",
             "*.xml", "*.html", "*.css", "*.erb", "*.rst"]
 # Sibling fleet repos to exempt (this project = codemasterdd-ai-station, stays guarded).
 SIBLINGS = ["**/Game/**", "**/Game-Godot-v2/**", "**/Game-Database/**",
-            "**/synesthesia/**", "**/vault/**", "**/Dafne/**"]
+            "**/synesthesia/**", "**/vault/**", "**/Dafne/**",
+            # Ad-hoc worktrees created OUTSIDE the repo dir (gap 2026-07-10, Game PR #3256):
+            "**/Game-wt*/**",    # C:/dev/Game-wt-gridcap + bare C:/dev/Game-wt
+            "**/_game-wt-*/**",  # C:/dev/_game-wt-3246, -apfloor, ... (Ryzen)
+            "**/_gamewt-*/**",   # _gamewt-lenovo-host (Lenovo convention)
+            "**/vault-wt*/**"]   # C:/dev/vault-wt
 
-root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-path = os.path.join(root, ".claude", "tdd-guard", "data", "config.json")
-os.makedirs(os.path.dirname(path), exist_ok=True)
+def main(root=None):
+    if root is None:
+        root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    path = os.path.join(root, ".claude", "tdd-guard", "data", "config.json")
+    os.makedirs(os.path.dirname(path), exist_ok=True)
 
-cfg = {}
-if os.path.exists(path):
-    try:
-        with open(path, encoding="utf-8") as f:
-            cfg = json.load(f)
-    except (ValueError, OSError):
-        cfg = {}
+    cfg = {}
+    if os.path.exists(path):
+        try:
+            with open(path, encoding="utf-8") as f:
+                cfg = json.load(f)
+        except (ValueError, OSError):
+            cfg = {}
 
-cfg["ignorePatterns"] = DEFAULTS + SIBLINGS  # idempotent: same result each run
-# guardEnabled (if present) is preserved as-is.
+    cfg["ignorePatterns"] = DEFAULTS + SIBLINGS  # idempotent: same result each run
+    # guardEnabled (if present) is preserved as-is.
 
-with open(path, "w", encoding="utf-8") as f:
-    json.dump(cfg, f, indent=2)
-    f.write("\n")
-print("tdd-guard config written:", path)
-print("ignorePatterns:", len(cfg["ignorePatterns"]), "( defaults", len(DEFAULTS), "+ siblings", len(SIBLINGS), ")")
-print("guardEnabled:", cfg.get("guardEnabled", "(absent -> default True)"))
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(cfg, f, indent=2)
+        f.write("\n")
+    print("tdd-guard config written:", path)
+    print("ignorePatterns:", len(cfg["ignorePatterns"]), "( defaults", len(DEFAULTS), "+ siblings", len(SIBLINGS), ")")
+    print("guardEnabled:", cfg.get("guardEnabled", "(absent -> default True)"))
+    return path
+
+
+if __name__ == "__main__":
+    main()
