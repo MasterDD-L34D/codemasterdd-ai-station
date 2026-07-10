@@ -19,6 +19,41 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-07-10 (consolidamento post-arco symmetry: #3250 merged, cleanup, re-probe bit-exact, Fable 5 da Ryzen)
+
+### Completato
+- **Refresh-verify multi-sessione** (protocollo chip-lifecycle): le 5 PR del piano triage
+  (#3252/#3256/#3257/#3259/#3260) erano GIA' tutte merged da sessioni parallele (14:40-15:43Z);
+  i marker prState del session-registry erano stale, ground-truth = gh. Zero duplicazione.
+- **PR Game #3250 MERGED** (fail-closed missing-dep guard): update-branch su main fresco,
+  required checks verdi, gate sostituto harsh-reviewer SHIP-IT 0 P1 (Codex usage-limit x2,
+  ADR-0026 #5). Post-merge: remote head + `pr-3250-gate` locale cancellati.
+- **Cleanup**: branch superseded `fix/ap-ledger-negative-ap-cost-floor` cancellato local+remote
+  senza merge (#3257 lo supersede); 5 worktree orfani rimossi junction-safe (verifica LinkType,
+  `rmdir` della junction node_modules PRIMA di `git worktree remove`, mai --force); 3 branch
+  locali merged potati; stash intent-mix-probe (6 righe instrumentation `retreat_by_rule`)
+  salvato in patch e droppato.
+- **Re-probe bande flag-OFF post-merge (L-069)**: N=10 sui 3 grid_sized (dorsale, canyon,
+  abisso) con MOVE_TERRAIN_COST_ENABLED + XP_BUDGET_GEOMETRY_ENABLED, flag simmetria UNSET,
+  paired vs control `reports/sim/*-n40-stepfix` seeds 1..10: **BIT-EXACT su tutti i 30 run**
+  (incluso kos seed 4 abisso). I merge apLedger/#3257/#3260 NON muovono la semantica combat
+  flag-OFF; bande [14,25]/[15,21]/[13,21] valide, niente N=40 (guardrail N-sample).
+  Collaterale: seed del grid-band-probe EFFETTIVI (riproduzione bit-exact cross-machine
+  Lenovo->Ryzen, node v24.11.0). Log: `Extras/ollama-runs/2026-07-10-grid-band-reprobe-postmerge.log`.
+
+### Da fare
+- ADR #3262 merge+flip = Eduardo-only; al flip ri-ratifica bande flag-ON (L-069): worktree
+  `C:\dev\_game-wt-probe` PRONTO (origin/main f30861e9e, npm ci completo, node_modules reale
+  non junction).
+- Riga di conferma delta-zero nel prossimo doc research (formato factorial 2026-07-10).
+- `C:\dev\Game` HEAD e' su `fix/ap-cost-poison-floor` (merged, stale): switch a main quando
+  nessuna sessione attiva -- decisione Eduardo, mai checkout dal clone condiviso in sessione.
+- Candidati pulizia extra (non mandati): `backup/ap-ledger-pre-rebase`,
+  `rescue/buff-steal-plan-16e4f48`, remote head merged residui (fix/grid-bounds-cap ecc.).
+
+### Note
+- Codex resta in usage-limit; gate sostituto usato per #3250 come da policy.
+
 ## 2026-07-10 (tdd-guard: blindspot worktree ad-hoc chiuso -- glob *-wt-* in ignorePatterns, Fable 5 da Ryzen)
 
 ### Completato
