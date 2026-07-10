@@ -82,17 +82,27 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 - TDD rigoroso: RED route-level ha riprodotto l'exploit (`e_ghost x=9998 outside real board width 6`)
   PRIMA del fix. 5 test nuovi (`tests/api/gridBoundsCap.test.js`) + regression correlata 22/22 +
   consumer inline-grid 54/54. CI PR: 15 pass / 0 fail.
-- Triage review Codex: unico rilievo P2, CONFERMATO a ground-truth (residuo in-range: grid 20x20
-  schema-valida non-authored -> board resta 6x6, unita' a (19,19) ancora fuori). Bounded (<=19 vs
-  9998); causa = asimmetria strutturale fra semantica clamp PR #3065 e resolved-board fase-2c
-  (ADR-2026-07-03). Reply nel thread con le 2 opzioni di fix; decisione design a Eduardo.
+- **P2 Codex RISOLTO nello stesso PR** (`9aec48862`), non deferito. Il cap chiudeva il vettore a
+  magnitudine arbitraria ma non la CLASSE: una grid inline schema-valida (20x20) senza
+  `board_scale:'grid_sized'` restava il clamp di spawn mentre `resolveBoardSize` la ignora ->
+  board 6x6 con nemico a (19,19) fuori. RED riprodotto a ground-truth prima del fix.
+- **Causa**: due policy decidevano la stessa cosa. Il clamp onorava la grid DICHIARATA (PR #3065),
+  `resolveBoardSize` -- unica autorita' board (ADR-2026-07-03) -- adotta solo grid AUTHORED. Fix:
+  encounter risolto una volta a monte, board risolta subito dopo l'assemblaggio unita', poi ogni
+  unita' tirata dentro. Invariante "posizione unita' inclusa in session.grid" per costruzione.
+- **Scartata** l'altra opzione Codex (gate `grid_sized` per il widening): avrebbe fatto ricadere i
+  non-authored su GRID_SIZE=6, over-clampando le board party_sized 8x8/10x10 (5-8 deployed).
+- **Band-neutral verificato a ground-truth**, non per ragionamento: `scenario-enemies.js:106-110`
+  pre-clampa gia' identico (GRID_SAFE_MAX=5 party_sized / grid_size-1 authored), e **Godot v2 non
+  chiama mai `/session/start`** (combat 100% locale). Il fix sposta server-side un invariante che i
+  caller gia' rispettavano. Re-clamp shrink-only -> spawn authored 16x12 a x=12-13 sopravvivono.
+- Il mio test "8x8 mantiene x=7" **pinnava il bug** (quella board risolve a 6x6): sostituito dalle
+  due meta' dell'invariante. 7/7 nuovi + 257 regression verdi. CI 10/0 sul commit nuovo.
+  Codex re-review: clean sullo sha giusto.
 
 ### Da fare
-- Merge PR #3256 = Eduardo (zero P1; P2 triaged nel thread).
-- Follow-up design sul residuo in-range (opzione 1: richiedere `board_scale:'grid_sized'` per il
-  widening; opzione 2: clamp al resolved board pre-normalizzazione). Issue pubblica bloccata dal
-  classifier (correttamente: detail exploit non richiesto) -- il thread PR fa da tracker.
-- Chip spawned: estendere `tddguard-ignore-config.py` con glob `**/Game-wt-*/**` + `**/_game-wt-*/**`.
+- Merge PR #3256 = Eduardo (zero P1, P2 risolto, Codex clean, CI verde).
+- Rerun `tddguard-ignore-config.py` su Lenovo (fix #531 landed, config gitignored per-macchina).
 
 ### Note
 - Worktree dedicato `C:\dev\Game-wt-gridcap` (junction node_modules): NON rimuovere con
@@ -100,6 +110,11 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
   Tree condiviso `C:\dev\Game` (era su `pr-3250-gate`, branch gate locale) mai toccato.
 - tdd-guard: gap ignorePatterns sui worktree ad-hoc fuori `**/Game/**`; terzo workaround
   ground-truth (test.json alimentato coi risultati REALI del run node) documentato in memoria.
+  Fix strutturale poi LANDED via chip spawnato (PR #531).
+- **Codex clean verdict ha una TERZA forma**: issue comment (`"Didn't find any major issues"` +
+  `Reviewed commit: <sha>`), non solo review-object o reaction. Il monitor ne pollava 2 su 3 e lo
+  dava per unresponsive. Memoria aggiornata: pollare reviews + reactions + issue comments, e
+  verificare che `Reviewed commit` sia il proprio HEAD (un clean su sha vecchio non e' un gate).
 - Run locali su node 24 (PATH Ryzen) vs canonical Game 22: CI = autorita', tutta verde.
 
 ## 2026-07-10 (Game: due trait inerti resi vivi -- buff-steal + oracle-reveal, PR #3255 MERGED, Opus 4.8 da Ryzen)
