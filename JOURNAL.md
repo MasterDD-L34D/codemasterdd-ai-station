@@ -19,6 +19,24 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-07-10 (Reprobe grid_sized substrate-ON: RED fleet-verify chiuso, Fable 5 da Ryzen)
+
+### Completato
+- **RED fleet-verify 07-09 chiuso con evidence** (= chip "re-probe N=40 mappe grandi con terrain+geometry ON" della sessione monitor-v2): i 3 encounter grid_sized (dorsale 16x12, canyon 20x12, abisso 18x10) erano ratificati N=40 il 07-06 con MOVE_TERRAIN_COST OFF, prod ora ON + XP_BUDGET_GEOMETRY ON. Re-probe N=10 -> re-ratify N=40 paired (seed numerici 1..40 vs runs.jsonl baseline, stesso harness grid-band-probe.js, flags ON). PR Game #3243, CI 22 pass / 0 fail (merge=Eduardo, @codex in review).
+- **Verdetti banda**: dorsale delta +0.05 -> [10,18] confermata; abisso delta -0.15 con 25/40 seed a delta ESATTO 0 -> [10,18] confermata; canyon delta **+6.47** CI95 [+5.17,+7.78] -> banda NUOVA **[10,28]** (tail 27 su time_limit 30, 0 timeout -- watch dichiarato). WR 1.000 e reinf 4/4 ovunque.
+- **hazard_xp PROPOSED -> MEASURED-0**: shape per-tile flat doppiamente falsificata dalla misura -- l'abisso col warn peggiore (ratio 5.43 critical_over, +864 XP predetti da 18 lava) ha delta reale 0 (il pathing usa il varco, la lava non viene mai pagata); il pace-tax vero (canyon) viene dalla ROCCIA dei detour (medium 1.5x) che NON e' in hazard_set. lava 40->0, acqua 30->0 in xp_budget.yaml; gate/hazard_set/test restano (test resi config-driven). Post-fix 3/3 audit 1.11 in_band sotto flag prod = unico arm che concorda col fight misurato. Al deploy sparisce il warn critical_over fuorviante a /start.
+- **Doc + governance**: docs/research/2026-07-10-grid-terrain-geometry-reprobe.md + entry docs_registry.json + bande 15-LEVEL_DESIGN (riga abisso mancante aggiunta) + grid_ratify_baseline.json (evidence_ref/ratified_at 07-10) + artifacts reports/sim/*-terrain-on (n10+n40).
+
+### Da fare
+- PR Game #3243: verdetto Codex + merge Eduardo (valori balance = decider owner).
+- v2 termine geometria: predittore path-tax geometrico (cheapest-path spawn->contatto vs Manhattan) = OD aperta, unica shape coerente con entrambe le falsificazioni (SDMG: falsificazione esterna pre-integrazione).
+- acqua_profonda mai esercitata da un grid_sized: re-probe dedicato quando esistera' un esemplare.
+
+### Note
+- Nota per il chip re-probe: la combo col LETHAL resta non testata BY DESIGN (flag-set ratificato 07-10 = LETHAL=false fino a K-07); questo re-probe copre esattamente il set prod corrente (terrain+geometry ON, LOS default, lethal OFF).
+- Gotcha commit-guard: blocca il comando Bash INTERO pre-esecuzione (staging incluso) se il subject supera 72 char. Gotcha prettier: `+` a inizio riga markdown viene riscritto come list-marker.
+- Log batch: Extras/ollama-runs/2026-07-10-grid-terrain-reprobe.log (probe checkpoint-resumable via runs.jsonl, N=40 riusa i seed del N=10).
+
 ## 2026-07-10 (Monitor v2 + fleet-verify: overlay smentito dal prod, flag-set ratificato, Nido aperto, Fable 5 da Ryzen)
 
 ### Completato
