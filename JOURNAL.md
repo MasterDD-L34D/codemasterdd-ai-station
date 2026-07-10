@@ -19,6 +19,24 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-07-10 (Game-Database: RED fleet-verify workflow-sync chiuso + policy no-draft, Fable 5 da Ryzen)
+
+### Completato
+- **PR Game-Database #238 MERGED (squash 13a38ab)**: chiuso il RED #1 del fleet-verify 07-09. Workflow `evo-import-sync` (cron 6h GREEN, sync PR strutturalmente impossibile: import scrive solo nel Postgres effimero del job, checkout mai toccato) -> rinominato `evo-import-smoke` onesto, step PR morti rimossi, permissions `contents: read`. History-log per-macchina `server/logs/evo-import-history.log` (import/dry-run/validate-only, status su stderr per non sporcare lo stdout JSON-only dell'importer).
+- **Ground-truth piu' grave del report**: stack standing MAI provisionato su Lenovo (repo+node_modules ok, ma zero .env / PG-5433 / servizio 3333 / task) e nessun listener nemmeno su Ryzen -> il DB standing oggi non gira da nessuna parte; Game boota fetch-failed + fallback. RUNBOOK sez. 9 completa: PG portable dedicato 5433 (`pgdata-gamedb`), .env loopback-only, primo import, `start-game-database.cmd` con readiness-gate, task `GameDatabaseServer` (mirror EvoTacticsBackend), verifica con controprova negativa LAN.
+- **Gate Codex 8 round**: 6 finding fixati (5 P2 + 1 P1: `/api/records` POST/PATCH/DELETE deliberatamente non-gated -> auth-off NON e' read-only -> HOST=127.0.0.1 obbligatorio) + 1 P2 refutato con prova empirica (Prisma Client auto-carica server/.env al require) e chiuso con nota doc. Verdetto finale = 👍 Codex sul PR. Il test end-to-end del .cmd ha scovato anche un bug che Codex non aveva visto (cmd.exe mangia %FT%TZ nei batch -> `date -u -Iseconds`).
+- **Policy ratificata da Eduardo: NO draft PR parcheggiati** ("non so controllarli") -> flusso = PR ready + verifiche proprie + @codex review + triage P1 + merge diretto a verdetto pulito. Memoria `feedback_no_draft_prs_codex_gate` + lezione: refutare un finding da soli = self-waive (classifier blocca il merge, correttamente) -> convertire in fix costruttivo + nuovo round; trigger @codex a volte persi (2/8) -> rilanciare.
+
+### Da fare
+- **Eduardo, sul Lenovo**: eseguire RUNBOOK sez. 9 (provisioning PG-5433 + .env + primo import + registrazione task `GameDatabaseServer`) -- comandi copia-incolla pronti; dopo, il boot di Game perde il rumore fetch-failed.
+- Decisione strategica rimandata: deprecare o no il runtime-serving del DB standing (flusso circolare canon Game -> DB -> HTTP -> Game; `evo:export --out/--diff` gia' pronto se si riapre).
+
+### Note
+- Registro gamer vale anche per AskUserQuestion (prima domanda in gergo dev rigettata con frustrazione; riformulata a metafore = risposta immediata). Memoria aggiornata.
+- Wife-PC/LAN: il P1 records-ungated resta vero in generale -- MAI documentare auth-off come read-only su questo repo; loopback-bind e' il pattern per servizi standing consumati in-host.
+
+---
+
 ## 2026-07-10 (Jules Wave D: backport #2744 + chiusura campagna doc-comment, Fable 5 da Ryzen)
 
 ### Completato
