@@ -19,6 +19,71 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-07-10 (Game: due trait inerti resi vivi -- buff-steal + oracle-reveal, PR #3255 MERGED, Opus 4.8 da Ryzen)
+
+### Completato
+- **PR Game #3255 MERGED** (main `1da68d3d2`): `ghiandole_mnemoniche` e `nodi_micorrizici_oracolari`
+  passano da data-only a meccanicamente vivi. Chiude la voce "Owner design call" dei cluster
+  buff-manipulation e recon/foresight dei GAP2 proposal (06-28, 06-29).
+- **`nodi_micorrizici_oracolari` = zero codice motore.** Il primitive "reveal" esisteva gia':
+  `combat/telepathicReveal.js` era wired in `begin-planning` ma AFFAMATO (unico produttore
+  `risonanza_magnetica`, gated `on_kill` + `min_mos 5`). Il tratto ne diventa il primo produttore
+  passivo: entry `passive` + `apply_status` + `stato: telepatic_link`. `telepatic_link` non concede
+  delta statistici (`statusModifiers.js:206-208`) -> reveal permanente = zero power-creep. Contenimento
+  = il raggio (manhattan 3), non la rarita'.
+- **`ghiandole_mnemoniche` = modulo dedicato** (`combat/ghiandoleMnemoniche.js`, pattern
+  `cortecciaMemetica`): su hit ruba UN buff alla preda e lo riapplica a durata dimezzata. Whitelist
+  ordinata frenzy-first (priorita' `sabotaggio` del role_template "Sciame Memetico").
+- **Canale `_pendingStatusRemovals`** (`combat/pendingStatusRemovals.js`): nuovo, non previsto dallo
+  spec iniziale. Senza, il furto degradava SILENZIOSAMENTE a copia nel path round-model restando
+  furto in quello legacy.
+- 32 test nuovi, band AI 602/0 invariata, CI 21/0. `tests/helpers/traitLiveness.js` mai toccato.
+
+### Da fare
+- **Bug namespace `traits` vs `trait_ids`**: `mutationEngine`/`mutationCatalogLoader` leggono e scrivono
+  `unit.trait_ids`, che `normaliseUnit` non popola MAI. Conseguenza: ogni prereq di mutazione basato su
+  trait e' insoddisfacibile (es. `simbionte_micorriza_radici`, PE 14/PI 8, irraggiungibile). Separato e
+  piu' grande di questo change.
+- 18 tratti dichiarano `passive` + `apply_status` + `stato: focused`, che non e' in `WAVE_A_STATUSES`
+  -> tutti inerti. Gia' noto (`ai/policy.js:121-124`, `imprintTraitGrant.js:88`); zero impatto player
+  (nessuno e' in `index.json`). Il fix e' una decisione: o `focused` entra in WAVE_A con un consumatore
+  in `resolveAttack`, o le 18 entry vanno riscritte.
+- Restano 62 tratti inerti su 309. Nessuna policy generale ratificata.
+
+### Note
+- **Tre difetti trovati, tutti pre-merge, da tre fonti diverse.** (1) Il canale di rimozione: trovato
+  tracciando il seam PRIMA di scrivere il piano -- i test unitari sul modulo sarebbero passati verdi
+  comunque, perche' il modulo FA il `delete`. (2) Il furto derubava gli alleati: la route di attacco
+  risolve il target con `session.units.find((u) => u.id === body.target_id)`, senza validare la fazione.
+  Trovato leggendo la ROUTE, non il modulo -- i miei 12 test costruivano unita' senza `controlled_by`,
+  coerenti fra loro e ciechi alla dimensione che contava. (3) L'ordine dei drain annichiliva il buff
+  quando due ladri opposti rubavano lo stesso status (verificato: entrambi finivano con
+  `frenzy: undefined`). Trovato dall'`harsh-reviewer`.
+- **Codex usage-limit** -> gate rituale impossibile. Sostituto G5 = `harsh-reviewer` (nessun P1,
+  SHIP IT). Il suo P2 era il piu' scomodo e il piu' giusto: lo spec dichiarava un test che non esisteva
+  (il caso `frenzy` asseriva solo la status-map, non i due lati). Ora chiama `computeStatusModifiers`
+  due volte sul motore vero. Merge autorizzato esplicitamente da Eduardo in sessione.
+- **Collisione fra sessioni.** Ho lavorato nel checkout condiviso `C:\dev\Game`; un'altra sessione ha
+  cambiato branch sotto di me fra due commit, e il mio commit del piano e' atterrato su
+  `feat/ap-ledger-extraction` (PR #3251 aperta). Rimediato con `git revert` (append-only, mai un
+  rewrite su un branch altrui in uso). **Lezione: un worktree per filone**, come gia' fanno
+  `_game-wt-3246/-3249/-apfloor`. Nessun lavoro perso, netto zero sulla loro PR.
+- **Due gate persi in silenzio nel worktree.** (a) husky/lint-staged vive in `node_modules`, assente in
+  un worktree fresco -> prettier non ha mai girato, la CI l'ha preso. (b) `tdd-guard` non vede i
+  `node --test` cross-repo; il suo config gia' esentava `**/Game/**` ma non i worktree -> aggiunto
+  `**/_game-wt-*/**` (file gitignored, locale). Entrambi sono la stessa classe del bug che chiudevamo:
+  un controllo che sembra attivo perche' il codice c'e', ma il cui effetto non arriva.
+- Misura invalida colta in tempo: `grep -P` non supportato nella locale -> il primo conteggio della band
+  diede `pass=0 fail=0`, che non significa "nessun fallimento" ma "non ho misurato niente".
+- Ryzen ha solo Node 24; il repo e' Node-22-canonico. Test eseguiti **per-file** (`node --test <dir>`
+  fallisce con `MODULE_NOT_FOUND` su Node 24 anche su albero pulito).
+- Scostamento dal canone dichiarato: `riverbero_memetico` dice "duplica al 50%"; la magnitudo di uno
+  status NON e' scalabile (`status_intensity` letto solo per `abbagliato`), quindi il 50% e' reso sulla
+  DURATA. Annotato nel docstring del modulo perche' nessuno lo "corregga" in silenzio.
+
+---
+
+
 ## 2026-07-10 (Bugfix produzione Game: stepTowards senza bounds -- clamp 6x6 su board grandi, PR #3253, Fable 5 da Ryzen)
 
 ### Completato
