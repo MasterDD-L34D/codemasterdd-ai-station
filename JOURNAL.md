@@ -19,6 +19,30 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-07-10 (Fronte CONTENUTO: testo narrativo dei trait Evo-Tactics -- template, routing 2-stage, wiring, 38/309 voci, Opus 4.8 da Ryzen)
+
+### Completato
+- **Ground-truth ribaltata (3 premesse su 3 del brief)**: il backing NON e' `data/i18n/` ma `locales/it/traits.json` (tracciato, 263 entry); la copertura e' illusoria (~118 delle 237 voci di prosa sono cloni boilerplate, la stessa frase su fino a **14 tratti**; 121 campi iniziano minuscoli; testo autorato reale ~119 stringhe; EN = zero); e soprattutto **nessun runtime risolveva `i18n:traits.*`** -- `traitRepository.js:81` usa il prefisso solo per estrarre l'id via regex, `locales/it/traits.json` ha ZERO lettori. Il gioco non parlava per segnaposto: non parlava affatto.
+- **Routing sovereign, pipeline 2-stage eseguita** (llmfit shortlist -> task-eval N-sample sul prompt reale): 4 arm locali (`gemma3:12b`, `qwen3:8b`, `mistral` su Ryzen; `qwen2.5:32b` su Lenovo) vs baseline Claude autorata **alla cieca**. Gate oggettivi **falsificati su fixture a difetti noti (6/6)** prima di usarli per decidere (SDMG). Esito: i locali non falliscono sulla prosa, falliscono sul **contratto col dato** (`gemma3:12b` ha inventato "riduce i danni del 50%" per `criostasi_adattiva`; `mistral` inventa chiavi e riproduce il boilerplate da uccidere). Tuning: prompt che elenca i numeri canonici come vincolo -> `qwen3:8b` passa da 7/12 a **12/12** voci canon-perfette (N=3 x 4 tratti). Ma `harsh-reviewer` in blind A/B/C boccia comunque i locali su difetti semantici che nessun gate vede (campo sbagliato, tratto invertito, collasso in template su 6/10). Verdetto: **authoring = Claude**, locali = QA.
+- **4 decisioni ratificate da Eduardo** (AskUserQuestion, 4/4 raccomandate): registro **manuale di campo xenobiologico**; destinazione **`data/i18n/{it,en}/traits.json`** (rispetta ADR-2026-06-08 QA3, ed entra gratis nel gate `npm run i18n:check` che fa glob su `<locale>/*.json`); authoring Claude su tutti i lotti; **sovrascrivere** il corpus vecchio.
+- **PR Game #3247 aperta** (4 commit, CI 21 pass / 0 fail, `tests/play` 324/324, `i18n:check` 0 errori): wiring del namespace `traits` in `apps/play/src/i18n.js` (merge per-namespace, `_meta` non sovrascrive il fratello) + `traitLineFor()` puro in `onboardingPanel.js` + **38/309 tratti curati** (lotto 1 da 10 + 3 onboarding + lotto 2 da 25, categorie complete) + 2 test nuovi nati RED. La card di onboarding non dice piu' `Trait: zampe_a_molla`, e degrada al vecchio formato per i 271 non curati.
+- **Review Codex: 6 rilievi P2 in 3 giri, tutti verificati a codice prima di correggere, tutti reali.** Il primo (`zampe_a_molla`: "balzo di riposizionamento" vs runtime "+1 danno da sopraelevata, MoS >= 5") ha smascherato che stavo leggendo **la fonte sbagliata**: 21 tratti su 38 sbagliati, **68 campi**. All'ultimo giro ho spazzato da solo i 38 tratti cercando moduli di motore dedicati e ho trovato un **settimo** difetto non segnalato (`tessuti_adattivi`, cap di 2 canali adattati).
+
+### Da fare
+- **Lotto 3**: 14 tratti ancora senza alcuna voce (`sensoriale` 7, `offensivo` 4, `nervoso` 3), poi le **127 `debolezza` mancanti**, infine i cluster boilerplate. Lotti da 25, raggruppati per categoria (le sinergie stanno dentro la categoria; le ripetizioni si vedono solo cosi').
+- **Ritirare il secondo key-space**: migrare le ~119 stringhe uniche da `locales/` e dismettere `scripts/sync_trait_locales.py` (viola QA3). Fuori scope in #3247 per tenerlo rivedibile.
+- Incoerenza interna al repo, **non toccata**: `mente_lucida.description_it` dice `MoS >= 3`, `trigger.min_mos` dice `5`.
+
+### Note
+- **Gerarchia delle fonti (lezione load-bearing)**: per scrivere `uso_funzione` si legge, in quest'ordine, (1) il **modulo dedicato** `apps/backend/services/combat/<trait>.js` -- 12 dei 38 ne hanno uno e spesso fa **di piu'** dello yaml (`membrane_osmotiche` cura anche 1 a fine round vicino ad acqua/palude); (2) `active_effects.yaml` (`trigger` + `effect`, 428 voci); (3) il glossario, che e' **solo fallback** perche' e' metadata descrittivo -- lo dichiara l'header di `active_effects.yaml` stesso.
+- **Regola dura**: una `debolezza` non puo' asserire una meccanica che il motore non implementa. L'ho violata due volte per fare colore (`eco_sismico` "la zona rivela chi l'ha creata" -- ma la sorgente e' IMMUNE; `spore_paniche` "gli alleati respirano il panico" -- ma e' single-target). E' **lo stesso errore** per cui avevo bocciato `gemma3:12b`. Nessun gate automatico lo intercetta: serve leggere il motore.
+- Semantiche status verificate nel resolver (riusabili): `chilled` = -1 AP cap **e** -1 attacco; `slowed` = -1 AP min 1; `disorient` = -2 attacco; `marked` = +1 danno al prossimo attaccante, consumato; `fracture` = AP portati a 1; `panic` = il bersaglio fugge.
+- tdd-guard ha bloccato la Write dello scorer (blind-spot noto su runner non-node, scratchpad fuori repo). Non ho toccato la sua config: il gate non aveva bisogno di essere un modulo, l'ho eseguito inline falsificandolo comunque.
+- `node --test tests/play/` in modalita' directory fallisce con `MODULE_NOT_FOUND` **anche su albero pulito** (Node 24 in ambiente, repo Node-22-canonico). Non e' una regressione: i 26 file vanno passati esplicitamente.
+- Artefatti: `docs/research/2026-07-10-trait-flavor-lotto1.md` (+ sez. 1-bis con la correzione post-review) e `2026-07-10-trait-flavor-blind-review.md`; log `Extras/ollama-runs/2026-07-10-trait-flavor-eval.log`. Memory `project_trait_flavor_content`.
+
+---
+
 ## 2026-07-10 (Game-Database: RED fleet-verify workflow-sync chiuso + policy no-draft, Fable 5 da Ryzen)
 
 ### Completato
