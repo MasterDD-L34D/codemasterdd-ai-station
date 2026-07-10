@@ -19,6 +19,23 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-07-10 (Jules Wave D: backport #2744 + chiusura campagna doc-comment, Fable 5 da Ryzen)
+
+### Completato
+- **Wave D dispatch (ratifica Eduardo, 3 sessioni concorrenti come Wave B)**: 3/3 COMPLETED in ~10 min, 3/3 patch byte-identical allo spec pre-provato, zero delivery-miss, zero re-dispatch. Task file in docs/jules-batch/tasks/2026-07-10-* (landati con #524).
+- **(A) Backport encounter #2744 -> PR Game #3244 (PR-to-owner, do-NOT-merge)**: Currency Gate sull'issue (stale: i floors dei planning/draft erano gia' backportati il 07-03) -> delta reale = 27 additions su 5 file, non 21 encounter. Catch pre-dispatch: edit schema FORZATO fuori contratto issue (enum conditions[].type + "lethal" in schemas/evo/encounter.schema.json, senno' encounterSchema.test.js rosso). Pre-prova completa su mirror (regen ETL: 27/27 diff spariti; AJV 19/19; pin-equivalent GGv2 verdi). Gate locale post-salvage: encounterSchema 22/0 + gridSchema 3/0 + validate-datasets verde + ratify 0 warn + committed==mirror 6/6 (prettier lint-staged no-op verificato).
+- **(B) Batch 38 (#596) + 39 (#597) MERGED su GGv2 main (grant filler)**: 14+13 righe ##, dels=0, byte-compare 5/5 file vs candidati pre-provati in locale (gdtoolkit 4.5.0 Ryzen: gdformat unchanged + gdlint clean PRIMA del dispatch). Pool clean VUOTO (re-scan 285 .gd: zero cream oltre i 5 nominati) -> **CAMPAGNA DOC-COMMENT CHIUSA hard-stop**: tracker #598 merged (STATUS banner CLOSED, snapshot finale 154/285 = 54% @ db38e7d, phase note Wave D). 100% NON era l'obiettivo (policy decision 2).
+- **CI blind spot Game flaggato** (nel body di #3244): data/encounters/** + docs/planning/encounters/** + schemas/evo/** non triggherano stack-quality in ci.yml -> i test AJV non girano su PR YAML-only. Gate coperto in locale; fix = candidato chip separato.
+
+### Da fare
+- PR Game #3244: merge Eduardo (chiude #2744) + decisione sul chip paths-filter.
+- Campagna doc-comment: niente -- chiusa, si riapre solo con nuova ratifica esplicita.
+
+### Note
+- Delta metodologico Wave D: pre-prova COMPLETA di entrambe le lane PRIMA del dispatch (mirror YAML + regen ETL per A; gd_mirror + gdformat/gdlint per B) -> triage ridotto a byte-compare + validatori. 3/3 gate-perfect first try.
+- Gotcha nuovi: (1) lint-staged/prettier gira sui .yaml/.json staged nel pre-commit di Game -- stavolta no-op ma va SEMPRE verificato committed==mirror post-commit; (2) tdd-guard false-blocca anche la Write di script python di pura ANALISI in scratchpad -> fallback heredoc py-stdin (gia' doctrine per i char-test); (3) journal-land: -Path via powershell -File appiattisce l'array -> invocare con & e @(); mai accoppiare Edit+land nello stesso blocco (race, entry persa al primo giro).
+- Jules REST: il salvage e' outputs[0].changeSet.gitPatch.unidiffPatch dal GET sessione (niente PR aperti da Jules, conferma doctrine); sessioni doc/yaml-only ~5-10 min.
+
 ## 2026-07-10 (Riconcile doc post fleet-verify: trittico PR + policy no-draft, Fable 5 da Ryzen)
 
 ### Completato
