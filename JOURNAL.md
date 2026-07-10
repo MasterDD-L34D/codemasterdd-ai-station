@@ -19,6 +19,26 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-07-10 (Arco sistema-symmetry COMPLETO: ceiling WR 1.0 ROTTO, Opus+Fable da Ryzen)
+
+### Completato
+- **Arco intero in un giorno, subagent-driven (spec -> piano -> 7 task -> evidence)**: il Sistema passa all'economia d'azione del party. Merged: spec+piano #3249, apLedger #3251, flag retreat-gate+per-unit-AP #3254, telegraph threats-only #3258, report+bande #3261 (pending fact-check). Aperti per Eduardo: **ADR #3262** (PROPOSED, merge+flip owner; dentro la checkbox widening 1.2x M1).
+- **RISULTATO STORICO**: prime sconfitte del party mai misurate sul driver -- arm gate+AP N=40 paired: dorsale WR **0.925 CI95 [0.801, 0.974]** (3 defeat), abisso 0.975 (1 defeat), KO 0.275/0.113/0.175 vs ~0 control. Conversione attack 4.6%->16.7%, ritirate 55.7%->**0.7%**, attivazioni ~2x con movimento reale. Fattoriale: gate-only inerte, ap-only debole, **insieme rompono il muro** (sinergia = tesi della spec, ora misura).
+- **Integrita' sperimentale**: primo fattoriale SCARTATO come contaminato -- il budget AP interagiva col bug stepTowards (passo clampato = 7 AP -> statue "castello immobile"); verdetto owner: sequenziamento invertito, merged #3253 (fix altra sessione, gate sostituto + 4 probe verificate da me), control ri-baselinato N=40, fattoriale rifatto pulito. Misura contaminata conservata come evidenza dell'interazione.
+- **Bande pace terza ratifica in un giorno** (L-069 due volte: substrate-ON al mattino, stepfix la sera): dorsale [14,25], canyon [15,21], abisso [13,21] -- e correzione storica: il "ceiling di modello del driver" NON esisteva, era il comportamento del Sistema (doc cap-falsification + factorial).
+- **Gate Codex esaurito (usage-limit) -> sostituto ratificato esercitato su tutto l'arco**: two-stage review (spec+quality) con fix-loop reali -- mutation testing che ha ucciso 2 gap veri (threshold-sensitivity, sort telegraph), RED-first provato empiricamente, byte-compare meccanici.
+
+### Da fare
+- Eduardo: **merge ADR #3262** + decisione checkbox widening M1 + eventuale flip flag (keys.env+restart) -> poi ri-ratifica bande flag-ON + neutralizzazione `action_economy` xpBudget (sequenza nell'ADR).
+- #3261 (report): merge al verdetto del fact-check sostituto (in volo a fine sessione).
+- WR 0.925 -> banda [0.35, 0.55]: tuning authoring/pressure/tier, fasi successive (dichiarato nel report, niente over-claim).
+- Triage floor ap_cost: #3257 supersede il branch `fix/ap-ledger-negative-ap-cost-floor` (cancellabile); sequenza #3257/#3252 alla sessione apLedger dedicata.
+
+### Note
+- **Feedback Eduardo recepito (memory nuova)**: chip lifecycle multi-sessione -- dismettere i chip quando il lavoro esiste altrove; pre-spawn/pre-azione = `gh pr list` + `list_sessions`; la sessione di un chip puo' essere l'ORIGINE del fix (stepTowards), non un duplicato; il duplicato vero c'e' stato (floor ap_cost, 2 implementazioni).
+- Coordinamento multi-sessione: 6+ sessioni parallele su Game oggi; collisioni gestite senza perdite (checkout rubato 2x, prettier-fix via worktree detached, push fast-forward senza toccare i tree altrui).
+- Fattoriale/N=40: ~340 run totali in giornata, tutti checkpoint-resumable, log su Extras/ollama-runs.
+
 ## 2026-07-10 (Game: fix CWE-20 grid-bounds asimmetrici -- PR #3256 aperto, Fable 5 da Ryzen)
 
 ### Completato
