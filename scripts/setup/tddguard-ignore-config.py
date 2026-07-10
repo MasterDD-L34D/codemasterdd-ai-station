@@ -21,10 +21,13 @@ DEFAULTS = ["*.md", "*.txt", "*.log", "*.json", "*.yml", "*.yaml",
 # Sibling fleet repos to exempt (this project = codemasterdd-ai-station, stays guarded).
 SIBLINGS = ["**/Game/**", "**/Game-Godot-v2/**", "**/Game-Database/**",
             "**/synesthesia/**", "**/vault/**", "**/Dafne/**",
-            # Ad-hoc worktrees created OUTSIDE the repo dir (gap 2026-07-10, Game PR #3256):
-            "**/Game-wt*/**",    # C:/dev/Game-wt-gridcap + bare C:/dev/Game-wt
+            # Ad-hoc worktrees created OUTSIDE the repo dir (gap 2026-07-10, Game PR #3256).
+            # Conventions from runbooks/handoffs, not just dirs on disk (Codex P2, PR #531):
+            "**/Game-*/**",      # Game-wt*, Game-<topic>, Game-golive (supersets the
+                                 # Game-Godot-v2/Game-Database entries above, kept for clarity)
             "**/_game-wt-*/**",  # C:/dev/_game-wt-3246, -apfloor, ... (Ryzen)
             "**/_gamewt-*/**",   # _gamewt-lenovo-host (Lenovo convention)
+            "**/_wt-game-*/**",  # C:/dev/_wt-game-ennea-t1 (handoff 2026-07-02)
             "**/vault-wt*/**"]   # C:/dev/vault-wt
 
 def main(root=None):

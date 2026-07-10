@@ -24,17 +24,19 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 ### Completato
 - **Gap chiuso**: i worktree ad-hoc fuori repo-dir (`C:\dev\Game-wt-*`, `C:\dev\_game-wt-*`,
   Lenovo `_gamewt-*`, `vault-wt`) non matchavano `**/Game/**` -> tdd-guard false-bloccava TDD
-  legittimo li' (episodio: fix CWE-20 in Game-wt-gridcap, PR Game #3256). Aggiunti 4 glob a
-  `SIBLINGS` in `scripts/setup/tddguard-ignore-config.py`: `**/Game-wt*/**` (copre anche
-  `Game-wt` nudo, ground-truth C:\dev), `**/_game-wt-*/**`, `**/_gamewt-*/**`, `**/vault-wt*/**`.
+  legittimo li' (episodio: fix CWE-20 in Game-wt-gridcap, PR Game #3256). Aggiunti 5 glob a
+  `SIBLINGS` in `scripts/setup/tddguard-ignore-config.py`: `**/Game-*/**` (copre `Game-wt*`,
+  `Game-<topic>`, `Game-golive` -- convention da runbook, allargato su Codex P2 CONFERMATO
+  a ground-truth), `**/_game-wt-*/**`, `**/_gamewt-*/**` (Lenovo), `**/_wt-game-*/**`
+  (handoff ennea 07-02), `**/vault-wt*/**`.
 - **Refactor testabilita'**: corpo script -> `main(root=None)` + guard `__main__` (import senza
   side-effect). 4 test nuovi TDD RED->GREEN in `scripts/tests/test_tddguard_ignore_config.py`
   (glob presenti, write defaults+siblings, guardEnabled preservato, idempotenza byte-stable).
   Suite completa 52/52 verde.
-- **Smoke minimatch 8/8**: engine reale (npm minimatch) conferma match sui path worktree e
-  NON-match su codemasterdd (progetto resta guarded).
+- **Smoke minimatch 10/10**: engine reale (npm minimatch) conferma match sui path worktree
+  (incluse le convention solo-documentate) e NON-match su codemasterdd (progetto resta guarded).
 - **Config rigenerati su Ryzen**: worktree sessione + repo canonico `C:\dev\codemasterdd-ai-station`
-  (21 pattern = 11 default + 10 sibling).
+  (22 pattern = 11 default + 11 sibling).
 
 ### Da fare
 - Rilanciare `scripts/setup/tddguard-ignore-config.py` su **Lenovo** post-merge (config.json

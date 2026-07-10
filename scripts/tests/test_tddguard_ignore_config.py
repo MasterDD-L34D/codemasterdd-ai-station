@@ -34,9 +34,10 @@ def cfg_module():
 def test_siblings_include_adhoc_worktree_globs(cfg_module):
     """Worktree conventions outside repo dirs must be exempted too."""
     expected = [
-        "**/Game-wt*/**",      # C:/dev/Game-wt-gridcap + bare C:/dev/Game-wt
+        "**/Game-*/**",        # Game-wt*, Game-<topic>, Game-golive (runbook conventions)
         "**/_game-wt-*/**",    # C:/dev/_game-wt-3246, -apfloor, ... (Ryzen)
         "**/_gamewt-*/**",     # _gamewt-lenovo-host (Lenovo convention)
+        "**/_wt-game-*/**",    # C:/dev/_wt-game-ennea-t1 (handoff 2026-07-02)
         "**/vault-wt*/**",     # C:/dev/vault-wt (convention extends to vault)
     ]
     for pattern in expected:
