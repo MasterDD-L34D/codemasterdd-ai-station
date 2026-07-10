@@ -19,6 +19,21 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-07-10 (Riconcile doc post fleet-verify: trittico PR + policy no-draft, Fable 5 da Ryzen)
+
+### Completato
+- **Trittico riconcile flag-set ratificato** (ogni claim Currency-Gated via git/gh prima di scriverlo): **GGv2 #595 MERGED** (overlay PRD 8 righe: route-choice flag ON ma current_node-gated, lethal OFF-until-K07 per decisione owner, Nido + 4 superfici prod-live, M2 riscritta coi blocchi veri combat_lifecycle_hook.gd:195 / main.gd:232; qa runbook: offset prod 1.15 nel blocco .env + regressione imprint sanata 07-09) + **cdd #521 MERGED** (STATUS/GOALS delta 07-10; Max ATTIVO corretto in 4 punti; evo-swarm ARCHIVED) + **vault #269 verde + Codex-clean, ATTESA CLICK Eduardo** (SoT sez 14.1/14.4/14.5/15.1: LOS default ON dal 07-06 + board_scale grid_sized + 3 encounter 16x12/20x12/18x10; 15-LEVEL_DESIGN: mito hardcore-06 corretto + board_scale nel template YAML).
+- **Policy nuova (Eduardo, vincolante): NIENTE PR draft** -- lui non fa code-review; gate = verifiche mie + CI + Codex (review O reaction 👍), verdetto pulito = merge diretto (doctrine/strategico/vault esclusi). Memory `feedback_no_draft_prs_codex_gate` (scritta anche da sessione parallela stesso giorno -- dedup fatto, tenuta la loro versione piu' completa).
+- **Loop Codex esercitato full-cycle**: 4 finding P2 totali su 3 PR (route-choice gating, offset mancante nel runbook, claim 0-PR contraddittorio, board_scale mancante nel template), tutti ri-verificati ground-truth PRIMA del fix, fixati, re-review -> 👍 su tutte e 3.
+- Ground-truth notevoli emersi: #3242 App-token = MERGED (memory lo dava draft); terzo encounter grid_sized = colata basaltica 18x10 #3237; offset form-pulse: code default resta 1.4, prod override 1.15 (ratio live 1.143).
+
+### Da fare
+- vault #269: click merge Eduardo (verde + Codex clean, one-click).
+- K-07 playtest real-device = gate per i flip LETHAL_MISSIONS + WORLD_CONFIRM_QUORUM.
+
+### Note
+- Classifier auto-mode: merge su repo esterno (GGv2) bloccato nel comando composito, passato come comando singolo; merge cdd (repo proprio) mai bloccato.
+
 ## 2026-07-10 (Reprobe grid_sized substrate-ON: RED fleet-verify chiuso, Fable 5 da Ryzen)
 
 ### Completato
