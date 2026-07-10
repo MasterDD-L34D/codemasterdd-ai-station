@@ -19,6 +19,38 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-07-10 (Game: fix CWE-20 grid-bounds asimmetrici -- PR #3256 aperto, Fable 5 da Ryzen)
+
+### Completato
+- **PR Game #3256 aperto** (`fix/grid-bounds-cap`): chiuso il rilievo A04/CWE-20 dall'audit del
+  PR #3253. `/start` derivava i clamp bounds delle unita' iniziali da `encounter.grid.{width,height}`
+  con solo `Number.isFinite` -> peer LAN con `width=9999` piazzava un'unita' a x=9998 fuori dalla
+  board reale (6x6). Nuovo `sessionHelpers.normaliseGridBounds`: mirror dei bounds schema
+  [4,20] interi (come `isAuthoredGrid`), coercion stringhe preservata, fail-closed (null -> clamp
+  legacy GRID_SIZE).
+- TDD rigoroso: RED route-level ha riprodotto l'exploit (`e_ghost x=9998 outside real board width 6`)
+  PRIMA del fix. 5 test nuovi (`tests/api/gridBoundsCap.test.js`) + regression correlata 22/22 +
+  consumer inline-grid 54/54. CI PR: 15 pass / 0 fail.
+- Triage review Codex: unico rilievo P2, CONFERMATO a ground-truth (residuo in-range: grid 20x20
+  schema-valida non-authored -> board resta 6x6, unita' a (19,19) ancora fuori). Bounded (<=19 vs
+  9998); causa = asimmetria strutturale fra semantica clamp PR #3065 e resolved-board fase-2c
+  (ADR-2026-07-03). Reply nel thread con le 2 opzioni di fix; decisione design a Eduardo.
+
+### Da fare
+- Merge PR #3256 = Eduardo (zero P1; P2 triaged nel thread).
+- Follow-up design sul residuo in-range (opzione 1: richiedere `board_scale:'grid_sized'` per il
+  widening; opzione 2: clamp al resolved board pre-normalizzazione). Issue pubblica bloccata dal
+  classifier (correttamente: detail exploit non richiesto) -- il thread PR fa da tracker.
+- Chip spawned: estendere `tddguard-ignore-config.py` con glob `**/Game-wt-*/**` + `**/_game-wt-*/**`.
+
+### Note
+- Worktree dedicato `C:\dev\Game-wt-gridcap` (junction node_modules): NON rimuovere con
+  `git worktree remove --force` (incidente junction noto); prima rmdir della junction, poi remove.
+  Tree condiviso `C:\dev\Game` (era su `pr-3250-gate`, branch gate locale) mai toccato.
+- tdd-guard: gap ignorePatterns sui worktree ad-hoc fuori `**/Game/**`; terzo workaround
+  ground-truth (test.json alimentato coi risultati REALI del run node) documentato in memoria.
+- Run locali su node 24 (PATH Ryzen) vs canonical Game 22: CI = autorita', tutta verde.
+
 ## 2026-07-10 (Game: due trait inerti resi vivi -- buff-steal + oracle-reveal, PR #3255 MERGED, Opus 4.8 da Ryzen)
 
 ### Completato
