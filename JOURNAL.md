@@ -19,6 +19,40 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-07-11 (pomeriggio: studio-track Fase 1 GDD-refresh ESEGUITA, PR Game #3269 gate-clean, Fable 5 da Ryzen)
+
+### Completato
+- **Fase 1 studio-track v0.9 eseguita** (piano letto dal branch di #3268, ancora aperto;
+  executing-plans, worktree dedicato `C:\dev\_game-wt-gddrefresh`): 6 task doc-only ->
+  **PR Game #3269** (8 commit, trailer ADR-0011). SoT sez.13 -> puntatore overlay LIVE
+  Godot-v2; sez.18.1 audience DECISA (creature-strategist primaria); piano audio
+  implementabile (mappa eventi Path A + criteri asset + budget 40-60 SFX / 6-8 tracce);
+  nuovo `45-ACCESSIBILITY.md` baseline v1 + registry; hub 00-GDD_MASTER refresh.
+- **Gate completo**: CI verde (9 pass / 0 fail), governance errors=0, ASCII-guard ok,
+  Codex 4 round -> CLEAN su HEAD `ee46520228` ("Didn't find any major issues").
+- **Triage Codex 4x P2 + 1x P3, tutti confermati ground-truth e fixati**: (a) sez.13.9
+  OD-058 (Phase-2 boundary + canali danno D4) era CANONE attivo dentro la sezione
+  "stale" -> ripristinata ASCII-fied, pointer 00D:528 risolve di nuovo; (b) sez.14
+  hex-axial superseded da ADR-2026-04-28 square-final -> banner; (c) sez.16 single-machine
+  vs co-op WS 1-8 LIVE -> banner; (d) anchor 13.1-13.8 rotti -> retarget dei soli ref
+  LIVE (loop 23.1 + 10-SISTEMA_TATTICO), ADR/museum intatti; (e) checklist gap audio
+  marcata STORICO. Voci creature riallineate al canone 00F 3.2 (nessuna voce).
+
+### Da fare
+- **Merge Eduardo**: PR #3269 (Fase 1) + PR #3268 (piano, gia' gate-ok da ieri).
+- **Fase 2 asset hunt** (deep-research audio+VFX contro i criteri Fase 1, shortlist
+  pre-approvata prima del download) -> sessione dedicata post-merge.
+- Worktree `C:\dev\_game-wt-gddrefresh` da rimuovere dopo il merge (no junction dentro).
+
+### Note
+- Il piano prevedeva 1 hit "sprint 001" post-edit; ne restano 2 (riga 549, sez.12,
+  pre-esistente fuori perimetro -- lasciata).
+- commit-guard: description deve iniziare minuscola -> subject Task 4 adattato
+  ("add 45-ACCESSIBILITY...").
+- Verdetto Codex clean di nuovo in forma ISSUE-COMMENT (terza forma, memoria gia'
+  aggiornata 07-10): il poll a 2 canali (reviews+reactions) non lo cattura -- usare
+  sempre i 3 canali + match `Reviewed commit:` == HEAD.
+
 ## 2026-07-11 (notte: FLIP flag-ON deployato + quarta ratifica bande + sweep Codex + studio track avviato, Fable 5 da Ryzen)
 
 ### Completato
