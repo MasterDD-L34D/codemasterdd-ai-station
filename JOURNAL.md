@@ -19,6 +19,51 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-07-11 (notte: FLIP flag-ON deployato + quarta ratifica bande + sweep Codex + studio track avviato, Fable 5 da Ryzen)
+
+### Completato
+- **Sweep thread Codex su PR merged 07-10** (richiesta Eduardo): 14 trovati, 13 chiusi
+  con reply evidenziata + resolve (7 gia' fixati nel codice di main verificati riga per
+  riga; 6 flavor di #3247 gia' corretti nello squash mergiato -- Codex aveva rivisto un
+  commit pre-fix); 1 lasciato aperto (#3258 telegraph) -> risolto in giornata dal chip
+  con PR #3264. Zero P1 scoperti.
+- **ADR #3262 MERGED** (autorizzazione esplicita Eduardo): fix Codex P1/P2 in 66c54ec07
+  (DECISIONS_LOG regen 74->75 = governance verde; frontmatter `status: proposed`);
+  P2-citazione era stale. **D2 decisa da Eduardo: widening 1.2x M1 esteso al gate**
+  (checkbox tickata; implementazione poi landata dal chip in #3266).
+- **#3263 addendum factorial MERGED** col gate sostituto (Codex limit x2): SHIP-IT 0 P1
+  con verifica INDIPENDENTE del bit-exact (30/30 ricontrollati); honesty pass 72a2ba814:
+  claim "cross-machine Lenovo->Ryzen" RIMOSSO (i control girarono su Ryzen, header doc)
+  -- corregge anche la entry journal precedente che lo citava.
+- **FLIP eseguito** (autorizzato, da Ryzen via SSH): #3264 merged -> prod Lenovo
+  `_gamewt-lenovo-host` dc0de487 -> d9fd2f0ca (141 file, zero lockfile/migrazioni) +
+  3 export `SISTEMA_*` in keys.env + Stop/Start task (pid nuovo, /api/health ok, boot
+  pulito). Il chip D2 ha poi avanzato prod a d6a9f523 (#3266).
+- **Bande flag-ON promosse** (#3265 MERGED, quarta ratifica): probe pre-flip N=10
+  bit-exact 30/30 vs control gateap N=40 (incluse le 2 sconfitte dorsale) = telegraph
+  presentation-only PROVATO; bande [11,23]/[13,20]/[12,25] in 15-LEVEL_DESIGN,
+  completion con sconfitte by-design (dorsale WR 0.925). xpBudget action_economy =
+  DEFER (decisione Eduardo, warn accettato).
+- **Studio track v0.9 avviato** (richiesta Eduardo "come uno studio"): ground-truth =
+  GDD gia' ~90% distribuito; brainstorming 6 decisioni owner (audience PRIMARIA
+  creature-strategist, slice-first verso freeze v0.9, asset hunt solo audio+VFX
+  CC0/CC-BY) -> **spec #3267 MERGED** (review Eduardo) -> **piano Fase 1 su PR #3268**
+  (6 task doc-only con testi completi; 2 P2 Codex fixati: report path reale +
+  ricetta trailer ADR-0011).
+
+### Da fare
+- **Fase 1 GDD refresh**: eseguire il piano (#3268) in sessione fresca -- chip pronto
+  (task_e1ebfdf5). Poi Fase 2 asset hunt (shortlist PRIMA del download) e Fase 3
+  roadmap slice-first (SOLO `40-ROADMAP`, il MASTER_ROADMAP e' superseded).
+- Conferma bande flag-ON live post-#3266 (D2 non tocca gli encounter di misura:
+  atteso delta zero, N=10 basta).
+
+### Note
+- Codex quota rientrata in serata (clean su #3264/#3265/#3266/#3267); sostituto usato
+  solo su #3263 con doppio trigger documentato.
+- Gotcha nuovi: doc `doc_status: active` -> entry in docs_registry.json NELLO STESSO
+  PR; segnaposto in parentesi angolari negli snippet = redirection in Git Bash.
+
 ## 2026-07-10 (pre-flip telegraph: Codex P2 #3258 risolto -- contratto hidden-row, PR Game #3264)
 
 ### Completato
