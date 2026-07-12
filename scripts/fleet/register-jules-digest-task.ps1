@@ -14,9 +14,18 @@ This script registers the jules-daily-digest Windows scheduled task on Ryzen, id
 #
 # OWNERSHIP = SINGLE-OWNER, NOT both PCs. Both clones writing the same-name
 # docs/jules-batch/<day>-digest.md = cross-fleet drift (two divergent working
-# trees + double commits). Owner today = Ryzen (DESKTOP-T77TMKT). To hand off
-# to Lenovo: run this with -Unregister on the current owner FIRST, then run it
-# (register) on the new owner. Never leave it registered on two PCs.
+# trees + double commits). Owner today = Lenovo (CODEMASTERDD), as of
+# 2026-06-25 (was dual-registered, fixed -- see docs/jules/
+# JULES-GOVERNANCE-INDEX.md). To hand off: run this with -Unregister on the
+# current owner FIRST, then run it (register) on the new owner. Never leave
+# it registered on two PCs.
+#
+# 2026-07-12: -Unattended registers the task with LogonType S4U ("run
+# whether user is logged on or not", no stored password). Default Interactive
+# tasks are REFUSED (0x800710E0) when no interactive session exists at
+# trigger time (caused a 9-day digest gap 07-03..07-11 on Lenovo). The digest
+# only needs HTTPS + local key/token files, so S4U is safe. S4U registration
+# requires an ELEVATED shell; plain Interactive does not.
 #
 # Prereq on the owner PC: JULES_API_KEY in ~/.config/api-keys/keys.env + gh
 # authed (the PR-state 2-source signal; without gh the digest still runs but
@@ -25,10 +34,12 @@ This script registers the jules-daily-digest Windows scheduled task on Ryzen, id
 #
 # Usage:
 #   powershell -NoProfile -ExecutionPolicy Bypass -File register-jules-digest-task.ps1
+#   powershell -NoProfile -ExecutionPolicy Bypass -File register-jules-digest-task.ps1 -Unattended   # elevated shell
 #   powershell -NoProfile -ExecutionPolicy Bypass -File register-jules-digest-task.ps1 -Unregister
 [CmdletBinding()]
 param(
   [switch]$Unregister,
+  [switch]$Unattended,
   [string]$At = '09:30',
   [string]$ScriptPath = 'C:\dev\codemasterdd-ai-station\scripts\jules-daily-digest.ps1'
 )
@@ -50,7 +61,8 @@ if (-not (Test-Path $ScriptPath)) { throw "Digest script not found: $ScriptPath"
 
 $action    = New-ScheduledTaskAction -Execute 'powershell.exe' -Argument ('-NoProfile -ExecutionPolicy Bypass -File "' + $ScriptPath + '"')
 $trigger   = New-ScheduledTaskTrigger -Daily -At $At
-$principal = New-ScheduledTaskPrincipal -UserId "$env:COMPUTERNAME\$env:USERNAME" -LogonType Interactive -RunLevel Limited
+$logonType = if ($Unattended) { 'S4U' } else { 'Interactive' }
+$principal = New-ScheduledTaskPrincipal -UserId "$env:COMPUTERNAME\$env:USERNAME" -LogonType $logonType -RunLevel Limited
 $settings  = New-ScheduledTaskSettingsSet -StartWhenAvailable -ExecutionTimeLimit (New-TimeSpan -Minutes 15) -DontStopOnIdleEnd
 $desc      = "READ-ONLY Jules sessions digest (ADR-0034 Option D, heuristic v4.1). Writes docs/jules-batch/<day>-digest.md. Single-owner cross-fleet (G3)."
 
