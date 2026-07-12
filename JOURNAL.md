@@ -19,6 +19,35 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-07-12 (fleet: journal-land v3 copy carry -- fix conflitto stash, Fable 5 da Lenovo)
+
+### Completato
+- **Root cause** bug journal-land n=2 (landing #539/#543): lo stash e' un commit con
+  parent = HEAD del shared tree, quindi `stash apply` nel worktree origin/main = merge
+  3-way con base = feature HEAD -> su file newest-first gli hunk in testa collidono
+  sempre appena origin/main guadagna entry dopo il branch point. Conflitto strutturale,
+  riprodotto deterministico su scratch fixture PRIMA del fix (negative control L-041).
+- **Fix v3 (PR #545 MERGED)**: carry per Copy-Item diretto (WYSIWYG, fidelity hash
+  `--no-filters`), shared tree MAI mutato (macchineria stash/restore eliminata), guard
+  anti-clobber 2-segnali (origin mosso dal merge-base AND la copia droppa righe di
+  origin; `-AcceptMerge` = override reviewed), fallback merge CI-gated visto che il
+  repo ha auto-merge PR disabilitato (2 poll verdi consecutivi, bounded 5 min).
+- Harsh-review pre-merge (protocollo #5): 2 P1 + 4 P2, tutti fixati (regex del guard
+  statico bypassabile dalla forma v2 `git -C <wt> stash apply`; race registrazione
+  check nel merge diretto).
+- Smoke scratch: scenario-incidente landa pulito / clobber abort / AcceptMerge landa /
+  noop exit 0; pytest 56 pass; guard statici in test_journal_land_copy_carry.py.
+- Spec aggiornata: 2026-05-29-journal-land-cross-fleet-design.md sec 12.
+
+### Da fare
+- Nulla (arc chiuso). Eventuale: dogfood da Ryzen alla prossima sessione journal.
+
+### Note
+- Questa entry = dogfood live del v3 (landata col nuovo helper, incluso il fallback
+  merge diretto post-CI).
+- Post-land l'edit resta nel working tree (copy carry): su feature branch scartarlo
+  con `git checkout -- JOURNAL.md` dopo il merge; su main sparisce col pull.
+
 ## 2026-07-12 (sera: download manifest asset ESEGUITO + provenance in repo, Fable 5 da Ryzen)
 
 ### Completato
