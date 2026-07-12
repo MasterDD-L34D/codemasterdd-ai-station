@@ -1,6 +1,6 @@
 # Spec -- journal-land cross-fleet (kill recurring journal-branch drift)
 
-> **Status (2026-06-23):** shipped -- journal-land.ps1 live (CLAUDE.md helper)
+> **Status (2026-07-12):** shipped -- journal-land.ps1 live (CLAUDE.md helper); v3 copy carry (sec 12)
 
 Date: 2026-05-29
 Status: Design (pending Eduardo review)
@@ -209,3 +209,73 @@ The safety contract (origin/main base, hash-based silent-merge detection + `-Acc
 exit-code-checked recovery, ASCII-no-BOM `-F` commit, gh-graceful Ryzen path, conventional-subject
 fail-fast) is preserved unchanged. The helper interface (sec 4) is unchanged. Verified by a live
 dogfood land + a different-model `harsh-reviewer` pass (SDMG external falsification, Protocol 7).
+
+## 12. Revision 2026-07-12 -- copy carry (supersedes the sec 11 stash-apply mechanics)
+
+Bug confirmed n=2 (landings of journal PR #539 and #543, 2026-07-12): with the shared tree
+on a feature branch divergent from origin/main, `git stash push` + `git -C <wt> stash apply`
+conflicted EVERY time -- even when the JOURNAL entry had been built on top of origin/main
+content, and with spurious modify/delete noise on files that exist only on the feature branch
+(AGENTIC_OS.md, ADR-0044).
+
+Root cause (reproduced deterministically in a scratch fixture before the fix -- negative
+control per L-041): a stash is a commit whose parent is the shared HEAD, so `stash apply` in
+the origin/main worktree is a 3-way merge with the FEATURE HEAD as base. On a newest-first
+file like JOURNAL.md both "sides" (origin's entries landed after the branch point, and the
+session's insert) touch the same top-of-file hunk -> structural conflict, not bad luck.
+
+Fix (v3): carry the edit by DIRECT FILE COPY instead of stash.
+
+```
+session edits JOURNAL.md (newest-first, after the --- divider)
+   -> journal-land.ps1 -Subject "docs(journal): <desc>"
+      -> git fetch origin main
+      -> git worktree add -b claude/journal-<host>-<date> <TEMP> origin/main
+      -> Copy-Item each -Path file into <TEMP>       (WYSIWYG: bytes the session reviewed)
+      -> git -C <TEMP> hash-object == pre-copy hash  (copy fidelity; abort on mismatch)
+      -> git -C <TEMP> add ; anti-clobber guard      (see below; abort unless -AcceptMerge)
+      -> commit -F <tmp> ; push ; worktree remove ; PR ; merge (see fallback below)
+```
+
+Properties:
+- The shared working tree is NEVER mutated (no stash, no switch): the entire
+  restore-on-failure machinery of sec 11 is deleted because there is nothing to restore.
+  On any failure the edit is still sitting untouched in the working tree.
+- WYSIWYG: what lands is byte-identical to the reviewed working-tree file, enforced by the
+  pre/post `git hash-object` compare (replaces the old post-apply merge detection).
+- After a successful land the edit STAYS in the shared working tree (the old stash flow
+  consumed it). On main it disappears with the post-merge `git pull --ff-only`; on a feature
+  branch discard it with `git checkout -- <file>` once the PR is merged (the helper prints
+  this note).
+- Anti-clobber guard (replaces the silent-3-way-merge detection): a copy built on a STALE
+  base would silently DROP content that is on origin/main now. Flag a file only when BOTH
+  hold: (a) origin/main's blob differs from the merge-base(HEAD, origin/main) blob (origin
+  moved it since our base) AND (b) the staged copy deletes lines vs origin/main
+  (`git diff --cached --numstat`, binary `-` treated as risk). A pure newest-first insert
+  deletes nothing, so the n=2 incident pattern (entry rebuilt on origin content from a stale
+  branch) now lands CLEAN, while a genuinely stale copy still aborts with guidance.
+  `-AcceptMerge` keeps its role as the reviewed-override, with sharper semantics than sec 6:
+  it lands the session's copy as-is (before, it landed a merge result nobody had reviewed).
+  Known friction: an intentional rewrite of a file origin also touched trips the guard ->
+  review, then re-run with `-AcceptMerge`.
+- Merge fallback: `gh pr merge --auto` FAILS on this repo (PR auto-merge disabled --
+  GraphQL enablePullRequestAutoMerge; sec 6 assumed it worked). New chain: try `--auto`
+  (future-proof) -> on failure wait for CI bounded (5 min poll of `gh pr checks`; ci.yml
+  ascii-guard + pytest run on every PR; "no checks reported" right after create = pending;
+  TWO consecutive green polls required, so a fast job registering+greening before a slower
+  sibling registers cannot slip an unchecked merge through)
+  -> checks green = direct `gh pr merge --squash --delete-branch` (journal = docs class =
+  auto-merge per autonomy ladder sec 5) -> pending timeout or failed checks = PR left open
+  with the exact manual command. Never hard-fails the landing.
+
+Quality Gate evidence (scratch fixture = bare origin + seed clone + shared clone on a
+divergent feature branch, entry built on origin/main content):
+1. negative control, PRE-fix script: `CONFLICT (content): Merge conflict in JOURNAL.md`,
+   exit 1 (incident reproduced);
+2. POST-fix same scenario: lands clean, 4 insertions, landed blob byte-identical to the
+   reviewed copy, trailers present, shared HEAD/edit untouched, no stash, no stale worktree;
+3. clobber variant (origin gains an entry AFTER the copy was built): abort exit 1 with
+   guidance; same run with `-AcceptMerge`: lands WYSIWYG with a warning;
+4. no-change run: "nothing to journal", exit 0.
+Static regression guards: `scripts/tests/test_journal_land_copy_carry.py` (no stash-carry
+reintroduction, copy+fidelity present, anti-clobber signals present, merge fallback present).
