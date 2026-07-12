@@ -3,10 +3,12 @@
 Morning brief R0 -- deterministic, read-only fleet snapshot (no LLM).
 
 .DESCRIPTION
-ADR-0044 gap G1, governor earn-path rung R0 (report-only). Aggregates:
-open PRs across monitored repos (gh), local scheduled-task health, JOURNAL
-and GOALS currency. Writes logs/morning-brief/<date>.md (gitignored) and
-prints to stdout. NEVER writes outside logs/, never commits, never merges.
+Governor earn-path rung R0 (report-only) -- see the design spec
+docs/superpowers/specs/2026-06-01-unified-fleet-governor-design.md (ratifying
+decision ADR-0044, PR #538). Aggregates: open PRs across monitored repos (gh),
+local scheduled-task health, JOURNAL and GOALS currency. Writes
+logs/morning-brief/<date>.md (gitignored) and prints to stdout. NEVER writes
+outside logs/, never commits, never merges.
 
 Cross-fleet: safe on BOTH PCs (local-log only, no shared artifact -> no
 single-owner constraint, unlike jules-daily-digest).
@@ -26,14 +28,15 @@ $today = Get-Date -Format 'yyyy-MM-dd'
 $lines = New-Object System.Collections.Generic.List[string]
 $lines.Add("# Morning brief -- $today ($env:COMPUTERNAME)")
 $lines.Add('')
-$lines.Add('> R0 report-only (ADR-0044 G1). Deterministic aggregator, no LLM, no writes outside logs/.')
+$lines.Add('> R0 fleet heartbeat (governor rung R0, report-only). Deterministic, no LLM, no writes outside logs/.')
 $lines.Add('')
 
 # --- Open PRs per repo (gh, degraded-not-fatal) ---
 $lines.Add('## Open PRs')
 $prDegraded = 0
+$prLimit = 100  # high enough for fleet repos; count == limit is flagged as truncated below
 foreach ($r in $Repos) {
-  $json = gh pr list --repo "$Owner/$r" --state open --json 'number,title,createdAt,author' --limit 20 2>$null
+  $json = gh pr list --repo "$Owner/$r" --state open --json 'number,title,createdAt,author' --limit $prLimit 2>$null
   if ($LASTEXITCODE -ne 0 -or -not $json) {
     $lines.Add("- ${r}: DEGRADED (gh error or unauthenticated)")
     $prDegraded++
@@ -43,7 +46,9 @@ foreach ($r in $Repos) {
   if (-not $prs -or $prs.Count -eq 0) {
     $lines.Add("- ${r}: 0 open")
   } else {
-    $lines.Add("- ${r}: $($prs.Count) open")
+    # if the API returned exactly the cap, the true backlog may be larger -- never report a truncated count as exact
+    $countLabel = if ($prs.Count -ge $prLimit) { ">=$prLimit open (TRUNCATED)" } else { "$($prs.Count) open" }
+    $lines.Add("- ${r}: $countLabel")
     foreach ($p in $prs) {
       $age = [int]((Get-Date) - [datetime]$p.createdAt).TotalDays
       $lines.Add("  - #$($p.number) $($p.title) ($($p.author.login), ${age}d)")
