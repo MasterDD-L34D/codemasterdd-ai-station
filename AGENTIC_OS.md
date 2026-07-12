@@ -5,6 +5,10 @@
 > sistema nuovo. Convenzione: i riferimenti a file del repo sono link markdown
 > relativi (verificati da `scripts/tests/test_agentic_os_map.py`); i path fuori repo
 > sono in backtick e NON verificabili dal test.
+> **Nota per reviewer: questo e' un INDICE.** Gli artifact vivono nelle rispettive
+> authority (su `main`, o in sibling-PR ancora aperti, o in path out-of-repo), NON in
+> questo PR. Un riferimento a un PR sibling (`#540`, `#542`) e' un forward/back-ref
+> deliberato: verifica lo stato su `main`, non nel diff di questo branch.
 > ASCII-first (ADR-0021). Vale per entrambi i PC della flotta (Lenovo .10 + Ryzen .11).
 
 ## I 7 layer -> authority esistente
@@ -15,7 +19,7 @@
 | 2 | Routing modelli | [MODEL_ROUTING.md](MODEL_ROUTING.md) + agent `delegation-classifier` + llmfit (`C:\dev\tools\llmfit\LOCAL-LLM-STANDARD.md`) | 2 dimensioni: tier capacita' + constraint-count (ADR-0016) |
 | 3 | Esecutori (processi) | [.claude/agents/README.md](.claude/agents/README.md) (16 attivi + 5 dormant) + skill globali (`~/.claude/skills/`) + wrapper Aider ([scripts/wrappers](scripts/wrappers)) + Jules ([docs/jules/JULES-GOVERNANCE-INDEX.md](docs/jules/JULES-GOVERNANCE-INDEX.md)) + Workflow tool | selezione SEMPRE via skill `agent-scanner` (anti shadow-duplicate, OD-007) |
 | 4 | Memoria (stato) | auto-memory `~/.claude/projects/<proj>/memory/` + [COMPACT_CONTEXT.md](COMPACT_CONTEXT.md) + [JOURNAL.md](JOURNAL.md) + AA01 (`~/aa01/`, 41+ lessons) | **per-machine BY DESIGN**: [sync-claude-global.ps1](scripts/fleet/sync-claude-global.ps1) esclude `memory/` deliberatamente; pattern index+topic-file (MEMORY.md: caricati solo primi 200 righe / 25KB) |
-| 5 | Scheduling | task Windows `jules-daily-digest` (fix unattended-run in #542) + `morning-brief` (R0, #540) + cron R0 (vault coherence 6h + `playtest2-board-sync` weekly) + [journal-land.ps1](scripts/fleet/journal-land.ps1) | `/loop` e cron di sessione SCADONO a 7 giorni: durabile = Desktop scheduled task / Routines. Espansione act-layer = solo via earn-path governor ([spec](docs/superpowers/specs/2026-06-01-unified-fleet-governor-design.md)) |
+| 5 | Scheduling | task Windows `jules-daily-digest` (S4U unattended-fix landato via #542, merged su main) + `morning-brief` (R0, merge-gated su #540) + cron R0 (vault coherence 6h + `playtest2-board-sync` weekly) + [journal-land.ps1](scripts/fleet/journal-land.ps1) | `/loop` e cron di sessione SCADONO a 7 giorni: durabile = Desktop scheduled task / Routines. Espansione act-layer = solo via earn-path governor ([spec](docs/superpowers/specs/2026-06-01-unified-fleet-governor-design.md)) |
 | 6 | Apprendimento (self-maintenance) | AA01 inbox->lesson (protocollo ADR-0026 P4) + skill `continuous-learning-v2` + skill `consolidate-memory` + plugin compass (direction index) + skill `fleet-verify` | loop: sessione -> lesson L-NNN -> (promozione) skill/hook |
 | 7 | Safety / governance | hook: tdd-guard + journal-drift in [.claude/settings.json](.claude/settings.json); commit-guard (ADR-0011) + ASCII (ADR-0021) via hook GLOBALI `~/.claude` (PreToolUse) + git pre-commit (`core.hooksPath`), NON in questo settings.json + privacy guard (`~/.config/aider-privacy-whitelist.txt`) + keys (`~/.config/api-keys/keys.env`) + allow-glob permissions | principio verificato: CLAUDE.md = advisory, enforcement = SOLO hook (PreToolUse) |
 
