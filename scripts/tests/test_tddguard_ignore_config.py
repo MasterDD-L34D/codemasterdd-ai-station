@@ -38,6 +38,7 @@ def test_siblings_include_adhoc_worktree_globs(cfg_module):
         "**/_game-wt-*/**",    # C:/dev/_game-wt-3246, -apfloor, ... (Ryzen)
         "**/_gamewt-*/**",     # _gamewt-lenovo-host (Lenovo convention)
         "**/_wt-game-*/**",    # C:/dev/_wt-game-ennea-t1 (handoff 2026-07-02)
+        "**/_godot-wt-*/**",   # C:/dev/_godot-wt-audio (Game-Godot-v2, audio-foundation 2026-07-12)
         "**/vault-wt*/**",     # C:/dev/vault-wt (convention extends to vault)
     ]
     for pattern in expected:
