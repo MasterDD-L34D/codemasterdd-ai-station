@@ -114,3 +114,9 @@ Get-NetTCPConnection -LocalPort 8081 -State Listen | ForEach-Object { Stop-Proce
 - v0.4: PR velocity chart (commits/week timeline)
 - v1.0: Tailscale LAN exposure for Ryzen access
 - Future: post-Gate-E decision → consult `docs/research/component-1-design-options-archived-2026-05-13.md` for SQLite + cron + scaling decisions
+
+## Agentic OS Console
+
+The OS front door is `http://127.0.0.1:8081/cross-repo/os` (root `/` redirects there).
+Start: `py -3 apps/cross-repo-dashboard/app.py` (or the tray icon / desktop shortcut).
+Shows the 7 OS layers, the latest morning brief, fleet PRs, and tier-gated actions.

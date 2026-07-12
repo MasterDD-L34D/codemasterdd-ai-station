@@ -33,6 +33,8 @@ import requests
 from flask import Flask, Blueprint, jsonify, render_template, request
 
 from dashboards_registry import DASHBOARDS, RUN_MONITORS
+from actions_registry import ACTIONS
+from os_home import parse_layers, latest_brief
 
 cross_repo_bp = Blueprint(
     'cross_repo', __name__,
@@ -771,6 +773,30 @@ def health() -> Any:
     return jsonify({"status": "ok", "version": "0.3.0-daily-use-features", "timestamp": now_iso()})
 
 
+@cross_repo_bp.route("/os")
+def os_console() -> Any:
+    # LOCAL date (not UTC): morning-brief.ps1 writes logs/morning-brief/<local-date>.md
+    # via PowerShell Get-Date, so around midnight a UTC date would look up the wrong
+    # file and falsely show the placeholder (Codex P2 #552).
+    today = datetime.now().strftime("%Y-%m-%d")
+    # actions without argv/steps reaching the template (mirror regen: pop steps)
+    acts = []
+    for a in ACTIONS:
+        e = {k: a[k] for k in ("id", "label", "tier", "area", "desc") if k in a}
+        e["params"] = a.get("params", [])
+        acts.append(e)
+    areas: dict[str, list[dict[str, Any]]] = {}
+    for e in acts:
+        areas.setdefault(e["area"], []).append(e)
+    return render_template(
+        "os_console.html",
+        layers=parse_layers(),
+        brief=latest_brief(today),
+        actions_by_area=areas,
+        api_secret=os.environ.get("API_SECRET", ""),
+    )
+
+
 @cross_repo_bp.route("/governor")
 def governor_pane() -> Any:
     """R0 read-only consolidated signal pane (Fase 1a). No action taken here."""
@@ -918,6 +944,74 @@ def regen_dashboard() -> Any:
                             "output": "\n".join(outputs)[-2000:]}), 500
     return jsonify({"ok": True, "output": "\n".join(outputs)[-2000:],
                     "open_href": _open_href(entry["open"]) if entry.get("open") else ""})
+
+
+@cross_repo_bp.route("/api/run-action", methods=["POST"])
+def run_action() -> Any:
+    """Run the FIXED argv steps of a tier-0/1 action (whitelist-only).
+
+    Security mirrors /api/regen-dashboard: optional API_SECRET bearer with
+    constant-time compare; the only client input is the action id (dict lookup,
+    no interpolation) plus whitelisted param choices; steps are code-reviewed
+    argv lists executed without shell. tier-2 is not executable (403)."""
+    api_secret = os.environ.get("API_SECRET")
+    if api_secret:
+        auth_header = request.headers.get("Authorization", "")
+        if not hmac.compare_digest(auth_header, f"Bearer {api_secret}"):
+            return jsonify({"ok": False, "error": "unauthorized"}), 401
+
+    body = request.json or {}
+    action_id = body.get("id", "")
+    action = next((a for a in ACTIONS if a["id"] == action_id), None)
+    if action is None:
+        return jsonify({"ok": False, "error": "unknown action id"}), 400
+    if action["tier"] == 2:
+        return jsonify({"ok": False, "error": "tier-2 action is excluded from the panel"}), 403
+    # tier-1 (mutating) is auth-mandatory even though tier-0 (read) stays open:
+    # without a server API_SECRET the bearer check above is skipped, so a
+    # mutating action would run unauthenticated. Fail closed instead.
+    if action["tier"] == 1 and not api_secret:
+        return jsonify({"ok": False, "error": "tier-1 action requires API_SECRET to be set on the server"}), 403
+    if not action.get("steps"):
+        return jsonify({"ok": False, "error": "action has no runnable steps"}), 400
+
+    # Params -> argv: validate each chosen value against the registry whitelist,
+    # then append [flag, value] to the (single) step server-side. The flag comes
+    # from the registry and the value only from `choices` -- never free text, so
+    # nothing client-supplied is interpolated into a command.
+    extra_args: list[str] = []
+    for p in action.get("params", []):
+        val = str(body.get(p["name"], "")).strip()
+        if val and val not in p["choices"]:
+            return jsonify({"ok": False, "error": f"param {p['name']} not in whitelist"}), 400
+        if val:
+            extra_args += [p["flag"], val]
+    steps = [list(s) for s in action["steps"]]  # copy so we never mutate the registry
+    if extra_args:
+        steps[-1].extend(extra_args)  # param'd actions are single-step (registry-enforced)
+
+    timeout = int(action.get("timeout", 300))
+    ok_codes = set(action.get("ok_exit_codes", [0]))
+    outputs: list[str] = []
+    for argv in steps:
+        try:
+            result = subprocess.run(
+                argv, cwd=action["cwd"], capture_output=True, text=True,
+                timeout=timeout, check=False, shell=False,
+                creationflags=_NO_WINDOW_FLAG,
+            )
+        except subprocess.TimeoutExpired:
+            return jsonify({"ok": False, "error": f"timeout after {timeout}s",
+                            "output": "\n".join(outputs)[-2000:]}), 500
+        except FileNotFoundError as e:
+            return jsonify({"ok": False, "error": f"tool not found: {e}",
+                            "output": "\n".join(outputs)[-2000:]}), 500
+        tail = (result.stdout or "")[-800:] + (("\nSTDERR: " + result.stderr[-400:]) if result.stderr else "")
+        outputs.append(f"$ {' '.join(argv)} (rc={result.returncode})\n{tail}")
+        if result.returncode not in ok_codes:
+            return jsonify({"ok": False, "error": f"step failed rc={result.returncode}",
+                            "output": "\n".join(outputs)[-2000:]}), 500
+    return jsonify({"ok": True, "output": "\n".join(outputs)[-2000:]})
 
 
 @cross_repo_bp.route("/api/open-dashboard", methods=["POST"])
@@ -1079,6 +1173,12 @@ def create_app() -> Flask:
     """App factory: creates Flask instance and registers the cross-repo blueprint."""
     _app = Flask(__name__)
     _app.register_blueprint(cross_repo_bp, url_prefix='/cross-repo')
+
+    @_app.route("/")
+    def _root():
+        from flask import redirect
+        return redirect("/cross-repo/os")
+
     return _app
 
 
