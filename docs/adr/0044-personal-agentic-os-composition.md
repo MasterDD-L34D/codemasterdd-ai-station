@@ -57,8 +57,9 @@ per il design:
 - Pro: "OS" nel senso letterale; single pane.
 - Contro: SDMG P7 (autonomizzazione self-designed senza falsificazione); duplica
   la roadmap governor gia' SDMG-disciplinata (spec 2026-06-01, R0 live); gateway
-  LLM gia' decommissionato (OD-009); il claim verificato "multi-agente ~15x token"
-  rende il runtime always-on antieconomico per un solo utente.
+  LLM gia' decommissionato (OD-009). Il dato direzionale "multi-agente ~15x token"
+  (blog Anthropic, NON verificato 3-0 -- vedi report) rafforza ma non fonda il
+  rifiuto: gia' OD-009 + SDMG lo reggono da soli.
 - Verdetto: **REJECT**.
 
 ### C. Composizione: mappa + guard-test + roadmap gated (scelta proposta)

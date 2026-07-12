@@ -18,11 +18,17 @@
 
 ## Claim VERIFICATI (3-0 / 2-0, fonte primaria)
 
-Architettura (arXiv 2604.14228, paper sull'architettura Claude Code):
+Architettura (arXiv 2604.14228 = "Dive into Claude Code: The Design Space of
+Today's and Future AI Agent Systems", Liu et al. -- risolve, verificato via
+WebFetch 2026-07-12; sostanza confermata, con una nota di over-precision al
+punto 1):
 
-1. Claude Code si decompone in 5 layer canonici: surface / core (agent loop +
-   compaction) / safety-action (permissions, hook, tool, subagent) / state
-   (context assembly, sessioni, CLAUDE.md + memoria) / backend.
+1. Claude Code stratifica le sue funzioni; il paper enumera esplicitamente:
+   permission system a 7 modi + classifier ML, five-layer COMPACTION pipeline,
+   4 meccanismi di estensibilita' (MCP, plugin, skill, hook), subagent
+   delegation/orchestration, append-oriented session storage. (Nota: il naming
+   "surface/core/safety/state/backend" e' una parafrasi nostra, NON testuale nel
+   paper -- la sostanza dei sottosistemi regge, l'etichettatura a 5 layer no.)
 2. Memoria persistente = file-based e stratificata: gerarchia CLAUDE.md a 4
    livelli + auto-memory scritta dal modello + transcript JSONL append-only.
    Il continuous learning nativo e' "append su file", non un database.
