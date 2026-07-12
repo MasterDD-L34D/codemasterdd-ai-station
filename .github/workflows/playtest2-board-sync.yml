@@ -9,7 +9,7 @@ name: playtest2 board sync
 #   own GITHUB_TOKEN, however, is fully allowed to PR codemasterdd. So we
 #   automate it FROM this side, pulling Game's signal read-only.
 #
-# Data flow (OD-042-A proven pattern — consumer raw-fetches producer's
+# Data flow (OD-042-A proven pattern -- consumer raw-fetches producer's
 # git-committed file, NO cross-repo auth):
 #   Game commits `tools/sim/pillar-baseline.json` (verdict/samples/
 #   updated_at) to Game/main via its baseline-update PR. This workflow
@@ -25,7 +25,7 @@ name: playtest2 board sync
 
 on:
   schedule:
-    # Weekly Monday 04:00 UTC — after the Sun/Mon Game nightly runs land.
+    # Weekly Monday 04:00 UTC -- after the Sun/Mon Game nightly runs land.
     - cron: '0 4 * * 1'
   workflow_dispatch: {}
 
@@ -51,7 +51,7 @@ jobs:
           bash tools/playtest2-board-sync.sh
           if git diff --quiet -- docs/governance/EXECUTION-BOARD.md; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
-            echo "Board already current OR Game signal unreachable — no-op, no PR."
+            echo "Board already current OR Game signal unreachable -- no-op, no PR."
           else
             echo "changed=true" >> "$GITHUB_OUTPUT"
           fi
@@ -72,39 +72,39 @@ jobs:
           git push --force-with-lease origin "$BRANCH"
           # Reuse an open PR for this branch if present (re-run same day).
           if gh pr view "$BRANCH" --json number >/dev/null 2>&1; then
-            echo "PR for $BRANCH already open — push updated it."
+            echo "PR for $BRANCH already open -- push updated it."
           else
             gh pr create \
               --base main \
               --head "$BRANCH" \
               --title "docs(board): auto-sync OD-044 playtest#2 signal (${DATE})" \
               --body "$(cat <<'BODY'
-## Summary
+          ## Summary
 
-Automated refresh of the `| **playtest#2 automation (OD-044)** |` row in
-`docs/governance/EXECUTION-BOARD.md`. Only the content between the
-`<!-- AUTO-SYNC:playtest2 -->` markers is touched; human prose is untouched.
+          Automated refresh of the `| **playtest#2 automation (OD-044)** |` row in
+          `docs/governance/EXECUTION-BOARD.md`. Only the content between the
+          `<!-- AUTO-SYNC:playtest2 -->` markers is touched; human prose is untouched.
 
-This closes the OD-044 B4 **manual-handoff** gap. Game's workflow token
-cannot PR cross-repo; codemasterdd's own token can. Signal is pulled
-read-only from Game via the OD-042-A raw-fetch pattern (no PAT).
+          This closes the OD-044 B4 **manual-handoff** gap. Game's workflow token
+          cannot PR cross-repo; codemasterdd's own token can. Signal is pulled
+          read-only from Game via the OD-042-A raw-fetch pattern (no PAT).
 
-**Auto-synced:** pillar verdict, baseline samples, baseline `updated_at`
-(from Game `tools/sim/pillar-baseline.json` @ main), latest
-`ai-sim-nightly` run conclusion + date + run link.
+          **Auto-synced:** pillar verdict, baseline samples, baseline `updated_at`
+          (from Game `tools/sim/pillar-baseline.json` @ main), latest
+          `ai-sim-nightly` run conclusion + date + run link.
 
-**Honest residual:** Game commits *only* the rolling pillar baseline +
-the run conclusion to a stable path. The full analyzer `metrics.json`
-(p3_promotions / p4_psicologico / p6_fairness / od024 / od026 / perf)
-lives only in the Game workflow ARTIFACT (auth-gated, not raw-fetchable).
-Deep per-pillar metric sync stays a documented TODO until Game commits
-`metrics.json` to a stable path/branch. See
-`docs/runbook/playtest2-board-sync.md`.
+          **Honest residual:** Game commits *only* the rolling pillar baseline +
+          the run conclusion to a stable path. The full analyzer `metrics.json`
+          (p3_promotions / p4_psicologico / p6_fairness / od024 / od026 / perf)
+          lives only in the Game workflow ARTIFACT (auth-gated, not raw-fetchable).
+          Deep per-pillar metric sync stays a documented TODO until Game commits
+          `metrics.json` to a stable path/branch. See
+          `docs/runbook/playtest2-board-sync.md`.
 
-Opened by the scheduled `playtest2-board-sync` workflow. Not
-auto-merged — review + merge (or merge-cron) lands it.
+          Opened by the scheduled `playtest2-board-sync` workflow. Not
+          auto-merged -- review + merge (or merge-cron) lands it.
 
-🤖 Generated with [Claude Code](https://claude.com/claude-code)
-BODY
-)"
+          Generated with [Claude Code](https://claude.com/claude-code)
+          BODY
+          )"
           fi

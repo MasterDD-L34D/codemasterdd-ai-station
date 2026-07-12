@@ -26,9 +26,9 @@ _Auto-synced governor signal snapshot; human prose elsewhere is authoritative. T
 >
 > Riferimenti deep: CLAUDE.md sezione "Progetti monitorati" (descrittivo), memory `project_multi_repo_overview.md` (architetturale), questo file (operativo). Audit storici + session-log May 2026 archiviati in [`docs/archive/status-multi-repo-history-2026-05.md`](docs/archive/status-multi-repo-history-2026-05.md) (Ecosystem-audit 15-repo + Reconcile OD-038 + DF Integration + ADR retrospective + D-sequence + multi-session orchestration).
 
-**Ultimo refresh**: **2026-06-30** (full 7-repo, repo-health-auditor gh-api) + **delta game-family 2026-07-03** (fleet-verify da Lenovo, Game/Godot-v2/Game-DB + probe schema/SoT). NB: la **Snapshot 1-riga** + sezioni per-repo narrative sotto restano contesto datato (last-verified per-sezione); il layer fresco = la sezione "Audit delta 2026-07-03" (game-family, in fondo alla pila) + "2026-06-30" (7-repo) qui sotto (le delta accumulano newest-last, lo Snapshot non si ri-hardcoda -- daily-ship).
+**Ultimo refresh**: **2026-06-30** (full 7-repo, repo-health-auditor gh-api) + **delta game-family 2026-07-03** (fleet-verify da Lenovo) + **delta 2026-07-10** (post fleet-verify 07-09 + ratifica flag-set owner, da Ryzen). NB: la **Snapshot 1-riga** + sezioni per-repo narrative sotto restano contesto datato (last-verified per-sezione); il layer fresco = la sezione "Audit delta 2026-07-10" (in fondo alla pila) + "2026-06-30" (7-repo) qui sotto (le delta accumulano newest-last, lo Snapshot non si ri-hardcoda -- daily-ship).
 
-**Codemasterdd state**: HEAD main `f15387e` (docs(journal): rfc4 s3 closed NO-GO, #398). 0 PR open. 84 PR merged 06-10->06-19. **Claude Max SCADUTO ~2026-06-17 -> post-Max routing ADR-0023 attivo** (`logs/claude-api-spend-2026-06.md` presente, spend ~$0 giugno). Stack ADR-0017 DOWN (scaffold opt-in, expected). Last-verified: 2026-06-19.
+**Codemasterdd state**: HEAD main `f15387e` (docs(journal): rfc4 s3 closed NO-GO, #398). 0 PR open. 84 PR merged 06-10->06-19. **Claude Max ATTIVO** (rinnovato; riconfermato Eduardo 2026-07-03 -- la voce precedente "SCADUTO ~06-17" era stale; ADR-0023 = piano contingency post-Max, NON attivo; spend log ~$0). Stack ADR-0017 DOWN (scaffold opt-in, expected). Last-verified: 2026-06-19 (Max: 2026-07-03).
 
 ### Audit delta 2026-06-23 (gh/git ground-truth, 7 repo, repo-health-auditor manuale)
 
@@ -62,13 +62,23 @@ _Auto-synced governor signal snapshot; human prose elsewhere is authoritative. T
 - **Cross-machine (SSH read-only Ryzen)**: dev Game ATTIVO su Ryzen (branch `feat/combat-los-slice1`, commit live) -> conferma clone Lenovo detached = puro leftover (cleanup safe). Ryzen Game/Godot fresh (Godot churn `.import` sessione attiva, non work-at-risk); Ryzen Game-DB main behind 33 (igiene rimandata Ryzen-side). Backend prod EvoTacticsBackend NON toccato.
 - Deliverable: Artifact health-report (matrice green/amber/red + delta cross-machine). 0 RED confermati.
 
+### Audit delta 2026-07-10 (post fleet-verify 07-09 + ratifica flag-set owner, gh/git ground-truth da Ryzen)
+
+> Scope game-family + hub. Consolida la maratona 07-06/07 + il rientro 07-09 (JOURNAL) + la ratifica flag-set di Eduardo. Ogni claim verificato via gh/git il 2026-07-10.
+
+- **Game**: maratona 07-06/07 landed su main -- **LOS default ON** (#3226 + step prod default), **big-maps arc: 3 encounter grid_sized MERGED** (16x12 dorsale #3229 / 20x12 canyon #3230 / 18x10 colata basaltica #3237; ADR-2026-07-03 board_scale ACCEPTED, wiring #3199), **seed-fix #3232** (hash string seeds -> full-loop finalmente seedabile; batch storici = unseeded), D4 A/B roster-scaling negative (#3231, flag OFF), zone-defense spec #3238, xp-budget geometry calibration #3239, seed census #3240. **App-token automation #3242 MERGED** (delivery PR bot via GitHub App token, fix gate action_required). **0 PR open su TUTTA la family a inizio riconcile** (Game/GGv2/Game-DB, verificato 07-10); le PR aperte dopo = le riconcile di questo giro (GGv2 #595 + vault #269 + questa cdd #521), non lavoro pendente terzo.
+- **Flag-set prod RATIFICATO da Eduardo 07-09/10 (LIVE su Lenovo keys.env, backend riavviato)**: `META_NETWORK_ROUTING=true`, `MOVE_TERRAIN_COST_ENABLED=true`, `LETHAL_MISSIONS_ENABLED=false` (OFF-until-K07, decisione owner), `FORM_PULSE_TRAIT_V2_ENABLED=true` (anchor prod 1.15, ratificato 07-01), `XP_BUDGET_GEOMETRY_ENABLED=true` (flag D9, acceso 07-09), `IMPRINT_BEAT_ENABLED=true` (riacceso, regressione sanata 07-09), **`NIDO_UNLOCKED=true`** (Nido APERTO; anche setx utente per il client TV). Prod serve per la prima volta: LOS ON + grid_sized + seed-fix + route-choice + Nido raggiungibile.
+- **Godot-v2**: campagna Jules a 149/285 (52%), pool filler residuo 5 (~2 trio all'hard-stop). Riconcile overlay PRD post fleet-verify -> **PR GGv2 #595** (ready-for-review; gate = CI + Codex, niente draft per policy 07-10).
+- **vault**: riconcile SoT (LOS default ON sez 14.4/14.5 + board_scale/3-encounter sez 14.1/15.1 + 15-LEVEL_DESIGN) -> **PR vault #269** (ready-for-review; merge = Eduardo, mai diretto -- boundary vault).
+- **Correzioni currency hub**: **Claude Max ATTIVO** (riconfermato Eduardo 07-03) -- le righe "Max SCADUTO ~06-17" nei layer 06-19/06-30 = credenza dell'epoca, superata; ADR-0023 resta piano contingency. **evo-swarm ARCHIVED+PRIVATE dal 06-22** (Dec-013/014, retire riconfermato): nessuna decisione resume-vs-PARK pendente, la sezione Dafne sotto = storico.
+
 ---
 
 ## Snapshot 1-riga per repo
 
 | Repo | Status | Next action | Deadline/trigger | Blocker |
 |------|--------|-------------|------------------|---------|
-| **codemasterdd-ai-station** | HEAD `f15387e` (2026-06-19, #398). 84 PR merged 06-10->06-19. 0 PR open. **Claude Max SCADUTO ~2026-06-17** -> post-Max routing ADR-0023 attivo; spend ~$0 giugno. Stack ADR-0017 DOWN (scaffold opt-in). Sub-agent ecosystem 16+5 stabile. | SDMG quarterly review ~2026-08-01; aggiorna spend log mensile | 2026-08-01 | Nessuno |
+| **codemasterdd-ai-station** | HEAD `f15387e` (2026-06-19, #398). 84 PR merged 06-10->06-19. 0 PR open. **Claude Max ATTIVO** (riconfermato 2026-07-03; ADR-0023 = contingency post-Max, non attivo); spend ~$0. Stack ADR-0017 DOWN (scaffold opt-in). Sub-agent ecosystem 16+5 stabile. | SDMG quarterly review ~2026-08-01; aggiorna spend log mensile | 2026-08-01 | Nessuno |
 | **Synesthesia** | Dormant, HEAD `05f8a92` (invariato, verificato 06-10) | Riattiva pre-esame UniUPO | ~agosto 2026 | Nessuno (dormant intenzionale) |
 | **Game (Evo-Tactics)** | HEAD `9df35b8` (2026-06-19, #2877). ~166 PR merged 06-10->06-19 (daily-ship). **RFC#4 CHIUSO** (S1 traits / S2 fidelity-shadow + biome/eco import-only / S3 NO-GO ADR-2026-06-19). **Taxonomy+calib arc DONE** (#2832/#2837/#2850/#2853/#2857/#2862/#2863/#2868/#2872/#2876; validate-datasets 0 warn). **PE_ratio arc CLOSED 2026-06-24** (#3022: contestedness FALSIFIED a canonical multi-policy N=40 -> PE term droppato, `composite_metric`=0.70*win_rate+0.30*kd_ratio; negative-result SDMG-ratified, pe_ratio machinery dormiente come diagnostica; sblocca SPEC-J/SPEC-H flips). SPEC-K K-05 quorum #2871. | prod-auto-restart residue (chip task_3ce69e8d) | -- | Nessuno |
 | **Game-Godot-v2** | HEAD `b6e7afd` (2026-06-19, #508). ~43 PR merged 06-10->06-19. **Ferrospora UI art-pass v2 DONE** + **style-LoRA v1 DONE** (step2000, P0-P5, bf16). **SPEC-K K-05 phone/TV client #507**. 2 PR open: #509 (Ferrospora ornate twin-socket ForecastPanel frame) + #510 (K-05 AI co-op playtest PASS docs). Owner-paused at finish+wire ForecastPanel. | Merge #509/#510 (Eduardo); finish+wire ForecastPanel (pattern #489) | -- | Nessuno |
@@ -154,7 +164,7 @@ Dormant → Attivo: Eduardo segnala riattivazione → codemasterdd riprende trac
 **Last-verified**: 2026-06-19.
 **Open**: 0 PR. OD-004 dashboard usage deferred; OD-005 Tavily degraded.
 **Blocker**: nessuno hard.
-**Next**: decisione Eduardo resume-vs-PARK esplicito (vedi GOALS.md PROPOSTE). Handoff invariato: Dafne propone -> Eduardo approva via POST -> H5 gate -> Game agents/ write.
+**Next**: nessuna -- remote **ARCHIVED+PRIVATE 2026-06-22** (Decisione 013 FALSIFIED + 014 retire riconfermato); nessuna decisione resume-vs-PARK pendente, sezione conservata come storico.
 **Detail-pointer**: repo swarm governance (5 file root-level) + memory `reference_dafne_swarm.md` + `project_dafne_persona.md`.
 
 ---
@@ -219,7 +229,7 @@ Dormant → Attivo: Eduardo segnala riattivazione → codemasterdd riprende trac
 
 | Data | Evento | Progetto | Azione |
 |------|--------|----------|--------|
-| ~~**~2026-06-17**~~ **DONE 06-19** | **Claude Max scaduto ~06-17** -> post-Max routing ADR-0023 ATTIVO | codemasterdd | Eseguito: budget cap $10-20/mese + tracking `logs/claude-api-spend-2026-06.md` (presente, spend ~$0 finora) |
+| ~~**~2026-06-17**~~ **DONE 06-19, CORRETTO 07-03/07-10** | ~~Claude Max scaduto ~06-17~~ **Max ATTIVO** (rinnovato, riconfermato Eduardo 07-03) | codemasterdd | La credenza "scaduto" era stale: ADR-0023 torna piano contingency (readiness fatta, tracking presente, spend ~$0); nessuna azione pendente |
 | **~giugno-agosto 2026** | Synesthesia riattivazione | Synesthesia | Privacy validation 2/3 + esame prep |
 | **~2026-08-01** | **SDMG-gate quarterly review** (codemasterdd PR #194 narrow-pick 2-week empirical period -> 3 month review) | codemasterdd | Trigger: adoption rate < 30% qualifying decisions OR ADOPT-rate without executed experiment > 0 -> ADR-0026 amendment B/C |
 | ~~trigger-based~~ | ~~**ADR-0038 + ADR-0039 ratify**~~ **DONE 2026-06-11**: entrambi Accepted con amendment (0038: 4 testuali + actor-criteria sec-7 sync; 0039: P1 clock-free rescope + annotazioni R2 b-d). Dossier `docs/research/adr-0038-0039-ratify-dossier-2026-06.md`. Residui chiusi same-day: clock-leak P1-1 FIXED (#333, mask severity time-derived nel render STATUS) + primo run post-fix (reconcile PR cdd #336 + vault #258, merge Eduardo-only) | codemasterdd | **Cadenza rung decisa (Eduardo 2026-06-11): run manuale settimanale** (`py -m governor.reconcile`, token env Eduardo; ingest prima del run) durante l'earn window R2; no cron (ADR-0039 dec.8). Non-run prolungato = segnale off-ramp letto onestamente (annotazione R2-d) |
