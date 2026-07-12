@@ -19,6 +19,21 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-07-12 (Personal Agentic OS: ricerca multi-source -> ADR-0044 composition + mappa root)
+
+### Completato
+- **Ricerca**: /last30days engine (36 item Reddit/HN/GitHub, raw in ~/Documents/Last30Days) + deep-research Workflow (105 agent, 13 claim VERIFICATI 3-0 da arXiv 2604.14228 + docs ufficiali memory/scheduled-tasks + LiteLLM; 37 verifier persi per session limit, claim residui etichettati non-verificati). Report -> `docs/research/personal-agentic-os-2026-07-12.md`.
+- **Build (PR #538, Eduardo-gate)**: `AGENTIC_OS.md` root map (7 layer -> authority esistente + boot + gap G1-G3) + ADR-0044 Proposed (composizione, non costruzione: framework esterni REJECT, runtime nuovo REJECT) + guard-test `scripts/tests/test_agentic_os_map.py` (link-existence + negative control L-041; suite 51 passed) + CLAUDE.md ordine-lettura step 1b.
+- **Currency Gate save**: "gap memoria cross-fleet" smentito -- auto-memory machine-local per design (claim 3-0) E sync-claude-global.ps1 la esclude gia' deliberatamente.
+
+### Da fare
+- Eduardo: review + merge PR #538 (ADR = doctrine file, Eduardo-only).
+- Ratifica gap gated: G1 heartbeat R0 (via governor Fase-1), G2 unlock X/YouTube per last30days (~5 min), G3 wiring continuous-learning-v2 (eval-gated).
+
+### Note
+- last30days: scritto `SETUP_COMPLETE=true` (path "Skip for now" del wizard, sessione autonoma); sorgenti attive 3/5.
+- Claim direzionali non verificati (Anthropic multi-agent blog): orchestrator-worker +90.2%, multi-agente ~15x token -- coerenti col cost ladder ORCHESTRATION.md, non fondano decisioni.
+
 ## 2026-07-11 (pomeriggio: studio-track Fase 1 GDD-refresh ESEGUITA, PR Game #3269 gate-clean, Fable 5 da Ryzen)
 
 ### Completato
