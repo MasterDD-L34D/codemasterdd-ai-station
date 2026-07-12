@@ -19,6 +19,35 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-07-12 (sera: download manifest asset ESEGUITO + provenance in repo, Fable 5 da Ryzen)
+
+### Completato
+- **Download manifest Fase 2 eseguito** (auth esplicita owner): 22 file ~117MB in
+  staging locale `C:\dev\_evo-assets-staging\` (Ryzen, per classe) -- SFX combat
+  CC0 x3 pack, UI CC0 x3, ambience CC0+CC-BY, Dark Sci-Fi Pack CC0 + 3 tracce
+  incompetech curate (SCP-x6x=sconfitta, The Escalation=evoluzione, Dream
+  Culture=vittoria), VFX slash CC0. Licenza RI-verificata sulla pagina al fetch.
+- **Gap ambience savana/foresta CHIUSO** via OGA (Forest Ambience CC0 + Ambient
+  Bird Sounds CC0 + JC Nature Ambient Pack Vol 1 CC-BY 78MB).
+- **PR Game #3271 MERGED** (2 round Codex: P2 provenance-solo-locale -> report
+  repo-visibile `docs/reports/2026-07-12-asset-staging-provenance.md` + registry;
+  P3 nota GAP stale riconciliata). Verdetto clean = di nuovo review-object vuoto
+  su HEAD (x2), quarta forma confermata.
+
+### Da fare
+- **5 item manuali browser** (lista nel report provenance): ObsydianX + CodeManu
+  (itch name-your-price, no upload_id headless), Pimen subset $0 (price-gate),
+  Cave Ambience Loop (freesound login), Sonniss cherry-pick.
+- **Fase 3 roadmap slice-first** (40-ROADMAP, 1 PR).
+- Cleanup opzionale: worktree `C:\dev\_game-wt-assethunt` + branch remote
+  `docs/asset-hunt-phase2` / `docs/asset-manifest-downloaded` (naming esplicito).
+
+### Note
+- itch name-your-price headless: il download page pre-claim non espone upload_id
+  (bottoni renderizzati JS) -> gli item itch vanno scaricati da browser.
+- journal-land.ps1 su branch di sessione longevo: lo stash diffa contro l'HEAD
+  locale stale -> conflict; flow manuale = worktree throwaway da origin/main.
+
 ## 2026-07-12 (fleet: jules-digest 0x800710E0 -- diagnosi + fix S4U, Fable 5 da Lenovo)
 
 ### Completato
