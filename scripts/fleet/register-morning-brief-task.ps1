@@ -9,13 +9,25 @@ is SAFE on both PCs (writes only local gitignored logs, no shared artifact),
 so no single-owner constraint. No admin elevation (current-user, Limited).
 ASCII-first (ADR-0021). Pattern: register-jules-digest-task.ps1.
 
+-Unattended registers with LogonType S4U ("run whether the user is logged on or
+not", no stored password) instead of Interactive. Interactive only fires inside
+an existing interactive session, so an 08:30 task is skipped/refused (0x800710E0)
+whenever the PC is booted but nobody is signed in -- the exact failure that hit
+jules-daily-digest (fixed in #542). RECOMMENDED for the real daily task. The brief
+reads git/gh/scheduled-tasks/local files; under S4U the user profile is only
+partially loaded, so gh auth MAY be unavailable -> the PR section degrades, but the
+script's all-repos-DEGRADED WARN header flags that and the run still produces a
+brief. S4U registration needs an ELEVATED shell.
+
 Usage:
-  powershell -NoProfile -ExecutionPolicy Bypass -File register-morning-brief-task.ps1
+  powershell -NoProfile -ExecutionPolicy Bypass -File register-morning-brief-task.ps1              # Interactive (only if you stay logged in)
+  powershell -NoProfile -ExecutionPolicy Bypass -File register-morning-brief-task.ps1 -Unattended  # S4U, survives logged-off (elevated shell)
   powershell -NoProfile -ExecutionPolicy Bypass -File register-morning-brief-task.ps1 -Unregister
 #>
 [CmdletBinding()]
 param(
   [switch]$Unregister,
+  [switch]$Unattended,
   [string]$At = '08:30',
   [string]$ScriptPath = 'C:\dev\codemasterdd-ai-station\scripts\fleet\morning-brief.ps1'
 )
@@ -37,9 +49,10 @@ if (-not (Test-Path $ScriptPath)) { throw "Brief script not found: $ScriptPath" 
 
 $action    = New-ScheduledTaskAction -Execute 'powershell.exe' -Argument ('-NoProfile -ExecutionPolicy Bypass -File "' + $ScriptPath + '"')
 $trigger   = New-ScheduledTaskTrigger -Daily -At $At
-$principal = New-ScheduledTaskPrincipal -UserId "$env:COMPUTERNAME\$env:USERNAME" -LogonType Interactive -RunLevel Limited
+$logonType = if ($Unattended) { 'S4U' } else { 'Interactive' }
+$principal = New-ScheduledTaskPrincipal -UserId "$env:COMPUTERNAME\$env:USERNAME" -LogonType $logonType -RunLevel Limited
 $settings  = New-ScheduledTaskSettingsSet -StartWhenAvailable -ExecutionTimeLimit (New-TimeSpan -Minutes 10) -DontStopOnIdleEnd
-$desc      = "READ-ONLY morning fleet brief (ADR-0044 G1, governor rung R0). Writes logs/morning-brief/<date>.md (gitignored). Safe on both PCs."
+$desc      = "READ-ONLY morning fleet brief (governor rung R0, report-only). Writes logs/morning-brief/<date>.md (gitignored). Safe on both PCs."
 
 Register-ScheduledTask -TaskName $taskName -Action $action -Trigger $trigger -Principal $principal -Settings $settings -Description $desc -Force | Out-Null
 
