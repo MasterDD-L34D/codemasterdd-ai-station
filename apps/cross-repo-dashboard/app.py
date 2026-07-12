@@ -33,6 +33,7 @@ import requests
 from flask import Flask, Blueprint, jsonify, render_template, request
 
 from dashboards_registry import DASHBOARDS, RUN_MONITORS
+from actions_registry import ACTIONS
 
 cross_repo_bp = Blueprint(
     'cross_repo', __name__,
@@ -918,6 +919,63 @@ def regen_dashboard() -> Any:
                             "output": "\n".join(outputs)[-2000:]}), 500
     return jsonify({"ok": True, "output": "\n".join(outputs)[-2000:],
                     "open_href": _open_href(entry["open"]) if entry.get("open") else ""})
+
+
+@cross_repo_bp.route("/api/run-action", methods=["POST"])
+def run_action() -> Any:
+    """Run the FIXED argv steps of a tier-0/1 action (whitelist-only).
+
+    Security mirrors /api/regen-dashboard: optional API_SECRET bearer with
+    constant-time compare; the only client input is the action id (dict lookup,
+    no interpolation) plus whitelisted param choices; steps are code-reviewed
+    argv lists executed without shell. tier-2 is not executable (403)."""
+    api_secret = os.environ.get("API_SECRET")
+    if api_secret:
+        auth_header = request.headers.get("Authorization", "")
+        if not hmac.compare_digest(auth_header, f"Bearer {api_secret}"):
+            return jsonify({"ok": False, "error": "unauthorized"}), 401
+
+    body = request.json or {}
+    action_id = body.get("id", "")
+    action = next((a for a in ACTIONS if a["id"] == action_id), None)
+    if action is None:
+        return jsonify({"ok": False, "error": "unknown action id"}), 400
+    if action["tier"] == 2:
+        return jsonify({"ok": False, "error": "tier-2 action is excluded from the panel"}), 403
+    if not action.get("steps"):
+        return jsonify({"ok": False, "error": "action has no runnable steps"}), 400
+
+    # validate any params strictly against the registry whitelist (never interpolate)
+    chosen: dict[str, str] = {}
+    for p in action.get("params", []):
+        val = str(body.get(p["name"], ""))
+        if val and val not in p["choices"]:
+            return jsonify({"ok": False, "error": f"param {p['name']} not in whitelist"}), 400
+        if val:
+            chosen[p["name"]] = val
+
+    timeout = int(action.get("timeout", 300))
+    ok_codes = set(action.get("ok_exit_codes", [0]))
+    outputs: list[str] = []
+    for argv in action["steps"]:
+        try:
+            result = subprocess.run(
+                argv, cwd=action["cwd"], capture_output=True, text=True,
+                timeout=timeout, check=False, shell=False,
+                creationflags=_NO_WINDOW_FLAG,
+            )
+        except subprocess.TimeoutExpired:
+            return jsonify({"ok": False, "error": f"timeout after {timeout}s",
+                            "output": "\n".join(outputs)[-2000:]}), 500
+        except FileNotFoundError as e:
+            return jsonify({"ok": False, "error": f"tool not found: {e}",
+                            "output": "\n".join(outputs)[-2000:]}), 500
+        tail = (result.stdout or "")[-800:] + (("\nSTDERR: " + result.stderr[-400:]) if result.stderr else "")
+        outputs.append(f"$ {' '.join(argv)} (rc={result.returncode})\n{tail}")
+        if result.returncode not in ok_codes:
+            return jsonify({"ok": False, "error": f"step failed rc={result.returncode}",
+                            "output": "\n".join(outputs)[-2000:]}), 500
+    return jsonify({"ok": True, "output": "\n".join(outputs)[-2000:]})
 
 
 @cross_repo_bp.route("/api/open-dashboard", methods=["POST"])
