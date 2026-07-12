@@ -34,7 +34,10 @@ from flask import Flask, Blueprint, jsonify, render_template, request
 
 from dashboards_registry import DASHBOARDS, RUN_MONITORS
 from actions_registry import ACTIONS
-from os_home import parse_layers, latest_brief
+from os_home import (
+    parse_layers, latest_brief, scheduled_task_health, memory_index_size,
+    active_hooks, count_agents, aa01_lesson_count,
+)
 
 cross_repo_bp = Blueprint(
     'cross_repo', __name__,
@@ -773,6 +776,61 @@ def health() -> Any:
     return jsonify({"status": "ok", "version": "0.3.0-daily-use-features", "timestamp": now_iso()})
 
 
+def _layer_live_state() -> list[dict[str, Any]]:
+    """Attach a LIVE status to each of the 7 OS layers -- the console must show the
+    OS's STATE, not just its static map (research/spec). All signals are LOCAL
+    (file reads + scheduled-task query); PR flight loads async client-side via
+    /api/state, so the home renders instantly and hermetically."""
+    # reuse the existing local fetchers (no network): OD/ADR/spend/journal
+    ods = fetch_open_decisions()
+    adrs = fetch_adr_countdown()
+    spend = fetch_api_spend()
+    journal = fetch_journal_preview()
+    sched = scheduled_task_health(["morning-brief", "jules-daily-digest"])
+    mem = memory_index_size()
+    hooks = active_hooks()
+    agents = count_agents()
+    lessons = aa01_lesson_count()
+
+    def state_for(name: str) -> tuple[str, str]:
+        n = name.lower()
+        if "kernel" in n or "dottrina" in n:
+            near = adrs[0]["days_remaining"] if adrs else None
+            extra = f", ADR proposto piu' vicino {near}gg" if near is not None else ""
+            return "ok", f"{ods.get('count_active', 0)} OD attive{extra}"
+        if "routing" in n:
+            band = spend.get("band", "?")
+            return ("warn" if band != "ok" else "ok",
+                    f"Claude API MTD ${spend.get('mtd_cost', 0)} (band {band}); routing per-tier")
+        if "esecutori" in n:
+            return "ok", f"{agents['active']} subagent attivi (+{agents['dormant']} dormant); PR flotta sotto"
+        if "memoria" in n:
+            hdr = journal.get("header", "?") if journal.get("available") else "n/d"
+            memnote = f"MEMORY.md {mem['lines']} righe/{mem['kb']}KB" if mem.get("available") else "MEMORY.md n/d"
+            return ("warn" if mem.get("over_budget") else "ok", f"JOURNAL top: {hdr}; {memnote}")
+        if "scheduling" in n:
+            bad = [t for t in sched if not t["healthy"]]
+            detail = "; ".join(
+                f"{t['name']}={t['state']}/rc{t['last_result']}" for t in sched
+            ) or "nessun task"
+            return ("warn" if bad else "ok"), detail
+        if "apprendimento" in n or "maintenance" in n:
+            return "ok", (f"{lessons['count']} lezioni AA01 (learning on-demand)"
+                          if lessons.get("available") else "AA01 non accessibile da qui")
+        if "safety" in n:
+            if not hooks.get("available"):
+                return "warn", "settings hooks non leggibili"
+            evs = ", ".join(hooks.get("events", [])[:4])
+            return ("ok" if hooks.get("count") else "warn"), f"{hooks['count']} hook attivi ({evs})"
+        return "muted", ""
+
+    out: list[dict[str, Any]] = []
+    for lyr in parse_layers():
+        status, detail = state_for(lyr["layer"])
+        out.append({**lyr, "status": status, "detail": detail})
+    return out
+
+
 @cross_repo_bp.route("/os")
 def os_console() -> Any:
     # LOCAL date (not UTC): morning-brief.ps1 writes logs/morning-brief/<local-date>.md
@@ -790,7 +848,7 @@ def os_console() -> Any:
         areas.setdefault(e["area"], []).append(e)
     return render_template(
         "os_console.html",
-        layers=parse_layers(),
+        layers=_layer_live_state(),
         brief=latest_brief(today),
         actions_by_area=areas,
         api_secret=os.environ.get("API_SECRET", ""),
