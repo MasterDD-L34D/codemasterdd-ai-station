@@ -19,6 +19,37 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-07-12 (notte: fasi doc studio-track COMPLETE -- Fase 3 roadmap merged + vaglio pool locali, Fable 5 da Ryzen)
+
+### Completato
+- **Fase 3 MERGED** (PR Game #3272, auth owner): 40-ROADMAP = sequenza slice-first
+  F-A (slice vestita badlands) -> F-B (playtest N5) -> F-C (scala 4/6/3) -> F-D
+  (meta+EA), Quality Gate 3-step per fase; MVP scope-lock e sprint cadence marcati
+  STORICO. Codex 1x P2 ("SUPERANO" ambiguo con scope ridotto) -> "SOSTITUISCONO,
+  deliberatamente ridotto". Con questo le fasi DOC studio-track sono complete
+  (spec #3267, F1 #3269, F2 #3270+#3271, F3 #3272).
+- **Vaglio arrivi manuali + pool locali**: 4/5 rar identificati = Pimen (incluso
+  "Battlemage" = Fantasy Platformer Character, match sul nome file di download);
+  licenze verificate verbatim. 1 BLOCCATO (Animation Pack.rar, fonte ignota).
+- **Scoperto workspace `Documents/evo-tactics-refs`** (~186GB, provenance
+  documentata, 2026-04-29): Sonniss 127GB, FreePD 1237 MP3 CC0, HF OGA-CC0,
+  kit pre-curato skiv-audio-kit (318 file creature). Memoria dedicata scritta:
+  consultare PRIMA di scaricare asset (stavamo per ri-scaricare Sonniss).
+- **Sonniss cherry-pick da pool locale** (item manuale 5 chiuso senza download):
+  18 WAV organici in staging (Fx_Mutation_Blood_Flesh, crab carapace squishy,
+  gore set, alien growl, cammelli). `VAGLIO-SELECTION.md` in staging.
+
+### Da fare
+- **Fase 4 build F-A**: writing-plans dedicato (slice vestita: badlands, 2 specie,
+  Path A con audio+VFX dallo staging); vaglio umano audio/VFX all'import.
+- Animation Pack.rar: owner indica fonte o si scarta.
+- Cleanup naming-esplicito: worktree `_game-wt-assethunt` + branch remote
+  asset-hunt/manifest/roadmap (merged).
+
+### Note
+- Verdetto Codex clean "review-object vuoto su HEAD" visto altre 2 volte (#3271 x2,
+  #3272): forma ormai stabile, poll a 4 canali con match commit_id==HEAD regge.
+
 ## 2026-07-12 (fleet: journal-land v3 copy carry -- fix conflitto stash, Fable 5 da Lenovo)
 
 ### Completato
