@@ -244,9 +244,11 @@ Properties:
 - WYSIWYG: what lands is byte-identical to the reviewed working-tree file, enforced by the
   pre/post `git hash-object` compare (replaces the old post-apply merge detection).
 - After a successful land the edit STAYS in the shared working tree (the old stash flow
-  consumed it). On main it disappears with the post-merge `git pull --ff-only`; on a feature
-  branch discard it with `git checkout -- <file>` once the PR is merged (the helper prints
-  this note).
+  consumed it) and BLOCKS `git pull` until discarded -- git refuses to overwrite a dirty
+  file even when its content is byte-identical to the incoming blob (observed live on the
+  #546 dogfood land). Once the PR is merged: `git checkout -- <file>` (content is already
+  landed; verify with hash-object vs `origin/main:<file>` if paranoid), then
+  `git pull --ff-only` on main. The helper prints this note.
 - Anti-clobber guard (replaces the silent-3-way-merge detection): a copy built on a STALE
   base would silently DROP content that is on origin/main now. Flag a file only when BOTH
   hold: (a) origin/main's blob differs from the merge-base(HEAD, origin/main) blob (origin
