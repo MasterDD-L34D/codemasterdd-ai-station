@@ -19,6 +19,39 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-07-13 (F-A Audio Foundation eseguito -- Godot-v2 PR #599, Fable 5 da Ryzen)
+
+### Completato
+- **Piano F-A Audio Foundation ESEGUITO** (repo Game piano 2026-07-12, PR Game#3273;
+  esecuzione subagent-driven-development, worktree `C:\dev\_godot-wt-audio`):
+  **Godot-v2 PR #599 aperto, ready** -- 11 commit: 14 asset license-verificati +
+  PROVENANCE.md (CC-BY SCP-x6x), bus Master/Music/SFX, SfxCatalog, SfxSpawner,
+  wiring combat (hit/death/miss/status), AudioDirector musica per-fase + outcome
+  debrief, PRD overlay stesso-PR. GUT full 3870/3875 zero fail (5 pending
+  pre-esistenti), gdformat/gdlint verdi, trailer ADR-0011 su tutti i commit.
+- Review pipeline: spec-review indipendente per task (re-run test), quality-review
+  su Task 4/5, final review whole-branch. 2 bug REALI trovati e fixati pre-PR:
+  leak SfxSpawner su re-entry combat (teardown senza `_free_node`) + riga PRD
+  imprecisa (urgent vs airy). Aggiunto test forwarding setter con GUT double.
+- Deviazioni giudizio (flaggate nel PR per ratifica): setter-observer su
+  `current_phase` (main.gd non ha punto unico di switch fase), `main_audio.gd`
+  helper MainX nuovo, gdlintrc max-file-lines 1100->1120 (main.gd a 1120 ESATTO,
+  zero headroom -- prossima aggiunta = estrarre controller).
+
+### Da fare
+- **Eduardo**: merge PR #599 (gate: CI + @codex review richiesto nel body) +
+  **smoke manuale Path A** (residuo esplicito Task 6: host+phone+backend, verifica
+  a orecchio, esito in docs/godot-v2/qa/) + ratifica bump gdlintrc.
+- Piani F-A restanti da scrivere: VFX combat (Pimen/CodeManu) + polish badlands.
+
+### Note
+- Gotcha Godot appresi: `--quit-after` NON genera .import (serve `--editor
+  --import`); class_name nuovo = rescan cache pre-GUT; default-init di property
+  NON invoca il setter (verificato empiricamente in review, Godot 4.6).
+- tdd-guard `_godot-wt-*`: false-block in sessione, ma fix strutturale gia'
+  merged (PR #551 di ieri) -- era il config locale non rigenerato; chip duplicato
+  spawnato e gia' preso in carico, si auto-risolvera' come no-op.
+
 ## 2026-07-13 (Agentic OS Console shipped -- MVP front-door + tier-0/1 actions, Fable 5 da Lenovo)
 
 ### Completato
