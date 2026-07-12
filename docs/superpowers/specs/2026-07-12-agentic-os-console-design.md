@@ -162,11 +162,11 @@ launcher wiring, test.
 -p`); azioni autonome/schedulate dal pannello (= act-layer governor-gated); auth
 multi-utente / esposizione non-locale; storicizzazione run in governor.db.
 
-## 11. Open questions (per la review di Eduardo)
+## 11. Decisioni (risolte -- Eduardo 2026-07-12, spec approvata)
 
-- Q1: la home `/os` come DEFAULT (sostituisce `/`), o `/` resta il fleet-dash attuale e
-  `/os` e' una tab in piu'? (Reco: `/os` default, `/` resta raggiungibile.)
-- Q2: `create-draft-pr` con quali template titolo? (evita free-text -> whitelist di
-  prefissi conventional-commit + campo desc controllato).
-- Q3: `aider-delegate` -- dropdown file da quali repo? (solo whitelisted privacy:
-  codemasterdd/Game/Godot-v2).
+- Q1 RESOLVED: home `/os` = route DEFAULT; `/` (fleet-dash attuale) resta raggiungibile
+  (link in cima alla home OS).
+- Q2 RESOLVED: `create-draft-pr` -- titolo da whitelist di prefissi conventional-commit
+  (feat/fix/chore/docs/refactor/test) + campo desc controllato; NO free-text nel comando.
+- Q3 RESOLVED: `aider-delegate` -- dropdown file solo da repo privacy-whitelisted
+  (codemasterdd / Game / Game-Godot-v2); repo sovereign-only esclusi.
