@@ -40,7 +40,7 @@
 
 ## Gap onesti / roadmap (tutti Eduardo-gated)
 
-- **G1 heartbeat/morning-brief -- DONE 2026-07-12** (ratifica Eduardo): `scripts/fleet/morning-brief.ps1` (landa via PR #540) R0 report-only, task daily 08:30 su Lenovo, no-LLM, log locale gitignored.
+- **G1 heartbeat/morning-brief -- LANDING via PR #540** (merge-gated; ratifica Eduardo): `scripts/fleet/morning-brief.ps1` R0 report-only, no-LLM, log locale gitignored, task daily 08:30 su Lenovo. Diventa authority attiva del layer-5 SOLO a #540 merged (fino ad allora lo script NON e' su main -- non trattarlo come attivo).
 - **G2 last30days sorgenti -- YouTube DONE, X pendente 1 azione Eduardo** (login x.com in Firefox; yt-dlp + Firefox installati 2026-07-12).
 - **G3 continuous-learning-v2 -- NARROW GO 2026-07-12** (eval nel [report](docs/research/personal-agentic-os-2026-07-12.md)): observation gia' live (hook globali), analisi = ritual on-demand (observer Haiku via Agent tool + `instinct-cli.py status/prune`), observer background resta OFF; promotion instinct -> AA01/CLAUDE.md via curation umana.
 - **Non-gap ratificati**: memoria per-machine (design, non bug); NESSUN framework orchestrazione esterno (ORCHESTRATION.md sec 8 anti-scope / ADR-0036 decision 6); NESSUN gateway LLM (OD-009).
