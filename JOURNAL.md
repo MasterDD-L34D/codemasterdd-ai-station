@@ -19,6 +19,29 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-07-12 (tarda sera: Fase 4 avviata -- piano F-A Audio Foundation MERGED + vaglio arrivi finali, Fable 5 da Ryzen)
+
+### Completato
+- **Piano F-A Audio Foundation MERGED** (PR Game #3273, auth owner): primo dei 3
+  piani F-A (scope-check writing-plans). Ground-truth Godot-v2 verificata
+  (explorer + spot-check): ZERO autoload, zero audio nel repo, pattern =
+  VfxSpawner figlio di Main, hook combat main.gd:512-525 + action_resolved.
+  Architettura: SfxCatalog/SfxSpawner/AudioDirector, 7 task TDD GUT con codice
+  completo, mappa asset file-per-file dallo staging Fase 2, PROVENANCE con
+  attribution CC-BY. Codex 2x P2 fixati (worktree -b mancante; queue_free
+  deferred bucava il cap pool -> remove_child immediato).
+- **Vaglio arrivi finali**: Animation Pack SBLOCCATO (fonte Pimen, conferma
+  owner); **Minifantasy Creatures Free BLOCCATO x2** (FreeLicense.txt verbatim =
+  solo non-commerciale, incompatibile Steam EA; creature visuals comunque fuori
+  scope asset-hunt per decisione owner 4 -- eventuale full version a pagamento).
+- Chip spawnato per la sessione di esecuzione del piano audio su Game-Godot-v2
+  (worktree feat/audio-foundation, gate GUT+CI+review).
+
+### Da fare
+- Esecuzione piano audio (chip) -> poi piani F-A restanti: VFX combat
+  (Pimen/CodeManu, telegraph/status) + polish/content-lock badlands.
+- Cleanup naming-esplicito: worktree _game-wt-assethunt + branch remote merged.
+
 ## 2026-07-12 (Agentic OS: review-cycle harsh+Codex, #540 + #538 MERGED, Fable 5 da Lenovo)
 
 ### Completato
