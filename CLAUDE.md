@@ -91,7 +91,7 @@ Entry in JOURNAL.md (YYYY-MM-DD newest-first: Completato/Da fare/Note). Poi land
 MAI journal su branch `chore/`/`docs/` (resta orfano); MAI `git pull` su feature-branch (`--ff-only` solo su main).
 
 ## Ordine lettura nuove sessioni
-1. CLAUDE.md (questo) 2. COMPACT_CONTEXT.md 3. STATUS_MULTI_REPO.md (se cross-repo) 3b. GOALS.md (se pianificazione)
+1. CLAUDE.md (questo) 1b. AGENTIC_OS.md (mappa OS: layer -> authority) 2. COMPACT_CONTEXT.md 3. STATUS_MULTI_REPO.md (se cross-repo) 3b. GOALS.md (se pianificazione)
 4. `.claude/agents/README.md` (16 subagent attivi + 5 dormant in `_dormant/`) 5. Archivio_.../07 operating-rules 6. BACKLOG.md + OPEN_DECISIONS.md 7. ADR rilevanti.
 Agent multi-client (Codex/OpenCode/sandbox) -> leggi AGENTS.md prima (ADR-0021). CLAUDE.md autoritativo per decisioni progetto;
 regole 07 per pattern operativi generici. Framework governance: `Archivio_Libreria_Operativa_Progetti/`.
