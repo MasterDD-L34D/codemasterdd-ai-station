@@ -19,6 +19,33 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-07-12 (fleet: jules-digest 0x800710E0 -- diagnosi + fix S4U, Fable 5 da Lenovo)
+
+### Completato
+- **Diagnosi** fail `jules-daily-digest` su Lenovo (LastTaskResult 0x800710E0, scoperto
+  dal primo run di morning-brief): LogonType Interactive + nessuna sessione interattiva
+  alle 08:00. Winlogon 7001/7002: tutte le 08:00 dal 03/07 all'11/07 in finestra
+  utente-sloggato -> gap digest di 9 giorni (ultimo 2026-07-02). Macchina accesa dal
+  24/06: non e' power, e' logon.
+- **Ownership chiarita** (niente unregister): registrazione Lenovo LEGITTIMA
+  (JULES-GOVERNANCE-INDEX: single-owner = Lenovo dal 2026-06-25); Ryzen senza task
+  (verificato via SSH). Stale era l'header del register script ("owner = Ryzen",
+  fermo al G3 2026-06-03).
+- **Fix**: PR hub #542 MERGED -- switch `-Unattended` (LogonType S4U) in
+  register-jules-digest-task.ps1 + header ownership corretto. Task ri-registrato
+  live su Lenovo (S4U @08:00, StartWhenAvailable, PT15M; prima era formato legacy
+  del 05-18 con limite 72h). Smoke run-once: 0x0 + digest 2026-07-12 scritto sano.
+- TaskScheduler operational log abilitato (era disabled: run non diagnosticabili).
+
+### Da fare
+- Verifica passiva 13/07 ~08:00: LastTaskResult 0 + digest scritto con utente
+  sloggato (prova reale S4U).
+
+### Note
+- Lesson: 0x800710E0 = codice dello scheduler ("mai partito"), non exit dello script;
+  StartWhenAvailable NON copre il caso logged-off (solo machine-off/sleep).
+- morning-brief.ps1 non presente nel clone Lenovo (Ryzen o branch non landed).
+
 ## 2026-07-12 (studio-track: Fase 1 MERGED + Fase 2 asset-shortlist eseguita e MERGED, Fable 5 da Ryzen)
 
 ### Completato
