@@ -19,6 +19,42 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-07-12 (studio-track: Fase 1 MERGED + Fase 2 asset-shortlist eseguita e MERGED, Fable 5 da Ryzen)
+
+### Completato
+- **Merge Fase 1** (auth esplicita "fai tutti i fix e poi i merge"): PR Game #3268
+  (piano) + #3269 (GDD refresh, update-branch + auto-merge). Thread Codex TUTTI
+  risolti: 6 su #3269 + 2 arretrati su #3266 (guard escalationAllIn verificato su
+  main) e #3258 (debito telegraph pagato da #3264 hidden-row, flag ON) -- reply
+  evidenziata + resolve, ground-truth su main prima di chiudere.
+- **Cleanup autorizzato**: branch remote+locali gddrefresh cancellati, worktree
+  rimosso (junction-safe, senza --force).
+- **Fase 2 asset hunt ESEGUITA e MERGED** (PR #3270): deep-research workflow (103
+  agent; session-limit a meta' -> recupero findings da journal.jsonl + 5 WebFetch
+  mirati per le verifiche mancanti). Shortlist licenze-verificate in
+  43-ASSET-SOURCING (SFX combat CC0 x3, UI CC0 x4 con 51-WAV-organici come match
+  migliore, ambience CC0 x2, musica CC0+CC-BY, VFX CC0/CC-BY) + eccezioni owner
+  (Sonniss custom; Pimen condizionale con PRICE-GATE da Codex P2: solo subset $0)
+  + scartati anti-drift + manifest con download DA AUTORIZZARE per-item.
+  Approvazione shortlist owner in-session (AskUserQuestion) PRIMA del PR.
+- **Codex #3270**: P2 Pimen freemium fixato (a9df42653) -> re-review CLEAN in
+  QUARTA forma: review-object VUOTO con commit_id == HEAD (memoria aggiornata:
+  poll a 4 canali + match sha).
+
+### Da fare
+- **Download asset**: autorizzazione owner per-item sul manifest (43-ASSET-SOURCING),
+  poi hunt mirata sui gap (ambience savana/foresta-tossica, VFX status/telegraph,
+  2-3 tracce musica).
+- **Fase 3 roadmap slice-first**: refresh 40-ROADMAP (1 PR), sequenza F-A..F-D.
+- Cleanup opzionale: branch remote `docs/asset-hunt-phase2` + worktree
+  `C:\dev\_game-wt-assethunt` (da nominare esplicitamente).
+
+### Note
+- Session limit Claude a meta' workflow: i risultati dei 49 agent completati erano
+  tutti recuperabili da `journal.jsonl` -- niente re-run, solo 5 fetch di verifica.
+- Classifier corretto due volte: delete branch remote e merge #3270 richiedevano
+  naming esplicito di Eduardo (arrivato in entrambi i casi).
+
 ## 2026-07-12 (Personal Agentic OS: ricerca multi-source -> ADR-0044 composition + mappa root)
 
 ### Completato
