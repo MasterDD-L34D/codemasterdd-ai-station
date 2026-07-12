@@ -42,9 +42,17 @@ def test_tier2_has_no_executable_steps() -> None:
 
 
 def test_tier1_requires_wrapper() -> None:
+    # A tier-1 action must not only NAME a wrapper -- the wrapper must resolve to
+    # a real file in the repo. A dangling label (the old "gh-draft-pr" that was
+    # never a script) would let a bare, unguarded command masquerade as gated.
+    repo_root = Path(__file__).resolve().parents[2]
     for a in ACTIONS:
         if a["tier"] == 1:
             assert a.get("wrapper"), f"{a['id']}: tier-1 must route through a named fail-closed wrapper"
+            wp = a.get("wrapper_path")
+            assert wp, f"{a['id']}: tier-1 must declare a wrapper_path"
+            resolved = repo_root.joinpath(*wp.replace("\\", "/").split("/"))
+            assert resolved.is_file(), f"{a['id']}: wrapper_path does not resolve to a file: {resolved}"
 
 
 def test_argv_elements_are_literal_strings() -> None:
@@ -61,6 +69,19 @@ def test_params_are_whitelist_choices_only() -> None:
             assert p.get("name") and isinstance(p.get("choices"), list) and p["choices"], \
                 f"{a['id']}: param must have a name + non-empty whitelist choices"
             assert all(isinstance(c, str) for c in p["choices"]), f"{a['id']}: param choices must be strings"
+            # every param must declare the fixed CLI flag it maps to: the endpoint
+            # appends [flag, choice], so a param with no flag would be a dead dropdown.
+            assert isinstance(p.get("flag"), str) and p["flag"].startswith("-"), \
+                f"{a['id']}: param {p.get('name')!r} must declare a CLI flag (e.g. --repo)"
+
+
+def test_param_actions_are_single_step() -> None:
+    # params append to steps[-1] server-side; keeping param'd actions single-step
+    # makes that append target unambiguous (no silent apply-to-wrong-step).
+    for a in ACTIONS:
+        if a.get("params"):
+            assert len(a.get("steps", [])) == 1, \
+                f"{a['id']}: an action with params must have exactly one step"
 
 
 def test_negative_control_injection_id_not_in_registry() -> None:

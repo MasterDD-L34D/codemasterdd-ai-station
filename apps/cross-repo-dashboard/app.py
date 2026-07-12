@@ -965,22 +965,33 @@ def run_action() -> Any:
         return jsonify({"ok": False, "error": "unknown action id"}), 400
     if action["tier"] == 2:
         return jsonify({"ok": False, "error": "tier-2 action is excluded from the panel"}), 403
+    # tier-1 (mutating) is auth-mandatory even though tier-0 (read) stays open:
+    # without a server API_SECRET the bearer check above is skipped, so a
+    # mutating action would run unauthenticated. Fail closed instead.
+    if action["tier"] == 1 and not api_secret:
+        return jsonify({"ok": False, "error": "tier-1 action requires API_SECRET to be set on the server"}), 403
     if not action.get("steps"):
         return jsonify({"ok": False, "error": "action has no runnable steps"}), 400
 
-    # validate any params strictly against the registry whitelist (never interpolate)
-    chosen: dict[str, str] = {}
+    # Params -> argv: validate each chosen value against the registry whitelist,
+    # then append [flag, value] to the (single) step server-side. The flag comes
+    # from the registry and the value only from `choices` -- never free text, so
+    # nothing client-supplied is interpolated into a command.
+    extra_args: list[str] = []
     for p in action.get("params", []):
-        val = str(body.get(p["name"], ""))
+        val = str(body.get(p["name"], "")).strip()
         if val and val not in p["choices"]:
             return jsonify({"ok": False, "error": f"param {p['name']} not in whitelist"}), 400
         if val:
-            chosen[p["name"]] = val
+            extra_args += [p["flag"], val]
+    steps = [list(s) for s in action["steps"]]  # copy so we never mutate the registry
+    if extra_args:
+        steps[-1].extend(extra_args)  # param'd actions are single-step (registry-enforced)
 
     timeout = int(action.get("timeout", 300))
     ok_codes = set(action.get("ok_exit_codes", [0]))
     outputs: list[str] = []
-    for argv in action["steps"]:
+    for argv in steps:
         try:
             result = subprocess.run(
                 argv, cwd=action["cwd"], capture_output=True, text=True,

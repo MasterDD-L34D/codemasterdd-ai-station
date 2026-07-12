@@ -1,5 +1,15 @@
 # Agentic OS Console Implementation Plan
 
+> **SCOPE REVISION 2026-07-13 (Option A, MVP onesto -- supersedes the tier-1 parts
+> of this plan):** the registry ships 5 tier-0 actions + exactly ONE tier-1
+> (`create-draft-pr`, now routed through the REAL guarded wrapper
+> `scripts/fleet/draft-pr.ps1`, not a bare `gh`). `jules-dispatch` and
+> `aider-delegate` are REMOVED from the MVP and deferred to v2 (they need a
+> repo+task-file / file-target input flow the panel does not have yet). Params are
+> now APPLIED to argv server-side via a fixed `flag` (see `fleet-pr-status`
+> `--repo`), not just validated. The Task-1 / Task-6 code blocks below are the
+> original draft and are kept for history; the shipped code is the source of truth.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Add an "Agentic OS Console" home + a tier-gated action runner to the existing `apps/cross-repo-dashboard` Flask app, so the OS has one page you open to see its state and launch fleet actions.
@@ -646,6 +656,11 @@ gh pr create --title "feat(os-console): Agentic OS Console (home + tiered action
 - [ ] `py -m pytest -q scripts/tests apps/cross-repo-dashboard/tests` all green; ASCII guard clean.
 - [ ] harsh-reviewer pre-merge (security/governance-critical: the run-action endpoint executes commands) + Codex.
 
-## Out of scope (later, own spec)
+## Out of scope (later, v2 / own spec)
 
-Tier-2 anything; `claude -p` headless agent spawn; panel-initiated autonomous/scheduled runs (act-layer, governor-gated); multi-user auth / non-local exposure; run history in governor.db.
+- `jules-dispatch` (needs a repo + task-file input flow + scoped-template wrapper)
+  and `aider-delegate` (needs a file-target + tier flow + privacy-guarded file-backed
+  wrapper) -- deferred to v2, not wired as dead placeholders in the MVP.
+- Tier-2 anything; `claude -p` headless agent spawn; panel-initiated
+  autonomous/scheduled runs (act-layer, governor-gated); multi-user auth / non-local
+  exposure; run history in governor.db.

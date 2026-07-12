@@ -1,6 +1,8 @@
 # Agentic OS Console -- design spec (2026-07-12)
 
-> Status: DRAFT (awaiting Eduardo review before writing-plans).
+> Status: MVP IMPLEMENTED (2026-07-13). Scope Option A: 5 azioni tier-0 + 1 tier-1
+> (`create-draft-pr` via wrapper reale); `jules-dispatch`/`aider-delegate` -> v2
+> (sec 5 + sec 10). Home `/os`, `/api/run-action`, param->argv, test verdi.
 > Authority chain: ADR-0044 (Agentic OS = composition) -> AGENTIC_OS.md (the map) ->
 > this spec (the "front door" app). ASCII-first (ADR-0021). Local single-user.
 > Approccio approvato: estendere `apps/cross-repo-dashboard` (NON nuova app).
@@ -65,19 +67,24 @@ Ogni azione = dict literal (mai costruito da input client):
   "timeout": 600,
   "ok_exit_codes": [0],
   # tier-1 SOLO:
-  "wrapper": "jules-dispatch",            # OBBLIGATORIO se tier==1: nome del gate
-  "params": [ {"name":"repo","choices":["Game","Game-Godot-v2",...]} ],  # whitelisted, mai free-text
+  "wrapper": "draft-pr",                  # OBBLIGATORIO se tier==1: nome del gate
+  "wrapper_path": "scripts/fleet/draft-pr.ps1",  # OBBLIGATORIO se tier==1: deve risolvere a un file
+  # param opzionale: mappa una CHOICE whitelisted a un flag CLI fisso ->
+  # l'endpoint appende [flag, value] allo step lato server (value solo da choices):
+  "params": [ {"name":"repo","flag":"--repo","choices":["MasterDD-L34D/Game",...]} ],
 }
 ```
 
 Regole di integrita' (enforced dai test, sec 7):
 - `tier in {0,1,2}`; `id` unico.
 - tier 0/1 -> `steps` presente e non-vuoto; tier 2 -> NESSUN `steps` eseguibile.
-- tier 1 -> `wrapper` presente (l'azione deve passare per un gate fail-closed
-  esistente, non per gh/curl nudo su path pericolosi).
+- tier 1 -> `wrapper` presente E `wrapper_path` che RISOLVE a un file reale nel repo
+  (un'etichetta senza script dietro = comando nudo mascherato da gated; il test lo blocca).
+  Inoltre tier-1 richiede `API_SECRET` settato sul server (muta -> auth obbligatoria).
 - ogni elemento di ogni `steps` argv e' una stringa literal; nessun placeholder viene
-  interpolato dall'`id` o da input client. I `params` sono scelte da whitelist mappate a
-  posizioni argv fisse lato server (dropdown, non testo).
+  interpolato dall'`id` o da input client. I `params` mappano una scelta da whitelist a un
+  `flag` CLI fisso (dropdown, non testo); l'endpoint appende `[flag, value]` con value SOLO
+  da `choices`. Un'azione con `params` ha esattamente UNO step (append target univoco).
 
 ## 5. Azioni MVP
 
@@ -88,14 +95,15 @@ Regole di integrita' (enforced dai test, sec 7):
 - `bench-report` -- report bench da risultati esistenti.
 - `governance-lint` -- lint governance (gia' regenerable nel dashboards_registry).
 
-**Tier-1 (muta-reversibile, click = autorizzazione, via wrapper) -- tutti e 3 approvati:**
-- `create-draft-pr` -- branch + draft-PR via `gh` (reversibile; branch = `claude/*`
-  allow-glob). Param: titolo (whitelist template) + repo (dropdown).
-- `jules-dispatch` -- dispatch Jules SOLO via `scripts/fleet/jules-dispatch.ps1`
-  (fail-closed: repo-whitelist + ASCII-check + scoped-template lint). Param: repo
-  (dropdown whitelisted) + task-template (dropdown). MAI curl nudo.
-- `aider-delegate` -- delega edit ad Aider SOLO via wrapper privacy-guarded
-  (`aider-cosmetic`/`aider-refactor`). Param: file (dropdown da repo whitelisted) + tier.
+**Tier-1 (muta-reversibile, click = autorizzazione, via wrapper) -- 1 azione nell'MVP:**
+- `create-draft-pr` -- apre un draft-PR per il branch `claude/*` corrente via il
+  wrapper REALE fail-closed `scripts/fleet/draft-pr.ps1` (aborta se non su un
+  branch `claude/*` o se non pushato; `gh pr create --draft` con `--head` pinnato
+  al branch risolto -- nessun input client raggiunge l'argv). Reversibile (draft).
+- `jules-dispatch` + `aider-delegate` -- **NON nell'MVP** (v2): richiedono un flusso
+  d'input (repo + task-file per Jules; file-target + tier per Aider) che il pannello
+  non ha ancora. Riammessi solo quando il flusso e il wrapper file-backed esistono.
+  Vedi sec 10 (out-of-scope).
 
 **Tier-2 (esclusi dal pannello):** merge-main/doctrine, force-push, comms esterne. Non
 hanno bottone. Se mai richiesti in futuro: conferma digitata + classifier backstop, via
@@ -154,13 +162,18 @@ Test in `apps/cross-repo-dashboard/tests/` + estensione `scripts/tests/`.
 
 ## 10. MVP scope / out-of-scope
 
-**In (MVP):** home `/os` completa (7 layer + brief + PR + task health), tier-0 completo
-(5 azioni), 3 azioni tier-1 (draft-PR, jules-dispatch, aider-delegate) via wrapper,
-launcher wiring, test.
+**In (MVP):** home `/os` (7 layer + brief + azioni), tier-0 completo (5 azioni,
+`fleet-pr-status` con param `repo` funzionante), 1 azione tier-1 (`create-draft-pr`
+via wrapper reale branch-guarded), launcher wiring, test (incl. happy-path exec +
+tier-1-auth negative control).
 
-**Out (later, spec propria):** tier-2 qualsiasi; spawn agenti Claude headless (`claude
--p`); azioni autonome/schedulate dal pannello (= act-layer governor-gated); auth
-multi-utente / esposizione non-locale; storicizzazione run in governor.db.
+**Out (later, spec propria / v2):**
+- `jules-dispatch` (serve flusso input repo + task-file, wrapper scoped) e
+  `aider-delegate` (serve file-target + tier, wrapper privacy-guarded file-backed):
+  spostati a v2 -- l'MVP non ha il flusso d'input e non wireremo un placeholder morto.
+- tier-2 qualsiasi; spawn agenti Claude headless (`claude -p`); azioni
+  autonome/schedulate dal pannello (= act-layer governor-gated); auth multi-utente /
+  esposizione non-locale; storicizzazione run in governor.db.
 
 ## 11. Decisioni (risolte -- Eduardo 2026-07-12, spec approvata)
 

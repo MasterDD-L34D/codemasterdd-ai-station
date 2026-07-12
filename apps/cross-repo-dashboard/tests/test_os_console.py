@@ -7,6 +7,8 @@ from pathlib import Path
 APP_DIR = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(APP_DIR))
 
+import sys as _sys
+
 import pytest  # noqa: E402
 
 import app as appmod  # noqa: E402
@@ -52,6 +54,56 @@ def test_run_action_tier2_forbidden() -> None:
 
 
 def test_run_action_bad_param_rejected() -> None:
-    # jules-dispatch requires repo in whitelist; a bogus repo must 400 before any exec
-    r = client().post("/cross-repo/api/run-action", json={"id": "jules-dispatch", "repo": "evil; rm -rf"})
+    # fleet-pr-status has a working `repo` param (whitelist); a bogus repo must
+    # 400 BEFORE any subprocess runs (negative control for the param->argv path).
+    r = client().post("/cross-repo/api/run-action", json={"id": "fleet-pr-status", "repo": "evil; rm -rf"})
     assert r.status_code == 400
+
+
+def test_run_action_tier1_requires_secret(monkeypatch) -> None:
+    # tier-1 (mutating) must fail closed when no server API_SECRET is set, even
+    # though tier-0 stays open. 403, no wrapper invoked.
+    monkeypatch.delenv("API_SECRET", raising=False)
+    r = client().post("/cross-repo/api/run-action", json={"id": "create-draft-pr"})
+    assert r.status_code == 403
+
+
+def test_run_action_happy_path_hermetic(monkeypatch) -> None:
+    # One real happy-path through /api/run-action: inject a trivial tier-0 action
+    # whose fixed argv just prints "ok" (portable, no external tool), and assert
+    # the endpoint returns ok:True with that output. Proves the exec path, not
+    # just the 4xx guards.
+    monkeypatch.delenv("API_SECRET", raising=False)
+    trivial = {
+        "id": "selftest-echo", "label": "selftest", "tier": 0, "area": "audit",
+        "desc": "hermetic self-test", "cwd": str(APP_DIR), "timeout": 30,
+        "ok_exit_codes": [0], "steps": [[_sys.executable, "-c", "print('ok')"]],
+    }
+    monkeypatch.setattr(appmod, "ACTIONS", list(appmod.ACTIONS) + [trivial])
+    r = client().post("/cross-repo/api/run-action", json={"id": "selftest-echo"})
+    assert r.status_code == 200
+    payload = r.get_json()
+    assert payload["ok"] is True
+    assert "ok" in payload["output"]
+
+
+def test_run_action_applies_whitelisted_param_to_argv(monkeypatch) -> None:
+    # Positive control for the P1 fix: a valid whitelisted choice must actually be
+    # APPENDED to argv server-side as [flag, value]. Without this, reverting the
+    # param->argv apply would leave the suite green (bad-param still 400s, the
+    # param-less happy-path still passes) -- so this locks the exact fixed behavior.
+    monkeypatch.delenv("API_SECRET", raising=False)
+    echo_args = {
+        "id": "selftest-echoargs", "label": "selftest", "tier": 0, "area": "audit",
+        "desc": "echo argv tail", "cwd": str(APP_DIR), "timeout": 30, "ok_exit_codes": [0],
+        "steps": [[_sys.executable, "-c", "import sys; print(sys.argv[1:])"]],
+        "params": [{"name": "repo", "flag": "--repo", "choices": ["SAFE-CHOICE-XYZ"]}],
+    }
+    monkeypatch.setattr(appmod, "ACTIONS", list(appmod.ACTIONS) + [echo_args])
+    r = client().post("/cross-repo/api/run-action",
+                      json={"id": "selftest-echoargs", "repo": "SAFE-CHOICE-XYZ"})
+    assert r.status_code == 200
+    payload = r.get_json()
+    assert payload["ok"] is True
+    # both the fixed flag and the whitelisted value must appear in the executed argv
+    assert "--repo" in payload["output"] and "SAFE-CHOICE-XYZ" in payload["output"]
