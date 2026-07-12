@@ -12,10 +12,14 @@ from __future__ import annotations
 import json
 import re
 import subprocess
+import sys
 from pathlib import Path
 from typing import Any, Callable
 
 HUB = Path(r"C:\dev\codemasterdd-ai-station")
+# Match app.py: subprocess on Windows flashes a console window unless
+# CREATE_NO_WINDOW (0x08000000) is set. Keep the OS home flicker-free too.
+_NO_WINDOW_FLAG = 0x08000000 if sys.platform == "win32" else 0
 _ROW = re.compile(r"^\|\s*\d+\s*\|\s*(?P<layer>[^|]+?)\s*\|\s*(?P<authority>[^|]+?)\s*\|")
 _TASK_NAME_RE = re.compile(r"^[\w.\- ]+$")  # scheduled-task names are constants, not client input
 
@@ -60,6 +64,7 @@ def _query_scheduled_task(name: str) -> dict[str, Any] | None:
         r = subprocess.run(
             ["powershell", "-NoProfile", "-Command", ps],
             capture_output=True, text=True, timeout=15, check=False,
+            creationflags=_NO_WINDOW_FLAG,
         )
     except Exception:  # noqa: BLE001
         return None

@@ -69,13 +69,20 @@ async function loadPRs(){
   const el = document.getElementById('prflotta'); const meta = document.getElementById('prf-meta');
   try{
     const r = await fetch('/cross-repo/api/state'); const j = await r.json();
-    const repos = j.repos || {}; const rows = []; let total = 0;
+    const repos = j.repos || {}; let total = 0;
+    el.textContent = '';
+    // Build DOM with textContent only -- PR titles come from public repos (any
+    // contributor can craft one), so they are NEVER inserted as HTML (no innerHTML
+    // with untrusted data -> no XSS in the dashboard origin; Codex P1 #555).
     for(const [name, rp] of Object.entries(repos)){
       const n = rp.pr_count || 0; total += n;
       const titles = (rp.prs||[]).slice(0,5).map(p => '#'+p.number+' '+(p.title||'')).join(' | ');
-      rows.push('<div><strong>'+name+'</strong>: '+n+' PR'+(n? ' -- '+titles : '')+'</div>');
+      const div = document.createElement('div');
+      const b = document.createElement('strong'); b.textContent = name; div.appendChild(b);
+      div.appendChild(document.createTextNode(': '+n+' PR'+(n? ' -- '+titles : '')));
+      el.appendChild(div);
     }
-    el.innerHTML = rows.join('') || '(nessun repo)';
+    if(!el.children.length){ el.textContent = '(nessun repo)'; }
     meta.textContent = '-- '+total+' PR aperte totali (cache ~5min)';
   }catch(e){ el.textContent = '[errore caricamento PR] '+e; meta.textContent=''; }
 }
