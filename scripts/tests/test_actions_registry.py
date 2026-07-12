@@ -63,6 +63,19 @@ def test_argv_elements_are_literal_strings() -> None:
                 assert isinstance(tok, str), f"{a['id']}: argv token not a literal string: {tok!r}"
 
 
+def test_step_script_paths_resolve() -> None:
+    # any .ps1/.py path token in a step must resolve to a real file in the repo.
+    # Codex #552: governance-lint pointed at a non-existent scripts/governance-lint.py,
+    # so the tier-0 action failed with file-not-found instead of producing the report.
+    repo_root = Path(__file__).resolve().parents[2]
+    for a in ACTIONS:
+        for step in a.get("steps", []):
+            for tok in step:
+                if tok.endswith((".ps1", ".py")):
+                    resolved = repo_root.joinpath(*tok.replace("\\", "/").split("/"))
+                    assert resolved.is_file(), f"{a['id']}: step path does not resolve: {tok} -> {resolved}"
+
+
 def test_params_are_whitelist_choices_only() -> None:
     for a in ACTIONS:
         for p in a.get("params", []):

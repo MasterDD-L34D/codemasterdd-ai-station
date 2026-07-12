@@ -54,7 +54,9 @@ ACTIONS: list[dict[str, Any]] = [
     {
         "id": "governance-lint", "label": "Governance lint", "tier": 0,
         "area": "audit", "desc": "Run the governance lint report.",
-        "steps": [["py", "-3", r"scripts\governance-lint.py"]],
+        # the generator is a .ps1 (there is no governance-lint.py); mirror the
+        # dashboards_registry invocation so the action actually produces the report.
+        "steps": [["powershell", "-NoProfile", "-File", r"scripts\governance-lint.ps1"]],
         "cwd": HUB, "timeout": 300, "ok_exit_codes": [0, 1],  # lint rc=1 when it finds items
     },
     {

@@ -775,8 +775,10 @@ def health() -> Any:
 
 @cross_repo_bp.route("/os")
 def os_console() -> Any:
-    from datetime import datetime, timezone
-    today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    # LOCAL date (not UTC): morning-brief.ps1 writes logs/morning-brief/<local-date>.md
+    # via PowerShell Get-Date, so around midnight a UTC date would look up the wrong
+    # file and falsely show the placeholder (Codex P2 #552).
+    today = datetime.now().strftime("%Y-%m-%d")
     # actions without argv/steps reaching the template (mirror regen: pop steps)
     acts = []
     for a in ACTIONS:

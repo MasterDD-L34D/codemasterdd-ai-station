@@ -39,9 +39,17 @@ if ($branch -notlike 'claude/*') {
     exit 3
 }
 
-& git ls-remote --exit-code --heads origin $branch | Out-Null
-if ($LASTEXITCODE -ne 0) {
+# The remote ref must exist AND point at the current HEAD -- `--exit-code` alone
+# only proves the ref exists, so a branch with unpushed local commits would slip
+# through and open a draft PR for the STALE remote state (Codex P2 #552).
+$remoteSha = (& git ls-remote --heads origin $branch | ForEach-Object { ($_ -split "\s+")[0] } | Select-Object -First 1)
+$localSha = (& git rev-parse HEAD | Select-Object -First 1)
+if ([string]::IsNullOrWhiteSpace($remoteSha)) {
     Write-Output "draft-pr guard: branch '$branch' is not pushed to origin -- push it first (git push -u origin $branch)"
+    exit 4
+}
+if ($remoteSha.Trim() -ne $localSha.Trim()) {
+    Write-Output "draft-pr guard: local HEAD ($($localSha.Trim().Substring(0,7))) != origin/$branch ($($remoteSha.Trim().Substring(0,7))) -- push HEAD first"
     exit 4
 }
 
