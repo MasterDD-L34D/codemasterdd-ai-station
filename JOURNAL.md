@@ -19,6 +19,34 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-07-12 (Agentic OS: review-cycle harsh+Codex, #540 + #538 MERGED, Fable 5 da Lenovo)
+
+### Completato
+- **#540 morning-brief R0 MERGED** (654bcbe): harsh-reviewer SHIP-IT 0 P1 + 6 fix
+  review Codex/harsh -- Set-Content silent-failure (try/catch+exit1), [datetime]->TryParse
+  (degrade-don't-die), benign SCHED_S_* ristretti (0x41305/06/07 rotti = WARN, non info),
+  PR count truncation-safe (>=100 marker), header ADR-ref rimosso, S4U via -Unattended
+  (Codex: Interactive fallisce logged-off = stessa causa jules-digest 0x800710E0).
+- **#538 mappa OS + ADR-0044 MERGED** (253556a): harsh-reviewer REWORK-light 0 P1 + 6 fix
+  honesty (verificato-vs-direzionale split, hook-location layer-7 GLOBAL, 15x relabel,
+  arXiv 2604.14228 verificato=Liu et al. naming=parafrasi) + Codex (indice ADR in
+  DECISIONS_LOG, G1 LANDING-non-DONE, map-is-index note, P3 fragment-link nel guard-test).
+- Task morning-brief registrata al path canonico (run-once 0x0, Interactive).
+
+### Da fare
+- Eduardo: re-register morning-brief `-Unattended` (S4U, admin shell) per sopravvivenza
+  logged-off -- dopo che il clone e' su main.
+
+### Note
+- **Gotcha shared-clone**: sessione jules-digest concorrente sullo stesso working tree ->
+  il mio commit ha aspirato JOURNAL.md (poi #538 CONFLICTING vs main). Fix: merge di main
+  nel branch, JOURNAL preso interamente da main (branch = 0 modifiche a JOURNAL). Force-push
+  per ripulire = GATED (corretto). Ogni edit isolato in worktree throwaway.
+- Codex sub-gate su PR-series (map->script->ADR): commenti "not in tree" ricorrenti finche'
+  il branch non e' su main aggiornato. Dispositio: real-fix + merge main + map-is-index note.
+- Lesson-mia: tool-call malformati ripetuti (`court`/`invoke` come testo) = errori visibili
+  all'utente; usare SEMPRE il formato function-call corretto.
+
 ## 2026-07-12 (notte: fasi doc studio-track COMPLETE -- Fase 3 roadmap merged + vaglio pool locali, Fable 5 da Ryzen)
 
 ### Completato
