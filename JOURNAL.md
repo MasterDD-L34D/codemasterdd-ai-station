@@ -19,6 +19,42 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-07-13 (Agentic OS Console shipped -- MVP front-door + tier-0/1 actions, Fable 5 da Lenovo)
+
+### Completato
+- **Agentic OS Console MERGED** (PR #552 -> main a0cda43, squash, ADR-0037 self-merge
+  post-gate): la "app per avviare l'OS davvero" -- home `/os` (root redirect) +
+  `/api/run-action` fixed-argv tier-gated su apps/cross-repo-dashboard (Flask :8081).
+  5 azioni tier-0 (fleet-verify, morning-brief, fleet-pr-status con dropdown `repo`
+  funzionante, governance-lint, pytest) + 1 tier-1 `create-draft-pr` via wrapper REALE
+  scripts/fleet/draft-pr.ps1 (guard claude/* + HEAD==remote pushed, `--head` pinnato).
+- **Fix harsh-review**: P1 param->argv non applicati (dropdown morti) -> ora appesi
+  server-side da whitelist (flag+choice, mai free-text); P2 bare-gh -> wrapper guarded;
+  tier-1 fail-closed 403 senza API_SECRET.
+- **Fix Codex 3x P2** (tutti reali, verificati live): governance-lint puntava a un `.py`
+  inesistente -> `.ps1`; `ls-remote --exit-code` -> confronto SHA remoto vs HEAD locale;
+  data UTC -> locale (match morning-brief writer, disallineamento a cavallo mezzanotte).
+- Gate: 293 test verdi (positive-control param L-041-verificato che morde + guard
+  path-resolve script), CI ascii+pytest success, harsh-review 0 P1, smoke live reale
+  (redirect + azione tier-0 con param applicato + negative-control 400/403).
+- jules-dispatch + aider-delegate -> **v2** (spec sec 10; niente placeholder morti nell'MVP).
+  QUALITY.md 3-step aggiunto; spec passata a "MVP IMPLEMENTED".
+
+### Da fare
+- v2 OS Console (spec propria): jules-dispatch (serve flusso repo+task-file + wrapper
+  scoped) + aider-delegate (serve file-target+tier + wrapper privacy-guarded file-backed)
+  quando il flusso d'input esiste. Riammettere una tier-1 solo con wrapper file-backed
+  (il test test_tier1_requires_wrapper esige che risolva a un file reale).
+
+### Note
+- Sessione da worktree isolato (vigorous-pascal-7eddd5), branch locale osconsole-fable5
+  pushato con refspec su claude/agentic-os-console per non toccare il worktree
+  _cmdd-osconsole-spec-wt della sessione precedente (shared-clone safe, Protocol 1).
+- Codex re-review del fix-commit non arrivato entro 5 min (1 sola review sul commit
+  base a5f7bb2); i 3 P2 comunque risolti su commit verde 8bad1bb + reagito con +1.
+
+---
+
 ## 2026-07-12 (tarda sera: Fase 4 avviata -- piano F-A Audio Foundation MERGED + vaglio arrivi finali, Fable 5 da Ryzen)
 
 ### Completato
