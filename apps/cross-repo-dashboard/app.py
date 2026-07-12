@@ -34,6 +34,7 @@ from flask import Flask, Blueprint, jsonify, render_template, request
 
 from dashboards_registry import DASHBOARDS, RUN_MONITORS
 from actions_registry import ACTIONS
+from os_home import parse_layers, latest_brief
 
 cross_repo_bp = Blueprint(
     'cross_repo', __name__,
@@ -772,6 +773,28 @@ def health() -> Any:
     return jsonify({"status": "ok", "version": "0.3.0-daily-use-features", "timestamp": now_iso()})
 
 
+@cross_repo_bp.route("/os")
+def os_console() -> Any:
+    from datetime import datetime, timezone
+    today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    # actions without argv/steps reaching the template (mirror regen: pop steps)
+    acts = []
+    for a in ACTIONS:
+        e = {k: a[k] for k in ("id", "label", "tier", "area", "desc") if k in a}
+        e["params"] = a.get("params", [])
+        acts.append(e)
+    areas: dict[str, list[dict[str, Any]]] = {}
+    for e in acts:
+        areas.setdefault(e["area"], []).append(e)
+    return render_template(
+        "os_console.html",
+        layers=parse_layers(),
+        brief=latest_brief(today),
+        actions_by_area=areas,
+        api_secret=os.environ.get("API_SECRET", ""),
+    )
+
+
 @cross_repo_bp.route("/governor")
 def governor_pane() -> Any:
     """R0 read-only consolidated signal pane (Fase 1a). No action taken here."""
@@ -1137,6 +1160,12 @@ def create_app() -> Flask:
     """App factory: creates Flask instance and registers the cross-repo blueprint."""
     _app = Flask(__name__)
     _app.register_blueprint(cross_repo_bp, url_prefix='/cross-repo')
+
+    @_app.route("/")
+    def _root():
+        from flask import redirect
+        return redirect("/cross-repo/os")
+
     return _app
 
 

@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="it"><head><meta charset="utf-8"><title>Agentic OS Console</title>
+<style>
+ body{font-family:system-ui,sans-serif;margin:1.5rem;background:#0f1115;color:#e6e6e6}
+ h1{font-size:1.3rem} h2{font-size:1rem;margin-top:1.5rem;color:#8ab4f8}
+ a{color:#8ab4f8} .muted{color:#8a8f98}
+ table{border-collapse:collapse;width:100%} td,th{border:1px solid #2a2f3a;padding:.35rem .5rem;text-align:left;font-size:.85rem}
+ .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:.6rem}
+ .card{border:1px solid #2a2f3a;border-radius:8px;padding:.6rem}
+ button{cursor:pointer;background:#1f6feb;color:#fff;border:0;border-radius:6px;padding:.35rem .7rem}
+ button.t1{background:#b7791f} pre{white-space:pre-wrap;background:#0b0d11;padding:.5rem;border-radius:6px;max-height:320px;overflow:auto}
+ .t{font-size:.7rem;border-radius:4px;padding:.05rem .35rem} .t0{background:#1f6feb33} .t1{background:#b7791f33}
+</style></head><body>
+<h1>Agentic OS Console <span class="muted">-- <a href="/cross-repo/">fleet dashboard</a></span></h1>
+
+<h2>Layer -> authority</h2>
+<table><tr><th>Layer</th><th>Authority</th></tr>
+{% for l in layers %}<tr><td>{{ l.layer }}</td><td>{{ l.authority }}</td></tr>{% endfor %}
+{% if not layers %}<tr><td colspan="2" class="muted">AGENTIC_OS.md non trovato</td></tr>{% endif %}
+</table>
+
+<h2>Morning brief</h2>
+<pre>{{ brief }}</pre>
+
+<h2>Azioni</h2>
+{% for area, acts in actions_by_area.items() %}
+<h3 style="font-size:.9rem;color:#8a8f98">{{ area }}</h3>
+<div class="grid">
+{% for a in acts %}
+ <div class="card">
+  <div><span class="t t{{ a.tier }}">tier {{ a.tier }}</span> <strong>{{ a.label }}</strong></div>
+  <div class="muted" style="font-size:.8rem">{{ a.desc }}</div>
+  {% for p in a.params %}
+   <select data-param="{{ p.name }}">{% for c in p.choices %}<option>{{ c }}</option>{% endfor %}</select>
+  {% endfor %}
+  {% if a.tier != 2 %}<button class="{% if a.tier==1 %}t1{% endif %}" onclick="run('{{ a.id }}', this)">Esegui</button>{% else %}<span class="muted">escluso</span>{% endif %}
+ </div>
+{% endfor %}
+</div>
+{% endfor %}
+
+<h2>Output</h2>
+<pre id="out" class="muted">(nessuna azione ancora)</pre>
+
+<script>
+const SECRET = {{ api_secret|tojson }};
+async function run(id, btn){
+  const card = btn.closest('.card'); const params = {};
+  card.querySelectorAll('select[data-param]').forEach(s => params[s.dataset.param] = s.value);
+  const out = document.getElementById('out'); out.textContent = 'running '+id+' ...'; btn.disabled = true;
+  try{
+    const h = {'Content-Type':'application/json'}; if(SECRET) h['Authorization']='Bearer '+SECRET;
+    const r = await fetch('/cross-repo/api/run-action', {method:'POST', headers:h, body:JSON.stringify({id, ...params})});
+    const j = await r.json(); out.textContent = (j.ok?'[OK] ':'[FAIL] ')+(j.output||j.error||'');
+  }catch(e){ out.textContent = '[ERR] '+e; } finally { btn.disabled = false; }
+}
+</script>
+</body></html>
