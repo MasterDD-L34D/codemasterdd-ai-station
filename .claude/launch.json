@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "agentic-os-console",
+      "runtimeExecutable": "py",
+      "runtimeArgs": ["-3", "apps/cross-repo-dashboard/app.py"],
+      "port": 8081
+    }
+  ]
+}
