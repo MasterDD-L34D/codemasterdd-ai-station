@@ -290,7 +290,6 @@ if (-not $NoMerge) {
 }
 
 & git branch -D $branch *> $null     # local copy redundant (pushed); avoids per-session accumulation
-if ($origBranch -eq 'main') { Info "reminder: 'git pull --ff-only' on main to sync after the squash lands." }
-Info "note: your working-tree edit stays in place (copy carry); on a feature branch discard it with 'git checkout -- <file>' once the PR is merged."
+Info "note: your working-tree edit stays in place (copy carry) and BLOCKS 'git pull' until discarded; once the PR is merged run: git checkout -- $($Path -join ' ') (content is already landed), then 'git pull --ff-only' on main."
 Info "done. shared working tree ('$origBranch') was never touched."
 exit 0
