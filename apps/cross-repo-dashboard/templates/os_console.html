@@ -4,20 +4,31 @@
  body{font-family:system-ui,sans-serif;margin:1.5rem;background:#0f1115;color:#e6e6e6}
  h1{font-size:1.3rem} h2{font-size:1rem;margin-top:1.5rem;color:#8ab4f8}
  a{color:#8ab4f8} .muted{color:#8a8f98}
- table{border-collapse:collapse;width:100%} td,th{border:1px solid #2a2f3a;padding:.35rem .5rem;text-align:left;font-size:.85rem}
+ table{border-collapse:collapse;width:100%} td,th{border:1px solid #2a2f3a;padding:.35rem .5rem;text-align:left;font-size:.85rem;vertical-align:top}
  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:.6rem}
  .card{border:1px solid #2a2f3a;border-radius:8px;padding:.6rem}
  button{cursor:pointer;background:#1f6feb;color:#fff;border:0;border-radius:6px;padding:.35rem .7rem}
  button.t1{background:#b7791f} pre{white-space:pre-wrap;background:#0b0d11;padding:.5rem;border-radius:6px;max-height:320px;overflow:auto}
  .t{font-size:.7rem;border-radius:4px;padding:.05rem .35rem} .t0{background:#1f6feb33} .t1{background:#b7791f33}
+ .badge{font-size:.68rem;border-radius:4px;padding:.05rem .4rem;font-weight:600;text-transform:uppercase}
+ .s-ok{background:#1a7f3733;color:#3fb950} .s-warn{background:#9e6a0333;color:#d29922} .s-muted{background:#2a2f3a;color:#8a8f98}
+ .auth{font-size:.72rem} .det{font-size:.78rem}
+ #prflotta div{font-size:.82rem;padding:.15rem 0;border-bottom:1px solid #1c2027}
 </style></head><body>
 <h1>Agentic OS Console <span class="muted">-- <a href="/cross-repo/">fleet dashboard</a></span></h1>
 
-<h2>Layer -> authority</h2>
-<table><tr><th>Layer</th><th>Authority</th></tr>
-{% for l in layers %}<tr><td>{{ l.layer }}</td><td>{{ l.authority }}</td></tr>{% endfor %}
-{% if not layers %}<tr><td colspan="2" class="muted">AGENTIC_OS.md non trovato</td></tr>{% endif %}
+<h2>Layer -> stato vivo</h2>
+<table><tr><th>Layer</th><th>Authority</th><th>Stato</th></tr>
+{% for l in layers %}<tr>
+ <td><strong>{{ l.layer }}</strong></td>
+ <td class="muted auth">{{ l.authority }}</td>
+ <td><span class="badge s-{{ l.status }}">{{ l.status }}</span> <span class="det">{{ l.detail }}</span></td>
+</tr>{% endfor %}
+{% if not layers %}<tr><td colspan="3" class="muted">AGENTIC_OS.md non trovato</td></tr>{% endif %}
 </table>
+
+<h2>PR flotta <span class="muted" id="prf-meta" style="font-size:.75rem">-- caricamento...</span></h2>
+<div id="prflotta" class="muted">...</div>
 
 <h2>Morning brief</h2>
 <pre>{{ brief }}</pre>
@@ -54,5 +65,27 @@ async function run(id, btn){
     const j = await r.json(); out.textContent = (j.ok?'[OK] ':'[FAIL] ')+(j.output||j.error||'');
   }catch(e){ out.textContent = '[ERR] '+e; } finally { btn.disabled = false; }
 }
+async function loadPRs(){
+  const el = document.getElementById('prflotta'); const meta = document.getElementById('prf-meta');
+  try{
+    const r = await fetch('/cross-repo/api/state'); const j = await r.json();
+    const repos = j.repos || {}; let total = 0;
+    el.textContent = '';
+    // Build DOM with textContent only -- PR titles come from public repos (any
+    // contributor can craft one), so they are NEVER inserted as HTML (no innerHTML
+    // with untrusted data -> no XSS in the dashboard origin; Codex P1 #555).
+    for(const [name, rp] of Object.entries(repos)){
+      const n = rp.pr_count || 0; total += n;
+      const titles = (rp.prs||[]).slice(0,5).map(p => '#'+p.number+' '+(p.title||'')).join(' | ');
+      const div = document.createElement('div');
+      const b = document.createElement('strong'); b.textContent = name; div.appendChild(b);
+      div.appendChild(document.createTextNode(': '+n+' PR'+(n? ' -- '+titles : '')));
+      el.appendChild(div);
+    }
+    if(!el.children.length){ el.textContent = '(nessun repo)'; }
+    meta.textContent = '-- '+total+' PR aperte totali (cache ~5min)';
+  }catch(e){ el.textContent = '[errore caricamento PR] '+e; meta.textContent=''; }
+}
+loadPRs();
 </script>
 </body></html>

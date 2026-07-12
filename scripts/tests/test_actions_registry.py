@@ -124,3 +124,62 @@ def test_latest_brief_placeholder_when_absent(tmp_path) -> None:
     _sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "apps" / "cross-repo-dashboard"))
     from os_home import latest_brief
     assert "non ancora generato" in latest_brief("2099-01-01", tmp_path)
+
+
+def _import_os_home():
+    import sys as _sys
+    _sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "apps" / "cross-repo-dashboard"))
+    import os_home  # noqa: PLC0415
+    return os_home
+
+
+def test_scheduled_task_health_injected() -> None:
+    # hermetic: inject the query fn so no real Task Scheduler is touched.
+    oh = _import_os_home()
+    fake = {"morning-brief": {"LastTaskResult": 0, "State": "Ready", "LastRunTime": "2026-07-13T08:30:00"}}
+    rows = oh.scheduled_task_health(["morning-brief", "jules-daily-digest"], query_fn=fake.get)
+    by = {r["name"]: r for r in rows}
+    assert by["morning-brief"]["healthy"] is True and by["morning-brief"]["state"] == "Ready"
+    # absent task -> unhealthy, state 'absent' (must-fail branch, L-041)
+    assert by["jules-daily-digest"]["healthy"] is False and by["jules-daily-digest"]["state"] == "absent"
+    # a non-zero last result is NOT healthy
+    bad = oh.scheduled_task_health(["x"], query_fn=lambda n: {"LastTaskResult": 1, "State": "Ready"})
+    assert bad[0]["healthy"] is False
+
+
+def test_active_hooks_parses(tmp_path) -> None:
+    oh = _import_os_home()
+    p = tmp_path / "settings.json"
+    p.write_text('{"hooks": {"PreToolUse": [{"a":1}], "Stop": [{"b":2},{"c":3}]}}', encoding="utf-8")
+    h = oh.active_hooks(p)
+    assert h["available"] and h["count"] == 3 and h["events"] == ["PreToolUse", "Stop"]
+    assert oh.active_hooks(tmp_path / "nope.json")["available"] is False
+
+
+def test_memory_index_size_budget(tmp_path) -> None:
+    oh = _import_os_home()
+    small = tmp_path / "m1.md"
+    small.write_text("a\nb\nc\n", encoding="utf-8")
+    assert oh.memory_index_size(small)["over_budget"] is False
+    big = tmp_path / "m2.md"
+    big.write_text("\n".join(f"line {i}" for i in range(250)), encoding="utf-8")
+    assert oh.memory_index_size(big)["over_budget"] is True
+    assert oh.memory_index_size(tmp_path / "absent.md")["available"] is False
+
+
+def test_count_agents_and_lessons(tmp_path) -> None:
+    oh = _import_os_home()
+    agents = tmp_path / "agents"
+    (agents / "_dormant").mkdir(parents=True)
+    (agents / "README.md").write_text("x", encoding="utf-8")
+    (agents / "a.md").write_text("x", encoding="utf-8")
+    (agents / "b.md").write_text("x", encoding="utf-8")
+    (agents / "_dormant" / "d.md").write_text("x", encoding="utf-8")
+    res = oh.count_agents(agents)
+    assert res == {"active": 2, "dormant": 1}  # README excluded
+    learn = tmp_path / "learnings"
+    learn.mkdir()
+    (learn / "L-001.md").write_text("x", encoding="utf-8")
+    (learn / "notes.md").write_text("x", encoding="utf-8")  # not an L-*.md
+    lc = oh.aa01_lesson_count(learn)
+    assert lc["available"] and lc["count"] == 1

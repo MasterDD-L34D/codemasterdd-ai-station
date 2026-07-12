@@ -31,10 +31,20 @@ def client():
     return appmod.create_app().test_client()
 
 
-def test_os_home_renders() -> None:
+def test_os_home_renders(monkeypatch) -> None:
+    # stub the scheduled-task query so the route never shells out to PowerShell
+    monkeypatch.setattr(
+        appmod, "scheduled_task_health",
+        lambda names, **kw: [{"name": n, "state": "Ready", "last_result": 0,
+                              "last_run": None, "healthy": True} for n in names],
+    )
     r = client().get("/cross-repo/os")
     assert r.status_code == 200
     assert b"Agentic OS Console" in r.data
+    # the home now surfaces LIVE per-layer state, not just the static map
+    assert b"stato vivo" in r.data
+    assert b"PR flotta" in r.data
+    assert b"s-ok" in r.data  # at least one layer rendered a live status badge
 
 
 def test_root_redirects_to_os() -> None:
