@@ -58,9 +58,12 @@ $lines.Add('')
 
 # --- Scheduled task health ---
 $lines.Add('## Scheduled tasks')
-# SCHED_S_* are benign status codes (ready / running / not-yet-run / disabled),
-# not failures -- flag them 'info', reserve WARN for real non-zero results.
-$benignResults = @(0x00041300, 0x00041301, 0x00041302, 0x00041303, 0x00041304, 0x00041305, 0x00041306, 0x00041307, 0x00041308)
+# Only genuinely-benign steady states are info: READY (0x41300), RUNNING
+# (0x41301), HAS_NOT_RUN_YET (0x41303). Everything else stays WARN on purpose --
+# DISABLED (0x41302), NO_MORE_RUNS (0x41304), and especially NOT_SCHEDULED
+# (0x41305) / TERMINATED (0x41306) / NO_VALID_TRIGGERS (0x41307) mean the task
+# is broken, which is exactly what this health line must surface, not hide.
+$benignResults = @(0x00041300, 0x00041301, 0x00041303)
 foreach ($tn in @('jules-daily-digest', 'morning-brief')) {
   $t = Get-ScheduledTask -TaskName $tn -ErrorAction SilentlyContinue
   if (-not $t) { $lines.Add("- ${tn}: not registered on this PC"); continue }
