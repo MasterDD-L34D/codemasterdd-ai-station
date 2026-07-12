@@ -31,10 +31,12 @@ $lines.Add('')
 
 # --- Open PRs per repo (gh, degraded-not-fatal) ---
 $lines.Add('## Open PRs')
+$prDegraded = 0
 foreach ($r in $Repos) {
   $json = gh pr list --repo "$Owner/$r" --state open --json 'number,title,createdAt,author' --limit 20 2>$null
   if ($LASTEXITCODE -ne 0 -or -not $json) {
     $lines.Add("- ${r}: DEGRADED (gh error or unauthenticated)")
+    $prDegraded++
     continue
   }
   $prs = $json | ConvertFrom-Json
@@ -48,20 +50,31 @@ foreach ($r in $Repos) {
     }
   }
 }
+if ($prDegraded -eq $Repos.Count -and $Repos.Count -gt 0) {
+  $lines.Add('')
+  $lines.Add('> WARN: every repo returned DEGRADED -- gh likely unauthenticated on this PC. PR section is unreliable.')
+}
 $lines.Add('')
 
 # --- Scheduled task health ---
 $lines.Add('## Scheduled tasks')
+# SCHED_S_* are benign status codes (ready / running / not-yet-run / disabled),
+# not failures -- flag them 'info', reserve WARN for real non-zero results.
+$benignResults = @(0x00041300, 0x00041301, 0x00041302, 0x00041303, 0x00041304, 0x00041305, 0x00041306, 0x00041307, 0x00041308)
 foreach ($tn in @('jules-daily-digest', 'morning-brief')) {
   $t = Get-ScheduledTask -TaskName $tn -ErrorAction SilentlyContinue
   if (-not $t) { $lines.Add("- ${tn}: not registered on this PC"); continue }
   $info = Get-ScheduledTaskInfo -TaskName $tn -ErrorAction SilentlyContinue
   $res = 'n/a'
   if ($info) {
-    if ($info.LastTaskResult -eq 0) {
+    $code = $info.LastTaskResult
+    if ($code -eq 0) {
       $res = "last run $($info.LastRunTime), result OK"
+    } elseif ($benignResults -contains $code) {
+      $hex = '0x{0:X8}' -f $code
+      $res = "last run $($info.LastRunTime), status $hex (info)"
     } else {
-      $hex = '0x{0:X8}' -f $info.LastTaskResult
+      $hex = '0x{0:X8}' -f $code
       $res = "last run $($info.LastRunTime), result WARN $hex"
     }
   }
@@ -72,31 +85,47 @@ $lines.Add('')
 # --- Doc currency (JOURNAL top entry + GOALS last refresh) ---
 $lines.Add('## Doc currency')
 $repoRoot = 'C:\dev\codemasterdd-ai-station'
+# TryParse (not [datetime] cast): a regex-matching-but-invalid date must
+# DEGRADE this line, never throw and kill the whole brief (degrade-don't-die).
 $journal = Join-Path $repoRoot 'JOURNAL.md'
 if (Test-Path $journal) {
   $m = Select-String -Path $journal -Pattern '^## (\d{4}-\d{2}-\d{2})' | Select-Object -First 1
-  if ($m) {
-    $d = [datetime]$m.Matches[0].Groups[1].Value
+  $d = [datetime]::MinValue
+  if ($m -and [datetime]::TryParse($m.Matches[0].Groups[1].Value, [ref]$d)) {
     $lines.Add("- JOURNAL top entry: $($m.Matches[0].Groups[1].Value) ($([int]((Get-Date) - $d).TotalDays)d ago)")
-  } else { $lines.Add('- JOURNAL: no dated entry found (DEGRADED)') }
+  } else { $lines.Add('- JOURNAL: no valid dated entry found (DEGRADED)') }
 } else { $lines.Add('- JOURNAL.md missing (DEGRADED)') }
 $goals = Join-Path $repoRoot 'GOALS.md'
 if (Test-Path $goals) {
   $g = Select-String -Path $goals -Pattern 'Last refresh: \*\*(\d{4}-\d{2}-\d{2})' | Select-Object -First 1
-  if ($g) {
-    $d = [datetime]$g.Matches[0].Groups[1].Value
+  $d = [datetime]::MinValue
+  if ($g -and [datetime]::TryParse($g.Matches[0].Groups[1].Value, [ref]$d)) {
     $lines.Add("- GOALS last refresh: $($g.Matches[0].Groups[1].Value) ($([int]((Get-Date) - $d).TotalDays)d ago)")
   } else { $lines.Add('- GOALS: refresh marker not found (DEGRADED)') }
 } else { $lines.Add('- GOALS.md missing (DEGRADED)') }
 $lines.Add('')
 
 # --- Emit ---
+# stdout always carries the brief. The saved file is the deliverable for the
+# unattended scheduled run: a write failure MUST surface as a non-zero exit,
+# else Task Scheduler reports success with no brief (silent failure). Set-Content
+# is a cmdlet, so $LASTEXITCODE does not cover it under ErrorActionPreference
+# Continue -- gate it explicitly with -ErrorAction Stop + try/catch (the native
+# gh/git calls above stay on Continue so their stderr does not false-fail, L-040).
+# Write-Output (not Write-Host): the brief goes to stdout so it is capturable,
+# pipeable, and redirectable by a scheduler or a watcher. Write-Host would only
+# reach the console and vanish under capture.
 $text = $lines -join [Environment]::NewLine
-Write-Host $text
+Write-Output $text
 if (-not $NoFile) {
-  if (-not (Test-Path $OutDir)) { New-Item -ItemType Directory -Force -Path $OutDir | Out-Null }
-  $outPath = Join-Path $OutDir "$today.md"
-  Set-Content -Path $outPath -Value $text -Encoding utf8
-  Write-Host "[morning-brief] saved to $outPath"
+  try {
+    if (-not (Test-Path $OutDir)) { New-Item -ItemType Directory -Force -Path $OutDir -ErrorAction Stop | Out-Null }
+    $outPath = Join-Path $OutDir "$today.md"
+    Set-Content -Path $outPath -Value $text -Encoding utf8 -ErrorAction Stop
+    Write-Host "[morning-brief] saved to $outPath"
+  } catch {
+    Write-Error "[morning-brief] failed to write brief to ${OutDir}: $_"
+    exit 1
+  }
 }
 exit 0
