@@ -118,3 +118,30 @@ Da docs/blog vari (stesso stato):
 
 Conclusione: composizione, non costruzione. Dettaglio decisionale in
 [ADR-0044](../adr/0044-personal-agentic-os-composition.md).
+
+## Esito attivazione gap (stessa sessione, ratifica Eduardo via AskUserQuestion)
+
+- **G2 DONE (parziale)**: yt-dlp 2026.07.04 installato (winget, user-PATH persistente)
+  -> sorgente YouTube ATTIVA (diagnose: reddit, youtube, hackernews, polymarket,
+  github, grounding). Firefox installato; X resta pendente su UNA azione Eduardo
+  (login x.com in Firefox -- i run successivi leggono i cookie da soli). Digg CLI
+  bloccata dal classifier (npm esterno non dichiarato) -- comando manuale
+  documentato, opzionale.
+- **G1 DONE**: `scripts/fleet/morning-brief.ps1` + register (PR #540). Quality Gate
+  3-step nel PR body. Task registrato su Lenovo (daily 08:30), end-to-end
+  LastTaskResult=0. Primo run ha gia' prodotto segnali reali: vault #266 aperto 9gg
+  + `jules-daily-digest` WARN 0x800710E0 (run rifiutato, da investigare).
+- **G3 verdetto: NARROW GO (eval eseguita)**. Ground-truth ribalta la premessa:
+  gli hook observe.sh erano GIA' wired (PreToolUse/PostToolUse `*` async in
+  settings.json globale) e il corpus esiste (5186 osservazioni solo hub); il pezzo
+  morto era l'ANALISI (observer.enabled=false, zero instinct in mesi). Smoke
+  on-demand (observer Haiku su 800 osservazioni reali): 4 instinct evidence-backed
+  creati e visibili in `instinct-cli.py status` (git-verify-before-state-change
+  0.70, error-diagnosis-then-fix 0.65, read-before-edit-files 0.60,
+  ask-user-before-risky-action 0.50). Decisione: observer background resta OFF
+  (loop LLM standing = SDMG fiat-standing; gli instinct ri-derivano in gran parte
+  dottrina gia' codificata -> valore marginale basso per run frequente). Adozione
+  NARROW = ritual on-demand a cadenza (candidato: checkpoint AA01) con promotion
+  instinct -> lesson/CLAUDE.md via curation umana. Known issue non-blocking:
+  i worktree throwaway generano project-ID spuri nel registry (zen-gagarin,
+  blissful-kare) -- bug di detection upstream, da segnalare.

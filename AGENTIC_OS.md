@@ -35,7 +35,7 @@
 
 ## Gap onesti / roadmap (tutti Eduardo-gated)
 
-- **G1 heartbeat/morning-brief**: rung R0 report-only via governor Fase-1 -- NON nuova autonomia; e' l'esperimento che distingue "pain reale" da "sotto soglia" (spec sec 1.2).
-- **G2 last30days sorgenti**: X (login x.com su Firefox) + YouTube (`yt-dlp`) sbloccano 2/5 sorgenti mancanti, ~5 min.
-- **G3 promotion loop**: `continuous-learning-v2` installata ma non wired al ciclo AA01 -- candidata, richiede eval prima (Quality Gate 3-step).
+- **G1 heartbeat/morning-brief -- DONE 2026-07-12** (ratifica Eduardo): `scripts/fleet/morning-brief.ps1` (landa via PR #540) R0 report-only, task daily 08:30 su Lenovo, no-LLM, log locale gitignored.
+- **G2 last30days sorgenti -- YouTube DONE, X pendente 1 azione Eduardo** (login x.com in Firefox; yt-dlp + Firefox installati 2026-07-12).
+- **G3 continuous-learning-v2 -- NARROW GO 2026-07-12** (eval nel [report](docs/research/personal-agentic-os-2026-07-12.md)): observation gia' live (hook globali), analisi = ritual on-demand (observer Haiku via Agent tool + `instinct-cli.py status/prune`), observer background resta OFF; promotion instinct -> AA01/CLAUDE.md via curation umana.
 - **Non-gap ratificati**: memoria per-machine (design, non bug); NESSUN framework orchestrazione esterno (ADR-0036 sec 8 anti-scope); NESSUN gateway LLM (OD-009).
