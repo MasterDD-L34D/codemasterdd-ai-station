@@ -68,3 +68,25 @@ def test_negative_control_injection_id_not_in_registry() -> None:
     ids = {a["id"] for a in ACTIONS}
     assert "fleet-verify; rm -rf /" not in ids
     assert not any(";" in i or "&&" in i or "|" in i for i in ids), "action ids must be plain slugs"
+
+
+def test_parse_layers_reads_seven_rows(tmp_path) -> None:
+    import sys as _sys
+    _sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "apps" / "cross-repo-dashboard"))
+    from os_home import parse_layers
+    m = tmp_path / "AGENTIC_OS.md"
+    m.write_text(
+        "| # | Layer | Authority | Note |\n|---|---|---|---|\n"
+        "| 1 | Kernel | ORCHESTRATION.md | x |\n| 2 | Routing | MODEL_ROUTING.md | y |\n",
+        encoding="utf-8",
+    )
+    rows = parse_layers(m)
+    assert rows == [{"layer": "Kernel", "authority": "ORCHESTRATION.md"},
+                    {"layer": "Routing", "authority": "MODEL_ROUTING.md"}]
+
+
+def test_latest_brief_placeholder_when_absent(tmp_path) -> None:
+    import sys as _sys
+    _sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "apps" / "cross-repo-dashboard"))
+    from os_home import latest_brief
+    assert "non ancora generato" in latest_brief("2099-01-01", tmp_path)
