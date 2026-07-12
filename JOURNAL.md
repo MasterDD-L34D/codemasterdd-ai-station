@@ -19,6 +19,36 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-07-13 (notte: audio #599 MERGED end-to-end + piano VFX combat MERGED, Fable 5 da Ryzen)
+
+### Completato
+- **Audio foundation chiusa end-to-end**: il chip aveva eseguito il piano
+  (Godot-v2 PR #599, 54 file, GUT verde, deviazioni documentate); io ho chiuso
+  il P2 Codex rimasto orfano post-chip (colpo letale = hit+death sovrapposti ->
+  gate hp_after>0 a zero righe aggiunte, main.gd resta al ceiling 1120; suite
+  421/421 riverificata in locale) -> **#599 MERGED** con ratifica owner dei 4
+  punti (gdlintrc 1120, main_audio.gd, setter-observer, file >50 righe).
+- **Piano F-A n.2 VFX Combat MERGED** (Game #3274): geometrie spritesheet
+  misurate dai PNG, VfxCatalog/AnimatedVfx/spawn_effect, Task CombatFeedback
+  (estrazione da main.gd obbligata dalla ratifica). Codex P1 governance risolto
+  ALLA RADICE: verifica per-pack delle 4 pagine Pimen (price-gate confermato,
+  Cutting and Healing = CC-BY 4.0, Smoke 8 frame reali vs 7 dichiarati) +
+  addendum nel report provenance = 5 residui manuali CHIUSI + Step 0 GATE nel
+  piano. P2 test-debole fixato (assert su AnimatedVfx, non child-count).
+- Chip esecuzione VFX spawnato (task_0be65605).
+
+### Da fare
+- Smoke Path A a orecchio (owner, residuo #599, pre-F-B).
+- Esecuzione piano VFX (chip) -> poi piano 3 polish/content-lock badlands.
+- Animation Pack = Pimen (conferma owner, sbloccato); Minifantasy resta bloccato.
+
+### Note
+- Il verdetto Codex "review-object vuoto su HEAD" e' ormai la forma standard
+  (vista su #3271 x2, #3272, #3273 x2, #3274 x2, #599 round-2).
+- Pattern maturato nel giro: chip esegue -> Codex trova post-turno -> io triaggio
+  e chiudo. Il buco era il poll del chip che finiva col turno: accettabile,
+  la sessione hub fa da garbage collector dei thread orfani.
+
 ## 2026-07-13 (F-A Audio Foundation eseguito -- Godot-v2 PR #599, Fable 5 da Ryzen)
 
 ### Completato
