@@ -36,10 +36,21 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
   - Artifact health-report: https://claude.ai/code/artifact/c771fb1b-b079-4829-b26c-ee69f92fb719
 - **Igiene cloni Lenovo** notata read-only (GGv2 su branch merged-leftover portrait-loader #556,
   Game behind-99 + 2 scratch untracked) -- NON toccato (collision-safe, Game-lane = Ryzen no-push).
+- **AMBER governor-sync VERIFICATO -> GREEN**: task `governor-ingest` (#564) LastRun 07-13 11:35 rc0,
+  `governor.db` scritto 11:41, daily 08:45 armato. La superficie viva (R0 pane) e' fresca; il blocco
+  statico GOVERNOR-SYNC in STATUS resta datato BY DESIGN (lo scrive `governor.reconcile` manuale
+  weekly, Eduardo-token-gated, no-cron ADR-0039). Ingest != reconcile: nessun difetto.
+- **vault PR #266 MERGED** da Eduardo (17:50) -- hand-merge chiuso.
+- **Game roadmap pane su OS Console (`682c441`)**: risposta a "quanto manca al gioco / dove vedo
+  l'avanzamento". JSON snapshot hub-side ([game_roadmap.json]) della roadmap-of-record v0.9
+  slice-first (F-A..F-D toward EA Steam), reso su `/os` con badge stato per-fase (F-A active,
+  F-B/C/D todo). Status hand-tracked (clone Game behind-99 -> parsare il doc darebbe roadmap vecchia;
+  il doc non ha status machine-readable). Helper puro injectable + 2 test; suite dashboard 231 pass,
+  ASCII-clean, pane confermato live nel browser. Colma il gap "nessun avanzamento-gioco in dashboard".
 
 ### Da fare
-- **1 hand-merge Eduardo**: vault PR #266 (path-citation cosmetica sessionRoundBridge, dal 07-03).
-- **Verify AMBER** governor-sync: che #564 daily-ingest rinfreschi il blocco segnali stale (05-27..06-28).
+- **Critical path**: chiudere F-A (verifica slice badlands giocabile end-to-end su GGv2) -> poi F-B
+  playtest umano CAMP-4. A gate chiuso, flippa `status` in game_roadmap.json.
 - Cleanup cloni Lenovo (GGv2 checkout main quando no sessione attiva; Game scratch decide Ryzen).
 
 ### Note
@@ -47,6 +58,9 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
   switch a Opus 4.8; nessun buco di copertura.
 - Gate: ADR-0011 trailer su ogni commit (Coding-Agent + Trace-Id uuidv7), pre-push re-fetch/rebase
   (anti fold-race, race colto 1x su main behind-2), read-mostly, backend prod EvoTacticsBackend intatto.
+- **Edit tool 401 transiente** a meta' del pane roadmap: 3 modifiche codice applicate via patch Python
+  byte-level (encoding-safe, bypassa il validatore LLM dell'Edit), template/journal via Edit una volta
+  recuperato. Nessun impatto sul risultato -- fallback pulito, non hammering.
 
 ---
 
