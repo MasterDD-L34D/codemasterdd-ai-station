@@ -19,6 +19,35 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-07-13 (sera: esecuzione F-A 3/3 polish+badlands -- Godot-v2 PR #602, Fable 5 da Ryzen)
+
+### Completato
+- **Piano F-A 3/3 ESEGUITO** (subagent-driven-development, worktree
+  `C:\dev\_godot-wt-polish`): 7 task + opzionale VFX, 15 commit, **Godot-v2
+  PR #602 APERTO**. Ogni task con spec-review + quality-review indipendenti e
+  fix applicati; final review branch (lente godot-engine-specialist) = READY
+  FOR PR. Suite 3899/3894/5 pending/0 fail (baseline 3888, +11 test);
+  main.gd INVARIATO a 1117; CI verde (GUT + gdformat).
+- **Gate Codex chiuso**: round-1 = 1 P2 solo (objective sabotage non
+  implementato TV-side) = decisione GIA' ratificata nel piano -> triaged con
+  reply nel thread, zero P1. Merge = Eduardo.
+- **Catch ground-truth in esecuzione** (i reviewer hanno pagato): specie T1
+  nel catalogo (piano diceva T2); death_flesh_gush.wav aveva cover-art
+  embedded -> primo ogg con stream Theora spurio, ri-encodato -vn; delta PCK
+  reale ~-30% (QOA 5.2MB -> ogg 3.6MB) vs -91% repo/source, registrati
+  distinti; 4 label HudView extra renderizzanti fuori dall'inventario piano;
+  test API phone fuori dal blast-radius grep del piano.
+
+### Da fare
+- Merge #602 (Eduardo) + residui owner-assisted: smoke visivo web Path A +
+  run nativo anti-crackling (QA doc 2026-07-13-fa-polish-smoke.md).
+- Follow-up tracciati: resample 48k + trim tail death se serve altro peso pck.
+
+### Note
+- Esecuzione interamente da Ryzen; clone condiviso Game-Godot-v2 mai toccato.
+- Worktree piano `C:\dev\_gamewt-plan-fa-polish` + `_godot-wt-polish` = cleanup
+  post-merge (azione da nominare a Eduardo).
+
 ## 2026-07-13 (pomeriggio: piano F-A 3/3 polish + content-lock badlands -- Game PR #3276, Fable 5 da Ryzen)
 
 ### Completato
