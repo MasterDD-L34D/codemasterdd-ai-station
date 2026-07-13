@@ -19,6 +19,38 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-07-13 (mattina: VFX combat #601 MERGED -- slice F-A 2/3 + smoke audio chiuso, Fable 5 da Ryzen)
+
+### Completato
+- **Smoke audio Path A**: ambiente montato per l'owner (deploy-quick web, backend
+  da worktree probe, LAN dopo il collo del tunnel 112MB); esito PASS con finding
+  (crackling) -> report QA Godot-v2 #600 MERGED; residuo nativo tracciato aperto
+  (Codex P2 accolto: "chiuso" solo la parte funzionale).
+- **Incidente tunnel risolto**: prod evo-tactics.com era GIA' down (backend Lenovo
+  morto); deploy-quick con token cached ha agganciato il tunnel PROD come seconda
+  replica -> 502 misti. Fix: Stop-Service Cloudflared sul Lenovo (e' un SERVIZIO,
+  Stop-Process risorge). Lezioni in memoria: FORCE_QUICK_TUNNEL=1 per gli smoke.
+- **VFX combat MERGED** (Godot-v2 #601, chip + triage hub): 4 spritesheet Pimen
+  geometrie misurate, VfxCatalog/AnimatedVfx/spawn_effect, CombatFeedback estratto
+  da main.gd (1120->1117, obbligo ratifica #599), suite 3888/0 fail. Il chip ha
+  auto-triaged il P2 Codex (smoke status per-recipient) e fixato in-branch prima
+  di chiudere. Round-2: P1 governance 50-righe -> conferma owner registrata.
+- **Decisioni owner registrate sui thread #601**: asset no-redistribute
+  (Pimen/Sonniss) in repo pubblico = rischio ACCETTATO documentato (PROVENANCE,
+  precedente #599); regola 50-righe ratificata per main_combat_feedback.gd.
+
+### Da fare
+- Piano 3 F-A: polish/content-lock badlands (assorbe WAV->OGG web export +
+  verifica crackling nativo + smoke visivo VFX).
+- Ripristino prod Lenovo: backend EvoTacticsBackend (Stop+Start) POI
+  Start-Service Cloudflared.
+- Cleanup naming-esplicito: worktree _game-wt-assethunt/_godot-wt-audio/
+  _godot-wt-vfx + branch remote merged.
+
+### Note
+- Pattern hub+chip maturo: chip esegue e auto-triaggia il primo round Codex,
+  hub garbage-collect i thread orfani e raccoglie le ratifiche owner.
+
 ## 2026-07-13 (F-A VFX combat eseguito -- Godot-v2 PR #601, Fable 5 da Ryzen)
 
 ### Completato
