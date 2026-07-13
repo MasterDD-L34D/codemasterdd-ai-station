@@ -213,9 +213,11 @@ def parse_sot_drift_issues(issues: list, ref: str) -> Signal:
     updated = [i.get("updatedAt") or i.get("updated_at") or "" for i in items]
     produced_at = max(updated) if updated and any(updated) else None
     severity = "warning" if open_count > 0 else "ok"
-    summary_text = f"{open_count} open SoT drift candidate(s)"
+    is_ggv2 = "ggv2" in (ref or "")
+    label = "frontend (GGv2)" if is_ggv2 else "backend (Game)"
+    summary_text = f"{open_count} open SoT drift candidate(s) -- {label}"
     return Signal(
-        source="game-sot-drift",
+        source="game-sot-drift-ggv2" if is_ggv2 else "game-sot-drift",
         kind="sot-drift",
         severity=severity,
         summary=summary_text,
