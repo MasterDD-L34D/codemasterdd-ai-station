@@ -19,6 +19,37 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-07-13 (Housekeeping + fleet-verify game-family 0-RED -- Fable 5 -> Opus 4.8 da Lenovo)
+
+### Completato
+- **Boot sessione**: compass-boot (DI ~80, drift knowledge-preservation = falso positivo di
+  finestra, pillar toccato 07-06 #515), lettura COMPACT/AGENTIC_OS/digest, identity guard.
+- **Housekeeping hub (3 commit su main)**:
+  - `d72a4f9` landati digest Jules 07-12 + 07-13 (primi run post-fix S4U #542; entrambi Awaiting 0).
+  - `b9478d1` COMPACT_CONTEXT refresh: arco OS Console #552-#564 + ADR-0044 agentic-OS chiuso +
+    fase 4 studio-track GGv2 + ADR count 45.
+  - `437591a` STATUS_MULTI_REPO delta 07-13.
+- **Fleet-verify game-family (skill, Workflow 5-probe + verify 3-vote)**: **0 RED confermati**.
+  3 GREEN (balance / schema / sot) + AMBER artifacts + governance GREEN (1 AMBER minore). SoT vault
+  GREEN per ground-truth (Game main dal 07-11 = solo docs/plans, zero runtime -> nessun drift d20).
+  Verify adversariale: nessun finding sopravvive (confirmedRed vuoto).
+  - Artifact health-report: https://claude.ai/code/artifact/c771fb1b-b079-4829-b26c-ee69f92fb719
+- **Igiene cloni Lenovo** notata read-only (GGv2 su branch merged-leftover portrait-loader #556,
+  Game behind-99 + 2 scratch untracked) -- NON toccato (collision-safe, Game-lane = Ryzen no-push).
+
+### Da fare
+- **1 hand-merge Eduardo**: vault PR #266 (path-citation cosmetica sessionRoundBridge, dal 07-03).
+- **Verify AMBER** governor-sync: che #564 daily-ingest rinfreschi il blocco segnali stale (05-27..06-28).
+- Cleanup cloni Lenovo (GGv2 checkout main quando no sessione attiva; Game scratch decide Ryzen).
+
+### Note
+- 2 probe (governance+sot) falliti mid-Workflow su crediti Fable 5 -> completati main-thread post
+  switch a Opus 4.8; nessun buco di copertura.
+- Gate: ADR-0011 trailer su ogni commit (Coding-Agent + Trace-Id uuidv7), pre-push re-fetch/rebase
+  (anti fold-race, race colto 1x su main behind-2), read-mostly, backend prod EvoTacticsBackend intatto.
+
+---
+
 ## 2026-07-13 (Dashboard audit truthfulness/completeness -- PR #567, Opus 4.8 da Lenovo)
 
 ### Completato
