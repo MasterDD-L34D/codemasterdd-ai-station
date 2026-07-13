@@ -10,16 +10,18 @@ injectable callable so tests stay hermetic and CI (pytest-only) can import it.
 from __future__ import annotations
 
 import json
-import os
 import re
 import subprocess
 import sys
 from pathlib import Path
 from typing import Any, Callable
 
-# Override via OS_HUB_PATH (see actions_registry.py) so the OS home reads its live
-# signals from a main-tracking clone when the canonical clone is on another branch.
-HUB = Path(os.environ.get("OS_HUB_PATH", "").strip() or r"C:\dev\codemasterdd-ai-station")
+# The live-state + brief reads stay on the CANONICAL clone -- that is where the
+# machine state lives (logs/morning-brief written by morning-brief.ps1's hard-coded
+# OutDir, .claude/settings.json, agents). OS_HUB_PATH intentionally does NOT move
+# these (only the action cwd in actions_registry.py follows it), so the button that
+# writes and the page that reads never diverge (Codex #558).
+HUB = Path(r"C:\dev\codemasterdd-ai-station")
 # Match app.py: subprocess on Windows flashes a console window unless
 # CREATE_NO_WINDOW (0x08000000) is set. Keep the OS home flicker-free too.
 _NO_WINDOW_FLAG = 0x08000000 if sys.platform == "win32" else 0
