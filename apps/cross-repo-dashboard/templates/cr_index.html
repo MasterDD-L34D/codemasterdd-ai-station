@@ -10,11 +10,12 @@
 <h1>Cross-repo Dashboard <span class="version">v0.3 Daily-use</span></h1>
 <div class="meta">
   <span>Last refresh: <code>{{ state.timestamp }}</code></span>
+  <a class="btn" href="{{ url_for('cross_repo.os_console') }}">&#8962; OS Console</a>
   <a class="btn" href="{{ url_for('cross_repo.index') }}?refresh=1">Force refresh</a>
   <a class="btn-secondary" href="{{ url_for('cross_repo.api_state') }}">JSON API</a>
   <a class="btn-secondary" href="{{ url_for('cross_repo.dashboards_catalog') }}">Dashboards</a>
   <a class="btn-secondary" href="{{ url_for('cross_repo.governor_pane') }}">Governor</a>
-  <button class="btn-action" onclick="openCoordModal()">Log coord event (Gate E)</button>
+  <button class="btn-action" onclick="openCoordModal()">Log coord event</button>
   <button class="btn-action" onclick="openPrModal()">Draft cross-repo PR</button>
 </div>
 </header>
@@ -81,26 +82,9 @@
 <p class="hc-hint"><small>Stack ADR-0017 (LiteLLM + Langfuse + Postgres + dogfood-ui) is scaffold opt-in: <code>cd infra && docker compose up -d</code> per attivare.</small></p>
 </section>
 
-<!-- C3 Gate E counter -->
-<section class="row-section">
-<h3>Gate E (Component 1 build trigger)</h3>
-<div class="gate-e-card gate-e-{{ state.gate_e.window_status }}">
-  <div class="gate-e-stat"><span class="num">{{ state.gate_e.total_events }}</span><span class="label">total events</span></div>
-  <div class="gate-e-stat"><span class="num">{{ state.gate_e.current_month_events }}</span><span class="label">current month</span></div>
-  <div class="gate-e-window">
-    <strong>Window {{ state.gate_e.window_status }}</strong>
-    ({{ state.gate_e.window_start }} → {{ state.gate_e.window_end }})
-    {% if state.gate_e.window_status == "not_started" %}
-      | starts in {{ state.gate_e.days_to_window_start }} days
-    {% endif %}
-  </div>
-  <div class="gate-e-threshold">
-    Threshold: ≥{{ state.gate_e.threshold_pass_per_week }}/wk = BUILD full
-    | {{ state.gate_e.threshold_minimal_min }}-&lt;{{ state.gate_e.threshold_pass_per_week }}/wk = MINIMAL
-    | &lt;{{ state.gate_e.threshold_minimal_min }}/wk = FALSIFIED
-  </div>
-</div>
-</section>
+<!-- Gate E counter removed 2026-07-13: the Component-1 build-trigger experiment
+     window ended 2026-06-19 (concluded). Counter fn + coord-event logging retained;
+     only the stale expired-window card was dropped from the home. -->
 
 <!-- API spend cap-watch (ADR-0023 tier-0) -->
 <section class="row-section">

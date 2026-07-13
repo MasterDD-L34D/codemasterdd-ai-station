@@ -1,7 +1,7 @@
 """Cross-repo dashboard v0.2 — Component 1 spec V4 + Full Integration (2026-05-14).
 
-Read-active aggregator per 5 git repos monitored + 3 healthcheck endpoints +
-local git divergence + Gate E counter + OPEN_DECISIONS + ADR countdown.
+Read-active aggregator per 6 git repos monitored (incl. the codemasterdd hub) +
+healthcheck endpoints + local git divergence + OPEN_DECISIONS + ADR countdown.
 Workflow integration: coord-event log + dry-run PR + VS Code link.
 
 Sources:
@@ -130,6 +130,15 @@ HEALTHCHECKS_TCP: list[dict[str, Any]] = []
 
 # Repo config: name -> (owner/repo string, is_dormant flag)
 REPOS: dict[str, dict[str, Any]] = {
+    # The hub itself: the dashboard runs FROM codemasterdd, so track it too --
+    # otherwise the hub's own work (OS console, governance, fleet scripts) is
+    # invisible here. Public since 2026-06-17.
+    "codemasterdd": {
+        "slug": "MasterDD-L34D/codemasterdd-ai-station",
+        "dormant": False,
+        "local_path": r"C:\dev\codemasterdd-ai-station",
+        "privacy": "cloud-OK",
+    },
     "Game": {
         "slug": "MasterDD-L34D/Game",
         "dormant": False,
@@ -312,7 +321,6 @@ def fetch_all_state(force_refresh: bool = False) -> dict[str, Any]:
         "cache_ttl_sec": CACHE_TTL_SEC,
         "repos": repos_state,
         "healthchecks": fetch_healthchecks(force_refresh),
-        "gate_e": fetch_gate_e_counter(),
         "api_spend": fetch_api_spend(),
         "adr_countdown": fetch_adr_countdown(),
         "open_decisions": fetch_open_decisions(),
@@ -447,61 +455,10 @@ def fetch_git_local(local_path: str) -> dict[str, Any]:
         return {"available": False, "reason": f"{type(e).__name__}: {str(e)[:100]}"}
 
 
-def fetch_gate_e_counter() -> dict[str, Any]:
-    """C3: Count Gate E events from logs/coord-events-*.md aggregated.
-
-    This function parses markdown logs to count Gate E events.
-    It is actively called by fetch_all_state() to populate the 'gate_e' dictionary
-    which is then rendered in the index.html template.
-    """
-    total = 0
-    files_scanned = []
-    current_month_events = 0
-    cur_month = datetime.now(timezone.utc).strftime("%Y-%m")
-    try:
-        for f in LOGS_DIR.glob("coord-events-*.md"):
-            try:
-                content = f.read_text(encoding="utf-8", errors="replace")
-                # Count rows: lines starting with "| 2026-" (date-prefixed table rows)
-                events = len([line for line in content.split("\n") if _GATE_E_ROW_RE.match(line)])
-                total += events
-                files_scanned.append({"file": f.name, "events": events})
-                if cur_month in f.name:
-                    current_month_events += events
-            except Exception:  # noqa: BLE001
-                continue
-    except Exception:  # noqa: BLE001
-        pass
-    # Week E window: 2026-05-20 to 2026-06-19 (4 weeks)
-    window_start = datetime(2026, 5, 20, tzinfo=timezone.utc)
-    window_end = datetime(2026, 6, 19, tzinfo=timezone.utc)
-    now = datetime.now(timezone.utc)
-    if now < window_start:
-        window_status = "not_started"
-        days_to_start = (window_start - now).days
-    elif now > window_end:
-        window_status = "ended"
-        days_to_start = 0
-    else:
-        window_status = "active"
-        days_to_start = 0
-    return {
-        "total_events": total,
-        "current_month_events": current_month_events,
-        "files_scanned": files_scanned,
-        "window_status": window_status,
-        "days_to_window_start": days_to_start,
-        "window_start": window_start.date().isoformat(),
-        "window_end": window_end.date().isoformat(),
-        "threshold_pass_per_week": 5,
-        "threshold_minimal_min": 2,
-    }
-
-
 def fetch_api_spend() -> dict[str, Any]:
     """Claude API tier-0 spend cap-watch (ADR-0023).
 
-    Mirrors fetch_gate_e_counter: globs the monthly spend logs
+    Globs the monthly spend logs
     (logs/claude-api-spend-*.md, gitignored local-only), reads each file's
     '**Cumulative cost mese**: $X' aggregate, and reports current-month MTD +
     all-time total + soft cap band ($10/$15/$20 per ADR-0023). The logs are
