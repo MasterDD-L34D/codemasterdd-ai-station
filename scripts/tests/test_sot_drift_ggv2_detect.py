@@ -44,3 +44,29 @@ def test_is_feature_pr():
     assert not det.is_feature_pr("chore: bump")
     assert not det.is_feature_pr("docs: readme")
     assert not det.is_feature_pr("")
+
+
+import json
+
+
+def test_load_watch_map(tmp_path):
+    p = tmp_path / "wm.json"
+    p.write_text(json.dumps({"entries": [{"concept": "a", "patterns": ["x/**"], "sot_ref": ["y"]}]}), encoding="utf-8")
+    wm = det.load_watch_map(str(p))
+    assert wm == [{"concept": "a", "patterns": ["x/**"], "sot_ref": ["y"]}]
+
+
+def test_checkpoint_round_trip(tmp_path):
+    p = tmp_path / "sub" / "cp.json"
+    det.save_checkpoint(str(p), {"last_merged_at": "2026-07-13T00:00:00Z"})
+    assert det.load_checkpoint(str(p)) == {"last_merged_at": "2026-07-13T00:00:00Z"}
+
+
+def test_load_checkpoint_missing_returns_empty(tmp_path):
+    assert det.load_checkpoint(str(tmp_path / "nope.json")) == {}
+
+
+def test_load_checkpoint_corrupt_returns_empty(tmp_path):
+    p = tmp_path / "bad.json"
+    p.write_text("{not json", encoding="utf-8")
+    assert det.load_checkpoint(str(p)) == {}

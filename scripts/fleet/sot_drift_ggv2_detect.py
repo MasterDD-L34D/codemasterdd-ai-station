@@ -33,3 +33,28 @@ def match_changes(watch_map, changed_files):
 
 def is_feature_pr(title):
     return bool(_FEAT_RE.match((title or "").strip()))
+
+
+import json
+import os
+
+
+def load_watch_map(path):
+    with open(path, encoding="utf-8") as f:
+        return json.load(f)["entries"]
+
+
+def load_checkpoint(path):
+    try:
+        with open(path, encoding="utf-8") as f:
+            return json.load(f)
+    except (FileNotFoundError, json.JSONDecodeError):
+        return {}
+
+
+def save_checkpoint(path, data):
+    d = os.path.dirname(path)
+    if d:
+        os.makedirs(d, exist_ok=True)
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(data, f, indent=2)
