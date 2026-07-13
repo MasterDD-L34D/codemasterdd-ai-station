@@ -47,10 +47,22 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
   F-B/C/D todo). Status hand-tracked (clone Game behind-99 -> parsare il doc darebbe roadmap vecchia;
   il doc non ha status machine-readable). Helper puro injectable + 2 test; suite dashboard 231 pass,
   ASCII-clean, pane confermato live nel browser. Colma il gap "nessun avanzamento-gioco in dashboard".
+- **Governor WARN ground-truth + fix whatsmissing (`4c1cc76`)**: Eduardo chiedeva se avviare Jules-
+  orchestrato-da-Opus per "risolvere" i warning della pagina `/governor`. Ground-truth: i 3 WARN sono
+  tutti segnali VAULT (non bug dashboard, non code-health) -> Jules fuori-boundary (vault sovereign) +
+  fuori-forma. Verdetto sui 3: (1) vault-gap 3/5 = metrica gonfiata da 627 orphan = dump immagini
+  personali (rumore, ~4 gap veri); (2) vault-eng-graph = last_verified 05-31, serve 1 re-verify
+  Ryzen-side; (3) vault-whatsmissing = report congelato dal 05-22 (ritirato, superato da gap-scan
+  daily) = WARN permanentemente stale -> **RITIRATO**: droppato da ingest SOURCES + reconcile
+  vault-lint block, pane filtra su sorgenti attive (la riga DB stale smette di renderizzare, auto-clean
+  futuri ritiri, no chirurgia DB). Advisory log storico tenuto (record immutabile). Suite 232 pass,
+  whatsmissing confermata sparita dalla tabella segnali live.
 
 ### Da fare
 - **Critical path**: chiudere F-A (verifica slice badlands giocabile end-to-end su GGv2) -> poi F-B
   playtest umano CAMP-4. A gate chiuso, flippa `status` in game_roadmap.json.
+- **Governor WARN residui** (non urgenti): vault-eng-graph re-verify (Ryzen-side); vault-gap scope
+  potrebbe escludere `Cards/chatgpt-personal-images-*` per rendere la metrica orphan onesta (vault PR).
 - Cleanup cloni Lenovo (GGv2 checkout main quando no sessione attiva; Game scratch decide Ryzen).
 
 ### Note
