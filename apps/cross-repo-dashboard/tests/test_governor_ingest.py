@@ -69,18 +69,33 @@ def test_ingest_all_records_advisory_on_new_only(tmp_path):
     assert len(advisories) == len(SOURCES)
 
 
-def test_ingest_all_records_run_marker_every_run(tmp_path):
+def test_ingest_all_records_run_marker_on_refresh(tmp_path):
     from governor.store import SignalStore
     from governor.ingest import ingest_all
     store = SignalStore(tmp_path / "g.db")
     fetcher, json_getter, content_getter = _fakes()
     assert store.last_ingest_at() is None  # no run yet
     ingest_all(store, fetcher=fetcher, json_getter=json_getter, content_getter=content_getter)
-    first = store.last_ingest_at()
-    assert first is not None  # a run marker was recorded even though this run may add 0 new
+    assert store.last_ingest_at() is not None  # marker recorded even though this run may add 0 new
     ingest_all(store, fetcher=fetcher, json_getter=json_getter, content_getter=content_getter)
     runs = [a for a in store.auto_observed_recent(limit=50) if a["event"] == "ran"]
-    assert len(runs) == 2  # a marker per run, regardless of data changes
+    assert len(runs) == 2  # a marker per successful run, regardless of data changes
+
+
+def test_ingest_all_no_run_marker_on_total_failure(tmp_path):
+    # A run where every source errors (outage / no auth) must NOT reset freshness
+    # (Codex #564): no '_ingest'/'ran' marker, last_ingest_at stays None.
+    from governor.store import SignalStore
+    from governor.ingest import ingest_all, SOURCES
+
+    def _boom(*_a, **_k):
+        raise RuntimeError("simulated outage")
+
+    store = SignalStore(tmp_path / "g.db")
+    result = ingest_all(store, fetcher=_boom, json_getter=_boom, content_getter=_boom)
+    assert result["ingested"] == 0 and result["errors"] == len(SOURCES)
+    assert store.last_ingest_at() is None  # freshness NOT reset by a failed run
+    assert not [a for a in store.auto_observed_recent(limit=50) if a["event"] == "ran"]
 
 def test_ingest_all_one_source_failure_does_not_abort_others(tmp_path):
     from governor.store import SignalStore

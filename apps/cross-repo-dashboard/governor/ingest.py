@@ -170,9 +170,14 @@ def ingest_all(
             store.add_auto_observed(src["id"], "ingest-error", detail=str(e)[:200])
     result = {"ingested": ingested, "new": new, "errors": errors}
     # Run marker: signals only bump fetched_at when their DATA changes, so a run with
-    # no changes leaves every fetched_at old. Record every run so the /governor
-    # freshness banner reflects "when ingest last RAN", not "when data last changed".
-    store.add_auto_observed("_ingest", "ran", detail=json.dumps(result))
+    # no changes leaves every fetched_at old. Record the run so the /governor freshness
+    # banner reflects "when ingest last RAN", not "when data last changed" -- but ONLY
+    # when at least one source actually refreshed. A total failure (network outage / no
+    # S4U auth -> ingested == 0) must NOT reset the stale clock, or the banner would
+    # falsely show 'fresh' over old data while main() still exits 0 (Codex #564). The
+    # per-source 'ingest-error' advisories above still record the failure.
+    if ingested > 0:
+        store.add_auto_observed("_ingest", "ran", detail=json.dumps(result))
     return result
 
 
