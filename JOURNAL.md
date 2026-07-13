@@ -19,6 +19,32 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-07-13 (pomeriggio: piano F-A 3/3 polish + content-lock badlands -- Game PR #3276, Fable 5 da Ryzen)
+
+### Completato
+- **Piano F-A 3/3 scritto e in PR** (Game #3276, writing-plans, 413 righe):
+  content-lock badlands + polish UI + residui #599/#601. Gate passati: governance
+  errors=0, prettier, 100% ASCII, trailer ADR-0011; Codex review round-1 = 1 P2
+  (pressure canonica high, claim verificato su biomeAdapter._derivePressure) ->
+  fixato 00dee146e, thread risolto, re-review richiesta. Merge = Eduardo.
+- **Finding ground-truth load-bearing**: il flusso live Path A gira con
+  world.biome_id VUOTO end-to-end (combat sempre fixture tutorial 8x6, pool
+  specie phone mai fetchato -> fallback 4 specie). Il lock del piano seeda alla
+  sorgente (SliceWorldSeed, swap same-line main.gd 1117/1120) + stamp
+  graph_routed per ingaggiare enc_sabotage_01 (unico encounter badlands, 10x10).
+- **Proposta specie slice** (decisione owner nel piano): gulogluteus_scutiger +
+  elastovaranus_hydrus -- native badlands nel pool companion, sprite combat +
+  portrait GIA' shipped, ruoli tank/bruiser. Vince 4/5 criteri vs fallback.
+
+### Da fare
+- Ratifica owner su PR #3276 (specie + piano) -> merge.
+- Esecuzione piano in Godot-v2 (branch feat/fa-polish-badlands, 7 task + 1 opz).
+- Smoke owner residui: visivo VFX + crackling run nativo a macchina scarica.
+
+### Note
+- Worktree piano: C:\dev\_gamewt-plan-fa-polish (branch docs/fa-polish-badlands-plan).
+- CI Game su PR docs-only = tutti job skipping (path-filtered): e' il verde atteso.
+
 ## 2026-07-13 (mattina: VFX combat #601 MERGED -- slice F-A 2/3 + smoke audio chiuso, Fable 5 da Ryzen)
 
 ### Completato
