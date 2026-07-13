@@ -2,7 +2,9 @@
 
 Agent definition files per Claude Code. Invocati tramite `Agent` tool con `subagent_type: <name>`.
 
-> **Update 2026-05-28 post first-principles audit**: 5 sub-agent draft never-fired (5+ settimane, zero invocation) sono stati **moved a `_dormant/` subdir** -> effective deregister dal Claude Code skill loader (discovery non-recursive). Le tabelle sotto mostrano ancora i 21 sub-agent storici per traceability con marker DORMANT inline. Reactivation = `git mv .claude/agents/_dormant/<name>.md .claude/agents/<name>.md`. Lista dormant: `a11y-wcag-reviewer`, `database-schema-designer`, `dafne-proposal-triager`, `lore-consistency-checker`, `game-design-validator`. Audit ref: `docs/research/2026-05-28-codemasterdd-first-principles-audit.md`.
+> **Update 2026-05-28 post first-principles audit**: 5 sub-agent draft never-fired (5+ settimane, zero invocation) sono stati **moved a `_dormant/` subdir** -> effective deregister dal Claude Code skill loader (discovery non-recursive). Reactivation = `git mv .claude/agents/_dormant/<name>.md .claude/agents/<name>.md`. Lista dormant: `a11y-wcag-reviewer`, `database-schema-designer`, `dafne-proposal-triager`, `game-design-validator`, `lore-consistency-checker`. Audit ref: `docs/research/2026-05-28-codemasterdd-first-principles-audit.md`.
+>
+> **Update 2026-07-13 recount**: aggiunti 2 agent attivi dal 05-28 (`godot-engine-specialist` #158, `sot-drift-verifier`) -> registry riconciliato a **16 attivi + 5 dormant = 21 definizioni**. Le tabelle attive ora listano solo i 16 subagent reali; i 5 dormant hanno tabella separata con link a `_dormant/` (niente piu' marker DORMANT inline). Conteggio file `ls .claude/agents/*.md` (escl. README) = 19 = 16 subagent + 3 file di supporto (`SUB_AGENT_TEMPLATE`/`SMOKE_TEST_TEMPLATE`/`SOURCES`); CLAUDE.md:95 usa la convenzione file-count (19 attivi), allineata a PR #569.
 
 ## ⚠️ Readiness protocol (ADR-0018)
 
@@ -14,20 +16,23 @@ Ogni agent ha status visibile in tabelle sotto:
 
 Riferimento completo: [ADR-0018 agent readiness protocol](../../docs/adr/0018-agent-readiness-protocol.md) + [SMOKE_TEST_TEMPLATE.md](SMOKE_TEST_TEMPLATE.md).
 
-Stato 2026-04-24 (post batch P0 + P1 + P2-partial): **12/18 ✅ ready** (smoke test live confermato), **6/18 🟡 draft**. Priorità validation documentata in ADR-0018.
+Stato 2026-07-13 (16 agent attivi): **12/16 ✅ ready** (smoke test live confermato), **4/16 🟡 draft**. Validation priority documentata in ADR-0018. I 5 dormant non contano nel readiness (deregistered).
 
-- **Gate 1 PASS + Gate 2 validated + Gate 3 documented** (12 agent):
+- **Gate 1 PASS + Gate 2 validated + Gate 3 documented** (12 agent ready):
   - Mattina: `harsh-reviewer`, `delegation-classifier`, `swarm-cycle-analyzer`
   - Batch P0: `owasp-security-auditor`, `privacy-policy-enforcer`, `dogfood-analyst`
   - Batch P1: `adr-drafter`, `repo-health-auditor`, `bench-reporter`, `cost-monitor`, `compact-conversation`
-  - Opportunistic (Game data disponibile): `game-balance-auditor` — audit reale con 2 ROSSO findings concreti
-- **Restano draft** (6 agent): game-systems-designer, game-design-validator, lore-consistency-checker, dafne-proposal-triager, database-schema-designer, a11y-wcag-reviewer
+  - Opportunistic (Game data disponibile): `game-balance-auditor` -- audit reale con 2 ROSSO findings concreti
+- **Draft attivi** (4 agent): `game-systems-designer`, `jules-pr-triager`, `godot-engine-specialist`, `sot-drift-verifier` (validation pending; `sot-drift-verifier` ha smoke Gate 1 PASS loggato in commit)
+- **Dormant** (5 agent, deregistered in `_dormant/`): `a11y-wcag-reviewer`, `database-schema-designer`, `dafne-proposal-triager`, `game-design-validator`, `lore-consistency-checker`
 
 Log smoke test completi: [docs/superpowers/tests/](../../docs/superpowers/tests/)
 
-## Agent registrati (18 totali)
+## Agent registrati -- 16 attivi + 5 dormant (21 definizioni)
 
-### 🎯 Operational — codemasterdd core (5)
+> Conteggio file: `ls .claude/agents/*.md` (escl. README) = **19** = 16 subagent + 3 file di supporto (`SUB_AGENT_TEMPLATE.md`, `SMOKE_TEST_TEMPLATE.md`, `SOURCES.md`). CLAUDE.md:95 usa la convenzione file-count (19 attivi + 5 dormant), allineata a PR #569. Le tabelle attive qui sotto listano i **16 subagent reali**; i 5 dormant hanno tabella separata (link a `_dormant/`).
+
+### 🎯 Operational -- codemasterdd core (5)
 
 | Agent | Status | Model | Scope | When to invoke |
 |-------|:------:|-------|-------|----------------|
@@ -37,37 +42,34 @@ Log smoke test completi: [docs/superpowers/tests/](../../docs/superpowers/tests/
 | [repo-health-auditor](repo-health-auditor.md) | ✅ ready | sonnet | Audit cross-repo superficie + STATUS_MULTI_REPO refresh | "audit cross-repo", "stato tutti repo" |
 | [adr-drafter](adr-drafter.md) | ✅ ready | sonnet | Scaffold nuovi ADR seguendo MADR | "scrivi ADR per X" |
 
-### 🎮 Game (Evo-Tactics) — 5
+### 🎮 Game / Godot (Evo-Tactics) -- 4
 
 | Agent | Status | Model | Scope | When to invoke |
 |-------|:------:|-------|-------|----------------|
 | [game-balance-auditor](game-balance-auditor.md) | ✅ ready | sonnet | d20 combat balance, stat outlier, Numbers Policy | "check balance", "rivedi stats" |
 | [game-systems-designer](game-systems-designer.md) | 🟡 draft | sonnet | Design core loop + sub-loop + experience arc | "design core loop", "progetta sistema X" |
-| [game-design-validator](game-design-validator.md) | 🟡 draft | opus | First principles + Rule of Threes + elimination test | "valida design", "first principles game" |
-| [lore-consistency-checker](lore-consistency-checker.md) | 🟡 draft | sonnet | Coerenza narrativa cross-artifact lore | "check lore", "coerenza narrativa" |
+| [godot-engine-specialist](godot-engine-specialist.md) | 🟡 draft | sonnet | Godot 4.x ENGINE layer: scene/node, GDScript perf, .tscn/.tres hygiene, build/migration | "godot engine review", "gdscript perf", "tscn hygiene" |
 | [jules-pr-triager](jules-pr-triager.md) | 🟡 draft | sonnet | Triage PR Jules code-health su Game (MERGE-OK/CLOSE/NEEDS-REVIEW, NO auto-merge) | "triage pr jules", "valuta pr game" |
 
-### 🐝 Dafne swarm — 2 (oltre a repo-health-auditor per quick check)
+### 🐝 Dafne swarm -- 1 (oltre a repo-health-auditor per quick check)
 
 | Agent | Status | Model | Scope | When to invoke |
 |-------|:------:|-------|-------|----------------|
 | [swarm-cycle-analyzer](swarm-cycle-analyzer.md) | ✅ ready | sonnet | Deep pattern analysis cicli swarm + intervention effectiveness | "analisi cicli swarm", "pattern fail Dafne" |
-| [dafne-proposal-triager](dafne-proposal-triager.md) | 🟡 draft | sonnet | Pre-filter proposals Dafne prima approvazione Eduardo | "triage dafne proposals", "review pending" |
 
-### 🔒 Cross-cutting quality/security (3)
+### 🔒 Cross-cutting quality/security (2)
 
 | Agent | Status | Model | Scope | When to invoke |
 |-------|:------:|-------|-------|----------------|
 | [owasp-security-auditor](owasp-security-auditor.md) | ✅ ready | opus | OWASP Top 10 2025 + Agentic Skills Top 10 su endpoint/secrets | "security audit", "OWASP review" |
-| [a11y-wcag-reviewer](a11y-wcag-reviewer.md) | 🟡 draft | sonnet | WCAG 2.2 AA scan su template HTML/EJS/Jinja2 | "check a11y", "WCAG review" |
 | [harsh-reviewer](harsh-reviewer.md) | ✅ ready | opus | Quality gate generico multi-aspect (code, ADR, plan) | "harsh review", "che problemi vedi" |
 
-### 🗄️ Database + privacy (2)
+### 🗄️ Privacy + governance (2)
 
 | Agent | Status | Model | Scope | When to invoke |
 |-------|:------:|-------|-------|----------------|
-| [database-schema-designer](database-schema-designer.md) | 🟡 draft | sonnet | Schema design + index + migration strategy cross-repo | "design schema DB", "review Prisma" |
 | [privacy-policy-enforcer](privacy-policy-enforcer.md) | ✅ ready | haiku | Classifica file path per cloud-OK vs sovereign-only | "è cloud OK?", "classifica privacy" |
+| [sot-drift-verifier](sot-drift-verifier.md) | 🟡 draft | inherit | Verdict gated SoT-drift (Game runtime vs vault SoT), propone reconcile PR, NO auto-merge | "verdict drift candidate", "controlla drift SoT" |
 
 ### 🧭 Meta / workflow (2)
 
@@ -75,6 +77,18 @@ Log smoke test completi: [docs/superpowers/tests/](../../docs/superpowers/tests/
 |-------|:------:|-------|-------|----------------|
 | [delegation-classifier](delegation-classifier.md) | ✅ ready | haiku | Classifica task + suggest tier routing (ADR-0016 formalizzato) | "classifica task", "che tier uso" |
 | [compact-conversation](compact-conversation.md) | ✅ ready | sonnet | Produce compact markdown paste-ready per nuova sessione | "compact", "prepara handoff" |
+
+### 💤 Dormant -- deregistered in `_dormant/` (5)
+
+Never-fired draft moved 2026-05-28 (audit first-principles); fuori dal loader (discovery non-recursive). Reactivation = `git mv .claude/agents/_dormant/<name>.md .claude/agents/<name>.md` + re-run readiness gate ADR-0018.
+
+| Agent | Model | Scope |
+|-------|-------|-------|
+| [a11y-wcag-reviewer](_dormant/a11y-wcag-reviewer.md) | sonnet | WCAG 2.2 AA scan su template HTML/EJS/Jinja2 |
+| [database-schema-designer](_dormant/database-schema-designer.md) | sonnet | Schema design + index + migration strategy cross-repo |
+| [dafne-proposal-triager](_dormant/dafne-proposal-triager.md) | sonnet | Pre-filter proposals Dafne prima approvazione Eduardo |
+| [game-design-validator](_dormant/game-design-validator.md) | opus | First principles + Rule of Threes + elimination test |
+| [lore-consistency-checker](_dormant/lore-consistency-checker.md) | sonnet | Coerenza narrativa cross-artifact lore |
 
 ## Model tier rationale
 
@@ -129,10 +143,12 @@ Agent({
 
 | Repo | Primary agent(s) | Cross-cutting agents |
 |------|------------------|----------------------|
-| codemasterdd | dogfood-analyst, bench-reporter, cost-monitor, repo-health-auditor, adr-drafter, delegation-classifier, compact-conversation | owasp, database, privacy, harsh |
-| Game (Evo-Tactics) | game-balance-auditor, game-design-validator, lore-consistency-checker | owasp, a11y, harsh |
+| codemasterdd | dogfood-analyst, bench-reporter, cost-monitor, repo-health-auditor, adr-drafter, delegation-classifier, compact-conversation | owasp, privacy, harsh |
+| Game / Godot (Evo-Tactics) | game-balance-auditor, game-systems-designer, godot-engine-specialist, jules-pr-triager | owasp, harsh, sot-drift-verifier |
 | Dafne swarm | swarm-cycle-analyzer, repo-health-auditor | owasp, harsh |
-| Synesthesia (dormant) | — | a11y, database, privacy, owasp, harsh (quando riattiva) |
+| Synesthesia (dormant) | -- | a11y, database, privacy, owasp, harsh (quando riattiva) |
+
+> Solo agent **attivi** in questa matrix. Dormant (reactivate on-demand da `_dormant/`): game-design-validator, lore-consistency-checker (Game design/lore), a11y-wcag-reviewer, database-schema-designer, dafne-proposal-triager.
 
 ## Aggiungere nuovo agent (workflow ADR-0018)
 
