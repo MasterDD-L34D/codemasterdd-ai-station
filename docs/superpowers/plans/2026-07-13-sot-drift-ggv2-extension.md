@@ -664,10 +664,9 @@ In the `SOURCES` list, after the `game-sot-drift` entry add:
 In the style dispatch (near the existing `if style == "gh-issues":` at line ~130) add:
 ```python
     if style == "gh-issues-ggv2":
-        sig = parse_sot_drift_issues(json_getter(SOT_GGV2_ISSUES_URL), SOT_GGV2_ISSUES_URL)
-        sig.source = "game-sot-drift-ggv2"
-        return sig
+        return parse_sot_drift_issues(json_getter(SOT_GGV2_ISSUES_URL), SOT_GGV2_ISSUES_URL)
 ```
+(NB: `Signal` is `@dataclass(frozen=True)` -- do NOT try `sig.source = ...` post-construction, it raises `FrozenInstanceError`. The source is derived inside `parse_sot_drift_issues` from the `ref` below.)
 
 In `apps/cross-repo-dashboard/governor/parsers.py`, make `parse_sot_drift_issues` label the source from the ref so the two signals are distinct. Change the `summary_text`/`source` block (line ~216-218) to:
 ```python

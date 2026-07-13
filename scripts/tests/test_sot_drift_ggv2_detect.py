@@ -130,3 +130,36 @@ def test_open_or_update_edits_when_open_exists():
     joined = [" ".join(c) for c in gh.calls]
     assert any("issue edit" in j and "42" in j for j in joined)
     assert not any("issue create" in j for j in joined)
+
+
+def test_detect_skips_non_feat_prs(tmp_path):
+    wm = tmp_path / "wm.json"
+    wm.write_text(json.dumps({"entries": [{"concept": "audio", "patterns": ["assets/audio/**"], "sot_ref": ["adr/a.md"]}]}), encoding="utf-8")
+    gh = FakeGh([("pr list", json.dumps([
+        {"number": 5, "title": "fix(audio): crackle", "mergedAt": "2026-07-13T10:00:00Z",
+         "files": [{"path": "assets/audio/x.wav"}]},
+    ]))])
+    res = det.detect(gh, str(wm), str(tmp_path / "cp.json"), dry_run=True)
+    assert res["flagged"] == 0  # fix() PR is not a feature ship
+
+
+def test_detect_flags_feat_pr(tmp_path):
+    wm = tmp_path / "wm.json"
+    wm.write_text(json.dumps({"entries": [{"concept": "audio", "patterns": ["assets/audio/**"], "sot_ref": ["adr/a.md"]}]}), encoding="utf-8")
+    gh = FakeGh([("pr list", json.dumps([
+        {"number": 6, "title": "feat(audio): bus", "mergedAt": "2026-07-13T10:00:00Z",
+         "files": [{"path": "assets/audio/bus.tres"}]},
+    ]))])
+    res = det.detect(gh, str(wm), str(tmp_path / "cp.json"), dry_run=True)
+    assert res["flagged"] == 1
+
+
+def test_detect_no_match_no_flag(tmp_path):
+    wm = tmp_path / "wm.json"
+    wm.write_text(json.dumps({"entries": [{"concept": "audio", "patterns": ["assets/audio/**"], "sot_ref": ["adr/a.md"]}]}), encoding="utf-8")
+    gh = FakeGh([("pr list", json.dumps([
+        {"number": 7, "title": "feat(net): reconnect", "mergedAt": "2026-07-13T10:00:00Z",
+         "files": [{"path": "scripts/net/peer.gd"}]},
+    ]))])
+    res = det.detect(gh, str(wm), str(tmp_path / "cp.json"), dry_run=True)
+    assert res["flagged"] == 0
