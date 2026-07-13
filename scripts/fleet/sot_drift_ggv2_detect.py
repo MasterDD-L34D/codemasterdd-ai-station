@@ -16,7 +16,8 @@ Design notes (from a pre-merge harsh review):
   leapfrog a timestamp watermark (fall outside a "newest N" window while the
   watermark advances past them) and be missed forever. Recent merges are
   fetched by `updated` desc (a merge bumps updatedAt), so a just-merged old PR
-  surfaces at the top and is processed exactly once via the seen-set.
+  surfaces at the top and is processed at-least-once via the seen-set (and
+  de-duplicated on the Game issue by PR number).
 """
 import argparse
 import datetime
@@ -36,8 +37,9 @@ GH_TIMEOUT = 120
 
 # Commit types that by definition ship NO runtime behavior -> cannot drift a
 # design SoT. Excluded from path-first flagging (recall-preserving noise guard).
-# Everything else (feat/fix/refactor/perf/revert/unknown) is still flagged.
-NOISE_TYPES = {"docs", "chore", "style", "test", "ci", "build"}
+# Only docs/style/test/ci (chore/build CAN carry runtime behavior -> keep recall).
+# Everything else (feat/fix/refactor/perf/revert/chore/build/unknown) is flagged.
+NOISE_TYPES = {"docs", "style", "test", "ci"}
 
 _TYPE_RE = re.compile(r"^([a-z]+)(\([^)]*\))?!?:", re.IGNORECASE)
 
@@ -152,11 +154,13 @@ def open_or_update_issue(runner, per_pr, repo=GAME_REPO):
     """Create the single GGv2 drift issue, or ACCUMULATE new PR sections onto it."""
     existing = runner(["issue", "list", "--repo", repo, "--label", LABEL, "--state", "open",
                        "--json", "number", "--jq", ".[0].number"]).strip()
-    new_sections = "\n".join(pr_section(i) for i in per_pr)
     if existing and existing != "null":
         cur = json.loads(runner(["issue", "view", existing, "--repo", repo,
-                                 "--json", "body"])).get("body", "")
-        body = cur.rstrip() + "\n\n" + new_sections
+                                 "--json", "body"])).get("body", "") or ""
+        fresh = [i for i in per_pr if f"PR #{i['pr']['number']} " not in cur]
+        if not fresh:
+            return ("nochange", existing)
+        body = cur.rstrip() + "\n\n" + "\n".join(pr_section(i) for i in fresh)
         path = _write_tmp(body)
         try:
             runner(["issue", "edit", existing, "--repo", repo, "--body-file", path])
@@ -204,8 +208,10 @@ def detect(runner, watch_map_path, checkpoint_path, limit=100, dry_run=False):
         result["issue"] = {"action": "dry-run"}
 
     if not dry_run:
-        seen |= {p["number"] for p in recent}
-        checkpoint["seen"] = sorted(seen)[-SEEN_CAP:]
+        this_run = {p["number"] for p in recent}
+        prior = [n for n in checkpoint.get("seen", []) if n not in this_run]
+        # most-recently-examined at the TAIL so the tail-cap keeps the newest
+        checkpoint["seen"] = (prior + [p["number"] for p in reversed(recent)])[-SEEN_CAP:]
         checkpoint["last_run_at"] = datetime.datetime.now(
             datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
         save_checkpoint(checkpoint_path, checkpoint)

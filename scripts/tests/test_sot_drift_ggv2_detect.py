@@ -109,12 +109,13 @@ class FakeGh:
     """Routes gh argv by prefix; records every call for assertions."""
 
     def __init__(self, prs=None, files_by_number=None, issue_list_out="",
-                 issue_view_body="", fail_on_search=False):
+                 issue_view_body="", fail_on_search=False, fail_on_create=False):
         self.prs = prs or []
         self.files_by_number = files_by_number or {}
         self.issue_list_out = issue_list_out
         self.issue_view_body = issue_view_body
         self.fail_on_search = fail_on_search
+        self.fail_on_create = fail_on_create
         self.calls = []
         self.edit_body = None
         self.create_body = None
@@ -144,6 +145,8 @@ class FakeGh:
         if args[0] == "issue" and args[1] == "comment":
             return ""
         if args[0] == "issue" and args[1] == "create":
+            if self.fail_on_create:
+                raise RuntimeError("gh issue create failed (rc=1): boom")
             body_file = args[args.index("--body-file") + 1]
             self.create_body = pathlib.Path(body_file).read_text(encoding="utf-8")
             return "https://github.com/MasterDD-L34D/Game/issues/999"
@@ -255,3 +258,28 @@ def test_detect_skips_noise_commit_types(tmp_path):
     assert res["flagged"] == 0  # docs PR ships no behavior -> not drift
     # noise guard skips BEFORE fetch_pr_files -> no `pr view` gh call for it
     assert not any(c[0] == "pr" and c[1] == "view" for c in gh.calls)
+
+
+def test_detect_no_checkpoint_advance_on_issue_create_failure(tmp_path):
+    wm = _wm(tmp_path)
+    cp = tmp_path / "cp.json"
+    cp.write_text(json.dumps({"seen": [1]}), encoding="utf-8")
+    before = cp.read_text(encoding="utf-8")
+    gh = FakeGh(prs=[{"number": 5, "title": "fix(audio): crackle"}],
+                files_by_number={5: ["assets/audio/x.wav"]},
+                issue_list_out="", fail_on_create=True)
+    with pytest.raises(RuntimeError):
+        det.detect(gh, wm, str(cp), dry_run=False)
+    assert cp.read_text(encoding="utf-8") == before  # #5 not buried
+
+
+def test_detect_reflag_existing_pr_is_nochange(tmp_path):
+    wm = _wm(tmp_path)
+    prior_body = ("<!-- sot-drift-ggv2 -->\n### GGv2 PR #5 -- feat(audio): x\n"
+                  "- **audio** (`assets/audio/**`) -> review SoT: `adr/a.md`\n")
+    gh = FakeGh(prs=[{"number": 5, "title": "feat(audio): x"}],
+                files_by_number={5: ["assets/audio/x.wav"]},
+                issue_list_out="42\n", issue_view_body=prior_body)
+    res = det.detect(gh, wm, str(tmp_path / "cp.json"), dry_run=False)
+    assert res["issue"]["action"] == "nochange"
+    assert not any(c[0] == "issue" and c[1] == "edit" for c in gh.calls)
