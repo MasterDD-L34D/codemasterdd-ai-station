@@ -104,7 +104,7 @@ def test_ingest_all_one_source_failure_does_not_abort_others(tmp_path):
     fetcher, json_getter, content_getter = _fakes()
 
     def json_getter_sot_fails(url):
-        if "labels=sot-drift-candidate" in url:
+        if "labels=sot-drift-candidate&" in url:
             raise RuntimeError("gh api down")
         return json_getter(url)
 
@@ -388,3 +388,13 @@ def test_ingest_all_includes_jules_digest(tmp_path):
     assert result["errors"] == 0
     sources = {r["source"] for r in store.latest_per_source()}
     assert "jules-digest" in sources
+
+
+def test_ggv2_sot_drift_source_is_registered_and_counts():
+    from governor import ingest
+    ids = [s["id"] for s in ingest.SOURCES]
+    assert "game-sot-drift-ggv2" in ids
+
+    from governor.parsers import parse_sot_drift_issues
+    sig = parse_sot_drift_issues([{"updatedAt": "2026-07-13T00:00:00Z"}], "ref-ggv2")
+    assert sig.counts["open"] == 1

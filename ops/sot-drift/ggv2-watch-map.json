@@ -1,0 +1,32 @@
+{
+  "_doc": "GGv2 (frontend) path-glob -> vault SoT-ref. Consumed by scripts/fleet/sot_drift_ggv2_detect.py. sot_ref = vault Spaces/Dev/Evo-Tactics/<ref>. Extend conservatively: only concepts with a canonical SoT doc. Globs: * = within a path segment, ** = any depth.",
+  "entries": [
+    { "concept": "audio direction / impl",
+      "patterns": ["assets/audio/**", "default_bus_layout.tres", "scripts/audio/**"],
+      "sot_ref": ["adr/ADR-2026-04-18-audio-direction-placeholder.md", "core/00F-ART_AUDIO_BUSINESS.md"] },
+    { "concept": "VFX / art direction",
+      "patterns": ["assets/vfx/**", "scripts/vfx/**"],
+      "sot_ref": ["adr/ADR-2026-04-18-art-direction-placeholder.md", "core/41-ART-DIRECTION.md", "core/45-VISUAL-IDENTITY-CANONICAL.md"] },
+    { "concept": "UI / HUD identity",
+      "patterns": ["assets/ui/**", "scripts/ui/**"],
+      "sot_ref": ["core/30-UI_TV_IDENTITA.md", "core/42-STYLE-GUIDE-UI.md", "core/44-HUD-LAYOUT-REFERENCES.md"] },
+    { "concept": "screen flow / schermate",
+      "patterns": ["scenes/**"],
+      "sot_ref": ["core/17-SCREEN_FLOW.md"] },
+    { "concept": "combat d20 / tattico",
+      "patterns": ["scripts/combat/**"],
+      "sot_ref": ["core/10-SISTEMA_TATTICO.md", "core/11-REGOLE_D20_TV.md"] },
+    { "concept": "campaign loop / descent",
+      "patterns": ["scripts/campaign/**"],
+      "sot_ref": ["core/03-LOOP.md", "core/15-LEVEL_DESIGN.md", "core/40-ROADMAP.md"] },
+    { "concept": "progression / economy",
+      "patterns": ["scripts/progression/**"],
+      "sot_ref": ["core/25-REGOLE_SBLOCCO_PE.md", "core/26-ECONOMY_CANONICAL.md"] },
+    { "concept": "narrative / VC telemetry",
+      "patterns": ["scripts/narrative/**"],
+      "sot_ref": ["core/24-TELEMETRIA_VC.md"] },
+    { "concept": "Nido / mating surfaces",
+      "patterns": ["scripts/**/*nido*", "scripts/**/*mating*", "scripts/**/*genetic*", "scripts/**/*offspring*"],
+      "sot_ref": ["core/27-MATING_NIDO.md"] }
+  ]
+}

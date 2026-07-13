@@ -158,3 +158,15 @@ verdetto semantico multi-signal + propone reconcile vault branch+PR (gated, mai 
 - Plan: `docs/superpowers/plans/2026-05-28-sot-drift-sentinel.md`
 - watch-map (Game): `.github/sot-drift/watch-map.yml`
 - Research-grounded: doc-drift CI (mapping deterministico) + LLM-as-judge gated (TrustJudge 2026).
+
+### GGv2 frontend extension (2026-07-13)
+
+Il sentinel base e' Game-keyed; un ship di Game-Godot-v2 (frontend canonico) non lo faceva scattare
+(caso audio #599 / VFX #601 riconciliato a mano, vault PR #270). Estensione sovereign:
+
+- Detector `scripts/fleet/sot_drift_ggv2_detect.py` polla i PR `feat` merged di GGv2 (read-only, `gh`)
+  vs `ops/sot-drift/ggv2-watch-map.json`, apre UN issue Game label `sot-drift-candidate-ggv2` (distinto
+  dal backend `sot-drift-candidate` per evitare clobber sul reuse-by-label dell'Action Game).
+- Governor conta il nuovo label come segnale "frontend drift" separato; verdetto = stesso subagent
+  `sot-drift-verifier` (invariato). Task daily (Lenovo) `scripts/fleet/register-sot-drift-ggv2-task.ps1`.
+- Zero write su GGv2 (Ryzen-active). Spec: `docs/superpowers/specs/2026-07-13-sot-drift-ggv2-extension-design.md`.

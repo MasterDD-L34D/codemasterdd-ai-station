@@ -24,6 +24,7 @@ from governor.parsers import (
 GAME_DRIFT_URL = "https://raw.githubusercontent.com/MasterDD-L34D/Game/main/reports/docs/governance_drift_report.json"
 EVO_EXPORTS_API = "https://api.github.com/repos/MasterDD-L34D/evo-swarm/contents/docs/exports"
 SOT_ISSUES_URL = "https://api.github.com/repos/MasterDD-L34D/Game/issues?labels=sot-drift-candidate&state=open"
+SOT_GGV2_ISSUES_URL = "https://api.github.com/repos/MasterDD-L34D/Game/issues?labels=sot-drift-candidate-ggv2&state=open"
 VAULT_LINT_API = "https://api.github.com/repos/MasterDD-L34D/vault/contents/Extras/lint-reports"
 ENG_GRAPH_MOC_API = "https://api.github.com/repos/MasterDD-L34D/vault/contents/Atlas/engineering-moc.md"
 # ARCHON learnings are vendored on GitHub in the vault repo (local aa01 is NON-git).
@@ -36,6 +37,7 @@ JULES_DIGEST_API = "https://api.github.com/repos/MasterDD-L34D/codemasterdd-ai-s
 SOURCES = [
     {"id": "game-governance-drift", "style": "json"},
     {"id": "game-sot-drift", "style": "gh-issues"},
+    {"id": "game-sot-drift-ggv2", "style": "gh-issues-ggv2"},
     {"id": "evo-swarm-digest", "style": "evo-private"},
     {"id": "vault-gap", "style": "vault", "prefix": "gap-", "kind": "gap"},
     {"id": "vault-coherence", "style": "vault", "prefix": "coherence-", "kind": "coherence"},
@@ -129,6 +131,8 @@ def _produce(src: dict, fetcher, json_getter, content_getter, now: date | None =
         return parse_game_governance_drift(json.loads(fetcher(GAME_DRIFT_URL)))
     if style == "gh-issues":
         return parse_sot_drift_issues(json_getter(SOT_ISSUES_URL), SOT_ISSUES_URL)
+    if style == "gh-issues-ggv2":
+        return parse_sot_drift_issues(json_getter(SOT_GGV2_ISSUES_URL), SOT_GGV2_ISSUES_URL)
     if style == "evo-private":
         url = resolve_latest_in_dir(EVO_EXPORTS_API, "EXPORT-FOR-GAME-REPO", json_getter)
         if not url:
