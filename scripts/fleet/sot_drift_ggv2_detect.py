@@ -58,3 +58,35 @@ def save_checkpoint(path, data):
         os.makedirs(d, exist_ok=True)
     with open(path, "w", encoding="utf-8") as f:
         json.dump(data, f, indent=2)
+
+
+MARKER = "<!-- sot-drift-ggv2 -->"
+
+
+def new_prs_since(prs, checkpoint):
+    last = checkpoint.get("last_merged_at") or ""
+    fresh = [p for p in prs if (p.get("mergedAt") or "") > last]
+    return sorted(fresh, key=lambda p: p.get("mergedAt") or "")
+
+
+def build_issue_body(per_pr):
+    lines = [
+        MARKER,
+        "## SoT drift candidate -- Game-Godot-v2 frontend (auto-detected)",
+        "",
+        "Frontend `feat` PR(s) touched areas mapped to canonical vault SoT docs.",
+        "**Deterministic flag only** -- semantic verdict is gated: invoke the sovereign",
+        "`sot-drift-verifier` subagent to verdict + (if stale) propose a vault branch+PR reconcile.",
+        "",
+    ]
+    for item in per_pr:
+        pr = item["pr"]
+        lines.append(f"### GGv2 PR #{pr['number']} -- {pr['title']}")
+        for m in item["matches"]:
+            refs = ", ".join(f"`{r}`" for r in m["sot_ref"])
+            lines.append(f"- **{m['concept']}** (`{'`, `'.join(m['patterns'])}`) -> review SoT: {refs}")
+            for f in m["files"]:
+                lines.append(f"  - changed: `{f}`")
+        lines.append("")
+    lines.append("_Boundary: vault reconcile = branch+PR, merge human-only. GGv2 never written._")
+    return "\n".join(lines)

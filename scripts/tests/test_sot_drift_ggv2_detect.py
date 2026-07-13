@@ -70,3 +70,31 @@ def test_load_checkpoint_corrupt_returns_empty(tmp_path):
     p = tmp_path / "bad.json"
     p.write_text("{not json", encoding="utf-8")
     assert det.load_checkpoint(str(p)) == {}
+
+
+def test_new_prs_since_filters_and_sorts():
+    prs = [
+        {"number": 3, "title": "feat: c", "mergedAt": "2026-07-13T10:00:00Z"},
+        {"number": 1, "title": "feat: a", "mergedAt": "2026-07-12T09:00:00Z"},
+        {"number": 2, "title": "feat: b", "mergedAt": "2026-07-13T08:00:00Z"},
+    ]
+    fresh = det.new_prs_since(prs, {"last_merged_at": "2026-07-12T12:00:00Z"})
+    assert [p["number"] for p in fresh] == [2, 3]  # PR1 too old; sorted asc
+
+
+def test_new_prs_since_empty_checkpoint_uses_all():
+    prs = [{"number": 1, "title": "feat: a", "mergedAt": "2026-07-13T08:00:00Z"}]
+    assert len(det.new_prs_since(prs, {})) == 1
+
+
+def test_build_issue_body_lists_prs_and_refs():
+    per_pr = [
+        {"pr": {"number": 599, "title": "feat(audio): bus"},
+         "matches": [{"concept": "audio", "sot_ref": ["adr/audio.md"], "patterns": ["assets/audio/**"],
+                      "files": ["assets/audio/x.wav"]}]},
+    ]
+    body = det.build_issue_body(per_pr)
+    assert "<!-- sot-drift-ggv2 -->" in body
+    assert "#599" in body
+    assert "adr/audio.md" in body
+    assert "sot-drift-verifier" in body
