@@ -14,6 +14,10 @@ Auth: needs `gh`. Interactive (default) uses the logged-in gh auth. -Unattended
 partial profile -> pass a GitHub token via the GH_TOKEN environment variable for
 the task principal, or keep Interactive.
 
+Baseline: run governor.ingest once before the first detector run so the
+game-sot-drift-ggv2 signal has an ok baseline (else the first drift may not
+escalate on the governor rising-edge).
+
 Usage:
   powershell -NoProfile -ExecutionPolicy Bypass -File register-sot-drift-ggv2-task.ps1
   powershell -NoProfile -ExecutionPolicy Bypass -File register-sot-drift-ggv2-task.ps1 -Unattended

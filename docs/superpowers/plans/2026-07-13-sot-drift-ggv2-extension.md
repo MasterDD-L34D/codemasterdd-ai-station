@@ -914,3 +914,20 @@ Do NOT merge. Eduardo reviews + merges. Label bootstrap (Task 7) + task registra
 **Placeholder scan:** `<uuidv7>` in commit messages = intentional (executor generates a fresh uuidv7 per commit per ADR-0011); `<branch>` / `<pr-body...>` in Task 11 = executor-supplied. No TODO/TBD in code steps.
 
 **Type consistency:** `match_changes` returns `{concept, sot_ref, patterns, files}` -- consumed identically in `build_issue_body` (Task 4) and `detect` (Task 5). `is_feature_pr`, `new_prs_since`, `load_watch_map`, `load_checkpoint`, `save_checkpoint`, `open_or_update_issue`, `detect`, `main` names consistent across tasks + tests. Label `sot-drift-candidate-ggv2` consistent Tasks 5/7/8/9/10. `fetch_merged_prs` uses `--json ...,files`; `detect` reads `pr["files"][i]["path"]` -- matches gh pr list JSON shape.
+
+---
+
+## Post-review rework (2026-07-13)
+
+A pre-merge harsh review (Task 11) found the original detector had a false-negative hole. Reworked
+(commits `7595103`, `da27beb`) -- the Task 2-5 / Task 8 code blocks above are superseded by:
+- **Path-first** flagging (drop the `feat()` gate; commit-type is triage only; exclude only no-behavior
+  types docs/chore/style/test/ci/build). Fixes: feat-only silently missed fix/refactor drift.
+- **Seen-PR-set checkpoint** + fetch via `gh search prs --sort updated` (a merge bumps updatedAt).
+  Fixes: the `mergedAt`-watermark + `gh pr list` newest-N window leapfrogged out-of-order merges
+  (long-lived branches) = permanent miss.
+- **Accumulating issue body** (append new PR sections; seen-set makes it lossless). Fixes: the update
+  path overwrote the body, dropping prior unreconciled candidates.
+- `run_gh` timeout, window-full warning (no silent cap), and checkpoint regression tests
+  (advance / no-advance-on-gh-failure) -- the detector suite is 22 tests.
+- Governor: the `Signal` frozen-dataclass fix (Task 8) + a rising-edge baseline-seed deploy note.

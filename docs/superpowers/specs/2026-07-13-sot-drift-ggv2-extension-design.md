@@ -53,35 +53,43 @@ GGv2 push->main (Ryzen)                        [Eduardo, on-demand]
                                         governor pane conta il nuovo label [source aggiunta]
 ```
 
-- **(A') detection = deterministica** (path-glob + heuristic commit-type, zero LLM, zero GGv2 write).
+- **(A') detection = deterministica** (path-glob PATH-FIRST, esclusi solo i commit-type senza behavior docs/chore/style/test/ci/build; zero LLM, zero GGv2 write).
 - **(B) verdetto = INVARIATO** (subagent gia' repo-agnostico; invocato per numero issue).
 - **Label DISTINTO** `sot-drift-candidate-ggv2` -> nessuna collisione con l'Action Game.
 - **governor** = +1 source (conta il nuovo label separatamente -> "frontend drift" vs "backend drift").
 
 ## 4. (A') Detector sovereign -- fleet-side
 
-- File: `scripts/fleet/sot-drift-ggv2-detect.py` (Python, coerente col tooling `scripts/` + test pytest).
-- Input: `ops/sot-drift/ggv2-watch-map.yml` (C') + checkpoint file (last-processed).
-- Logica:
-  1. Legge checkpoint (`logs/sot-drift-ggv2-checkpoint.json`, gitignored) = ultimo PR GGv2 processato
-     (number + mergedAt). Missing/corrotto -> fallback lookback bounded (7 giorni), non full-history.
-  2. `gh api` lista PR GGv2 **merged su main** dopo il checkpoint (READ-ONLY). Per ciascuno, i file
-     cambiati (`.../pulls/N/files`).
-  3. **Filtro anti-rumore** (deterministico): considera solo PR con commit-type/title `feat(...)`
-     (introduce sistemi); scarta `fix/chore/style/docs/refactor/test` (polish, non drift-vero).
-  4. Matcha i path vs i glob della watch-map (stesso matcher logico dell'Action Game).
-  5. Se match: apre **o aggiorna** UN issue Game label `sot-drift-candidate-ggv2` (idempotente,
-     reuse-by-marker `<!-- sot-drift-ggv2 -->`), body = PR GGv2 + concept + SoT-ref mappati +
-     "invoca sot-drift-verifier".
-  6. Avanza il checkpoint. Log persistente (`Extras/ollama-runs/<date>-sot-drift-ggv2.log` o `logs/`).
-- Auth: legge GGv2 (public) + apre issue Game (owned) via `gh`. Sotto S4U (logged-off) il profilo
-  e' parziale e `gh auth` puo' mancare -> il task passa `GH_TOKEN` dal keys-store ACL-locked
-  (`~/.config/api-keys/keys.env` GitHub token) cosi' funziona anche loggato-fuori.
-- **Nessun accesso vault** (by design). Solo flag deterministico.
+- File: `scripts/fleet/sot_drift_ggv2_detect.py` (Python stdlib-only, test pytest).
+- Input: `ops/sot-drift/ggv2-watch-map.json` (C') + checkpoint (seen-set di PR-number).
+- Logica (rivista post harsh-review):
+  1. Checkpoint = un SET bounded di PR-number gia' processati (`logs/sot-drift-ggv2-checkpoint.json`,
+     gitignored), NON un watermark `mergedAt`: un PR merged fuori-ordine da un branch long-lived
+     scavalcherebbe il watermark (fuori dalla finestra "newest N" mentre il watermark avanza) = miss
+     permanente. Il seen-set elimina il leapfrog.
+  2. `gh search prs --merged --sort updated --order desc` (READ-ONLY): un merge bumpa `updatedAt`,
+     quindi un PR appena merged (anche da branch vecchio) emerge in cima ed e' processato UNA volta
+     via seen-set. Per ogni PR unseen -> i file via `gh pr view N --json files`.
+  3. **PATH-FIRST** (recall-safe, scelta Eduardo): flagga QUALSIASI PR merged che tocca un path
+     sorvegliato; il commit-type e' solo etichetta di triage. Un detector di sicurezza non deve
+     mai perdere silenziosamente un drift shippato come fix/refactor. Esclusi solo i type che per
+     definizione NON shippano behavior (docs/chore/style/test/ci/build) = rumore puro, zero perdita
+     di recall.
+  4. Match dei path vs i glob della watch-map (stesso matcher dell'Action Game, backslash-exact).
+  5. Se match: apre **o ACCUMULA** UN issue Game label `sot-drift-candidate-ggv2` (append delle nuove
+     PR-section al body esistente -- lossless: il seen-set garantisce che le PR sono nuove, niente
+     dup ne' perdita di candidate non ancora riconciliati), marker `<!-- sot-drift-ggv2 -->`.
+  6. Il checkpoint avanza (seen |= tutti i PR-number esaminati) SOLO a fine pass riuscito; un errore
+     `gh` solleva prima del save -> reprocess al run successivo (nessun leapfrog). Finestra piena ->
+     warning nel result (no silent cap). `run_gh` ha timeout 120s.
+- Auth: legge GGv2 (public) + apre issue Game (owned) via `gh`. Sotto S4U (logged-off) il profilo e'
+  parziale e `gh auth` puo' mancare -> passare `GH_TOKEN` dal keys-store ACL-locked cosi' funziona
+  anche loggato-fuori.
+- **Nessun accesso vault** (by design). Solo flag deterministico; verdetto = subagent (B).
 
 ## 5. (C') watch-map GGv2 -- ospitata in codemasterdd (NON in GGv2)
 
-File: `ops/sot-drift/ggv2-watch-map.yml`. Stesso schema della watch-map Game
+File: `ops/sot-drift/ggv2-watch-map.json` (stdlib json, no PyYAML dep). Stesso schema della watch-map Game
 (`{pattern, sot_ref, concept}`); `sot_ref` = path vault `Spaces/Dev/Evo-Tactics/<ref>` di doc **esistenti**
 (verificati origin/main 2026-07-13). Mapping ampio (scelta Eduardo), scoped ai path che hanno un
 doc SoT canonico:
@@ -96,13 +104,12 @@ doc SoT canonico:
 | `scripts/campaign/**` | `core/03-LOOP.md`, `core/15-LEVEL_DESIGN.md`, `core/40-ROADMAP.md` | campaign loop / descent |
 | `scripts/progression/**` | `core/25-REGOLE_SBLOCCO_PE.md`, `core/26-ECONOMY_CANONICAL.md` | progression / economy |
 | `scripts/narrative/**` | `core/24-TELEMETRIA_VC.md` | narrative / VC telemetry |
-| `scripts/session/**`, `scripts/phone/**` | `core/27-MATING_NIDO.md` | Nido / mating surfaces |
+| `scripts/**/*nido*`, `scripts/**/*mating*`, `scripts/**/*genetic*`, `scripts/**/*offspring*` | `core/27-MATING_NIDO.md` | Nido / mating surfaces |
 
 Note: `scripts/{ai,coop,net,data,lifecycle,services}` NON mappati (no doc SoT canonico dedicato,
 o coperti dal backend Game -> evitare rumore). Species/Forma (`20-SPECIE_E_PARTI`, `22-FORME_BASE_16`)
 sono DB-generated + backend-owned -> gia' nel perimetro Game/DB, non ri-mappati qui.
-La precisione dei glob (in particolare i piu' larghi `scripts/ui/**`, `scenes/**`) e' oggetto del
-QG Step-3 (tuning) -- il filtro `feat(...)` di sez. 4 e' la prima linea anti-rumore.
+La precisione dei glob e' calibrata da un QG Step-3 smoke (il mapping largo phone/session->Nido era un mis-mapping: 11 falsi -> 0 dopo lo scope a filename). Il rumore residuo dei glob larghi (combat/ui/scenes, scelta "keep broad") e' contenuto dall'esclusione dei commit-type no-behavior (sez. 4) + dal verdetto on-demand.
 
 ## 6. Anti-collisione (finding load-bearing)
 
@@ -136,6 +143,7 @@ classe data-loss.
 - `-At` default ~09:00 (dopo governor-ingest 08:45).
 - S4U per logged-off + `GH_TOKEN` iniettato (sez. 4) cosi' `gh` funziona anche loggato-fuori.
 - `-Unregister` / `-Unattended` come il pattern esistente. ASCII-first (ADR-0021).
+- **Baseline governor (rising-edge):** eseguire `governor.ingest` UNA volta prima del primo run del detector, cosi' il source `game-sot-drift-ggv2` ha un baseline `ok`; altrimenti il primo drift viene riportato ma puo' non escalare (il classifier escala sul fronte di salita ok->warning). Il ri-arm avviene quando Eduardo chiude l'issue riconciliato.
 
 ## 9. (B) Verdetto -- subagent sot-drift-verifier -- INVARIATO
 
@@ -176,7 +184,9 @@ assunzioni piu' fragili -> QG Step-3 e' la CALIBRATE (falsifying experiment su P
 
 - Host detection: **sovereign fleet-side** (zero GGv2 write) [vs Action-in-GGv2]. -- forzato dal boundary.
 - Surface: **issue Game label distinto `sot-drift-candidate-ggv2`** [vs stesso-label / issue-codemasterdd / report-json]. -- anti-collisione.
-- Scope watch-map: **ampio, ancorato a doc SoT esistenti** [vs minimale 2-entry]. -- scelta Eduardo; noise-control via filtro `feat(...)` + QG-3 tuning.
+- Filtro: **PATH-FIRST recall-safe** (flagga ogni tocco di path sorvegliato; esclusi solo i type no-behavior) [vs feat-only / feat|fix|refactor|perf]. -- harsh-review: feat-only = recall hole.
+- Checkpoint: **seen-PR-set** [vs mergedAt-watermark]. -- watermark leapfroggava i merge fuori-ordine.
+- Scope watch-map: **ampio "keep broad"** (nido mis-mapping corretto a filename-scope) [vs minimale].
 - Cadenza/host: **daily su Lenovo** [vs weekly / on-demand].
 - Verdetto (B) + subagent: **INVARIATO**.
 
