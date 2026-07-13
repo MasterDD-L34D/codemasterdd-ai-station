@@ -111,6 +111,21 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 - Worktree piano `C:\dev\_gamewt-plan-fa-polish` + `_godot-wt-polish` = cleanup
   post-merge (azione da nominare a Eduardo).
 
+### Addendum sera-2 (smoke parziale + gate Codex rounds 2-4)
+- Smoke web PARZIALE agent-driven (QA addendum `46111ec`): Status label
+  themed, combat mount con fixture nuove + sprite dedicati, world seed
+  reveal screen. RESIDUO 1 RISTRETTO (VFX motion, audio, Calanchi a schermo,
+  phone picker, routed 10x10). Gotcha ambiente in memory studio-track.
+- Codex round-3 ha escalato sabotage a P1 con claim nuovo CONFIRMED:
+  vittoria PG prematura skippa la wave-2 (bug latente su main, reso default
+  dal seed). FIX: `4ded86b`+`da05dd4` (victory hold su pending waves,
+  dual-path: sessione + downgrade tick) + `6d25bd1` (P2: species_id non
+  threaded nei reinforcement -> sprite fallback). Suite 3916/3911/5/0,
+  main.gd sempre 1117, CI verde.
+- Round-4 = P1 re-escalation pura design ("implementa sabotage prima del
+  lock") = fuori scope ratificato -> triaged sul thread, stop re-trigger.
+  Thread P1 design + merge = decisione Eduardo.
+
 ## 2026-07-13 (pomeriggio: piano F-A 3/3 polish + content-lock badlands -- Game PR #3276, Fable 5 da Ryzen)
 
 ### Completato
