@@ -5,43 +5,63 @@
 > Scope Jules = SOLO la fetta HYGIENE meccanica/CI-verificabile. La fetta creativa
 > (46 design-stub) e behavior-critical (wiring combat active_effects.yaml) NON va a
 > Jules -- vedi Game `docs/planning/2026-07-14-r1-trait-stub-authoring-istruttoria.md`.
-> Il **lancio (Start/:create) = Eduardo** (Game esterno). Ogni task consegna branch+PR,
-> **merge = Eduardo** (classifier hard-block + ADR-0037). Uso: jules.google -> apri/edit
-> -> incolla il prompt sotto -> Start.
+> Il **lancio (Start/:create) = Eduardo**-authorized (Game esterno). Ogni task consegna
+> branch+PR, **merge = Eduardo** (classifier hard-block + ADR-0037).
 
-## Ordine dispatch
+## LESSON load-bearing -- index.json NON si rigenera con build_trait_index.js
 
-1. **J1 + J2 in parallelo** (indipendenti, rischio basso).
-2. **J3 poi J4 SERIALI** -- entrambi rigenerano `data/traits/index.json`; in parallelo
-   collidono. Attendere merge/rebase di J3 prima di J4.
+Scoperto in salvage J3/J4 (2026-07-14). Errore nel prompt originale ("regenerate via
+node scripts/build_trait_index.js"):
+- `scripts/build_trait_index.js` scansiona i file trait e scrive **SOLO `data/traits/index.csv`**
+  (ignora `index.json` + `species_affinity.json`). NON tocca `index.json`.
+- `data/traits/index.json` = **indice-unico SOURCE** (da cui `sync_trait_lists.js` deriva le
+  liste). Per una CANCELLAZIONE/dedup di un trait, la sua entry va rimossa **A MANO** da
+  `index.json` (chiave = trait id; rimuovere l'oggetto + ogni ref in liste `sinergie`), poi
+  `build_trait_index.js` per riallineare il CSV.
+- Sintomo se si sbaglia: `trait_template_validator.py` -> "Trait presenti in index.json ma
+  senza file dedicato" (coverage parity FAIL). Entrambe le sessioni J3/J4 hanno mancato questo.
 
-Decisioni canoniche sciolte (ground-truth 2026-07-14):
-- J3 slug canonico = `coscienza_d_alveare_diffusa` (i due file sono byte-identici
-  tranne lo slug; underscore preserva la posizione dell'apostrofo "d'alveare").
-- J4 canonici = `difensivo` (25 vs difesa 3) + `locomotorio` (23 vs locomotivo 12),
-  per massa; Jules deve comunque verificare l'overlap semantico per-file.
+## Ordine dispatch + ESITI
+
+1. **J3 + J4** (sottoalberi disgiunti cognitivo vs difesa) -- DISPATCHED 2026-07-14, ESITI:
+   - **J3** session 14788218009007265665 = COMPLETED delivery-miss (PR vuota) -> salvata dal
+     changeSet + completato il dedup di index.json a mano -> draft PR #3278.
+   - **J4** session 956121496509546387 = FAILED (ha inquinato il tree con scratch plan.md +
+     update_index.js) -> rifatta pulita a mano (rilocazione, non dedup) -> draft PR #3279.
+2. **J1** -- dispatch DOPO il merge di #3278 + #3279 (spazza tutto l'albero; collide con J3/J4
+   su sottoalbero). J1 e' IMMUNE al trap index.json (vedi sotto: non tocca index.json/csv).
+3. **J2** -- **locale (Eduardo/Claude)**, NON Jules: gate-2 ASCII del wrapper blocca il report IT
+   + sandbox Jules fragile sui generatori.
+
+Decisioni canoniche (ground-truth 2026-07-14):
+- J3 slug canonico = `coscienza_d_alveare_diffusa` (i due file byte-identici tranne lo slug).
+- J4 canonici = `difensivo` + `locomotorio` (per massa). NB J4 = i 2 trait difesa NON erano dup
+  di difensivo, erano da RILOCARE (category fold, non delete).
 
 ## Prompt (ASCII, gate-compliant)
 
-### J1 -- schema_version backfill (UN dispatch per categoria)
+### J1 -- schema_version backfill (per-trait files only; IMMUNE al trap index.json)
 
-254 entry su 309 non hanno `schema_version`. Stampare "2.0" SOLO dove la shape gia'
-conforma. Regola load-bearing: NON stampare sui file col design-block vuoto (sono i
-46 design-stub) -- li maschererebbe come completi.
+254 entry su 309 non hanno `schema_version`. Stampare "2.0" SOLO dove la shape gia' conforma.
+Regola load-bearing: NON stampare sui file col design-block vuoto (i 46 design-stub).
+J1 tocca SOLO i file trait per-categoria, MAI index.json/index.csv (che restano allineati per
+esistenza; lo schema_version mancante nell'index e' WARN non-bloccante, fuori scope J1).
 
 ```
 Repo: MasterDD-L34D/Game   Base: main
-Scope: data/traits/<CATEGORIA>/*.json ONLY (one category directory per task).
+Scope: data/traits/<CATEGORIA>/*.json per-trait files ONLY (one category per task).
 
-TASK (single, narrow): add "schema_version": "2.0" to every trait JSON in this one
-directory that DOES NOT already have the field, BUT ONLY if the file already contains
-a populated design block (non-empty "tier" AND "famiglia_tipologia" AND "slot_profile").
+TASK (single, narrow): add "schema_version": "2.0" to every per-trait JSON in this one
+directory that DOES NOT already have the field, BUT ONLY if the file already contains a
+populated design block (non-empty "tier" AND "famiglia_tipologia" AND "slot_profile").
 
 HARD CONSTRAINTS:
 1. DO NOT add the field to files whose design block is empty/missing -- those are
-   intentional design-stubs (completion_flags.design_stub=true) and must stay unstamped.
+   intentional design-stubs (completion_flags.design_stub true) and MUST stay unstamped.
 2. DO NOT edit any other field or reformat the JSON.
-3. DO NOT touch active_effects.yaml, glossary.json, or any file outside this directory.
+3. DO NOT touch data/traits/index.json, data/traits/index.csv, active_effects.yaml,
+   glossary.json, or anything outside the per-trait category files. Do NOT run any
+   index generator -- the per-trait edit is the whole task.
 
 VERIFY (must pass, paste output in PR):
   python tools/lint/trait_schema_gate.py
@@ -50,36 +70,17 @@ VERIFY (must pass, paste output in PR):
 Deliver a branch + PR. Do NOT merge.
 ```
 
-### J2 -- rigenera artefatti stale
+### J2 -- rigenera artefatti stale (LOCALE, non Jules)
 
-`reports/trait_progress.md` riporta 251 trait (snapshot 2025-12-02), ora sono 309.
-Index/csv da riallineare.
-
+`reports/trait_progress.md` = 251 (snapshot 2025-12-02), reale 309. Eseguire in locale:
 ```
-Repo: MasterDD-L34D/Game   Base: main
-
-TASK: regenerate stale trait artifacts by running the existing generators, then
-commit ONLY their output. Run:
-  python tools/py/trait_completion_dashboard.py    (-> reports/trait_progress.md)
-  node scripts/build_trait_index.js                (-> data/traits/index.json + .csv)
-  node scripts/sync_trait_lists.js
-
-HARD CONSTRAINTS:
-1. DO NOT hand-edit any generated file.
-2. DO NOT change any generator logic.
-
-VERIFY (must pass, paste output in PR): re-run all three commands a SECOND time and
-confirm `git diff` is empty (idempotent), then:
-  python scripts/trait_audit.py --check
-
-Deliver a branch + PR. Do NOT merge.
+python tools/py/trait_completion_dashboard.py    (-> reports/trait_progress.md)
+node scripts/build_trait_index.js                (-> data/traits/index.csv)
+node scripts/sync_trait_lists.js
 ```
+Commit dei soli output rigenerati; re-run idempotente (0 diff) come verifica.
 
-Caveat: se `trait_progress.md` contiene prose IT non-ASCII (em-dash/accenti), il gate
-ASCII del dispatch wrapper puo' bloccare -> in quel caso J2 lo esegue Eduardo/Claude in
-locale (3 comandi), Jules non serve.
-
-### J3 -- merge id near-dup (canonico = coscienza_d_alveare_diffusa)
+### J3 -- merge id near-dup (canonico = coscienza_d_alveare_diffusa) [SHIPPED #3278]
 
 ```
 Repo: MasterDD-L34D/Game   Base: main
@@ -90,55 +91,50 @@ traits (byte-identical except the id). Canonical = coscienza_d_alveare_diffusa.
 - Repoint every SOURCE reference from coscienza_dalveare_diffusa to the canonical id
   in: locales/it/traits.json, locales/en/traits.json, data/core/traits/glossary.json,
   data/core/traits/active_effects.yaml, species_affinity, and any species trait_refs.
+- Remove the coscienza_dalveare_diffusa entry (the object AND any synergy-list refs)
+  from data/traits/index.json BY HAND -- index.json is the indice-unico source and is
+  NOT regenerated by build_trait_index.js. THEN run: node scripts/build_trait_index.js
+  to realign data/traits/index.csv.
+- DO NOT hand-edit other generated/derived files (logs/, reports/, data/derived/,
+  data/external/evo/, docs/generated/, docs/reports/).
 
-HARD CONSTRAINTS:
-1. DO NOT hand-edit generated/derived files (logs/, reports/, data/derived/,
-   data/external/evo/, docs/generated/, docs/reports/). Regenerate them instead:
-     node scripts/build_trait_index.js
-     python tools/py/trait_completion_dashboard.py
-2. DO NOT change the canonical trait's content.
-
-VERIFY (must pass, paste output in PR):
-  python tools/py/check_missing_traits.py
-  python scripts/trait_audit.py --check
-  npx jest tests/scripts/speciesTraitReferences.test.js
-
+VERIFY (must pass): python tools/py/check_missing_traits.py ;
+  python scripts/trait_audit.py --check ; python tools/py/trait_template_validator.py
 Deliver a branch + PR. Do NOT merge.
 ```
 
-### J4 -- merge dir-doppione (una dispatch per coppia)
-
-Coppia 1: `difesa`(3) -> `difensivo`(25). Coppia 2 (dispatch separata, stessa
-procedura): `locomotivo`(12) -> `locomotorio`(23).
+### J4 -- fold dir difesa into difensivo [SHIPPED #3279]
 
 ```
 Repo: MasterDD-L34D/Game   Base: main
-Coppia: difesa -> difensivo  (lancia la coppia locomotivo -> locomotorio a parte)
+Coppia 2 residua (dispatch separata): locomotivo -> locomotorio, stessa procedura.
 
-TASK: merge the duplicate category directory into the canonical one.
-1. FIRST verify each file in data/traits/difesa/ is a true concept-duplicate of the
-   defensive category (compare famiglia_tipologia + uso_funzione). Merge only true
-   duplicates into data/traits/difensivo/, keeping the difensivo id as canonical.
-   If any difesa trait is genuinely distinct, LEAVE IT and note it in the PR body --
-   do not force-merge.
-2. Move/rename merged files; delete the emptied difesa directory.
-3. Repoint SOURCE references (species trait_refs, active_effects.yaml, glossary.json,
-   locales, category enums) from difesa ids to canonical ids.
-4. Regenerate derived artifacts (node scripts/build_trait_index.js); do NOT hand-edit
-   them.
+TASK: data/traits/difesa duplicates the defensive category data/traits/difensivo.
+1. For each real trait file in data/traits/difesa: if the same id already exists in
+   difensivo -> it is a duplicate (merge/delete). If not -> it is a MIS-FILED trait ->
+   RELOCATE it (git mv) into data/traits/difensivo, id unchanged.
+2. Delete the deprecated data/traits/difesa/index.json redirect and remove the empty dir.
+3. IDs unchanged => id-based refs (active_effects, glossary, locales, index.json) stay
+   valid; do NOT rewrite them. Only run: node scripts/build_trait_index.js to realign
+   data/traits/index.csv. If any id changes, remove the old entry from index.json by hand.
+4. DO NOT create any scratch/helper file (no plan.md, no update_index.js). Modify only
+   trait data files.
 
-VERIFY (must pass, paste output in PR):
-  python tools/py/trait_template_validator.py
-  python scripts/trait_audit.py --check
-  python tools/py/check_missing_traits.py
-
+VERIFY (must pass): python tools/py/trait_template_validator.py ;
+  python scripts/trait_audit.py --check ; python tools/py/check_missing_traits.py
 Deliver a branch + PR. Do NOT merge.
 ```
 
 ## Fuori-scope Jules (per memoria)
 
-- **R1** authoring 46 design-stub -> creativo, canon-gated, rischio fabrication ->
-  Claude/human. Istruttoria: Game `docs/planning/2026-07-14-r1-trait-stub-authoring-istruttoria.md`.
+- **R1** authoring 46 design-stub -> creativo, canon-gated, rischio fabrication -> Claude/human.
+  Istruttoria: Game `docs/planning/2026-07-14-r1-trait-stub-authoring-istruttoria.md` (MERGED #3277).
 - **R2** wiring meccaniche combat (active_effects.yaml, 12 PROPOSED #3118 + GAP2 residui)
   -> behavior-critical + freeze-adjacent + AI-playtest gate -> Claude/human.
 - **R3** fork TR-NNNN vs slug (71 placeholder) -> decisione SoT-inversion, ADR PRIMA.
+
+## Note ambiente (finding adiacente)
+
+Il clone `C:\dev\Game` ha `.claude/worktrees/` stale (agent-worktree altrui senza glossary.json)
+che rompono la raccolta jest (`speciesTraitReferences` + ~690 suite falliscono al require) --
+igiene worktree separata. La CI dei PR gira jest in ambiente pulito.
