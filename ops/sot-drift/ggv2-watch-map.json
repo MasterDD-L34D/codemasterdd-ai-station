@@ -26,7 +26,7 @@
       "patterns": ["scripts/narrative/**"],
       "sot_ref": ["core/24-TELEMETRIA_VC.md"] },
     { "concept": "Nido / mating surfaces",
-      "patterns": ["scripts/session/**", "scripts/phone/**"],
+      "patterns": ["scripts/**/*nido*", "scripts/**/*mating*", "scripts/**/*genetic*", "scripts/**/*offspring*"],
       "sot_ref": ["core/27-MATING_NIDO.md"] }
   ]
 }
