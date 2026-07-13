@@ -137,3 +137,29 @@ def test_run_action_keep_lines_filters_output(monkeypatch) -> None:
     out = r.get_json()["output"]
     assert "KEEP one" in out and "KEEP two" in out
     assert "ZZDROPPEDZZ" not in out
+
+
+def test_os_home_shows_game_roadmap(monkeypatch) -> None:
+    monkeypatch.setattr(
+        appmod, "scheduled_task_health",
+        lambda names, **kw: [{"name": n, "state": "Ready", "last_result": 0,
+                              "last_run": None, "healthy": True} for n in names],
+    )
+    r = client().get("/cross-repo/os")
+    assert r.status_code == 200
+    assert b"Roadmap gioco" in r.data
+    assert b"F-A" in r.data          # first phase id renders
+    assert b"EA Steam" in r.data     # target line renders
+
+
+def test_game_roadmap_helper(tmp_path) -> None:
+    from os_home import game_roadmap
+    # missing file -> not available, no crash
+    missing = game_roadmap(tmp_path / "nope.json")
+    assert missing["available"] is False and missing["total"] == 0
+    # present -> parsed + derived done/total counts
+    f = tmp_path / "rm.json"
+    f.write_text('{"phases":[{"id":"F-A","status":"done"},{"id":"F-B","status":"todo"}]}', encoding="utf-8")
+    got = game_roadmap(f)
+    assert got["available"] is True
+    assert got["total"] == 2 and got["done_count"] == 1

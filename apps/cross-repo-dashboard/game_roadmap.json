@@ -1,0 +1,18 @@
+{
+  "title": "v0.9 slice-first -> EA Steam",
+  "source": "Game/docs/core/40-ROADMAP.md",
+  "decided": "2026-07-10 (owner, studio-track sequenza C slice-first)",
+  "last_verified": "2026-07-13",
+  "target": "Scope freeze v0.9 (4 specie, 6 job, 3 biomi, slice meta recruit/nido/mating) -> build EA Steam",
+  "note": "Status tracciato a mano nel hub; aggiorna quando un exit-gate chiude. La roadmap-of-record (SoT) vive nel doc Game.",
+  "prereqs": [
+    {"name": "GDD refresh (Fase 1)", "status": "done", "ref": "Game #3269"},
+    {"name": "Asset shortlist + staging (Fase 2)", "status": "done", "ref": "Game #3270/#3271"}
+  ],
+  "phases": [
+    {"id": "F-A", "name": "Slice vestita", "focus": "1 bioma badlands + 2 specie + Path A audio/VFX veri + polish UI", "exit_gate": "Slice giocabile end-to-end vestita", "status": "active", "ref": "GGv2 #599/#601/#602 landati; gate non verificato"},
+    {"id": "F-B", "name": "Playtest N5", "focus": "Co-op real-device CAMP-4 (gate UMANO)", "exit_gate": "Report playtest + triage", "status": "todo", "ref": ""},
+    {"id": "F-C", "name": "Scala contenuto", "focus": "4 specie, 6 job, 3 biomi (criteri asset validati dalla slice)", "exit_gate": "Contenuto freeze completo in build", "status": "todo", "ref": ""},
+    {"id": "F-D", "name": "Slice meta + EA-ready", "focus": "Recruit/nido/mating + packaging Steam EA", "exit_gate": "Build candidata EA", "status": "todo", "ref": ""}
+  ]
+}

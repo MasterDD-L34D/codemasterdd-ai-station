@@ -27,6 +27,23 @@
 {% if not layers %}<tr><td colspan="3" class="muted">AGENTIC_OS.md non trovato</td></tr>{% endif %}
 </table>
 
+<h2>Roadmap gioco <span class="muted" style="font-size:.75rem">{% if roadmap.available %}-- {{ roadmap.title }}{% endif %}</span></h2>
+{% if roadmap.available %}
+{% set cls = {'done':'ok','active':'warn','todo':'muted'} %}
+<div class="muted det">
+ {{ roadmap.done_count }}/{{ roadmap.total }} fasi chiuse -- target: {{ roadmap.target }}<br>
+ fonte: {{ roadmap.source }} (roadmap-of-record) -- verificato {{ roadmap.last_verified }} -- status tracciato a mano
+</div>
+<table><tr><th>Fase</th><th>Focus</th><th>Exit-gate</th><th>Stato</th></tr>
+{% for ph in roadmap.phases %}<tr>
+ <td><strong>{{ ph.id }}</strong> {{ ph.name }}{% if ph.ref %}<br><span class="muted auth">{{ ph.ref }}</span>{% endif %}</td>
+ <td class="det">{{ ph.focus }}</td>
+ <td class="det muted">{{ ph.exit_gate }}</td>
+ <td><span class="badge s-{{ cls.get(ph.status, 'muted') }}">{{ ph.status }}</span></td>
+</tr>{% endfor %}
+</table>
+{% else %}<div class="muted">game_roadmap.json non trovato</div>{% endif %}
+
 <h2>PR flotta <span class="muted" id="prf-meta" style="font-size:.75rem">-- caricamento...</span></h2>
 <div id="prflotta" class="muted">...</div>
 

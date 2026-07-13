@@ -149,3 +149,23 @@ def aa01_lesson_count(learnings_dir: Path | None = None) -> dict[str, Any]:
     if not d.is_dir():
         return {"available": False, "count": 0}
     return {"available": True, "count": sum(1 for _ in d.glob("L-*.md"))}
+
+
+def game_roadmap(path: Path | None = None) -> dict[str, Any]:
+    """Game v0.9->EA roadmap tracker for the orientation pane -- answers 'quanto
+    manca al gioco / cosa faccio dopo'. A hand-maintained snapshot of the
+    roadmap-of-record (Game/docs/core/40-ROADMAP.md): the Game clone here runs behind
+    main, so a JSON snapshot beats parsing a stale working-tree copy, and per-phase
+    status has no machine-readable source in the doc anyway. Update when a gate closes."""
+    p = path or (Path(__file__).resolve().parent / "game_roadmap.json")
+    if not p.is_file():
+        return {"available": False, "phases": [], "done_count": 0, "total": 0}
+    try:
+        data = json.loads(p.read_text(encoding="utf-8", errors="replace"))
+    except ValueError:
+        return {"available": False, "phases": [], "done_count": 0, "total": 0}
+    phases = data.get("phases", [])
+    data["available"] = True
+    data["done_count"] = sum(1 for ph in phases if ph.get("status") == "done")
+    data["total"] = len(phases)
+    return data

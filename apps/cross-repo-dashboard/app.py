@@ -36,7 +36,7 @@ from dashboards_registry import DASHBOARDS, RUN_MONITORS
 from actions_registry import ACTIONS
 from os_home import (
     parse_layers, latest_brief, scheduled_task_health, memory_index_size,
-    active_hooks, count_agents, aa01_lesson_count,
+    active_hooks, count_agents, aa01_lesson_count, game_roadmap,
 )
 
 cross_repo_bp = Blueprint(
@@ -823,6 +823,7 @@ def os_console() -> Any:
     return render_template(
         "os_console.html",
         layers=_layer_live_state(),
+        roadmap=game_roadmap(),
         brief=latest_brief(today),
         actions_by_area=areas,
         api_secret=os.environ.get("API_SECRET", ""),
