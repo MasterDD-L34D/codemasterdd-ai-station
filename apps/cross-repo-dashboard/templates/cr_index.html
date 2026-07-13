@@ -164,7 +164,7 @@
       </div>
       {% if repo.git_local and repo.git_local.available %}
       <div class="metric">
-        <span class="metric-label">vs {{ repo.git_local.base }}</span>
+        <span class="metric-label" title="confronto col ref origin/main gia' in locale -- nessun git fetch a pageload, la freschezza dipende dall'ultimo fetch del clone">vs {{ repo.git_local.base }} (local)</span>
         <span class="metric-value sync">
           {% if repo.git_local.ahead %}↑{{ repo.git_local.ahead }}{% endif %}
           {% if repo.git_local.behind %}↓{{ repo.git_local.behind }}{% endif %}
@@ -182,7 +182,7 @@
 
     {% if repo.velocity and repo.velocity.available %}
     <div class="velocity">
-      <span class="velocity-label">Velocity 4w:</span>
+      <span class="velocity-label" title="commit sul clone LOCALE nelle ultime 4 settimane (puo' essere behind origin); last_commit/activity sopra vengono invece da GitHub (remoto)">Velocity locale 4w:</span>
       <svg class="velocity-sparkline" width="80" height="20" viewBox="0 0 80 20">
         {% set max_v = repo.velocity.max_week if repo.velocity.max_week > 0 else 1 %}
         {% for w in repo.velocity.weeks %}
