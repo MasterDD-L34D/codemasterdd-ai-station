@@ -54,7 +54,7 @@ def test_ingest_all_uses_injected_fetcher_and_persists(tmp_path):
     assert "evo-swarm-digest" in sources
     assert "vault-gap" in sources
     assert "vault-coherence" in sources
-    assert "vault-whatsmissing" in sources
+    assert "vault-whatsmissing" not in sources  # retired 2026-07-13 (report frozen since 05-22)
 
 def test_ingest_all_records_advisory_on_new_only(tmp_path):
     from governor.store import SignalStore

@@ -31,14 +31,13 @@ jinja2 = pytest.importorskip("jinja2")
 
 _TEMPLATES = Path(__file__).resolve().parent.parent / "templates"
 
-# The seven R0 signal sources the governor ingests (one row each in the pane).
+# R0 signal sources the governor ingests (one row each in the pane).
 _SOURCES = [
     "game-governance-drift",
     "game-sot-drift",
     "evo-swarm-digest",
     "vault-gap",
     "vault-coherence",
-    "vault-whatsmissing",
     "vault-eng-graph",
 ]
 

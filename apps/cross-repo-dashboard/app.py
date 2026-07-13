@@ -834,8 +834,14 @@ def os_console() -> Any:
 def governor_pane() -> Any:
     """R0 read-only consolidated signal pane (Fase 1a). No action taken here."""
     from governor.store import SignalStore
+    from governor.ingest import active_source_ids
     store = SignalStore(GOVERNOR_DB)
-    signals = store.latest_per_source()
+    # Show only signals from currently-active sources: a retired source (e.g.
+    # vault-whatsmissing, report frozen since 05-22) leaves a stale row in the DB
+    # that would otherwise render a permanently-frozen WARN. Filtering by the live
+    # SOURCES list drops it without DB surgery and self-cleans future retirements.
+    _active = active_source_ids()
+    signals = [s for s in store.latest_per_source() if s.get("source") in _active]
     # Freshness: surface WHEN ingest last ran so a stale snapshot is not mistaken for
     # live fleet state. Use the '_ingest'/'ran' marker (a run with no data changes
     # leaves every signal's fetched_at old, so max(fetched_at) would under-report);

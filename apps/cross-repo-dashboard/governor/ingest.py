@@ -31,18 +31,24 @@ ARCHON_LEARNINGS_API = "https://api.github.com/repos/MasterDD-L34D/vault/content
 # Jules daily-digest dir (codemasterdd's own repo; the G3 cron writes <date>-digest.md here).
 JULES_DIGEST_API = "https://api.github.com/repos/MasterDD-L34D/codemasterdd-ai-station/contents/docs/jules-batch"
 
-# 9 sources: 2 Game public + 1 evo private + 3 vault lint + 1 vault eng-graph + 1 archon learnings + 1 jules digest.
+# 8 sources: 2 Game public + 1 evo private + 2 vault lint + 1 vault eng-graph + 1 archon learnings + 1 jules digest.
+# NB vault-whatsmissing RETIRED 2026-07-13: report frozen since 05-22 (superseded by daily gap-scan).
 SOURCES = [
     {"id": "game-governance-drift", "style": "json"},
     {"id": "game-sot-drift", "style": "gh-issues"},
     {"id": "evo-swarm-digest", "style": "evo-private"},
     {"id": "vault-gap", "style": "vault", "prefix": "gap-", "kind": "gap"},
     {"id": "vault-coherence", "style": "vault", "prefix": "coherence-", "kind": "coherence"},
-    {"id": "vault-whatsmissing", "style": "vault", "prefix": "whatsmissing-", "kind": "whatsmissing"},
     {"id": "vault-eng-graph", "style": "vault-fixed", "api_url": ENG_GRAPH_MOC_API},
     {"id": "archon-learnings", "style": "archon-learnings", "api_url": ARCHON_LEARNINGS_API},
     {"id": "jules-digest", "style": "jules-digest", "api_url": JULES_DIGEST_API},
 ]
+
+
+def active_source_ids() -> set:
+    """Ids of currently-ingested sources -- the pane filters the DB by this so a
+    retired source (its old row lingers in the DB) stops rendering a frozen WARN."""
+    return {s["id"] for s in SOURCES}
 
 
 def _gh_token() -> str:

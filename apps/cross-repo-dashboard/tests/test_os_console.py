@@ -163,3 +163,28 @@ def test_game_roadmap_helper(tmp_path) -> None:
     got = game_roadmap(f)
     assert got["available"] is True
     assert got["total"] == 2 and got["done_count"] == 1
+
+
+def test_governor_pane_hides_retired_source(tmp_path, monkeypatch) -> None:
+    # A signal whose source is no longer in ingest.SOURCES (retired, e.g.
+    # vault-whatsmissing) must NOT render on /governor even though its row lingers
+    # in the DB. Insert one active + one retired signal; only the active one shows.
+    import sqlite3
+    from governor.store import SignalStore
+    db = tmp_path / "g.db"
+    SignalStore(db)  # create schema
+    conn = sqlite3.connect(str(db))
+    for src, summ, h in (("vault-gap", "LIVEGAP", "h1"),
+                         ("vault-whatsmissing", "RETIREDZZZ", "h2")):
+        conn.execute(
+            "INSERT INTO signals (source,kind,severity,summary,payload_hash,fetched_at) "
+            "VALUES (?,?,?,?,?,?)",
+            (src, "gap", "warning", summ, h, "2026-07-13T00:00:00Z"),
+        )
+    conn.commit()
+    conn.close()
+    monkeypatch.setattr(appmod, "GOVERNOR_DB", str(db))
+    r = client().get("/cross-repo/governor")
+    assert r.status_code == 200
+    assert b"LIVEGAP" in r.data          # active source renders
+    assert b"RETIREDZZZ" not in r.data   # retired source filtered out of the pane
