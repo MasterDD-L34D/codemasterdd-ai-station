@@ -245,3 +245,13 @@ def test_detect_does_not_advance_checkpoint_on_gh_failure(tmp_path):
         det.detect(gh, wm, str(cp), dry_run=False)
     after = cp.read_text(encoding="utf-8")
     assert before == after
+
+
+def test_detect_skips_noise_commit_types(tmp_path):
+    wm = _wm(tmp_path, patterns=("scripts/combat/**",), sot_ref=("core/10.md",))
+    gh = FakeGh(prs=[{"number": 9, "title": "docs(scripts): gdscript doc-comments"}],
+                files_by_number={9: ["scripts/combat/round.gd"]})
+    res = det.detect(gh, wm, str(tmp_path / "cp.json"), dry_run=True)
+    assert res["flagged"] == 0  # docs PR ships no behavior -> not drift
+    # noise guard skips BEFORE fetch_pr_files -> no `pr view` gh call for it
+    assert not any(c[0] == "pr" and c[1] == "view" for c in gh.calls)

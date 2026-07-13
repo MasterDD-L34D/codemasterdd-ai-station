@@ -7,9 +7,10 @@ write is the Game issue (owned repo). Semantic verdict + vault reconcile stay
 with the sovereign sot-drift-verifier subagent (gated).
 
 Design notes (from a pre-merge harsh review):
-- PATH-FIRST recall: ANY merged PR touching a watched path flags, regardless
-  of commit type. A safety detector must not silently miss drift shipped as
-  fix/refactor. Commit type is kept only as a triage label in the issue.
+- PATH-FIRST recall: ANY merged PR touching a watched path flags, excluding
+  commit types that ship no behavior (docs/chore/style/test/ci/build). A
+  safety detector must not silently miss drift shipped as fix/refactor.
+  Commit type is kept only as a triage label in the issue.
 - Checkpoint = a bounded SET of already-processed PR numbers, NOT a mergedAt
   watermark. PRs merged out of creation-order from long-lived branches would
   leapfrog a timestamp watermark (fall outside a "newest N" window while the
@@ -32,6 +33,11 @@ LABEL = "sot-drift-candidate-ggv2"
 MARKER = "<!-- sot-drift-ggv2 -->"
 SEEN_CAP = 500
 GH_TIMEOUT = 120
+
+# Commit types that by definition ship NO runtime behavior -> cannot drift a
+# design SoT. Excluded from path-first flagging (recall-preserving noise guard).
+# Everything else (feat/fix/refactor/perf/revert/unknown) is still flagged.
+NOISE_TYPES = {"docs", "chore", "style", "test", "ci", "build"}
 
 _TYPE_RE = re.compile(r"^([a-z]+)(\([^)]*\))?!?:", re.IGNORECASE)
 
@@ -181,6 +187,8 @@ def detect(runner, watch_map_path, checkpoint_path, limit=100, dry_run=False):
 
     per_pr = []
     for pr in unseen:
+        if commit_type(pr["title"]) in NOISE_TYPES:
+            continue
         files = fetch_pr_files(runner, pr["number"])
         matches = match_changes(watch_map, files)
         if matches:
