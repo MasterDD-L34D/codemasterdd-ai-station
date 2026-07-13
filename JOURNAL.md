@@ -57,6 +57,22 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
   vault-lint block, pane filtra su sorgenti attive (la riga DB stale smette di renderizzare, auto-clean
   futuri ritiri, no chirurgia DB). Advisory log storico tenuto (record immutabile). Suite 232 pass,
   whatsmissing confermata sparita dalla tabella segnali live.
+- **Ryzen session probe (SSH read-only)**: ground-truth di cosa lavora Ryzen -> frontend Godot F-A
+  caldo (`_godot-wt-struct` canvaslayer 7min-fa, `_godot-wt-polish2` screen-polish/i18n 51min-fa) +
+  fa-audio/vfx/badlands mergiati; Game backend worktree in raffreddamento; 1 sessione hub Claude idle
+  in worktree isolate. Ryzen = sul critical path (veste la slice F-A). Conferma disco-separato:
+  collisione solo a livello push, non file-read.
+- **Agent hardening 4 draft -> 16/16 ready (`d112d41`)**: lavoro alto-effort collision-free scelto da
+  Eduardo (Ryzen caldo su GGv2/Game -> zona sicura = hub .claude/agents). QG 3-step ADR-0018 sui 4
+  draft (game-systems-designer / godot-engine-specialist / jules-pr-triager / sot-drift-verifier):
+  Gate-1 smoke live-dispatch **4/4 PASS** production-grade (tutti read-only, godot read-only nonostante
+  tool Edit, sot-drift ha applicato Currency Gate spontaneo); Gate-2 attribution (godot=VoltAgent MIT
+  in-file, altri interni; SOURCES.md era stale a "15 agent" -> aggiornato); Gate-3 **1 tuning reale
+  per agent** (dead-ref handoff -> skill first-principles-game; review=read-only guardrail; empty-queue
+  no-fabricated-work; sot-drift step-1 origin-ref). 4 log in docs/superpowers/tests/. Repo test 77 pass.
+- **Finding-bonus (chip `task_b13c8de2`)**: lo smoke sot-drift ha scovato drift reale adiacente --
+  audio/VFX shippati su GGv2 (#599/#601) ma ADR audio vault ancora "deferred". Fuori-scope (vault
+  sovereign + GGv2 Ryzen-hot + low-conf) -> chip per reconcile branch+PR Eduardo-gated.
 
 ### Da fare
 - **Critical path**: chiudere F-A (verifica slice badlands giocabile end-to-end su GGv2) -> poi F-B
