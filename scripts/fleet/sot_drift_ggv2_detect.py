@@ -90,3 +90,98 @@ def build_issue_body(per_pr):
         lines.append("")
     lines.append("_Boundary: vault reconcile = branch+PR, merge human-only. GGv2 never written._")
     return "\n".join(lines)
+
+
+import argparse
+import datetime
+import subprocess
+import sys
+import tempfile
+
+GGV2_REPO = "MasterDD-L34D/Game-Godot-v2"
+GAME_REPO = "MasterDD-L34D/Game"
+LABEL = "sot-drift-candidate-ggv2"
+
+
+def run_gh(args):
+    r = subprocess.run(["gh"] + args, capture_output=True, text=True)
+    if r.returncode != 0:
+        raise RuntimeError(f"gh {' '.join(args)} failed (rc={r.returncode}): {r.stderr.strip()}")
+    return r.stdout
+
+
+def fetch_merged_prs(runner, repo=GGV2_REPO, limit=50):
+    out = runner(["pr", "list", "--repo", repo, "--base", "main", "--state", "merged",
+                  "--json", "number,title,mergedAt,files", "--limit", str(limit)])
+    return json.loads(out) if out.strip() else []
+
+
+def _write_tmp(body):
+    fd, path = tempfile.mkstemp(suffix=".md")
+    with os.fdopen(fd, "w", encoding="utf-8") as f:
+        f.write(body)
+    return path
+
+
+def open_or_update_issue(runner, body, repo=GAME_REPO):
+    existing = runner(["issue", "list", "--repo", repo, "--label", LABEL, "--state", "open",
+                       "--json", "number", "--jq", ".[0].number"]).strip()
+    path = _write_tmp(body)
+    try:
+        if existing and existing != "null":
+            runner(["issue", "edit", existing, "--repo", repo, "--body-file", path])
+            runner(["issue", "comment", existing, "--repo", repo,
+                    "--body", "Updated: new GGv2 SoT drift candidate detected."])
+            return ("edit", existing)
+        num = runner(["issue", "create", "--repo", repo, "--label", LABEL,
+                      "--title", "SoT drift candidate -- GGv2 frontend ahead of SoT docs",
+                      "--body-file", path]).strip()
+        return ("create", num)
+    finally:
+        os.remove(path)
+
+
+def detect(runner, watch_map_path, checkpoint_path, lookback_days=7, dry_run=False):
+    watch_map = load_watch_map(watch_map_path)
+    checkpoint = load_checkpoint(checkpoint_path)
+    if not checkpoint.get("last_merged_at"):
+        cutoff = datetime.datetime.now(datetime.timezone.utc) - datetime.timedelta(days=lookback_days)
+        checkpoint = {"last_merged_at": cutoff.strftime("%Y-%m-%dT%H:%M:%SZ")}
+    prs = new_prs_since(fetch_merged_prs(runner), checkpoint)
+    per_pr = []
+    for pr in prs:
+        if not is_feature_pr(pr.get("title")):
+            continue
+        files = [f["path"] for f in pr.get("files", [])]
+        matches = match_changes(watch_map, files)
+        if matches:
+            per_pr.append({"pr": pr, "matches": matches})
+    result = {"scanned": len(prs), "flagged": len(per_pr)}
+    if per_pr and not dry_run:
+        action, num = open_or_update_issue(runner, build_issue_body(per_pr))
+        result["issue"] = {"action": action, "number": num}
+    elif per_pr:
+        result["issue"] = {"action": "dry-run"}
+    # Advance checkpoint to the newest merged PR we saw (only if fetch succeeded).
+    if prs:
+        checkpoint["last_merged_at"] = prs[-1]["mergedAt"]
+        if not dry_run:
+            save_checkpoint(checkpoint_path, checkpoint)
+    return result
+
+
+def main(argv=None):
+    ap = argparse.ArgumentParser(description="SoT drift detector for Game-Godot-v2 frontend ships.")
+    ap.add_argument("--watch-map", default="ops/sot-drift/ggv2-watch-map.json")
+    ap.add_argument("--checkpoint", default="logs/sot-drift-ggv2-checkpoint.json")
+    ap.add_argument("--lookback-days", type=int, default=7)
+    ap.add_argument("--dry-run", action="store_true")
+    args = ap.parse_args(argv)
+    res = detect(run_gh, args.watch_map, args.checkpoint,
+                 lookback_days=args.lookback_days, dry_run=args.dry_run)
+    print(json.dumps(res))
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

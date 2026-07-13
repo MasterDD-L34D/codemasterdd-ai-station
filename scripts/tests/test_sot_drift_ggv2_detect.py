@@ -98,3 +98,35 @@ def test_build_issue_body_lists_prs_and_refs():
     assert "#599" in body
     assert "adr/audio.md" in body
     assert "sot-drift-verifier" in body
+
+
+class FakeGh:
+    """Records gh argv; returns queued stdout per matched command prefix."""
+    def __init__(self, responses):
+        self.responses = responses  # list[(match_substr, stdout)]
+        self.calls = []
+
+    def __call__(self, args):
+        self.calls.append(args)
+        joined = " ".join(args)
+        for sub, out in self.responses:
+            if sub in joined:
+                return out
+        return ""
+
+
+def test_open_or_update_creates_when_none_open():
+    gh = FakeGh([("issue list", "")])  # no existing open issue
+    det.open_or_update_issue(gh, "body-x", repo="OWN/Game")
+    joined = [" ".join(c) for c in gh.calls]
+    assert any("issue list" in j for j in joined)
+    assert any("issue create" in j for j in joined)
+    assert not any("issue edit" in j for j in joined)
+
+
+def test_open_or_update_edits_when_open_exists():
+    gh = FakeGh([("issue list", "42\n")])  # existing issue #42
+    det.open_or_update_issue(gh, "body-x", repo="OWN/Game")
+    joined = [" ".join(c) for c in gh.calls]
+    assert any("issue edit" in j and "42" in j for j in joined)
+    assert not any("issue create" in j for j in joined)
