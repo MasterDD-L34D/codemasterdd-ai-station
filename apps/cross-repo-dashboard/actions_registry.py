@@ -19,9 +19,13 @@ merge-main/force-push/external comms stay off).
 """
 from __future__ import annotations
 
+import os
 from typing import Any
 
-HUB = r"C:\dev\codemasterdd-ai-station"
+# Canonical hub root. Override via OS_HUB_PATH (parity with app.py's AA01_ROOT_PATH /
+# DAFNE_REPO_PATH / VAULT_REPO_PATH env overrides): point the panel at a clone/worktree
+# that is on main when the canonical clone is transiently on another branch.
+HUB = os.environ.get("OS_HUB_PATH", "").strip() or r"C:\dev\codemasterdd-ai-station"
 
 ACTIONS: list[dict[str, Any]] = [
     # ---- tier 0: read / report ----

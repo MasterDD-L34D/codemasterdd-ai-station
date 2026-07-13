@@ -83,8 +83,10 @@ GH_TOKEN = _get_gh_token()
 GH_API_BASE = "https://api.github.com"
 HTTP_TIMEOUT = 15
 
-# Paths
-CODEMASTERDD_ROOT = Path(r"C:\dev\codemasterdd-ai-station")
+# Paths. OS_HUB_PATH overrides the canonical hub root (parity with AA01_ROOT_PATH /
+# DAFNE_REPO_PATH / VAULT_REPO_PATH below) so the panel can run against a main-tracking
+# clone when the canonical clone is transiently on another branch.
+CODEMASTERDD_ROOT = Path(os.environ.get("OS_HUB_PATH", "").strip() or r"C:\dev\codemasterdd-ai-station")
 # Machine-portable: aa01 lives at C:\Users\<user>\aa01 (VGit on Ryzen,
 # edusc on Lenovo). Override via AA01_ROOT_PATH.
 AA01_ROOT = Path(os.environ.get("AA01_ROOT_PATH", "").strip() or (Path.home() / "aa01"))
