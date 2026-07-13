@@ -1,14 +1,39 @@
 """SoT drift detector for Game-Godot-v2 (frontend) ships.
 
-Polls merged GGv2 PRs (read-only, gh), keeps only feat() PRs, matches changed
-paths against a JSON watch-map, and opens/updates ONE Game issue (label
-sot-drift-candidate-ggv2) listing the vault SoT refs to review. Read-only on
-GGv2 + vault; the only write is the Game issue (owned repo). Semantic verdict
-+ vault reconcile stay with the sovereign sot-drift-verifier subagent (gated).
-"""
-import re
+Polls merged GGv2 PRs (read-only, gh), matches changed paths against a JSON
+watch-map, and opens/updates ONE Game issue (label sot-drift-candidate-ggv2)
+listing the vault SoT refs to review. Read-only on GGv2 + vault; the only
+write is the Game issue (owned repo). Semantic verdict + vault reconcile stay
+with the sovereign sot-drift-verifier subagent (gated).
 
-_FEAT_RE = re.compile(r"^feat(\([^)]*\))?!?:", re.IGNORECASE)
+Design notes (from a pre-merge harsh review):
+- PATH-FIRST recall: ANY merged PR touching a watched path flags, regardless
+  of commit type. A safety detector must not silently miss drift shipped as
+  fix/refactor. Commit type is kept only as a triage label in the issue.
+- Checkpoint = a bounded SET of already-processed PR numbers, NOT a mergedAt
+  watermark. PRs merged out of creation-order from long-lived branches would
+  leapfrog a timestamp watermark (fall outside a "newest N" window while the
+  watermark advances past them) and be missed forever. Recent merges are
+  fetched by `updated` desc (a merge bumps updatedAt), so a just-merged old PR
+  surfaces at the top and is processed exactly once via the seen-set.
+"""
+import argparse
+import datetime
+import json
+import os
+import re
+import subprocess
+import sys
+import tempfile
+
+GGV2_REPO = "MasterDD-L34D/Game-Godot-v2"
+GAME_REPO = "MasterDD-L34D/Game"
+LABEL = "sot-drift-candidate-ggv2"
+MARKER = "<!-- sot-drift-ggv2 -->"
+SEEN_CAP = 500
+GH_TIMEOUT = 120
+
+_TYPE_RE = re.compile(r"^([a-z]+)(\([^)]*\))?!?:", re.IGNORECASE)
 
 
 def glob_to_regex(glob):
@@ -31,12 +56,10 @@ def match_changes(watch_map, changed_files):
     return out
 
 
-def is_feature_pr(title):
-    return bool(_FEAT_RE.match((title or "").strip()))
-
-
-import json
-import os
+def commit_type(title):
+    """Conventional-commit type prefix (feat/fix/refactor/...) for triage; '' if none."""
+    m = _TYPE_RE.match((title or "").strip())
+    return m.group(1).lower() if m else ""
 
 
 def load_watch_map(path):
@@ -60,60 +83,25 @@ def save_checkpoint(path, data):
         json.dump(data, f, indent=2)
 
 
-MARKER = "<!-- sot-drift-ggv2 -->"
-
-
-def new_prs_since(prs, checkpoint):
-    last = checkpoint.get("last_merged_at") or ""
-    fresh = [p for p in prs if (p.get("mergedAt") or "") > last]
-    return sorted(fresh, key=lambda p: p.get("mergedAt") or "")
-
-
-def build_issue_body(per_pr):
-    lines = [
-        MARKER,
-        "## SoT drift candidate -- Game-Godot-v2 frontend (auto-detected)",
-        "",
-        "Frontend `feat` PR(s) touched areas mapped to canonical vault SoT docs.",
-        "**Deterministic flag only** -- semantic verdict is gated: invoke the sovereign",
-        "`sot-drift-verifier` subagent to verdict + (if stale) propose a vault branch+PR reconcile.",
-        "",
-    ]
-    for item in per_pr:
-        pr = item["pr"]
-        lines.append(f"### GGv2 PR #{pr['number']} -- {pr['title']}")
-        for m in item["matches"]:
-            refs = ", ".join(f"`{r}`" for r in m["sot_ref"])
-            lines.append(f"- **{m['concept']}** (`{'`, `'.join(m['patterns'])}`) -> review SoT: {refs}")
-            for f in m["files"]:
-                lines.append(f"  - changed: `{f}`")
-        lines.append("")
-    lines.append("_Boundary: vault reconcile = branch+PR, merge human-only. GGv2 never written._")
-    return "\n".join(lines)
-
-
-import argparse
-import datetime
-import subprocess
-import sys
-import tempfile
-
-GGV2_REPO = "MasterDD-L34D/Game-Godot-v2"
-GAME_REPO = "MasterDD-L34D/Game"
-LABEL = "sot-drift-candidate-ggv2"
-
-
 def run_gh(args):
-    r = subprocess.run(["gh"] + args, capture_output=True, text=True)
+    r = subprocess.run(["gh"] + args, capture_output=True, text=True, timeout=GH_TIMEOUT)
     if r.returncode != 0:
         raise RuntimeError(f"gh {' '.join(args)} failed (rc={r.returncode}): {r.stderr.strip()}")
     return r.stdout
 
 
-def fetch_merged_prs(runner, repo=GGV2_REPO, limit=50):
-    out = runner(["pr", "list", "--repo", repo, "--base", "main", "--state", "merged",
-                  "--json", "number,title,mergedAt,files", "--limit", str(limit)])
+def fetch_recent_merged(runner, repo=GGV2_REPO, limit=100):
+    """Merged PRs sorted by `updated` desc (a merge bumps updatedAt). READ-ONLY."""
+    out = runner(["search", "prs", "--repo", repo, "--merged", "--sort", "updated",
+                  "--order", "desc", "--limit", str(limit), "--json", "number,title"])
     return json.loads(out) if out.strip() else []
+
+
+def fetch_pr_files(runner, number, repo=GGV2_REPO):
+    """Changed file paths for one PR. READ-ONLY."""
+    pr = json.loads(runner(["pr", "view", str(number), "--repo", repo,
+                            "--json", "number,title,files"]))
+    return [f["path"] for f in pr.get("files", [])]
 
 
 def _write_tmp(body):
@@ -123,50 +111,96 @@ def _write_tmp(body):
     return path
 
 
-def open_or_update_issue(runner, body, repo=GAME_REPO):
+def pr_section(item):
+    pr = item["pr"]
+    ct = f"[{item['commit_type']}] " if item.get("commit_type") else ""
+    lines = [f"### GGv2 PR #{pr['number']} -- {ct}{pr['title']}"]
+    for m in item["matches"]:
+        refs = ", ".join(f"`{r}`" for r in m["sot_ref"])
+        lines.append(f"- **{m['concept']}** (`{'`, `'.join(m['patterns'])}`) -> review SoT: {refs}")
+        for f in m["files"]:
+            lines.append(f"  - changed: `{f}`")
+    lines.append("")
+    return "\n".join(lines)
+
+
+def build_issue_body(per_pr):
+    header = [
+        MARKER,
+        "## SoT drift candidate -- Game-Godot-v2 frontend (auto-detected)",
+        "",
+        "Merged frontend PR(s) touched areas mapped to canonical vault SoT docs "
+        "(path-first: any commit type; the [type] tag is triage only).",
+        "**Deterministic flag only** -- semantic verdict is gated: invoke the sovereign",
+        "`sot-drift-verifier` subagent to verdict + (if stale) propose a vault branch+PR reconcile.",
+        "",
+        "_Boundary: vault reconcile = branch+PR, merge human-only. GGv2 never written._",
+        "",
+        "---",
+        "",
+    ]
+    return "\n".join(header) + "\n".join(pr_section(i) for i in per_pr)
+
+
+def open_or_update_issue(runner, per_pr, repo=GAME_REPO):
+    """Create the single GGv2 drift issue, or ACCUMULATE new PR sections onto it."""
     existing = runner(["issue", "list", "--repo", repo, "--label", LABEL, "--state", "open",
                        "--json", "number", "--jq", ".[0].number"]).strip()
-    path = _write_tmp(body)
-    try:
-        if existing and existing != "null":
+    new_sections = "\n".join(pr_section(i) for i in per_pr)
+    if existing and existing != "null":
+        cur = json.loads(runner(["issue", "view", existing, "--repo", repo,
+                                 "--json", "body"])).get("body", "")
+        body = cur.rstrip() + "\n\n" + new_sections
+        path = _write_tmp(body)
+        try:
             runner(["issue", "edit", existing, "--repo", repo, "--body-file", path])
-            runner(["issue", "comment", existing, "--repo", repo,
-                    "--body", "Updated: new GGv2 SoT drift candidate detected."])
-            return ("edit", existing)
-        num = runner(["issue", "create", "--repo", repo, "--label", LABEL,
+        finally:
+            os.remove(path)
+        return ("edit", existing)
+    path = _write_tmp(build_issue_body(per_pr))
+    try:
+        out = runner(["issue", "create", "--repo", repo, "--label", LABEL,
                       "--title", "SoT drift candidate -- GGv2 frontend ahead of SoT docs",
                       "--body-file", path]).strip()
-        return ("create", num)
     finally:
         os.remove(path)
+    return ("create", out)
 
 
-def detect(runner, watch_map_path, checkpoint_path, lookback_days=7, dry_run=False):
+def detect(runner, watch_map_path, checkpoint_path, limit=100, dry_run=False):
     watch_map = load_watch_map(watch_map_path)
     checkpoint = load_checkpoint(checkpoint_path)
-    if not checkpoint.get("last_merged_at"):
-        cutoff = datetime.datetime.now(datetime.timezone.utc) - datetime.timedelta(days=lookback_days)
-        checkpoint = {"last_merged_at": cutoff.strftime("%Y-%m-%dT%H:%M:%SZ")}
-    prs = new_prs_since(fetch_merged_prs(runner), checkpoint)
+    seen = set(checkpoint.get("seen", []))
+    recent = fetch_recent_merged(runner, limit=limit)
+    unseen = [p for p in recent if p["number"] not in seen]
+
+    warnings = []
+    if len(recent) >= limit and recent and recent[-1]["number"] not in seen and seen:
+        warnings.append(f"fetch window full ({limit}); oldest fetched PR unseen -- "
+                        "possible truncation, raise --limit or run more often")
+
     per_pr = []
-    for pr in prs:
-        if not is_feature_pr(pr.get("title")):
-            continue
-        files = [f["path"] for f in pr.get("files", [])]
+    for pr in unseen:
+        files = fetch_pr_files(runner, pr["number"])
         matches = match_changes(watch_map, files)
         if matches:
-            per_pr.append({"pr": pr, "matches": matches})
-    result = {"scanned": len(prs), "flagged": len(per_pr)}
+            per_pr.append({"pr": pr, "matches": matches, "commit_type": commit_type(pr["title"])})
+
+    result = {"scanned": len(unseen), "flagged": len(per_pr)}
+    if warnings:
+        result["warnings"] = warnings
     if per_pr and not dry_run:
-        action, num = open_or_update_issue(runner, build_issue_body(per_pr))
-        result["issue"] = {"action": action, "number": num}
+        action, ref = open_or_update_issue(runner, per_pr)
+        result["issue"] = {"action": action, "ref": ref}
     elif per_pr:
         result["issue"] = {"action": "dry-run"}
-    # Advance checkpoint to the newest merged PR we saw (only if fetch succeeded).
-    if prs:
-        checkpoint["last_merged_at"] = prs[-1]["mergedAt"]
-        if not dry_run:
-            save_checkpoint(checkpoint_path, checkpoint)
+
+    if not dry_run:
+        seen |= {p["number"] for p in recent}
+        checkpoint["seen"] = sorted(seen)[-SEEN_CAP:]
+        checkpoint["last_run_at"] = datetime.datetime.now(
+            datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+        save_checkpoint(checkpoint_path, checkpoint)
     return result
 
 
@@ -174,11 +208,10 @@ def main(argv=None):
     ap = argparse.ArgumentParser(description="SoT drift detector for Game-Godot-v2 frontend ships.")
     ap.add_argument("--watch-map", default="ops/sot-drift/ggv2-watch-map.json")
     ap.add_argument("--checkpoint", default="logs/sot-drift-ggv2-checkpoint.json")
-    ap.add_argument("--lookback-days", type=int, default=7)
+    ap.add_argument("--limit", type=int, default=100)
     ap.add_argument("--dry-run", action="store_true")
     args = ap.parse_args(argv)
-    res = detect(run_gh, args.watch_map, args.checkpoint,
-                 lookback_days=args.lookback_days, dry_run=args.dry_run)
+    res = detect(run_gh, args.watch_map, args.checkpoint, limit=args.limit, dry_run=args.dry_run)
     print(json.dumps(res))
     return 0
 
