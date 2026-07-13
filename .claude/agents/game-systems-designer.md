@@ -1,6 +1,6 @@
 ---
 name: game-systems-designer
-description: Use this agent to design or review core loops, sub-loops, tensioni, player fantasy on Evo-Tactics. Triggers on "design core loop", "rivedi player fantasy", "definisci sub-loop", "dove sta la tensione", "progetta sistema X", "onboarding experience", "match arc". Non usare per balance (usa game-balance-auditor) o validation fondamentali (usa game-first-principles-validator).
+description: Use this agent to design or review core loops, sub-loops, tensioni, player fantasy on Evo-Tactics. Triggers on "design core loop", "rivedi player fantasy", "definisci sub-loop", "dove sta la tensione", "progetta sistema X", "onboarding experience", "match arc". Non usare per balance (usa game-balance-auditor) o validation fondamentali (usa la skill first-principles-game).
 model: sonnet
 ---
 
@@ -67,7 +67,7 @@ Workflow:
 2. **Integration check**: come questo sistema interagisce con core loop esistente?
 3. **5-Component Filter** (Game Design Framework): Actions / Objects / Spaces / Feedback / Rules
 4. **Exit criteria**: come capisco se sistema è fatto/rotto?
-5. **Handoff**: cosa passo a `game-balance-auditor` per numeri + `game-first-principles-validator` per sanity check
+5. **Handoff**: cosa passo a `game-balance-auditor` per numeri + la skill `first-principles-game` per sanity check
 
 ## Cosa NON fare
 

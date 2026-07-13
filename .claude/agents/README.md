@@ -16,14 +16,14 @@ Ogni agent ha status visibile in tabelle sotto:
 
 Riferimento completo: [ADR-0018 agent readiness protocol](../../docs/adr/0018-agent-readiness-protocol.md) + [SMOKE_TEST_TEMPLATE.md](SMOKE_TEST_TEMPLATE.md).
 
-Stato 2026-07-13 (16 agent attivi): **12/16 ✅ ready** (smoke test live confermato), **4/16 🟡 draft**. Validation priority documentata in ADR-0018. I 5 dormant non contano nel readiness (deregistered).
+Stato 2026-07-13 (16 agent attivi): **16/16 ✅ ready** (smoke test live confermato). I 4 draft residui (`game-systems-designer`, `godot-engine-specialist`, `jules-pr-triager`, `sot-drift-verifier`) promossi a ready 2026-07-13 via QG 3-step (smoke live + attribution + tuning), log in `docs/superpowers/tests/`. I 5 dormant non contano nel readiness (deregistered).
 
 - **Gate 1 PASS + Gate 2 validated + Gate 3 documented** (12 agent ready):
   - Mattina: `harsh-reviewer`, `delegation-classifier`, `swarm-cycle-analyzer`
   - Batch P0: `owasp-security-auditor`, `privacy-policy-enforcer`, `dogfood-analyst`
   - Batch P1: `adr-drafter`, `repo-health-auditor`, `bench-reporter`, `cost-monitor`, `compact-conversation`
   - Opportunistic (Game data disponibile): `game-balance-auditor` -- audit reale con 2 ROSSO findings concreti
-- **Draft attivi** (4 agent): `game-systems-designer`, `jules-pr-triager`, `godot-engine-specialist`, `sot-drift-verifier` (validation pending; `sot-drift-verifier` ha smoke Gate 1 PASS loggato in commit)
+- **Draft attivi**: nessuno -- i 4 residui promossi a ready 2026-07-13 (QG 3-step: smoke live-dispatch + attribution + tuning per agent; log per-agent in `docs/superpowers/tests/`)
 - **Dormant** (5 agent, deregistered in `_dormant/`): `a11y-wcag-reviewer`, `database-schema-designer`, `dafne-proposal-triager`, `game-design-validator`, `lore-consistency-checker`
 
 Log smoke test completi: [docs/superpowers/tests/](../../docs/superpowers/tests/)
@@ -47,9 +47,9 @@ Log smoke test completi: [docs/superpowers/tests/](../../docs/superpowers/tests/
 | Agent | Status | Model | Scope | When to invoke |
 |-------|:------:|-------|-------|----------------|
 | [game-balance-auditor](game-balance-auditor.md) | ✅ ready | sonnet | d20 combat balance, stat outlier, Numbers Policy | "check balance", "rivedi stats" |
-| [game-systems-designer](game-systems-designer.md) | 🟡 draft | sonnet | Design core loop + sub-loop + experience arc | "design core loop", "progetta sistema X" |
-| [godot-engine-specialist](godot-engine-specialist.md) | 🟡 draft | sonnet | Godot 4.x ENGINE layer: scene/node, GDScript perf, .tscn/.tres hygiene, build/migration | "godot engine review", "gdscript perf", "tscn hygiene" |
-| [jules-pr-triager](jules-pr-triager.md) | 🟡 draft | sonnet | Triage PR Jules code-health su Game (MERGE-OK/CLOSE/NEEDS-REVIEW, NO auto-merge) | "triage pr jules", "valuta pr game" |
+| [game-systems-designer](game-systems-designer.md) | ✅ ready | sonnet | Design core loop + sub-loop + experience arc | "design core loop", "progetta sistema X" |
+| [godot-engine-specialist](godot-engine-specialist.md) | ✅ ready | sonnet | Godot 4.x ENGINE layer: scene/node, GDScript perf, .tscn/.tres hygiene, build/migration | "godot engine review", "gdscript perf", "tscn hygiene" |
+| [jules-pr-triager](jules-pr-triager.md) | ✅ ready | sonnet | Triage PR Jules code-health su Game (MERGE-OK/CLOSE/NEEDS-REVIEW, NO auto-merge) | "triage pr jules", "valuta pr game" |
 
 ### 🐝 Dafne swarm -- 1 (oltre a repo-health-auditor per quick check)
 
@@ -69,7 +69,7 @@ Log smoke test completi: [docs/superpowers/tests/](../../docs/superpowers/tests/
 | Agent | Status | Model | Scope | When to invoke |
 |-------|:------:|-------|-------|----------------|
 | [privacy-policy-enforcer](privacy-policy-enforcer.md) | ✅ ready | haiku | Classifica file path per cloud-OK vs sovereign-only | "è cloud OK?", "classifica privacy" |
-| [sot-drift-verifier](sot-drift-verifier.md) | 🟡 draft | inherit | Verdict gated SoT-drift (Game runtime vs vault SoT), propone reconcile PR, NO auto-merge | "verdict drift candidate", "controlla drift SoT" |
+| [sot-drift-verifier](sot-drift-verifier.md) | ✅ ready | inherit | Verdict gated SoT-drift (Game runtime vs vault SoT), propone reconcile PR, NO auto-merge | "verdict drift candidate", "controlla drift SoT" |
 
 ### 🧭 Meta / workflow (2)
 

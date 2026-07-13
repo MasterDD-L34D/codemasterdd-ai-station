@@ -110,6 +110,14 @@ Tutti gli agent nostri sono scritti da zero (non copiati verbatim). Hanno licenz
 - Aggiunti 10 agent nuovi: game-balance-auditor, game-design-validator, lore-consistency-checker, privacy-policy-enforcer, a11y-wcag-reviewer, owasp-security-auditor, database-schema-designer, swarm-cycle-analyzer (upgrade), delegation-classifier, harsh-reviewer, compact-conversation
 - **Totale 15 agent** registrati
 
+**2026-07-13 (agent post-15 + draft-hardening)**:
+- Agent aggiunti dopo i 15 originali (attribution, prima non listati qui):
+  - `game-systems-designer` -- Archivio `02_LIBRARY` "Game Systems Designer (senior)" + "Product Designer (Gameplay)" personas + 5-Component Filter (interno, repo license).
+  - `godot-engine-specialist` -- seed strutturale da `VoltAgent/awesome-claude-code-subagents` `game-developer.md` (MIT, prompt audited injection-clean 2026-05-17); contenuto Godot-4.x + fences = originale. Provenance anche in-file (footer).
+  - `jules-pr-triager` -- Archivio "Harsh Reviewer" doctrine + triage empirico (17 PR Jules, 2026-05-17) + ADR-0033 Jules-governance (interno, repo license).
+  - `sot-drift-verifier` -- design interno; pairs con la Game `sot-drift-sentinel` Action + vault sibling-peer policy (repo license).
+- **QG 3-step draft-hardening**: i 4 sopra promossi da draft a ready via smoke live-dispatch + attribution (questa sezione) + tuning per agent. Log per-agent in `docs/superpowers/tests/`. Registry ora **16 attivi, 16/16 ready** (la riga "15 agent" sopra e' storica: post-15 sono stati aggiunti anche gli agent riconciliati nel README 2026-07-13).
+
 ## Next evolution (tracked in BACKLOG)
 
 Se in futuro emerge necessità, candidati validi da research:

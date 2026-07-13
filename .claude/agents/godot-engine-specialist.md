@@ -54,6 +54,7 @@ DO:
 - Verify node paths and signal wiring actually resolve
 - Flag (don't silently fix) anything that crosses into game-design/balance
 - For Jules code-health PRs on Game: defer triage to jules-pr-triager; only give engine-correctness opinion if asked
+- Review mode = READ-ONLY: when asked to REVIEW (not fix), report smell/rule/minimal-patch and apply NOTHING (no Edit/Write)
 
 DO NOT:
 - Touch balance numbers, lore text, or design intent

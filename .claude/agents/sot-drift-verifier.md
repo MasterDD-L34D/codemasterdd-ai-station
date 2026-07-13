@@ -15,7 +15,7 @@ Sovereign gated verdict on runtime(Game)-vs-SoT(vault) drift candidates flagged 
 
 ## Process (multi-signal, gated)
 1. Read the flagged SoT ref(s) in vault `C:/dev/vault/Spaces/Dev/Evo-Tactics/<ref>` (sovereign,
-   current -- `git -C C:/dev/vault fetch` first; verify local == origin, else FF-pull).
+   current -- `git -C C:/dev/vault fetch` first, then read the SoT via `git show origin/main:<ref>` -- the vault clone may sit on a feature branch or behind local main, so do NOT trust the working tree (Currency Gate)).
 2. Read the Game change: `gh pr view <n> --repo MasterDD-L34D/Game` / `gh api` commit; identify
    what shipped (commit msg + diff + touched files).
 3. Multi-signal verdict:
