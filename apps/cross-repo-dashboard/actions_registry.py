@@ -92,7 +92,7 @@ ACTIONS: list[dict[str, Any]] = [
         "label": "Jules preview: docstring pass journal-land.ps1 (dry-run)", "tier": 1,
         "area": "delegate",
         "desc": "Validate a scoped Jules docstring task on scripts/fleet/journal-land.ps1 "
-                "(5 gates + REST body, NO dispatch).",
+                "(5 gates -- incl. a live Jules session GET -- + REST body; NO POST/dispatch).",
         "wrapper": "jules-dispatch", "wrapper_path": r"scripts\fleet\jules-dispatch.ps1",
         "steps": [["powershell", "-NoProfile", "-ExecutionPolicy", "Bypass",
                    "-File", r"scripts\fleet\jules-dispatch.ps1",
@@ -106,7 +106,7 @@ ACTIONS: list[dict[str, Any]] = [
         "label": "Jules preview: docstring pass morning-brief.ps1 (dry-run)", "tier": 1,
         "area": "delegate",
         "desc": "Validate a scoped Jules docstring task on scripts/fleet/morning-brief.ps1 "
-                "(5 gates + REST body, NO dispatch).",
+                "(5 gates -- incl. a live Jules session GET -- + REST body; NO POST/dispatch).",
         "wrapper": "jules-dispatch", "wrapper_path": r"scripts\fleet\jules-dispatch.ps1",
         "steps": [["powershell", "-NoProfile", "-ExecutionPolicy", "Bypass",
                    "-File", r"scripts\fleet\jules-dispatch.ps1",
