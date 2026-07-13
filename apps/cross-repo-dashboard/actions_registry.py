@@ -66,10 +66,6 @@ ACTIONS: list[dict[str, Any]] = [
         "cwd": HUB, "timeout": 300, "ok_exit_codes": [0],
     },
     # ---- tier 1: mutating-reversible (via a real fail-closed wrapper) ----
-    # MVP has exactly ONE tier-1 action. jules-dispatch + aider-delegate need a
-    # repo+task-file / file-target input flow they do not have yet -> deferred to
-    # v2 (see spec sec 10, out-of-scope). Only add a tier-1 entry once its wrapper
-    # exists AND resolves to a file (test_tier1_requires_wrapper enforces this).
     {
         "id": "create-draft-pr", "label": "Crea draft-PR (branch corrente)", "tier": 1,
         "area": "delegate", "desc": "Guarded: open a DRAFT PR for the current claude/* branch (--head pinned).",
@@ -80,6 +76,44 @@ ACTIONS: list[dict[str, Any]] = [
         "steps": [["powershell", "-NoProfile", "-ExecutionPolicy", "Bypass",
                    "-File", r"scripts\fleet\draft-pr.ps1"]],
         "cwd": HUB, "timeout": 120, "ok_exit_codes": [0],
+    },
+    # ---- tier 1: Jules scoped-dispatch PREVIEW (v2) ----
+    # The jules-dispatch wrapper needs -Repo + -TaskFile + -Target, and gate 3
+    # enforces Target<->task-file consistency -- so template and target are COUPLED
+    # (independent dropdowns cannot satisfy the wrapper without a free-text Target,
+    # which the whitelist-only model forbids). The whitelist-safe fit is therefore
+    # ONE fixed-argv entry per pre-authored scoped task (reviewed like code), each
+    # run with -DryRun: it exercises all 5 gates + builds the REST body + writes a
+    # DRYRUN audit line, but does NOT POST (no outward dispatch). Add a new task by
+    # committing a docs/jules/templates/*.md and a sibling entry here. Real dispatch
+    # (dropping -DryRun) stays a human CLI action for now.
+    {
+        "id": "jules-preview-journal-land",
+        "label": "Jules preview: docstring pass journal-land.ps1 (dry-run)", "tier": 1,
+        "area": "delegate",
+        "desc": "Validate a scoped Jules docstring task on scripts/fleet/journal-land.ps1 "
+                "(5 gates -- incl. a live Jules session GET -- + REST body; NO POST/dispatch).",
+        "wrapper": "jules-dispatch", "wrapper_path": r"scripts\fleet\jules-dispatch.ps1",
+        "steps": [["powershell", "-NoProfile", "-ExecutionPolicy", "Bypass",
+                   "-File", r"scripts\fleet\jules-dispatch.ps1",
+                   "-Repo", "codemasterdd-ai-station",
+                   "-TaskFile", r"docs\jules\templates\docstring-pass-journal-land.md",
+                   "-Target", "scripts/fleet/journal-land.ps1", "-DryRun"]],
+        "cwd": HUB, "timeout": 180, "ok_exit_codes": [0],
+    },
+    {
+        "id": "jules-preview-morning-brief",
+        "label": "Jules preview: docstring pass morning-brief.ps1 (dry-run)", "tier": 1,
+        "area": "delegate",
+        "desc": "Validate a scoped Jules docstring task on scripts/fleet/morning-brief.ps1 "
+                "(5 gates -- incl. a live Jules session GET -- + REST body; NO POST/dispatch).",
+        "wrapper": "jules-dispatch", "wrapper_path": r"scripts\fleet\jules-dispatch.ps1",
+        "steps": [["powershell", "-NoProfile", "-ExecutionPolicy", "Bypass",
+                   "-File", r"scripts\fleet\jules-dispatch.ps1",
+                   "-Repo", "codemasterdd-ai-station",
+                   "-TaskFile", r"docs\jules\templates\docstring-pass-morning-brief.md",
+                   "-Target", "scripts/fleet/morning-brief.ps1", "-DryRun"]],
+        "cwd": HUB, "timeout": 180, "ok_exit_codes": [0],
     },
     # ---- tier 2: excluded (documented, NOT runnable) ----
     {

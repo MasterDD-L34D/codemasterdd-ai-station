@@ -64,16 +64,40 @@ def test_argv_elements_are_literal_strings() -> None:
 
 
 def test_step_script_paths_resolve() -> None:
-    # any .ps1/.py path token in a step must resolve to a real file in the repo.
-    # Codex #552: governance-lint pointed at a non-existent scripts/governance-lint.py,
-    # so the tier-0 action failed with file-not-found instead of producing the report.
+    # any script/template path token in a step must resolve to a real file in the
+    # repo. Codex #552: governance-lint pointed at a non-existent .py -> the action
+    # failed with file-not-found instead of running. Same guard covers the jules
+    # -TaskFile templates (.md) so a dangling template can never ship a dead action.
     repo_root = Path(__file__).resolve().parents[2]
     for a in ACTIONS:
         for step in a.get("steps", []):
             for tok in step:
-                if tok.endswith((".ps1", ".py")):
+                if tok.endswith((".ps1", ".py", ".md")):
                     resolved = repo_root.joinpath(*tok.replace("\\", "/").split("/"))
                     assert resolved.is_file(), f"{a['id']}: step path does not resolve: {tok} -> {resolved}"
+
+
+def test_jules_taskfile_templates_pass_gate3_markers() -> None:
+    # A jules -TaskFile template that merely EXISTS is not enough: the wrapper's
+    # gate 3 (Test-ScopedTemplate) requires 4 ADR-0035 markers, and a template
+    # missing one fails at runtime (rc!=0 -> dead tier-1 action). Mirror those
+    # regexes here so a mis-authored template is caught in CI, not on a panel click.
+    import re as _re
+    repo_root = Path(__file__).resolve().parents[2]
+    markers = [
+        (r"[\\/][\w.-]+\.[A-Za-z0-9]{1,8}", "target-file-path"),
+        (r"(?i)(single[\s-]?file|named function|no logic change|no behaviou?r change|docstring)", "scope-bound"),
+        (r"(?i)ascii[\s-]?only", "ascii-only-clause"),
+        (r"(?i)(accept|acceptance|verif|tests?\s+pass)", "acceptance"),
+    ]
+    for a in ACTIONS:
+        for step in a.get("steps", []):
+            if "-TaskFile" not in step:
+                continue
+            tf = step[step.index("-TaskFile") + 1]
+            text = repo_root.joinpath(*tf.replace("\\", "/").split("/")).read_text(encoding="utf-8")
+            for rx, name in markers:
+                assert _re.search(rx, text), f"{a['id']}: template {tf} missing gate-3 marker '{name}'"
 
 
 def test_params_are_whitelist_choices_only() -> None:
