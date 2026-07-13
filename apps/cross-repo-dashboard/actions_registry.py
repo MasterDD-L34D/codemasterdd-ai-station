@@ -30,6 +30,11 @@ from typing import Any
 # app.CODEMASTERDD_ROOT), so a button that writes and the page that reads never diverge.
 HUB = os.environ.get("OS_HUB_PATH", "").strip() or r"C:\dev\codemasterdd-ai-station"
 
+# CANONICAL is the fixed hub path (NOT overridable): machine-state that the server
+# reads -- governor.db, logs -- lives here (app.py CODEMASTERDD_ROOT), so an action
+# that writes it must target this, not the OS_HUB_PATH override.
+CANONICAL = r"C:\dev\codemasterdd-ai-station"
+
 # Display-only line filter for the verbose jules-dispatch -DryRun output: keep only
 # the signal lines (gate results, the DRYRUN verdict, the audit path, an ABORT),
 # dropping the multi-line REST body dump. Cosmetic -- see /api/run-action keep_lines.
@@ -79,6 +84,16 @@ ACTIONS: list[dict[str, Any]] = [
         "area": "audit", "desc": "Run the repo pytest suite.",
         "steps": [["py", "-m", "pytest", "-q", "scripts/tests"]],
         "cwd": HUB, "timeout": 300, "ok_exit_codes": [0],
+    },
+    {
+        "id": "governor-refresh", "label": "Governor: re-ingest signals (R0)", "tier": 0,
+        "area": "report",
+        "desc": "Re-ingest the 9 fleet governor signal sources into governor.db (report-only R0). "
+                "Refreshes the /governor pane; no outward action.",
+        # writes the CANONICAL governor.db the /governor pane reads (not the override).
+        "steps": [["py", "-3", "-m", "governor.ingest"]],
+        "cwd": CANONICAL + r"\apps\cross-repo-dashboard", "timeout": 180, "ok_exit_codes": [0],
+        "keep_lines": ["governor ingest"],  # CLI prints one summary line
     },
     # ---- tier 1: mutating-reversible (via a real fail-closed wrapper) ----
     {

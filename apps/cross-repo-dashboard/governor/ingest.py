@@ -168,7 +168,12 @@ def ingest_all(
         except Exception as e:  # noqa: BLE001 -- one bad source must not abort the rest
             errors += 1
             store.add_auto_observed(src["id"], "ingest-error", detail=str(e)[:200])
-    return {"ingested": ingested, "new": new, "errors": errors}
+    result = {"ingested": ingested, "new": new, "errors": errors}
+    # Run marker: signals only bump fetched_at when their DATA changes, so a run with
+    # no changes leaves every fetched_at old. Record every run so the /governor
+    # freshness banner reflects "when ingest last RAN", not "when data last changed".
+    store.add_auto_observed("_ingest", "ran", detail=json.dumps(result))
+    return result
 
 
 def main() -> int:

@@ -821,11 +821,28 @@ def governor_pane() -> Any:
     from governor.store import SignalStore
     store = SignalStore(GOVERNOR_DB)
     signals = store.latest_per_source()
+    # Freshness: surface WHEN ingest last ran so a stale snapshot is not mistaken for
+    # live fleet state. Use the '_ingest'/'ran' marker (a run with no data changes
+    # leaves every signal's fetched_at old, so max(fetched_at) would under-report);
+    # fall back to the newest fetched_at for DBs predating the run marker.
+    last_ingest = store.last_ingest_at()
+    if not last_ingest:
+        fetched = [s.get("fetched_at") for s in signals if s.get("fetched_at")]
+        last_ingest = max(fetched) if fetched else None
+    stale_days = None
+    if last_ingest:
+        try:
+            stale_days = (datetime.now(timezone.utc) - datetime.fromisoformat(last_ingest)).days
+        except ValueError:
+            stale_days = None
     return render_template(
         "cr_governor.html",
         signals=signals,
         acted_count=store.acted_on_count(),
         advisory=store.auto_observed_recent(limit=20),
+        last_ingest=last_ingest,
+        stale_days=stale_days,
+        stale=(stale_days is not None and stale_days > 7),
     )
 
 

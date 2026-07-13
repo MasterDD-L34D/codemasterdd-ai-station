@@ -128,6 +128,18 @@ class SignalStore:
                 "SELECT * FROM auto_observed ORDER BY id DESC LIMIT ?", (limit,)
             ).fetchall()
             return [dict(r) for r in rows]
+
+    def last_ingest_at(self) -> 'str | None':
+        """observed_at of the most recent ingest RUN (the '_ingest'/'ran' marker), or
+        None if none recorded. Distinct from a signal's fetched_at (which only bumps
+        when that signal's DATA changes), so this is the true 'last refreshed' clock."""
+        with self._connect() as c:
+            row = c.execute(
+                "SELECT MAX(observed_at) AS t FROM auto_observed "
+                "WHERE source='_ingest' AND event='ran'"
+            ).fetchone()
+            return row["t"] if row and row["t"] else None
+
     def previous_severity(self, source: str) -> 'str | None':
         """Return the severity of the SECOND-most-recent signals row for this source.
 

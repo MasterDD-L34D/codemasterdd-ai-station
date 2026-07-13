@@ -8,6 +8,14 @@
 </head>
 <body>
   <h1>Fleet governor -- consolidated signals (R0, report-only)</h1>
+  {% if last_ingest %}
+  <p class="{{ 'sev-warning' if stale else 'sev-ok' }}">
+    Last ingest: <code>{{ last_ingest }}</code> ({{ stale_days }} day(s) ago){% if stale %}
+    -- <strong>STALE</strong>: refresh with <code>python -m governor.ingest</code> or the OS Console "Governor: re-ingest" action{% endif %}
+  </p>
+  {% else %}
+  <p class="sev-warning">No signals ingested yet -- run <code>python -m governor.ingest</code>.</p>
+  {% endif %}
   <p>Acted-on signals (lifetime total; the off-ramp 4-week window + the &gt;=3 target activate post-Fase-1b, when &gt;=2 sources are live): <strong>{{ acted_count }}</strong></p>
   <table>
     <thead><tr><th>Source</th><th>Kind</th><th>Severity</th><th>Summary</th><th>Produced</th><th>Fetched</th></tr></thead>
