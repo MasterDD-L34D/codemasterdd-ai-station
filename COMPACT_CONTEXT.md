@@ -11,9 +11,17 @@
 - **Ruolo**: infrastructure-as-code + governance + dashboard operativa cross-repo
   per la fleet AI sovereign-first di Eduardo (vedi `CLAUDE.md` autoritativo).
 
-## Stato attuale (verificato git/ls/gh 2026-07-03, fleet audit)
-- **HEAD origin/main**: `eca45fe`+ (2026-07-03; avanza a ogni land, hub molto
-  attivo Ryzen+Lenovo in parallelo). 0 PR miei aperti sul hub.
+## Stato attuale (verificato git/ls/gh 2026-07-13, housekeeping)
+- **HEAD origin/main**: `9d3a042` (2026-07-13; avanza a ogni land, hub molto
+  attivo Ryzen+Lenovo in parallelo). 0 PR aperti sul hub.
+- **Arco OS Console (07-12/13, MERGED)**: home `/os` + tier-0 actions + guarded
+  draft-PR (#552), stato vivo 7 layer (#555), jules scoped-dispatch PREVIEW
+  dry-run (#557), OS_HUB_PATH override (#558), keep_lines filter (#561);
+  dashboard traccia il hub + link OS Console (#563), governor R0 signal pane
+  revival (#564). Mappa OS + ADR-0044 (#538) e morning-brief R0 (#540) merged
+  07-12: arco agentic-OS composition-not-construction CHIUSO.
+- **jules-daily-digest RIPARATO** (#542, S4U 0x800710E0): digest ripresi dal
+  07-12 (gap 07-03..07-11 = task rotto); 07-12 e 07-13 entrambi Awaiting 0.
 - **Fleet health VERDE** (audit 2026-07-03, workflow 5-probe + verify 4-agent,
   overall_go): dashboard registry 10/10 + run-monitor 50/50, Game/GGv2
   origin/main CI verde. Unico RED era **Game-DB "Evo Import Sync"** (giu' 3gg,
@@ -35,17 +43,23 @@
   aggiornato multi-machine `93fe89d`). Lane policy ratificata:
   `docs/reference/jules-lane-policy.md` (FILLER-ONLY max 1 trio/sessione in
   coda, stop a pool vuoto, ~9 file clean residui; 100% NON e' un goal).
-- **Compass**: DI ~72-82 (oscilla con la window same-day). Due drift risolti =
-  falsi positivi da mis-scoping (#469 scripts/fleet, #473 fleet-tools-mcp).
-  `agentic-tooling` drift = artefatto di finestra (30 commit same-day), NON
-  neglect -- recon scope-vs-neglect PRIMA di ogni commit (anti L-016).
+- **Compass**: DI ~72-82 (oscilla con la window same-day). Tre drift risolti =
+  falsi positivi: mis-scoping (#469 scripts/fleet, #473 fleet-tools-mcp) +
+  artefatto di finestra (`agentic-tooling` 07-02; `knowledge-preservation`
+  07-13, pillar toccato 07-06 #515 ma window = solo sprint 07-12/13). Recon
+  scope-vs-neglect PRIMA di ogni commit (anti L-016).
+- **GGv2 studio-track fase 4 (lane Godot, journal 07-12/13)**: f-a 3/3
+  eseguito -- audio foundation GGv2#599, vfx combat GGv2#601, polish+badlands
+  GGv2#602. Campagna doc-comment: batch fino a 38-39 dispatchati 07-10
+  (tasks in docs/jules-batch/tasks/).
 - **Fleet altre lane 07-03**: Ryzen lane L3 char-test attiva (telemetry-bridge
   #3187, vc_telemetry_harness #3188, pe_candidates #3189, generate_open_decisions
   #3195 -- PR-to-owner do-NOT-merge); July-spend chip -> card dashboard cap-watch
   su main; code-graph tooling landato (ADR-0043).
-- **ADR**: ~43 file; **collision 0040 RISOLTA** (#482: 0040-code-graph ->
+- **ADR**: 45 file; **collision 0040 RISOLTA** (#482: 0040-code-graph ->
   0043-code-graph-tooling-adoption; resta 0040-doctrine-triage-label). Recenti
-  0041 sovereign-SD, 0042 evo-swarm entity-grounding, 0043 code-graph.
+  0041 sovereign-SD, 0042 evo-swarm entity-grounding, 0043 code-graph,
+  0044 personal-agentic-OS.
 - **Stack decommissionato** (NON piu' presente): `infra/` (LiteLLM+Langfuse+
   Postgres docker-compose) e `apps/dogfood-ui/` RIMOSSI (ADR-0017 SUPERSEDED da
   ADR-0030 Hybrid A1). `apps/` ora contiene solo `cross-repo-dashboard/` +
