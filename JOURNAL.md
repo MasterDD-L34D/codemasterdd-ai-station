@@ -19,6 +19,36 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-07-13 (Dashboard audit truthfulness/completeness -- PR #567, Opus 4.8 da Lenovo)
+
+### Completato
+- **Audit sezione-per-sezione dashboard cross-repo** (follow-up chip OS-Console): ground-truth
+  di ogni sezione contro git/gh/governor.db/filesystem live. OK senza fix: JOURNAL preview,
+  Recent activity, OPEN_DECISIONS (3 active OD-010/011/012), API spend $0 (veritiero, path+formato
+  match), Governor R0 pane (fresh post-#564 + colonna Fetched per-signal), /os 7 layer, run-monitors.
+- **5 fix concordati (F1+F2A+F4+F5+F6) + 2 Codex P2** mergiati (#567 squash, gate CI+Codex, sync
+  canonico+Ryzen):
+  - F1 healthcheck: `always_on` solo Ollama; header "1/1 always-on UP + N opt-in UP"; opt-in
+    `down`=idle neutro, `error`/`timeout` tengono badge reale (P2 Codex: non nascondere unhealthy).
+  - F2A ADR panel: mostra tutte le Proposed (5), undated=on-merge; +regex STATUS-CHECK (ADR-0029 ->
+    2026-06-13 overdue, P2 Codex). Rilabel "ADR proposte (attesa ratifica)".
+  - F4 rimossa label stale "Gate E" (coord modal + classi CSS `gate-e-*` -> `spend-*`, regole morte).
+  - F5 /os Scheduling layer interroga anche `governor-ingest` (task #564).
+  - F6 catalog badge "da generare" per file-target non ancora rigenerati (3/14 regenerable).
+  - Test: 306 pass (canonical order) + 5 nuovi regressione. ASCII-clean added-lines.
+
+### Da fare
+- Doc drift (out-of-scope, chip aperto): CLAUDE.md/agents README dice "16 subagent" ma reali 19
+  (la dashboard conta i file veri; il doc e' stale).
+
+### Note
+- F3 (caveat divergence) proposto ma NON scelto da Eduardo: la dashboard mostra ahead/behind
+  senza `git fetch` (Game local 65 behind = reale, freshness=ultimo fetch) + velocity LOCAL mentre
+  last_commit/activity REMOTE -- explicabile ma mixabile; lasciato come-e'.
+- Edit-tool validation 401 intermittente per meta' sessione -> edits applicati via py-patch-script
+  con assert single-occurrence (stessa safety di Edit); heredoc collassa `\\` -> costruito regex
+  con `chr(92)`.
+
 ## 2026-07-13 (Agentic OS Console: feature completa + dashboard/governor revival, Fable 5 da Lenovo)
 
 ### Completato
