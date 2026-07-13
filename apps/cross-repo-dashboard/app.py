@@ -107,9 +107,11 @@ def resolve_repo_path(env_var: str, *candidates: str) -> str:
 
 # Healthcheck endpoints
 # HTTP-based (require service exposing /health or similar)
+# always_on=True marks the sole unconditionally-running service (Ollama); every
+# other entry is opt-in, so its DOWN renders as "idle" not "broken" (2026-07-13 audit).
 HEALTHCHECKS = [
     # Local AI inference (always-on)
-    {"name": "Ollama", "url": "http://127.0.0.1:11434/api/tags", "timeout": 3, "category": "ai-inference"},
+    {"name": "Ollama", "url": "http://127.0.0.1:11434/api/tags", "timeout": 3, "category": "ai-inference", "always_on": True},
     # Stack ADR-0017 observability (Docker compose, scaffold opt-in DOWN by default)
     {"name": "LiteLLM proxy", "url": "http://127.0.0.1:4000/health/readiness", "timeout": 3, "category": "stack-adr-0017"},
     {"name": "Langfuse", "url": "http://127.0.0.1:3000/api/public/health", "timeout": 3, "category": "stack-adr-0017"},
@@ -365,16 +367,20 @@ def fetch_healthchecks(force_refresh: bool = False) -> list[dict[str, Any]]:
                 "status": "up" if r.status_code == 200 else "error",
                 "http": r.status_code,
                 "latency_ms": int(r.elapsed.total_seconds() * 1000),
+                "always_on": hc.get("always_on", False),
             })
         except requests.ConnectionError:
             results.append({"name": hc["name"], "url": hc["url"], "category": hc.get("category", "other"),
-                          "status": "down", "http": None, "latency_ms": None})
+                          "status": "down", "http": None, "latency_ms": None,
+                          "always_on": hc.get("always_on", False)})
         except requests.Timeout:
             results.append({"name": hc["name"], "url": hc["url"], "category": hc.get("category", "other"),
-                          "status": "timeout", "http": None, "latency_ms": None})
+                          "status": "timeout", "http": None, "latency_ms": None,
+                          "always_on": hc.get("always_on", False)})
         except Exception as e:  # noqa: BLE001
             results.append({"name": hc["name"], "url": hc["url"], "category": hc.get("category", "other"),
-                          "status": "error", "http": None, "error": str(e)[:100]})
+                          "status": "error", "http": None, "error": str(e)[:100],
+                          "always_on": hc.get("always_on", False)})
     # TCP socket healthchecks (es. Postgres no HTTP)
     for hc in HEALTHCHECKS_TCP:
         sock = None
@@ -530,14 +536,18 @@ def fetch_adr_countdown() -> list[dict[str, Any]]:
                     or _ADR_RATIFY_DATE_RE2.search(content)
                     or _ADR_RATIFY_DATE_RE3.search(content)
                 )
-                if not date_match:
-                    continue
-                ratify_date_str = date_match.group(1)
-                try:
-                    ratify_date = datetime.fromisoformat(ratify_date_str).replace(tzinfo=timezone.utc)
-                    days_remaining = (ratify_date - datetime.now(timezone.utc)).days
-                except ValueError:
-                    days_remaining = None
+                # F2A (2026-07-13 audit): surface EVERY Status:Proposed ADR, not only
+                # those with an explicit ratification-deadline date. The convention now
+                # ratifies "on Eduardo merge" (no timer); an undated Proposed ADR is still
+                # pending -> ratify_date None, days_remaining None.
+                ratify_date_str = date_match.group(1) if date_match else None
+                days_remaining = None
+                if ratify_date_str:
+                    try:
+                        ratify_date = datetime.fromisoformat(ratify_date_str).replace(tzinfo=timezone.utc)
+                        days_remaining = (ratify_date - datetime.now(timezone.utc)).days
+                    except ValueError:
+                        days_remaining = None
                 # Extract ADR number from filename
                 num_match = _ADR_NUM_RE.match(f.name)
                 items.append({
@@ -746,7 +756,7 @@ def _layer_live_state() -> list[dict[str, Any]]:
     adrs = fetch_adr_countdown()
     spend = fetch_api_spend()
     journal = fetch_journal_preview()
-    sched = scheduled_task_health(["morning-brief", "jules-daily-digest"])
+    sched = scheduled_task_health(["morning-brief", "jules-daily-digest", "governor-ingest"])
     mem = memory_index_size()
     hooks = active_hooks()
     agents = count_agents()
@@ -922,6 +932,10 @@ def dashboards_catalog() -> Any:
         e["open_href"] = _open_href(d["open"]) if d.get("open") else ""
         e["open_is_url"] = bool(d.get("open")) and _is_url(d["open"])
         e["has_regen"] = bool(d.get("regen"))
+        # F6 audit 2026-07-13: file targets 404 on open until first generated;
+        # surface existence so the card flags "da generare". None for url/no-open.
+        e["exists"] = (Path(d["open"]).exists()
+                       if d.get("open") and not e["open_is_url"] else None)
         e.pop("regen", None)  # argv lists never reach the template
         entries.append(e)
     areas: dict[str, list[dict[str, Any]]] = {}

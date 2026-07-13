@@ -60,7 +60,11 @@
 
 <!-- C1 Healthchecks (grouped by category) -->
 <section class="row-section">
-<h3>Service health <span class="subtitle">({{ state.healthchecks | selectattr('status', 'equalto', 'up') | list | length }}/{{ state.healthchecks | length }} UP)</span></h3>
+{% set hc_always = state.healthchecks | selectattr('always_on') | list %}
+{% set hc_always_up = hc_always | selectattr('status', 'equalto', 'up') | list %}
+{% set hc_optin = state.healthchecks | rejectattr('always_on') | list %}
+{% set hc_optin_up = hc_optin | selectattr('status', 'equalto', 'up') | list %}
+<h3>Service health <span class="subtitle">({{ hc_always_up | length }}/{{ hc_always | length }} always-on UP{% if hc_optin_up %} &middot; {{ hc_optin_up | length }}/{{ hc_optin | length }} opt-in UP{% else %} &middot; {{ hc_optin | length }} opt-in idle{% endif %})</span></h3>
 {% set categories = {} %}
 {% for hc in state.healthchecks %}
   {% if categories.update({hc.category: categories.get(hc.category, []) + [hc]}) %}{% endif %}
@@ -70,16 +74,17 @@
   <span class="hc-category-label">{{ category|replace('-', ' ') }}</span>
   <div class="healthcheck-row">
   {% for hc in hcs %}
-  <div class="hc-badge hc-{{ hc.status }}" title="{{ hc.url }}">
+  {% set hc_idle = (not hc.always_on) and hc.status != 'up' %}
+  <div class="hc-badge {% if hc_idle %}hc-idle{% else %}hc-{{ hc.status }}{% endif %}" title="{{ hc.url }}{% if hc_idle %} (opt-in, non avviato){% endif %}">
     <span class="hc-name">{{ hc.name }}</span>
-    <span class="hc-status">{{ hc.status }}</span>
+    <span class="hc-status">{{ 'idle' if hc_idle else hc.status }}</span>
     {% if hc.latency_ms is not none %}<span class="hc-latency">{{ hc.latency_ms }}ms</span>{% endif %}
   </div>
   {% endfor %}
   </div>
 </div>
 {% endfor %}
-<p class="hc-hint"><small>Stack ADR-0017 (LiteLLM + Langfuse + Postgres + dogfood-ui) is scaffold opt-in: <code>cd infra && docker compose up -d</code> per attivare.</small></p>
+<p class="hc-hint"><small>Solo <strong>ai-inference</strong> (Ollama) e' always-on; il resto e' opt-in (DOWN = idle, non rotto). Avvio: <code>stack-adr-0017</code> = <code>cd infra &amp;&amp; docker compose up -d</code> &middot; <code>dafne</code> = <code>START-SWARM.ps1</code> &middot; <code>dashboards</code> = server Game / Mission Console / Game-DB.</small></p>
 </section>
 
 <!-- Gate E counter removed 2026-07-13: the Component-1 build-trigger experiment
@@ -89,11 +94,11 @@
 <!-- API spend cap-watch (ADR-0023 tier-0) -->
 <section class="row-section">
 <h3>Claude API spend (ADR-0023 tier-0)</h3>
-<div class="gate-e-card spend-{{ state.api_spend.band }}">
-  <div class="gate-e-stat"><span class="num">${{ '%.4f'|format(state.api_spend.mtd_cost) }}</span><span class="label">month-to-date ({{ state.api_spend.month }})</span></div>
-  <div class="gate-e-stat"><span class="num">${{ '%.4f'|format(state.api_spend.total_cost) }}</span><span class="label">total tracked</span></div>
-  <div class="gate-e-stat"><span class="num">{{ state.api_spend.band|upper }}</span><span class="label">cap band</span></div>
-  <div class="gate-e-threshold">
+<div class="spend-card spend-{{ state.api_spend.band }}">
+  <div class="spend-stat"><span class="num">${{ '%.4f'|format(state.api_spend.mtd_cost) }}</span><span class="label">month-to-date ({{ state.api_spend.month }})</span></div>
+  <div class="spend-stat"><span class="num">${{ '%.4f'|format(state.api_spend.total_cost) }}</span><span class="label">total tracked</span></div>
+  <div class="spend-stat"><span class="num">{{ state.api_spend.band|upper }}</span><span class="label">cap band</span></div>
+  <div class="spend-threshold">
     Soft cap ${{ state.api_spend.cap_low }}-{{ state.api_spend.cap_high }}/mo:
     &lt;$10 OK | $10-15 awareness | $15-20 alert | &ge;$20 trigger reactivation Pro
     | {{ state.api_spend.months_tracked }} month(s) tracked, local-only (gitignored)
@@ -115,12 +120,12 @@
 </div>
 
 <div class="split-half">
-<h3>ADR ratification countdown</h3>
+<h3>ADR proposte (attesa ratifica) ({{ state.adr_countdown | length }})</h3>
 <ul class="adr-list">
-{% for adr in state.adr_countdown[:5] %}
+{% for adr in state.adr_countdown[:8] %}
 <li>
   <strong>ADR-{{ adr.adr }}</strong>
-  ratify <code>{{ adr.ratify_date }}</code>
+  {% if adr.ratify_date %}ratify <code>{{ adr.ratify_date }}</code>{% else %}<span class="subtitle">ratifica on-merge</span>{% endif %}
   {% if adr.days_remaining is not none %}
     <span class="days {% if adr.days_remaining < 0 %}overdue{% elif adr.days_remaining < 7 %}urgent{% endif %}">
       {% if adr.days_remaining < 0 %}{{ -adr.days_remaining }}d OVERDUE
@@ -129,7 +134,7 @@
   {% endif %}
 </li>
 {% else %}
-<li class="empty">No ADR pending ratification</li>
+<li class="empty">Nessuna ADR in stato Proposed</li>
 {% endfor %}
 </ul>
 </div>
@@ -240,7 +245,7 @@
 <!-- Modal Coord event -->
 <div class="modal-overlay" id="coord-modal" style="display:none">
 <div class="modal">
-<h3>Log coord event (Gate E)</h3>
+<h3>Log coord event</h3>
 <p>Quick log via <code>coord-event-log.ps1 -Quiet -NotesQuick</code></p>
 <textarea id="coord-notes" placeholder="es. Grep cross-repo for PR status 15min cost" maxlength="200"></textarea>
 <div class="modal-actions">
