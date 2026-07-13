@@ -58,6 +58,9 @@ _ADR_STATUS_PROPOSED_RE = re.compile(r"\*{0,2}Status\*{0,2}\s*:\s*Proposed", re.
 _ADR_RATIFY_DATE_RE1 = re.compile(r"\*{0,2}Ratification[^:\n]{0,80}date\*{0,2}\s*:.{0,200}?(20\d{2}-\d{2}-\d{2})", re.IGNORECASE | re.DOTALL)
 _ADR_RATIFY_DATE_RE2 = re.compile(r"ratification[^.\n]{0,200}?(20\d{2}-\d{2}-\d{2})", re.IGNORECASE | re.DOTALL)
 _ADR_RATIFY_DATE_RE3 = re.compile(r"\bentro\s+(20\d{2}-\d{2}-\d{2})", re.IGNORECASE)
+# The older `STATUS-CHECK: <date>` convention (e.g. ADR-0029) is a real dated deadline;
+# parse it too so such an ADR is not mislabelled ratify-on-merge (Codex P2 #567).
+_ADR_STATUS_CHECK_RE = re.compile(r"STATUS-CHECK\s*:\s*(20\d{2}-\d{2}-\d{2})", re.IGNORECASE)
 _ADR_NUM_RE = re.compile(r"(\d{4})")
 _OD_ENTRY_RE = re.compile(r"###\s+\[?(OD-\d+)\]?\s+([^\n]+)")
 _JOURNAL_DATE_RE = re.compile(r"^## 20\d{2}-\d{2}-\d{2}")
@@ -533,6 +536,7 @@ def fetch_adr_countdown() -> list[dict[str, Any]]:
                 # Pattern 3: "entro 2026-MM-DD" (Italian common pattern)
                 date_match = (
                     _ADR_RATIFY_DATE_RE1.search(content)
+                    or _ADR_STATUS_CHECK_RE.search(content)
                     or _ADR_RATIFY_DATE_RE2.search(content)
                     or _ADR_RATIFY_DATE_RE3.search(content)
                 )

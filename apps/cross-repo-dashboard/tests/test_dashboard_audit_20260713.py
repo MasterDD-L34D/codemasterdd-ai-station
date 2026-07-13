@@ -85,3 +85,16 @@ def test_scheduling_layer_queries_governor_ingest(monkeypatch):
     app._layer_live_state()  # calls scheduled_task_health(...) unconditionally
     assert "governor-ingest" in seen["names"]
     assert "morning-brief" in seen["names"] and "jules-daily-digest" in seen["names"]
+
+
+def test_adr_countdown_parses_status_check_date(tmp_path, monkeypatch):
+    """Codex P2 #567: the older STATUS-CHECK: <date> convention (ADR-0029) is a real
+    dated deadline -- it must parse, not fall through to ratify-on-merge."""
+    import app
+    (tmp_path / "0029-decline.md").write_text(
+        "# ADR-0029\n\n**Status**: Proposed\n\nSTATUS-CHECK: 2026-06-13 | trigger: cost\n",
+        encoding="utf-8")
+    monkeypatch.setattr(app, "ADR_DIR", tmp_path)
+    items = {i["adr"]: i for i in app.fetch_adr_countdown()}
+    assert items["0029"]["ratify_date"] == "2026-06-13"
+    assert items["0029"]["days_remaining"] is not None  # dated -> has a countdown

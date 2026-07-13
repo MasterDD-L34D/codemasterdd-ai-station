@@ -64,7 +64,7 @@
 {% set hc_always_up = hc_always | selectattr('status', 'equalto', 'up') | list %}
 {% set hc_optin = state.healthchecks | rejectattr('always_on') | list %}
 {% set hc_optin_up = hc_optin | selectattr('status', 'equalto', 'up') | list %}
-<h3>Service health <span class="subtitle">({{ hc_always_up | length }}/{{ hc_always | length }} always-on UP{% if hc_optin_up %} &middot; {{ hc_optin_up | length }}/{{ hc_optin | length }} opt-in UP{% else %} &middot; {{ hc_optin | length }} opt-in idle{% endif %})</span></h3>
+<h3>Service health <span class="subtitle">({{ hc_always_up | length }}/{{ hc_always | length }} always-on UP &middot; {{ hc_optin_up | length }}/{{ hc_optin | length }} opt-in UP)</span></h3>
 {% set categories = {} %}
 {% for hc in state.healthchecks %}
   {% if categories.update({hc.category: categories.get(hc.category, []) + [hc]}) %}{% endif %}
@@ -74,7 +74,7 @@
   <span class="hc-category-label">{{ category|replace('-', ' ') }}</span>
   <div class="healthcheck-row">
   {% for hc in hcs %}
-  {% set hc_idle = (not hc.always_on) and hc.status != 'up' %}
+  {% set hc_idle = (not hc.always_on) and hc.status == 'down' %}
   <div class="hc-badge {% if hc_idle %}hc-idle{% else %}hc-{{ hc.status }}{% endif %}" title="{{ hc.url }}{% if hc_idle %} (opt-in, non avviato){% endif %}">
     <span class="hc-name">{{ hc.name }}</span>
     <span class="hc-status">{{ 'idle' if hc_idle else hc.status }}</span>
