@@ -83,7 +83,10 @@ GH_TOKEN = _get_gh_token()
 GH_API_BASE = "https://api.github.com"
 HTTP_TIMEOUT = 15
 
-# Paths
+# Paths. The dashboard's live-state reads (logs, ADRs, OPEN_DECISIONS, JOURNAL,
+# governor.db) stay on the CANONICAL clone -- machine state, not per-worktree. Only the
+# action cwd (actions_registry.HUB) follows OS_HUB_PATH, so a button that writes to the
+# canonical clone and a page that reads it never diverge (Codex #558).
 CODEMASTERDD_ROOT = Path(r"C:\dev\codemasterdd-ai-station")
 # Machine-portable: aa01 lives at C:\Users\<user>\aa01 (VGit on Ryzen,
 # edusc on Lenovo). Override via AA01_ROOT_PATH.

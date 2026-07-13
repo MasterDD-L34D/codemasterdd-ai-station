@@ -19,9 +19,16 @@ merge-main/force-push/external comms stay off).
 """
 from __future__ import annotations
 
+import os
 from typing import Any
 
-HUB = r"C:\dev\codemasterdd-ai-station"
+# Action CWD root. OS_HUB_PATH (parity with app.py's AA01_ROOT_PATH / DAFNE_REPO_PATH /
+# VAULT_REPO_PATH) points the ACTIONS at a clone/worktree that is on main when the
+# canonical clone is transiently on another branch -- so repo-content an action needs
+# (jules templates, wrapper scripts) resolves. Scope is deliberately narrow: ONLY the
+# action cwd follows this; the live-state + brief reads stay canonical (os_home.HUB /
+# app.CODEMASTERDD_ROOT), so a button that writes and the page that reads never diverge.
+HUB = os.environ.get("OS_HUB_PATH", "").strip() or r"C:\dev\codemasterdd-ai-station"
 
 ACTIONS: list[dict[str, Any]] = [
     # ---- tier 0: read / report ----
