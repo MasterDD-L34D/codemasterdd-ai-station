@@ -30,6 +30,14 @@ from typing import Any
 # app.CODEMASTERDD_ROOT), so a button that writes and the page that reads never diverge.
 HUB = os.environ.get("OS_HUB_PATH", "").strip() or r"C:\dev\codemasterdd-ai-station"
 
+# Display-only line filter for the verbose jules-dispatch -DryRun output: keep only
+# the signal lines (gate results, the DRYRUN verdict, the audit path, an ABORT),
+# dropping the multi-line REST body dump. Cosmetic -- see /api/run-action keep_lines.
+# NB the whole REST body prints as ONE line (JSON string with escaped \n), so keep
+# markers must be specific: a broad word like "error" matches that body line and
+# defeats the filter. Wrapper failures are "ABORT:"-prefixed (stderr is shown anyway).
+_JULES_KEEP = ["gate", "PASSED", "ABORT", "DRYRUN complete", "Audit-log"]
+
 ACTIONS: list[dict[str, Any]] = [
     # ---- tier 0: read / report ----
     {
@@ -106,7 +114,7 @@ ACTIONS: list[dict[str, Any]] = [
                    "-Repo", "codemasterdd-ai-station",
                    "-TaskFile", r"docs\jules\templates\docstring-pass-journal-land.md",
                    "-Target", "scripts/fleet/journal-land.ps1", "-DryRun"]],
-        "cwd": HUB, "timeout": 180, "ok_exit_codes": [0],
+        "cwd": HUB, "timeout": 180, "ok_exit_codes": [0], "keep_lines": _JULES_KEEP,
     },
     {
         "id": "jules-preview-morning-brief",
@@ -120,7 +128,7 @@ ACTIONS: list[dict[str, Any]] = [
                    "-Repo", "codemasterdd-ai-station",
                    "-TaskFile", r"docs\jules\templates\docstring-pass-morning-brief.md",
                    "-Target", "scripts/fleet/morning-brief.ps1", "-DryRun"]],
-        "cwd": HUB, "timeout": 180, "ok_exit_codes": [0],
+        "cwd": HUB, "timeout": 180, "ok_exit_codes": [0], "keep_lines": _JULES_KEEP,
     },
     # ---- tier 2: excluded (documented, NOT runnable) ----
     {

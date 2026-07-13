@@ -1067,7 +1067,15 @@ def run_action() -> Any:
         except FileNotFoundError as e:
             return jsonify({"ok": False, "error": f"tool not found: {e}",
                             "output": "\n".join(outputs)[-2000:]}), 500
-        tail = (result.stdout or "")[-800:] + (("\nSTDERR: " + result.stderr[-400:]) if result.stderr else "")
+        stdout = result.stdout or ""
+        keep = action.get("keep_lines")
+        if keep:
+            # display-only: show just the signal lines (gate results, DRYRUN/audit,
+            # errors), dropping a verbose body dump. Purely cosmetic -- never affects
+            # the argv, gates, auth, or exit-code handling below.
+            stdout = "\n".join(ln for ln in stdout.splitlines()
+                               if any(k.lower() in ln.lower() for k in keep))
+        tail = stdout[-800:] + (("\nSTDERR: " + result.stderr[-400:]) if result.stderr else "")
         outputs.append(f"$ {' '.join(argv)} (rc={result.returncode})\n{tail}")
         if result.returncode not in ok_codes:
             return jsonify({"ok": False, "error": f"step failed rc={result.returncode}",

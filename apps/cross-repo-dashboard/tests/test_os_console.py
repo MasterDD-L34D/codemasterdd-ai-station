@@ -117,3 +117,23 @@ def test_run_action_applies_whitelisted_param_to_argv(monkeypatch) -> None:
     assert payload["ok"] is True
     # both the fixed flag and the whitelisted value must appear in the executed argv
     assert "--repo" in payload["output"] and "SAFE-CHOICE-XYZ" in payload["output"]
+
+
+def test_run_action_keep_lines_filters_output(monkeypatch) -> None:
+    # keep_lines is a display-only filter: only stdout lines matching a keyword are
+    # shown (drops verbose body dumps). Cosmetic -- must not affect ok/exit handling.
+    monkeypatch.delenv("API_SECRET", raising=False)
+    # the dropped marker is assembled at runtime so it is NOT a contiguous literal in
+    # the argv echo header (which is always shown) -- it can only reach the output via
+    # stdout, which keep_lines filters out.
+    act = {
+        "id": "selftest-keep", "label": "x", "tier": 0, "area": "audit", "desc": "x",
+        "cwd": str(APP_DIR), "timeout": 30, "ok_exit_codes": [0], "keep_lines": ["KEEP"],
+        "steps": [[_sys.executable, "-c", "print('KEEP one'); print('ZZ'+'DROPPED'+'ZZ'); print('KEEP two')"]],
+    }
+    monkeypatch.setattr(appmod, "ACTIONS", list(appmod.ACTIONS) + [act])
+    r = client().post("/cross-repo/api/run-action", json={"id": "selftest-keep"})
+    assert r.status_code == 200
+    out = r.get_json()["output"]
+    assert "KEEP one" in out and "KEEP two" in out
+    assert "ZZDROPPEDZZ" not in out
