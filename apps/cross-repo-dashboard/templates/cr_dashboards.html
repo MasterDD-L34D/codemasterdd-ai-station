@@ -55,6 +55,7 @@
       <div>
         <span class="badge b-{{ d.status }}">{{ d.status }}</span>
         <span class="badge b-kind">{{ d.kind }}</span>
+        {% if d.exists is not none and not d.exists %}<span class="badge b-stale" title="file non ancora generato -- usa rigenera">da generare</span>{% endif %}
       </div>
       <p>{{ d.desc }}</p>
       <div class="dash-actions">
