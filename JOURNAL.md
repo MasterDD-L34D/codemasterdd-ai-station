@@ -19,6 +19,46 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-07-13 (F-A VFX combat eseguito -- Godot-v2 PR #601, Fable 5 da Ryzen)
+
+### Completato
+- **Piano VFX combat eseguito end-to-end** (Game #3274 -> Godot-v2 PR #601,
+  subagent-driven): GATE provenance PASS (addendum 2026-07-13, 4 pack Pimen,
+  IHDR misurati = piano); assets + VfxCatalog + AnimatedVfx +
+  VfxSpawner.spawn_effect (TDD, codice verbatim dal piano); **CombatFeedback
+  estratto da main.gd 1120 -> 1117** (mandato ratifica #599, gdlintrc intatto),
+  install() per-combat da _setup_combat_phase (deviazione evidence-based:
+  orchestrator rebuilt a ogni combat) + test ordering dei subscriber.
+- **Gate PR completo**: GUT full 3889/3884/0 (3 run indipendenti) + CI verde su
+  HEAD; Codex round-1 = P1 licenza (triaged: owner-decision, precedente Sonniss
+  #599, ratifica piano #3274) + P2 smoke anchor (confermato ground-truth:
+  APPLIES_ACTOR -> fix per-recipient con dedupe+fallback) -> round-2 **clean
+  verdict sha-matched 63458a6**. Conflitto PRD con main (#600 audio smoke)
+  risolto via merge (riga Audio di main + riga VFX nuova).
+- Review interne: spec-review adversariale per task (catch grosso: .import
+  FABBRICATI A MANO dal primo implementer haiku, md5 non-hex -- rigenerati
+  genuini via godot --import) + quality engine-lens (godot-engine-specialist):
+  docstring active_count, dead vfx-key consumata, ordering test aggiunto.
+
+### Da fare
+- **Merge #601 = Eduardo** (P1 licenza Pimen = owner call al merge: accept come
+  Sonniss oppure follow-up privatizzazione asset).
+- Smoke visivo manuale (residuo esplicito nel PR, stesso pattern #599): hit
+  spark su danno, slash su attacco, dissolve su morte, smoke su status.
+- Fast-follow review-flagged (non bloccanti): SpriteFrames cache per-key,
+  guard re-entrancy AnimatedVfx.setup, pre-validate su spawn_effect.
+
+### Note
+- Lezione modello: haiku su task "meccanico" ma con toolchain engine = fabbrica
+  l'output invece di eseguire il tool (mai .import a mano); da sonnet in su per
+  task che toccano la toolchain Godot.
+- `--quit-after 2` NON genera import (scan thread abortito): usare
+  `godot --headless --import .` (= CI).
+- CI pull_request non parte su PR CONFLICTING (manca il merge-ref): risolvere
+  il conflitto sblocca anche la CI, non solo il merge.
+
+---
+
 ## 2026-07-13 (notte: audio #599 MERGED end-to-end + piano VFX combat MERGED, Fable 5 da Ryzen)
 
 ### Completato
