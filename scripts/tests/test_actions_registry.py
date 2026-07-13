@@ -64,14 +64,15 @@ def test_argv_elements_are_literal_strings() -> None:
 
 
 def test_step_script_paths_resolve() -> None:
-    # any .ps1/.py path token in a step must resolve to a real file in the repo.
-    # Codex #552: governance-lint pointed at a non-existent scripts/governance-lint.py,
-    # so the tier-0 action failed with file-not-found instead of producing the report.
+    # any script/template path token in a step must resolve to a real file in the
+    # repo. Codex #552: governance-lint pointed at a non-existent .py -> the action
+    # failed with file-not-found instead of running. Same guard covers the jules
+    # -TaskFile templates (.md) so a dangling template can never ship a dead action.
     repo_root = Path(__file__).resolve().parents[2]
     for a in ACTIONS:
         for step in a.get("steps", []):
             for tok in step:
-                if tok.endswith((".ps1", ".py")):
+                if tok.endswith((".ps1", ".py", ".md")):
                     resolved = repo_root.joinpath(*tok.replace("\\", "/").split("/"))
                     assert resolved.is_file(), f"{a['id']}: step path does not resolve: {tok} -> {resolved}"
 

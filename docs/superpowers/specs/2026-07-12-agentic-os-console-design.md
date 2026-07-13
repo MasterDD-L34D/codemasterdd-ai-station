@@ -95,14 +95,24 @@ Regole di integrita' (enforced dai test, sec 7):
 - `bench-report` -- report bench da risultati esistenti.
 - `governance-lint` -- lint governance (gia' regenerable nel dashboards_registry).
 
-**Tier-1 (muta-reversibile, click = autorizzazione, via wrapper) -- 1 azione nell'MVP:**
+**Tier-1 (muta-reversibile, click = autorizzazione, via wrapper):**
 - `create-draft-pr` -- apre un draft-PR per il branch `claude/*` corrente via il
   wrapper REALE fail-closed `scripts/fleet/draft-pr.ps1` (aborta se non su un
   branch `claude/*` o se non pushato; `gh pr create --draft` con `--head` pinnato
   al branch risolto -- nessun input client raggiunge l'argv). Reversibile (draft).
-- `jules-dispatch` + `aider-delegate` -- **NON nell'MVP** (v2): richiedono un flusso
-  d'input (repo + task-file per Jules; file-target + tier per Aider) che il pannello
-  non ha ancora. Riammessi solo quando il flusso e il wrapper file-backed esistono.
+- `jules-preview-*` (v2, 2026-07-13) -- **Jules scoped-dispatch PREVIEW** via il wrapper
+  REALE `scripts/fleet/jules-dispatch.ps1 -DryRun`. Vincolo scoperto: il wrapper esige
+  `-Repo` + `-TaskFile` + `-Target` e il gate 3 impone consistenza Target<->task-file
+  (template e target ACCOPPIATI). Un `-Target` free-text romperebbe il modello
+  whitelist-only, quindi il fit pulito NON e' un dropdown ma **una entry fixed-argv per
+  task pre-autorizzato** (repo + template `docs/jules/templates/*.md` + target, tutto
+  literal, reviewed-like-code). `-DryRun` esegue i 5 gate + costruisce il body REST +
+  scrive l'audit line, ma NON fa POST (nessun dispatch outward). Aggiungere un task =
+  committare un template + una sibling entry. Il dispatch REALE (senza `-DryRun`) resta
+  azione umana CLI per ora.
+- `aider-delegate` -- **ancora deferred** (v2+): il file-target e' free-text non
+  whitelistabile in pratica (migliaia di file) e aider edita+committa da un click
+  (rischio piu' alto). Fit debole col pannello; resta sulla CLI/wrapper.
   Vedi sec 10 (out-of-scope).
 
 **Tier-2 (esclusi dal pannello):** merge-main/doctrine, force-push, comms esterne. Non
@@ -167,10 +177,16 @@ Test in `apps/cross-repo-dashboard/tests/` + estensione `scripts/tests/`.
 via wrapper reale branch-guarded), launcher wiring, test (incl. happy-path exec +
 tier-1-auth negative control).
 
-**Out (later, spec propria / v2):**
-- `jules-dispatch` (serve flusso input repo + task-file, wrapper scoped) e
-  `aider-delegate` (serve file-target + tier, wrapper privacy-guarded file-backed):
-  spostati a v2 -- l'MVP non ha il flusso d'input e non wireremo un placeholder morto.
+**v2 shipped (2026-07-13):**
+- `jules-preview-*` -- Jules scoped-dispatch PREVIEW (dry-run, fixed-argv per task,
+  vedi sec 5). Solo preview/validate (5 gate + body REST), NO POST outward.
+
+**Out (later / v2+):**
+- `aider-delegate`: file-target free-text non whitelistabile + edita/committa da click
+  (rischio) -> resta sulla CLI, fuori dal pannello finche' non c'e' un flusso file-target
+  sicuro.
+- Jules dispatch REALE (senza `-DryRun`) dal pannello: e' un POST outward; per ora
+  resta azione umana CLI. Se in futuro: earn-path harsh-review-gated (ADR-0037 standing).
 - tier-2 qualsiasi; spawn agenti Claude headless (`claude -p`); azioni
   autonome/schedulate dal pannello (= act-layer governor-gated); auth multi-utente /
   esposizione non-locale; storicizzazione run in governor.db.
