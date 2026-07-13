@@ -19,6 +19,39 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-07-13 (Agentic OS Console: feature completa + dashboard/governor revival, Fable 5 da Lenovo)
+
+### Completato
+- **Agentic OS Console -- 8 PR mergiati** su codemasterdd (ogni giro: gate CI + Codex +
+  harsh-review dove serve, sync flotta canonico+Ryzen):
+  - #552 console MVP (home `/os` + `/api/run-action` tier-gated + 5 tier-0 + guarded
+    draft-PR); #553 journal; #555 home STATO-VIVO per-layer (7 layer con segnali live +
+    PR flotta async); #557 jules scoped-dispatch PREVIEW (tier-1 `-DryRun`, fixed-argv
+    per template, no free-text); #558 `OS_HUB_PATH` env override (action cwd only);
+    #561 `keep_lines` output-filter (jules preview pulito); #563 dashboard track
+    codemasterdd hub + drop stale Gate E + link OS Console; #564 governor R0 revival.
+- **Fleet dashboard fix**: il hub codemasterdd ora e' TRACCIATO (lavoro visibile), Gate E
+  stale rimosso, governor rivitalizzato (re-ingest -> segnali 2026-07-13, banner
+  freschezza via run-marker che NON si azzera su ingest fallito, task giornaliero
+  `governor-ingest` 08:45, azione OS Console `governor-refresh`).
+- **tdd-guard Lenovo**: config rigenerato (23 pattern, `_godot-wt-*`) + `guardEnabled=True`
+  (post-merge #551, generatore FIXED targettato al root canonico).
+- **Canonico -> main**: rimosso worktree leftover `hungry-pascal`, clone canonico portato
+  su main -> lancio durevole dashboard senza `OS_HUB_PATH`.
+- Codex P2 risolti (7): governance-lint path, draft-pr pushed-check SHA, XSS PR-flotta
+  (innerHTML->DOM nodes), morning-brief UTC->local, OS_HUB_PATH scope, jules gate-3
+  marker guard, governor freshness-on-failure.
+
+### Da fare
+- **Chip aperto**: audit completo ritrovamenti dashboard + risoluzioni (service-health
+  opt-in tutti down, sezioni residue, healthchecks, dashboards-catalog).
+- Governor task: `-Unattended` (S4U elevato) per run a PC sloggato + registrare su Ryzen (opz).
+- `API_SECRET` persistente come User env var se lo si vuole ai riavvii.
+
+### Note
+- Feedback-memory: [[feedback_background_task_hygiene]] (no spam relaunch dev-server, TaskStop pulito).
+- Lavorato da worktree isolati con push-refspec (shared-clone safe); tutti i merge self dopo gate (ADR-0037).
+
 ## 2026-07-13 (sera: esecuzione F-A 3/3 polish+badlands -- Godot-v2 PR #602, Fable 5 da Ryzen)
 
 ### Completato
