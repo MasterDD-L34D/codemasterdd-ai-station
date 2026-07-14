@@ -52,6 +52,32 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 - **Content substrate census** (#3304): fotografia misurata del substrato, registrata in
   `docs_registry.json`. Prima non esisteva NESSUN registro del contenuto -- ecco perche' la
   marcescenza e' sopravvissuta 7 mesi.
+- **ADR-2026-07-14 worldgen data model** (#3305, 10 decisioni) -- la seconda meta' della
+  sessione. **Il modello non mancava**: la SoT §3 definiva gia' uno stack canonico a 4 livelli
+  (`bioma -> ecosistema -> foodweb -> network/eventi`). Mancava che **nessun file dichiarasse di
+  appartenergli e nessun guard lo facesse rispettare** -- e nei vuoti sono cresciuti 4 vocabolari
+  di biomi, 3 mappature contraddittorie e un catalogo specie per il 56% segnaposto.
+  L'ADR **non inventa un modello**: sceglie quale file e' autoritativo per livello, cancella i
+  doppioni, mette i guard. `biome_classes.yaml` si scioglie (koppen dentro `biomes.yaml` --
+  **ordine load-bearing**: `trait_coverage.py` lo inverte OGGI, cancellarlo prima re-introduce
+  il layer 3). `cryosteppe` + `deserto_caldo` **PROMOSSI** (sono liv.2+3+4, `DESERTO_CALDO` e'
+  lo `start_node` della meta-rete: fonderli l'avrebbe rotta dal nodo di partenza).
+  **Una specie = `biomes` + `role_trofico` + >=1 tratto** -> catalogo onesto **46, non 105**.
+- **Le 4 domande aperte: CHIUSE, e nessuna ha richiesto un'opinione** -- ognuna si e' risolta
+  misurando. `when.biome_class` = identita' di bioma (19/33 la usano, **0** usano la famiglia
+  ecologica: non era ambiguita', era un nome sbagliato). `cross_events` autoritativo = quello
+  della network (**il pack pubblicava quello stale di 9 mesi**). Il debito narrativo era **un
+  solo bioma** (`savana`: summary "dune fotoniche", affixes copiati da `abisso_vulcanico` ->
+  fusa in `deserto_caldo`).
+- **TARGET: nucleo-8. "Quanto manca" = ~35 specie + 3 foodweb.** Il nucleo **non l'ho scelto io:
+  era gia' scritto nei dati, in due posti indipendenti** -- i foodweb (liv.3) esistono per
+  esattamente 5 biomi, e la meta-rete (liv.4) ha 6 nodi (quei 5 + `atollo_obsidiana`). Chi ha
+  costruito il gioco **aveva gia' scelto un nucleo** e ha autorato lo stack profondo solo per
+  quello. Aggiunti il 7o e l'8o col criterio delle famiglie ecologiche mancanti (il nucleo-5
+  copriva solo arid/canopy/clastic: **niente acqua, niente calore, niente sottosuolo**).
+  I 13 biomi fuori dal nucleo si **archiviano** (museum card, non cancellati).
+- **Museum**: 4 carte nuove + 6 rianimate (via `repo-archaeologist`, l'unico autorizzato a
+  scriverci). `M-2026-04-26-012` **REVIVED**.
 
 ### Da fare
 
@@ -74,14 +100,25 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
   Ma nomina `species` 0 volte e `ecosistemi` 0 volte: misura la MECCANICA, e la meccanica sta
   bene (247/308 tratti con `active_effects`). Chi rivede il piano da li' vede un gioco quasi
   finito. Non e' falso -- e' incompleto.
-- **Tre volte ho costruito una conclusione su una premessa non misurata**, e tre volte una
-  falsificazione esterna mi ha corretto: (1) stavo per congelare in un gate un **73 fantasma**
-  -> smontato da una chip; (2) ho proposto a Eduardo un bivio "promuovi o aliasa i 21 biomi"
-  quando quei biomi hanno **zero specie** e ENTRAMBE le opzioni avrebbero legittimato dati
+- **QUATTRO volte ho costruito una conclusione su una premessa non misurata**, e quattro volte
+  una falsificazione **esterna** mi ha corretto: (1) stavo per congelare in un gate un **73
+  fantasma** -> smontato da una chip; (2) ho proposto a Eduardo un bivio "promuovi o aliasa i 21
+  biomi" quando quei biomi hanno **zero specie** e ENTRAMBE le opzioni avrebbero legittimato dati
   fabbricati -> smontato da un subagent; (3) ho detto a una chip che `pelli_cave` e' isolante-a-
-  freddo, il glossario dice **arido** -> la chip ha rifiutato la mia istruzione sbagliata.
+  freddo, il glossario dice **arido** -> la chip ha rifiutato la mia istruzione sbagliata;
+  (4) ho contato **5 ecosistemi** leggendo `.biome.yaml` invece di `.ecosystem.yaml` (**21**),
+  non ho visto ne' i foodweb ne' la meta-rete, e stavo per fondere via due nodi di livello 4 ->
+  **smontato dal Museum**, che Eduardo mi ha detto di consultare.
   Regola salvata in memoria: **prima di offrire un bivio, verifica la premessa su cui poggia --
   `ls` la cartella, conta le righe, fai la misura. Una storia plausibile non e' una prova.**
+- **Il Museum aveva PREVISTO tutto questo**, testualmente, ad aprile: *"Rischio: sessioni future
+  di Claude descrivono il gioco come 'rotazione di mappe' ignorando 3 livelli profondi gia'
+  documentati e validati."* (carta `M-2026-04-26-012`). E' esattamente cio' che ho fatto.
+  **`docs/museum/MUSEUM.md` va consultato PRIMA dello scavo, non dopo.** E' piu' economico del
+  dig e sa in anticipo cosa stai per sbagliare.
+- Il sistema ha retto **non perche' io sia stato attento, ma perche' Eduardo ha preteso che ci
+  fosse sempre qualcosa fuori di me a contraddirmi.** E' l'unica ragione per cui la sessione
+  finisce con un ADR fondato su numeri veri invece che con un sesto strato di vernice.
 - **Collisione shared-clone reale**: una chip avviata da Eduardo ha dirottato il mio branch a
   meta' lavoro nello stesso clone Game. Recupero via worktree isolato (`r1iso/*`). Poi i 7 PR
   per-famiglia sono andati tutti DIRTY appena il primo ha mergiato (rigenerano gli STESSI file
