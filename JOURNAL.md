@@ -19,6 +19,75 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-07-14 (Game R1 trait-authoring CHIUSO + cinque strati di copertura finta rimossi -- Opus 4.8 da Lenovo)
+
+### Completato
+
+- **R1 trait design-stub authoring: CHIUSO.** 46/46 stub autorati (sinergie grounded sul
+  glossario, reciproche, `debolezza` ovunque), 14 voci i18n IT+EN con `uso_funzione` grounded
+  verbatim su `active_effects.yaml`. Su main: **0 `design_stub:true`** nel repo, 0 un-stubbati
+  senza `debolezza`. PR Game #3284 #3285 #3292 #3296.
+- **Pack-ref dead-slug** (Codex P2 su #3278): `env_traits.json` NON e' generato -- e' la
+  sorgente hand-maintained che `sync_evo_pack_assets.js` copia nei 2 mirror. Il #3282 aveva
+  editato il file giusto ma non rigenerato i mirror -> no-drift guard rosso. Fix completo #3284.
+- **Cinque strati di copertura finta, rimossi.** Il filone e' partito da un P2 di Codex ed e'
+  finito in una demolizione:
+  1. regola sintetica `coverage_backfill` (`when:{}`, 105 tratti, runtime-inerte) -> #3298
+  2. backfill `species_affinity` incondizionato (iniettava OGNI specie affinity in QUALSIASI
+     combo scoperta, zero grounding di bioma) -> #3300
+  3. regole koppen -> combo `(None,None)` insoddisfacibile per costruzione, "coperto" da uno
+     stub globale senza bioma -> modellate sui biomi veri con la mappa canonica gia' esistente
+     (`biome_classes.yaml` -> `koppen_examples`), #3300
+  4. 21 cartelle-bioma fabbricate + **59/105 file-specie sono stub autogen (56%)** -> #3302
+  5. 4 alias contraddittori (`badlands -> dorsale_termale_tropicale`) su biomi VIVI -> #3302
+  Gate coverage: da uno **0 finto** a un **5 vero**, ratchet-down-only, + lint che RIFIUTA le
+  regole con `when` vuoto (negative-control: env avvelenato -> rifiutato, file vero -> passa).
+- **Harsh review dei PR + fix**: trovata un'**asimmetria del ratchet** mia (soffitto
+  `max_missing` "ratchet DOWN only" ma pavimento `min_traits=27` con 189 reali -> 162 tratti
+  potevano perdere ogni link con CI verde). Ora 189, ratchet UP only.
+- **`broken_doc_pin` false-positive** (#3303): l'estrattore di pin legge riga-per-riga, quindi
+  un path spezzato a-capo in un commento diventa un pin troncato -> "doc inesistente" su doc
+  che ESISTONO e commenti CORRETTI. Il weekly drift audit #3275 proponeva di **riformattare i
+  commenti corretti** per compiacere la regex. Fixato l'estrattore: 4 -> 0 FP, 110 test.
+- **Content substrate census** (#3304): fotografia misurata del substrato, registrata in
+  `docs_registry.json`. Prima non esisteva NESSUN registro del contenuto -- ecco perche' la
+  marcescenza e' sopravvissuta 7 mesi.
+
+### Da fare
+
+- **#3302 (ADR-class, master-dd)**: 4 vocabolari di biomi sovrapposti + `biome_class`
+  semanticamente sovraccarica (fine in `biome_classes.yaml`, grossolana in `biomes.yaml`) +
+  alias contraddittori. Deve decidere anche **cosa puo' essere una "specie"** (56% placeholder).
+- **TARGET di scope (master-dd)**: quanti ecosistemi/biomi/specie deve avere il gioco. Oggi non
+  e' scritto da nessuna parte -> "quanto manca" e' indefinito. Senza questo, ripianificare e'
+  costruire sul vuoto.
+- #3299 triage dei 71 tratti senza regola-bioma (bucket A 44 / B 5 esenti / C 22 ambigui).
+- #3304 da mergiare.
+
+### Note
+
+- **Ordine raccomandato: MISURA -> MODELLO -> TARGET -> PIANO -> BUILD.** Invertirlo e'
+  letteralmente come e' nata la regola-backfill: qualcuno doveva far quadrare un numero e non
+  aveva la realta' sotto.
+- **Le SPEC A..Q non servono per questa domanda.** Il residual-gate register e' fatto bene e i
+  gate sono chiusi ONESTAMENTE (il PE_ratio e' stato falsificato e droppato -- scienza vera).
+  Ma nomina `species` 0 volte e `ecosistemi` 0 volte: misura la MECCANICA, e la meccanica sta
+  bene (247/308 tratti con `active_effects`). Chi rivede il piano da li' vede un gioco quasi
+  finito. Non e' falso -- e' incompleto.
+- **Tre volte ho costruito una conclusione su una premessa non misurata**, e tre volte una
+  falsificazione esterna mi ha corretto: (1) stavo per congelare in un gate un **73 fantasma**
+  -> smontato da una chip; (2) ho proposto a Eduardo un bivio "promuovi o aliasa i 21 biomi"
+  quando quei biomi hanno **zero specie** e ENTRAMBE le opzioni avrebbero legittimato dati
+  fabbricati -> smontato da un subagent; (3) ho detto a una chip che `pelli_cave` e' isolante-a-
+  freddo, il glossario dice **arido** -> la chip ha rifiutato la mia istruzione sbagliata.
+  Regola salvata in memoria: **prima di offrire un bivio, verifica la premessa su cui poggia --
+  `ls` la cartella, conta le righe, fai la misura. Una storia plausibile non e' una prova.**
+- **Collisione shared-clone reale**: una chip avviata da Eduardo ha dirottato il mio branch a
+  meta' lavoro nello stesso clone Game. Recupero via worktree isolato (`r1iso/*`). Poi i 7 PR
+  per-famiglia sono andati tutti DIRTY appena il primo ha mergiato (rigenerano gli STESSI file
+  derivati condivisi) -> consolidati in un unico PR. Per-famiglia e' l'unita' giusta per la
+  REVIEW, sbagliata per il MERGE.
+
 ## 2026-07-13 (Housekeeping + fleet-verify game-family 0-RED -- Fable 5 -> Opus 4.8 da Lenovo)
 
 ### Completato
