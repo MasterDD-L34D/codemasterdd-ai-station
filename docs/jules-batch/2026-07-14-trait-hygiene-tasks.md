@@ -21,6 +21,21 @@ node scripts/build_trait_index.js"):
 - Sintomo se si sbaglia: `trait_template_validator.py` -> "Trait presenti in index.json ma
   senza file dedicato" (coverage parity FAIL). Entrambe le sessioni J3/J4 hanno mancato questo.
 
+### 3 layer derivati CI-drift-guarded (LOCAL GREEN != CI GREEN)
+
+Una change che cambia il COUNT dei trait (delete/dedup) stala TRE bundle derivati; il trio
+validator locale (`trait_template_validator` + `trait_audit` + `check_missing_traits`) passa
+lo stesso -> verde-locale NON basta. Rigenerare tutti e 3 prima di dire "ready":
+1. `data/traits/index.csv` -> `node scripts/build_trait_index.js`.
+2. `data/derived/analysis/*` -> `python scripts/generate_derived_analysis.py --update-readme`.
+   CI guard ENFORCING: `python tools/py/check_derived_reproducible.py --deep` (required `ci-gate`
+   via `dataset-checks`). Deve dire "OK: reproducible".
+3. `reports/qa_badges.json` + `reports/trait_baseline.json` -> `npm run export:qa`.
+   CI check "Generate QA baselines" (non-required -> UNSTABLE non BLOCKED, ma rosso).
+
+J3 (#3278) ha richiesto 3 commit follow-up post-CI per questi. Una RILOCAZIONE che tiene id+count
+(come J4 #3279) NON stala nulla. Dettaglio memory: `reference_game_trait_index_tooling`.
+
 ## Ordine dispatch + ESITI
 
 1. **J3 + J4** (sottoalberi disgiunti cognitivo vs difesa) -- DISPATCHED 2026-07-14, ESITI:
