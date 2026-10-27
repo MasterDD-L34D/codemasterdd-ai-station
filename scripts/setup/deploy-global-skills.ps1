@@ -168,6 +168,7 @@ function Invoke-ClaudeMdMerge {
     [string]$FragmentPath,
     [string]$StartSentinel,
     [string]$DisambigRegex,
+    [string]$EndSentinel = '<!-- END agent-scanner-directive -->',
     [switch]$DryRun
   )
 
@@ -175,7 +176,42 @@ function Invoke-ClaudeMdMerge {
 
   switch ($state) {
     'present-valid' {
-      Write-Host "  [OK] directive already present and valid -- skip merge (idempotent)"
+      $fragmentContent = Read-FileUtf8NoBom -Path $FragmentPath
+      if ($null -eq $fragmentContent) {
+        Write-Error "Fragment file missing: $FragmentPath"
+        return $false
+      }
+      $existing = Read-FileUtf8NoBom -Path $ClaudeMdPath
+      $startEsc = [Regex]::Escape($StartSentinel)
+      $endEsc = [Regex]::Escape($EndSentinel)
+      $pattern = "(?ms)^$startEsc.*?$endEsc`r?`n?"
+      $currentDirective = [Regex]::Match($existing, $pattern)
+      if (-not $currentDirective.Success) {
+        Write-Host "  [FAIL] directive start+END sentinel pair not found; merge skipped"
+        return $false
+      }
+      $currentNormalized = ($currentDirective.Value -replace "`r`n", "`n").TrimEnd("`n")
+      $fragmentNormalized = ($fragmentContent -replace "`r`n", "`n").TrimEnd("`n")
+      if ($currentNormalized -eq $fragmentNormalized) {
+        Write-Host "  [OK] directive already current -- skip merge (idempotent)"
+        return $true
+      }
+      if ($DryRun) {
+        Write-Host "  [DRY] would update installed directive -> $ClaudeMdPath"
+        return $true
+      }
+      $ts = Get-Date -Format 'yyyyMMdd-HHmmss'
+      $bakPath = "$ClaudeMdPath.bak-$ts"
+      Copy-Item -Path $ClaudeMdPath -Destination $bakPath -Force
+      Write-Host "  [OK] backup saved: $bakPath"
+      $replacement = $fragmentContent
+      if ($currentDirective.Value.EndsWith("`n") -and -not $replacement.EndsWith("`n")) {
+        $replacement += "`n"
+      }
+      $merged = $existing.Substring(0, $currentDirective.Index) + $replacement +
+                $existing.Substring($currentDirective.Index + $currentDirective.Length)
+      Write-FileUtf8NoBom -Path $ClaudeMdPath -Content $merged
+      Write-Host "  [OK] installed directive updated: $ClaudeMdPath"
       return $true
     }
     'ambiguous' {

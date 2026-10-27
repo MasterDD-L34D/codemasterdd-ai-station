@@ -259,6 +259,47 @@ Assert-True -Condition ($qualityContent -match 'SUPERSEDED 2026-10-27') -Name "Q
 Assert-True -Condition ($qualityContent -match 'scanner NON fires') -Name "QUALITY.md expects no scanner for typo fixes"
 
 # ----------------------------------------------------------------------
+# Test 9: existing STRONG-PURE directive migrates to the canonical fragment
+# ----------------------------------------------------------------------
+Write-Host ""
+Write-Host "Test 9: migrate installed directive to scoped policy"
+
+$tmpRoot = Join-Path $env:TEMP "merge-test-$([guid]::NewGuid())"
+New-Item -ItemType Directory -Force -Path $tmpRoot | Out-Null
+$claudeMd = Join-Path $tmpRoot 'CLAUDE.md'
+
+$installed = @"
+# Existing user content
+
+## Agent Scanner discipline (anti-shadow-duplicate, cross-fleet)
+
+**Rule** (STRONG-PURE, no bypass): always scan before routine tasks.
+
+<!-- END agent-scanner-directive -->
+
+## User section after directive
+
+This content MUST survive the upgrade.
+"@
+Set-Content -Path $claudeMd -Value $installed -Encoding utf8
+
+$ok = Invoke-ClaudeMdMerge -ClaudeMdPath $claudeMd -FragmentPath $canonicalFragmentFile `
+                           -StartSentinel $startSentinel -DisambigRegex $disambigRegex
+$upgraded = Read-FileUtf8NoBom -Path $claudeMd
+Assert-True -Condition $ok -Name "installed directive upgrade succeeds"
+Assert-True -Condition ($upgraded -match 'STRONG-SCOPED') -Name "upgrade installs scoped directive"
+Assert-True -Condition (-not ($upgraded -match 'STRONG-PURE')) -Name "upgrade removes obsolete no-bypass directive"
+Assert-True -Condition ($upgraded -match '# Existing user content') -Name "upgrade preserves preceding user content"
+Assert-True -Condition ($upgraded -match 'This content MUST survive the upgrade') -Name "upgrade preserves following user content"
+
+$okSecond = Invoke-ClaudeMdMerge -ClaudeMdPath $claudeMd -FragmentPath $canonicalFragmentFile `
+                                 -StartSentinel $startSentinel -DisambigRegex $disambigRegex
+Assert-True -Condition $okSecond -Name "upgraded directive second run succeeds"
+Assert-Eq -Expected $upgraded -Actual (Read-FileUtf8NoBom -Path $claudeMd) -Name "upgraded directive remains idempotent"
+
+Remove-Item -Recurse -Force $tmpRoot
+
+# ----------------------------------------------------------------------
 # Summary
 # ----------------------------------------------------------------------
 Write-Host ""
