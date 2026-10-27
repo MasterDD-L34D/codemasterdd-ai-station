@@ -1,12 +1,11 @@
 ---
 name: agent-scanner
 description: >
-  Use BEFORE selecting/recommending any subagent/skill/agent for a
-  non-trivial task. Anti-shadow-duplicate (build on existing work,
-  never recreate; Ibrahim 2026 + Microsoft Multi-Agent Ref Arch).
-  Triggers: "scan agents", "quali agenti ho", "inventario agenti",
-  "riusa agente", "registry", "overlap", "mappa agenti",
-  "che agent uso", "serve un agent per X", "team formation".
+  Use when creating or dispatching a subagent/agent, or when an inventory
+  of available agents is requested. Not for routine use of existing skills
+  or session bootstrap. Triggers: "scan agents", "quali agenti ho",
+  "inventario agenti", "riusa agente", "registry", "overlap",
+  "mappa agenti", "che agent uso", "serve un agent per X", "team formation".
 tools: [Bash, Glob, Grep, Read]
 ---
 
@@ -28,10 +27,11 @@ cross-PC; used only when `aa01/archon/` is detected in CWD or `$HOME`).
 
 | Trigger | Quando |
 |---------|--------|
-| **BOOTSTRAP** | New session on a project -> step 1 prima di routing agent. |
 | **TEAM_FORMATION** | Prima di proporre o creare un nuovo agent specializzato. |
-| **DELTA** | A inizio sessione, diff vs scan precedente (signal cambi recenti). |
-| **ON_DEMAND** | Comando utente esplicito ("scan agents"). |
+| **AGENT_DISPATCH** | Prima di dispatchare un subagent/agent, se il controller lo consente. |
+| **ON_DEMAND** | Inventario esplicito ("scan agents", "quali agenti ho"). |
+
+Non invocare per scegliere una skill esistente o all'avvio di una sessione.
 
 ---
 
