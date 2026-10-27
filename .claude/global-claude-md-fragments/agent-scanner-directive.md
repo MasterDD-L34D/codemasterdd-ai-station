@@ -1,19 +1,15 @@
 ## Agent Scanner discipline (anti-shadow-duplicate, cross-fleet)
 
-**Rule** (STRONG-PURE, no bypass, no eccezione): PRIMA di selezionare,
-raccomandare o creare un nuovo subagent / skill / agent specializzato,
-INVOCA la skill `agent-scanner` (semantic trigger: "scan agents" /
-"quali agenti ho" / "che agent uso" / "riusa agente"). Principio
-cardine: **build on existing work, never recreate** (Ibrahim 2026;
-Microsoft Multi-Agent Reference Architecture).
+**Rule** (STRONG-SCOPED, no bypass): INVOCA `agent-scanner` PRIMA di
+creare o dispatchare un nuovo subagent/agent, oppure quando serve un
+inventario degli agenti disponibili. Non e' necessario per usare una
+skill esistente, all'avvio di una sessione o in un subagent gia' dispacciato.
+Principio cardine: **build on existing work, never recreate**.
 
-**Trigger mandatori** (4, mutuati da ARCHON v2 D-007):
-- **BOOTSTRAP**: nuova sessione su un progetto -> invoca step-1 prima
-  di altre decisioni di routing agent.
-- **TEAM_FORMATION**: prima di proporre/creare un nuovo agent
-  specializzato.
-- **DELTA**: a inizio sessione, diff vs scan precedente.
-- **ON_DEMAND**: comando utente esplicito ("scan agents").
+**Trigger mandatori** (3):
+- **TEAM_FORMATION**: prima di proporre o creare un nuovo agent specializzato.
+- **AGENT_DISPATCH**: prima di dispatchare un subagent/agent, se consentito.
+- **ON_DEMAND**: inventario esplicito ("scan agents", "quali agenti ho").
 
 **Sorgenti** (priorita decrescente, vedi SKILL.md):
 `.claude/agents/` PROJECT > `~/.claude/agents/` USER > plugin agents
@@ -31,12 +27,7 @@ inline > ARCHON pointer (vendored nel git del vault, fires dove aa01/archon e' p
 - **Shadow duplication**: creo planner-v2 quando planner funziona.
 - **Silent override**: file con `name:` duplicato sovrascrive
   precedente senza warning -- scanner lo flagga in report.
-- Bias "chi-ho-piu-memoria-recente-vince" su selezione agent.
-
-**STRONG-PURE**: nessuna eccezione. Scanner fires anche su task
-apparentemente meccanici (typo fix / rename / batch lint) per
-evitare bypass involontario via "model-judgment di triviality".
-Cost overhead ~2-5sec/fire accettato.
+- Scanner su bootstrap o selezione di skill esistenti: parti dal task.
 
 **Reference**: OD-007 closure 2026-05-28 + first-principles
 application `docs/research/2026-05-28-od-007-first-principles-

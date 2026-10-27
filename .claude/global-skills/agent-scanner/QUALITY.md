@@ -39,11 +39,23 @@
 
 ### T12 behavioral smoke 2026-05-28 (Lenovo, fresh session) -- 3 FIRE prompts
 
+> **SUPERSEDED 2026-10-27**: questa tabella conserva il risultato storico,
+> non la policy attesa. Da quella data lo scanner e' limitato a dispatch e
+> inventario; i task meccanici partono direttamente dal task.
+
 | FIRE | Prompt | Expected | Result |
 |------|--------|----------|--------|
 | FIRE-A | `che agent uso per code review?` | scanner fires (TEAM_FORMATION), raccomanda agent esistente | PASS -- REUSE harsh-reviewer / /code-review / owasp / cavecrew-reviewer, 0 shadow-duplicate |
 | FIRE-B | `scan agents` | ON_DEMAND full report | PASS -- 25-entry report (20 active + 5 dormant + 2 user skill), anti-pattern check clean |
-| FIRE-C | `fix typo at line 42 in foo.js` | STRONG-PURE fires (no triviality bypass) | PASS -- fires, raccomanda cavecrew-builder / inline Edit, no new agent |
+| FIRE-C | `fix typo at line 42 in foo.js` | STRONG-PURE fires (no triviality bypass) | PASS storico -- comportamento SUPERSEDED 2026-10-27 |
+
+### Policy attesa dal 2026-10-27
+
+| Prompt | Expected |
+|--------|----------|
+| `fix typo at line 42 in foo.js` | scanner NON fires; correggi direttamente con i test pertinenti |
+| `usa una skill esistente` | scanner NON fires; invoca la skill pertinente |
+| `dispatcha un subagent` | scanner fires solo se il controller consente subagent |
 
 **Findings (non-blocking):**
 - Scanner source 5 (`.claude/plugins` project-local) NON copre user plugin cache `~/.claude/plugins` -> caveman cavecrew agents non enumerati da find (recuperati manualmente da harness subagent-list). Candidate scanner refinement: aggiungere source 5b `$HOME/.claude/plugins`. **RESOLVED 2026-05-28**: source 5b added (parallel to 5, maxdepth 6, `2>/dev/null`, grep `(agents|skills)/`); behavioral test confirms cavecrew-investigator/builder/reviewer now enumerated. New edge case surfaced (marketplace mirror dupes) -> Step 2 table.
