@@ -60,7 +60,8 @@ Rimisurati il 2026-11-02. Hub a `origin/main` = `0ef8b48`; branch di lavoro
 | Tetto meta-lavoro deciso da Eduardo (CODA_LAVORI, priorita' 5, 2026-11-02) | ~10% del tempo agenti | lettura |
 | PR aperte hub | solo #31 (questo lavoro); #16 e #23 non piu' aperte | `list_pull_requests` (GitHub MCP) |
 | PR aperte pathmaster-dd | 0 | idem |
-| Taverna #572 e checkout su `main` | **non misurati**: repo fuori dal perimetro della sessione | -- |
+| Taverna: PR aperte e #572 | 0 aperte; #572 mergiata 2026-11-02 13:11Z | `gh api -X GET search/issues -f q='repo:MasterDD-L34D/Master-DD-Taverna is:pr is:open'` |
+| Checkout principali su `main` | **non misurabili dal cloud**: restano a Eduardo | -- |
 | `stablyai/orca` | MIT, TypeScript/Electron, 113.223 stelle, 7.161 fork, 7.904 issue aperte, push 2026-11-02, nato 2026-03-17 | `gh api -X GET search/repositories -f q='repo:stablyai/orca'` |
 | `BloopAI/vibe-kanban` | Apache-2.0, Rust, 28.562 stelle, push 2026-10-29; azienda chiusa 2026-04-10, codice community, solo locale | idem + README |
 | `orca-cli/orca` | 4 stelle, 5 commit, fermo da 2026-05-08 | idem |
@@ -94,16 +95,16 @@ un consiglio accettato per una richiesta.
 | Q2 | Cosa sostituisce Orca | "penso che (c) possa essere un improve" = anche la coda | Vedi Q10: coda NON migra adesso | Eduardo, poi consiglio accettato |
 | Q3 | Chi usa Orca | (c) sia Eduardo sia gli agenti via CLI | Spike: agenti via CLI; Kimi fuori (Q11) | Eduardo |
 | Q4 | Dove sta la verita' | "decidi tu" | **Markdown in Git**; Orca solo riferimento in riga | autore |
-| Q5 | Perimetro privacy | hub + cloud-ok + repo-libri + vault; Synesthesia fuori | ADR limitato all'hub; estensioni con emendamento e controllo 1 ripetuto (harsh review P2.13) | Eduardo l'intento; autore la gradualita' |
+| Q5 | Perimetro privacy | hub + cloud-ok + repo-libri + vault; Synesthesia fuori | ADR limitato a hub + Taverna (Taverna aggiunta da Eduardo alla ratifica del 2026-11-02); estensioni con emendamento e controllo 1 ripetuto (harsh review P2.13) | Eduardo l'intento e Taverna; autore la gradualita' |
 | Q6 | Forma della rivalutazione | "decidi tu" | **Emendamento per categoria**, non revoca | autore |
-| Q7 | Budget e precedenza | "decidi tu" | Mezza giornata a carico del 10%; #16 e #23 chiuse; Taverna #572 non misurata | autore |
+| Q7 | Budget e precedenza | "decidi tu" | Mezza giornata a carico del 10%; #16, #23 e Taverna #572 chiuse | autore |
 | Q8 | Destinazione | "decidi tu" | ADR-0045 + questa nota; spec Board-LINK dopo le 4 settimane | autore |
 | Q9 | Cosa vuol dire "la Board funziona" | accettato il consiglio | un agente prende un id coda, lavora in worktree, consegna un diff; il coordinatore verifica e apre la PR; Eduardo non tocca Markdown a mano | autore, accettato |
 | Q10 | Coda in GitHub Issues? | accettato il consiglio | **No, non adesso**: decisione separata con ADR proprio dopo lo spike | autore, accettato |
 | Q11 | Kimi dentro o fuori Orca | accettato | Fuori nello spike: un cambiamento per volta | autore, accettato |
 | Q12 | Condizione su vault | accettato | Entra solo con emendamento, controllo 1 ripetuto, agenti del suo routing | autore, accettato |
 | Q13 | Cosa resta di Board-LINK 1B | accettato | Resta tutto tranne creazione worktree e lancio processo; emendamento in tre punti dopo le 4 settimane | autore, accettato |
-| Q14 | Criterio di uscita | accettato la prima versione (quota commit 15%) | **sostituito** dopo harsh review P1.2: uso, collisioni meccaniche, tocchi manuali. Da ri-ratificare | autore; Eduardo deve rivedere |
+| Q14 | Criterio di uscita | accettato la prima versione (quota commit 15%) | **sostituito** dopo harsh review P1.2: uso, collisioni meccaniche, tocchi manuali. Ri-ratificato da Eduardo il 2026-11-02 | autore; Eduardo ha riletto |
 | -- | Riserva | decisa | Vibe Kanban solo se Orca fallisce la regola 3 | autore |
 
 Dolori di Q1 che l'ADR **non** affronta: il telefono (regola 3 lo esclude), la
@@ -126,9 +127,9 @@ alle fonti prima di incorporarli; nessuno scartato.
 | P2.8 regole 1 e 2 solo dichiarate | -- | script worktree-vs-Lavori; esercizio di uscita; dispatcher nominato |
 | P2.9 uscita "gratis" aspirazionale | -- | costo di uscita dichiarato |
 | P2.10 appartenenza non meccanica | ADR-0036 opzione B respinge "dispatch service" | checklist di appartenenza a quattro punti |
-| P2.11 meta-lavoro non a budget; PR ferme non tutte misurate | Taverna fuori perimetro sessione | dichiarato a carico del 10%; Taverna #572 non misurata |
+| P2.11 meta-lavoro non a budget; PR ferme non tutte misurate | Taverna misurata via search API | dichiarato a carico del 10%; Taverna #572 mergiata, 0 PR aperte |
 | P2.12 numeri senza SHA | -- | SHA e comandi completi in sez 3 |
-| P2.13 perimetro privacy prematuro | repo-libri non in whitelist; vault sovereign-only | ADR limitato all'hub |
+| P2.13 perimetro privacy prematuro | repo-libri non in whitelist; vault sovereign-only | ADR limitato a hub + Taverna (pubblico) |
 | P2.14 paternita' non dichiarata | -- | colonna "Chi ha deciso"; paragrafo Provenienza nell'ADR |
 | P3.15 Archon non motivato | -- | motivato: reversibile, gated; scatta oltre l'hub |
 | P3.16 formato MADR | ADR-0010 sezioni minime lette | TL;DR in corsivo, Decisore, More Information; nota Amended-by in ADR-0036 |

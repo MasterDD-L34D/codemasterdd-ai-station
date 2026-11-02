@@ -4,6 +4,9 @@
 
 - Status: Proposed
 - Data: 2026-11-02
+- Ratifica del testo: Eduardo, 2026-11-02 in chat ("ho riletto, e' ok"), con
+  l'inserimento di `Master-DD-Taverna` nel perimetro. Lo stato resta Proposed
+  finche' lo spike non e' concluso (ADR-0010).
 - Decisore: Eduardo Scarpelli (ratifica)
 - Autore draft: Claude, sessione cloud, su richiesta di Eduardo
 - Amends: ADR-0036 decisione 6; ORCHESTRATION.md sez 8 (solo dopo spike superato)
@@ -12,7 +15,7 @@
   in due giri; brainstorming a quattro opzioni (P6); harsh-reviewer pre-merge
   (P5), i cui sei P1 sono incorporati qui. Archon (P3) non applicato: la
   decisione e' reversibile per costruzione (regola 1), gated da spike e da
-  ratifica; scatta se lo spike propone di estendere oltre l'hub.
+  ratifica; scatta se lo spike propone di estendere oltre hub e Taverna.
 
 ## Context and Problem Statement
 
@@ -105,7 +108,7 @@ worktree e la UI; `.claude/worktrees/` nativo copre solo Claude Code.
 
 ## Decision Outcome
 
-Scelta **Opzione B**, nel solo `pathfinder-hub`, con D lasciata come spike
+Scelta **Opzione B**, nel perimetro `pathfinder-hub` + `Master-DD-Taverna`, con D lasciata come spike
 separato gia' previsto dal design v2. ADR-0036 decisione 6 resta in vigore per
 framework multi-agente e gateway LLM.
 
@@ -138,11 +141,13 @@ Chi fallisce un punto ricade nella decisione 6 di ADR-0036.
    aggiornamento solo dopo lettura del diff di release e ripetizione del
    controllo 1. I terminali del cockpit non ereditano `keys.env` (verifica:
    `Get-ChildItem env:` in un terminale Orca non mostra chiavi). Perimetro di
-   questo ADR: solo `pathfinder-hub`. Le estensioni che Eduardo ha indicato
+   questo ADR: `pathfinder-hub` e `Master-DD-Taverna` (repo pubblico,
+   sotto-progetto canonico dell'hub in `tooling/`; aggiunto da Eduardo alla
+   ratifica). Il controllo 1 si esegue una volta per repo. Le estensioni che Eduardo ha indicato
    (repo cloud-ok, `repo-libri`, `vault` con i soli agenti del suo routing;
    `Synesthesia` mai) richiedono ciascuna un emendamento con controllo 1
    ripetuto: `repo-libri` non e' in whitelist, `vault` e' sovereign-only.
-4. **Tetto WIP.** Al massimo 3 worktree agente attivi per volta nell'hub
+4. **Tetto WIP.** Al massimo 3 worktree agente attivi per volta nel perimetro
    (Osmani: WIP 3-5, scelto il minimo). Il parallelismo oltre e' fuori scope,
    come nella spec 1B.
 
@@ -196,7 +201,7 @@ chiusura sotto Status, `Deprecated`.
   proprio, solo se lo spike passa.
 - Non sposta Kimi dentro Orca.
 - Non tocca Board desktop e widget.
-- Non estende il perimetro oltre l'hub.
+- Non estende il perimetro oltre hub e Taverna.
 
 ## Consequences
 
@@ -217,9 +222,10 @@ chiusura sotto Status, `Deprecated`.
 - **Rischio accettato**: churn di Orca; mitigato dalla versione bloccata.
 - **Rischio non mitigato**: doc Orca non lette dalla sessione cloud. Il
   controllo 1 e' l'unica difesa; senza di esso lo spike non parte.
-- **Non misurato**: stato di Taverna #572 e dei checkout principali su `main`
-  (priorita' 3 della coda): il repo Taverna non e' nel perimetro di questa
-  sessione. Eduardo lo verifica prima di avviare lo spike.
+- **Precondizione della priorita' 3 della coda**: misurata il 2026-11-02 con
+  `gh api search/issues`: Taverna #572 mergiata alle 13:11Z, 0 PR aperte su
+  Taverna, pathmaster-dd e hub (oltre a #31). I checkout principali su `main`
+  non sono misurabili dal cloud: restano a Eduardo prima dello spike.
 
 ## More Information
 
