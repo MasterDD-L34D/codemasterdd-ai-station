@@ -2,6 +2,7 @@
 
 > Status: **Accepted (spine)** + **Deferred (auto-merge rung)** -- revised 2026-06-01 (orig Proposed 2026-05-29). The doctrine spine (hub-and-spoke, 5 spokes, routing tree, mandatory verification gate, ladder-as-classification) is ratified on already-practiced evidence. The auto-merge rung is deferred to a future R2 ADR via the earn-path in `docs/governance/actor-activation-criteria.md`. A harsh-reviewer falsification (2026-06-01) corrected the original trigger framing (not "circular" but SDMG-incompatible). See "Ratify scope split".
 > Supersedes-as-routing-authority (consolidates, does not deprecate): ADR-0013, 0022, 0023, 0030, 0034, 0035. Reframes: MODEL_ROUTING.md as local-fleet detail.
+> Amended-by (Proposed): ADR-0045 (2026-11-02) -- decisione 6 resta; aggiunge la categoria "cockpit di worktree" a quattro regole, solo hub e Taverna, dopo spike.
 > Operational authority: `ORCHESTRATION.md` (root). This ADR = the why; ORCHESTRATION.md = the which-executor-and-autonomy; CLAUDE.md = the how.
 
 ## TL;DR
