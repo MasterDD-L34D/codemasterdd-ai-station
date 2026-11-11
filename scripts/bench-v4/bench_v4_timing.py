@@ -9,6 +9,11 @@ Per request: TTFT (first streamed token, incl. thinking), end-to-end,
 decode tok/s (eval_count/eval_duration), prompt tok/s, load_duration,
 min RAM free, max commit, max VRAM used, CPU/GPU split from /api/ps.
 
+Known limit (review PR582 P1-1, fix pending): resume skips a block's warmup if it
+was already recorded, so a block interrupted mid-way restarts cold and its first
+"warm" run includes a model load. After an interruption, use a fresh --out DIR
+(or drop that block's rows from raw.jsonl); check warm load_s ~ 0 in raw.jsonl.
+
 Usage:
   py scripts/bench-v4/bench_v4_timing.py --models A B --cold 3 --warm 5 --out DIR
   py scripts/bench-v4/bench_v4_timing.py --models A B --cold 1 --warm 1 --out DIR  (mini-sample)
@@ -22,6 +27,7 @@ import sys
 import threading
 import time
 import urllib.request
+import uuid
 from datetime import datetime
 from pathlib import Path
 
@@ -33,6 +39,12 @@ PROMPT = (
     "representation. Add a docstring to each method explaining its purpose, parameters,\n"
     "and return value. Use type hints."
 )  # same prompt as scripts/bench-ollama.ps1 -> comparable with Apr/May 2026 numbers
+
+
+def make_prompt():
+    """PROMPT with a per-run nonce prefix: defeats Ollama prefix (KV) cache, so warm
+    TTFT/prompt tok/s measure real prefill instead of a cache hit (review PR582 P1-2)."""
+    return f"[run {uuid.uuid4().hex}]\n" + PROMPT
 
 
 class MemStatus(ctypes.Structure):
@@ -105,7 +117,7 @@ def ps_split(model):
 
 
 def one_request(model, args, phase):
-    body = {"model": model, "prompt": PROMPT, "stream": True,
+    body = {"model": model, "prompt": make_prompt(), "stream": True,
             "options": {"num_ctx": args.ctx, "num_predict": args.predict, "temperature": 0, "seed": 42}}
     s = Sampler()
     s.start()
