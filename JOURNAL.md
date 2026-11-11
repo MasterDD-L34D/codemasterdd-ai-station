@@ -19,6 +19,43 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-11-11/12 (Lenovo riacceso: Fase 1 piano HW, bench v4 Bolt vs qwen3-coder, holdout coding, NUM_PARALLEL -- Opus 5.5 da Lenovo)
+
+### Completato
+- **Lenovo di nuovo online** dopo ~4 mesi; coordinamento via board agenti (Ryzen), presenze + lease
+  `@ollama:lenovo`/`@docker:lenovo` per ogni run. Governo stack/Lenovo preso al posto di Codex (credito finito).
+- **Piano HW Fase 1 verificato contro le fonti**: la "Bolt 74B Q4_K_M 47,5 GiB" del piano **non esiste**
+  (ufficiale = IQ2_XXS QAT 23 GiB; Unsloth UD-Q4_K_XL 50,2 GB mai provata); qwen3-coder:30b oggi ~45 tok/s,
+  non 23-32 (cifre di apr/mag con Ollama vecchio).
+- **Bench v4 passo 7** (`scripts/bench-v4/bench_v4_timing.py`, PR #582): decode warm Bolt 12,5 vs qwen3-coder
+  46,0 tok/s (n=10); load cold 25,5 vs 12,3 s (n=5). Bolt con thinking: 0/6 risposte entro 2048 token.
+  `ollama ps` sottostima Bolt (2 GB "100% GPU"): usare la RAM campionata.
+- **Review indipendente PR #582** (harsh-reviewer; Kimi non lanciabile via SSH: WinError 448 su junction delle
+  credenziali): P1-2 cache prefisso -> TTFT/prompt tok/s warm erano a cache calda, corretto con nonce + test;
+  decode tok/s valido.
+- **Holdout coding privato** (30 task congelati, sandbox Docker rivalidata sul Lenovo con esiti identici al Ryzen):
+  Bolt think:false 22, gemma4:12b (rif. Ryzen) 21, qwen3-coder:30b 19; nessuna differenza significativa,
+  nessun cambio default.
+- **OLLAMA_NUM_PARALLEL=3** (variabile utente, lasciata attiva): qwen3-coder aggregato 40,3 -> 68,6 tok/s a k=3,
+  coda quasi annullata; Bolt resta seriale e costa ~10 GB RAM in piu'.
+- **Docker Desktop Lenovo riparato**: socket AF_UNIX orfani in `run` e `docker-secrets-engine` (stesso guasto Ryzen).
+  Rinomina entrambe + **attesa >15 s** prima del riavvio (riavviando subito il tunneling NTFS riportava il blocco).
+- Report + riga INDICE: codemasterdd-workspace PR #5.
+
+### Da fare
+- Merge (bloccati dal classifier, a Eduardo): pathfinder-hub #84, questo repo #582 (dopo fix P1-1), workspace #5.
+- P1-1 PR #582 (ripresa salta il warmup): documentato, fix bloccato da tdd-guard senza reporter pytest
+  (installazione `tdd-guard-pytest` negata dal classifier).
+- Eduardo: regola firewall `ollama.exe` aperta anche su rete Public; Ollama always-on (oggi parte solo al login).
+- Stack Docker `codemasterdd-*` (litellm/postgres exit 127, langfuse-web in restart loop) da guardare.
+- Ruolo concreto per Bolt + holdout piu' grande per ratificare (N=30 = direzione).
+
+### Note
+- Lezioni: tok/s pubblicati in un piano = ipotesi finche' non c'e' fonte+data; prompt identici in un bench warm
+  misurano la cache, non il prefill; modelli thinking a budget fisso possono non rispondere mai.
+
+---
+
 ## 2026-07-14 (Game R1 trait-authoring CHIUSO + cinque strati di copertura finta rimossi -- Opus 4.8 da Lenovo)
 
 ### Completato
