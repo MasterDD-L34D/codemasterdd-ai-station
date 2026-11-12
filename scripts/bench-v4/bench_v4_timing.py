@@ -15,7 +15,9 @@ Usage:
 """
 import argparse
 import ctypes
+import hashlib
 import json
+import os
 import statistics
 import subprocess
 import sys
@@ -34,6 +36,14 @@ PROMPT = (
     "representation. Add a docstring to each method explaining its purpose, parameters,\n"
     "and return value. Use type hints."
 )  # same prompt as scripts/bench-ollama.ps1 -> comparable with Apr/May 2026 numbers
+SAMPLING = {"temperature": 0, "seed": 42}  # single source for requests and meta.json
+SCHEMA = 2  # 2 = per-run nonce prompt (PR582 P1-2); bump when the measurement method changes
+
+
+def measurement_config(models, ctx, predict):
+    """Everything that defines a measurement, bound to the --out dir by bind_config."""
+    return {"models": list(models), "ctx": ctx, "predict": predict, "sampling": SAMPLING,
+            "prompt_sha": hashlib.sha256(PROMPT.encode("utf-8")).hexdigest()[:12], "schema": SCHEMA}
 
 
 def make_prompt():
@@ -113,7 +123,7 @@ def ps_split(model):
 
 def one_request(model, args, phase):
     body = {"model": model, "prompt": make_prompt(), "stream": True,
-            "options": {"num_ctx": args.ctx, "num_predict": args.predict, "temperature": 0, "seed": 42}}
+            "options": {"num_ctx": args.ctx, "num_predict": args.predict, **SAMPLING}}
     s = Sampler()
     s.start()
     t0 = time.perf_counter()
@@ -183,15 +193,20 @@ def bind_config(out, cfg):
     """
     meta = Path(out) / "meta.json"
     if meta.exists():
-        old = json.loads(meta.read_text(encoding="utf-8"))
-        diff = sorted(k for k in cfg if old.get(k) != cfg[k])
+        try:
+            old = json.loads(meta.read_text(encoding="utf-8"))
+            diff = sorted(k for k in cfg if old.get(k) != cfg[k])
+        except (ValueError, AttributeError) as e:
+            raise SystemExit(f"{meta} is unreadable ({e}): use a new --out dir") from None
         if diff:
             raise SystemExit(f"{out} was measured with other parameters ({', '.join(diff)}): "
                              f"use a new --out dir. recorded={old} requested={cfg}")
         return
     if (Path(out) / "raw.jsonl").exists():
         raise SystemExit(f"{out} has raw.jsonl but no meta.json: cannot verify its parameters, use a new --out dir")
-    meta.write_text(json.dumps(cfg), encoding="utf-8")
+    tmp = meta.with_suffix(".json.tmp")
+    tmp.write_text(json.dumps(cfg), encoding="utf-8")
+    os.replace(tmp, meta)  # atomic: a crash never leaves a half-written meta.json
 
 
 def main():
@@ -205,7 +220,7 @@ def main():
     args = ap.parse_args()
     out = Path(args.out)
     out.mkdir(parents=True, exist_ok=True)
-    bind_config(out, {"models": list(args.models), "ctx": args.ctx, "predict": args.predict})
+    bind_config(out, measurement_config(args.models, args.ctx, args.predict))
     raw = out / "raw.jsonl"
     done = set()
     if raw.exists():  # idempotent resume: skip (phase, model, idx) already recorded

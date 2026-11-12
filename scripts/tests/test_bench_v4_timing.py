@@ -17,14 +17,56 @@ def test_each_prompt_is_unique_to_defeat_prefix_cache():
 def test_resume_with_different_predict_is_refused_before_any_write(tmp_path):
     bv.bind_config(tmp_path, {"models": ["A", "B"], "ctx": 8192, "predict": 300})
     (tmp_path / "raw.jsonl").write_text('{"phase": "cold"}\n', encoding="utf-8")
-    before = sorted(p.name for p in tmp_path.iterdir())
+    before = {p.name: p.read_bytes() for p in tmp_path.iterdir()}
     try:
         bv.bind_config(tmp_path, {"models": ["A", "B"], "ctx": 8192, "predict": 2048})
     except SystemExit as e:
         assert "predict" in str(e)
     else:
         raise AssertionError("mismatched config was accepted")
-    assert sorted(p.name for p in tmp_path.iterdir()) == before
+    assert {p.name: p.read_bytes() for p in tmp_path.iterdir()} == before
+
+
+def test_main_refuses_mismatched_dir_before_network(tmp_path, monkeypatch):
+    bv.bind_config(tmp_path, bv.measurement_config(["A", "B"], 8192, 300))
+
+    def boom(*a, **k):
+        raise AssertionError("network touched")
+
+    monkeypatch.setattr(bv, "unload_all", boom)
+    monkeypatch.setattr(bv, "post", boom)
+    monkeypatch.setattr(bv.sys, "argv", ["x", "--models", "A", "B", "--predict", "2048", "--out", str(tmp_path)])
+    try:
+        bv.main()
+    except SystemExit as e:
+        assert "predict" in str(e)
+    else:
+        raise AssertionError("main accepted a mismatched dir")
+    assert not (tmp_path / "SUMMARY.md").exists()
+
+
+def test_same_measurement_resumes_and_changed_prompt_is_refused(tmp_path, monkeypatch):
+    cfg = bv.measurement_config(["A", "B"], 8192, 300)
+    bv.bind_config(tmp_path, cfg)
+    (tmp_path / "raw.jsonl").write_text('{"phase": "cold"}\n', encoding="utf-8")
+    bv.bind_config(tmp_path, bv.measurement_config(["A", "B"], 8192, 300))  # --cold/--warm are not bound
+    monkeypatch.setattr(bv, "PROMPT", bv.PROMPT + " Changed.")
+    try:
+        bv.bind_config(tmp_path, bv.measurement_config(["A", "B"], 8192, 300))
+    except SystemExit as e:
+        assert "prompt_sha" in str(e)
+    else:
+        raise AssertionError("changed prompt was accepted")
+
+
+def test_corrupt_meta_is_refused_with_clear_message(tmp_path):
+    (tmp_path / "meta.json").write_text("", encoding="utf-8")  # e.g. crash mid-write
+    try:
+        bv.bind_config(tmp_path, bv.measurement_config(["A", "B"], 8192, 300))
+    except SystemExit as e:
+        assert "meta.json" in str(e) and "unreadable" in str(e)
+    else:
+        raise AssertionError("corrupt meta.json was accepted")
 
 
 def test_legacy_dir_with_raw_but_no_meta_is_refused(tmp_path):
