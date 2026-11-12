@@ -19,6 +19,29 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-11-12 (Lenovo: Ollama always-on via scheduled task S4U -- Opus 5.5 da Lenovo)
+
+### Completato
+- **Ollama parte all'avvio senza login**: task `ollama-serve-boot` (S4U, utente edusc, Limited, trigger
+  AtStartup +30 s, 3 riavvii a 1 min). Il trigger all'avvio richiede admin: registrato da Eduardo con lo script
+  `install-task-admin.ps1` (fuori repo, `~/.ollama/boot/`). Wrapper `ollama-serve-boot.ps1`: copia le variabili
+  utente `OLLAMA_*` (S4U non le eredita in modo affidabile), esce se un server risponde gia', log UTF-8.
+- `Ollama.lnk` tolto dall'Esecuzione automatica (backup in `~/.ollama/boot/`): niente secondo server al login.
+- Verificato: server in sessione 0, API ok in ~4 s, config effettiva dal log del server (`NUM_PARALLEL:3`,
+  `HOST 0.0.0.0:11434`, `KV_CACHE q8_0`, `FLASH_ATTENTION`), raggiungibile dal Ryzen.
+
+### Da fare
+- Eduardo: test reale = riavvio del PC senza login, poi `Invoke-RestMethod http://<lenovo>:11434/api/version` dal Ryzen.
+- Eduardo: firewall `ollama.exe` -> solo Private (comando consegnato, ancora da lanciare).
+- Valutare `OLLAMA_CONTEXT_LENGTH=64000` (utente): con `NUM_PARALLEL=3` riserva KV per 3 slot da 64k.
+
+### Note
+- Il server avviato da S4U **non si ferma da una sessione non elevata** (Accesso negato): per riavviarlo o
+  aggiornarlo serve admin (`Stop-Process -Name ollama -Force` + `Start-ScheduledTask`) o un reboot.
+  Senza app tray, Ollama non si aggiorna piu' da solo.
+
+---
+
 ## 2026-11-12 (Lenovo: merge PR #582/#84/workspace#5, stack Docker dismesso ripulito -- Opus 5.5 da Lenovo)
 
 ### Completato
