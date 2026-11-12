@@ -19,6 +19,34 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-11-12 (Lenovo: merge PR #582/#84/workspace#5, stack Docker dismesso ripulito -- Opus 5.5 da Lenovo)
+
+### Completato
+- **Merge** (su autorizzazione formale di Eduardo, regole `gh pr merge` + `pip install tdd-guard-pytest`
+  aggiunte a `.claude/settings.local.json`): pathfinder-hub #84, codemasterdd-workspace #5, questo repo #582.
+- **PR #582 P1-1 risolto con TDD**: la ripresa ripianifica il warmup del blocco incompleto (`plan_runs`).
+  Il tdd-guard richiede il reporter `tdd-guard-pytest` e pytest lanciato dal cwd della sessione
+  (`-o tdd_guard_project_root`): senza, blocca ogni edit Python non banale.
+- **Stack Docker `codemasterdd-*` (exit 127) -- root cause**: stack dismesso il 2026-05-28 (`672728c`,
+  ADR-0017 -> ADR-0030, OD-009) con `git rm infra/`, ma i container (restart `unless-stopped`) non erano mai
+  stati rimossi. A ogni avvio di Docker ripartivano; i file bind mancanti venivano ricreati da Docker come
+  cartelle vuote e il mount file<-dir falliva (OCI create, 127); langfuse-web in loop senza postgres.
+  **Fix**: `docker rm -f` dei 3 container + rimozione delle cartelle fantasma vuote in `infra/`.
+  Volume `codemasterdd-postgres-data` (tracce Langfuse apr-mag) conservato; immagine litellm tenuta (sandbox holdout).
+- Docker Desktop ripartito di nuovo con la procedura socket orfani (rinomina + attesa 20 s).
+
+### Da fare
+- Eduardo: regola firewall `ollama.exe` (Query User, TCP/UDP tutte le porte, Private+Public) -> limitare a Private
+  (`Get-NetFirewallRule -DisplayName 'ollama.exe' | Set-NetFirewallRule -Profile Private`, PowerShell admin).
+- Eduardo: Ollama always-on -- proposta scheduled task S4U all'avvio + rimozione `Ollama.lnk` da Startup.
+- Facoltativo: volume `codemasterdd-postgres-data` e immagini langfuse (~2,5 GB) se le tracce non servono.
+
+### Note
+- Lezione: decommission di uno stack Docker = `git rm` **e** `docker compose down`; i container con
+  `unless-stopped` sopravvivono al codice e falliscono in silenzio mesi dopo.
+
+---
+
 ## 2026-11-11/12 (Lenovo riacceso: Fase 1 piano HW, bench v4 Bolt vs qwen3-coder, holdout coding, NUM_PARALLEL -- Opus 5.5 da Lenovo)
 
 ### Completato
