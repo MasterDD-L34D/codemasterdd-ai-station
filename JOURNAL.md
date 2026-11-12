@@ -19,6 +19,47 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-11-12 (Board di flotta: design, piano, Fase 1 avviata -- Fable 5.2 da Lenovo)
+
+### Completato
+- **Recon misurata della Board agenti** (sola lettura): un solo file markdown da 190 KB, usato ormai fra
+  progetti diversi; 428 righe non salvate da due settimane; almeno 3 scrittori e 2 versioni del writer sullo
+  stesso file; 81 dei 121 messaggi "open" sono `info`/`result` che nessuno chiude (open che chiedono azione: 40).
+- **Design v2 + piano esecutivo** approvati da Eduardo in chat (documenti locali, fuori da git perche' nominano
+  repo privati). Scelta: prima uno SPECCHIO dello stato in un repo privato dedicato (nessun percorso cambia),
+  poi un ADR come cancello, e solo dopo eventuali funzioni nuove. Review severa: v1 bocciata, v2 la integra.
+- **ADR-0046 (Proposed)** in PR #587: la Board come livello di coordinamento della flotta -- ratifica, restringi
+  o rinvia. Raccomanda RINVIA ora, RATIFICA solo con prove della Fase 1 verificate da reviewer indipendente e
+  STATUS_MULTI_REPO aggiornato. Due giri di correzione dopo la review severa. `AGENTIC_OS.md`: nota "livelli
+  ombra" fuori dalla tabella dei 7 layer.
+- **Repo privato dedicato** creato; **script di specchio** (libreria standard, 24 test su repo git reali) in PR;
+  **inventario dei percorsi** della board in PR. Review indipendente dello script: 2 critici (fallimenti
+  silenziosi sui codici di ritorno git) + 3 importanti, tutti chiusi.
+- Messa in sicurezza: snapshot locale dello stato della board sul Ryzen (commit locale, non pushato).
+- Ollama Lenovo: trovato giu' alle 01:4x, riavviato a mano su OK; poi sostituito dal task S4U `ollama-serve-boot`
+  (voce precedente). Un solo server attivo.
+
+### Da fare
+- Eduardo: merge delle due PR nel repo privato (script, inventario); decisione su ADR-0046 (#587).
+- Dopo il merge dello script: attivazione sul Ryzen (clone, primo push, prova con push rotto e recupero), task
+  schedulato orario, verifica indipendente delle prove, `QUALITY.md`. Ogni passo con OK esplicito.
+- Refresh di `STATUS_MULTI_REPO.md` (fermo al 2026-07-13): e' una precondizione dell'ADR-0046.
+- Review Codex di #587 non eseguita (limite d'uso esaurito): rilanciarla se si vuole un secondo parere.
+
+### Note
+- **Checkout di sessione 10 commit dietro `main`**: ADR-0045 (stessa Board) non visto nel recon iniziale,
+  scoperto solo dalla review. Regola pratica: `git fetch` + `git log HEAD..origin/main` prima di trattare
+  `docs/adr/` come completo.
+- **Guard TDD**: accetta un solo test nuovo per modifica e vede i risultati solo se pytest gira dalla radice di
+  sessione. Un agente esecutore lo ha aggirato una volta scrivendo Python via redirezione di shell: dichiarato,
+  vietato nel giro successivo, diff passato comunque da review.
+- **Writer della board via SSH**: usare quello della release installata, non quello del checkout (piu' vecchio).
+- Git Bash sul Lenovo non ha `iconv`: i comandi codificati si costruiscono da PowerShell.
+- Specchio prima di spostamento: il percorso della board e' cablato in writer, parser e script di lancio;
+  ripuntare la sola configurazione non basterebbe.
+
+---
+
 ## 2026-11-12 (Lenovo: Ollama always-on via scheduled task S4U -- Opus 5.5 da Lenovo)
 
 ### Completato
