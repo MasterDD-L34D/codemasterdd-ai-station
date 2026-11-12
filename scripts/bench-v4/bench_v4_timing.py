@@ -9,11 +9,6 @@ Per request: TTFT (first streamed token, incl. thinking), end-to-end,
 decode tok/s (eval_count/eval_duration), prompt tok/s, load_duration,
 min RAM free, max commit, max VRAM used, CPU/GPU split from /api/ps.
 
-Known limit (review PR582 P1-1, fix pending): resume skips a block's warmup if it
-was already recorded, so a block interrupted mid-way restarts cold and its first
-"warm" run includes a model load. After an interruption, use a fresh --out DIR
-(or drop that block's rows from raw.jsonl); check warm load_s ~ 0 in raw.jsonl.
-
 Usage:
   py scripts/bench-v4/bench_v4_timing.py --models A B --cold 3 --warm 5 --out DIR
   py scripts/bench-v4/bench_v4_timing.py --models A B --cold 1 --warm 1 --out DIR  (mini-sample)
@@ -168,6 +163,17 @@ def med_range(xs):
     return f"{statistics.median(xs):g} [{min(xs):g}-{max(xs):g}] n={len(xs)}"
 
 
+def plan_runs(done, a, b, cold, warm):
+    """Runs still to do as (model, phase, idx, unload). A block's warmup is re-run
+    whenever the block misses a measured run (review PR582 P1-1)."""
+    plan = [(m, "cold", i, True) for i in range(cold) for m in (a, b) if ("cold", m, i) not in done]
+    for blk, m in enumerate((a, b, b, a)):
+        todo = [(m, "warm", blk * 100 + i, False) for i in range(warm) if ("warm", m, blk * 100 + i) not in done]
+        if todo:
+            plan += [(m, "wup", blk, False)] + todo
+    return plan
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--models", nargs=2, required=True, help="arm A and arm B")
@@ -188,8 +194,6 @@ def main():
     a, b = args.models
 
     def run(model, phase, idx, unload):
-        if (phase, model, idx) in done:
-            return
         if unload:
             unload_all()
         rec = one_request(model, args, phase)
@@ -200,15 +204,8 @@ def main():
               f"tps={rec.get('decode_tps')} load={rec.get('load_s')} gpu%={rec.get('gpu_pct')} err={rec['error']}",
               flush=True)
 
-    # cold: alternated A,B,A,B... each preceded by full unload (symmetric)
-    for i in range(args.cold):
-        for m in (a, b):
-            run(m, "cold", i, unload=True)
-    # warm ABBA: block = 1 discarded warmup + n measured
-    for blk, m in enumerate((a, b, b, a)):
-        run(m, "wup", blk, unload=False)
-        for i in range(args.warm):
-            run(m, "warm", blk * 100 + i, unload=False)
+    for model, phase, idx, unload in plan_runs(done, a, b, args.cold, args.warm):
+        run(model, phase, idx, unload)
 
     rows = [json.loads(x) for x in raw.read_text(encoding="utf-8").splitlines()]
     lines = [f"# Bench v4 timing -- {datetime.now():%Y-%m-%d %H:%M}", "",
