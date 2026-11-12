@@ -174,6 +174,26 @@ def plan_runs(done, a, b, cold, warm):
     return plan
 
 
+def bind_config(out, cfg):
+    """Bind an output dir to the parameters that define its measurements (meta.json).
+
+    Refuses, before any network call or write, to resume into a dir measured with other
+    parameters (e.g. --predict 300 then 2048 would relabel old rows) or holding raw rows
+    without meta.json (legacy, unverifiable). Changing --cold/--warm is allowed: that is resume.
+    """
+    meta = Path(out) / "meta.json"
+    if meta.exists():
+        old = json.loads(meta.read_text(encoding="utf-8"))
+        diff = sorted(k for k in cfg if old.get(k) != cfg[k])
+        if diff:
+            raise SystemExit(f"{out} was measured with other parameters ({', '.join(diff)}): "
+                             f"use a new --out dir. recorded={old} requested={cfg}")
+        return
+    if (Path(out) / "raw.jsonl").exists():
+        raise SystemExit(f"{out} has raw.jsonl but no meta.json: cannot verify its parameters, use a new --out dir")
+    meta.write_text(json.dumps(cfg), encoding="utf-8")
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--models", nargs=2, required=True, help="arm A and arm B")
@@ -185,6 +205,7 @@ def main():
     args = ap.parse_args()
     out = Path(args.out)
     out.mkdir(parents=True, exist_ok=True)
+    bind_config(out, {"models": list(args.models), "ctx": args.ctx, "predict": args.predict})
     raw = out / "raw.jsonl"
     done = set()
     if raw.exists():  # idempotent resume: skip (phase, model, idx) already recorded
