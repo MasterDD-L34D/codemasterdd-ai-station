@@ -23,6 +23,18 @@
 | 6 | Apprendimento (self-maintenance) | AA01 inbox->lesson (protocollo ADR-0026 P4) + skill `continuous-learning-v2` + skill `consolidate-memory` + plugin compass (direction index) + skill `fleet-verify` | loop: sessione -> lesson L-NNN -> (promozione) skill/hook |
 | 7 | Safety / governance | hook: tdd-guard + journal-drift in [.claude/settings.json](.claude/settings.json); commit-guard (ADR-0011) + ASCII (ADR-0021) via hook GLOBALI `~/.claude` (PreToolUse) + git pre-commit (`core.hooksPath`), NON in questo settings.json + privacy guard (`~/.config/aider-privacy-whitelist.txt`) + keys (`~/.config/api-keys/keys.env`) + allow-glob permissions | principio verificato: CLAUDE.md = advisory, enforcement = SOLO hook (PreToolUse) |
 
+## Livelli ombra (non ratificati)
+
+Fuori dalla tabella dei 7 layer: in uso, ma senza un'autorita' ratificata. Nessuno di questi
+ha autorita' nuova, e nessuno e' una sorgente R0, finche' il suo ADR non ha un esito.
+
+- **Board agenti** (coordinamento fra agenti: presenze, lease, lavori, messaggi). E' un file
+  markdown con writer atomico, tenuto nel repo privato del progetto in cui e' nata (non
+  linkabile); uno specchio in un repo privato dedicato e' in costruzione. Oggi viene usata anche fra
+  progetti diversi, fuori dal Gate B. Ruolo di flotta: [ADR-0046](docs/adr/0046-board-fleet-coordination-layer.md)
+  (Proposed). Da non confondere con [EXECUTION-BOARD.md](docs/governance/EXECUTION-BOARD.md)
+  ne' con `playtest2-board-sync` (layer 5).
+
 ## Boot di sessione (gia' operativo)
 
 1. Ordine lettura in [CLAUDE.md](CLAUDE.md) (questo file e' lo step 1b).
