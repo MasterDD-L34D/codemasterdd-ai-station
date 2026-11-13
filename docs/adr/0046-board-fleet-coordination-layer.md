@@ -79,7 +79,7 @@ al primo commit dello specchio): le due tabelle non sono la stessa serie. I pesi
 | Specchio | attivo dal 2026-11-12: un commit per giro orario quando la board cambia. 26 commit che toccano la board fino al 2026-11-13 12:27Z |
 | Prove di uscita della Fase 1 | eseguite tutte e tre il 2026-11-12: copia remota a 84 secondi dall'ultima modifica; ripristino da clone fresco con gli stessi conteggi per sezione; push verso un remoto irraggiungibile fallito in modo visibile e recuperato al giro dopo |
 | Verifica indipendente delle prove | **parziale**: rieseguite il 2026-11-13 da un agente separato, piu' un parere di un'altra famiglia di modelli (vedi "Esito delle verifiche") |
-| STATUS_MULTI_REPO.md | refresh del 2026-11-13 in PR #590, **non ancora mergiata** (prima: ultimo commit 2026-07-13) |
+| STATUS_MULTI_REPO.md | refresh del 2026-11-13 mergiato su `main` (PR #590); prima l'ultimo commit era del 2026-07-13 |
 | Natura del ponte (persistente o su richiesta) | **su richiesta**, verificato il 2026-11-13 (vedi "Esito delle verifiche") |
 | Peso della board | 200.423 byte (2026-11-12 02:25Z), 232.308 (17:27Z), 335.464 (2026-11-13 12:27Z): +67% in 34 ore |
 | Crescita per sezione | Messaggi da 134.668 a 243.835 byte (81% della crescita); Lavori +16.384; Presenze +8.102 |
@@ -105,8 +105,8 @@ Cosa cambia per la decisione:
   rinvio senza data non e' "a costo zero".
 - **Dove cresce**: dei 118 messaggi open in piu', 71 (60%) sono `info` o `result`; 46 (39%)
   chiedono azione, e per questi la Fase 2 non prevede scadenza.
-- **La RATIFICA non e' legittima oggi**: X e' chiusa solo in parte, Y e' in una PR non
-  mergiata, Z e' verificata (vedi sotto).
+- **La RATIFICA non e' legittima oggi**: X e' chiusa solo in parte; di Y e' fatta la parte
+  sul file, ma non la decisione nel merito, che e' di Eduardo. Z e' chiusa (vedi sotto).
 - **RESTRINGI va riletta** con queste misure: vedi la sezione Decision.
 
 ### Esito delle verifiche X, Y, Z (2026-11-13)
@@ -129,7 +129,7 @@ Le ha lanciate il coordinatore, che ha scritto i mandati. Nessuna e' stata esegu
     specchio non gira e nessuno viene avvisato.
   - Perche' non e' chiusa in senso forte: l'agente che ha rieseguito e' della stessa famiglia
     del coordinatore ed e' stato istruito da lui. Decide Eduardo se basta.
-- **Y -- STATUS_MULTI_REPO.md: refresh in PR #590, non mergiata.**
+- **Y -- STATUS_MULTI_REPO.md: refresh mergiato su `main` il 2026-11-13 (PR #590).**
   - La tabella snapshot passa da 12 a 15 righe: entrano i tre repo privati coordinati dalla
     Board, descritti per funzione.
   - Con le tre righe la lettura fedele del Gate B salirebbe da 6 a 9. **E' un conteggio
@@ -169,7 +169,7 @@ Le ha lanciate il coordinatore, che ha scritto i mandati. Nessuna e' stata esegu
 | Spec governor di flotta `docs/superpowers/specs/2026-06-01-unified-fleet-governor-design.md` | 2026-06-23 | "shipped-partial -- R0/R1 live + weekly reconcile scheduled"; corpo "DRAFT v2" | Vincolo per R0 e per il principio anti-circolarita' (sez. 4). Vecchio di 5 mesi |
 | Spec console Agentic OS `docs/superpowers/specs/2026-07-12-agentic-os-console-design.md` | 2026-07-13 | "MVP IMPLEMENTED (2026-07-13)" | Vincolo: la console legge la tabella dei layer di AGENTIC_OS.md |
 | Spec fleet-tools MCP `docs/superpowers/specs/2026-05-29-fleet-tools-mcp-design.md` | 2026-06-23 | "shipped -- apps/fleet-tools-mcp live" | Serve solo per `cross_check` (reviewer di un'altra famiglia di modelli). Nessuna sovrapposizione funzionale con la Board |
-| [STATUS_MULTI_REPO.md](../../STATUS_MULTI_REPO.md) | 2026-07-13 | "Ultimo refresh 2026-06-30" + delta fino al 2026-07-13 | Unica fonte ammessa per contare il Gate B. **Fermo da 4 mesi** |
+| [STATUS_MULTI_REPO.md](../../STATUS_MULTI_REPO.md) | 2026-07-13 | "Ultimo refresh 2026-06-30" + delta fino al 2026-07-13 | Unica fonte ammessa per contare il Gate B. **Fermo da 4 mesi** alla prima stesura; aggiornato il 2026-11-13 (PR #590) |
 | Spec di design Board di flotta v2 (2026-11-12) | nessuno: fuori da git per privacy | intestazione "v2 APPROVATA da Eduardo in chat il 2026-11-12": approvazione registrata nell'intestazione dello spec, verificabile solo con accesso al repo privato | Fonte dei numeri del 2026-11-12. Prove di uscita della Fase 1 eseguite il 2026-11-12; verifica indipendente **parziale** (vedi aggiornamento del 2026-11-13) |
 
 ### Gate B: conteggio dal file
@@ -481,8 +481,9 @@ Avvertenza (SDMG): raccomandazione, misure e specchio vengono dallo stesso coord
 dalla RATIFICA riceverebbe altro lavoro. Per questo il reviewer di X rifa' anche le misure, e
 l'esito proposto a scadenza passata e' un fermo, non una ratifica.
 
-Perche' non RATIFICA subito: X e' chiusa solo in parte, Y aspetta il merge della PR #590, e
-ADR-0045 riporta che la Board "non funziona ancora". Z e' verificata. Ratificare come bus di flotta un componente che il suo stesso
+Perche' non RATIFICA subito: X e' chiusa solo in parte, la decisione nel merito prevista da
+Y non c'e' ancora, e ADR-0045 riporta che la Board "non funziona ancora". Di Y e' fatto il
+refresh del file; Z e' chiusa. Ratificare come bus di flotta un componente che il suo stesso
 perimetro dichiara non funzionante vorrebbe dire ratificare l'uso, non la funzione.
 
 Perche' non RESTRINGI come primo passo: introduce una regola senza enforcement. **Doppio
