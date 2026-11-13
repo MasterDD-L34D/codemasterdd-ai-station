@@ -32,7 +32,8 @@ ha autorita' nuova, e nessuno e' una sorgente R0, finche' il suo ADR non ha un e
   markdown con writer atomico, tenuto nel repo privato del progetto in cui e' nata (non
   linkabile); uno specchio orario in un repo privato dedicato e' attivo dal 2026-11-12. Oggi viene usata anche fra
   progetti diversi, fuori dal Gate B. Ruolo di flotta: [ADR-0046](docs/adr/0046-board-fleet-coordination-layer.md)
-  (Proposed). Da non confondere con [EXECUTION-BOARD.md](docs/governance/EXECUTION-BOARD.md)
+  (esito RESTRINGI, 2026-11-13): resta un livello di progetto per il coordinamento fra agenti,
+  non e' il livello di coordinamento della flotta. Da non confondere con [EXECUTION-BOARD.md](docs/governance/EXECUTION-BOARD.md)
   ne' con `playtest2-board-sync` (layer 5).
 
 ## Boot di sessione (gia' operativo)

@@ -1,8 +1,9 @@
 # ADR-0046 — Board agenti come livello di coordinamento della flotta: ratifica, restringi o rinvia
 
-> *TL;DR: la Board agenti e' nata per coordinare un solo progetto. Oggi coordina di fatto la flotta (benchmark, hardware, Ollama, PR di questo repo, lavori schedulati di un altro progetto). Funziona cioe' da bus di messaggi cross-repo, la cosa che lo spec orchestratore aveva rinviato al Gate B, ed e' cresciuta fuori da quel gate e fuori da AGENTIC_OS.md. Il Gate B e' obsoleto nella sostanza; la lettura fedele della sua definizione da' 6 repo, sotto la soglia. Raccomandazione (rivista il 2026-11-13): RINVIA a tempo. Tre verifiche (reviewer indipendente sulle prove della Fase 1, refresh di STATUS_MULTI_REPO.md, natura del ponte), poi nuova decisione entro il 2026-11-20. Il rinvio senza scadenza non regge piu': un giorno dopo la stesura la board ha superato la soglia di revisione dei 250 KB. Decide Eduardo.*
+> *TL;DR: la Board agenti e' nata per coordinare un solo progetto. Oggi coordina di fatto la flotta (benchmark, hardware, Ollama, PR di questo repo, lavori schedulati di un altro progetto). Funziona cioe' da bus di messaggi cross-repo, la cosa che lo spec orchestratore aveva rinviato al Gate B, ed e' cresciuta fuori da quel gate e fuori da AGENTIC_OS.md. Il Gate B e' obsoleto nella sostanza; la lettura fedele della sua definizione da' 6 repo, sotto la soglia. **Esito (2026-11-13): RESTRINGI**, deciso da Eduardo. La Board resta per coordinare agenti che lavorano insieme (presenze, lease, handoff); i segnali di flotta escono; nessuna Fase 2; lo specchio resta in sola manutenzione. Le raccomandazioni precedenti (RINVIA, poi RINVIA a tempo) sono superate: le tre verifiche previste sono state fatte lo stesso giorno e stanno sotto.*
 
-- Status: **Proposed** (2026-11-12, cancello del progetto "Board di flotta", fase 1)
+- Status: **Accepted** (2026-11-13, esito RESTRINGI; decisione di Eduardo, in vigore col merge
+  di questa PR). Proposed il 2026-11-12 come cancello del progetto "Board di flotta", fase 1.
 - Data: 2026-11-12
 - Decisore: Eduardo Scarpelli
 - Deciders: solo-dev (single-user workstation)
@@ -376,8 +377,8 @@ vanno su R0, nel JOURNAL o nelle PR. Nessuna Fase 2.
 **Pannello R0**: invariato, la Board non e' una sorgente. **Console**: la nota resta,
 riformulata come "livello di progetto, non di flotta".
 
-**Verdict**: secondaria. Ha senso se Eduardo vuole il costo minimo e accetta la misura di
-meta-lavoro gia' esistente.
+**Verdict**: secondaria nella prima stesura. Ha senso se Eduardo vuole il costo minimo e
+accetta la misura di meta-lavoro gia' esistente. **Scelta il 2026-11-13** (vedi Decision).
 
 ### Opzione C -- RINVIA: resta la Fase 1, nessuna decisione sul ruolo
 
@@ -426,8 +427,55 @@ Regole proposte:
 
 ## Decision
 
+**Esito: RESTRINGI (Opzione B).** Deciso da Eduardo il 2026-11-13, dopo le tre verifiche.
+
+Cosa vale da adesso:
+
+- La Board serve solo a coordinare agenti che lavorano insieme: presenze, lease, handoff.
+- I segnali di flotta (stato dei benchmark, hardware, Ollama) escono dalla Board e vanno su
+  R0, nel JOURNAL o nelle PR.
+- Nessuna Fase 2: niente release del codice Board, niente campo `progetto`, niente scadenze
+  ne' archivio.
+- Lo specchio orario resta, in sola manutenzione.
+- La Board non e' il livello di coordinamento della flotta. Il Gate B non viene riaperto.
+
+Perche' RESTRINGI e non RATIFICA:
+
+- La RATIFICA non aveva le sue precondizioni: X e' chiusa solo in parte.
+- La crescita misurata e' in buona parte lavoro sulla Board stessa (71-88 messaggi nuovi su
+  132). La RATIFICA ne aggiungerebbe.
+- Tre dei repo della flotta non hanno commit su `main` da luglio 2026: oggi non c'e' un
+  lavoro di flotta che chieda un bus piu' grande.
+- La scelta e' asimmetrica. Da RESTRINGI si passa a RATIFICA con un nuovo atto; il contrario
+  lascia una release installata e un campo nuovo nel file.
+
+Cosa RESTRINGI non risolve (misure sulla copia dello specchio del 2026-11-13, 355 messaggi):
+
+- Il file resta com'e', circa 335 KB, senza archivio. Solo 67 messaggi su 355 sono puro
+  segnale di flotta (stima per parole chiave): spostarli altrove alleggerisce poco.
+- Il confine e' solo scritto: nessun controllo lo fa rispettare. Il lease su Ollama fra due
+  macchine resta sulla Board, perche' e' coordinamento fra agenti.
+- Le richieste aperte restano: 86, di cui 44 indirizzate a un destinatario generico usato da
+  molte sessioni, quindi senza un responsabile. Nessuna opzione toccava questo difetto.
+
+Quando si riapre (condizioni proposte, non misurate):
+
+1. i segnali di flotta ricompaiono sulla Board nonostante la regola;
+2. riparte un lavoro su piu' repo che chiede coordinamento vivo fra agenti di progetti
+   diversi;
+3. un reviewer esterno con accesso alle fonti chiude la verifica X, e Eduardo vuole la Board
+   come cruscotto della flotta.
+
+Avvertenza: misure e testo restano del coordinatore del progetto. L'esito gli toglie lavoro,
+quindi qui il suo interesse andava nel senso opposto alla raccomandazione.
+
+### Storico: raccomandazione precedente (superata dall'esito)
+
+Quello che segue, fino al piano di implementazione, e' il ragionamento scritto prima
+dell'esito. Resta per traccia. La scadenza del 2026-11-20 non vale piu'.
+
 **Raccomandazione (rivista il 2026-11-13): RINVIA a tempo (Opzione C con scadenza); nuova
-decisione entro il 2026-11-20, dopo le tre verifiche X, Y e Z.** Decide Eduardo.
+decisione entro il 2026-11-20, dopo le tre verifiche X, Y e Z.**
 
 Cosa cambia rispetto alla prima stesura: il rinvio non e' piu' senza data. La prima stesura
 diceva "si rivaluta quando scatta un trigger scritto", e il trigger 2 e' scattato il giorno
@@ -534,6 +582,16 @@ decide nel merito.
 
 ### Implementation plan
 
+Con RESTRINGI (esito del 2026-11-13, in vigore):
+- Step R1 -- nota in AGENTIC_OS.md riformulata: livello di progetto, non di flotta (fatta in
+  questo cambio).
+- Step R2 -- modifica alle istruzioni degli agenti nel repo d'origine: branch + PR, merge di
+  Eduardo. Non fatta qui.
+- Step R3 -- nessun lavoro nuovo su Board e specchio oltre la manutenzione.
+
+I passi sotto ("Con RINVIA a tempo", "Con RATIFICA") restano per traccia e non sono in
+vigore.
+
 Con RINVIA a tempo (entro il 2026-11-20):
 - Step 1 -- nota "Livelli ombra" in AGENTIC_OS.md (fatta in questo cambio).
 - Step 2 -- verifica delle prove di uscita della Fase 1 da parte del reviewer indipendente
@@ -558,15 +616,15 @@ Con RATIFICA (dopo X, Y e Z; tutto fuori da questo repo salvo dove indicato):
 
 #### Positive
 
-- Il livello ombra ha un nome, una nota in AGENTIC_OS.md e un'autorita' scritta, anche se
-  solo Proposed.
+- Il livello ombra ha un nome, una nota in AGENTIC_OS.md e un'autorita' scritta, con un
+  esito deciso.
 - Il confine fra Board, governor ed EXECUTION-BOARD.md e' esplicito.
 - Il Gate B obsoleto viene chiamato col suo nome, invece di essere chiuso con un conteggio.
 
 #### Negative
 
-- Con RINVIA a tempo il bus continua a esistere senza ratifica fino alla scadenza, e intanto
-  cresce (vedi aggiornamento del 2026-11-13).
+- Con RESTRINGI il file gia' accumulato resta senza archivio e il confine non ha un controllo
+  che lo faccia rispettare (vedi Decision).
 - La domanda su ADR-0036 decisione 6 resta aperta.
 - La Board resta un file condiviso letto da agenti cloud: il limite di privacy e' noto e non
   risolto.
@@ -631,8 +689,9 @@ Sono scritti qui perche' nessuna opzione li cancella.
 
 - Perche' ora: lo spec della Board di flotta mette questo ADR come cancello. Senza esito la
   Fase 2 non si scrive.
-- Target Accepted: la firma di Eduardo, dopo la review severa. Con esito RINVIA a tempo lo
-  stato resta Proposed fino alla nuova decisione (entro il 2026-11-20).
+- Accepted il 2026-11-13 con esito RESTRINGI, firma di Eduardo col merge della PR.
+- I trigger qui sotto erano scritti per il rinvio: restano per traccia. Per riaprire valgono
+  le tre condizioni della sezione Decision.
 - Trigger di revisione (valori proposti, non misurati):
   1. prove di uscita della Fase 1 verificate e STATUS_MULTI_REPO.md aggiornato (cioe' X e Y;
      dal 2026-11-13 anche Z);
