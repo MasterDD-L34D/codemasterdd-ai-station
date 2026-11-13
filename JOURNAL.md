@@ -19,6 +19,34 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-11-13 (coda Da fare: journal-land a rebase + PR #580 chiusa -- Opus 5.5 da Lenovo)
+
+### Completato
+- **journal-land: merge rebase al posto di squash** (#592, `01e7018`). Lo squash toglieva
+  `Coding-Agent` e `Trace-Id` e GitHub aggiungeva un `Co-authored-by` (vietato da ADR-0011; visto
+  su #591). Test di regressione: ogni `gh pr merge` dello script deve usare `--rebase`. Rosso prima
+  del fix, verde dopo; suite 109 pass.
+- **PR #580 chiusa dopo 17 giorni** (`76a571d`, `edae964`): `agent-scanner` limitato a dispatch e
+  inventario, migrazione della direttiva gia' installata. P2 Codex gia' risolto nel branch. Test sul
+  merge con `main` aggiornato (21 commit indietro, nessun conflitto): 37/37 PowerShell + 109 pytest.
+  Negative control: rimesso lo script di `main` -> 2 test di upgrade falliscono.
+- Deploy globale non necessario: `~/.claude/CLAUDE.md` ha gia' la regola scoped, nessun `STRONG-PURE`.
+
+### Da fare
+- Worktree aperti nel repo d'origine: istruzioni vecchie finche' non riallineati.
+- Game-Godot-v2 privato su GitHub, `CLAUDE.md` lo dice pubblico: decide Eduardo quale correggere.
+- Gateway LLM residente sulla macchina della board vs ADR-0036 decisione 6.
+- Game: 17 bozze automatiche "weekly drift" aperte da luglio.
+- Specchio: allarme dopo tre fallimenti mai provato dal vivo.
+- Clone principale Lenovo fermo su HEAD staccato al 14/07 (`f4c7b16`): non toccato.
+
+### Note
+- I commit di #580 hanno `Coding-Agent` in un paragrafo separato da `Trace-Id`: `git log
+  --format=%(trailers)` vede solo `Trace-Id`. Contenuto ADR-0011 presente, formato fragile.
+- Primo journal landato col rebase: questa entry e' la prova dal vivo del fix #592.
+
+---
+
 ## 2026-11-13 (ADR-0046 chiuso: la Board resta di progetto, esito RESTRINGI -- Fable 5.2 da Lenovo)
 
 ### Completato
