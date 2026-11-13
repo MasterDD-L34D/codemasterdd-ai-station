@@ -94,7 +94,7 @@ _Auto-synced governor signal snapshot; human prose elsewhere is authoritative. T
 - **Game-Database**: main fermo al 2026-07-10 (#238). 0 PR open.
 - **vault**: main al 2026-10-28. PR open #270 (non draft, dal 07-13), #271 e #275 (draft). #266/#269 MERGED (07-13/07-10).
 - **evo-swarm**: ARCHIVED+PRIVATE, ultimo commit 2026-06-22. **Synesthesia**: ultimo commit 2026-04-16, 0 PR open.
-- **Board agenti**: tre repo privati coordinati via Board (progetto di origine, specchio orario attivo dal 2026-11-12, almeno un altro): attivi, privati, non linkabili; ruolo in ADR-0046 (Proposed).
+- **Board agenti**: tre repo privati coordinati via Board (progetto di origine, specchio orario attivo dal 2026-11-12, almeno un altro): attivi, privati, non linkabili; ruolo in ADR-0046 (Accepted 2026-11-13, esito RESTRINGI).
 
 ---
 
@@ -102,7 +102,7 @@ _Auto-synced governor signal snapshot; human prose elsewhere is authoritative. T
 
 | Repo | Status | Next action | Deadline/trigger | Blocker |
 |------|--------|-------------|------------------|---------|
-| **codemasterdd-ai-station** | Ultimo commit su main 2026-11-13 ("board di flotta fase 1 chiusa, specchio auto-allineato", #589). 2 PR open: #587 ADR-0046 Board agenti (2026-11-12), #580 fix scope scanner (aperta dal 2026-10-27). Claude Max/spend/stack ADR-0017: non riverificati il 2026-11-13 (ultima verifica 07-03). | Triage #580 (aperta da 17 giorni); decisione ADR-0046 (Proposed) | -- | Nessuno |
+| **codemasterdd-ai-station** | Ultimo commit su main 2026-11-13 ("board di flotta fase 1 chiusa, specchio auto-allineato", #589). 1 PR open: #580 fix scope scanner (aperta dal 2026-10-27). #587 ADR-0046 mergiata il 2026-11-13. Claude Max/spend/stack ADR-0017: non riverificati il 2026-11-13 (ultima verifica 07-03). | Triage #580 (aperta da 17 giorni) | -- | Nessuno |
 | **Synesthesia** | Dormant, ultimo commit 2026-04-16 ("Batch D complete"), 0 PR open, repo non archiviato. Invariato. | Riattiva pre-esame UniUPO (data esame non riverificata) | ~agosto 2026 (da riverificare: siamo a novembre) | Nessuno (dormant intenzionale) |
 | **Game (Evo-Tactics)** | Ultimo commit su main 2026-07-14 ("docs(adr): last count contradiction"); nessun commit su main da allora. 18 PR open: 17 draft routine "weekly drift" (#3308-#3324, dal 2026-07-20 al 2026-11-09, mai chiuse) + #3306 fix(species) recover rovine_planari (2026-07-14, non draft). Storico arco (RFC#4, PE_ratio CLOSED, big-maps) = layer delta 07-10/07-13. | Triage/chiusura draft weekly-drift accumulate; decidere #3306 | -- | Nessuno |
 | **Game-Godot-v2** | Ultimo commit su main 2026-07-14 (#611). 2 PR open: #612 e #613 (entrambe del 2026-07-14). **Repo ora PRIVATE** (gh repo view 2026-11-13): titoli e contenuti non riportati qui. CLAUDE.md lo dice ancora Public. | Review/merge #612/#613 (Eduardo); allineare etichetta privacy | -- | Nessuno |
@@ -114,9 +114,9 @@ _Auto-synced governor signal snapshot; human prose elsewhere is authoritative. T
 | **compass-marketplace** (Ryzen-only) | Compass plugin marketplace -- direction-first audit/kickoff lens per Claude Code. Auxiliary. | Informational, no action | -- | Nessuno |
 | **Master-DD-Pathfinder-GPT** (Ryzen-only) | Pathfinder 1E Master DD GPT core repo (API + Prompt Kit), external GPT backing. Personal PF1e. | Informational, no action | -- | Nessuno |
 | **torneo-cremesi-site** (Ryzen-only) | Static site PF1e Torneo Cremesi (ABP+EITR ON, localStorage). Personal campaign site. | Informational, no action | -- | Nessuno |
-| **Repo privato progetto Board** (privato, non linkabile) | Repo privato del progetto in cui la Board agenti e' nata; coordinato via Board. Attivo, privato, non linkabile. Fonte: ADR-0046 (Proposed), esistenza non riverificata da questo audit. | Informational | -- | Nessuno |
-| **Repo privato specchio Board** (privato, non linkabile) | Repo privato dedicato allo specchio orario dello stato della Board, attivo dal 2026-11-12. Attivo, privato, non linkabile. Fonte: ADR-0046 (Proposed), esistenza non riverificata da questo audit. | Informational | -- | Nessuno |
-| **Altro repo privato coordinato via Board** (privato, non linkabile) | Almeno un altro repo privato coordinato via Board agenti. Attivo, privato, non linkabile. Fonte: ADR-0046 (Proposed), esistenza non riverificata da questo audit. | Informational | -- | Nessuno |
+| **Repo privato progetto Board** (privato, non linkabile) | Repo privato del progetto in cui la Board agenti e' nata; coordinato via Board. Attivo, privato, non linkabile. Fonte: ADR-0046 (Accepted 2026-11-13, esito RESTRINGI), esistenza non riverificata da questo audit. | Informational | -- | Nessuno |
+| **Repo privato specchio Board** (privato, non linkabile) | Repo privato dedicato allo specchio orario dello stato della Board, attivo dal 2026-11-12. Attivo, privato, non linkabile. Fonte: ADR-0046 (Accepted 2026-11-13, esito RESTRINGI), esistenza non riverificata da questo audit. | Informational | -- | Nessuno |
+| **Altro repo privato coordinato via Board** (privato, non linkabile) | Almeno un altro repo privato coordinato via Board agenti. Attivo, privato, non linkabile. Fonte: ADR-0046 (Accepted 2026-11-13, esito RESTRINGI), esistenza non riverificata da questo audit. | Informational | -- | Nessuno |
 
 ### Stack ADR-0017 runtime — DECOMMISSIONED reference
 
