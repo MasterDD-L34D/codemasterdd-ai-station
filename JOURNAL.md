@@ -19,6 +19,43 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-11-13 (ADR-0046 chiuso: la Board resta di progetto, esito RESTRINGI -- Fable 5.2 da Lenovo)
+
+### Completato
+- **ADR-0046 Accepted, esito RESTRINGI** (#587, merge autorizzato da Eduardo in chat). La Board agenti resta
+  per coordinare agenti che lavorano insieme: presenze, lease, lavori condivisi, messaggi con un destinatario
+  che deve agire. Stato, report ed esiti senza destinatario vanno in JOURNAL o PR. Nessuna Fase 2; specchio in
+  sola manutenzione. La stessa regola e' nelle istruzioni del repo privato d'origine (PR mergiata, con un test
+  che fissa le frasi chiave).
+- **Tre verifiche prima della scelta**, fatte da agenti separati: prove dello specchio rieseguite e confermate
+  (indipendenza solo parziale: stessa famiglia di modelli; un modello di altra famiglia le giudica
+  "parzialmente sostenute"); il ponte della Board parte solo su richiesta; `STATUS_MULTI_REPO.md` aggiornato
+  dopo quattro mesi (#590).
+- **Misure dallo specchio**: board da 200 a 335 KB in 34 ore; 121 messaggi nuovi su 132 scritti da due agenti;
+  fra 71 e 88 parlano del coordinamento stesso; 44 richieste aperte su 86 indirizzate a un nome generico.
+- Buco di alcune ore nel log dello specchio spiegato: interruzione della macchina ospite, nessun dato perso,
+  specchio ripartito da solo.
+
+### Da fare
+- Worktree aperti nel repo d'origine: hanno ancora le istruzioni vecchie finche' non vengono riallineati.
+- Game-Godot-v2 risulta privato su GitHub; `CLAUDE.md` lo dice pubblico. Decide Eduardo quale dei due correggere.
+- Gateway LLM residente sulla macchina che ospita la board: da confrontare con ADR-0036 decisione 6.
+- Game: 17 bozze automatiche "weekly drift" aperte da luglio; #580 di questo repo aperta dal 2026-10-27.
+- Specchio: allarme dopo tre fallimenti mai provato dal vivo; nessun avviso se la macchina ospite e' ferma.
+- `journal-land`: il merge squash toglie i trailer `Coding-Agent` e `Trace-Id` dal commit su `main`.
+
+### Note
+- **Una misura a favore della mia tesi era gonfiata**: 101 messaggi "sul coordinamento" contavano anche pezzi
+  di parola ("lease" dentro "release"). L'ha trovata il verificatore: 88 con la parola intera. Regola pratica:
+  chi scrive la misura non la verifica.
+- **Stessa misura, lettura opposta**: "+67% in 34 ore" sembrava chiedere piu' Board; guardando chi scriveva e di
+  cosa, diceva che si lavorava troppo sulla Board. Mancava l'attribuzione.
+- **Costo della sessione**: delega via Board mai usata (contesto solo in sessione) e due agenti partiti sul
+  modello piu' caro perche' il modello non era indicato. Da indicare sempre nel mandato.
+- Merge rebase conserva i trailer; lo squash no.
+
+---
+
 ## 2026-11-12 (Board di flotta: Fase 1 chiusa, lo specchio si riallinea da solo -- Fable 5.2 da Lenovo)
 
 ### Completato
