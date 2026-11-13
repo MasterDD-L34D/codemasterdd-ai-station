@@ -19,6 +19,45 @@ Diario operativo della workstation. Una entry per sessione di lavoro significati
 
 ---
 
+## 2026-11-12 (Board di flotta: Fase 1 chiusa, lo specchio si riallinea da solo -- Fable 5.2 da Lenovo)
+
+### Completato
+- **Specchio attivo sul Ryzen**: clone, primo push, prova con push rotto e recupero, task orario registrato
+  alle 02:27Z. Giri automatici osservati senza intervento; visto anche l'esito `unchanged` a board ferma.
+  Eta' della copia remota dello stato: da 15 giorni a meno di un'ora.
+- **Difetto di piano trovato dal vivo e corretto** (PR #4 del repo privato): un merge fatto da GitHub lasciava
+  il clone del Ryzen indietro e il push dello specchio non passava piu' senza un pull a mano. Ora, solo quando
+  c'e' qualcosa da spingere: fetch, rebase, push. Lo specchio si rifiuta di lavorare se il clone non e' su
+  `main` (o ha HEAD staccato). Test da 24 a 32; review indipendente: 2 difetti importanti riprodotti e chiusi.
+- **Rebase vero provato sul Ryzen**: PR di soli documenti mergiata alle 16:50Z, clone lasciato indietro apposta,
+  nessun pull. Giro delle 17:27Z: commit `6152dbd` con genitore il commit della PR, letto anche da GitHub;
+  clone pari al remoto, nessun rebase rimasto a meta'. Gli hook globali del Ryzen non hanno disturbato.
+- **`QUALITY.md`** del repo privato: tre passi (smoke, casi limite, tuning) per lo specchio e per la correzione.
+- Board aggiornata a ogni passo con messaggi di esito. Budget del piano chiuso: 4 pacchetti su 4.
+
+### Da fare
+- Eduardo: decisione su ADR-0046 (#587), ancora aperta.
+- Refresh di `STATUS_MULTI_REPO.md`: resta precondizione dell'ADR-0046.
+- Verifica delle prove da parte di un reviewer davvero esterno (condizione dell'ADR): non fatta.
+- Allarme dopo tre fallimenti: provato solo nei test, mai in condizioni reali.
+- Minori aperti dello specchio: elencati nel `QUALITY.md` del repo privato.
+
+### Note
+- **Dopo la correzione ogni merge di codice su `main` del repo privato e' un rilascio automatico**: entra in
+  funzione sul Ryzen al primo giro con modifiche alla board, entro un'ora, senza pull. Vale come regola di review.
+- **Una seconda sessione ha fatto entrare un'altra modifica allo specchio** (PR #5: lo specchio prende il lock
+  dello scrittore; allarme dal writer della release attiva), merge alle 17:36Z, non da questa sessione e non
+  esaminata qui. In servizio da sola dal giro delle 18:27Z: 11 giri `committed` fino alle 04:27Z del 13/11.
+  Cambia una scelta del design ("lo specchio aspetta il lock, non lo crea"): da rileggere prima dell'ADR.
+- Nessun giro nel log fra le 05:27Z e le 12:13Z del 13/11: causa non verificata.
+- `git status` senza fetch dice "pari al remoto" anche a clone indietro: confronta con la copia locale di
+  `origin/main`. Per sapere la verita' serve il fetch, o la testa letta da GitHub.
+- Test nati verdi (nessuna fase rossa): il controllo negativo sono state le mutazioni su copie usa-e-getta,
+  6 su 6 fanno cadere almeno un test. Una mutazione (`--autostash`) era sopravvissuta al primo giro.
+- Review del bot Codex mai eseguita su #587 e sulle PR del repo privato (limite d'uso esaurito).
+
+---
+
 ## 2026-11-12 (Board di flotta: design, piano, Fase 1 avviata -- Fable 5.2 da Lenovo)
 
 ### Completato
