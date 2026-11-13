@@ -41,3 +41,14 @@ def test_param_env_fallback_chain():
 def test_sanitizer_present():
     # polluted env var must not be able to corrupt the trailer block
     assert re.search(r"\$CodingAgent\s+-notmatch\s+'", script_text()), "missing ASCII-token sanitizer"
+
+
+def test_merge_preserves_trailers():
+    # squash-merge rewrites the commit: drops Coding-Agent/Trace-Id and adds a
+    # GitHub Co-authored-by line (forbidden by ADR-0011). Seen on #591.
+    # Rebase-merge keeps the authored commit message verbatim.
+    merges = re.findall(r"gh pr merge[^\r\n]*", script_text())
+    assert merges, "no gh pr merge call found"
+    for line in merges:
+        assert "--squash" not in line, f"squash drops ADR-0011 trailers: {line!r}"
+        assert "--rebase" in line, f"merge must use --rebase: {line!r}"

@@ -260,8 +260,8 @@ Info "PR: $prUrl"
 
 if (-not $NoMerge) {
   # $branch is not checked out anywhere now -> --delete-branch succeeds without a false error
-  & gh pr merge $branch --auto --squash --delete-branch *> $null
-  if ($LASTEXITCODE -eq 0) { Info "auto-merge (squash) queued; remote branch deletes on merge." }
+  & gh pr merge $branch --auto --rebase --delete-branch *> $null
+  if ($LASTEXITCODE -eq 0) { Info "auto-merge (rebase) queued; remote branch deletes on merge." }
   else {
     # this repo has PR auto-merge DISABLED (GraphQL enablePullRequestAutoMerge fails) ->
     # bounded wait for CI (ascii-guard + pytest, runs on every PR), then merge directly
@@ -280,11 +280,11 @@ if (-not $NoMerge) {
       Start-Sleep -Seconds 15
     } while ((Get-Date) -lt $deadline)
     if ($green -ge 2) {
-      & gh pr merge $branch --squash --delete-branch
-      if ($LASTEXITCODE -eq 0) { Info "merged (squash) after CI green; remote branch deleted." }
+      & gh pr merge $branch --rebase --delete-branch
+      if ($LASTEXITCODE -eq 0) { Info "merged (rebase) after CI green; remote branch deleted." }
       else { Info "direct merge failed; PR left open for manual merge: $prUrl" }
     }
-    elseif ($checks -eq 8 -or $checks -eq 0) { Info "CI still pending after 5 min; PR left open. Merge with: gh pr merge $branch --squash --delete-branch" }
+    elseif ($checks -eq 8 -or $checks -eq 0) { Info "CI still pending after 5 min; PR left open. Merge with: gh pr merge $branch --rebase --delete-branch" }
     else { Info "CI checks FAILED; PR left open for review: $prUrl" }
   }
 }
