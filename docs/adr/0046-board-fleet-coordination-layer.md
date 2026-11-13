@@ -69,6 +69,11 @@ registro eventi della macchina che ospita la board, file di qualita' del repo pr
 possono verificare solo con accesso a quel repo. Le ha prese il coordinatore del progetto,
 non un reviewer indipendente.
 
+**Metodo**: i valori "erano" vengono dal primo commit dello specchio (2026-11-12 02:25Z),
+calcolati con lo stesso script dei valori nuovi. La tabella del 2026-11-12 qui sopra viene
+invece dallo spec, misurata prima e in un altro modo (206 messaggi e 121 open li'; 220 e 131
+al primo commit dello specchio): le due tabelle non sono la stessa serie. I pesi sono in byte.
+
 | Fatto | Misura |
 |---|---|
 | Specchio | attivo dal 2026-11-12: un commit per giro orario quando la board cambia. 26 commit che toccano la board fino al 2026-11-13 12:27Z |
@@ -77,20 +82,32 @@ non un reviewer indipendente.
 | STATUS_MULTI_REPO.md | **non aggiornato**: ultimo commit 2026-07-13 |
 | Natura del ponte (persistente o su richiesta) | **non verificata** |
 | Peso della board | 200.423 byte (2026-11-12 02:25Z), 232.308 (17:27Z), 335.464 (2026-11-13 12:27Z): +67% in 34 ore |
-| Messaggi | 352 (erano 206): 249 open (erano 121). Open per tipo: info 106, result 56, review 35, handoff 26, request 25, stato 1 |
+| Crescita per sezione | Messaggi da 134.668 a 243.835 byte (81% della crescita); Lavori +16.384; Presenze +8.102 |
+| Messaggi | 352 (erano 220): 249 open (erano 131). Open per tipo: info 106, result 56, review 35, handoff 26, request 25, altro 1 |
 | Open che chiedono azione | 86 (erano 40); oltre i 7 giorni 14 (erano 14) |
+| Chi ha scritto i 132 messaggi nuovi | due agenti ne hanno scritti 121 (67 e 54) |
+| Di cosa parlano i messaggi nuovi | 101 su 132 contengono parole del coordinamento stesso (board, specchio, ponte, coda, lease, handoff); 23 riguardano il progetto dello specchio. E' una ricerca per parole chiave, non una classificazione: puo' sovrastimare |
 | Correzioni allo specchio dopo l'attivazione | 2. La prima: riallineamento al remoto prima del push, provato dal vivo. La seconda: lettura delle sorgenti sotto il lock dello scrittore, fatta da un'altra sessione e non esaminata dal coordinatore |
-| Interruzione | il 2026-11-13 la macchina che ospita la board si e' spenta senza arresto regolare: 6 giri saltati, nessun dato perso, specchio ripartito al login dell'utente |
+| Interruzione | dopo un'interruzione della macchina che ospita la board lo specchio ha saltato alcuni giri ed e' ripartito; nessun dato perso |
 
 Cosa cambia per la decisione:
 
-- **Il trigger di revisione 2 e' scattato** (board oltre 250 KB) un giorno dopo la stesura.
-  Il rinvio "a costo zero" dell'Opzione C non e' a costo zero: il debito cresce in fretta.
-- **La crescita sta dove la Fase 2 interverrebbe**: 162 dei 249 messaggi open sono `info` o
-  `result`, che nessuno chiude. Scadenza e archivio pero' stanno dietro la RATIFICA.
-- **La RATIFICA non e' ancora legittima**: delle sue precondizioni e' fatta solo meta' della
-  prima (prove eseguite, non verificate).
-- Non misurato: quali agenti e quali lavori hanno prodotto la crescita.
+- **Il trigger di revisione 2 e' scattato** un giorno dopo la stesura: 335.464 byte superano
+  i 250 KB comunque si legga l'unita' (335 kB, 328 KiB). La soglia era un valore proposto, non
+  misurato.
+- **La crescita e' in buona parte lavoro sulla Board stessa.** L'81% dei byte nuovi sta nella
+  sezione Messaggi; 121 messaggi nuovi su 132 vengono da due agenti; circa tre su quattro
+  parlano del coordinamento stesso (stima per parole chiave). Quindi la crescita **non prova**
+  che la flotta abbia bisogno di un bus piu' grande: in buona parte misura il meta-lavoro, che
+  ADR-0045 aveva gia' trovato sopra il tetto. Usarla come urgenza a favore della RATIFICA
+  sarebbe un argomento circolare.
+- **Cosa prova**: senza scadenza ne' archivio il file cresce con qualunque attivita'. Un
+  rinvio senza data non e' "a costo zero".
+- **Dove cresce**: dei 118 messaggi open in piu', 71 (60%) sono `info` o `result`; 46 (39%)
+  chiedono azione, e per questi la Fase 2 non prevede scadenza.
+- **La RATIFICA non e' legittima oggi**: X non e' soddisfatta (prove eseguite, verifica
+  indipendente mancante), Y e Z nemmeno.
+- **RESTRINGI va riletta** con queste misure: vedi la sezione Decision.
 
 ### Input / trigger
 
@@ -229,6 +246,10 @@ dichiarazione motivata che la Board ne resta fuori. Questo ADR non la chiude.
 
 ## Options
 
+Nota del 2026-11-13: i numeri dentro le opzioni (190 KB, 40 messaggi, stima di 80 KB dopo
+l'archivio) sono quelli della prima stesura. I valori aggiornati stanno nella sezione
+"Aggiornamento del 2026-11-13".
+
 ### Opzione A -- RATIFICA: la Board e' il bus di coordinamento della flotta e la Fase 2 parte
 
 La Board diventa il livello di coordinamento della flotta per lo stato vivo fra agenti. La
@@ -320,20 +341,21 @@ meta-lavoro gia' esistente.
 ### Opzione C -- RINVIA: resta la Fase 1, nessuna decisione sul ruolo
 
 Lo specchio orario della Fase 1 resta, per la sicurezza dello stato. Niente Fase 2, niente
-restrizione. Si rivaluta quando scatta un trigger scritto.
+restrizione. Prima stesura: si rivaluta quando scatta un trigger scritto. Dal 2026-11-13: si
+rivaluta a data fissa (vedi Decision).
 
 **Pro**:
 - Nessun meta-lavoro aggiuntivo.
-- Lascia il tempo per le due cose che oggi mancano: le prove di uscita della Fase 1 e il
-  refresh di STATUS_MULTI_REPO.md.
+- Lascia il tempo per le tre verifiche che mancano: reviewer indipendente sulle prove della
+  Fase 1, refresh di STATUS_MULTI_REPO.md, natura del ponte.
 
 **Contro**:
 - Il livello ombra resta ombra: la Board continua a crescere fuori da ogni gate.
 - Il debito cresce: 14 messaggi oltre i 7 giorni, 43 lavori in `review`, file da 190 KB
   senza archivio.
 
-**Cost**: zero lavoro, non zero debito. Misura del 2026-11-13: +67% di peso in 34 ore (vedi
-aggiornamento).
+**Cost**: zero lavoro. Il file intanto cresce: +67% in 34 ore, in buona parte meta-lavoro
+(vedi aggiornamento del 2026-11-13).
 
 **Rischio**: la decisione viene presa per inerzia, e la Board diventa il bus senza ADR. Per
 limitarlo servono un trigger di revisione e una nota in AGENTIC_OS.md.
@@ -368,11 +390,22 @@ decisione entro il 2026-11-20, dopo le tre verifiche X, Y e Z.** Decide Eduardo.
 
 Cosa cambia rispetto alla prima stesura: il rinvio non e' piu' senza data. La prima stesura
 diceva "si rivaluta quando scatta un trigger scritto", e il trigger 2 e' scattato il giorno
-dopo. Le tre verifiche sono in sola lettura o quasi. La data e' un valore proposto.
+dopo. Le tre verifiche sono in sola lettura o quasi.
 
-Alla scadenza gli esiti restano tre: RATIFICA (Opzione A) se X, Y e Z sono soddisfatte e
-Eduardo decide nel merito; RESTRINGI (Opzione B) se pesa di piu' il costo; un altro rinvio
-solo con una nuova data e un motivo scritto.
+Perche' il 2026-11-20: sette giorni, la stessa finestra che questo ADR usa per le sue soglie
+(messaggi oltre i 7 giorni, clausola di arresto). E' un valore proposto.
+
+Chi fa le verifiche: X un reviewer che non e' il coordinatore (vedi sotto), su OK di
+Eduardo; Y un agente di audit dei repo, con PR e merge di Eduardo; Z chiunque abbia accesso
+in sola lettura al repo d'origine, non il coordinatore.
+
+Alla scadenza gli esiti restano tre, pesati alla pari: RATIFICA (Opzione A) se X, Y e Z sono
+soddisfatte e Eduardo decide nel merito; RESTRINGI (Opzione B); un altro rinvio solo con una
+nuova data e un motivo scritto.
+
+Se la data passa senza decisione (proposta): nessun lavoro nuovo su Board e specchio oltre
+la manutenzione, finche' Eduardo non decide. Cosi' l'inerzia non gioca a favore di chi
+propone il lavoro.
 
 - **X -- prove di uscita della Fase 1 verificate da un reviewer indipendente.** Le prove
   sono quelle dello spec, sez. 6.1:
@@ -383,7 +416,9 @@ solo con una nuova data e un motivo scritto.
 
   Le prove sono state eseguite il 2026-11-12 (vedi aggiornamento del 2026-11-13). Manca la
   verifica: chi le ha controllate era un agente della stessa famiglia di modelli, inviato dal
-  coordinatore. Il reviewer non e' il coordinatore. Sono possibili due scelte:
+  coordinatore. Il reviewer non e' il coordinatore. Dal 2026-11-13 lo stesso reviewer rifa'
+  anche le misure della tabella di aggiornamento: sono riproducibili dalla storia dello
+  specchio con accesso in sola lettura. Sono possibili due scelte:
   1. un modello di un'altra famiglia, tramite lo strumento `cross_check` del server MCP di
      flotta gia' esistente (`apps/fleet-tools-mcp`);
   2. il reviewer severo, in una sessione che non ha partecipato al progetto.
@@ -395,15 +430,17 @@ solo con una nuova data e un motivo scritto.
   codice e sulla configurazione nel repo d'origine. Serve a chiudere la domanda su ADR-0036
   decisione 6, che va chiusa nello stesso atto della RATIFICA.
 
-Perche' non RINVIA senza data: la board e' passata da 200 a 335 KB in 34 ore e i messaggi
-che chiedono azione da 40 a 86. Un rinvio aperto lascia crescere il debito che la decisione
-dovrebbe governare.
+Perche' non RINVIA senza data: il trigger scritto e' gia' scattato, quindi "aspettare un
+trigger" oggi vuol dire decidere per inerzia, che e' il rischio dichiarato dell'Opzione C.
+La crescita del file non e' usata qui come urgenza: in buona parte e' meta-lavoro (vedi
+aggiornamento).
 
-Avvertenza (SDMG): raccomandazione, misure e specchio vengono dallo stesso coordinatore. La
-verifica X e' il passo che puo' smentirle.
+Avvertenza (SDMG): raccomandazione, misure e specchio vengono dallo stesso coordinatore, che
+dalla RATIFICA riceverebbe altro lavoro. Per questo il reviewer di X rifa' anche le misure, e
+l'esito proposto a scadenza passata e' un fermo, non una ratifica.
 
-Perche' non RATIFICA subito: X e' soddisfatta a meta', Y e Z non lo sono, e ADR-0045 riporta
-che la Board "non funziona ancora". Ratificare come bus di flotta un componente che il suo stesso
+Perche' non RATIFICA subito: X non e' soddisfatta (prove eseguite, verifica indipendente
+mancante), Y e Z nemmeno, e ADR-0045 riporta che la Board "non funziona ancora". Ratificare come bus di flotta un componente che il suo stesso
 perimetro dichiara non funzionante vorrebbe dire ratificare l'uso, non la funzione.
 
 Perche' non RESTRINGI come primo passo: introduce una regola senza enforcement. **Doppio
@@ -412,6 +449,13 @@ board") non ha enforcement. L'argomento "regola senza enforcement" quindi non di
 due opzioni. Le distinguono il costo (RESTRINGI e' quasi gratis) e l'assenza di un posto
 alternativo per lo stato vivo fra agenti (sfavorevole a RESTRINGI). RESTRINGI resta
 un'opzione legittima se Eduardo da' piu' peso al costo.
+
+**RESTRINGI riletta con le misure del 2026-11-13.** Le misure la rafforzano rispetto alla
+prima stesura. Sotto RESTRINGI non c'e' Fase 2, quindi il lavoro sulla Board stessa, che oggi
+produce buona parte dei messaggi nuovi, si ferma senza nessuna release. Restano i suoi due
+limiti: nessun controllo la fa rispettare, e il file gia' accumulato non si archivia.
+Dichiarato: una scadenza corta insieme ad "archivio solo dietro la RATIFICA" spinge di fatto
+verso la RATIFICA. Per questo alla scadenza RESTRINGI va pesata alla pari, non come ripiego.
 
 **Clausola di arresto (vale se si arriva a RATIFICA).** Le righe Lavori non hanno data,
 quindi "lavori nuovi in 7 giorni" non si puo' calcolare sulla board. La misura si sposta sui
@@ -507,9 +551,8 @@ Sono scritti qui perche' nessuna opzione li cancella.
 - **Checkout fermo.** Lo stato vivo resta in un checkout condiviso, su un ramo molto indietro
   rispetto a `main`, che ospita anche altro stato vivo. Un cambio di ramo o un reset li'
   cancellerebbe stato vivo. Lo specchio limita la perdita a un'ora (prove eseguite, verifica
-  indipendente mancante), ma solo a macchina accesa e con l'utente collegato: dopo un riavvio
-  resta fermo fino al login, e non c'e' un allarme per "specchio fermo". In ogni caso non
-  toglie il rischio.
+  indipendente mancante). Dopo un'interruzione della macchina che ospita la board puo' pero'
+  restare fermo senza avviso. In ogni caso non toglie il rischio.
 - **Percorso scritto nel codice** in piu' punti: la Fase 1 non lo cambia.
 - **43 lavori fermi in `review`**: senza data sulle righe Lavori il collo di bottiglia non si
   puo' misurare. E' un buco dichiarato, non un obiettivo. I diff dello specchio darebbero una
@@ -548,9 +591,10 @@ Sono scritti qui perche' nessuna opzione li cancella.
 - Target Accepted: la firma di Eduardo, dopo la review severa. Con esito RINVIA a tempo lo
   stato resta Proposed fino alla nuova decisione (entro il 2026-11-20).
 - Trigger di revisione (valori proposti, non misurati):
-  1. prove di uscita della Fase 1 verificate e STATUS_MULTI_REPO.md aggiornato (cioe' X e Y);
+  1. prove di uscita della Fase 1 verificate e STATUS_MULTI_REPO.md aggiornato (cioe' X e Y;
+     dal 2026-11-13 anche Z);
   2. board viva oltre 250 KB -- **scattato il 2026-11-13** (335 KB);
   3. piu' di 20 messaggi che chiedono azione oltre i 7 giorni (al 2026-11-13: 14);
   4. un secondo incidente di stato perso nel checkout condiviso.
-- Questo draft non aggiorna DECISIONS_LOG.md, docs/adr/README.md, COMPACT_CONTEXT.md ne'
-  BACKLOG.md: sono fuori dal perimetro del task e vanno fatti al commit.
+- DECISIONS_LOG.md e AGENTIC_OS.md sono aggiornati in questo cambio. docs/adr/README.md,
+  COMPACT_CONTEXT.md e BACKLOG.md no: sono fuori dal perimetro e vanno fatti al merge.
