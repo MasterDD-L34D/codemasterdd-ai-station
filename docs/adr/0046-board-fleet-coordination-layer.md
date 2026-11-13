@@ -78,15 +78,15 @@ al primo commit dello specchio): le due tabelle non sono la stessa serie. I pesi
 |---|---|
 | Specchio | attivo dal 2026-11-12: un commit per giro orario quando la board cambia. 26 commit che toccano la board fino al 2026-11-13 12:27Z |
 | Prove di uscita della Fase 1 | eseguite tutte e tre il 2026-11-12: copia remota a 84 secondi dall'ultima modifica; ripristino da clone fresco con gli stessi conteggi per sezione; push verso un remoto irraggiungibile fallito in modo visibile e recuperato al giro dopo |
-| Verifica indipendente delle prove | **mancante**: chi le ha controllate era un agente della stessa famiglia di modelli, inviato dal coordinatore |
-| STATUS_MULTI_REPO.md | **non aggiornato**: ultimo commit 2026-07-13 |
-| Natura del ponte (persistente o su richiesta) | **non verificata** |
+| Verifica indipendente delle prove | **parziale**: rieseguite il 2026-11-13 da un agente separato, piu' un parere di un'altra famiglia di modelli (vedi "Esito delle verifiche") |
+| STATUS_MULTI_REPO.md | refresh del 2026-11-13 in PR #590, **non ancora mergiata** (prima: ultimo commit 2026-07-13) |
+| Natura del ponte (persistente o su richiesta) | **su richiesta**, verificato il 2026-11-13 (vedi "Esito delle verifiche") |
 | Peso della board | 200.423 byte (2026-11-12 02:25Z), 232.308 (17:27Z), 335.464 (2026-11-13 12:27Z): +67% in 34 ore |
 | Crescita per sezione | Messaggi da 134.668 a 243.835 byte (81% della crescita); Lavori +16.384; Presenze +8.102 |
 | Messaggi | 352 (erano 220): 249 open (erano 131). Open per tipo: info 106, result 56, review 35, handoff 26, request 25, altro 1 |
-| Open che chiedono azione | 86 (erano 40); oltre i 7 giorni 14 (erano 14) |
+| Open che chiedono azione | 86 (erano 40); oltre i 7 giorni 14 (erano 14, e sono gli stessi 14: in 34 ore nessuno e' stato chiuso) |
 | Chi ha scritto i 132 messaggi nuovi | due agenti ne hanno scritti 121 (67 e 54) |
-| Di cosa parlano i messaggi nuovi | 101 su 132 contengono parole del coordinamento stesso (board, specchio, ponte, coda, lease, handoff); 23 riguardano il progetto dello specchio. E' una ricerca per parole chiave, non una classificazione: puo' sovrastimare |
+| Di cosa parlano i messaggi nuovi | 88 su 132 contengono, come parola intera, un termine del coordinamento stesso (board, specchio, ponte, coda, lease, handoff); 71 se non si conta "board", che e' quasi tautologico. 23 riguardano il progetto dello specchio. E' una ricerca per parole chiave, non una classificazione. La prima versione di questa riga diceva 101: contava anche le sottostringhe ("lease" dentro "release"); l'ha corretta il verificatore |
 | Correzioni allo specchio dopo l'attivazione | 2. La prima: riallineamento al remoto prima del push, provato dal vivo. La seconda: lettura delle sorgenti sotto il lock dello scrittore, fatta da un'altra sessione e non esaminata dal coordinatore |
 | Interruzione | dopo un'interruzione della macchina che ospita la board lo specchio ha saltato alcuni giri ed e' ripartito; nessun dato perso |
 
@@ -96,8 +96,8 @@ Cosa cambia per la decisione:
   i 250 KB comunque si legga l'unita' (335 kB, 328 KiB). La soglia era un valore proposto, non
   misurato.
 - **La crescita e' in buona parte lavoro sulla Board stessa.** L'81% dei byte nuovi sta nella
-  sezione Messaggi; 121 messaggi nuovi su 132 vengono da due agenti; circa tre su quattro
-  parlano del coordinamento stesso (stima per parole chiave). Quindi la crescita **non prova**
+  sezione Messaggi; 121 messaggi nuovi su 132 vengono da due agenti; fra la meta' e i due
+  terzi parlano del coordinamento stesso (71-88 su 132, stima per parole chiave). Quindi la crescita **non prova**
   che la flotta abbia bisogno di un bus piu' grande: in buona parte misura il meta-lavoro, che
   ADR-0045 aveva gia' trovato sopra il tetto. Usarla come urgenza a favore della RATIFICA
   sarebbe un argomento circolare.
@@ -105,9 +105,49 @@ Cosa cambia per la decisione:
   rinvio senza data non e' "a costo zero".
 - **Dove cresce**: dei 118 messaggi open in piu', 71 (60%) sono `info` o `result`; 46 (39%)
   chiedono azione, e per questi la Fase 2 non prevede scadenza.
-- **La RATIFICA non e' legittima oggi**: X non e' soddisfatta (prove eseguite, verifica
-  indipendente mancante), Y e Z nemmeno.
+- **La RATIFICA non e' legittima oggi**: X e' chiusa solo in parte, Y e' in una PR non
+  mergiata, Z e' verificata (vedi sotto).
 - **RESTRINGI va riletta** con queste misure: vedi la sezione Decision.
+
+### Esito delle verifiche X, Y, Z (2026-11-13)
+
+Le ha lanciate il coordinatore, che ha scritto i mandati. Nessuna e' stata eseguita da lui.
+
+- **X -- prove di uscita: riprodotte, indipendenza parziale.**
+  - Un agente separato le ha rieseguite con comandi propri. Freschezza: una modifica della
+    board e' arrivata sul remoto dopo circa 19 minuti, un'altra dopo circa 3,5; hash della
+    board viva e del remoto uguali dopo il giro. Ripristino: clone fresco con lo stesso hash
+    della copia locale allo stesso commit (secondo ripristino riuscito, dopo quello del
+    2026-11-12). Controllo negativo: con il remoto rotto lo script esce con codice 1 e scrive
+    una riga di errore; al giro dopo recupera.
+  - Le misure della tabella sono state riprodotte, salvo il conteggio per parole chiave,
+    corretto sopra.
+  - Un modello di un'altra famiglia (`cross_check`) ha giudicato le tre prove "parzialmente
+    sostenute". Ha letto solo un riassunto scritto dal coordinatore, senza accesso alle fonti.
+  - Lacune indicate: il ritardo nel passato e' dedotto dalla cadenza dei giri, non misurato;
+    l'allarme dopo tre fallimenti non e' mai stato esercitato; a macchina ospite ferma lo
+    specchio non gira e nessuno viene avvisato.
+  - Perche' non e' chiusa in senso forte: l'agente che ha rieseguito e' della stessa famiglia
+    del coordinatore ed e' stato istruito da lui. Decide Eduardo se basta.
+- **Y -- STATUS_MULTI_REPO.md: refresh in PR #590, non mergiata.**
+  - La tabella snapshot passa da 12 a 15 righe: entrano i tre repo privati coordinati dalla
+    Board, descritti per funzione.
+  - Con le tre righe la lettura fedele del Gate B salirebbe da 6 a 9. **E' un conteggio
+    circolare**: la fonte di quelle righe e' questo stesso ADR, e l'audit non ne ha
+    riverificato l'esistenza. Non cambia la conclusione: il gate resta obsoleto nella sostanza
+    e si decide nel merito.
+  - Fatto utile al merito: tre dei repo contati non hanno commit su `main` da luglio 2026.
+    Nello stesso periodo la Board e' cresciuta.
+- **Z -- natura del ponte: parte su richiesta.**
+  - Il client esegue un comando ed esce; su nessuna delle due macchine c'e' un processo, un
+    task o un servizio del ponte attivo.
+  - Riserva: dipende dalla configurazione, non dal codice. Diventerebbe persistente
+    riabilitando un task di coordinamento oggi disabilitato, o tenendo aperta l'app desktop
+    della Board.
+  - Per ADR-0036 decisione 6 oggi pesa quindi l'argomento "non ricade", con quella riserva.
+  - Fatto separato: sulla macchina che ospita la board gira in modo residente un gateway LLM,
+    distinto dal ponte, che il ponte puo' usare come backend. ADR-0036 decisione 6 nomina i
+    gateway LLM: e' una domanda a parte, non chiusa qui.
 
 ### Input / trigger
 
@@ -130,7 +170,7 @@ Cosa cambia per la decisione:
 | Spec console Agentic OS `docs/superpowers/specs/2026-07-12-agentic-os-console-design.md` | 2026-07-13 | "MVP IMPLEMENTED (2026-07-13)" | Vincolo: la console legge la tabella dei layer di AGENTIC_OS.md |
 | Spec fleet-tools MCP `docs/superpowers/specs/2026-05-29-fleet-tools-mcp-design.md` | 2026-06-23 | "shipped -- apps/fleet-tools-mcp live" | Serve solo per `cross_check` (reviewer di un'altra famiglia di modelli). Nessuna sovrapposizione funzionale con la Board |
 | [STATUS_MULTI_REPO.md](../../STATUS_MULTI_REPO.md) | 2026-07-13 | "Ultimo refresh 2026-06-30" + delta fino al 2026-07-13 | Unica fonte ammessa per contare il Gate B. **Fermo da 4 mesi** |
-| Spec di design Board di flotta v2 (2026-11-12) | nessuno: fuori da git per privacy | intestazione "v2 APPROVATA da Eduardo in chat il 2026-11-12": approvazione registrata nell'intestazione dello spec, verificabile solo con accesso al repo privato | Fonte dei numeri del 2026-11-12. Prove di uscita della Fase 1 eseguite il 2026-11-12; verifica indipendente **mancante** (vedi aggiornamento del 2026-11-13) |
+| Spec di design Board di flotta v2 (2026-11-12) | nessuno: fuori da git per privacy | intestazione "v2 APPROVATA da Eduardo in chat il 2026-11-12": approvazione registrata nell'intestazione dello spec, verificabile solo con accesso al repo privato | Fonte dei numeri del 2026-11-12. Prove di uscita della Fase 1 eseguite il 2026-11-12; verifica indipendente **parziale** (vedi aggiornamento del 2026-11-13) |
 
 ### Gate B: conteggio dal file
 
@@ -238,7 +278,8 @@ divieto. L'argomento vale nei due sensi e qui non viene chiuso.
 oppure solo su richiesta? Questo draft non l'ha verificato e i documenti letti non lo dicono.
 Se e' persistente pesa l'argomento "ricade"; se parte solo su richiesta, a ogni passaggio di
 lavoro, pesa l'argomento "non ricade". La verifica va fatta sul codice e sulla configurazione
-nel repo d'origine prima di chiudere la domanda.
+nel repo d'origine prima di chiudere la domanda. Verificato il 2026-11-13: parte su richiesta
+(vedi "Esito delle verifiche X, Y, Z").
 
 Se l'esito e' RATIFICA, questa domanda va chiusa nello stesso atto. Le strade sono due: un
 emendamento esplicito a ADR-0036 decisione 6, nel modo usato da ADR-0045, oppure una
@@ -414,9 +455,10 @@ propone il lavoro.
   - il ripristino e' stato provato una volta, con lo stesso numero di righe per sezione;
   - con il remoto irraggiungibile, lo script fallisce in modo visibile (controllo negativo).
 
-  Le prove sono state eseguite il 2026-11-12 (vedi aggiornamento del 2026-11-13). Manca la
-  verifica: chi le ha controllate era un agente della stessa famiglia di modelli, inviato dal
-  coordinatore. Il reviewer non e' il coordinatore. Dal 2026-11-13 lo stesso reviewer rifa'
+  Le prove sono state eseguite il 2026-11-12 (vedi aggiornamento del 2026-11-13). La
+  verifica e' parziale: le ha rieseguite il 2026-11-13 un agente separato, ma della stessa
+  famiglia di modelli e istruito dal coordinatore; un modello di un'altra famiglia ha letto
+  solo un riassunto (vedi "Esito delle verifiche X, Y, Z"). Il reviewer non e' il coordinatore. Dal 2026-11-13 lo stesso reviewer rifa'
   anche le misure della tabella di aggiornamento: sono riproducibili dalla storia dello
   specchio con accesso in sola lettura. Sono possibili due scelte:
   1. un modello di un'altra famiglia, tramite lo strumento `cross_check` del server MCP di
@@ -439,8 +481,8 @@ Avvertenza (SDMG): raccomandazione, misure e specchio vengono dallo stesso coord
 dalla RATIFICA riceverebbe altro lavoro. Per questo il reviewer di X rifa' anche le misure, e
 l'esito proposto a scadenza passata e' un fermo, non una ratifica.
 
-Perche' non RATIFICA subito: X non e' soddisfatta (prove eseguite, verifica indipendente
-mancante), Y e Z nemmeno, e ADR-0045 riporta che la Board "non funziona ancora". Ratificare come bus di flotta un componente che il suo stesso
+Perche' non RATIFICA subito: X e' chiusa solo in parte, Y aspetta il merge della PR #590, e
+ADR-0045 riporta che la Board "non funziona ancora". Z e' verificata. Ratificare come bus di flotta un componente che il suo stesso
 perimetro dichiara non funzionante vorrebbe dire ratificare l'uso, non la funzione.
 
 Perche' non RESTRINGI come primo passo: introduce una regola senza enforcement. **Doppio
@@ -550,8 +592,8 @@ Sono scritti qui perche' nessuna opzione li cancella.
   verificato qui): un processo in piu' sullo stesso lock.
 - **Checkout fermo.** Lo stato vivo resta in un checkout condiviso, su un ramo molto indietro
   rispetto a `main`, che ospita anche altro stato vivo. Un cambio di ramo o un reset li'
-  cancellerebbe stato vivo. Lo specchio limita la perdita a un'ora (prove eseguite, verifica
-  indipendente mancante). Dopo un'interruzione della macchina che ospita la board puo' pero'
+  cancellerebbe stato vivo. Lo specchio limita la perdita a un'ora (prove rieseguite il
+  2026-11-13, verifica indipendente parziale). Dopo un'interruzione della macchina che ospita la board puo' pero'
   restare fermo senza avviso. In ogni caso non toglie il rischio.
 - **Percorso scritto nel codice** in piu' punti: la Fase 1 non lo cambia.
 - **43 lavori fermi in `review`**: senza data sulle righe Lavori il collo di bottiglia non si
