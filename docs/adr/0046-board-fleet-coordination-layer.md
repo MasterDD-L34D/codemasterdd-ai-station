@@ -384,7 +384,7 @@ accetta la misura di meta-lavoro gia' esistente. **Scelta il 2026-11-13** (vedi 
 
 Lo specchio orario della Fase 1 resta, per la sicurezza dello stato. Niente Fase 2, niente
 restrizione. Prima stesura: si rivaluta quando scatta un trigger scritto. Dal 2026-11-13: si
-rivaluta a data fissa (vedi Decision).
+rivaluta a data fissa (proposta poi superata dall'esito, vedi Decision).
 
 **Pro**:
 - Nessun meta-lavoro aggiuntivo.
@@ -439,7 +439,19 @@ Cosa vale da adesso:
 - Lo specchio orario resta, in sola manutenzione.
 - La Board non e' il livello di coordinamento della flotta. Il Gate B non viene riaperto.
 
-Perche' RESTRINGI e non RATIFICA:
+Il confine, caso per caso (lettura del coordinatore, che Eduardo conferma col merge):
+
+- **Dentro**: presenze; lease, anche su Ollama; lavori condivisi fra piu' agenti; messaggi
+  con un destinatario che deve agire (richieste, handoff, review di un lavoro condiviso),
+  anche fra agenti di progetti diversi.
+- **Fuori**: stato, report ed esiti senza un destinatario che deve agire. Per esempio i
+  risultati di un benchmark, lo stato dell'hardware o di Ollama, "ho finito X".
+
+In vigore per chi legge questo ADR. Per gli agenti diventa vincolante solo quando vengono
+aggiornate le istruzioni nel repo d'origine (Step R2, non fatto).
+
+Perche' RESTRINGI e non RATIFICA (motivi registrati dal coordinatore; Eduardo li conferma
+col merge):
 
 - La RATIFICA non aveva le sue precondizioni: X e' chiusa solo in parte.
 - La crescita misurata e' in buona parte lavoro sulla Board stessa (71-88 messaggi nuovi su
@@ -449,20 +461,22 @@ Perche' RESTRINGI e non RATIFICA:
 - La scelta e' asimmetrica. Da RESTRINGI si passa a RATIFICA con un nuovo atto; il contrario
   lascia una release installata e un campo nuovo nel file.
 
-Cosa RESTRINGI non risolve (misure sulla copia dello specchio del 2026-11-13, 355 messaggi):
+Cosa RESTRINGI non risolve (misure su una copia dello specchio del 2026-11-13 piu' tarda di
+quella della tabella: 355 messaggi contro 352):
 
 - Il file resta com'e', circa 335 KB, senza archivio. Solo 67 messaggi su 355 sono puro
   segnale di flotta (stima per parole chiave): spostarli altrove alleggerisce poco.
 - Il confine e' solo scritto: nessun controllo lo fa rispettare. Il lease su Ollama fra due
   macchine resta sulla Board, perche' e' coordinamento fra agenti.
 - Le richieste aperte restano: 86, di cui 44 indirizzate a un destinatario generico usato da
-  molte sessioni, quindi senza un responsabile. Nessuna opzione toccava questo difetto.
+  molte sessioni, quindi senza un responsabile. Solo la RATIFICA prevedeva un triage di
+  queste richieste; con RESTRINGI il difetto resta.
 
 Quando si riapre (condizioni proposte, non misurate):
 
 1. i segnali di flotta ricompaiono sulla Board nonostante la regola;
-2. riparte un lavoro su piu' repo che chiede coordinamento vivo fra agenti di progetti
-   diversi;
+2. riparte un lavoro su piu' repo e il coordinamento fra progetti diversi diventa la parte
+   prevalente del traffico della Board;
 3. un reviewer esterno con accesso alle fonti chiude la verifica X, e Eduardo vuole la Board
    come cruscotto della flotta.
 
@@ -631,7 +645,7 @@ Con RATIFICA (dopo X, Y e Z; tutto fuori da questo repo salvo dove indicato):
 
 ### Mitigations
 
-- Trigger di revisione scritti (Notes).
+- Condizioni di riapertura scritte (sezione Decision). I trigger delle Notes sono storici.
 - Con RATIFICA, clausola di arresto sui diff dello specchio, calcolata dal reviewer.
 - Una sola release; una seconda vuol dire stop e nuovo OK di Eduardo (spec, sez. 8).
 - Rollback della Fase 2: se il dry-run non coincide con il reale, la release non si installa.
