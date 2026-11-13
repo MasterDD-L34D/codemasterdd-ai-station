@@ -34,8 +34,8 @@
   Agent id for the ADR-0011 "Coding-Agent:" commit trailer. Resolution order:
   this parameter > $env:CLAUDE_MODEL > 'claude-code' (generic fallback).
 .PARAMETER NoMerge
-  Create the PR but do not merge (default = try auto-merge, else wait for CI and
-  merge directly -- this repo has auto-merge disabled).
+  Create the PR but do not merge (default = wait for CI green, max 5 min, then
+  rebase-merge directly; never gh auto-merge, it merged before CI ran).
 .PARAMETER AcceptMerge
   Land your working-tree copy as-is even though origin/main moved the file since your
   merge base and your copy drops lines currently on origin/main (default = abort so
@@ -154,7 +154,7 @@ if ($DryRun) {
   Info "  paths      : $($Path -join ', ')"
   Info "  subject    : $Subject"
   Info "  agent      : $CodingAgent (Coding-Agent trailer)"
-  Info "  merge      : $([bool](-not $NoMerge)) (auto-merge try, else CI-wait + direct)"
+  Info "  merge      : $([bool](-not $NoMerge)) (CI-wait + direct rebase)"
   Info "  shared HEAD: '$origBranch' (never switched)"
   exit 0
 }
@@ -259,13 +259,10 @@ if (-not $prUrl) { $prUrl = "$branch (PR URL lookup pending)" }
 Info "PR: $prUrl"
 
 if (-not $NoMerge) {
-  # $branch is not checked out anywhere now -> --delete-branch succeeds without a false error
-  & gh pr merge $branch --auto --rebase --delete-branch *> $null
-  if ($LASTEXITCODE -eq 0) { Info "auto-merge (rebase) queued; remote branch deletes on merge." }
-  else {
-    # this repo has PR auto-merge DISABLED (GraphQL enablePullRequestAutoMerge fails) ->
-    # bounded wait for CI (ascii-guard + pytest, runs on every PR), then merge directly
-    Info "auto-merge unavailable on this repo -- waiting for CI (max 5 min), then merging directly."
+  # Never use the gh auto-merge flag: main has no required checks, so gh merged the PR at once,
+  # BEFORE CI ran (#591 4s, #593 5s after create). Always: bounded CI wait, then merge.
+  & {
+    Info "waiting for CI (max 5 min), then merging directly."
     $deadline = (Get-Date).AddMinutes(5)
     $green = 0
     do {
@@ -281,7 +278,10 @@ if (-not $NoMerge) {
     } while ((Get-Date) -lt $deadline)
     if ($green -ge 2) {
       & gh pr merge $branch --rebase --delete-branch
-      if ($LASTEXITCODE -eq 0) { Info "merged (rebase) after CI green; remote branch deleted." }
+      # exit code lies: gh fails its LOCAL branch step on a detached-HEAD clone after a good
+      # merge -> read the PR state instead
+      $state = (& gh pr view $branch --json state --jq '.state' 2>$null)
+      if ("$state".Trim() -eq 'MERGED') { Info "merged (rebase) after CI green." }
       else { Info "direct merge failed; PR left open for manual merge: $prUrl" }
     }
     elseif ($checks -eq 8 -or $checks -eq 0) { Info "CI still pending after 5 min; PR left open. Merge with: gh pr merge $branch --rebase --delete-branch" }

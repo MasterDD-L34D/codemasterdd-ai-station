@@ -52,3 +52,18 @@ def test_merge_preserves_trailers():
     for line in merges:
         assert "--squash" not in line, f"squash drops ADR-0011 trailers: {line!r}"
         assert "--rebase" in line, f"merge must use --rebase: {line!r}"
+
+
+def test_merge_waits_for_ci():
+    # `gh pr merge --auto` on a repo without required checks merges at once,
+    # before CI runs (#591 merged 4s, #593 5s after create, pytest still running).
+    merges = re.findall(r"gh pr merge[^\r\n]*", script_text())
+    for line in merges:
+        assert "--auto" not in line, f"--auto skips the CI wait: {line!r}"
+
+
+def test_merge_outcome_from_pr_state():
+    # gh exits non-zero after a good merge when the clone has a detached HEAD
+    # (local --delete-branch step), so success must be read from the PR state.
+    assert re.search(r"gh pr view \$branch --json state", script_text()), \
+        "merge outcome must be read from PR state, not exit code"
