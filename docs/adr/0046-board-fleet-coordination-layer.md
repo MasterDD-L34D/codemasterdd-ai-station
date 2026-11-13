@@ -1,6 +1,6 @@
 # ADR-0046 — Board agenti come livello di coordinamento della flotta: ratifica, restringi o rinvia
 
-> *TL;DR: la Board agenti e' nata per coordinare un solo progetto. Oggi coordina di fatto la flotta (benchmark, hardware, Ollama, PR di questo repo, lavori schedulati di un altro progetto). Funziona cioe' da bus di messaggi cross-repo, la cosa che lo spec orchestratore aveva rinviato al Gate B, ed e' cresciuta fuori da quel gate e fuori da AGENTIC_OS.md. Il Gate B e' obsoleto nella sostanza; la lettura fedele della sua definizione da' 6 repo, sotto la soglia. Raccomandazione: RINVIA ora; RATIFICA quando le prove di uscita della Fase 1 saranno verificate e STATUS_MULTI_REPO.md sara' aggiornato. Decide Eduardo.*
+> *TL;DR: la Board agenti e' nata per coordinare un solo progetto. Oggi coordina di fatto la flotta (benchmark, hardware, Ollama, PR di questo repo, lavori schedulati di un altro progetto). Funziona cioe' da bus di messaggi cross-repo, la cosa che lo spec orchestratore aveva rinviato al Gate B, ed e' cresciuta fuori da quel gate e fuori da AGENTIC_OS.md. Il Gate B e' obsoleto nella sostanza; la lettura fedele della sua definizione da' 6 repo, sotto la soglia. Raccomandazione (rivista il 2026-11-13): RINVIA a tempo. Tre verifiche (reviewer indipendente sulle prove della Fase 1, refresh di STATUS_MULTI_REPO.md, natura del ponte), poi nuova decisione entro il 2026-11-20. Il rinvio senza scadenza non regge piu': un giorno dopo la stesura la board ha superato la soglia di revisione dei 250 KB. Decide Eduardo.*
 
 - Status: **Proposed** (2026-11-12, cancello del progetto "Board di flotta", fase 1)
 - Data: 2026-11-12
@@ -9,6 +9,9 @@
 - Autore draft: Claude (subagent adr-drafter, worktree isolato su Lenovo). Un design
   self-made e' un'ipotesi ad alto errore (SDMG). Prima revisione dopo review severa
   (verdetto "correggere e rivedere", fix round 1).
+- Revisione 2026-11-13: aggiunte le misure prese dopo la Fase 1 (sezione "Aggiornamento del
+  2026-11-13"); raccomandazione cambiata da RINVIA a RINVIA a tempo. Le misure del 2026-11-12
+  restano scritte com'erano.
 - Amends (solo se l'esito e' RATIFICA): il Gate B in `docs/governance/ESCALATION_GATES.md`
   viene annotato come riaperto e deciso da questo ADR. Lo spec orchestratore cross-repo non
   viene emendato: e' gia' superato.
@@ -59,6 +62,36 @@ data).
 Stato funzionale dichiarato altrove: ADR-0045 riporta, dal 2026-11-02, che "la Board non
 funziona ancora". Secondo quel testo e' un registro, non un'esecuzione.
 
+### Aggiornamento del 2026-11-13 (misure dopo la Fase 1)
+
+**Provenienza**: storia git dello specchio (repo privato dedicato), log dello specchio e
+registro eventi della macchina che ospita la board, file di qualita' del repo privato. Si
+possono verificare solo con accesso a quel repo. Le ha prese il coordinatore del progetto,
+non un reviewer indipendente.
+
+| Fatto | Misura |
+|---|---|
+| Specchio | attivo dal 2026-11-12: un commit per giro orario quando la board cambia. 26 commit che toccano la board fino al 2026-11-13 12:27Z |
+| Prove di uscita della Fase 1 | eseguite tutte e tre il 2026-11-12: copia remota a 84 secondi dall'ultima modifica; ripristino da clone fresco con gli stessi conteggi per sezione; push verso un remoto irraggiungibile fallito in modo visibile e recuperato al giro dopo |
+| Verifica indipendente delle prove | **mancante**: chi le ha controllate era un agente della stessa famiglia di modelli, inviato dal coordinatore |
+| STATUS_MULTI_REPO.md | **non aggiornato**: ultimo commit 2026-07-13 |
+| Natura del ponte (persistente o su richiesta) | **non verificata** |
+| Peso della board | 200.423 byte (2026-11-12 02:25Z), 232.308 (17:27Z), 335.464 (2026-11-13 12:27Z): +67% in 34 ore |
+| Messaggi | 352 (erano 206): 249 open (erano 121). Open per tipo: info 106, result 56, review 35, handoff 26, request 25, stato 1 |
+| Open che chiedono azione | 86 (erano 40); oltre i 7 giorni 14 (erano 14) |
+| Correzioni allo specchio dopo l'attivazione | 2. La prima: riallineamento al remoto prima del push, provato dal vivo. La seconda: lettura delle sorgenti sotto il lock dello scrittore, fatta da un'altra sessione e non esaminata dal coordinatore |
+| Interruzione | il 2026-11-13 la macchina che ospita la board si e' spenta senza arresto regolare: 6 giri saltati, nessun dato perso, specchio ripartito al login dell'utente |
+
+Cosa cambia per la decisione:
+
+- **Il trigger di revisione 2 e' scattato** (board oltre 250 KB) un giorno dopo la stesura.
+  Il rinvio "a costo zero" dell'Opzione C non e' a costo zero: il debito cresce in fretta.
+- **La crescita sta dove la Fase 2 interverrebbe**: 162 dei 249 messaggi open sono `info` o
+  `result`, che nessuno chiude. Scadenza e archivio pero' stanno dietro la RATIFICA.
+- **La RATIFICA non e' ancora legittima**: delle sue precondizioni e' fatta solo meta' della
+  prima (prove eseguite, non verificate).
+- Non misurato: quali agenti e quali lavori hanno prodotto la crescita.
+
 ### Input / trigger
 
 1. Lo spec di design "Board di flotta v2" (approvazione registrata nell'intestazione dello
@@ -80,7 +113,7 @@ funziona ancora". Secondo quel testo e' un registro, non un'esecuzione.
 | Spec console Agentic OS `docs/superpowers/specs/2026-07-12-agentic-os-console-design.md` | 2026-07-13 | "MVP IMPLEMENTED (2026-07-13)" | Vincolo: la console legge la tabella dei layer di AGENTIC_OS.md |
 | Spec fleet-tools MCP `docs/superpowers/specs/2026-05-29-fleet-tools-mcp-design.md` | 2026-06-23 | "shipped -- apps/fleet-tools-mcp live" | Serve solo per `cross_check` (reviewer di un'altra famiglia di modelli). Nessuna sovrapposizione funzionale con la Board |
 | [STATUS_MULTI_REPO.md](../../STATUS_MULTI_REPO.md) | 2026-07-13 | "Ultimo refresh 2026-06-30" + delta fino al 2026-07-13 | Unica fonte ammessa per contare il Gate B. **Fermo da 4 mesi** |
-| Spec di design Board di flotta v2 (2026-11-12) | nessuno: fuori da git per privacy | intestazione "v2 APPROVATA da Eduardo in chat il 2026-11-12": approvazione registrata nell'intestazione dello spec, verificabile solo con accesso al repo privato | Fonte dei numeri. Prove di uscita della Fase 1 **non ancora eseguite** |
+| Spec di design Board di flotta v2 (2026-11-12) | nessuno: fuori da git per privacy | intestazione "v2 APPROVATA da Eduardo in chat il 2026-11-12": approvazione registrata nell'intestazione dello spec, verificabile solo con accesso al repo privato | Fonte dei numeri del 2026-11-12. Prove di uscita della Fase 1 eseguite il 2026-11-12; verifica indipendente **mancante** (vedi aggiornamento del 2026-11-13) |
 
 ### Gate B: conteggio dal file
 
@@ -216,7 +249,8 @@ Fase 2 dello spec parte con **una sola release** del codice Board:
 - Non aggiunge componenti: stesso file, stesso writer, stessa casa.
 
 **Contro**:
-- Oggi le precondizioni non ci sono: la Fase 1 non ha passato le prove di uscita, e ADR-0045
+- Oggi le precondizioni non ci sono tutte: le prove di uscita della Fase 1 sono eseguite ma
+  non verificate da un reviewer indipendente, STATUS_MULTI_REPO.md e' fermo, e ADR-0045
   riporta che la Board "non funziona ancora".
 - Il meta-lavoro e' gia' sopra il tetto. ADR-0045 ha misurato 60 commit su 178 in 30 giorni
   con board, coda o handoff nel messaggio. La Fase 2 ci aggiunge una release, fino a 4
@@ -298,7 +332,8 @@ restrizione. Si rivaluta quando scatta un trigger scritto.
 - Il debito cresce: 14 messaggi oltre i 7 giorni, 43 lavori in `review`, file da 190 KB
   senza archivio.
 
-**Cost**: zero.
+**Cost**: zero lavoro, non zero debito. Misura del 2026-11-13: +67% di peso in 34 ore (vedi
+aggiornamento).
 
 **Rischio**: la decisione viene presa per inerzia, e la Board diventa il bus senza ADR. Per
 limitarlo servono un trigger di revisione e una nota in AGENTIC_OS.md.
@@ -328,8 +363,16 @@ Regole proposte:
 
 ## Decision
 
-**Raccomandazione: RINVIA ora (Opzione C); RATIFICA (Opzione A) quando X e Y saranno
-soddisfatte.** Decide Eduardo.
+**Raccomandazione (rivista il 2026-11-13): RINVIA a tempo (Opzione C con scadenza); nuova
+decisione entro il 2026-11-20, dopo le tre verifiche X, Y e Z.** Decide Eduardo.
+
+Cosa cambia rispetto alla prima stesura: il rinvio non e' piu' senza data. La prima stesura
+diceva "si rivaluta quando scatta un trigger scritto", e il trigger 2 e' scattato il giorno
+dopo. Le tre verifiche sono in sola lettura o quasi. La data e' un valore proposto.
+
+Alla scadenza gli esiti restano tre: RATIFICA (Opzione A) se X, Y e Z sono soddisfatte e
+Eduardo decide nel merito; RESTRINGI (Opzione B) se pesa di piu' il costo; un altro rinvio
+solo con una nuova data e un motivo scritto.
 
 - **X -- prove di uscita della Fase 1 verificate da un reviewer indipendente.** Le prove
   sono quelle dello spec, sez. 6.1:
@@ -338,8 +381,9 @@ soddisfatte.** Decide Eduardo.
   - il ripristino e' stato provato una volta, con lo stesso numero di righe per sezione;
   - con il remoto irraggiungibile, lo script fallisce in modo visibile (controllo negativo).
 
-  Alla data di questo draft le prove **non sono state eseguite**. Il reviewer non e' il
-  coordinatore. Sono possibili due scelte:
+  Le prove sono state eseguite il 2026-11-12 (vedi aggiornamento del 2026-11-13). Manca la
+  verifica: chi le ha controllate era un agente della stessa famiglia di modelli, inviato dal
+  coordinatore. Il reviewer non e' il coordinatore. Sono possibili due scelte:
   1. un modello di un'altra famiglia, tramite lo strumento `cross_check` del server MCP di
      flotta gia' esistente (`apps/fleet-tools-mcp`);
   2. il reviewer severo, in una sessione che non ha partecipato al progetto.
@@ -347,10 +391,19 @@ soddisfatte.** Decide Eduardo.
   per funzione se privati), e decisione di Eduardo **nel merito** sul bus. Vista
   l'obsolescenza del Gate B, il conteggio non decide da solo. Chiudere il gate con la
   lettura debole prima del refresh non e' ammesso.
-- Va chiusa anche la domanda su ADR-0036 decisione 6, nello stesso atto della RATIFICA.
+- **Z -- natura del ponte verificata**: processo persistente o solo su richiesta, letto sul
+  codice e sulla configurazione nel repo d'origine. Serve a chiudere la domanda su ADR-0036
+  decisione 6, che va chiusa nello stesso atto della RATIFICA.
 
-Perche' non RATIFICA subito: le due precondizioni oggi non ci sono, e ADR-0045 riporta che la
-Board "non funziona ancora". Ratificare come bus di flotta un componente che il suo stesso
+Perche' non RINVIA senza data: la board e' passata da 200 a 335 KB in 34 ore e i messaggi
+che chiedono azione da 40 a 86. Un rinvio aperto lascia crescere il debito che la decisione
+dovrebbe governare.
+
+Avvertenza (SDMG): raccomandazione, misure e specchio vengono dallo stesso coordinatore. La
+verifica X e' il passo che puo' smentirle.
+
+Perche' non RATIFICA subito: X e' soddisfatta a meta', Y e Z non lo sono, e ADR-0045 riporta
+che la Board "non funziona ancora". Ratificare come bus di flotta un componente che il suo stesso
 perimetro dichiara non funzionante vorrebbe dire ratificare l'uso, non la funzione.
 
 Perche' non RESTRINGI come primo passo: introduce una regola senza enforcement. **Doppio
@@ -394,13 +447,15 @@ decide nel merito.
 
 ### Implementation plan
 
-Con RINVIA (subito):
+Con RINVIA a tempo (entro il 2026-11-20):
 - Step 1 -- nota "Livelli ombra" in AGENTIC_OS.md (fatta in questo cambio).
-- Step 2 -- prove di uscita della Fase 1 e verifica del reviewer indipendente (proposta:
-  circa 1 ora, stima non misurata).
+- Step 2 -- verifica delle prove di uscita della Fase 1 da parte del reviewer indipendente
+  (le prove sono gia' eseguite).
 - Step 3 -- refresh di STATUS_MULTI_REPO.md, senza nomi di repo privati.
+- Step 3b -- verifica della natura del ponte (Z), in sola lettura.
+- Step 3c -- nuova decisione di Eduardo: RATIFICA, RESTRINGI, o nuovo rinvio con data.
 
-Con RATIFICA (dopo X e Y; tutto fuori da questo repo salvo dove indicato):
+Con RATIFICA (dopo X, Y e Z; tutto fuori da questo repo salvo dove indicato):
 - Step 4 -- chiudere la domanda su ADR-0036 decisione 6 (emendamento o dichiarazione).
 - Step 5 -- Fase 2, una sola release nel repo d'origine: TTL, `archive`, campo `progetto`,
   `migrate --dry-run`. Codex via Board, review di kimi-native e del reviewer severo prima
@@ -423,7 +478,8 @@ Con RATIFICA (dopo X e Y; tutto fuori da questo repo salvo dove indicato):
 
 #### Negative
 
-- Con RINVIA il bus continua a esistere senza ratifica per un tempo non definito.
+- Con RINVIA a tempo il bus continua a esistere senza ratifica fino alla scadenza, e intanto
+  cresce (vedi aggiornamento del 2026-11-13).
 - La domanda su ADR-0036 decisione 6 resta aperta.
 - La Board resta un file condiviso letto da agenti cloud: il limite di privacy e' noto e non
   risolto.
@@ -445,17 +501,22 @@ Sono scritti qui perche' nessuna opzione li cancella.
   scrive. Chi entra via SSH usa ancora il writer vecchio (-457 righe nette rispetto a
   `main`). La Fase 1 consegna solo un inventario di quale writer usare. Il problema si
   risolverebbe solo con la Fase 3 (spostamento, con il file congelato sul posto), che non e'
-  progettata e richiede una nuova approvazione.
+  progettata e richiede una nuova approvazione. Dal 2026-11-12 anche lo specchio prende il
+  lock dello scrittore per leggere (dichiarato nella descrizione della modifica, non
+  verificato qui): un processo in piu' sullo stesso lock.
 - **Checkout fermo.** Lo stato vivo resta in un checkout condiviso, su un ramo molto indietro
   rispetto a `main`, che ospita anche altro stato vivo. Un cambio di ramo o un reset li'
-  cancellerebbe stato vivo. Lo specchio dovrebbe limitare la perdita a un'ora, ma finche' le
-  prove di uscita non passano non e' verificato. In ogni caso non toglie il rischio.
+  cancellerebbe stato vivo. Lo specchio limita la perdita a un'ora (prove eseguite, verifica
+  indipendente mancante), ma solo a macchina accesa e con l'utente collegato: dopo un riavvio
+  resta fermo fino al login, e non c'e' un allarme per "specchio fermo". In ogni caso non
+  toglie il rischio.
 - **Percorso scritto nel codice** in piu' punti: la Fase 1 non lo cambia.
 - **43 lavori fermi in `review`**: senza data sulle righe Lavori il collo di bottiglia non si
   puo' misurare. E' un buco dichiarato, non un obiettivo. I diff dello specchio darebbero una
   data di comparsa solo alle righe future.
-- **Accesso da Lenovo**: lo spec propone la lettura con `git pull` dallo specchio, non ancora
-  verificata. Per scrivere resterebbe comunque SSH.
+- **Accesso da Lenovo**: la lettura con `git pull` dallo specchio funziona (usata il
+  2026-11-13 per le misure dell'aggiornamento), con un ritardo fino a un'ora. Per scrivere
+  resta SSH.
 - **Privacy della Board**: nessun controllo impedisce che nel file finisca contenuto sovrano.
 - **Gate B non contabile in modo pulito** finche' STATUS_MULTI_REPO.md non viene aggiornato,
   e comunque obsoleto nella sostanza.
@@ -484,12 +545,12 @@ Sono scritti qui perche' nessuna opzione li cancella.
 
 - Perche' ora: lo spec della Board di flotta mette questo ADR come cancello. Senza esito la
   Fase 2 non si scrive.
-- Target Accepted: la firma di Eduardo, dopo la review severa. Con esito RINVIA lo stato
-  resta Proposed fino a uno dei trigger sotto.
+- Target Accepted: la firma di Eduardo, dopo la review severa. Con esito RINVIA a tempo lo
+  stato resta Proposed fino alla nuova decisione (entro il 2026-11-20).
 - Trigger di revisione (valori proposti, non misurati):
   1. prove di uscita della Fase 1 verificate e STATUS_MULTI_REPO.md aggiornato (cioe' X e Y);
-  2. board viva oltre 250 KB;
-  3. piu' di 20 messaggi che chiedono azione oltre i 7 giorni;
+  2. board viva oltre 250 KB -- **scattato il 2026-11-13** (335 KB);
+  3. piu' di 20 messaggi che chiedono azione oltre i 7 giorni (al 2026-11-13: 14);
   4. un secondo incidente di stato perso nel checkout condiviso.
 - Questo draft non aggiorna DECISIONS_LOG.md, docs/adr/README.md, COMPACT_CONTEXT.md ne'
   BACKLOG.md: sono fuori dal perimetro del task e vanno fatti al commit.
