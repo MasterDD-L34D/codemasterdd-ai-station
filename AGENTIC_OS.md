@@ -30,7 +30,7 @@ ha autorita' nuova, e nessuno e' una sorgente R0, finche' il suo ADR non ha un e
 
 - **Board agenti** (coordinamento fra agenti: presenze, lease, lavori, messaggi). E' un file
   markdown con writer atomico, tenuto nel repo privato del progetto in cui e' nata (non
-  linkabile); uno specchio in un repo privato dedicato e' in costruzione. Oggi viene usata anche fra
+  linkabile); uno specchio orario in un repo privato dedicato e' attivo dal 2026-11-12. Oggi viene usata anche fra
   progetti diversi, fuori dal Gate B. Ruolo di flotta: [ADR-0046](docs/adr/0046-board-fleet-coordination-layer.md)
   (Proposed). Da non confondere con [EXECUTION-BOARD.md](docs/governance/EXECUTION-BOARD.md)
   ne' con `playtest2-board-sync` (layer 5).
