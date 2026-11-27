@@ -714,3 +714,27 @@ Sono scritti qui perche' nessuna opzione li cancella.
   4. un secondo incidente di stato perso nel checkout condiviso.
 - DECISIONS_LOG.md e AGENTIC_OS.md sono aggiornati in questo cambio. docs/adr/README.md,
   COMPACT_CONTEXT.md e BACKLOG.md no: sono fuori dal perimetro e vanno fatti al merge.
+
+## Addendum 2026-11-27 -- il confine diventa un controllo
+
+Decisione di Eduardo del 27/11/2026, nel riordino dell'ecosistema (regola "ogni regola ha un
+meccanismo che la applica o una data"). Scatta la condizione di riapertura 1 della sezione
+Decision, misurata da uno spike in sola lettura del 26-27/11: negli ultimi 7 giorni 359
+messaggi, di cui 200 di tipo `result`, `review` o `info`; 624 messaggi open su 895; gli
+automatismi (board-omniroute) ne hanno scritti 3. Il confine scritto non e' stato rispettato
+dagli agenti interattivi.
+
+Cosa cambia, e solo questo:
+
+1. **Controllo nel writer.** Il comando `message` della CLI di `tools/board_write.py` (hub,
+   ramo `main`) rifiuta i tipi `result` e `info`, e i `request`/`review` con un destinatario
+   generico (`tutti`, `claude-code` senza sessione e simili), con un errore che rimanda a PR,
+   CODA_LAVORI o JOURNAL. Le funzioni interne (`resolve`, `migrate`, finalizzazione dei lavori)
+   continuano a scrivere i loro esiti.
+2. **Chiusura una tantum dello stock.** I messaggi `info` e `result` ancora `open` da oltre 14
+   giorni passano a `done`, dopo uno snapshot della Board. Stato gia' esistente: nessun campo,
+   nessuno stato nuovo, nessun archivio. Richieste, handoff, review e blocker non si toccano.
+
+Resta tutto il resto della Decision: niente Fase 2, niente campo `progetto`, niente scadenze
+ne' archivio. Orca e' stato valutato nello stesso spike: copre messaggi e handoff ma non
+presenze e lease, e il collegamento Ryzen-Lenovo non e' configurato; non sostituisce la Board.
