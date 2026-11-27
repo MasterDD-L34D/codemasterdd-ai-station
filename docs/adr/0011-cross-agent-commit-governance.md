@@ -283,4 +283,14 @@ Lo scope "solo co-autori IA" del 2026-06-17 e' revocato.
 - Enforcement allineato: `scripts/hooks/commit-guard.js` (divieto totale + oggetto misurato sulla
   sola prima riga del `-m`, fix del 2026-07-06) e `scripts/hooks/commit-msg` (identico alla copia
   installata). Test: `scripts/tests/test_commit_guard.py`.
-- Nota: il self-credit del merge squash di GitHub avviene lato server e non passa da questi hook.
+- Portata: "per tutti" vale per i commit LOCALI. Il merge squash di GitHub aggiunge lato server un
+  trailer di co-autore umano (auto-credito per email d'autore diverse nella PR) e quei commit
+  continuano a entrare in main (pathfinder: 8 commit negli ultimi 90 giorni al 27/11; ai-station: 7).
+  La causa (email d'autore) va chiusa a parte.
+- Effetto noto: un `git commit --amend`, un reword in rebase o un cherry-pick con conflitto su un
+  commit che porta gia' il trailer viene bloccato. Rimedio: togliere quella riga dal messaggio,
+  MAI `--no-verify`. Merge e revert sono esclusi a monte (`Merge*|Revert*`).
+- Effetto collaterale (noto, non corretto qui per restare identici alle copie installate): i due hook
+  cercano il trailer ovunque, quindi un comando o un corpo che lo CITA soltanto viene bloccato.
+- Limiti noti dell'enforcement: Kimi aggira `core.hooksPath` (gap gia' registrato); Codex non ha
+  `commit-guard.js` (audit hook, codemasterdd-workspace#32): per loro vale solo l'hook git, se attivo.
