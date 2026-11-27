@@ -36,13 +36,15 @@ cheaper spoke can do.
 task ->
   exploratory / architecture / synthesis / multi-file / verification?  -> INLINE-OPUS
   scoped edit, sovereign or cheap, single-file?                        -> LOCAL FLEET
+     (only promoted roles; no local Aider edit wrapper since 27/11/2026)
   local insufficient + repo cloud-OK + privacy-guard pass?             -> CLOUD KEYS
   well-defined chore + acceptance-criteria + whitelisted + ASCII-clean
        + parallelizable + reviewable async?                            -> JULES ASYNC
   need parallel read/review/verify or deterministic fan-out?           -> SUBAGENTS / WORKFLOW
 ```
 
-Privacy: sovereign-only repos -> local only; cloud spokes gated by the privacy-guard
+Privacy: sovereign-only repos -> local only (since 27/11/2026 no local edit wrapper is active:
+sovereign edits have no delegation route, flag to Eduardo); cloud spokes gated by the privacy-guard
 whitelist (`~/.config/aider-privacy-whitelist.txt`). ASCII-clean-target rule for Jules:
 non-ASCII files are mangled on rewrite (mojibake) -- exclude or byte-verify (ADR-0035).
 

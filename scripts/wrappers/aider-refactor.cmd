@@ -1,6 +1,6 @@
 @echo off
 REM Aider wrapper for behavior-critical edits -- SUSPENDED 2026-11-27
-REM Old model qwen2.5-coder:14b-instruct-q2_K was removed from every fleet host on 2026-11-27.
+REM Old model qwen2.5-coder:14b-instruct-q2_K was removed from the Lenovo on 2026-11-27; the Ryzen dropped it earlier, see MODEL_ROUTING.md.
 REM No local model is promoted for the refactor role, so this wrapper does NOT call aider.
 REM Do not swap in another tag here: a new default needs a promotion in
 REM C:\dev\codemasterdd-workspace\test-llm\INDICE-VALUTAZIONE-LLM.md first.

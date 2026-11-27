@@ -8,7 +8,7 @@ Pre-2026-05-13 i 6 wrapper Aider vivevano solo `~/.local/bin/*.cmd` user-side: N
 
 Post-fix questa directory (`scripts/wrappers/`) contiene la versione **canonical repo-tracked** dei 6 wrapper. Install/sync via `scripts/setup/install-wrappers.ps1` (idempotente, hash-verified, backup-on-conflict).
 
-## Wrapper attivi (8 totale -- 6 cluster T1 SPRINT_02 + 2 free-LLM audit 2026-05-15)
+## Wrapper (8 totale: 6 attivi + 2 sospesi dal 2026-11-27 -- 6 cluster T1 SPRINT_02 + 2 free-LLM audit 2026-05-15)
 
 | Wrapper | Tier | Stack | Default invocation status | Mitigation flags |
 |---------|------|-------|---------------------------|------------------|

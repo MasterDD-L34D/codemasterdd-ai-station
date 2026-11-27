@@ -14,6 +14,14 @@ WRAPPERS_DIR = Path(__file__).resolve().parents[1] / "wrappers"
 SUSPENDED = ["aider-cosmetic.cmd", "aider-refactor.cmd"]
 
 
+@pytest.mark.parametrize("name", SUSPENDED)
+def test_suspended_wrapper_has_no_executable_aider_line(name):
+    lines = (WRAPPERS_DIR / name).read_text(encoding="ascii").splitlines()
+    code = [ln.strip() for ln in lines if ln.strip() and not ln.strip().upper().startswith("REM")]
+    assert not [ln for ln in code if ln.lower().startswith("aider")]
+    assert "exit /b 1" in code
+
+
 @pytest.mark.skipif(sys.platform != "win32", reason="cmd.exe wrapper")
 @pytest.mark.parametrize("name", SUSPENDED)
 def test_suspended_wrapper_exits_nonzero_with_notice(name):
