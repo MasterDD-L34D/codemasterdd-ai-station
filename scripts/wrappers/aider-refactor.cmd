@@ -1,10 +1,11 @@
 @echo off
-REM Aider wrapper for behavior-critical edits refactor bug fix logic change
-REM Model: Qwen 14B Q2 + diff format + no-auto-commits ADR-0008 safety protocol
-REM --commit-prompt: enforce English + Conventional Commits ADR-0011 Gap 2C
-REM --git-commit-verify: respect git hooks ADR-0011 Gap 3 Aider default False
-REM cp1252 fix 2026-04-23: force console + Python UTF-8 to avoid Rich UnicodeEncodeError on retry loop dogfood #3 bug
-REM Note: REM lines with parens removed -- L-2026-05-015 PowerShell pollution mitigation Option B 2026-05-13
-chcp 65001 >nul 2>&1
-set PYTHONIOENCODING=utf-8
-aider --model ollama/qwen2.5-coder:14b-instruct-q2_K --edit-format diff --no-auto-commits --git-commit-verify --commit-prompt "Commit message MUST be in English, Conventional Commits format (type: short description), subject line <=72 chars total, lowercase description, no trailing period. Example: 'fix: handle null input in parser'." %*
+REM Aider wrapper for behavior-critical edits -- SUSPENDED 2026-11-27
+REM Old model qwen2.5-coder:14b-instruct-q2_K was removed from the Lenovo on 2026-11-27; the Ryzen dropped it earlier, see MODEL_ROUTING.md.
+REM No local model is promoted for the refactor role, so this wrapper does NOT call aider.
+REM Do not swap in another tag here: a new default needs a promotion in
+REM C:\dev\codemasterdd-workspace\test-llm\INDICE-VALUTAZIONE-LLM.md first.
+REM Meanwhile use a cloud-free wrapper with privacy guard, e.g. aider-groq-bypass, or Claude Code direct.
+REM Note: REM lines with parens removed -- L-2026-05-015 PowerShell pollution mitigation Option B
+echo aider-refactor SOSPESO: modello qwen2.5-coder:14b-instruct-q2_K rimosso il 27/11/2026, nessun locale promosso per refactor. 1>&2
+echo Usa un wrapper cloud-free con privacy guard, es. aider-groq-bypass, oppure Claude Code diretto. Vedi MODEL_ROUTING.md 1>&2
+exit /b 1
