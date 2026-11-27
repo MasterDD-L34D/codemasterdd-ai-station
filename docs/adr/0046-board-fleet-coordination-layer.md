@@ -735,6 +735,8 @@ Cosa cambia, e solo questo:
    scrivere i loro esiti. Aggiramenti noti, non coperti: il checkout condiviso dell'hub su un ramo
    vecchio e la release installata di board-omniroute hanno copie di `board_write.py` senza il
    controllo finche' non vengono riallineate a `main`.
+   Le review restano ammesse (sono richieste a un destinatario che deve agire): il calo atteso
+   riguarda `result` e `info`, circa 199 messaggi sui 356 dei 7 giorni misurati.
 2. **Chiusura una tantum dello stock.** I messaggi `info` e `result` ancora `open` da oltre 14
    giorni passano a `done`, dopo uno snapshot della Board. Stato gia' esistente: nessun campo,
    nessuno stato nuovo, nessun archivio. Richieste, handoff, review e blocker non si toccano.
