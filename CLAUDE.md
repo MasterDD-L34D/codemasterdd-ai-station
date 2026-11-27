@@ -6,7 +6,7 @@
 ## Ruolo
 Dev workstation AI agentic PRINCIPALE Eduardo. Autosufficiente per workflow dev + AI locali.
 Piattaforma sovereign-first (locale-prioritario, no-lock-in, multi-provider). Pivot Hybrid A1
-2026-05-18 (Pro+Meridian+free-tier ~$240-600/anno; target $0-50 SUPERSEDED). Vedi ADR-0030.
+2026-05-18 (Pro+Meridian+free-tier ~$240-600/anno; target $0-50 SUPERSEDED). Vedi ADR-0030. Oggi = piano di riserva: abbonamento Max attivo.
 Questo repo = infra-as-code + observability + UI-glue; NON contiene codice progetti reali
 (Game/Synesthesia vivono in repo separati).
 
@@ -36,30 +36,33 @@ Git, Claude Code (OAuth Max, Opus), Node 22 attivo (Game-canonical; +24.15.0 via
 Lista esaustiva (versioni + tool + plugin) -> `docs/reference/stack-installed.md`.
 
 ## Capacita AI locali
-RTX 5060 8GB: full-GPU fino 7-8B; 14B parziale (GPU+CPU spill); 30B MoE OK post-64GB-RAM.
-Sweet-spot agentic = Qwen 2.5 Coder 14B Q2_K (faithful) / qwen3-coder:30b MoE (escalation).
-Tabelle tok/s + bench mixed + swap-overhead -> `docs/reference/hardware-and-models.md` + `docs/research/bench-*`.
-Batch task per-modello quando possibile (swap = ~42% overhead workflow misto).
+Fleet 2 macchine: Ryzen (RTX 4070S 12GB, 31GB RAM) + Lenovo (RTX 5060 8GB, 64GB RAM). Dettaglio -> `MODEL_ROUTING.md`.
+**Ruoli dei modelli locali = fonte esterna** (non copiare qui nomi o numeri): `C:\dev\codemasterdd-workspace\test-llm\INDICE-VALUTAZIONE-LLM.md`
++ riga Ruoli (sezione LLM locali) di `C:\dev\codemasterdd-workspace\user-config\REGOLE-COMUNI.md`. Modelli installati: solo `ollama list` sull'host.
+SUPERATO (27/11/2026): lo sweet-spot "Qwen 2.5 Coder 14B Q2_K" -- famiglia qwen2.5 non piu' installata su nessun host.
+Tabelle tok/s storiche + bench mixed + swap-overhead -> `docs/reference/hardware-and-models.md` + `docs/research/bench-*`.
+Batch task per-modello quando possibile (swap = ~42% overhead workflow misto: misura storica su modelli rimossi).
 
 ## Priorita modelli / tier routing
-- **Durante Claude Max (~fino 17/06/2026)**: Opus per tutto.
-- **Post-Max tier 0 strategic** (non-delegabile: multi-file >=3, debug-arch, ADR, synthesis, constraint >=5):
-  Claude API on-demand, budget cap $10-20/mese, tracking `logs/claude-api-spend-*`. ADR-0023.
-- **Routing sovereign** (decision-summary; full -> `MODEL_ROUTING.md` + ADR-0008/0016/0022):
-  - Query one-shot / read-explain / create-single -> Qwen 7B (114 tok/s).
-  - Cosmetic edit -> `aider-cosmetic` (7B+diff). Behavior-critical -> `aider-refactor` (14B Q2+diff).
-  - Escalation 14B-safe-fail -> `aider` + qwen3-coder:30b. Multi-step agentic tool-use -> `opencode run` 30B MoE.
+- **Tier 0 strategic** (non-delegabile: multi-file >=3, debug-arch, ADR, synthesis, constraint >=5): Claude Code (abbonamento Max attivo).
+  Piano di riserva se Max cessa: ADR-0030 (Pro) + ADR-0023 (Claude API on-demand, cap $10-20/mese, tracking `logs/claude-api-spend-*`).
+- **Routing locale**: default locale solo dove il ruolo ha un riferimento o una promozione nelle fonti (vedi "Capacita AI locali"). Altri ruoli: nessun default locale; uso di prova libero e dichiarato, non default.
+  - SUPERATO (27/11/2026): Qwen 7B per query one-shot; `aider-cosmetic` (qwen2.5-coder 7B); `aider-refactor` (qwen2.5-coder 14B Q2);
+    escalation "14B safe-fail". I modelli non esistono piu' e i due wrapper puntano a tag rimossi.
+  - Multi-step agentic tool-use: `opencode run` + `qwen3-coder:30b` (Lenovo, ADR-0022) = uso di prova libero e dichiarato, non default (il ruolo "tool" non ha locali promossi).
+- **Routing cloud**:
   - Cloud free -> wrapper `aider-groq-bypass`/`aider-cerebras`/`aider-gemini` (privacy-guarded). Lista wrapper full -> MODEL_ROUTING.md.
-  - **Seconda dimensione**: constraint-count (ADR-0016) -- 5+ strict -> manual Claude Code.
+- **Seconda dimensione**: constraint-count (ADR-0016) -- 5+ strict -> manual Claude Code.
 - **Safety Aider**: `git diff HEAD~1` post-edit; no `--yes-always` su tree sporco; guard rail hooks via `core.hooksPath`.
 
 ## Trigger delega in-session (SEMPRE attivo)
 Prima di Edit/Write su file esistente, CLASSIFICA + proponi delega:
-- **cosmetic** (JSDoc/docstring/rename/lint/typo) + tree clean -> proponi `aider-cosmetic`, attendi OK.
-- **behavior-critical** (refactor/bugfix/logic 1-file) -> proponi `aider-refactor`, attendi OK.
+- **cosmetic** / **behavior-critical**: SOSPESO dal 27/11/2026 -- `aider-cosmetic` e `aider-refactor` puntano a modelli rimossi.
+  Non proporli finche' i wrapper non puntano a un modello installato con ruolo promosso. Classificare resta obbligatorio;
+  delega solo verso cloud-free privacy-guarded, altrimenti esegui diretto.
 - **strategic** (multi-file/synthesis/design/debug-arch/ADR) -> esegui diretto.
-- <1 riga meccanica -> skip. Batch >=5 simili -> proponi delega anche se sub-threshold.
-- Tracking -> `logs/aider-delegation-YYYY-MM.md`. Anti-pattern: default "faccio io" senza classify.
+- <1 riga meccanica -> skip. Batch >=5 simili -> proponi delega (oggi solo cloud-free) anche se sub-threshold.
+- Tracking -> `logs/aider-delegation-YYYY-MM.md`. Anti-pattern: "faccio io" senza classify (eseguire diretto DOPO aver classificato e' ok).
 
 ## Privacy guard rail
 Wrapper cloud abortano se repo non in `~/.config/aider-privacy-whitelist.txt` (setup/verify: `scripts/setup/install-privacy-guard.ps1`).
