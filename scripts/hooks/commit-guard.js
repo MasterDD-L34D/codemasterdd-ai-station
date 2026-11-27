@@ -22,15 +22,14 @@ process.stdin.on('end', () => {
   if (toolName !== 'Bash') process.exit(0);
   if (!/(^|[;&|]\s*)git\s+commit/.test(command)) process.exit(0);
 
-  // ADR-0011 policy-C (Addendum 2026-05-17, scoped 2026-06-17): ban a GitHub
-  // "Co-Authored-By:" trailer that credits an AI agent (Claude/LLM/bot). ALWAYS-ON,
-  // even for HEREDOC commits. Human co-authors (e.g. gh squash-merge crediting Eduardo)
-  // are ALLOWED -- the ban targets false AI credit (ADR-0011: "VIETATO Co-Authored-By: Claude").
-  if (/co-authored-by\s*:[^\n]*(claude|anthropic|openai|gpt|copilot|gemini|jules|\[bot\])/i.test(command)) {
+  // ADR-0011 policy-C (Addendum 2026-05-17; 2026-11-27 Eduardo: ban for EVERY co-author,
+  // the 2026-06-17 AI-only scope is reverted): ban the "Co-Authored-By:" trailer.
+  // ALWAYS-ON, even for HEREDOC commits.
+  if (/co-authored-by\s*:/i.test(command)) {
     process.stderr.write(
-      'commit-guard.js block -- ADR-0011 policy-C: AI "Co-Authored-By:" trailer VIETATO.\n' +
-      '  Agent attribution -> "Coding-Agent: <agent-id>" + "Trace-Id: <uuidv7>", mai Co-Authored-By.\n' +
-      '  (Human co-author OK.) Rif: docs/adr/0011 Addendum 2026-05-17 + scope 2026-06-17.\n'
+      'commit-guard.js block -- ADR-0011 policy-C: "Co-Authored-By:" trailer VIETATO (per tutti).\n' +
+      '  Usa trailer metadata: "Coding-Agent: <agent-id>" + "Trace-Id: <uuidv7>".\n' +
+      '  Rif: docs/adr/0011 Addendum 2026-05-17 + decisione 2026-11-27.\n'
     );
     process.exit(2);
   }
@@ -56,7 +55,11 @@ process.stdin.on('end', () => {
   const msgMatch = command.match(/-m\s+["']([^"']+)["']/);
   if (!msgMatch) process.exit(0);
 
-  const msg = msgMatch[1];
+  // Multi-line -m (shell-built messages): subject checks apply to the FIRST
+  // line only -- measuring the whole capture false-blocked valid commits
+  // (258-char "subject" that was really subject+body, 2026-07-06). Authorized
+  // by Eduardo in-session 2026-07-06; back-ported to the repo 2026-11-27.
+  const msg = msgMatch[1].split('\n')[0];
   const errors = [];
 
   /**

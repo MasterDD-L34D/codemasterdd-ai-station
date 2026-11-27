@@ -269,3 +269,18 @@ over-implemented as blanket. Scoped to match intent:
 - Enforcement updated to match: `scripts/hooks/commit-guard.js` (PreToolUse) + `scripts/hooks/commit-msg`
   (Layer 2) now block ONLY AI co-author trailers. The positive check (`Coding-Agent:` + `Trace-Id:`
   on agent commits) remains the load-bearing attribution guarantee.
+
+## Addendum 2026-11-27 -- policy-C per TUTTI i co-autori (revoca dello scope 2026-06-17)
+
+Decisione di Eduardo (sessione Claude Code del 27/11/2026): il trailer `Co-Authored-By:` e'
+VIETATO per qualunque co-autore, umano o IA, come gia' dicono le regole comuni
+(`codemasterdd-workspace/user-config/REGOLE-COMUNI.md`, sezione Commit attribution).
+Lo scope "solo co-autori IA" del 2026-06-17 e' revocato.
+
+- Contesto: le copie installate (`~/.claude/hooks/commit-guard.js` e il `commit-msg` globale in
+  `core.hooksPath`) applicavano gia' il divieto totale; il repo era rimasto alla versione ristretta
+  e senza la sezione dei trailer obbligatori sui repo pathfinder (2026-07-25, coda D3).
+- Enforcement allineato: `scripts/hooks/commit-guard.js` (divieto totale + oggetto misurato sulla
+  sola prima riga del `-m`, fix del 2026-07-06) e `scripts/hooks/commit-msg` (identico alla copia
+  installata). Test: `scripts/tests/test_commit_guard.py`.
+- Nota: il self-credit del merge squash di GitHub avviene lato server e non passa da questi hook.

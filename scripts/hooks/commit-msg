@@ -27,16 +27,68 @@ case "$MSG" in
     Merge*|Revert*|fixup\!*|squash\!*|\#*) exit 0 ;;
 esac
 
-# ADR-0011 policy-C (Addendum 2026-05-17, scoped 2026-06-17): ban a Co-Authored-By trailer
-# that credits an AI agent (Layer 2; covers Aider/manual/external agents bypassing the Claude
-# PreToolUse hook). Human co-authors (e.g. gh squash-merge self-credit) are ALLOWED.
-if grep -qiE 'co-authored-by[[:space:]]*:.*(claude|anthropic|openai|gpt|copilot|gemini|jules|\[bot\])' "$MSG_FILE"; then
-    echo 'commit-msg hook block -- ADR-0011 policy-C: AI "Co-Authored-By:" trailer VIETATO.' >&2
-    echo '  Agent attribution: Coding-Agent: <agent-id> + Trace-Id: <uuidv7> (human co-author OK).' >&2
+# ADR-0011 Addendum 2026-05-17 (policy-C): ban Co-Authored-By trailer (Layer 2;
+# covers Aider/manual/external agents that bypass the Claude PreToolUse hook).
+# Scans the FULL message (trailer is at the bottom, not the subject line).
+if grep -qiE 'co-authored-by[[:space:]]*:' "$MSG_FILE"; then
+    echo 'commit-msg hook block -- ADR-0011 policy-C: "Co-Authored-By:" trailer VIETATO.' >&2
+    echo '  Usa trailer metadata: Coding-Agent: <agent-id> + Trace-Id: <uuidv7>.' >&2
     exit 1
 fi
 
 errors=()
+
+# ADR-0011 trailer adoption reale (2026-07-25, coda D3): sui repo del progetto
+# pathfinder i trailer Coding-Agent: e Trace-Id: sono OBBLIGATORI (prima
+# warn-only via PreToolUse). Scoped per path: gli altri repo non cambiano.
+toplevel=$(git rev-parse --show-toplevel 2>/dev/null || true)
+case "$toplevel" in
+    *pathfinder*)
+        # Presenza E valore usabile: niente id vuoto, niente variabile non espansa
+        # (es. "Coding-Agent: $AGENT"). Nessun regex sull'id: e' libero per costruzione,
+        # cambia da agente ad agente. Si vieta solo cio' che non puo' essere un id vero.
+        AGENT_RE='^coding-agent[[:space:]]*:[[:space:]]*[^[:space:]$]+[^$]*$'
+        if ! grep -qiE '^coding-agent[[:space:]]*:' "$MSG_FILE"; then
+            errors+=("Missing required trailer: Coding-Agent: <agent-id> (ADR-0011)")
+        elif ! grep -qiE "$AGENT_RE" "$MSG_FILE"; then
+            found=$(grep -iE '^coding-agent[[:space:]]*:' "$MSG_FILE" | head -n 1)
+            errors+=("Coding-Agent vuoto o non espanso -- serve un id reale. Trovato: ${found}")
+        fi
+        # Presenza E forma: un trailer presente ma non espanso (es. "Trace-Id: $TID")
+        # passava il controllo e produceva un commit senza traccia. Successo il 2026-08-10.
+        #
+        # Si blocca solo cio' che NON PUO' essere un id (vuoto, variabile non espansa);
+        # tutto il resto passa, con avviso se non e' uuidv7. Misura sul corpus reale il
+        # 2026-08-11 (266 Trace-Id dall'adozione): 70 uuidv7, 167 uuid di altra versione,
+        # 29 slug leggibili tipo "fasea-dati". Esigere la v7 avrebbe bloccato 196 commit
+        # legittimi; esigere la forma uuid ne avrebbe bloccati 29, chiudendo di nascosto
+        # la decisione uuid-vs-slug che e' dichiarata APERTA.
+        # Se il trailer manca del tutto, lo genera l'hook -- come Gerrit fa col Change-Id.
+        # Un id digitato a mano e' esattamente il modo in cui nasce "Trace-Id: $TID".
+        # Richiede che Coding-Agent ci sia gia': quello dice CHI, e non si puo' inventare.
+        if ! grep -qiE '^trace-id[[:space:]]*:' "$MSG_FILE" \
+           && grep -qiE '^coding-agent[[:space:]]*:' "$MSG_FILE"; then
+            ms=$(date +%s%3N)
+            rand=$(od -An -tx1 -N10 /dev/urandom | tr -d ' \n')
+            hi=$(printf '%012x' "$ms")
+            ver=7${rand:0:3}
+            var=$(printf '%x' $(( 0x8 + (0x${rand:3:1} % 4) )))${rand:4:3}
+            uuid="${hi:0:8}-${hi:8:4}-${ver}-${var}-${rand:7:12}"
+            printf 'Trace-Id: %s\n' "$uuid" >> "$MSG_FILE"
+            echo "commit-msg -- Trace-Id assente, generato: ${uuid}" >&2
+        fi
+        TRACE_USABLE_RE='^trace-id[[:space:]]*:[[:space:]]*[^[:space:]$]+[^$]*$'
+        UUIDV7_RE='^trace-id[[:space:]]*:[[:space:]]*[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}[[:space:]]*$'
+        if ! grep -qiE '^trace-id[[:space:]]*:' "$MSG_FILE"; then
+            errors+=("Missing required trailer: Trace-Id: <uuidv7> (ADR-0011)")
+        elif ! grep -qiE "$TRACE_USABLE_RE" "$MSG_FILE"; then
+            found=$(grep -iE '^trace-id[[:space:]]*:' "$MSG_FILE" | head -n 1)
+            errors+=("Trace-Id vuoto o non espanso -- serve un id reale. Trovato: ${found}")
+        elif ! grep -qiE "$UUIDV7_RE" "$MSG_FILE"; then
+            echo "commit-msg avviso -- Trace-Id valido ma non uuidv7: ADR-0011 preferisce la v7." >&2
+        fi
+        ;;
+esac
 
 TYPE_RE='(feat|fix|docs|style|refactor|perf|test|chore|ci|build|revert)'
 
