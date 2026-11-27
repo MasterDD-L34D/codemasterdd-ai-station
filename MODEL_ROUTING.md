@@ -11,16 +11,17 @@
 ## Stato al 27/11/2026 (leggere prima del resto)
 
 - **Ruoli dei modelli locali**: fonte unica `C:\dev\codemasterdd-workspace\test-llm\INDICE-VALUTAZIONE-LLM.md`
-  + sezione Ruoli di `C:\dev\codemasterdd-workspace\user-config\REGOLE-COMUNI.md` (metodo: `METODO-SELEZIONE-LLM-20261107-v4.md`).
-  Questo file non copia ruoli ne' numeri: se diverge, vale l'indice. Un ruolo senza locale promosso -> nessun locale per quel ruolo.
+  + riga Ruoli (sezione LLM locali) di `C:\dev\codemasterdd-workspace\user-config\REGOLE-COMUNI.md` (metodo: `METODO-SELEZIONE-LLM-20261107-v4.md`).
+  Questo file non copia ruoli ne' numeri: se diverge, valgono quelle fonti. Il ruolo "codice" ha un modello di riferimento solo nella riga Ruoli.
+  Un ruolo senza riferimento o promozione -> nessun default locale; uso di prova libero e dichiarato, non default (REGOLE-COMUNI: provare e usare un modello e' libero).
 - **Modelli installati**: solo `ollama list` eseguito sull'host. Un nome scritto qui non prova che esista.
 - **Rimossi il 27/11/2026 dal Lenovo**: `gpt-oss:120b`, `qwen2.5:32b`, `qwen2.5-coder:32b`, `qwen2.5-coder:14b` (q2_K e q3_K_M),
   `qwen2.5-coder:7b`, `deepseek-r1:14b`, `deepseek-r1:8b`, `phi4:14b`, `mistral:latest`. Il Ryzen non ha nessun qwen2.5
-  (rimossi il 13/11) ne' `deepseek-coder-v2:16b`. Le rotte su questi modelli, sotto, sono marcate SUPERATO e restano solo come storia.
+  (`qwen2.5-coder:14b` e `:7b` rimossi il 13/11, METODO v4 voce del 13 nov) ne' `deepseek-coder-v2:16b` (`ollama list` del 27/11). Le rotte su questi modelli, sotto, sono marcate SUPERATO e restano solo come storia.
 - **Wrapper rotti**: `aider-cosmetic` e `aider-refactor` (Lenovo `~/.local/bin`, sorgente `scripts/wrappers/`) chiamano
   `qwen2.5-coder:7b` e `qwen2.5-coder:14b-instruct-q2_K`, non piu' installati. Non usarli finche' non sono riallineati.
 - **Claude**: abbonamento Max attivo (primario). ADR-0030 (Pro) e ADR-0023 (API on-demand) = piano di riserva se Max cessa,
-  non stato attuale. Le frasi "durante Max / post-Max ~17/06" sotto sono superate dalla data.
+  non stato attuale.
 
 ## Fleet 2-machine routing (llmfit standard, 2026-05-22)
 
@@ -34,11 +35,11 @@ Lo stack locale NON e' piu' single-machine. Fleet = 2 macchine a profilo OPPOSTO
 | Macchina | host | VRAM / RAM | Profilo | Ruolo locale |
 |----------|------|------------|---------|--------------|
 | **Ryzen** | `.11` DESKTOP-T77TMKT | RTX 4070S **12GB** / 31GB | VRAM-rich | dense fit-in-VRAM, veloce |
-| **Lenovo** | `.10` CodeMasterDD (edusc) | RTX 5060 8GB / **63GB** | RAM-rich | MoE/grandi (expert-offload), host Ollama primario |
+| **Lenovo** | `.10` CodeMasterDD (edusc) | RTX 5060 8GB / **64GB** | RAM-rich | MoE/grandi (expert-offload), host Ollama primario |
 
 **Machine-routing** (profilo HW, ortogonale ai ruoli: QUALE modello lo decide l'indice, non questa lista):
 - small/mid dense (fit in 12GB VRAM) -> **Ryzen**. SUPERATO (27/11/2026): ripiego Lenovo `mistral:latest` (rimosso) e "14B q4 su Ryzen" (nessun 14B installato).
-- MoE / grandi (es. `qwen3-coder:30b`, `gemma4:26b`) -> **Lenovo** (RAM-offload 63GB). Lo swarm Dafne gira qui.
+- MoE / grandi (es. `qwen3-coder:30b`, `gemma4:26b`) -> **Lenovo** (RAM-offload 64GB). Lo swarm Dafne gira qui (modelli dello swarm: non verificati il 27/11).
   SUPERATO (27/11/2026): tier 120B `gpt-oss:120b` (rimosso).
 - embedding -> entrambe (cheap).
 
@@ -52,7 +53,7 @@ SUPERATO (27/11/2026): la matrice tier 7B/14B/30B sotto non decide piu' QUALE mo
 
 Definire quale strumento / modello / accesso usare per ogni fase. Evita: usare sempre lo stesso strumento per tutto; accumulare modelli senza ruoli chiari; mandare codice sensibile in cloud; perdere tempo/$ su task delegabili piu' veloci/economici.
 
-**Regola madre**: Fonte complessa -> Comprensione -> Compressione -> Decisione -> Esecuzione -> Compact -> Archivio. In concreto: Comprensione/Sintesi/Decisione = Claude Code (read multi-file + ADR draft, approvazione utente esplicita); Esecuzione coding = Aider + modello tier-appropriate (vedi matrice); Compact/Archivio = Claude Code (docs/ / logs/ / memory).
+**Regola madre**: Fonte complessa -> Comprensione -> Compressione -> Decisione -> Esecuzione -> Compact -> Archivio. In concreto: Comprensione/Sintesi/Decisione = Claude Code (read multi-file + ADR draft, approvazione utente esplicita); Esecuzione coding = Aider + wrapper cloud-free o modello locale di riferimento (matrice tier SUPERATO 27/11); Compact/Archivio = Claude Code (docs/ / logs/ / memory).
 
 ## Profilo progetto
 
@@ -82,12 +83,12 @@ Definire quale strumento / modello / accesso usare per ogni fase. Evita: usare s
 | Repo map | structure analysis | Claude Code Max | Opus | reference index / repo overview |
 | Coding cosmetic | JSDoc, rename, lint | Aider + wrapper cloud | Cerebras 8B cloud (SUPERATO: Qwen 7B local) | diff additive pulito |
 | Coding behavior | refactor, bug fix | Aider + wrapper cloud | Groq 70B cloud (SUPERATO: Qwen 14B Q2 local) | diff controlled + review manuale |
-| Coding locale | 1 file, privacy/costo | vedi indice, ruolo "codice" | solo il modello promosso nell'indice | diff + review manuale |
+| Coding locale | 1 file, privacy/costo | nessun percorso operativo oggi (nessun wrapper punta al modello di riferimento): esegui diretto | riferimento "codice" nella riga Ruoli | diff + review manuale |
 | Capability-max | debug strategico, multi-file refactor | Claude Code Max | Opus | resolution (non delegabile) |
 | Review | QA edit recente | Claude Code Max | Opus | `git diff` audit + semantics |
 | Compact / Archivio | chiusura sessione | Claude Code | Opus / fs | COMPACT + JOURNAL + memory |
 
-**Piano di riserva se Max cessa (ADR-0030 Hybrid A1; la data ~17/06 e' superata, Max resta attivo)**: "Capability-max" + "Planning strategico" -> **Claude Code Pro $20/mo** (primary); se Pro daily-limit -> **Claude API on-demand** (overflow ad-hoc, cap $10-20/mese ADR-0023, log via `scripts/claude-api/log_spend.py`); routine fallback **Groq/Cerebras cloud-free** (era Gemini CLI free; il path OAuth-login free e' RITIRATO 2026-06-18 -- vedi ADR-0030 addendum; resta `aider-gemini` via API-key); emergency **OpenRouter**. Daily coding resta Aider local/cloud-free.
+**Piano di riserva se Max cessa (ADR-0030 Hybrid A1; Max resta attivo)**: "Capability-max" + "Planning strategico" -> **Claude Code Pro $20/mo** (primary); se Pro daily-limit -> **Claude API on-demand** (overflow ad-hoc, cap $10-20/mese ADR-0023, log via `scripts/claude-api/log_spend.py`); routine fallback **Groq/Cerebras cloud-free** (era Gemini CLI free; il path OAuth-login free e' RITIRATO 2026-06-18 -- vedi ADR-0030 addendum; resta `aider-gemini` via API-key); emergency **OpenRouter**. Daily coding resta Aider cloud-free (locale: vedi sopra).
 
 ## Routing consigliato per scenario
 
@@ -101,23 +102,23 @@ Claude Code nativa (Opus via Max; se Max cessa: API o Sonnet, ADR-0023). Integra
 Claude Code Opus (Max). Se Max cessa (ADR-0030): Claude Code Pro (primary strategico) OR Claude API on-demand (overflow, ADR-0023) OR Groq 70B via `aider-groq-bypass` (ADR operativo semplice). Reasoning strategico + consistency di stile.
 
 ### Se devo lavorare in locale per privacy o costo
-Usa solo il modello promosso nell'indice per quel ruolo (oggi l'unico ruolo di coding con un locale e' "codice"); se il ruolo non ha locali promossi, niente locale. Verifica `ollama list` sull'host prima.
+Default locale solo nei ruoli con riferimento o promozione nelle fonti; altrove nessun default locale (uso di prova libero e dichiarato, non default). Il caso "bugfix su 1 file con test" = ruolo worker Orca, testato e non promosso. Verifica `ollama list` sull'host prima.
 SUPERATO (27/11/2026): `qwen2.5-coder:7b` (cosmetic) + `qwen2.5-coder:14b-q2_K` (behavior) + escalation "oltre capability 14B" -- modelli rimossi.
 
 ### Se devo usare il cloud
 Aider + wrapper (`aider-groq-bypass`, `aider-cerebras`, `aider-gemini`, `aider-openai`). Modello primario: `groq/llama-3.3-70b-versatile` (free tier, LPU speed, capability 70B dense).
-- **OpenCode + cloud free NON viable** (ADR-0022): TPM 6-12k Groq + context 8k Cerebras 8B << OpenCode default request ~50k token. OpenCode resta sovereign-only (Ollama 30B MoE).
+- **OpenCode + cloud free NON viable** (ADR-0022): TPM 6-12k Groq + context 8k Cerebras 8B << OpenCode default request ~50k token. OpenCode resta sovereign-only (Ollama 30B MoE: uso di prova libero e dichiarato, non default).
 - **Cosa NON mandare al cloud**: codice repo cliente (sempre); Synesthesia `controllers/`/`routes/`/`middlewares/` (auth sensitive); segreti / env vars / API keys / token; output che contenga i sopra.
 
 ### Se devo fare task multi-step agentic con tool calls
-OpenCode (NOT Aider, scope diverso). Modello sovereign storico: `ollama/qwen3-coder:30b` MoE A3B (Lenovo, ADR-0022). Nota: nell'indice il ruolo "tool" non ha locali promossi; la rotta resta come ADR-0022, subordinata all'indice. Tool calls: Read, Edit, Bash, ListFiles, Glob, Grep, MCP servers.
+OpenCode (NOT Aider, scope diverso). Modello: `ollama/qwen3-coder:30b` MoE A3B (Lenovo, ADR-0022) = uso di prova libero e dichiarato, non default: nelle fonti il ruolo "tool" non ha locali promossi. Tool calls: Read, Edit, Bash, ListFiles, Glob, Grep, MCP servers.
 - **Cosa NON usare con OpenCode**: cloud free tier (rate-limited TPM o context-limited); qualsiasi task single-file edit semplice (Aider superiore: faithful diff; misura storica di maggio: 7B 5s vs OpenCode 30B 45s).
 
 ## Policy locale / cloud
 
-**Locale prima? SI** -- filosofia sovereign (ADR-0001) + privacy-by-default + zero rate-limit dependency.
+**Locale prima? SI come filosofia, ma default solo nei ruoli con riferimento o promozione** -- filosofia sovereign (ADR-0001) + privacy-by-default + zero rate-limit dependency.
 
-**Quando il locale basta**: cosmetic task; behavior-critical single-file con logica chiara + constraint respecting; bench/framework iterativi; sperimentazione/prototipo; task con codice sensibile (sovereign guard rail).
+**Quando il locale basta**: solo nei ruoli con riferimento o promozione nelle fonti (SUPERATO 27/11: "cosmetic task; behavior-critical single-file" via tier Qwen); bench/framework iterativi; sperimentazione/prototipo; task con codice sensibile (sovereign guard rail).
 
 **Quando il cloud e' giustificato**: speed-critical (Groq ~20x piu' veloce di locale 30B MoE); multi-file refactor >3 file target; ruolo senza locale promosso nell'indice; capability reasoning oltre il locale (debug architetturale); quality validation (second opinion); task volumetrici (>10min total locale).
 
@@ -145,8 +146,8 @@ SUPERATO (27/11/2026), righe tolte: `qwen2.5-coder:7b` (tier 1 cosmetic), `qwen2
 1. Non fare la stessa cosa in tre strumenti (scegli uno per corpus).
 2. Non mandare fonti grezze nel coding tool prima di capirle (fase Comprensione separata).
 3. Non accumulare modelli "per sicurezza" (ADR-0005 YAGNI -- aggiungi solo quando trigger).
-4. Non tenere implicito il routing: questo file e' la verita', se non e' scritto qui **non e' una regola**.
-5. Se un passaggio aumenta caos invece di ridurlo, fermati e consolida (es. tier 3 cloud fail rate >30% -> torna a tier 2 locale prima di debug wrapper).
+4. Non tenere implicito il routing: questo file e' la verita' per il routing, se non e' scritto qui **non e' una regola** (per i ruoli dei modelli locali valgono le fonti in "Stato").
+5. Se un passaggio aumenta caos invece di ridurlo, fermati e consolida (es. tier 3 cloud fail rate >30% -> torna al locale di riferimento, se il ruolo ne ha uno, prima di debug wrapper).
 
 **File da aggiornare dopo ogni passaggio importante**: `COMPACT_CONTEXT.md`, `DECISIONS_LOG.md` (strategiche -> ADR separato), `BACKLOG.md`, `REFERENCE_INDEX.md`, `JOURNAL.md`, `logs/aider-delegation-YYYY-MM.md`, memory `~/.claude/projects/.../memory/`.
 
@@ -164,10 +165,10 @@ Misura storica (maggio 2026, modelli in parte rimossi il 27/11: i tier 14B Q2 de
 
 ## Status decisione (post-Fase 6 closure + ADR-0022 Accepted)
 
-**Scenario A full-sovereign confermato Accepted 2026-05-07** (ADR-0015), operativo dalla transition Max. Soft-override esteso n>=12 con 5 rationale empirici; cumulative al 2026-05-09 zero trigger attivati (PASS OpenCode 30B MoE 3/3, Aider Fase 6 fail rate 8.3%).
+**Scenario A full-sovereign confermato Accepted 2026-05-07** (ADR-0015), pensato per la transition Max (oggi riserva: Max attivo). Soft-override esteso n>=12 con 5 rationale empirici; cumulative al 2026-05-09 zero trigger attivati (PASS OpenCode 30B MoE 3/3, Aider Fase 6 fail rate 8.3%).
 
-- **Oggi (Max attivo)**: Claude Code per comprensione/planning/multi-file/strategic; locale solo nei ruoli promossi dall'indice; Aider + Groq/Cerebras cloud per coding 1-file speed-critical (privacy permitting); OpenCode + `qwen3-coder:30b` per multi-step agentic (ADR-0022, subordinata all'indice). SUPERATO (27/11/2026): "Aider + Qwen local (o Ryzen q4)".
-- **Piano se Max cessa (Fase 8 sovereign, storico)**: Aider + Ollama daily-driver; OpenCode + Ollama 30B MoE per agentic multi-step; cloud free Aider-side per speed/capability marginale (NON OpenCode, rate-limited). Claude Code Max dismesso. **Tier 0 strategic** -> Claude Code Pro $20/mo primary (ADR-0030 Hybrid A1, supersede parziale ADR-0023); Claude API on-demand = overflow ad-hoc se Pro daily-limit, budget cap $10-20/mese (ADR-0023), tracking `logs/claude-api-spend-*` via `scripts/claude-api/log_spend.py`. Per repo sensibili: modello locale promosso nell'indice + diff locale (SUPERATO: Qwen 14B Q2).
+- **Oggi (Max attivo)**: Claude Code per comprensione/planning/multi-file/strategic; locale solo nei ruoli promossi dall'indice; Aider + Groq/Cerebras cloud per coding 1-file speed-critical (privacy permitting); OpenCode + `qwen3-coder:30b` per multi-step agentic = uso di prova libero e dichiarato, non default (ADR-0022). SUPERATO (27/11/2026): "Aider + Qwen local (o Ryzen q4)".
+- **Piano di riserva se Max cessa (Fase 8 sovereign)**: Aider + Ollama daily-driver; OpenCode + Ollama 30B MoE per agentic multi-step; cloud free Aider-side per speed/capability marginale (NON OpenCode, rate-limited). Claude Code Max dismesso. **Tier 0 strategic** -> Claude Code Pro $20/mo primary (ADR-0030 Hybrid A1, supersede parziale ADR-0023); Claude API on-demand = overflow ad-hoc se Pro daily-limit, budget cap $10-20/mese (ADR-0023), tracking `logs/claude-api-spend-*` via `scripts/claude-api/log_spend.py`. Per repo sensibili: modello locale promosso nell'indice + diff locale (SUPERATO: Qwen 14B Q2).
 - **Privacy validation Synesthesia** (criterio #3 ADR-0014): DEROGATO retroattivo, completamento post agosto 2026 (riattivazione pre-esame UniUPO).
 - **Trigger ri-evaluation soft-override**: silent-corruption working-tree >=1 caso reale -> ADR-0015 addendum + scenario B revisited; fail rate cumulative >15% -> revisione routing tier; privacy violation in repo non-sensitive -> ADR addendum reactive.
 - **Prossimo test** (deferred SPRINT_02): n>=3 data points constraint-count addizionali per ADR-0016 Accepted; dogfood organici OpenCode reali verso n>=20 cumulative.
