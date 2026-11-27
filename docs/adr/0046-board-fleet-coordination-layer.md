@@ -727,10 +727,14 @@ dagli agenti interattivi.
 Cosa cambia, e solo questo:
 
 1. **Controllo nel writer.** Il comando `message` della CLI di `tools/board_write.py` (hub,
-   ramo `main`) rifiuta i tipi `result` e `info`, e i `request`/`review` con un destinatario
-   generico (`tutti`, `claude-code` senza sessione e simili), con un errore che rimanda a PR,
-   CODA_LAVORI o JOURNAL. Le funzioni interne (`resolve`, `migrate`, finalizzazione dei lavori)
-   continuano a scrivere i loro esiti.
+   ramo `main`) ammette solo i tipi che chiedono un'azione (`request`, `review`, `handoff`,
+   `blocker`, `ack`, `question`, `task`, `proposal`, maiuscole comprese) e rifiuta il messaggio se
+   anche uno solo dei destinatari e' generico (`tutti`, `claude-code`, `kimi-code`, `kimi`,
+   `opencode`) o vuoto. L'errore rimanda a PR, CODA_LAVORI o JOURNAL. Le funzioni interne
+   (`add_message`, `resolve`, `reclaim`, `migrate`, finalizzazione dei lavori) continuano a
+   scrivere i loro esiti. Aggiramenti noti, non coperti: il checkout condiviso dell'hub su un ramo
+   vecchio e la release installata di board-omniroute hanno copie di `board_write.py` senza il
+   controllo finche' non vengono riallineate a `main`.
 2. **Chiusura una tantum dello stock.** I messaggi `info` e `result` ancora `open` da oltre 14
    giorni passano a `done`, dopo uno snapshot della Board. Stato gia' esistente: nessun campo,
    nessuno stato nuovo, nessun archivio. Richieste, handoff, review e blocker non si toccano.
