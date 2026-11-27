@@ -18,8 +18,10 @@
 - **Rimossi il 27/11/2026 dal Lenovo**: `gpt-oss:120b`, `qwen2.5:32b`, `qwen2.5-coder:32b`, `qwen2.5-coder:14b` (q2_K e q3_K_M),
   `qwen2.5-coder:7b`, `deepseek-r1:14b`, `deepseek-r1:8b`, `phi4:14b`, `mistral:latest`. Il Ryzen non ha nessun qwen2.5
   (`qwen2.5-coder:14b` e `:7b` rimossi il 13/11, METODO v4 voce del 13 nov) ne' `deepseek-coder-v2:16b` (`ollama list` del 27/11). Le rotte su questi modelli, sotto, sono marcate SUPERATO e restano solo come storia.
-- **Wrapper rotti**: `aider-cosmetic` e `aider-refactor` (Lenovo `~/.local/bin`, sorgente `scripts/wrappers/`) chiamano
-  `qwen2.5-coder:7b` e `qwen2.5-coder:14b-instruct-q2_K`, non piu' installati. Non usarli finche' non sono riallineati.
+- **Wrapper sospesi**: `aider-cosmetic` e `aider-refactor` (Lenovo `~/.local/bin`, sorgente `scripts/wrappers/`) chiamavano
+  `qwen2.5-coder:7b` e `qwen2.5-coder:14b-instruct-q2_K`, non piu' installati. La sorgente ora e' uno stub che stampa un avviso
+  ed esce 1; la copia sul Lenovo resta la vecchia finche' non si reinstalla (`install-wrappers.ps1 -Force`). Nessun sostituto locale:
+  nessun ruolo promosso per cosmetic/refactor.
 - **Claude**: abbonamento Max attivo (primario). ADR-0030 (Pro) e ADR-0023 (API on-demand) = piano di riserva se Max cessa,
   non stato attuale.
 
@@ -67,7 +69,7 @@ Definire quale strumento / modello / accesso usare per ogni fase. Evita: usare s
 ## Stack disponibile
 
 - **Claude Code** (OAuth Max attivo; riserva: API key on-demand, ADR-0023).
-- **Aider** + wrapper in `~/.local/bin/` (Lenovo). `aider-cosmetic` e `aider-refactor` rotti dal 27/11 (vedi "Stato").
+- **Aider** + wrapper in `~/.local/bin/` (Lenovo). `aider-cosmetic` e `aider-refactor` sospesi dal 27/11 (vedi "Stato").
 - **Ollama** su entrambi gli host (elenco: `ollama list` sull'host; ruoli: indice).
 - **OpenCode** (npm global; tier multi-step agentic con tool calls; ADR-0022 Accepted).
 - **API esterne**: Groq + Cerebras (free) + Gemini + OpenAI (paid). Keys (conteggio NON hardcodato: leggi il file -- anti-rot stale-claim, OD-048) in `~/.config/api-keys/keys.env`.

@@ -20,7 +20,7 @@ verdict. Five spokes:
 | Spoke | Role | Exact invocation |
 |-------|------|------------------|
 | Inline-Opus (hub) | strategic, multi-file, synthesis, architecture, ALL verification | (this session) |
-| Local fleet | sovereign, cheap, scoped edits, batch, tagging | `ollama run <model>` / `aider-cosmetic <f>` / `aider-refactor <f>` / `opencode run --model "ollama/qwen3-coder:30b"` / REST `:11434` |
+| Local fleet | sovereign, cheap, scoped edits, batch, tagging -- only in roles with a reference or promotion in the role sources (`MODEL_ROUTING.md` "Stato") | `ollama run <model>` / REST `:11434`; `opencode run --model "ollama/qwen3-coder:30b"` = free, declared trial use, not a default. SUSPENDED 27/11/2026: `aider-cosmetic` / `aider-refactor` (models removed; the wrappers now exit with a notice) |
 | Cloud keys | local-insufficient + repo cloud-OK + privacy-guard pass | `aider-groq-bypass`/`aider-cerebras`/`aider-gemini`/`aider-openai`/`aider-hf`/`aider-github-models <f>`; fleet-tools MCP (`tavily_search`/`openai_image`/`cross_check`) for services + non-Claude cross-check; keys from `~/.config/api-keys/keys.env` |
 | Jules async | well-defined + acceptance-criteria + scoped chore, whitelisted repo, ASCII-clean target, parallelizable | `jules remote new --repo <o/r> --session "<scoped task>"` + REST `jules.googleapis.com/v1alpha` (list/pull/`:archive`/`:sendMessage`) |
 | In-session subagents / Workflow | parallel read/review/verify; deterministic fan-out | Agent tool (harsh-reviewer, Explore, godot-engine-specialist, ...) ; Workflow tool (opt-in) |

@@ -48,7 +48,7 @@ Batch task per-modello quando possibile (swap = ~42% overhead workflow misto: mi
   Piano di riserva se Max cessa: ADR-0030 (Pro) + ADR-0023 (Claude API on-demand, cap $10-20/mese, tracking `logs/claude-api-spend-*`).
 - **Routing locale**: default locale solo dove il ruolo ha un riferimento o una promozione nelle fonti (vedi "Capacita AI locali"). Altri ruoli: nessun default locale; uso di prova libero e dichiarato, non default.
   - SUPERATO (27/11/2026): Qwen 7B per query one-shot; `aider-cosmetic` (qwen2.5-coder 7B); `aider-refactor` (qwen2.5-coder 14B Q2);
-    escalation "14B safe-fail". I modelli non esistono piu' e i due wrapper puntano a tag rimossi.
+    escalation "14B safe-fail". I modelli non esistono piu'; i due wrapper sono stub sospesi (escono con un avviso).
   - Multi-step agentic tool-use: `opencode run` + `qwen3-coder:30b` (Lenovo, ADR-0022) = uso di prova libero e dichiarato, non default (il ruolo "tool" non ha locali promossi).
 - **Routing cloud**:
   - Cloud free -> wrapper `aider-groq-bypass`/`aider-cerebras`/`aider-gemini` (privacy-guarded). Lista wrapper full -> MODEL_ROUTING.md.
@@ -57,7 +57,7 @@ Batch task per-modello quando possibile (swap = ~42% overhead workflow misto: mi
 
 ## Trigger delega in-session (SEMPRE attivo)
 Prima di Edit/Write su file esistente, CLASSIFICA + proponi delega:
-- **cosmetic** / **behavior-critical**: SOSPESO dal 27/11/2026 -- `aider-cosmetic` e `aider-refactor` puntano a modelli rimossi.
+- **cosmetic** / **behavior-critical**: SOSPESO dal 27/11/2026 -- `aider-cosmetic` e `aider-refactor` sono stub (modelli rimossi).
   Non proporli finche' i wrapper non puntano a un modello installato con ruolo promosso. Classificare resta obbligatorio;
   delega solo verso cloud-free privacy-guarded, altrimenti esegui diretto.
 - **strategic** (multi-file/synthesis/design/debug-arch/ADR) -> esegui diretto.

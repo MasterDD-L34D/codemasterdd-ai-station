@@ -35,8 +35,8 @@
     Target: ~/.local/bin/*.cmd (user-level, PATH).
 
     Wrapper ecosystem 8 active post-cluster T1 SPRINT_02 + post-harsh-review + 2026-05-15 free LLM audit:
-    - aider-cosmetic.cmd (Qwen 7B + diff format, post-fix entry #34)
-    - aider-refactor.cmd (Qwen 14B Q2 + diff)
+    - aider-cosmetic.cmd (SUSPENDED 2026-11-27: stub, exits 1; qwen2.5-coder:7b removed from fleet)
+    - aider-refactor.cmd (SUSPENDED 2026-11-27: stub, exits 1; qwen2.5-coder:14b-instruct-q2_K removed from fleet)
     - aider-cerebras.cmd (Cerebras 8B + --map-tokens 0 mitigation)
     - aider-gemini.cmd (Gemini 2.5 Flash + --map-tokens 0)
     - aider-openai.cmd (gpt-4o-mini, post 10 EUR funding)
